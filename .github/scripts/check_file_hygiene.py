@@ -308,8 +308,8 @@ def check_shell_executable(changed_files: list[str]) -> None:
 
 
 def main() -> int:
-    # --all scans every git-tracked file (used for push events where there is
-    # no PR diff to diff against). Without it, only changed files are checked.
+    # --all scans every git-tracked file (for push events, where there is no PR diff).
+    # Without it, only changed files are checked.
     all_files = "--all" in sys.argv
     if all_files:
         result = subprocess.run(

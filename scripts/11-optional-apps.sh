@@ -70,7 +70,7 @@ deploy_file() {
     fi
 }
 
-#  VSCode / VSCodium
+# VSCode / VSCodium
 if [[ "${INSTALL_VSCODE:-false}" == "true" ]]; then
     echo "  Setting up VSCode/VSCodium integration..."
     install_if_missing code || install_if_missing visual-studio-code-bin || true
@@ -94,7 +94,7 @@ if [[ "${INSTALL_VSCODE:-false}" == "true" ]]; then
     deploy_vscode "VSCodium" "codium"
 fi
 
-#  Zed
+# Zed
 if [[ "${INSTALL_ZED:-false}" == "true" ]]; then
     echo "  Setting up Zed..."
     if [[ "$BASE_DISTRO" == "arch" ]]; then
@@ -106,7 +106,7 @@ if [[ "${INSTALL_ZED:-false}" == "true" ]]; then
     deploy_file "$DOTS_DIR/zed/settings.json" "$HOME/.config/zed/settings.json"
 fi
 
-#  Spicetify
+# Spicetify
 if [[ "${INSTALL_SPICETIFY:-false}" == "true" ]]; then
     echo "  Setting up Spicetify..."
     install_if_missing spicetify-cli || true
@@ -124,7 +124,7 @@ if [[ "${INSTALL_SPICETIFY:-false}" == "true" ]]; then
     fi
 fi
 
-#  Discord / Equibop
+# Discord / Equibop
 if [[ "${INSTALL_DISCORD:-false}" == "true" ]]; then
     echo "  Installing Discord/Equibop..."
     if [[ "$BASE_DISTRO" == "arch" ]]; then
@@ -134,7 +134,7 @@ if [[ "${INSTALL_DISCORD:-false}" == "true" ]]; then
     fi
 fi
 
-#  Todoist (AppImage)
+# Todoist (AppImage)
 if [[ "${INSTALL_TODOIST:-false}" == "true" ]]; then
     echo "  Installing Todoist AppImage..."
     appimage="$HOME/.local/bin/todoist.AppImage"
@@ -152,7 +152,7 @@ if [[ "${INSTALL_TODOIST:-false}" == "true" ]]; then
     fi
 fi
 
-#  Firefox theming (user.js + userChrome.css)
+# Firefox theming (user.js + userChrome.css)
 if [[ "${INSTALL_FIREFOX_THEME:-false}" == "true" ]]; then
     echo "  Setting up Firefox theming..."
     install_if_missing firefox || true

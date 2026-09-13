@@ -73,7 +73,6 @@ if [[ ! -f "$SHELL_CONFIG" ]]; then
     exit 1
 fi
 
-# ---- helpers ----
 _qs_ipc() {
     "$QS" -p "$SHELL_CONFIG" ipc --any-display "$@"
 }

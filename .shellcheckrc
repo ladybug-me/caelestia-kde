@@ -1,26 +1,25 @@
 # ShellCheck configuration for Caelestia
 # https://www.shellcheck.net/wiki/
 
-# Enable optional checks. .github/scripts/check_shell_quality.sh reports at
-# warning severity and above, so the style-level suggestions these turn on only
-# surface when running shellcheck by hand.
+# check_shell_quality.sh reports at warning severity and above, so the style-level
+# suggestions these turn on only surface when running shellcheck by hand.
 enable=all
 
 # Paths to source (for source= directives)
 source-path=SCRIPTDIR
 
-# Disabled rules (with rationale):
+# Disabled rules:
 #
-# SC1090 - Can't follow non-constant source (we source dynamic files)
-# SC1091 - Not following external file (we source files from BUNDLE_DIR etc.)
-# SC2034 - Unused variable (false positives for variables used by other scripts)
-# SC2154 - Variable referenced but not assigned (env vars set by installer C++ code)
-# SC2155 - Declare and assign separately (inconsistent with our style)
-# SC2250 - Prefer putting braces around variable references (style choice)
+# SC1090 - can't follow non-constant source (we source dynamic files)
+# SC1091 - not following external file (sourced from BUNDLE_DIR etc.)
+# SC2034 - unused variable (false positives across scripts)
+# SC2154 - referenced but not assigned (env vars set by the installer)
+# SC2155 - declare and assign separately (style)
+# SC2250 - braces around variable references (style)
 #
-# SC2164 (Use cd ... || exit) is deliberately NOT disabled. Strict mode is
-# enforced in scripts/, but uninstall.sh, update.sh and installer/distro/* run
-# without `set -e`, where an unguarded cd silently retargets everything after it.
+# SC2164 (cd without || exit) is deliberately NOT disabled: uninstall.sh, update.sh and
+# installer/distro/* run without `set -e`, where an unguarded cd silently retargets
+# everything after it.
 
 disable=SC1090,SC1091,SC2034,SC2154,SC2155,SC2250
 

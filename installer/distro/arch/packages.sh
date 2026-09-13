@@ -29,7 +29,7 @@ if ! command -v yay >/dev/null 2>&1; then
     rm -rf "$tmpdir"
 fi
 
-# Core dependencies split by group — controlled via PACKAGE_GROUP env var
+# Package groups, selected by PACKAGE_GROUP.
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 CORE_PACKAGES=(
@@ -68,7 +68,6 @@ UTILITY_PACKAGES=(
     satty spectacle xdg-utils sassc bat ripgrep lazygit xdg-user-dirs
 )
 
-# Build final package list based on selected group
 PACKAGES=()
 case "$PACKAGE_GROUP" in
     core)   PACKAGES=("${CORE_PACKAGES[@]}") ;;
@@ -110,9 +109,8 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
     fi
 fi
 
-# Older installs registered a caelestia-bin pacman repo that pointed at the
-# now-deleted caelestia-bin-repo GitHub release. Drop any stale entry so
-# `pacman -Sy` does not fail against the dead Server URL.
+# An older install may have registered the caelestia-bin repo, which pointed at a
+# now-deleted GitHub release; a stale entry makes `pacman -Sy` fail.
 if grep -q '^\[caelestia-bin\]' /etc/pacman.conf 2>/dev/null; then
     log "Removing stale caelestia-bin repo entry from pacman.conf..."
     sudo sed -i '/^\[caelestia-bin\]/,/^$/d' /etc/pacman.conf
@@ -121,11 +119,8 @@ fi
 log "Installing packages (group: $PACKAGE_GROUP)..."
 FAILED_PKGS=()
 
-# Source-compilation fallbacks for AUR packages with no reliable binary repo
-# copy. When yay can't download/fetch an AUR package (or its source), build it
-# directly from the upstream source instead of failing outright.
-# Key: AUR package name -> source repo URL. Labels under "build type" below
-# select the build backend.
+# Fallbacks for AUR packages with no reliable binary: build from upstream source when
+# yay cannot fetch the package or its source. Keyed by AUR name -> repo URL.
 SOURCE_BUILD_REPOS=(
     # package            repo
     "ttf-rubik-vf        https://github.com/googlefonts/rubik"
@@ -146,8 +141,7 @@ source_repo_for() {
     return 1
 }
 
-# Build a package from its upstream source repository. Uses the build backend
-# the project ships (meson, CMake, autotools, or a plain makefile).
+# Build with whatever backend the project ships (meson, CMake, autotools, makefile).
 build_from_source() {
     local pkg="$1" repo="$2" tmpdir
     tmpdir="$(mktemp -d)"
@@ -180,7 +174,7 @@ build_from_source() {
     return 0
 }
 
-# Batch install all packages at once — much faster than individual yay calls
+# One batch install; failures are retried individually below.
 if ! yay -S --needed --noconfirm "${PACKAGES[@]}"; then
     log "Batch install had failures. Retrying individually..."
     for pkg in "${PACKAGES[@]}"; do
@@ -204,8 +198,7 @@ if ! yay -S --needed --noconfirm "${PACKAGES[@]}"; then
             fi
             rm -rf "$tmpdir"
 
-            # Last resort: compile straight from upstream source if the AUR
-            # build (or its source download) failed and we know the repo.
+            # Last resort: build from upstream source when the AUR path failed.
             if [[ "$_built" != "yes" ]]; then
                 repo="$(source_repo_for "$pkg")"
                 if [[ -n "$repo" ]]; then

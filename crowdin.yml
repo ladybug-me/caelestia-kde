@@ -6,23 +6,19 @@ base_path: "."
 preserve_hierarchy: true
 
 files:
-  # English is the source language and its catalog is not committed: the
-  # workflow regenerates it from the QML sources right before uploading, so the
-  # repository carries translations and never a file of empty strings.
+  # English is the source language; its catalog is not committed, because the workflow
+  # regenerates it from the QML before uploading.
   #
-  # %two_letters_code%, so Turkish is caelestia_tr.ts -- the name it already has
-  # here and the one Qt looks for. %locale_with_underscore% was tried first and
-  # writes caelestia_tr_TR.ts instead, which does not overwrite the existing
-  # catalog so much as sit next to it as an empty duplicate.
+  # %two_letters_code%, so Turkish is caelestia_tr.ts - the name it has here and the one Qt
+  # looks for. %locale_with_underscore% writes caelestia_tr_TR.ts, which does not overwrite
+  # the existing catalog so much as sit next to it as an empty duplicate.
   #
-  # Two variants of one language (pt-BR and pt-PT, zh-CN and zh-TW) would both
-  # want the bare code. That collides only once both are actually translated,
-  # since untranslated files are not exported at all; both Chinese catalogs
-  # are translated, so the file below names them explicitly.
+  # Two variants of one language (pt-BR/pt-PT, zh-CN/zh-TW) would both want the bare code.
+  # That collides only once both are translated, and both Chinese catalogs are, so they are
+  # named explicitly below.
   - source: /shell/translations/caelestia_en.ts
     translation: /shell/translations/caelestia_%two_letters_code%.ts
-    # Per-file rather than top-level: the CLI drops unknown root keys, so a copy
-    # at the root is silently ignored instead of rejected. The values are the
+    # Per-file, not top-level: the CLI drops unknown root keys silently. Values are the
     # locale names Qt looks for.
     languages_mapping:
       two_letters_code:

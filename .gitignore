@@ -30,8 +30,7 @@ cava/
 /CONTEXT.md
 /CLAUDE.md
 /docs/agents/
-# Generated for Crowdin immediately before upload and never committed: English
-# is the source language, and the catalog is thousands of empty entries.
+# Generated for Crowdin before upload; never committed.
 /shell/translations/caelestia_en.ts
 /shell/translations/caelestia_en.qm
 

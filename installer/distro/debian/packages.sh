@@ -48,7 +48,7 @@ INSTALL_FISH="${INSTALL_FISH:-true}"
 INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
 INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
-# Core dependencies split by group — controlled via PACKAGE_GROUP env var
+# Package groups, selected by PACKAGE_GROUP.
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 CORE_PACKAGES=(
@@ -74,8 +74,8 @@ CORE_PACKAGES=(
     # Media, Calculation & Security
     ffmpeg libavcodec-dev libavformat-dev libavutil-dev libswscale-dev
     libqalculate-dev qalc libvulkan-dev libsecret-1-dev ksshaskpass libx11-dev
-    # secret-tool lives in libsecret-tools here, not in the -dev package the
-    # shell is built against; the AI API key fields shell out to it at runtime.
+    # secret-tool is in libsecret-tools here, not in the -dev package; the AI API key
+    # fields shell out to it at runtime.
     libsecret-tools
 )
 
@@ -93,7 +93,7 @@ UTILITY_PACKAGES=(
     xdg-utils sassc python3-venv uv konsave
 )
 
-# Packages that need manual build or script fallback on Debian if apt package missing
+# Targets with no apt package, built or fetched by the fallback below.
 FALLBACK_PKGS=(
     quickshell starship libcava app2unit gpu-screen-recorder cliphist wl-clip-persist satty adw-gtk3 uv konsave matugen
 )
@@ -112,7 +112,7 @@ esac
 
 log "Installing packages (group: $PACKAGE_GROUP)..."
 
-# Optional packages only included for relevant groups (or "all")
+# Optional, and only for the groups that want them.
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
     if [[ "$INSTALL_FISH" == "true" ]]; then
         PACKAGES+=(fish)
@@ -134,7 +134,7 @@ sudo apt-get update || true
 
 FAILED_PKGS=()
 
-# Filter batch packages (excluding known fallback build targets)
+# Everything apt can provide, in one call; the fallback targets are handled after.
 BATCH_PKGS=()
 for pkg in "${PACKAGES[@]}"; do
     _is_fallback="no"
@@ -146,7 +146,6 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 
-# Batch install standard packages via apt
 if [[ ${#BATCH_PKGS[@]} -gt 0 ]]; then
     log "Batch installing standard Debian packages..."
     if ! sudo apt-get install -y --no-install-recommends "${BATCH_PKGS[@]}"; then
@@ -162,7 +161,6 @@ if [[ ${#BATCH_PKGS[@]} -gt 0 ]]; then
     fi
 fi
 
-# Process fallback / manual build targets
 for pkg in "${FALLBACK_TARGETS[@]}"; do
     if dpkg -s "$pkg" >/dev/null 2>&1 || command -v "$pkg" >/dev/null 2>&1; then
         continue
@@ -261,7 +259,7 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             ;;
         wl-clip-persist)
             sudo apt-get install -y build-essential curl git libwayland-dev || true
-            # Ensure Rust >= 1.85 (required for edition 2024)
+            # Rust >= 1.85 for edition 2024.
             if ! command -v cargo >/dev/null 2>&1 || [ "$(rustc --version 2>/dev/null | awk '{print $2}' | cut -d. -f2 || echo 0)" -lt 85 ]; then
                 log "Modern Rust toolchain (>= 1.85) required. Installing via rustup..."
                 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal || true # ci:allow-curl-pipe
@@ -289,7 +287,7 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             if ! command -v cargo-binstall >/dev/null 2>&1; then
                 curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash || true # ci:allow-curl-pipe
                 export PATH="$PATH:$HOME/.cargo/bin"
-                # Add to PATH permanently for future shell sessions
+                # Persist for future sessions.
                 for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
                     touch "$rc" 2>/dev/null || true
                     grep -q 'export PATH="$HOME/.cargo/bin:$PATH"' "$rc" 2>/dev/null || echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$rc" 2>/dev/null || true
@@ -339,9 +337,8 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             rm -rf "$tmpdir"
             ;;
         matugen)
-            # matugen generates the palette and is not packaged for Debian, so it
-            # is built from source. The toolchain it needs is not part of the
-            # package list either.
+            # matugen is not packaged for Debian and its toolchain is not in the package
+            # list either, so both are built here.
             export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
             if ! command -v cargo >/dev/null 2>&1; then
                 log "Installing a Rust toolchain to build matugen..."

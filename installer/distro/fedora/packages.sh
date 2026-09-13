@@ -10,8 +10,7 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 log()  { printf '  [INFO]  %s\n' "$*"; }
 err()  { printf '  [ERR]   %s\n' "$*" >&2; }
 
-# Return the download URL of the Darkly prebuilt RPM matching this Fedora
-# version from the latest GitHub release (https://github.com/Bali10050/Darkly/releases).
+# URL of the Darkly prebuilt RPM for this Fedora version, from the latest release.
 darkly_rpm_asset_url() {
     local release_json ver url
     release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/latest" 2>/dev/null || true)"
@@ -32,7 +31,7 @@ INSTALL_FISH="${INSTALL_FISH:-true}"
 INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
 INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
-# Core dependencies split by group — controlled via PACKAGE_GROUP env var
+# Package groups, selected by PACKAGE_GROUP.
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 CORE_PACKAGES=(
@@ -75,12 +74,11 @@ UTILITY_PACKAGES=(
     slurp grim xdg-utils sassc bat ripgrep lazygit xdg-user-dirs
 )
 
-# Packages known to need copr or manual fallback
+# Packages with no Fedora package: COPR or a manual fallback.
 COPR_CORE=(app2unit libcava)
 COPR_SHELL=(quickshell-git)
 COPR_UTILS=()
 
-# Build final package list based on selected group
 PACKAGES=()
 COPR_PKGS=()
 case "$PACKAGE_GROUP" in
@@ -92,7 +90,6 @@ case "$PACKAGE_GROUP" in
             COPR_PKGS=("quickshell-git" "gpu-screen-recorder" "app2unit" "starship" "libcava" "wl-clip-persist") ;;
 esac
 
-# Ensure COPR-only packages are actually requested for the relevant groups
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "core" ]]; then
     PACKAGES+=("${COPR_CORE[@]}")
 fi
@@ -102,7 +99,7 @@ fi
 
 log "Installing packages (group: $PACKAGE_GROUP)..."
 
-# Optional packages only included for relevant groups (or "all")
+# Optional, and only for the groups that want them.
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
     if [[ "$INSTALL_FISH" == "true" ]]; then
         PACKAGES+=(fish)
@@ -130,7 +127,7 @@ fi
 log "Installing packages via dnf (batch mode)..."
 sudo dnf upgrade -y || true
 
-# Build a batch list excluding copr-only packages
+# Everything dnf can provide, in one call; the COPR set is handled after.
 BATCH_PKGS=()
 for pkg in "${PACKAGES[@]}"; do
     _is_copr="no"
@@ -144,7 +141,6 @@ done
 
 FAILED_PKGS=()
 
-# Batch install standard packages
 if [[ ${#BATCH_PKGS[@]} -gt 0 ]]; then
     if ! sudo dnf install -y "${BATCH_PKGS[@]}"; then
         log "Batch install had failures. Retrying standard packages individually..."
@@ -156,9 +152,8 @@ if [[ ${#BATCH_PKGS[@]} -gt 0 ]]; then
     fi
 fi
 
-# Handle copr/manual-fallback packages individually
 for pkg in "${COPR_PKGS[@]}"; do
-    # Skip if not in the original PACKAGES list
+    # Only if the selected group asked for it.
     _needed="no"
     for op in "${PACKAGES[@]}"; do
         if [[ "$op" == "$pkg" ]]; then _needed="yes"; break; fi
@@ -271,7 +266,6 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 log "Downloading and installing required custom fonts (parallel)..."
 mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
 
-# Download all fonts in parallel
 curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
@@ -281,13 +275,11 @@ _pid_cc=$!
 curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "/tmp/JetBrainsMono.zip" &
 _pid_jb=$!
 
-# Wait for all downloads to finish
 wait $_pid_ms $_pid_cc $_pid_jb
 
-# Extract zip files
 unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; echo "CascadiaCode font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; echo "JetBrains Mono Nerd Font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
-# Material Symbols is a single .ttf, no extraction needed
+# Material Symbols is a single .ttf, nothing to extract.
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; echo "Material Symbols font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 
 fc-cache -f
@@ -350,7 +342,7 @@ if ! command -v caelestia >/dev/null 2>&1; then
             fi
         fi
 
-        # Install fish completions if fish is present
+        # Fish completions, when fish was installed.
         mkdir -p ~/.config/fish/completions/
         cp ./completions/caelestia.fish ~/.config/fish/completions/ 2>/dev/null || true
     )

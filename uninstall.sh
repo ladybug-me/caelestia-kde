@@ -1,17 +1,12 @@
 #!/usr/bin/env bash
-# ==============================================================
-#   Caelestia - uninstaller
-#
-#   Reverses actions performed by setup.sh.
-#   Restores backups when available and removes generated files.
-# ==============================================================
+# uninstall.sh - reverse setup.sh: restore backups, remove generated files.
 
 set -uo pipefail
 
 BUNDLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Shared log helpers: canonical [INFO]/[OK]/[WARN]/[SKIP]/[ERR] markers,
-# matching the installer TUI and every step script.
+# Shared log helpers: the [INFO]/[OK]/[WARN]/[SKIP]/[ERR] markers the installer TUI
+# and every step script use.
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/log.sh"
 
 section() {
@@ -22,7 +17,7 @@ section() {
     echo "-------------------------------------------------------------"
 }
 
-# -- OS detection ---------------------------------------------------------------
+# OS detection
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     case "$ID" in
@@ -68,7 +63,7 @@ echo " This will remove Caelestia shell files and configs."
 echo " Backups in $BUNDLE_DIR/backups/ can be restored during uninstall."
 echo
 
-# -- Sudo setup ----------------------------------------------------------------
+# Sudo setup
 sudo -v || die "Failed to obtain sudo privileges."
 
 # Keepalive loop
@@ -76,7 +71,7 @@ sudo -v || die "Failed to obtain sudo privileges."
 _SUDO_LOOP=$!
 trap 'kill $_SUDO_LOOP 2>/dev/null; true' EXIT
 
-# -- Confirmation ---------------------------------------------------------------
+# Confirmation
 echo
 read -r -p "Are you sure you want to uninstall Caelestia? [y/N]: " _confirm
 [[ "${_confirm,,}" == "y" || "${_confirm,,}" == "yes" ]] || die "Uninstall cancelled."
@@ -88,7 +83,7 @@ read -r -p "Remove packages? [y/N]: " _remove_pkgs
 REMOVE_PACKAGES=false
 [[ "${_remove_pkgs,,}" == "y" || "${_remove_pkgs,,}" == "yes" ]] && REMOVE_PACKAGES=true
 
-# -- Backup selection -----------------------------------------------------------
+# Backup selection
 SELECTED_BACKUP=""
 SELECTED_KNSV=""
 KONSAVE_BIN=""
@@ -180,7 +175,7 @@ ensure_konsave() {
     [[ -x "$KONSAVE_BIN" ]]
 }
 
-# -- Helper: restore config from backup ----------------------------------------
+# restore config from a backup
 restore_or_remove() {
     local name="$1"           # e.g. "fish"
     local target="$2"         # full destination path
@@ -202,9 +197,8 @@ restore_or_remove() {
 
 section "Step 1 - Stop and Disable Services"
 
-# kde-material-you-colors is in the list for installs that predate the palette
-# being applied by caelestia-color: it used to be installed and started, and two
-# programs applying a scheme to one session means whichever runs last wins.
+# kde-material-you-colors is listed for installs predating caelestia-color: it used to
+# apply a scheme too, and whichever program ran last won.
 for svc in qs-kwin-bridge cliphist ydotoold kde-material-you-colors; do
     if systemctl --user is-enabled --quiet "${svc}.service" 2>/dev/null ||
        systemctl --user is-active  --quiet "${svc}.service" 2>/dev/null; then
@@ -254,23 +248,20 @@ do
     fi
 done
 
-# The shell's systemd user unit. It is stopped and disabled by name, not only when the
-# user owns a copy of the file: a packaged install's unit lives in /usr/lib/systemd/user
-# and belongs to pacman, so there is nothing here to test for, while the enable link
-# `systemctl --user enable` wrote is in ~/.config/systemd/user whatever file the unit came
-# from. Left enabled, it would keep starting a shell whose files are removed in the next
-# step.
+# The shell's systemd user unit, stopped and disabled by name rather than only when the
+# user owns a copy: a package's unit lives in /usr/lib/systemd/user, but the enable link
+# `systemctl --user enable` wrote is always in ~/.config/systemd/user. Left enabled it
+# would keep starting a shell whose files the next step removes.
 systemctl --user disable --now caelestia-shell.service >/dev/null 2>&1 || true
 if [[ -f "$USER_SYSTEMD/caelestia-shell.service" ]]; then
     rm -f "$USER_SYSTEMD/caelestia-shell.service"
     ok "Removed: caelestia-shell.service"
 fi
 
-# That link, when the unit's file has already gone: pacman removes
-# /usr/lib/systemd/user/caelestia-shell.service before this script is run in the documented
-# order, and `disable` cannot clear a link whose unit it cannot resolve. A link with the
-# unit's name is enough for systemd to count the unit as enabled, so the leftovers are
-# dropped by hand here for the same reason 10-autostart.sh drops them on the way in.
+# That link, for the case where the unit's file is already gone: pacman removes
+# /usr/lib/systemd/user/caelestia-shell.service first, and `disable` cannot clear a link
+# whose unit it cannot resolve. A link with the unit's name is enough for systemd to count
+# it as enabled, so drop the leftovers by hand, as 10-autostart.sh does on the way in.
 for link in "$HOME"/.config/systemd/user/*.wants/caelestia-shell.service; do
     [[ -L "$link" ]] || continue
     [[ -e "$link" ]] && continue
@@ -278,8 +269,7 @@ for link in "$HOME"/.config/systemd/user/*.wants/caelestia-shell.service; do
     ok "Removed an enable link whose unit is gone: $link"
 done
 
-# Retired autostart desktop entry, and the unit the xdg-autostart generator made
-# out of it.
+# Retired autostart desktop entry, and the unit KDE's xdg-autostart generator made of it.
 if [[ -f "$HOME/.config/autostart/caelestiashell.desktop" ]]; then
     systemctl --user disable app-caelestiashell@autostart.service >/dev/null 2>&1 || true
     rm -f "$HOME/.config/autostart/caelestiashell.desktop"
@@ -380,8 +370,8 @@ kwriteconfig6 --file kdeglobals       --group "KDE"              --key "OSDEnabl
 kwriteconfig6 --file plasmanotifyrc   --group "Notifications"    --key "LoudnessChangedOSD" "true"  2>/dev/null || true
 kwriteconfig6 --file powerdevilrc     --group "BrightnessControl"--key "showOSD"            "true"  2>/dev/null || true
 kwriteconfig6 --file powerdevilrc     --group "AC"               --key "brightnessosd"       "true"  2>/dev/null || true
-# kmixrc is kmix's file and may hold settings that are not ours, so only the key
-# the installer changed is put back - the file itself stays.
+# kmixrc is kmix's file and may hold settings that are not ours, so only the key the
+# installer changed is put back; the file stays.
 kwriteconfig6 --file kmixrc           --group "Global"           --key "ShowOSD"            "true"  2>/dev/null || true
 ok "Re-enabled KDE OSD notifications"
 
@@ -485,9 +475,8 @@ rm -f "$HOME/.local/share/konsole/MaterialYou.colorscheme"
 rm -f "$HOME/.local/share/konsole/MaterialYouAlt.colorscheme"
 rm -f "$HOME/.local/share/konsole/TempMyou.profile"
 rm -f "$HOME/.local/share/color-schemes/MaterialYou"*.colors
-# The schemes the color command generates count as generated too. It writes the
-# palette under two names and rotates between them, because
-# plasma-apply-colorscheme ignores a scheme name that is already in effect.
+# The color command's output counts as generated too: it writes the palette under two
+# names and rotates them, because plasma-apply-colorscheme ignores a name already in use.
 rm -f "$HOME/.local/share/color-schemes/Matugen"*.colors
 ok "Removed Konsole profiles generated by Caelestia"
 
@@ -601,8 +590,8 @@ else
         ok "Removed Caelestia env vars from ~/.bashrc"
     fi
 
-    # The environment moved to environment.d, so that file is what carries the
-    # values now; the rc files are still cleaned above for older installs.
+    # The environment lives in environment.d now; the rc files are still cleaned
+    # above for older installs.
     if [[ -f "$HOME/.config/environment.d/caelestia.conf" ]]; then
         rm -f "$HOME/.config/environment.d/caelestia.conf"
         ok "Removed the Caelestia environment file"
@@ -670,11 +659,10 @@ for dropin in /etc/sddm.conf.d/caelestia.conf /etc/sddm.conf.d/zz-caelestia.conf
         ok "Removed SDDM config drop-in: $(basename "$dropin")"
     fi
 done
-# The theme is also named in /etc/sddm.conf, because which of the two SDDM reads
-# last differs between versions. What this installer found there was saved by
-# 05-sddm-theme.sh before it was overwritten, so the user's own selection - KDE's
-# Login Screen settings module writes the same key - goes back rather than being
-# deleted along with ours.
+# The theme is named in /etc/sddm.conf too, because which of the two SDDM reads last
+# differs between versions. 05-sddm-theme.sh saved whatever was there first, so the user's
+# own selection (KDE's Login Screen settings writes the same key) comes back instead of
+# being deleted with ours.
 SDDM_CONF_BACKUP="${XDG_STATE_HOME:-$HOME/.local/state}/caelestia/sddm.conf.theme-current"
 if command -v kwriteconfig6 >/dev/null 2>&1; then
     if [[ -f "$SDDM_CONF_BACKUP" ]]; then
@@ -688,17 +676,16 @@ if command -v kwriteconfig6 >/dev/null 2>&1; then
         fi
         rm -f "$SDDM_CONF_BACKUP"
     elif [[ "$(kreadconfig6 --file /etc/sddm.conf --group Theme --key Current 2>/dev/null || true)" == "caelestia" ]]; then
-        # No saved value, but the key is ours, so removing it is safe; anything else
-        # is a selection this installer never saw and has no business touching.
+        # No saved value and the key is ours, so removing it is safe; anything else is
+        # a selection this installer never saw.
         sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current --delete 2>/dev/null || true
         ok "Removed the login screen theme selection from /etc/sddm.conf"
     fi
 fi
 
-# Plasma Login, KDE's fork of SDDM and what Plasma 6.6 and newer boot into. Its
-# greeter is a Plasma shell: it reads the wallpaper from /etc/plasmalogin.conf and
-# its colours from the plasmalogin user's own Plasma config, both of which are
-# copies this installer made.
+# Plasma Login, KDE's SDDM fork (Plasma 6.6+). Its greeter is a Plasma shell: it reads
+# the wallpaper from /etc/plasmalogin.conf and its colours from the plasmalogin user's own
+# Plasma config, both of which this installer copied in.
 if [[ -f /usr/local/bin/caelestia-greeter-sync ]]; then
     sudo rm -f /usr/local/bin/caelestia-greeter-sync
     ok "Removed login screen sync helper: caelestia-greeter-sync"
@@ -710,9 +697,8 @@ fi
 PLASMALOGIN_HOME="$(getent passwd plasmalogin | cut -d: -f6)"
 if [[ -n "$PLASMALOGIN_HOME" && "$PLASMALOGIN_HOME" != "/" ]]; then
     # Only the directory the sync helper fills, never the shared wallpapers directory
-    # around it: the pictures a user chose in KDE's Login Screen settings live there
-    # too, and they are not this installer's to remove. The same goes for the colour
-    # schemes below, where only the files copied in are named.
+    # around it: the pictures a user picked in KDE's Login Screen settings live there too.
+    # Same for the colour schemes below, where only the copied-in files are named.
     if [[ -d "$PLASMALOGIN_HOME/wallpapers/caelestia" ]]; then
         sudo rm -rf "$PLASMALOGIN_HOME/wallpapers/caelestia"
         ok "Removed the login screen's copy of the wallpaper"
@@ -737,8 +723,8 @@ if not os.path.exists(cli_path):
 with open(cli_path) as f:
     config = json.load(f)
 changed = False
-# Both helpers are ours, and an install that moved between display managers could
-# have left either one behind, so both spellings are recognised.
+# Both helpers are ours, and an install that moved between display managers could have
+# left either behind, so both spellings are recognised.
 ours = re.compile(
     r'\s*&&\s*sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook'
     r'|sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook\s*&&\s*'
@@ -889,9 +875,8 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
         fi
     fi
 
-    # The upstream CLI is no longer a dependency: this port generates its own
-    # colors. Still remove it, because an earlier install of this port put it
-    # there and nothing would ever clean it up again.
+    # This port generates its own colors, so the upstream CLI is no longer a dependency -
+    # but an earlier install of this port put it there and nothing else would clean it up.
     if command -v caelestia >/dev/null 2>&1 || python3 -m caelestia --help &>/dev/null 2>&1; then
         sudo pip3 uninstall -y caelestia 2>/dev/null || true
         pip3 uninstall -y caelestia 2>/dev/null || true

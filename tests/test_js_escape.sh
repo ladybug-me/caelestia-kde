@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 # test_js_escape.sh - Tests for scripts/lib/js.sh.
 #
-# The value here is a wallpaper path, and it is interpolated into a script that
-# Plasma evaluates. The assertions are therefore about what the result may contain:
-# the characters JavaScript would have written, and none of the ones that could end
-# the literal early or be read by the shell on the way there.
+# The value is a wallpaper path interpolated into a script Plasma evaluates, so the
+# assertions are about what the result may contain: the characters JavaScript meant, and
+# none that could end the literal early or be read by the shell on the way.
 
 set -uo pipefail
 

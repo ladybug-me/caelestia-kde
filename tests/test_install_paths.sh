@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 # test_install_paths.sh - Tests for the one definition of where an install keeps its files.
 #
-# The layout used to be written out in three places: the wrapper the autostart step
-# generates, the environment the build step writes, and the command's own header. The
-# command's copy was the checkout's unconditionally, so on a packaged machine it put
-# ~/.config/quickshell/caelestia ahead of the package's tree for everything it spawned,
-# and a leftover checkout would have won over the package. These tests run the library
-# that owns the layout now, and the command, for both kinds.
+# The layout used to be written in three places, and the command's copy was the
+# checkout's unconditionally: on a packaged machine it put ~/.config/quickshell/caelestia
+# ahead of the installed tree for everything it spawned. These tests run the library that
+# owns the layout now, plus the command, for both kinds.
 
 set -uo pipefail
 

@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # test_login_screen.sh - Tests for what the login-screen install leaves behind.
 #
-# Four things here are state that two scripts have to agree on: which posthooks in
-# cli.json are ours, where the theme selection that /etc/sddm.conf had before the
-# install is kept, which directory the Plasma Login wallpaper copy lives in, and
-# which colour schemes uninstall removes. The scripts are read and driven rather
-# than copied, because a copy is what would drift.
+# Four pieces of state two scripts must agree on: which cli.json posthooks are ours,
+# where the pre-install /etc/sddm.conf theme selection is kept, the Plasma Login wallpaper
+# directory, and which color schemes uninstall removes. The scripts are read and driven,
+# not copied - a copy is what would drift.
 
 set -uo pipefail
 

@@ -1,18 +1,12 @@
 #!/usr/bin/env bash
-# test_bar_workspaces.sh - What the bar draws for a workspace.
+# test_bar_workspaces.sh - What the bar draws for a workspace: a square when occupied,
+# a circle when empty, something larger for the focused one.
 #
-# The bar gives each workspace a Material shape: a square when it is occupied, a circle
-# when it is empty, and something larger for the one in focus. Upstream picks that
-# larger shape at random from a pool that carries the organic ones as well -
-# Cookie4Sided through Cookie12Sided, Clover4Leaf, Clover8Leaf, SoftBurst and Ghostish.
-# A cookie is a circle with a bite taken out of it, so the focused workspace reads as a
-# Pac-Man sitting in the bar.
-#
-# This port draws from a pool without them, which is a deliberate divergence from the
-# shell it is ported from. That makes this file the record of it: the rest of the bar is
-# synced from upstream, and a sync that brought the pool back would look entirely
-# correct. Both the pool and the two places that draw from it are asserted, because two
-# copies of the list is how a divergence like this survives in only one of them.
+# This port deliberately omits upstream's organic shapes (Cookie4Sided..Cookie12Sided,
+# Clover4Leaf, Clover8Leaf, SoftBurst, Ghostish) from the random pool - upstream's reads
+# as a Pac-Man sitting in the bar. The rest of the bar syncs from upstream, so this file
+# is the record of that divergence: both the pool and the two places drawing from it are
+# asserted, because two copies of the list is how a divergence survives in only one.
 
 set -uo pipefail
 

@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # test_autostart_unit.sh - Tests for the one mechanism that starts the shell.
 #
-# parity-6 decided the shell starts from a single systemd user unit, enabled once by
-# `caelestia install`, instead of from a desktop entry that KDE's xdg-autostart
-# generator turns into a second unit of its own. These tests read the files that
-# have to agree on that: the unit name, who writes it, who restarts it, who removes
-# it, and the package that ships the other copy of it.
+# parity-6: the shell starts from a single systemd user unit enabled by `caelestia
+# install`, not from a desktop entry that KDE's xdg-autostart generator turns into a
+# second unit. These tests read the files that must agree on that: the unit name, who
+# writes, restarts and removes it, and the package that ships the other copy.
 
 set -uo pipefail
 

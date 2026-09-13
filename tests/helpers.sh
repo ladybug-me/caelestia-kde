@@ -1,16 +1,11 @@
 #!/usr/bin/env bash
-# helpers.sh - Assertions and fixtures for the bash test suite.
+# helpers.sh - assertions and fixtures for the bash test suite.
 #
-# Sourced by every tests/test_*.sh:
+# A test file sources this, defines functions named `test_*`, and ends with
+# `run_tests`. Assertions record failures instead of aborting, so one broken
+# expectation still reports the rest.
 #
-#     source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
-#
-# A test file defines functions named `test_*` and ends with `run_tests`.
-# Assertions record failures instead of aborting, so one broken expectation
-# still reports the rest of the file.
-
-# Guard against double-sourcing, written as an if so a false test never trips
-# `set -e` in the sourcing file (same pattern as scripts/lib/privileges.sh).
+# The double-source guard is an if so a false test cannot trip `set -e`.
 if [[ -z "${CAELESTIA_TEST_HELPERS_SOURCED:-}" ]]; then
 CAELESTIA_TEST_HELPERS_SOURCED=1
 
@@ -23,8 +18,8 @@ fail() {
     printf '    FAIL: %s\n' "$*" >&2
 }
 
-# Report a test as skipped because a prerequisite for it is missing on this
-# machine. Counts as neither a pass nor a failure; the test still returns 0.
+# Report a test as skipped because a prerequisite is missing here. Neither pass nor
+# failure; the test still returns 0.
 skip_test() {
     printf '    SKIP: %s\n' "$1"
 }
@@ -108,13 +103,10 @@ cleanup_tmpdirs() {
 
 # stub_bin <dir> <name> [body]
 #
-# Writes an executable stub named <name> into <dir> (created if needed) so a
-# test can put <dir> first on PATH and observe how the code under test shells
-# out. The body defaults to succeeding.
-#
-# The shebang is the absolute /bin/bash rather than /usr/bin/env bash: tests
-# that restrict PATH to a stub directory would otherwise have no way for env
-# to locate an interpreter.
+# Writes an executable stub into <dir> so a test can put <dir> first on PATH and
+# observe how the code under test shells out. Body defaults to succeeding. The
+# shebang is /bin/bash, not /usr/bin/env bash, so a PATH limited to the stub dir
+# still finds an interpreter.
 stub_bin() {
     local dir="$1" name="$2" body="${3:-exit 0}"
     mkdir -p "$dir"
@@ -124,8 +116,8 @@ stub_bin() {
 
 # recording_stub <dir> <name> <logfile> [exit-status]
 #
-# Stub that appends "<name> <args>" to <logfile> and exits with <exit-status>.
-# Lets a test assert both that a command ran and exactly how it was called.
+# Appends "<name> <args>" to <logfile> and exits with <exit-status>, so a test can
+# assert both that a command ran and exactly how it was called.
 recording_stub() {
     local dir="$1" name="$2" log="$3" status="${4:-0}"
     stub_bin "$dir" "$name" "printf '%s %s\n' '$name' \"\$*\" >> '$log'

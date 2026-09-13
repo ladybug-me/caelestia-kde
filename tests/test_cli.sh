@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 # test_cli.sh - Tests for the `caelestia` command dispatcher (src/bin/caelestia).
 #
-# The dispatcher's job is to send each subcommand to the helper that implements
-# it, with the arguments it was given. Every helper is replaced by a recording
-# stub here, so the assertions are about the hand-off and nothing else runs.
-# What the color command then does with those arguments is tests/test_color.sh.
+# Every helper is a recording stub, so the assertions are about the hand-off and nothing
+# else runs. What the color command then does with those arguments is test_color.sh.
 
 set -uo pipefail
 

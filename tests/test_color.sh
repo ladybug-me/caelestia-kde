@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 # test_color.sh - Tests for the color pipeline (src/bin/caelestia-color).
 #
-# matugen generates the palette and is replaced here by a stub that reads the
-# config it is handed and writes the files the config names, which is the part
-# the command is responsible for: what gets rendered, where it lands, and what
-# reaches scheme.json. The palette itself is matugen's and is checked on a real
-# machine instead.
+# matugen is stubbed: it reads the config it is handed and writes the file names in it,
+# so what is asserted is what the command owns - what gets rendered, where it lands, and
+# what reaches scheme.json. The palette itself is checked on a real machine.
 #
-# The scheme data is the repository's own src/ directory, so these tests read
-# the same files a checkout installs.
+# The scheme data is the repo's own src/, the same files a checkout installs.
 
 set -uo pipefail
 

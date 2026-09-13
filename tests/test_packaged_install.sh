@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # test_packaged_install.sh - Tests for `caelestia install` on a packaged machine.
 #
-# The split under test is parity-6: a package owns /usr and /etc, and the command
-# owns the user's half. So `install` has to do two different things depending on
-# which kind of install it finds itself in, and the packaged half has to be the
-# same step scripts the checkout's installer runs - told which install they are
-# part of, so the sections that write package-owned files stay out.
+# The split under test is parity-6: a package owns /usr and /etc, the command owns the
+# user's half. So `install` does one of two things, and the packaged half must be the same
+# step scripts the checkout installer runs - told which install they are part of, so the
+# sections that write package-owned files stay out.
 
 set -uo pipefail
 

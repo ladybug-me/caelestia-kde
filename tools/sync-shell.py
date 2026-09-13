@@ -32,8 +32,8 @@ UPSTREAM = "upstream/main"
 SHELL_TREE = "HEAD:shell"
 MIRROR_BRANCH = "mirror/upstream"
 
-# Paths that exist upstream but have nothing to do with the shell runtime.
-# They are excluded from the MISSING bucket so the report stays focused.
+# Paths that exist upstream but have nothing to do with the shell runtime; excluded
+# from the MISSING bucket so the report stays focused.
 SKIP_PREFIXES = (
     ".github",
     ".vscode",

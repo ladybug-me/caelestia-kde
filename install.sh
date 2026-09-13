@@ -1,24 +1,13 @@
 #!/bin/sh
-# ==============================================================
-#   Caelestia - bootstrap installer
+# install.sh - bootstrap installer: clone or update the repo, then hand off to
+# scripts/setup.sh, the single entry point for everything else.
 #
-#   Clone (or update) the repo and hand off to scripts/setup.sh,
-#   which is the single entry point for everything else: mirror
-#   refresh, sudo, build tools, install, update, and uninstall.
+#   curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/install.sh | sh
 #
-#   Original Hyprland dots: Caelestia
-#   KDE port and modifications: ladybug-me
-#   Co-maintainer: 0xSolanaceae
-#
-#   Install with a single command:
-#
-#     curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/install.sh | sh
-#
-#   Overridable via environment:
-#     CAELESTIA_REPO    repository URL (default: ladybug-me/caelestia-kde)
-#     CAELESTIA_BRANCH  branch to install (default: main)
-#     CAELESTIA_DIR     target directory (default: ~/caelestia-kde)
-# ==============================================================
+# Environment:
+#   CAELESTIA_REPO    repository URL (default: ladybug-me/caelestia-kde)
+#   CAELESTIA_BRANCH  branch to install (default: main)
+#   CAELESTIA_DIR     target directory (default: ~/caelestia-kde)
 
 set -eu
 

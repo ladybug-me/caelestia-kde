@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 export PATH="$HOME/.local/bin:$PATH"
-# ==============================================================
-#   Caelestia - updater
-# ==============================================================
+# update.sh - update the shell, then re-apply the configuration.
 
 set -uo pipefail
 

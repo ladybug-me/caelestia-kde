@@ -11,8 +11,8 @@
 
 using namespace std;
 
-// sig_atomic_t is the only type guaranteed to be safe for cross-thread/
-// signal-handler access. We use flags to defer all cleanup to the main loop.
+// sig_atomic_t is the only cross-signal-safe type; all cleanup is deferred to the
+// main loop.
 volatile sig_atomic_t g_sigint_received = 0;
 volatile sig_atomic_t g_sigterm_received = 0;
 
@@ -21,8 +21,7 @@ void handle_sigwinch(int) {
 }
 
 void handle_sigint(int) {
-    // Only set the flag — do NOT call any library functions from signal context.
-    // cleanup happens in the main loop via check_signals().
+    // Only set the flag - no library calls from signal context; check_signals() cleans up.
     g_sigint_received = 1;
 }
 
@@ -41,12 +40,9 @@ void check_signals() {
     }
 }
 
-// Hands the terminal to an interactive external script (update.sh or
-// uninstall.sh) and then exits. Those scripts drive the terminal themselves
-// (prompts, sudo, and a background shell restart), so re-entering the TUI's
-// raw/alternate screen afterward corrupts the terminal and leaves the
-// installer stuck. The installer is the single entry point: run it again for
-// the next action.
+// Hands the terminal to an interactive script (update.sh or uninstall.sh) and exits.
+// Those drive the terminal themselves, so re-entering the TUI's raw/alternate screen
+// afterwards corrupts it and wedges the installer. Re-run the installer for the next action.
 void run_external(const std::string& script_path) {
     Term::restore();
     pid_t child = fork();
@@ -99,9 +95,9 @@ int main(int argc, char** argv) {
 
     load_theme();
 
-    // The step scripts are the one thing the TUI cannot run without. The theme
-    // and menu checks live in load_theme() above, which records what failed so
-    // the screens can draw it - stderr alone is hidden by the alternate screen.
+    // The step scripts are the one thing the TUI cannot run without. The theme and menu
+    // checks live in load_theme() above, which records failures for the screens to draw,
+    // since the alternate screen hides stderr.
     {
         std::string scripts_dir = g_bundle_dir + "/scripts";
         if (!std::ifstream(scripts_dir + "/00a-system-update.sh").good()) {
@@ -126,8 +122,7 @@ int main(int argc, char** argv) {
         UI::welcome_screen();
         check_signals();
 
-        // Esc on the welcome screen sets g_quit. Honor it with a clean exit
-        // (same terminal restore the other cancel paths use).
+        // Esc on the welcome screen sets g_quit; exit as cleanly as the other cancels.
         if (g_quit) {
             std::cerr << "[installer] user quit at welcome screen" << std::endl;
             Term::restore();
@@ -136,8 +131,8 @@ int main(int argc, char** argv) {
         }
     }
 
-    // Phase 1.5: Action select. Update and uninstall hand off to their
-    // scripts on the real terminal; install continues into the wizard.
+    // Phase 1.5: Action select. Update and uninstall hand off to their scripts on the
+    // real terminal; install continues into the wizard.
     std::string action = preset_action;
     while (true) {
         if (action.empty()) {
@@ -191,13 +186,10 @@ int main(int argc, char** argv) {
             setenv(pair.first.c_str(), pair.second.c_str(), 1);
         }
 
-        // Persist the install-time menu choices so update.sh can restore them.
-        // A fresh update process runs 03-deploy-configs.sh / 08-build-shell.sh /
-        // 09-system-tweaks.sh with none of these env vars set, so every script
-        // gate (${DEFAULT_SHELL:-fish}, ${INSTALL_FISH:-true}, ...) falls back
-        // to its hardcoded default and silently reverts the user's explicit
-        // choice (forces the login shell back to fish, re-enables the
-        // lockscreen plugin, overwrites ~/.config/fish).
+        // Persist the install-time menu choices so update.sh can restore them: a fresh
+        // update process runs the deploy/build/tweak scripts with none of these env vars
+        // set, so every script gate (${DEFAULT_SHELL:-fish}, ${INSTALL_FISH:-true}, ...)
+        // would fall back to its hardcoded default and silently revert the user's choice.
         if (const char* home = getenv("HOME")) {
             string cfg_dir = string(home) + "/.config/caelestia-kde";
             std::string safe_dir = cfg_dir;
@@ -225,8 +217,7 @@ int main(int argc, char** argv) {
                     if (!valid)
                         continue;
 
-                    // Single-quote the value so the file stays parseable even
-                    // if a value ever contains shell metacharacters.
+                    // Single-quoted so a value with shell metacharacters stays parseable.
                     env_file << pair.first << "='";
                     for (char c : pair.second) {
                         if (c == '\'')

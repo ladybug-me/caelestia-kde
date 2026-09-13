@@ -28,12 +28,9 @@ std::map<std::string, std::string> g_answers;
 
 namespace {
 
-// Writes password to a file with secure permissions (0600) atomically at
-// creation time — avoids the TOCTOU race of creating with default umask then
-// chmod'ing afterwards.
+// Writes the password 0600 at creation, so there is no window where it is
+// readable - the TOCTOU race of creating under the default umask then chmod'ing.
 bool write_password_file_secure(const string& path, const string& password) {
-    // Mode 0600 ensures only the owner can read, from the moment of creation.
-    // This avoids the TOCTOU window of creating with default umask then chmod.
     int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0600);
     if (fd == -1) {
         return false;
@@ -44,8 +41,7 @@ bool write_password_file_secure(const string& path, const string& password) {
     return written == static_cast<ssize_t>(data.size());
 }
 
-// Writes @p content to @p path with O_EXCL, so a file (or symlink) already at
-// that path is never followed or overwritten.
+// O_EXCL, so an existing file or symlink at @p path is never followed or overwritten.
 bool write_file_excl(const string& path, const string& content, int mode) {
     int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, mode);
     if (fd == -1) {
@@ -79,13 +75,11 @@ void release_kde_inhibit(const string& cookie_file) {
         waitpid(child, nullptr, 0);
 }
 
-// Sets up the sudo askpass environment after a successful password
-// verification. Creates the password file, askpass helper, sudo wrapper,
-// screen inhibitor, and exports SUDO_PASS.
+// Sets up the sudo askpass environment after a successful password check: password
+// file, askpass helper, sudo wrapper, screen inhibitor, and SUDO_PASS.
 bool setup_sudo_environment(const string& pw) {
-    // Per-run, user-owned temp dir instead of a fixed, predictable /tmp path.
-    // mkdtemp creates it 0700, and the O_EXCL writes below can't follow a
-    // symlink someone else planted at a known name.
+    // A per-run user-owned temp dir, not a fixed /tmp path: mkdtemp is 0700 and the
+    // O_EXCL writes below cannot follow a symlink planted at a known name.
     char tmpl[] = "/tmp/caelestia-bin.XXXXXX";
     char* dir = mkdtemp(tmpl);
     if (!dir) {
@@ -132,9 +126,8 @@ bool setup_sudo_environment(const string& pw) {
     const string pid_file = state_dir + "/inhibit.pid";
     const string cookie_file = state_dir + "/kde_inhibit.cookie";
 
-    // Reap an inhibitor left by a killed earlier run before starting a fresh
-    // one; the shell EXIT trap can't run on SIGKILL or a hard crash. Only kill
-    // a process whose command line identifies it as our systemd inhibitor.
+    // Reap an inhibitor left by a killed earlier run, whose EXIT trap never ran. Only
+    // a process whose command line identifies it as our inhibitor is killed.
     ifstream old_pid(pid_file);
     pid_t pid = 0;
     old_pid >> pid;
@@ -416,7 +409,7 @@ namespace UI {
             Draw::text(left + 2, top + 2, "Root privileges are required to install packages.", "on_surface");
             Draw::text(left + 2, top + 3, "Password: ", Draw::bold + Draw::color("primary"));
 
-            // Draw masked password
+            // Masked password
             string masked(pw.length(), '*');
             masked.resize(30, ' ');
             Draw::text(left + 12, top + 3, masked, Draw::reset);
@@ -559,10 +552,8 @@ namespace UI {
         return false;
     }
 
-    // Parse + redraw one frame of the full-screen log view. Non-blocking:
-    // call repeatedly while the view is on screen (it handles resize itself).
-    // A cheap size check skips re-reading when the log has not grown, so an
-    // idle frame costs a stat() rather than a full file read.
+    // Parse and redraw one frame of the full-screen log view. Non-blocking, so call it
+    // repeatedly while the view is up; a size check skips re-reading an unchanged log.
     void log_view_tick(const std::string& log_path, LogViewState& s) {
         if (g_resized) { Term::get_size(); g_resized = false; s.redraw = true; }
 
@@ -612,8 +603,7 @@ namespace UI {
             push_line();
         s.redraw = true;
 
-        // Clamp the viewport from the current size; follow keeps the newest
-        // line on screen, otherwise keep the user's paused position.
+        // Follow keeps the newest line on screen; otherwise hold the paused position.
         int show = g_term_height - 6;
         if (show < 1) show = 1;
         long max_scroll = (long)s.lines.size() - show;
@@ -651,10 +641,8 @@ namespace UI {
         cout << Draw::sync_end() << flush;
     }
 
-    // Applies one key to the log view state (scroll/pause/next-issue).
-    // Returns true when the key asks to leave the view (L/Tab/Esc/Ctrl+C).
-    // Paging is recomputed from the current terminal height so scroll amounts
-    // survive a resize.
+    // Applies one key to the log view. Returns true when the key leaves the view
+    // (L/Tab/Esc/Ctrl+C). Paging is recomputed per frame so it survives a resize.
     bool log_view_key(const std::string& key, LogViewState& s) {
         if (key == "l" || key == "L" || key == "KEY_shift_tab" ||
             key == "escape" || key == "signal_interrupt")
@@ -721,12 +709,10 @@ namespace UI {
         return false;
     }
 
-    // Blocking full-screen tail of the install log. Only safe where no step is
-    // still running (Complete screen): it reads keys until the user leaves, so
-    // the install loop must NOT call it mid-step - that stalls the install
-    // until the user returns to the progress screen. The runner instead keeps
-    // log_open state and calls log_view_tick/log_view_key so steps advance
-    // underneath an open log view.
+    // Blocking full-screen tail of the install log. Only safe on the Complete screen: it
+    // reads keys until the user leaves, so the install loop must not call it mid-step.
+    // The runner keeps log_open instead and drives log_view_tick/log_view_key, so steps
+    // advance underneath an open view.
     void log_view(const std::string& log_path) {
         LogViewState s;
         while (!g_quit) {

@@ -17,9 +17,8 @@ json g_theme;
 json g_menu;
 std::unordered_map<std::string, std::string> g_theme_colors;
 
-// Resolves a theme color value to an ANSI foreground sequence. Hex values
-// (#rrggbb) become 24-bit truecolor; anything else is treated as a legacy
-// ANSI suffix (e.g. "36m").
+// A hex value (#rrggbb) becomes 24-bit truecolor; anything else is a legacy ANSI
+// suffix (e.g. "36m").
 std::string color_sequence(const std::string& value) {
     if (value.size() == 7 && value[0] == '#') {
         int r = std::stoi(value.substr(1, 2), nullptr, 16);

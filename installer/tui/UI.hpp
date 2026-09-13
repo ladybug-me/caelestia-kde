@@ -27,9 +27,8 @@ namespace UI {
     // Blocking: only safe where no step is still running (Complete screen).
     void log_view(const std::string& log_path);
 
-    // Mutable state for the non-blocking log view. The runner keeps an
-    // instance across steps so scroll/follow position survives while the
-    // install advances underneath an open log view.
+    // The runner keeps one instance across steps, so scroll/follow position survives
+    // while the install advances underneath an open log view.
     struct LogViewState {
         bool redraw = true;   // force a full redraw on the next tick
         long last_size = -1;  // install.log size at the last parse

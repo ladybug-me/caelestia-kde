@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
-# 02a-submodules.sh - Initialize git submodules
+# 02a-submodules.sh - Fetch the git submodule content.
 
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/submodules.sh"
 
-# Resolve the bundle root the same way the other steps do, so this can also be
-# run on its own to repair a checkout that is missing its submodule content.
+# Same bundle root as the other steps, so this can run on its own to repair a
+# checkout that is missing its submodule content.
 BUNDLE_DIR="${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
-# Initialize submodules
 if [[ -f "$BUNDLE_DIR/.gitmodules" ]]; then
     info "Initializing submodules..."
     prune_removed_submodules "$BUNDLE_DIR"
@@ -18,16 +17,13 @@ if [[ -f "$BUNDLE_DIR/.gitmodules" ]]; then
     git -C "$BUNDLE_DIR" submodule update --init --recursive --depth 1 --jobs "$(nproc 2>/dev/null || echo 1)" >/dev/null 2>&1 || true
 fi
 
-# That update is one way to get the content, and the one that fails most
-# quietly: a shallow fetch can miss the recorded commit, and a checkout that is
-# not a repository cannot run it at all. What matters is whether the content is
-# there afterwards, so that is what decides this step's status. A failure of
-# this particular command is not a warning when another route works, and the
-# step failing quietly here used to surface as 03-deploy-configs.sh complaining
-# about missing files several steps later.
+# The update above is the quietest way to fail: a shallow fetch can miss the
+# recorded commit, and a non-repository checkout cannot run it at all. Content
+# is what decides this step's status, so a failed command with another route that
+# worked is not a warning.
 #
-# src/dots holds the configuration files 03 deploys: without it there is nothing
-# to install, so failing to fetch it is fatal.
+# src/dots holds the files 03 deploys, so failing to fetch it is fatal; the icon
+# set only affects a monochrome theme 08 warns about, so it is not.
 if ! submodule_has_content "$BUNDLE_DIR/src/dots"; then
     info "src/dots is empty; fetching it another way."
     if ! ensure_submodule_content "$BUNDLE_DIR" "src/dots"; then
@@ -52,8 +48,8 @@ fi
 
 ok "src/dots ready."
 
-# The icon set only affects a monochrome icon theme, which 08-build-shell.sh
-# warns about on its own, so a missing one must not stop an install.
+# The icon set only affects a monochrome icon theme, which 08-build-shell.sh warns
+# about on its own, so a missing one must not stop an install.
 if ! submodule_has_content "$BUNDLE_DIR/src/yet-another-monochrome-icon-set"; then
     info "src/yet-another-monochrome-icon-set is empty; fetching it another way."
     if ensure_submodule_content "$BUNDLE_DIR" "src/yet-another-monochrome-icon-set"; then

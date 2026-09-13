@@ -1,28 +1,20 @@
 #!/usr/bin/env bash
-# install-kind.sh - Which half of an install a run is doing, and where that half's files
-# are.
+# install-kind.sh - which half of an install a run is doing, and where that
+# half keeps its files.
 #
-# Two things install Caelestia: a checkout, through `install.sh` and the installer
-# TUI, and a package, through `caelestia install` afterwards. The line between them
-# is ownership - a package owns every file under /usr and /etc, including the ones
-# an older installer wrote there (the SDDM theme, its sudoers drop-in, the KWin
-# effect). So a package's run must not write any of them, and the scripts that
-# otherwise would are told so here rather than guessing from what they find.
+# A checkout (install.sh + the TUI) owns user files. A package owns everything
+# under /usr and /etc, including files an older installer wrote there, so a
+# package run must not touch those. The step scripts ask here rather than
+# guessing from what they find.
 #
 #   CAELESTIA_INSTALL_KIND=source|package   set by the front end running the steps
 #   install_kind                            prints which one this run is
 #   install_is_packaged                     true when a package owns the files
 #
-# With nothing set the answer comes from where this library sits: a checkout's
-# scripts are under the user's home, a package's are under /usr. That keeps a step
-# script run by hand honest about which install it belongs to.
-#
-# The step scripts stay the one implementation of both halves (that is what
-# parity-6 decided): this only tells them which of their own sections apply.
-#
-# The same split decides where each kind keeps its files, and the functions below that
-# answer that are the only place the layout is written down. `src/bin/caelestia` sources
-# this file for them as well, so the command and the steps cannot drift apart.
+# Unset falls back to where this library sits: under $HOME = source, under /usr =
+# package, which keeps a step run by hand honest about which install it belongs
+# to. Both halves stay one implementation of the steps (parity-6); this only
+# decides which of their own sections apply.
 if [[ -z "${CAELESTIA_INSTALL_KIND_SOURCED:-}" ]]; then
 CAELESTIA_INSTALL_KIND_SOURCED=1
 
@@ -46,17 +38,14 @@ install_is_packaged() {
     [[ "$(install_kind)" == "package" ]]
 }
 
-# Where that half keeps its files.
+# Where that half keeps its files - the single definition of the layout.
+# `src/bin/caelestia` sources this file for these too, so the command and the
+# steps cannot drift. Named functions rather than one string-keyed lookup: the
+# callers want five different things.
 #
-# This is the one definition of the layout, and everything that needs a path asks for it:
-# the steps that write the session environment, the autostart wrapper that repeats those
-# paths, and the command itself, which used to carry their checkout form unconditionally -
-# so on a packaged machine the command put ~/.config/quickshell/caelestia ahead of
-# /etc/xdg/quickshell/caelestia for everything it spawned, and a leftover tree from an old
-# checkout would have won over the one the package installed.
-#
-# Named functions rather than one lookup keyed on a string: the callers want five different
-# things, and a name says which.
+# `caelestia` used to carry the checkout paths unconditionally, so on a packaged
+# machine it put a leftover ~/.config/quickshell/caelestia ahead of the installed
+# /etc/xdg one for everything it spawned.
 # The palette's templates and named schemes.
 install_lib_dir() {
     if install_is_packaged; then
@@ -75,8 +64,7 @@ install_bin_dir() {
     fi
 }
 
-# What QML2_IMPORT_PATH has to contain for the shell to find its own tree and the plugin
-# modules in it. The two entries are the ones that differ between the install kinds.
+# QML2_IMPORT_PATH entries for the shell's own tree and its plugin modules.
 install_qml_import_path() {
     if install_is_packaged; then
         printf '%s\n' "/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia"
@@ -94,10 +82,8 @@ install_shell_config() {
     fi
 }
 
-# The shell's assets, which sit beside the entrypoint: fonts, icons, sounds and the
-# rest of what it draws with. A package ships the small ones and leaves the fonts to
-# the install, so 12-fetch-assets.sh needs to know where the tree is; Fonts.qml looks
-# in the user's own directory as well, which is where that step puts them.
+# The shell's assets beside the entrypoint. 12-fetch-assets.sh writes the fonts
+# here; Fonts.qml also looks in the user's own directory.
 install_assets_dir() {
     printf '%s\n' "$(dirname -- "$(install_shell_config)")/assets"
 }

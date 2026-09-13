@@ -1,33 +1,22 @@
 #!/usr/bin/env bash
-# ==============================================================
-#   Caelestia - installer
-#
-#   Original Hyprland dots: Caelestia
-#   KDE port and modifications: ladybug-me
-#   Co-maintainer: 0xSolanaceae
-#   Installer behavior: idempotent and safe for reruns
-# ==============================================================
+# setup.sh - the installer entry point. Idempotent and safe to re-run.
 
 set -euo pipefail
 export CAELESTIA_SETUP_RUNNING=1
 
-# Hide cursor immediately for cleaner output
 tput civis 2>/dev/null || true
 
-# -- Paths ---------------------------------------------------------------------
 BUNDLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPTS_DIR="$BUNDLE_DIR/scripts"
 export BUNDLE_DIR
 export INSTALL_START_EPOCH="$(date +%s)"
 
-# 08-build-shell.sh installs the `caelestia` command into ~/.local/bin, and the
-# steps after it call it by name (09-system-tweaks.sh derives the default scheme
-# with it). A shell that has not read a profile yet - and fish, which does not
-# add the directory by itself - would not have it on PATH, so the step would
-# quietly do nothing. Put it there for every step.
+# 08-build-shell.sh installs the `caelestia` command into ~/.local/bin and the steps
+# after it call it by name, but a shell that has not read a profile yet - and fish,
+# which does not add the directory itself - would not have it on PATH, so the step
+# would quietly do nothing.
 export PATH="$HOME/.local/bin:$PATH"
 
-# Prevent concurrent runs.
 exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock"
 flock -n 9 || { echo "Another Caelestia setup is already running."; exit 1; }
 

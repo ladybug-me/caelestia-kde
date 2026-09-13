@@ -15,16 +15,14 @@ SHELL_DIR="$BUNDLE_DIR/shell"
 
 # write_shell_environment
 #
-# The environment the session and the shell's unit run under: where the QML modules are,
-# where the command and the palette data are, and the shell's entrypoint. systemd reads
-# ~/.config/environment.d into every session process and into the user manager the unit
-# runs under, so bash, fish, zsh and the shell itself read one file instead of three that
-# have to be kept in step - and the three needed four branches of grep and sed between
-# them.
+# The environment the session and the shell's unit run under. systemd reads
+# ~/.config/environment.d into every session process and into the user manager, so
+# bash, fish, zsh and the shell read one file instead of three kept in step - and
+# the three needed four branches of grep and sed between them.
 #
-# The values come from install-kind.sh, so a checkout and a package write the same file
-# with their own paths in it. This replaced two blocks that differed in nothing but their
-# contents, which is what let the command's own copy of these paths go stale.
+# Values come from install-kind.sh, so a checkout and a package write the same file
+# with their own paths. This replaced two blocks differing only in their contents,
+# which is how the command's own copy of these paths went stale.
 write_shell_environment() {
     local env_d="$HOME/.config/environment.d"
     local rc
@@ -54,12 +52,9 @@ EOF
 
 # packaged_shell_setup
 #
-# Everything this script does for a packaged install, which is the part only a
-# user's own files can carry. There is nothing to build: the tree the package's
-# CMake install put in /etc/xdg/quickshell/caelestia is the one to run, the
-# plugin and the command are in /usr, and the palette data is in
-# /usr/share/caelestia. What is left is the environment that tells every session
-# process where those are.
+# Everything this script does for a packaged install, and all a user's own files can
+# carry: nothing to build, since the package's CMake install owns the tree, the plugin,
+# the command and the palette data. What is left is the environment naming them.
 packaged_shell_setup() {
     write_shell_environment
 
@@ -72,10 +67,8 @@ if install_is_packaged; then
 fi
 
 
-# Prefer Ninja for faster builds; fall back to CMake's default generator when
-# it is not available (e.g. a standalone/update run before package install).
-# Reflected in the toolchain stamp so a build dir is invalidated if the
-# available generator changes.
+# Prefer Ninja; fall back to CMake's default generator without it. The choice is
+# part of the toolchain stamp, so a build dir is invalidated when it changes.
 if command -v ninja >/dev/null 2>&1; then
     CMAKE_GENERATOR="Ninja"
 else
@@ -83,14 +76,13 @@ else
     CMAKE_GENERATOR="Unix Makefiles"
 fi
 
-# Fingerprint of the toolchain that builds Caelestia. Build directories are
-# kept between runs so repeated installs/updates rebuild incrementally; they
-# are only wiped when this fingerprint changes (e.g. a distro Qt/CMake
-# upgrade that would otherwise leave stale object files behind).
-# Only the feature version is fingerprinted: patch releases (6.11.2 -> 6.11.3)
-# keep their ABI and their headers hash the same in ccache, so wiping the build
-# directory for one costs a full rebuild and buys nothing.
-# Cava had a version change and hence requires a clean rebuild.
+# Fingerprint of the toolchain that builds Caelestia. Build dirs survive between
+# runs for incremental rebuilds and are wiped only when this changes (a distro Qt or
+# CMake upgrade that would leave stale objects behind).
+#
+# Only the feature version counts: patch releases (6.11.2 -> 6.11.3) keep their ABI
+# and the same ccache header hash, so wiping for one costs a full rebuild for nothing.
+# Cava changed version, hence the clean rebuild there.
 caelestia_toolchain_stamp() {
     local cmake_ver qt_ver cava_state
     cmake_ver="$(cmake --version | head -n1 | grep -oE '[0-9]+\.[0-9]+' | head -n1)"
@@ -99,15 +91,13 @@ caelestia_toolchain_stamp() {
     printf 'bundle:%s cmake:%s qt6core:%s gen:%s cava:%s\n' "$BUNDLE_DIR" "$cmake_ver" "$qt_ver" "$CMAKE_GENERATOR" "$cava_state"
 }
 
-# Stamps written before the fingerprint dropped patch versions carried the full
-# `cmake version X.Y.Z` string. Normalizing both sides keeps those build dirs
-# alive instead of forcing one gratuitous full rebuild on upgrade.
+# Older stamps carried the full `cmake version X.Y.Z`. Normalizing both sides keeps
+# those build dirs alive instead of forcing one gratuitous full rebuild on upgrade.
 caelestia_normalise_stamp() {
     sed -E -e 's/cmake version //' -e 's/([0-9]+\.[0-9]+)\.[0-9]+/\1/g'
 }
 
-# Reuse an existing CMake build directory unless the toolchain fingerprint
-# changed since the last configure.
+# Reuse the build dir unless the toolchain fingerprint changed.
 prepare_build_dir() {
     local dir="$1"
     if [[ -f "$dir/CMakeCache.txt" && -f "$dir/.caelestia_toolchain_stamp" ]] \
@@ -120,8 +110,8 @@ prepare_build_dir() {
     caelestia_toolchain_stamp > "$dir/.caelestia_toolchain_stamp"
 }
 
-# Print only the error lines from a build log (skipping warning spam), plus a
-# short tail for context. The full log is always preserved on disk.
+# Print only the error lines from a build log, plus a short tail. The full log
+# stays on disk.
 show_build_errors() {
     local log="$1"
     grep -E 'error:|FAILED:|ninja: build stopped|CMake Error|make(\[[0-9]+\])?: \*\*\*|undefined reference|ld: ' "$log" || true
@@ -129,9 +119,8 @@ show_build_errors() {
     tail -n 20 "$log"
 }
 
-# Leave a core for the desktop: a -j$(nproc) build makes the running session
-# stutter for as long as it lasts. CAELESTIA_BUILD_JOBS overrides, and Ninja
-# additionally backs off when the load average is already above the core count.
+# Leave a core for the desktop: -j$(nproc) makes the running session stutter for
+# the whole build. CAELESTIA_BUILD_JOBS overrides.
 BUILD_JOBS="${CAELESTIA_BUILD_JOBS:-}"
 if [[ -z "$BUILD_JOBS" ]]; then
     BUILD_JOBS=$(( $(nproc 2>/dev/null || echo 2) - 1 ))
@@ -140,12 +129,10 @@ if [[ -z "$BUILD_JOBS" ]]; then
     fi
 fi
 
-# Both Ninja and Make take -l: hold off on starting new jobs while the machine
-# is already loaded, so a build never fully monopolises the desktop.
+# Both Ninja and Make take -l: no new jobs while the machine is already loaded.
 BUILD_LOAD="$(nproc 2>/dev/null || echo 2)"
 
-# Run compilers at a lower priority so the shell stays responsive during a
-# build. Ignored when nice is unavailable.
+# Compilers at a lower priority, so the shell stays responsive during a build.
 caelestia_build() {
     if command -v nice >/dev/null 2>&1; then
         nice -n 10 "$@"
@@ -155,16 +142,16 @@ caelestia_build() {
 }
 
 cleanup_legacy_lockscreen() {
-    # Remove deprecated plasma-wallpaper-application if present
+    # Drop the deprecated plasma-wallpaper-application wallpaper plugin.
     if command -v kpackagetool6 >/dev/null 2>&1; then
         kpackagetool6 -t Plasma/Wallpaper -r net.dosowisko.PlasmaApplicationWallpaper >/dev/null 2>&1 || true
     fi
     rm -rf "$HOME/.local/share/plasma/wallpapers/net.dosowisko.PlasmaApplicationWallpaper" 2>/dev/null || true
     rm -f "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/wallpaper-plugin-installed" 2>/dev/null || true
 
-    # Clean up old plasma-wallpaper-application config
+    # Its leftover config.
     if command -v kwriteconfig6 >/dev/null 2>&1; then
-        # NOTE: Switching to org.kde.image always is required for nexus lockscreen config
+        # The Nexus lock screen config needs org.kde.image unconditionally.
         kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin "org.kde.image" 2>/dev/null || true
         kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group net.dosowisko.PlasmaApplicationWallpaper --group General --key command --delete 2>/dev/null || true
         kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group net.dosowisko.PlasmaApplicationWallpaper --group General --key fps --delete 2>/dev/null || true
@@ -209,7 +196,6 @@ configure_lockscreen_greeter() {
         return 1
     fi
 
-    # Set Caelestia shell package
     if kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelestia.desktop" 2>/dev/null; then
         ok "KDE Lock Screen configured to use Caelestia greeter."
     else
@@ -218,9 +204,8 @@ configure_lockscreen_greeter() {
     fi
 }
 
-# Persistent ccache so repeated installs/updates reuse compiled objects even
-# across clean build-directory wipes. The shell build already wires ccache up
-# via CMAKE_CXX_COMPILER_LAUNCHER; this only gives it a stable cache dir.
+# Persistent ccache so repeated installs reuse compiled objects across build-dir
+# wipes. The build already sets CMAKE_CXX_COMPILER_LAUNCHER; this is the cache dir.
 CCACHE_DIR="${CCACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/ccache}"
 export CCACHE_DIR
 mkdir -p "$CCACHE_DIR"
@@ -236,9 +221,8 @@ if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
         info "Initializing all submodules..."
         prune_removed_submodules "$BUNDLE_DIR"
         git -C "$BUNDLE_DIR" submodule sync --recursive >/dev/null 2>&1 || true
-        # submodule update already checks out the exact commit the superproject
-        # pins. Do not force a hardcoded tag over it afterwards - that silently
-        # discarded any submodule bump.
+        # submodule update checks out the exact commit the superproject pins; forcing
+        # a hardcoded tag over it afterwards silently discarded any submodule bump.
         git -C "$BUNDLE_DIR" submodule update --init --recursive --depth 1 --jobs "$(nproc 2>/dev/null || echo 1)" >/dev/null 2>&1 || die "Failed to initialize all submodules"
     fi
 
@@ -247,9 +231,8 @@ if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
         bash "$BUNDLE_DIR/scripts/06-services.sh" || warn "06-services.sh failed"
     fi
 
-    # Only escalate when something is actually missing. Running the package
-    # manager unconditionally cost a root prompt and a repo round-trip on every
-    # single update, even though the packages were already there.
+    # Escalate only when something is missing: running the package manager
+    # unconditionally cost a root prompt and a repo round-trip on every update.
     missing_packages() {
         local pkg
         for pkg in "$@"; do
@@ -263,8 +246,7 @@ if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
         done
     }
 
-    # ksshaskpass is in the list so a GUI-launched update has a way to ask for
-    # the password once, instead of polkit prompting per privileged command.
+    # ksshaskpass so a GUI-launched update can ask once, not per privileged command.
     info "Checking Wayland and KDE build dependencies..."
     if command -v pacman >/dev/null; then
         mapfile -t MISSING < <(missing_packages qt6-wayland kpipewire kglobalaccel kglobalacceld ksshaskpass matugen)
@@ -323,24 +305,22 @@ fi
 
 cd "$SHELL_DIR" || exit 1
 
-# The prebuilt shell tarball is keyed by the Qt feature version it was built
-# against (patch releases share an ABI). A machine on a different Qt misses
-# the asset, 404s, and falls back to a local compile.
+# The prebuilt tarball is keyed by the Qt feature version it was built against
+# (patch releases share an ABI). A different Qt misses the asset, 404s, and falls back
+# to a local compile.
 shell_qt_abi() {
     pkg-config --modversion Qt6Core 2>/dev/null | grep -oE '^[0-9]+\.[0-9]+' || true
 }
 
-# The release tag this checkout corresponds to. The prebuilt tarball lives on
-# the release for this VERSION - the same tag setup.sh uses for the installer
-# TUI binary.
+# The release tag this checkout corresponds to: the tarball lives on the release for
+# this VERSION, the same tag setup.sh uses for the installer TUI binary.
 shell_release_tag() {
     sed -nE 's/^[[:space:]]*VERSION=//p' "$BUNDLE_DIR/.github/version.env" 2>/dev/null | tr -d '[:space:]'
 }
 
-# Download the prebuilt shell tarball from the version release and extract it.
-# The tarball has two top-level trees: lib/ (compiled QML plugins and the
-# version binary) into $HOME/.local, and quickshell/caelestia/ (the shell QML
-# source with the install-time shell.qml patch) into $HOME/.config.
+# Download and extract the prebuilt tarball. Two top-level trees: lib/ (compiled QML
+# plugins and the version binary) into $HOME/.local, and quickshell/caelestia/ (shell
+# QML with the install-time shell.qml patch) into $HOME/.config.
 try_download_prebuilt_shell() {
     local arch qt_abi tag tmp_archive url checksum expected actual asset candidate
     arch="$(uname -m)"

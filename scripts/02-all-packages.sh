@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# 02-all-packages.sh - Consolidated package installation (all groups in one yay run)
-# Replaces separate core/shell/themes/utils installs to avoid redundant DB syncs.
+# 02-all-packages.sh - install every package group in one yay run.
+#
+# One run instead of one per group: each separate run re-syncs the databases.
 set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 BUNDLE_DIR="${BUNDLE_DIR:?BUNDLE_DIR not set}"

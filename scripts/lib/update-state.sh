@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 # update-state.sh - Record which revision of the shell is actually installed.
 #
-# Source from the build/update scripts:
-#
-#     source "$(dirname "${BASH_SOURCE[0]}")/lib/update-state.sh"
-#
 #   record_installed_revision   Write .current_commit/.update_branch/.current_version
 #
-# These helpers never log; callers decide what to tell the user.
+# Helpers never log; callers decide what to tell the user.
 
 # record_installed_revision <bundle-dir> <config-dir>
 #
@@ -18,20 +14,17 @@
 #   .update_branch    branch that commit came from
 #   .current_version  VERSION from that commit's .github/version.env
 #
-# Returns 1 without touching anything when there is nothing truthful to record:
+# Returns 1 without writing when there is nothing truthful to record:
 #
-#   - CAELESTIA_SKIP_BUILD=1: the checkout moved (a revert, or a skip-build
-#     update) but the shell on screen did not, because this same flag stopped
-#     the build. Writing the new revision here would make every version readout
-#     claim a state the user cannot see (#651).
-#   - <bundle-dir> is not a git checkout: there is no revision to name.
+#   - CAELESTIA_SKIP_BUILD=1 stopped the build, so the checkout moved but the
+#     shell on screen did not. Recording the new revision would make every
+#     version readout claim a state the user cannot see (#651).
+#   - <bundle-dir> is not a git checkout, so there is no revision to name.
 #
-# The version is read from the working tree first and from the commit second,
-# because the updater uses a sparse checkout that omits .github/version.env.
-#
-# It is recorded at all because the Updates page resolves unrecognized commits
-# through its bare cache repo, which only mirrors origin branches: a commit
-# that exists only in the local checkout would otherwise show as "unknown".
+# The version comes from the working tree first and the commit second, because
+# the updater's sparse checkout omits .github/version.env. It is recorded at all
+# because the Updates page resolves unrecognized commits through a bare cache
+# repo mirroring origin only: a local-only commit would show as "unknown".
 record_installed_revision() {
     local bundle="$1" config="$2"
 

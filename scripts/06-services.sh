@@ -39,16 +39,12 @@ else
     echo "  Existing virtual desktop configuration found - leaving it untouched."
 fi
 
-#  ydotoold (on-screen keyboard key injection)
-# ydotoold needs access to /dev/uinput. Add a udev rule to allow the 'input'
-# group to access it, then add the user to that group.
-# Everything below needs root, and all of it is one-time setup. Check the
-# end state first so a routine update never asks for a password.
+# ydotoold (on-screen keyboard key injection) needs /dev/uinput. Everything
+# below needs root and is one-time, so the end state is checked first and a
+# routine update never asks for a password.
 system_setup_needed() {
-    # A package owns the system half: the udev rule and the group membership are
-    # files under /etc and changes to the user's groups, and writing them from here
-    # would be doing it behind the package manager's back. Parity-6 dropped them
-    # from a packaged install for the same reason.
+    # A package owns the system half: the udev rule and group membership are /etc
+    # files and changes to the user's groups (parity-6).
     install_is_packaged && return 1
     systemctl is-enabled --quiet keyd.service 2>/dev/null && return 0
     systemctl is-active --quiet keyd.service 2>/dev/null && return 0
@@ -64,9 +60,8 @@ system_setup_needed() {
 if ! system_setup_needed; then
     if install_is_packaged; then
         skip "System-level configuration belongs to the package."
-        # The udev rule is the package's file, but the group it names is the user's
-        # business: parity-6 dropped `usermod -aG input` from a packaged install, so
-        # say what is left for ydotoold to have access to /dev/uinput.
+        # The udev rule is the package's, but the group is the user's business:
+        # say what is left to do for ydotoold to reach /dev/uinput.
         if ! groups "$USER" | grep -q '\binput\b'; then
             info "For the on-screen keyboard, add yourself to the 'input' group: sudo usermod -aG input $USER"
         fi
@@ -111,7 +106,6 @@ fi
 EOF
 fi
 
-# Deploy ydotoold-wrapper script to ~/.local/bin
 mkdir -p "$HOME/.local/bin"
 cat > "$HOME/.local/bin/ydotoold-wrapper" << 'WRAPPER'
 #!/bin/bash
@@ -127,7 +121,7 @@ WRAPPER
 chmod +x "$HOME/.local/bin/ydotoold-wrapper"
 ok "ydotoold-wrapper deployed to ~/.local/bin."
 
-# Deploy and enable ydotoold systemd user service
+# Deploy and enable the ydotoold user service.
 mkdir -p "$HOME/.config/systemd/user"
 cat > "$HOME/.config/systemd/user/ydotoold.service" << 'UNIT'
 [Unit]
@@ -146,8 +140,8 @@ WantedBy=graphical-session.target
 UNIT
 systemctl --user daemon-reload
 systemctl --user enable ydotoold.service 2>/dev/null || true
-# The 'input' group only applies to new logins; starting the daemon in the
-# same session that just got the group would silently fail to open /dev/uinput.
+# The 'input' group only applies to new logins, so starting the daemon in the
+# session that just got it would fail to open /dev/uinput.
 if id -nG | grep -q '\binput\b'; then
     systemctl --user start ydotoold.service 2>/dev/null || \
         info "ydotoold will start on next login."

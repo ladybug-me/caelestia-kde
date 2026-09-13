@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
-# 10-autostart.sh  Set up autostart entries for Quickshell, and retire the
-#                  daemon that used to apply the palette.
-# Idempotent: overwrites .desktop files with correct content each run.
+# 10-autostart.sh  Write the autostart entry that starts the shell. Idempotent.
 
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/install-kind.sh"
 
-# Resolve the bundle root the same way the build script does, so this works
-# whether the installer exports it or the script is run directly.
+# Same resolution as the build script, so this works whether the installer exports
+# BUNDLE_DIR or the script is run directly.
 BUNDLE_DIR="${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 AUTOSTART_DIR="$HOME/.config/autostart"
@@ -21,18 +19,16 @@ echo ""
 info "Setting up autostart entries"
 echo ""
 
-# Where this install keeps the tree the shell runs from, and what the session needs to
-# find it. The values come from install-kind.sh, which is also what 08-build-shell.sh
-# writes into ~/.config/environment.d: one definition, so this cannot end up naming a
-# tree the install did not put there.
+# The tree the shell runs from and what the session needs to find it. From
+# install-kind.sh, which 08-build-shell.sh also writes into environment.d: one definition,
+# so this cannot name a tree the install did not put there.
 SHELL_CONFIG="$(install_shell_config)"
 QML_IMPORT_PATH="$(install_qml_import_path)"
 LIB_DIR="$(install_lib_dir)"
 BIN_DIR="$(install_bin_dir)"
 
-# Determine the path of quickshell to avoid PATH differences at login. Both kinds need it:
-# the wrapper below runs it, and the KWin declaration further down names it so KWin will
-# offer the shell its screencast protocol.
+# Absolute path so PATH differences at login cannot bite. Both kinds need it: the
+# wrapper runs it, and the KWin declaration further down names it for screencasting.
 if command -v quickshell >/dev/null 2>&1; then
     QUICKSHELL_PATH="$(command -v quickshell)"
 elif command -v qs >/dev/null 2>&1; then
@@ -47,19 +43,15 @@ fi
 
 # The launcher and the unit that starts it.
 #
-# A package ships both - /usr/bin/caelestia-autostart and
-# /usr/lib/systemd/user/caelestia-shell.service - and those are the ones to use. The
-# daemon's files belonging to the package is what makes removing it clean: `pacman -R`
-# takes the unit and the launcher with it, so nothing is left enabled pointing at a tree
-# that has gone. That was the failure this step used to cause - it wrote the user's own
-# copy of both, which survived the package and failed five times in a row afterwards.
+# A package ships both (/usr/bin/caelestia-autostart, the unit under
+# /usr/lib/systemd/user), and those are the ones to use: owning them is what makes
+# `pacman -R` clean, with nothing left enabled pointing at a gone tree. This step used to
+# write the user's own copies, which survived the package and then failed five times over.
 #
-# So a checkout is the case that needs them generated: there is no package to own them,
-# and the unit has to be built around wherever that checkout put its tree.
+# A checkout has no package to own them, so it generates them around its own tree.
 if install_is_packaged; then
-    # A copy under ~/.config shadows the package's, because a user unit wins over one in
-    # /usr/lib/systemd/user. An earlier version of this port wrote one, so take it back
-    # out rather than leave the package's unit unused.
+    # A user copy shadows the package's, since a unit in ~/.config wins over /usr/lib.
+    # An earlier version of this port wrote one, so take it back out.
     if [[ -f "$HOME/.config/systemd/user/caelestia-shell.service" ]]; then
         rm -f "$HOME/.config/systemd/user/caelestia-shell.service"
         info "Removed the user's copy of the shell unit; the package's is the one to use."
@@ -73,19 +65,17 @@ else
         die "Caelestia Shell entrypoint not found: $SHELL_CONFIG (run scripts/08-build-shell.sh first)"
     fi
 
-    # Caelestia Shell autostart
-    # Launch the shell this install produced directly, rather than through a wrapper that
-    # would have to guess where it ended up.
+    # Launch the shell this install produced directly, not through a wrapper that would
+    # have to guess where it ended up.
     echo "  Creating Caelestia Shell autostart entry..."
     cat > "$HOME/.local/bin/caelestia-autostart.sh" << EOF
 #!/bin/bash
-# Where this install's files are. ~/.config/environment.d carries the same values for a
-# session; they are repeated here because the unit can start this script outside one.
+# Where this install's files are. environment.d carries the same values for a
+# session; they are repeated because the unit can start this outside one.
 #
-# The command the shell and its widgets call by name has to be on PATH for everything
-# this spawns: 08-build-shell.sh installs it into ~/.local/bin, which a session started by
-# the display manager does not necessarily have on PATH (this script is reached by
-# absolute path, so finding it proves nothing).
+# The command the shell and its widgets call by name must be on PATH for everything
+# this spawns: 08-build-shell.sh installs it into ~/.local/bin, which a session started
+# by the display manager does not necessarily have on PATH.
 export PATH="$BIN_DIR:\$PATH"
 export QML2_IMPORT_PATH="$QML_IMPORT_PATH"
 export CAELESTIA_LIB_DIR="$LIB_DIR"
@@ -106,32 +96,29 @@ if [ -f "\$HOME/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen
         kwriteconfig6 --file kscreenlockerrc --group "Greeter" --key "Theme" --delete 2>/dev/null || true
     fi
 fi
-# No --daemonize: the autostart entry already runs under a systemd user unit,
-# which supervises the process and connects its stdout/stderr to the journal.
-# Detaching would replace that with /dev/null, and every application launched
-# from the shell inherits those descriptors - which is how the shell was
-# handing apps a stdout that goes nowhere. Vesktop deadlocks in exactly that
-# state when a call starts (issue #402); reproducible outside the shell with
+# No --daemonize: the unit supervises this process and sends its stdout/stderr to
+# the journal. Detaching would replace that with /dev/null, and every app launched
+# from the shell inherits those descriptors - which is how the shell was handing
+# apps a stdout that goes nowhere. Vesktop deadlocks in exactly that state when a
+# call starts (issue #402); reproducible outside the shell with
 # \`vesktop >/dev/null 2>&1\`.
 #
-# Dropping it also makes the old stdbuf wrapper unnecessary: journald stdio is
-# what the line-buffering hack was working around, and stdbuf leaked
-# LD_PRELOAD=libstdbuf.so into every launched app on top of that.
+# It also makes the old stdbuf wrapper unnecessary: journald stdio is what the
+# line-buffering hack worked around, and stdbuf leaked LD_PRELOAD=libstdbuf.so into
+# every launched app besides.
 exec "$QUICKSHELL_PATH" -n -p "$SHELL_CONFIG"
 EOF
     chmod +x "$HOME/.local/bin/caelestia-autostart.sh"
 
-    # The shell is started by one thing: the systemd user unit below. It replaced the
-    # desktop entry this script used to write, which KDE's xdg-autostart generator turned
-    # into app-caelestiashell@autostart.service - two mechanisms for one shell.
+    # One mechanism starts the shell: this unit, which replaced the desktop entry this
+    # script used to write (KDE's xdg-autostart generator turned that into
+    # app-caelestiashell@autostart.service).
     #
-    # The ordering is what the entry's phase used to buy, and it still matters: the shell
-    # registers org.freedesktop.Notifications, and applications decide once, when they
-    # start, whether a notification server exists - one that finds none draws its own
-    # popups for the rest of the session, in its own corner, ignoring every setting here.
-    # Before=xdg-desktop-autostart.target puts this unit in front of the app units that
-    # same generator creates. (On a machine without that target the ordering is a no-op,
-    # which is worse than the phase but never wrong.)
+    # The ordering still matters: the shell registers org.freedesktop.Notifications, and
+    # an app decides once at start whether a server exists - one that finds none draws its
+    # own popups for the rest of the session. Before=xdg-desktop-autostart.target puts this
+    # in front of the app units that generator creates. (A no-op without the target, which
+    # is worse than the old phase but never wrong.)
     echo "  Creating the Caelestia Shell unit..."
     mkdir -p "$HOME/.config/systemd/user"
     cat > "$HOME/.config/systemd/user/caelestia-shell.service" << EOF
@@ -144,9 +131,9 @@ Before=xdg-desktop-autostart.target
 [Service]
 Type=exec
 ExecStart=%h/.local/bin/caelestia-autostart.sh
-# A shell that cannot start is retried, but not in a tight loop: systemd gives up on a
-# unit that starts five times in ten seconds, and the state it leaves is one an install
-# then has to clear. Upstream's own unit waits the same five seconds between attempts.
+# A shell that cannot start is retried, but not in a tight loop: systemd gives up on
+# a unit that starts five times in ten seconds, and clearing that state falls to an
+# install. Upstream's unit waits the same five seconds between attempts.
 Restart=on-failure
 RestartSec=5s
 TimeoutStopSec=5s
@@ -157,21 +144,19 @@ WantedBy=graphical-session.target
 EOF
 fi
 
-# Take the older mechanisms back out. The entry is ours, so removing it is safe;
-# the unit it generated is disabled as well, or it would keep starting a shell of
-# its own from the same wrapper.
+# Take the older mechanisms back out. The entry is ours, so removing it is safe; the
+# generated unit is disabled too, or it would keep starting a shell from the same wrapper.
 if [[ -f "$AUTOSTART_DIR/caelestiashell.desktop" ]]; then
     rm -f "$AUTOSTART_DIR/caelestiashell.desktop"
     systemctl --user disable app-caelestiashell@autostart.service >/dev/null 2>&1 || true
     info "Removed the retired autostart entry; the shell's unit replaced it."
 fi
 
-# An install that is repairing a machine may be repairing this too: a unit that failed to
-# start repeatedly is refused by systemd with "Start request repeated too quickly" until
-# it is reset, and that is the state an uninstall leaves behind - the unit stays enabled
-# and points at a tree that has gone, which is five failed starts and a `start-limit-hit`.
-# Without this the run that puts the install back reports success and leaves the shell
-# unable to start.
+# A repairing install may be repairing this too: a unit that failed to start repeatedly
+# is refused by systemd with "Start request repeated too quickly" until it is reset, and
+# that is what an uninstall leaves behind - the unit still enabled, pointing at a gone
+# tree, five failed starts and a `start-limit-hit`. Without this the run that puts the
+# install back reports success and leaves the shell unable to start.
 systemctl --user reset-failed caelestia-shell.service >/dev/null 2>&1 || true
 
 # The links that enable the unit, which are what makes the session start it at login.
@@ -198,17 +183,12 @@ else
     warn "Could not enable caelestia-shell.service; start the shell with 'systemctl --user start caelestia-shell.service'."
 fi
 
-# KWin restricts privileged Wayland protocols (like zkde_screencast_unstable_v1,
-# used for live window thumbnails). For every such protocol, KWin's
-# allowInterface() calls KWin::fetchRequestedInterfaces(client->executablePath()),
-# which uses KApplicationTrader::query() to find an installed .desktop file whose
-# Exec= *first token*, resolved via QFileInfo::canonicalFilePath(), matches the
-# client's executable path *exactly* (no $PATH lookup, no symlink allowances
-# beyond what canonicalFilePath() resolves, and no wrapper scripts). A desktop
-# file with no Exec= line at all never matches anything (QProcess::splitCommand
-# returns an empty list, so the predicate always rejects it). Create a
-# user-level override at the standard XDG path, with Exec= pointing at the
-# fully-resolved quickshell binary, so KWin can find it and grant the protocol.
+# KWin restricts privileged Wayland protocols such as zkde_screencast_unstable_v1
+# (live window thumbnails). For each one it calls
+# KWin::fetchRequestedInterfaces(executablePath()), which uses KApplicationTrader to
+# find a .desktop whose Exec first token resolves - via canonicalFilePath() - exactly
+# to that path: no $PATH lookup, and no wrapper scripts. So write a user-level entry
+# with Exec pointing at the resolved quickshell binary.
 echo "  Creating quickshell KDE Wayland interface declaration..."
 mkdir -p "$HOME/.local/share/applications"
 QUICKSHELL_CANONICAL_PATH="$(realpath "$QUICKSHELL_PATH")"
@@ -221,8 +201,8 @@ Exec=$QUICKSHELL_CANONICAL_PATH
 X-KDE-Wayland-Interfaces=zkde_screencast_unstable_v1,org_kde_plasma_window_management
 DESKEOF
 update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
-# KApplicationTrader/KService resolve through the ksycoca cache, not just the
-# desktop-file-database used above; force a rebuild so the new Exec= is seen.
+# KApplicationTrader/KService go through the ksycoca cache, not just the database
+# above, so rebuild it for the new Exec to be seen.
 if command -v kbuildsycoca6 >/dev/null 2>&1; then
     kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
 elif command -v kbuildsycoca5 >/dev/null 2>&1; then
@@ -230,12 +210,11 @@ elif command -v kbuildsycoca5 >/dev/null 2>&1; then
 fi
 ok "Quickshell Wayland interface declaration created."
 
-#  Retired: kde-material-you-colors
+# Retired: kde-material-you-colors.
 #
-# The palette is generated and applied by `caelestia-color` now, so nothing
-# here starts that daemon. An install that predates the change still has its
-# unit enabled, and it would keep applying a scheme of its own on top of the
-# one we apply - whichever runs last wins - so the unit is stopped here.
+# caelestia-color generates and applies the palette now. An install predating that
+# still has the unit enabled, and it would keep applying a scheme of its own on top
+# of ours - whichever runs last wins - so stop it here.
 echo "  Retiring the KDE Material You Colors service..."
 rm -f "$AUTOSTART_DIR/kde-material-you-colors.desktop" 2>/dev/null || true
 
@@ -249,38 +228,33 @@ else
     skip "kde-material-you-colors service is not installed."
 fi
 
-# KMY wrote two schemes per change to work around plasma-apply-colorscheme
-# refusing the name already in effect. Ours rotates between two names of its
-# own, and the ones it left behind would only be duplicates in System Settings.
+# KMY wrote two schemes per change because plasma-apply-colorscheme refuses the name
+# already in effect. Ours rotates between two names of its own, so its leftovers would
+# only be duplicates in System Settings.
 rm -f "$HOME/.local/share/color-schemes/MaterialYou"*.colors 2>/dev/null || true
 
-#  Retired: the status icons order file
+# Retired: the status icons order file.
 #
-# The bar kept the order the user dragged its status icons into in a file of its
-# own under ~/.config/caelestia. The order is part of the config now
-# (bar.statusIcons), where the settings editor can see it, and the shell is what
-# moves it there: ConfigMigrations.qml reads the file, writes the list from its
-# order and the retired switches, and deletes the file on the following start,
-# once the list it fed is in the config. This script must not delete it - it runs
-# on the same login as the shell does, and a file removed here would take the
-# order with it before the shell has read it.
+# The bar kept the user's dragged order in ~/.config/caelestia. The order is part of
+# the config now (bar.statusIcons), and the shell moves it there: ConfigMigrations.qml
+# reads the file, writes the list, and deletes the file on the following start. This
+# script must not delete it - it runs on the same login as the shell, and removing it
+# here would take the order with it before the shell has read it.
 if [[ -f "$HOME/.config/caelestia/status_icons_order.txt" ]]; then
     skip "Status icon order file left to the shell, which migrates it into bar.statusIcons."
 fi
 
 # Live window thumbnails.
 #
-# KWin only advertises its privileged Wayland interfaces to clients whose
-# desktop file requests them: it resolves the client's /proc/<pid>/exe, then
-# looks for an installed .desktop whose Exec resolves to that same binary and
-# reads X-KDE-Wayland-Interfaces from it. Quickshell's packaged entry has no
-# Exec line at all, so the shell matches nothing and zkde_screencast_unstable_v1
-# is never offered — the dock hover popup and window switcher then fall back to
-# drawing the app icon instead of a live preview.
+# KWin only advertises its privileged Wayland interfaces to clients whose desktop file
+# requests them: it resolves /proc/<pid>/exe and looks for an installed .desktop whose
+# Exec resolves to that same binary, then reads X-KDE-Wayland-Interfaces. Quickshell's
+# packaged entry has no Exec line, so the shell matches nothing and
+# zkde_screencast_unstable_v1 is never offered - the dock hover popup and window
+# switcher then draw the app icon instead of a live preview.
 #
-# Note this cannot live on the autostart entry above: KWin matches on the
-# resolved executable, and that entry's Exec is the wrapper script rather than
-# the quickshell binary, so it never matches.
+# This cannot live on the autostart entry above: KWin matches the resolved executable,
+# and that entry's Exec is the wrapper script, not the quickshell binary.
 if [[ -f "$BUNDLE_DIR/assets/org.quickshell.desktop" ]]; then
     echo "  Requesting KWin screencast interface for window previews..."
     mkdir -p "$HOME/.local/share/applications"

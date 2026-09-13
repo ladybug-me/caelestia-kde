@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
-# 11-optional-apps.sh  Deploy the optional components the main installer
-# leaves off by default: editor integrations (VSCode/VSCodium, Zed),
-# Spicetify theming, Discord/Equibop, Todoist, and Firefox theming.
+# 11-optional-apps.sh  Deploy the components the main install leaves off:
+# editor integrations, Spicetify, Discord/Equibop, Todoist and Firefox theming.
 #
-# Each component is gated by a menu toggle exported by the installer
-# (INSTALL_VSCODE, INSTALL_ZED, INSTALL_SPICETIFY, INSTALL_DISCORD,
-# INSTALL_TODOIST, INSTALL_FIREFOX_THEME). All toggles default to false,
-# so a stock install runs this script and it does nothing.
-#
-# Idempotent: skips already-installed packages and missing source files.
+# Each is gated by a menu toggle (INSTALL_VSCODE, INSTALL_ZED,
+# INSTALL_SPICETIFY, INSTALL_DISCORD, INSTALL_TODOIST, INSTALL_FIREFOX_THEME),
+# all false by default, so a stock install runs this and does nothing.
+# Idempotent.
 
 set -euo pipefail
 
@@ -114,8 +111,8 @@ if [[ "${INSTALL_SPICETIFY:-false}" == "true" ]]; then
     echo "  Setting up Spicetify..."
     install_if_missing spicetify-cli || true
 
-    # Prefer the KDE-specific override in src/dots-extra; fall back to the
-    # upstream submodule copy if this bundle predates the override.
+    # Prefer our KDE-specific override; fall back to the submodule copy on a
+    # bundle that predates it.
     theme_css="$EXTRA_DIR/spicetify/Themes/caelestia/user.css"
     [[ -f "$theme_css" ]] || theme_css="$DOTS_DIR/spicetify/Themes/caelestia/user.css"
     deploy_file "$theme_css" "$HOME/.config/spicetify/Themes/caelestia/user.css"
@@ -176,10 +173,8 @@ if [[ "${INSTALL_FIREFOX_THEME:-false}" == "true" ]]; then
         fi
     fi
 
-    # The native-messaging companion (caelestiafox) needs the host binary at
-    # /usr/lib/caelestia/caelestiafox and the matching browser extension, which
-    # live in the upstream caelestia repo and are not wired into this build, so
-    # it is intentionally not deployed here.
+    # Not deployed: the caelestiafox native-messaging host and its extension live
+    # in the upstream caelestia repo and are not wired into this build.
 fi
 
 ok "Optional components done."

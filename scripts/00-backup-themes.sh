@@ -46,13 +46,12 @@ restore_user_konsave_conf() {
         return 0
     fi
 
-    # If we did not create a backup, do not delete an existing user config.
+    # Keep a pre-existing user config that we never backed up.
     if [[ "$HAD_USER_KONSAVE_CONF" != "true" ]]; then
         rm -f "$USER_KONSAVE_CONF"
     fi
 }
 
-# Remember whether the user already had a konsave config before we modify it.
 if [[ -f "$USER_KONSAVE_CONF" ]]; then
     HAD_USER_KONSAVE_CONF=true
 fi
@@ -105,7 +104,7 @@ export:
 ...
 EOF
 
-# Remove any stale profile left over from a previous run so -s doesn't collide.
+# Drop a stale profile from a previous run so -s does not collide.
 "$KONSAVE_BIN" -r "$PROFILE_NAME" -f >/dev/null 2>&1 || true
 
 info "Saving konsave profile '$PROFILE_NAME'..."

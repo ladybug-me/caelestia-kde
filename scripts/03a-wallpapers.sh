@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # 03a-wallpapers.sh  Download the dharmx "digital" wallpaper pack into the
-#                     wallpaper library (default ~/Pictures/Wallpapers).
+# wallpaper library (default ~/Pictures/Wallpapers).
 #
-# Best-effort: this step never fails the install. If the pack is already
-# present it is skipped, and if the download cannot run (no git, no network)
-# it warns and continues. The KDE deploy step (04) uses the pack's default
-# image when it exists and otherwise keeps the bundled fallback.
+# Best-effort: never fails the install. An already-present pack is skipped, and
+# a download that cannot run warns and continues. 04-deploy-kde.sh uses the
+# pack's default image when present, otherwise the bundled fallback.
 #
 # ci:allow-no-strict-mode - every failure below is checked explicitly and exits
 # 0, so `set -e` would abort the step instead of continuing the install.
@@ -14,9 +13,7 @@ set -uo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 
-# Match the runtime's resolution in shell/utils/Paths.qml as closely as a
-# fresh install can: honor CAELESTIA_WALLPAPERS_DIR, else XDG_PICTURES_DIR,
-# else ~/Pictures.
+# Match shell/utils/Paths.qml as closely as a fresh install can.
 if [[ -n "${CAELESTIA_WALLPAPERS_DIR:-}" ]]; then
     WALLS_DIR="$CAELESTIA_WALLPAPERS_DIR"
 elif [[ -n "${XDG_PICTURES_DIR:-}" ]]; then
@@ -33,9 +30,8 @@ DEFAULT_IMAGE="$PACK_DIR/a_couple_of_people_standing_on_a_mountain.png"
 
 info "Downloading wallpaper pack (dharmx/walls digital)..."
 
-# Idempotent: a previous successful run left a populated pack folder. The
-# staging dir is only ever moved into place once complete, so a populated
-# pack folder means the download finished.
+# A populated pack folder means a previous run finished: the staging dir is only
+# moved into place once the download is complete.
 if [[ -d "$PACK_DIR" ]] && [[ -n "$(ls -A "$PACK_DIR" 2>/dev/null)" ]]; then
     ok "Wallpaper pack already present at $PACK_DIR"
     exit 0
@@ -49,8 +45,7 @@ fi
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
-# Partial clone + sparse checkout pulls only the digital/ folder, not the
-# whole walls repo (which holds many other categories).
+# Sparse clone: only the digital/ folder, not the whole walls repo.
 if ! git clone --depth 1 --filter=blob:none --sparse \
         "https://github.com/dharmx/walls.git" "$TMP_DIR/walls" >/dev/null 2>&1; then
     warn "Failed to clone the wallpaper repository - skipping pack download."

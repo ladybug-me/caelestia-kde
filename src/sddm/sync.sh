@@ -90,10 +90,8 @@ fi
 CAEL_STATE="$REAL_HOME/.local/state/caelestia"
 THEME_DIR="/usr/share/sddm/themes/caelestia"
 
-# The command this port installs lives in the user's own bin directory, which is
-# on neither root's PATH nor the minimal one sudo hands to -u. Resolve it here
-# and use the absolute path, or the sync silently reports that it cannot read
-# the scheme.
+# The command lives in the user's own bin directory, on neither root's PATH nor the
+# minimal one `sudo -u` hands over, and the sync runs under sudo. Use the absolute path.
 CAELESTIA_BIN=""
 for candidate in "$REAL_HOME/.local/bin/caelestia" /usr/local/bin/caelestia /usr/bin/caelestia; do
     if [[ -x "$candidate" ]]; then
@@ -105,22 +103,20 @@ if [[ -z "$CAELESTIA_BIN" ]]; then
     CAELESTIA_BIN="$(command -v caelestia 2>/dev/null || true)"
 fi
 
-# Whether the wallpaper a dynamic scheme was derived from is still there. The
-# deploy script writes the path itself, so a state that names a wallpaper the
-# user has since deleted is a normal state rather than a broken one.
+# Whether the wallpaper a dynamic scheme came from still exists: the deploy script
+# writes the path itself, so a deleted wallpaper is a normal state, not a fault.
 wallpaper_on_screen() {
     local target
     target="$(sudo -H -u "$REAL_USER" readlink -f "$CAEL_STATE/wallpaper/current" 2>/dev/null || true)"
     [[ -n "$target" ]] && sudo -H -u "$REAL_USER" test -f "$target"
 }
 
-# 1. Generate FRESH colors from the current Caelestia scheme settings FIRST
+# 1. Generate FRESH colors from the current scheme settings FIRST
 #
-# Best effort. The greeter keeps the colors it already has, and the next
-# wallpaper or scheme change fills it in through the posthook, so a scheme that
-# cannot be derived yet is not a failure. A command that failed for any other
-# reason is reported with its own output and does fail the run, because that one
-# does not fix itself.
+# Best effort: a scheme that cannot be derived yet is not a failure, because the greeter
+# keeps its colors and the next wallpaper or scheme change fills them in through the
+# posthook. A command that failed for any other reason is reported with its output and
+# does fail the run - that one does not fix itself.
 FAILED=0
 if [[ "${1:-}" = "--posthook" ]]; then
     : # Skip color generation when run as posthook (--posthook)
@@ -145,12 +141,10 @@ else
     fi
 fi
 
-# Plasma Login is a fork of SDDM with a Plasma greeter of its own: it loads no SDDM
-# theme and none of the theme assets the sections below write, so on a machine that
-# has it the work goes to the two places its greeter actually reads -
-# /etc/plasmalogin.conf for the wallpaper, and the plasmalogin system user's own
-# Plasma config for the colours. That pair is what KDE's Login Screen settings
-# module writes when you press its button, done here from the session's state.
+# Plasma Login is an SDDM fork with a Plasma greeter of its own: it loads no SDDM theme
+# or theme assets, so the work goes to the two places its greeter reads -
+# /etc/plasmalogin.conf for the wallpaper and the plasmalogin user's Plasma config for
+# the colours. The same pair KDE's Login Screen settings writes.
 if command -v plasmalogin >/dev/null 2>&1 || [[ -e /etc/plasmalogin.conf ]]; then
     PLASMALOGIN_HOME="$(getent passwd plasmalogin | cut -d: -f6)"
     if [[ -z "$PLASMALOGIN_HOME" || "$PLASMALOGIN_HOME" = "/" ]]; then
@@ -159,18 +153,16 @@ if command -v plasmalogin >/dev/null 2>&1 || [[ -e /etc/plasmalogin.conf ]]; the
 
     PLASMALOGIN_CONFIG="$PLASMALOGIN_HOME/.config"
     PLASMALOGIN_SCHEMES="$PLASMALOGIN_HOME/.local/share/color-schemes"
-    # A directory of our own under it. The greeter's wallpapers directory is shared:
-    # KDE's Login Screen settings module puts the picture a user picks there as well,
-    # and the copy below is cleaned up by removing everything in it that is not the
-    # current one - which, run directly in the shared directory, is every other login
-    # screen wallpaper on the machine.
+    # A directory of our own: the greeter's wallpapers directory is shared with the
+    # Login Screen settings module, and the cleanup below removes everything in it that
+    # is not current - in the shared directory that is every other login wallpaper.
     PLASMALOGIN_WALLPAPERS="$PLASMALOGIN_HOME/wallpapers/caelestia"
     MAX_LOGIN_WALLPAPER_BYTES=$((50 * 1024 * 1024))
 
     install -d -o root -g root -m 0755 "$PLASMALOGIN_CONFIG" "$PLASMALOGIN_SCHEMES" "$PLASMALOGIN_WALLPAPERS"
 
-    # The greeter resolves its colour scheme by name, so the scheme files have to be
-    # somewhere it can see, not only in the session user's home directory.
+    # The greeter resolves its colour scheme by name, so the files must be somewhere
+    # it can see, not only in the session user's home.
     for scheme in "$REAL_HOME"/.local/share/color-schemes/Matugen*.colors; do
         [[ -f "$scheme" ]] || continue
         install -o root -g root -m 0644 "$scheme" "$PLASMALOGIN_SCHEMES/$(basename -- "$scheme")"
@@ -181,9 +173,8 @@ if command -v plasmalogin >/dev/null 2>&1 || [[ -e /etc/plasmalogin.conf ]]; the
         copy_user_file "$REAL_HOME/.config/$file" "$PLASMALOGIN_CONFIG/$file" "$((1024 * 1024))" || true
     done
 
-    # Wallpaper last, and only one of them: the greeter runs as its own user, which
-    # cannot read the session user's pictures directory, so the picture is copied to
-    # it and the config points at that copy.
+    # Wallpaper last and only one: the greeter's own user cannot read the session user's
+    # pictures directory, so the picture is copied to it and the config points at that copy.
     WALLPAPER_SOURCE="$(sudo -H -u "$REAL_USER" readlink -f "$CAEL_STATE/wallpaper/current" 2>/dev/null || true)"
     if [[ -n "$WALLPAPER_SOURCE" && -f "$WALLPAPER_SOURCE" ]]; then
         WALLPAPER_NAME="$(basename -- "$WALLPAPER_SOURCE")"
@@ -211,7 +202,7 @@ if command -v plasmalogin >/dev/null 2>&1 || [[ -e /etc/plasmalogin.conf ]]; the
     exit "$FAILED"
 fi
 
-# 2. Sync avatar files into theme assets so sddm can safely access them without permission issues.
+# 2. Avatar files into the theme assets, so SDDM can read them.
 sync_optional_user_file \
     "$REAL_HOME/.face.icon" \
     "$THEME_DIR/assets/avatar.face.icon" \
@@ -224,7 +215,7 @@ sync_optional_user_file \
     "$((5 * 1024 * 1024))" \
     "avatar.face"
 
-# 3. Sync Colors
+# 3. Colors
 THEME_CONF_SRC="$CAEL_STATE/theme/sddm-theme.conf"
 THEME_CONF_DEST="$THEME_DIR/theme.conf"
 MAX_THEME_CONF_BYTES=$((1024 * 1024))
@@ -248,7 +239,7 @@ else
     echo "No theme.conf found, leaving existing theme.conf unchanged."
 fi
 
-# 4. Sync Wallpaper LAST
+# 4. Wallpaper, last
 WALLPAPER_SRC="$CAEL_STATE/wallpaper/current"
 MAX_WALLPAPER_BYTES=$((50 * 1024 * 1024))
 MAX_VIDEO_WALLPAPER_BYTES=$((250 * 1024 * 1024))

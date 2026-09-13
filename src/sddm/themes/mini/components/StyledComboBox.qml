@@ -73,8 +73,7 @@ ComboBox {
         required property int index
         required property var model
 
-        // Fixed inset to fit inside popup borders and rounded corners
-        // Note: This 16px inset is required - making it dynamic breaks item width calculation
+        // Fixed inset for the popup border; making it dynamic breaks item width.
         width: root.width - 16
         hoverEnabled: true
 
@@ -103,7 +102,7 @@ ComboBox {
         contentItem: ListView {
             id: popupList
 
-            // add some margin so it doesn't look cramped when there are few items
+            // So a few items do not look cramped.
             topMargin: 6
             bottomMargin: 6
             leftMargin: 2

@@ -44,7 +44,7 @@ Item {
         Behavior on color { ColorAnimation { duration: 500 } }
     }
 
-    // ── Scrolling ground (shown while playing or game over) ──
+    // Scrolling ground, shown while playing or after a loss
     Item {
         visible: root.isPlaying || root.isGameOver
         width: parent.width
@@ -73,7 +73,7 @@ Item {
         }
     }
 
-    // ── Idle scene (not playing, not game-over) ──
+    // Idle scene
     ColumnLayout {
         id: idleScene
         anchors.centerIn: parent
@@ -191,7 +191,7 @@ Item {
         }
     }
 
-    // ── Active game scene ──
+    // Active game scene
     Item {
         anchors.fill: parent
         visible: root.isPlaying || root.isGameOver
@@ -312,7 +312,7 @@ Item {
         }
     }
 
-    // ── Input ──
+    // Input
     MouseArea {
         anchors.fill: parent
         onClicked: {

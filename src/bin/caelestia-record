@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# ---- paths --------------------------------------------------------------------
 RECORDER="${RECORDER:-gpu-screen-recorder}"
 STATE_DIR="${STATE_DIR:-$HOME/.local/state/caelestia/record}"
 PID_FILE="${STATE_DIR}/recorder.pid"
@@ -17,7 +16,6 @@ RECS_DIR="${CAELESTIA_RECORDINGS_DIR:-${XDG_VIDEOS_DIR:-$HOME/Videos}/Recordings
 
 mkdir -p "$STATE_DIR" "$RECS_DIR"
 
-# ---- helpers ------------------------------------------------------------------
 _notify() {
     local urgency="$1" summary="$2" body="$3"
     notify-send -u "$urgency" -a "Caelestia Recorder" "$summary" "$body" 2>/dev/null || true
@@ -34,7 +32,7 @@ _is_recording() {
             return 0
         fi
     fi
-    # Fallback: pidof check plus the active recording's file existing
+    # Fallback when the pid file is stale: a live recorder with a real output file.
     local current_path=""
     [[ -f "$CURRENT_FILE" ]] && current_path=$(cat "$CURRENT_FILE" 2>/dev/null || true)
     pidof "$RECORDER" >/dev/null 2>&1 && [[ -n "$current_path" ]] && [[ -f "$current_path" ]]
@@ -72,8 +70,7 @@ print(60)
 }
 
 _ensure_portals() {
-    # Restart the portal stack if either component isn't running â€” pipewire
-    # screen capture requires both xdg-desktop-portal and the KDE backend.
+    # Pipewire screen capture needs both the portal and its KDE backend running.
     if ! systemctl --user is-active --quiet plasma-xdg-desktop-portal-kde 2>/dev/null || \
        ! systemctl --user is-active --quiet xdg-desktop-portal 2>/dev/null; then
         systemctl --user restart plasma-xdg-desktop-portal-kde 2>/dev/null || true
@@ -87,9 +84,9 @@ _stop_recording() {
         local pid
         pid=$(cat "$PID_FILE" 2>/dev/null || true)
         if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
-            # Send SIGINT for clean finalization (writes the mp4 trailer)
+            # SIGINT so gpu-screen-recorder finalizes the mp4 trailer.
             kill -INT "$pid" 2>/dev/null || true
-            # Wait up to 5 seconds for graceful exit, then force-kill
+            # Give it 5 seconds to exit, then force it.
             local waited=0
             while kill -0 "$pid" 2>/dev/null && [[ $waited -lt 50 ]]; do
                 sleep 0.1
@@ -99,7 +96,7 @@ _stop_recording() {
         fi
         rm -f "$PID_FILE"
     fi
-    # Also kill any stray gpu-screen-recorder processes owned by us
+    # Stray recorders of ours that the pid file does not know about.
     local recorder_name
     recorder_name=$(basename -- "$RECORDER")
     while read -r pid; do
@@ -134,9 +131,9 @@ _convert_to_gif() {
     return 1
 }
 
-# Stop the active recording, converting it to a GIF when that session asked for one.
-# The mode is read before _stop_recording clears the session files: a session that
-# never wrote one is a plain recording, whatever an earlier session asked for.
+# Stop the active recording, converting to a GIF when that session asked for one. The
+# mode is read before _stop_recording clears the session files: a session that wrote none
+# is a plain recording, whatever an earlier one asked for.
 _finish_recording() {
     local saved_path=""
     local mode=""
@@ -156,7 +153,6 @@ _finish_recording() {
     fi
 }
 
-# ---- command dispatch ---------------------------------------------------------
 ACTION="start"
 SOUND_OUTPUT=false
 SOUND_INPUT=false
@@ -210,7 +206,7 @@ done
 
 case "$ACTION" in
     start)
-        # Already recording? Toggle stop.
+        # A second start means stop.
         if _is_recording; then
             _finish_recording
             exit 0
@@ -237,12 +233,11 @@ case "$ACTION" in
             exit 1
         fi
 
-        # Unique per-recording filename so a new recording never clobbers the
-        # previous one.
+        # Timestamped so a new recording never clobbers the previous one.
         REC_PATH="${RECS_DIR}/recording_$(date +%Y%m%d_%H-%M-%S).mp4"
         echo "$REC_PATH" > "$CURRENT_FILE"
-        # Written for every session, not just GIF ones, so a mode left behind by a
-        # session that died can never decide what happens to the next recording.
+        # Written for every session, not just GIF ones, so a mode left by a session that
+        # died cannot decide what happens to the next recording.
         if [[ "$GIF_MODE" == "true" ]]; then
             echo "gif" > "$MODE_FILE"
         else
@@ -263,7 +258,7 @@ case "$ACTION" in
         args+=("-ipc" "$IPC_SOCK")
         args+=("-o" "$REC_PATH")
 
-        # Launch in background via a subshell so we can capture the PID
+        # Subshell so the recorder's PID can be captured.
         (
             exec "${args[@]}" >/tmp/gpu-screen-recorder.log 2>&1 &
             echo $! > "$PID_FILE"
@@ -272,7 +267,7 @@ case "$ACTION" in
         ) &
         disown
 
-        # Wait briefly for PID file to be populated
+        # Wait for the PID file to appear.
         pid=""
         waited=0
         while [[ -z "$pid" ]] && [[ $waited -lt 20 ]]; do
@@ -281,7 +276,7 @@ case "$ACTION" in
             waited=$((waited + 1))
         done
 
-        # Wait while the recorder process is alive and the recording file has not yet appeared (e.g. portal dialog is open)
+        # Wait out the portal dialog: recorder alive, output file not yet created.
         while [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null && [[ ! -f "$REC_PATH" ]]; do
             sleep 0.1
         done

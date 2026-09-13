@@ -29,8 +29,7 @@ Item {
     readonly property real centerWidth: 400 * centerScale
     readonly property real passwordPillWidth: 300 * centerScale
     readonly property bool isPortrait: height > width * 1.2
-    // use12h: read from ~/.config/caelestia/shell.json services.useTwelveHourClock if set,
-    // otherwise fall back to the system locale — same logic as serviceconfig.hpp default.
+    // use12h: services.useTwelveHourClock from shell.json when set, else the locale.
     property bool use12h: Qt.locale().timeFormat(Locale.ShortFormat).toLowerCase().indexOf("a") !== -1
     property bool isCaelestiaMode: false
     property bool recolourLogo: true
@@ -40,12 +39,10 @@ Item {
     readonly property alias fprintTries: authHandler.fprintTries
     property int profilePicShape: 13
     property bool rotateProfilePic: false
-    // No syncWallpaper here: the background this screen shows is the greeter's
-    // own wallpaper, read from kscreenlockerrc, and whether it follows the desktop
-    // is decided by the shell that writes that file (Wallpapers.syncPlasmaWallpaper)
-    // and by the lock screen page in Nexus. A property of the same name was copied
-    // over from the Quickshell lock screen and read the config key without ever
-    // using it, which made it look as if this file owned that decision.
+    // No syncWallpaper: whether the greeter's wallpaper follows the desktop is decided
+    // by the shell that writes kscreenlockerrc (Wallpapers.syncPlasmaWallpaper) and by
+    // the Nexus lock screen page. The Quickshell lock screen's property of that name
+    // read the config key without using it, which made this file look as if it owned it.
     property var sessionIcons: ({})
     property bool showSleep: true
     property bool showHibernate: false
@@ -64,10 +61,8 @@ Item {
     readonly property color clCardBg: alterColour(clSurfaceContainer, 0.60, 1)
     readonly property color clCardBgHigh: alterColour(clSurfaceContainerHigh, 0.60, 1)
 
-    // Material You palette - the caelestia scheme's dark values.
-    // All components receive these via explicit property bindings from this root
-    // so there is one single source of truth and per-component defaults cannot drift.
-    // Values are overridden by schemeLoader below once scheme.json is read.
+    // The caelestia scheme's dark values; schemeLoader below overrides them once
+    // scheme.json is read. Components bind to these, so the defaults cannot drift.
     property color clSurface: "#0a0f0f"
     property color clSurfaceFg: "#dce8e6"
     property color clSurfaceContainer: "#131b1a"
@@ -91,14 +86,11 @@ Item {
     property string authMessage: ""
     property bool ready: false
 
-    // Fetch system info via the external helper script instead of an inline
-    // python3 -c one-liner. Inline shell-command concatenation runs pre-auth
-    // and is a security concern flagged in review.
-    // Qt.resolvedUrl resolves relative to this QML file's installed location,
-    // giving the correct absolute path regardless of where the shell is installed.
+    // System info comes from the external helper, not an inline `python3 -c` one-liner:
+    // inline shell-command concatenation runs pre-auth, which review flagged. Qt.resolvedUrl
+    // resolves relative to this file, so the path is right wherever the shell is installed.
     readonly property string sysinfoScriptPath: {
         var url = Qt.resolvedUrl("scripts/sysinfo.py").toString();
-        // Strip "file://" prefix (url is always file:///absolute/path on Linux)
         return url.startsWith("file://") ? url.slice(7) : url;
     }
 
@@ -106,10 +98,9 @@ Item {
     readonly property int liveTemp: Math.round(Cpu.temperature ?? 0)
     readonly property int liveRam: Math.round((Memory.percentage ?? 0) * 100)
     readonly property int liveDisk: Math.round((Storage.percentage ?? 0) * 100)
-    // The IPC helper ships with the shell: /usr/bin for a package install,
-    // ~/.local/bin for a source one. kscreenlocker inherits neither the session
-    // environment nor its PATH, so the resolution happens in the commands below
-    // rather than in this property.
+    // The helper ships with the shell (/usr/bin for a package, ~/.local/bin for a
+    // source install). kscreenlocker inherits neither the session environment nor its
+    // PATH, so resolution happens in the commands below instead of here.
     readonly property string ipcBin: "PATH=\"${CAELESTIA_BIN_DIR:-$HOME/.local/bin}:$PATH\" caelestia-shell-ipc"
     property var liveMedia: ({})
     property var liveNotifs: []
@@ -174,9 +165,8 @@ Item {
         onTriggered: lockScreenUi.ready = true
     }
 
-    // XHR file:// is blocked inside kscreenlocker, so read scheme.json and
-    // shell.json via cat. The scheme.json 'mode' field ('dark'/'light') switches
-    // between the light and dark palette variants.
+    // XHR file:// is blocked inside kscreenlocker, so scheme.json and shell.json are
+    // read with cat.
     Plasma5Support.DataSource {
         id: schemeLoader
 
@@ -188,12 +178,9 @@ Item {
             if (!stdout) return;
             try {
                 var d = JSON.parse(stdout);
-                // scheme.json may contain top-level colours or a colours sub-key
+                // Top-level colours, or a colours sub-key.
                 var c = d.colours || d;
-                // 'mode' field: 'dark' or 'light' — select the right variant
-                // Light mode inverts some roles (surface ↔ onSurface etc.)
-                // For now we read the colours block as-is; both light and dark
-                // scheme.json files already contain the correct per-mode values.
+                // Both modes ship correct per-mode values, so read the block as-is.
                 if (c.surface) clSurface = "#" + c.surface;
                 if (c.onSurface) clSurfaceFg = "#" + c.onSurface;
                 if (c.surfaceContainer) clSurfaceContainer = "#" + c.surfaceContainer;
@@ -219,8 +206,7 @@ Item {
         }
     }
 
-    // Read user clock-format preference from ~/.config/caelestia/shell.json
-    // Respects the useTwelveHourClock setting set via Nexus settings.
+    // useTwelveHourClock from shell.json, as set in Nexus.
     Plasma5Support.DataSource {
         id: configLoader
 
@@ -608,7 +594,7 @@ Item {
             }
         }
 
-        // ── Landscape Layout ──
+        // ── Landscape layout ──
         Item {
             id: landscapeContent
 
@@ -961,13 +947,10 @@ Item {
             }
         }
 
-        // ── Portrait Layout ──
-        // TODO: The portrait branch currently re-instantiates ClockWidget,
-        // ProfileAvatar, GreetingPill and PasswordPill independently instead of
-        // sharing the landscape instances via visible/states. This means both
-        // branches can drift if one is updated without the other.
-        // Tracked as technical debt — refactor to a single shared ColumnLayout
-        // with Layout.visible switching per isPortrait.
+        // ── Portrait layout ──
+        // TODO: this branch re-instantiates ClockWidget, ProfileAvatar, GreetingPill and
+        // PasswordPill instead of sharing the landscape instances via visible/states, so
+        // the two can drift. Refactor to one ColumnLayout with Layout.visible on isPortrait.
         Item {
             id: portraitContent
 

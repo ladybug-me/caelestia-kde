@@ -1,27 +1,17 @@
 #!/usr/bin/env bash
-# =============================================================================
-# caelestia-shell-ipc  –  Path-based IPC wrapper for the Caelestia Shell
-# =============================================================================
-#
-# Resolves the running shell instance by its config *path* rather than by
-# the named config directory.  This avoids the ambiguity that occurs when
-# both ~/.config/quickshell/shell.qml (default / unrelated) and
-# ~/.config/quickshell/caelestia/shell.qml (Caelestia) exist.
+# caelestia-shell-ipc - manage the shell by config *path*, not by config name.
+# Naming by path avoids the ambiguity between ~/.config/quickshell/shell.qml and
+# ~/.config/quickshell/caelestia/shell.qml when both exist.
 #
 # Usage:
 #   caelestia-shell-ipc quit              # gracefully stop the shell
 #   caelestia-shell-ipc show              # list available IPC commands
 #   caelestia-shell-ipc log               # tail the shell log
-#   caelestia-shell-ipc call <cmd> [...]   # send a custom IPC call
+#   caelestia-shell-ipc call <cmd> [...]  # send a custom IPC call
 #   caelestia-shell-ipc status            # check whether the shell is running
-#
-# The script auto-detects the quickshell binary and the shell config path
-# from the standard Caelestia installation layout.
-# =============================================================================
 
 set -euo pipefail
 
-# ---- resolve quickshell binary ------------------------------------------------
 _quickshell() {
     if command -v quickshell >/dev/null 2>&1; then
         command -v quickshell
@@ -39,14 +29,9 @@ _quickshell() {
 
 QS="$(_quickshell)"
 
-# ---- resolve shell config path ------------------------------------------------
-#
-# CAELESTIA_SHELL_CONFIG wins when something has set it - both autostart scripts
-# do, so anything started from the session inherits the right answer. For callers
-# outside that environment, such as the lock screen, the config is looked for
-# where the two install kinds put it: the package's /etc/xdg copy first, then the
-# source install's under $HOME. The two can exist on one machine, and the
-# environment variable is what tells them apart when it matters.
+# CAELESTIA_SHELL_CONFIG wins when set - both autostart scripts do, so anything
+# started from the session inherits it. Otherwise try the two install layouts, package
+# first; both can exist on one machine, and the variable is what tells them apart.
 resolve_shell_config() {
     local candidate
     for candidate in \
@@ -63,20 +48,14 @@ resolve_shell_config() {
 
 SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$(resolve_shell_config)}"
 
-# Start the shell without handing it (and everything it launches) a stdout that
-# goes nowhere. --daemonize detaches from the terminal by pointing stdio at
-# /dev/null, and every application started from the shell inherits those
-# descriptors; Vesktop deadlocks when a call starts in exactly that state
-# (issue #402, reproducible with `vesktop >/dev/null 2>&1`).
-#
-# A transient user service gets the same "returns immediately, survives the
-# terminal" behavior from systemd, with stdio on the journal. Without systemd
-# there is nothing better than the old behavior.
+# Start the shell without handing it, and everything it launches, a stdout that goes
+# nowhere: --daemonize points stdio at /dev/null and that state deadlocks Vesktop
+# (issue #402, reproducible with `vesktop >/dev/null 2>&1`). A transient user service
+# gives the same "returns immediately, survives the terminal" with stdio on the journal.
 _start_shell() {
     if command -v systemd-run >/dev/null 2>&1; then
-        # A transient unit of its own, and deliberately not `caelestia-shell`: that
-        # name belongs to the login unit this install writes, and systemd refuses a
-        # transient unit that collides with a loaded one.
+        # Deliberately not `caelestia-shell`: that name is the login unit this install
+        # writes, and systemd refuses a transient unit colliding with a loaded one.
         # A unit left behind by a crashed shell would make --unit fail.
         systemctl --user reset-failed caelestia-shell-start.service 2>/dev/null || true
         exec systemd-run --user --quiet --collect \
@@ -94,7 +73,7 @@ if [[ ! -f "$SHELL_CONFIG" ]]; then
     exit 1
 fi
 
-# ---- helpers ------------------------------------------------------------------
+# ---- helpers ----
 _qs_ipc() {
     "$QS" -p "$SHELL_CONFIG" ipc --any-display "$@"
 }
@@ -103,13 +82,11 @@ _qs_direct() {
     "$QS" -p "$SHELL_CONFIG" "$@"
 }
 
-# ---- status check -------------------------------------------------------------
+# Match the exact quickshell command line that launched our config.
 _is_running() {
-    # pgrep matches the exact quickshell command line that launched our config
     pgrep -f "quickshell.*$SHELL_CONFIG" >/dev/null 2>&1
 }
 
-# ---- commands -----------------------------------------------------------------
 case "${1:-}" in
     quit|kill|stop)
         if _is_running; then
@@ -167,7 +144,7 @@ case "${1:-}" in
         ;;
 
     -h|--help|help|"")
-        echo "Caelestia Shell IPC  –  path-based management wrapper"
+        echo "Caelestia Shell IPC  -  path-based management wrapper"
         echo ""
         echo "Usage: caelestia-shell-ipc <command> [args...]"
         echo ""
@@ -185,7 +162,7 @@ case "${1:-}" in
         ;;
 
     *)
-        # Unknown command – try forwarding as an IPC call
+        # Unknown command: forward it as an IPC call.
         _qs_ipc call "$@"
         ;;
 esac

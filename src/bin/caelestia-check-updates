@@ -1,15 +1,13 @@
 #!/usr/bin/env bash
+# caelestia-check-updates - run by a systemd timer: count pending updates and notify.
 export PATH="$HOME/.local/bin:$PATH"
 
-# This script is meant to be run periodically by a systemd timer.
-# It checks for updates and sends a notification using notify-send.
-
-# Pre-flight dependency check for silent failure
+# No git, nothing to check.
 if ! command -v git &> /dev/null; then
     exit 0
 fi
 
-# Respect Nexus Settings (GlobalConfig.general.checkUpdates)
+# Honor the Nexus "check for updates" setting.
 if command -v jq >/dev/null && [ -f "$HOME/.config/caelestia/shell.json" ]; then
     CHECK_UPDATES=$(jq -r '.general.checkUpdates // true' "$HOME/.config/caelestia/shell.json" 2>/dev/null)
     if [ "$CHECK_UPDATES" = "false" ]; then
@@ -17,15 +15,14 @@ if command -v jq >/dev/null && [ -f "$HOME/.config/caelestia/shell.json" ]; then
     fi
 fi
 
-# 1. Check Caelestia UI Updates (GitHub)
+# UI updates (GitHub)
 REPO="$HOME/.cache/caelestia-update-repo"
 BRANCH=$(cat "$HOME/.config/quickshell/caelestia/.update_branch" 2>/dev/null || echo "main")
 if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "dev" ]; then
     BRANCH="main"
 fi
 
-# Prevent git from blocking indefinitely on a hung network by setting a timeout
-# and disabling interactive prompts that could stall the script.
+# No interactive prompts, and a timeout so a hung network cannot stall the timer.
 export GIT_TERMINAL_PROMPT=0
 GIT_TIMEOUT=30
 
@@ -53,7 +50,7 @@ if [ -n "$_localCommit" ]; then
     fi
 fi
 
-# 2. Check System Updates (Arch Linux & Flatpak)
+# System updates
 SYSTEM_PENDING=0
 
 if command -v checkupdates >/dev/null; then
@@ -77,7 +74,7 @@ if command -v apt-get >/dev/null; then
     SYSTEM_PENDING=$((SYSTEM_PENDING + APT_PENDING))
 fi
 
-# 3. Notification Anti-Spam & Cachy-Update Logic
+# Notify only when a count went up, so a standing backlog does not re-nag.
 CACHE_FILE="$HOME/.cache/caelestia-kde/last_update_counts"
 OLD_C=0
 OLD_S=0
@@ -101,16 +98,15 @@ if [ "$CAELESTIA_PENDING" -gt "${OLD_C:-0}" ] || [ "$SYSTEM_PENDING" -gt "${OLD_
     fi
 
     if [ -n "$BODY" ]; then
-        # Cachy-update logic: Replace previous notification, add action buttons
+        # Replace the previous notification and offer an action button.
         NOTIF_ID_FILE="$HOME/.cache/caelestia-kde/last_update_notif_id"
         LAST_ID=""
         if [ -f "$NOTIF_ID_FILE" ]; then
             LAST_ID=$(cat "$NOTIF_ID_FILE")
         fi
 
-        # -t expires the toast so the Type=oneshot timer unit never stays active
-        # forever on an ignored notification, which would pause all future
-        # update checks.
+        # -t expires the toast, so an ignored notification does not keep the oneshot
+        # timer unit active forever and pause every later check.
         NOTIF_ARGS=( -w -p -u normal -i system-software-update -a "Caelestia Updates" -t 300000 )
         if [ -n "$LAST_ID" ]; then
             NOTIF_ARGS+=( -r "$LAST_ID" )
@@ -118,14 +114,13 @@ if [ "$CAELESTIA_PENDING" -gt "${OLD_C:-0}" ] || [ "$SYSTEM_PENDING" -gt "${OLD_
         
         NOTIF_ARGS+=( -A "run=Install Updates" -A "close=Close" )
         
-        # -w/--wait blocks until the user clicks an action or dismisses the
-        # notification, and prints the clicked action key so it can be captured.
+        # -w blocks until the user clicks an action or dismisses, and prints the
+        # clicked action key.
         NOTIF_OUT=$(notify-send "${NOTIF_ARGS[@]}" "$TITLE" "$BODY")
         
-        # Save new ID (first line of output) for next time
+        # Line 1 is the notification id, line 2 the clicked action.
         echo "$NOTIF_OUT" | head -n 1 > "$NOTIF_ID_FILE"
         
-        # Extract the clicked action
         ACTION=$(echo "$NOTIF_OUT" | sed -n '2p')
         if [ "$ACTION" = "run" ]; then
             if [ -x "$HOME/.local/bin/caelestia" ]; then
@@ -137,6 +132,5 @@ if [ "$CAELESTIA_PENDING" -gt "${OLD_C:-0}" ] || [ "$SYSTEM_PENDING" -gt "${OLD_
     fi
 fi
 
-# Always save the new counts
 mkdir -p "$(dirname "$CACHE_FILE")"
 echo "$CAELESTIA_PENDING $SYSTEM_PENDING" > "$CACHE_FILE"

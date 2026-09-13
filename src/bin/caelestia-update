@@ -34,8 +34,7 @@ if [ -n "$TARGET_REF" ]; then
     if git ls-remote --exit-code --tags https://github.com/ladybug-me/caelestia-kde.git "$TARGET_REF" >/dev/null 2>&1; then
         TARGET_KIND="tag"
     elif [ "$BRANCH" = "dev" ] && [[ "$TARGET_REF" =~ ^[0-9a-f]{7,40}$ ]]; then
-        # Dev branch supports installing/reverting to a specific commit from the
-        # timeline, not just tagged releases.
+        # Dev can also install or revert to a specific commit, not just a tag.
         TARGET_KIND="commit"
     else
         echo "Warning: Version tag '$TARGET_REF' not found on remote. Ignoring target and using branch head."
@@ -56,21 +55,16 @@ else
 fi
 echo "---------------------------------------------"
 
-# --- Which half owns this install ---
-#
-# The directory this copy of the command lives in says it: an installer run puts it
-# in ~/.local/bin (or wherever CAELESTIA_BIN_DIR points, which is what the shell
-# resolves helper paths from) and a package puts it in /usr/bin. Nothing has to be
-# probed on disk for that, and it stays right whatever the package is called.
+# Which half owns this install: /usr/bin means a package, anything else a checkout.
+# Nothing is probed on disk, so it stays right whatever the package is called.
 SELF_DIR="$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd)"
 PACKAGED=0
 case "$SELF_DIR" in
     /usr/bin) PACKAGED=1 ;;
 esac
 
-# --- Pre-flight Dependency Checks ---
-# A package-managed install needs none of these: the branch further down hands the
-# whole update to the package manager.
+# A package install needs none of these; its branch below hands off to the package
+# manager.
 if [ "$PACKAGED" -eq 0 ]; then
     for cmd in git cmake make; do
         if ! command -v "$cmd" &> /dev/null; then
@@ -79,22 +73,18 @@ if [ "$PACKAGED" -eq 0 ]; then
     done
 fi
 
-# --- Robust Privilege Escalation Wrapper ---
-# The wrapper tries cached credentials first (sudo -n), and only falls
-# back to an interactive prompt when the timestamp is truly expired.
+# sudo wrapper: cached credentials first, interactive prompt only when expired.
 mkdir -p "$UPD_DIR/bin"
 cat << 'EOF' > "$UPD_DIR/bin/sudo"
 #!/usr/bin/env bash
 if [ "$EUID" -eq 0 ]; then
     exec "$@"
 fi
-# Try non-interactive first — if the parent keepalive has kept the
-# timestamp fresh this succeeds without any prompt at all.
+# -n first: if the parent keepalive kept the timestamp fresh, no prompt at all.
 if /usr/bin/sudo -n true 2>/dev/null; then
     exec /usr/bin/sudo -n "$@"
 fi
-# Timestamp expired or never created: fall back to whatever interactive
-# helper is available (terminal, ksshaskpass, pkexec).
+# Expired or never created: whichever interactive helper exists.
 if [ -t 1 ]; then
     exec /usr/bin/sudo "$@"
 elif command -v ksshaskpass &> /dev/null; then
@@ -109,13 +99,11 @@ EOF
 chmod +x "$UPD_DIR/bin/sudo"
 export PATH="$UPD_DIR/bin:$PATH"
 
-# --- Package-managed install ---
+# Package-managed install.
 #
-# A package owns every file it installed, so the update is the package manager and
-# then whatever rebuilds the package - not the work below, which clones the
-# repository and builds a second shell into ~/.config and ~/.local. Two shells on
-# the machine, only one of them known to pacman, is an install that breaks in ways
-# nobody can explain a year later; and it needs a toolchain the package does not.
+# A package owns what it installed, so the update is the package manager, not the clone
+# and second build below: two shells, only one known to pacman, breaks in ways nobody can
+# explain a year later, and it needs a toolchain the package does not.
 if [ "$PACKAGED" -eq 1 ]; then
     echo "---------------------------------------------"
     echo "  Caelestia Update (this install came from a package)"
@@ -137,9 +125,8 @@ if [ "$PACKAGED" -eq 1 ]; then
     echo "    AUR:     rebuild caelestia-kde with the helper it was installed with"
     echo
 
-    # What this run can actually do is the user's half: the package's step scripts
-    # are its own copies, and `caelestia install` deploys from them idempotently,
-    # which is the re-run parity-6 asks for after every update.
+    # All this run can do is the user's half: the package's step scripts are its own
+    # copies, and `caelestia install` deploys from them idempotently (parity-6).
     if [[ -x "$SELF_DIR/caelestia" ]]; then
         info "Re-applying the user's configuration..."
         "$SELF_DIR/caelestia" install || warn "Applying the user's configuration failed; see the output above."
@@ -150,12 +137,8 @@ if [ "$PACKAGED" -eq 1 ]; then
     exit 0
 fi
 
-# --- Prime privilege escalation once, then keep it alive ---
-# Several steps below need root (system package update, the shell install
-# step). Authenticate once up front and refresh the cached credential in
-# the background so later sudo calls (which can happen well after the
-# initial prompt, e.g. after a long shell build) reuse it instead of
-# prompting again.
+# Prime escalation once and refresh it in the background, so the root work lower down
+# (system update, shell install) never prompts again, even after a long build.
 if [ "$EUID" -ne 0 ]; then
     # Determine the best interactive helper for the initial prompt.
     if [ -t 1 ]; then
@@ -163,17 +146,12 @@ if [ "$EUID" -ne 0 ]; then
     elif command -v ksshaskpass &> /dev/null; then
         SUDO_ASK_CMD=(env SUDO_ASKPASS="$(command -v ksshaskpass)" /usr/bin/sudo -A -v)
     elif command -v pkexec &> /dev/null; then
-        # pkexec authenticates via PolicyKit, not sudo's timestamp cache.
-        # There is no way to "prime" sudo from pkexec — each subsequent
-        # elevation will go through pkexec individually. PolicyKit has
-        # its own short-lived authorization caching, so the user won't
-        # be prompted for every single command.
-        info "Requesting administrator privileges via pkexec (PolicyKit)…"
+        # pkexec authorizes through PolicyKit, not sudo's timestamp cache, so there is
+        # nothing to prime: each elevation in the wrapper goes through pkexec, and
+        # PolicyKit does its own short-lived caching.
+        info "Requesting administrator privileges via pkexec (PolicyKit)..."
         pkexec true || die "Failed to obtain administrator privileges."
-        # Skip the sudo keepalive — it's useless without a sudo timestamp.
-        # The sudo wrapper ($UPD_DIR/bin/sudo) will use pkexec for each
-        # elevation via its fallback path.
-        SUDO_ASK_CMD=()  # signal: skip sudo -v below
+        SUDO_ASK_CMD=()  # Skip the keepalive below: no sudo timestamp exists.
     else
         die "Cannot elevate privileges — no terminal, ksshaskpass, or pkexec available."
     fi
@@ -183,20 +161,14 @@ if [ "$EUID" -ne 0 ]; then
         "${SUDO_ASK_CMD[@]}" || die "Failed to obtain administrator privileges."
     fi
 
-    # Export SUDO_ASKPASS so any sub-scripts that use raw /usr/bin/sudo -A
-    # (or the wrapper above) can resolve the askpass helper without needing
-    # to re-discover it in a non-tty child.
+    # So sub-scripts using raw `/usr/bin/sudo -A` do not have to rediscover it.
     if command -v ksshaskpass &> /dev/null; then
         export SUDO_ASKPASS="$(command -v ksshaskpass)"
     fi
 
-    # Background keepalive: refresh the sudo timestamp every 30 seconds
-    # so it never expires, even during long operations like CMake builds.
-    # Using -nv instead of -n true ensures the timestamp is *extended*,
-    # not just checked.
-    # Only started when we actually have a sudo timestamp to keep alive
-    # (tty or ksshaskpass paths above).  The pkexec path skips this
-    # because PolicyKit handles its own authorization caching.
+    # Keep the sudo timestamp alive through long builds. -nv extends it rather than
+    # just checking. Only runs when there is a timestamp (tty or ksshaskpass paths);
+    # pkexec handles its own caching.
     if [[ ${#SUDO_ASK_CMD[@]} -gt 0 ]]; then
         (
             while kill -0 "$$" 2>/dev/null; do
@@ -213,7 +185,6 @@ fi
 echo "PROGRESS: 1/5: Fetching updates from GitHub..."
 info "Checking for local repository cache..."
 
-# --- Safe Backup Directory outside of the git repo ---
 export BACKUP_DIR="$UPD_DIR/backups/$(date +%Y%m%d_%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 
@@ -241,9 +212,8 @@ echo ".gitmodules" >> .git/info/sparse-checkout
 
 # Safer fetch and reset instead of pull
 if [ -n "$TARGET_REF" ] && [ "${TARGET_KIND:-}" = "commit" ]; then
-    # Arbitrary commit target: the local clone is normally shallow (depth 1), so
-    # pull enough history to cover the commit timeline shown in the UI
-    # (UpdateChecker fetches up to 150 commits) rather than trying to unshallow.
+    # The local clone is normally depth 1; fetch enough history for the commit
+    # timeline the UI shows (UpdateChecker fetches up to 150) rather than unshallow.
     git fetch -q --depth=200 origin "$BRANCH" || die "Failed to fetch repository"
     if git cat-file -e "$TARGET_REF^{commit}" 2>/dev/null; then
         git reset --hard -q "$TARGET_REF" || die "Failed to apply commit $TARGET_REF"
@@ -269,10 +239,9 @@ if [[ -f "$UPD_DIR/repo/.gitmodules" ]]; then
     if declare -f prune_removed_submodules >/dev/null 2>&1; then
         prune_removed_submodules "$UPD_DIR/repo"
     else
-        # The helper ships in the same commit as this updater and the sparse
-        # checkout always pulls scripts/, so a lib that is missing here means
-        # the checkout is damaged. Say so instead of keeping a second copy of
-        # the prune that can drift away from the tested one.
+        # The helper ships in the same commit as this updater and the sparse checkout
+        # always pulls scripts/, so a missing lib means a damaged checkout. Say so
+        # rather than keep a second copy of the prune that can drift from the tested one.
         warn "scripts/lib/submodules.sh is missing; skipping the submodule prune."
     fi
     git -C "$UPD_DIR/repo" submodule sync --recursive >/dev/null 2>&1 || true
@@ -298,15 +267,14 @@ elif command -v apt-get >/dev/null; then
     sudo apt-get update && sudo apt-get upgrade -y || warn "System update was canceled or failed. Continuing with non-sudo parts..."
 fi
 
-# 3. Build script now handles GUI privilege escalation natively.
+# 3. 08-build-shell.sh handles GUI privilege escalation itself.
 info "Executing build scripts (GUI prompts will appear if required)..."
 
 export BUNDLE_DIR="$UPD_DIR/repo"
 
-# Helpers come from the revision that was just checked out, the same way the
-# step scripts below are run from it. A reverted target predating the helper
-# simply leaves the call unavailable, which is harmless: the recorded revision
-# then stays as it was rather than becoming wrong.
+# Helpers come from the revision just checked out, as the step scripts do. A reverted
+# target predating the helper simply leaves the call unavailable, which is harmless: the
+# recorded revision then stays as it was rather than becoming wrong.
 if [[ -f "$BUNDLE_DIR/scripts/lib/update-state.sh" ]]; then
     # shellcheck source=/dev/null
     source "$BUNDLE_DIR/scripts/lib/update-state.sh"
@@ -336,8 +304,8 @@ if [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
 else
     run_stage 3600 bash "$UPD_DIR/repo/scripts/08-build-shell.sh" || die "Shell build failed or timed out."
 
-    # Fail fast if QML module install is incomplete, otherwise shell startup fails
-    # with 'module "Caelestia.Config" is not installed'.
+    # Fail fast on an incomplete QML install, or the shell dies at startup with
+    # 'module "Caelestia.Config" is not installed'.
     QML_BASE="$HOME/.local/lib/qt6/qml"
     CONFIG_MODULE_DIR="$QML_BASE/Caelestia/Config"
     if [[ ! -f "$CONFIG_MODULE_DIR/qmldir" ]]; then
@@ -354,11 +322,10 @@ fi
 
 # 6. Record which revision is actually installed.
 #
-# record_installed_revision() refuses while CAELESTIA_SKIP_BUILD=1: the
-# checkout below moved to the target ref, but the shell in front of the user
-# was deliberately not rebuilt, so claiming the new revision would make every
-# version readout describe a state nobody can see (#651). When that happens the
-# previous value is left in place - it still names the shell that is running.
+# record_installed_revision() refuses under CAELESTIA_SKIP_BUILD=1: the checkout moved
+# but the shell was deliberately not rebuilt, so claiming the new revision would make
+# every version readout describe a state nobody can see (#651). The previous value stays,
+# still naming the running shell.
 if record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia"; then
     info "Saved commit hash: $(cat "$HOME/.config/quickshell/caelestia/.current_commit" 2>/dev/null || true)"
 elif [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then

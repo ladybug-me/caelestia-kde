@@ -33,7 +33,6 @@ Rectangle {
     property bool capsLockOn: false
     property bool mainCardBgBlur: config.mainCardBgBlur === "true"
     property int sessionIndex
-    // rounding stuff
     property real largeRadius: mainCard.radius
     property real midRadius: mainCard.radius / 1.4
     property real smallRadius: mainCard.radius / 2
@@ -508,7 +507,6 @@ Rectangle {
     }
 
     ComboBox {
-        // invisible just for now
         id: userPicker
 
         width: 190

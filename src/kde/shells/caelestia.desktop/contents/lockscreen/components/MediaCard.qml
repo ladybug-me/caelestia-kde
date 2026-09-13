@@ -64,20 +64,17 @@ Rectangle {
         layer.enabled: true
     }
 
-    // Single layout always present — mirrors Quickshell Media.qml structure.
-    // When no media is playing the content dims and shows placeholder strings.
     ColumnLayout {
         id: mediaContent
         anchors.centerIn: parent
         width: parent.width * 0.9
         spacing: 6 * root.centerScale
-        // Dim the whole layout while no media is active (matches Quickshell disabled state)
+        // Dim while nothing is playing, as upstream does.
         opacity: root.hasMedia ? 1.0 : 0.55
         Behavior on opacity { NumberAnimation { duration: 300 } }
 
         Text {
             Layout.fillWidth: true
-            // Quickshell: Players.active?.trackTitle ?? "Nothing playing"
             text: root.hasMedia ? (root.mediaInfo.title || "") : qsTr("Nothing playing")
             font { pixelSize: LockScreenConfig.sizeMedium; family: LockScreenConfig.fontHeading; weight: Font.Medium }
             color: root.clSurfaceFg
@@ -87,7 +84,6 @@ Rectangle {
 
         Text {
             Layout.fillWidth: true
-            // Quickshell: Players.active?.trackArtist ?? "Try playing some music!"
             text: root.hasMedia ? (root.mediaInfo.artist || "") : qsTr("Try playing some music!")
             font { pixelSize: LockScreenConfig.sizeSmall; family: LockScreenConfig.fontHeading }
             color: root.clSurfaceVariantFg
@@ -100,7 +96,7 @@ Rectangle {
             spacing: 14 * root.centerScale
             Layout.topMargin: 8 * root.centerScale
 
-            // Previous — Quickshell: disabled when !canGoPrevious
+            // Previous - disabled when !canGoPrevious (as upstream)
             Rectangle {
                 implicitWidth: 36 * root.centerScale
                 implicitHeight: 36 * root.centerScale
@@ -124,7 +120,7 @@ Rectangle {
                 }
             }
 
-            // Play/Pause — pill shape, primary color when active
+            // Play/Pause - pill shape, primary color when active
             Rectangle {
                 implicitWidth: 60 * root.centerScale
                 implicitHeight: 38 * root.centerScale
@@ -148,7 +144,7 @@ Rectangle {
                 }
             }
 
-            // Next — Quickshell: disabled when !canGoNext
+            // Next - disabled when !canGoNext (as upstream)
             Rectangle {
                 implicitWidth: 36 * root.centerScale
                 implicitHeight: 36 * root.centerScale

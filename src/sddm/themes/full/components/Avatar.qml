@@ -12,12 +12,11 @@ Item {
     /// Avatar shape: "hexagon" (Material Design blob) or "circle"
     property string avatarShape: "hexagon"
 
-    // Hexagon mode properties
     property bool hovered: false
     property int hexIndex: 0
     property var shapeGetters: [MaterialShapes.getClamShell, MaterialShapes.getCookie6Sided]
 
-    // Hover interaction (switches hexagon shape on hover; no-op in circle mode)
+    // Hover switches the hexagon shape; a no-op in circle mode.
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -35,9 +34,9 @@ Item {
         }
     }
 
-    // --- Mask sources for OpacityMask ---
+    // Mask sources for OpacityMask.
 
-    // Hexagon shape (used as mask in hexagon mode)
+    // Hexagon mask
     ShapeCanvas {
         id: hexMask
         anchors.fill: parent
@@ -47,7 +46,7 @@ Item {
         clip: true
     }
 
-    // Circular mask (used as mask in circle mode)
+    // Circular mask
     Rectangle {
         id: circleMask
         anchors.fill: parent
@@ -58,8 +57,6 @@ Item {
 
     property int currentUserIndex: 0
     property var userModel: null
-
-    // --- Profile picture ---
 
     Image {
         id: avatarImage

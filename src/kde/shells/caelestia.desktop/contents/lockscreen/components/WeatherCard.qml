@@ -24,13 +24,12 @@ Rectangle {
     color: clSurfaceContainer
     clip: true
 
-    // Natural height = content + vertical padding so the card shrinks-to-fit
-    // when Layout.fillHeight is not set (matches Quickshell Content.qml behavior)
+    // Height shrinks to fit unless Layout.fillHeight is set.
     implicitHeight: isHorizontalLayout
                     ? (horizontalContent.implicitHeight + Math.max(16, 24 * centerScale))
                     : (compactContent.implicitHeight + Math.max(12, 20 * centerScale))
 
-    // ── High-DPI / Wide Horizontal Layout ──
+    // Wide (high-DPI) layout
     RowLayout {
         id: horizontalContent
 
@@ -138,7 +137,7 @@ Rectangle {
         }
     }
 
-    // ── Low-DPI / Compact Layout ──
+    // Compact (low-DPI) layout
     RowLayout {
         id: compactContent
 

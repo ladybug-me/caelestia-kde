@@ -37,12 +37,10 @@ Rectangle {
         return "";
     }
 
-    // Rearrange thresholds:
-    // showLargeLogo: when width allows both large logo and text without elision
+    // Large logo only when the width fits it beside unelided text.
     readonly property bool showLargeLogo: root.width >= (280 * root.centerScale)
 
-    // Single monospace string per row keeps all colons on one vertical line.
-    // Adapts line count based on available height.
+    // One monospace string per row keeps the colons aligned; the count adapts to height.
     readonly property var fetchLines: {
         var osStr = "";
         var wmStr = "KDE";

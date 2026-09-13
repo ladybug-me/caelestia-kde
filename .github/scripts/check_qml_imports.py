@@ -58,12 +58,9 @@ PROPERTY_LIST_RE = re.compile(r"\bproperty\s+list<([A-Z]\w*)>")
 # `Layout.fillWidth`, `Text.AlignHCenter`.
 DOT_ACCESS_RE = re.compile(r"\b([A-Z]\w*)\.\w+")
 
-# QML language builtins and JS globals that never require a project import.
-# Also includes fundamental QtQml-module types (Connections, Timer, Binding)
-# that are transitively available through *any* Qt/Quickshell module import
-# (every Qt/Quickshell QML module depends on QtQml internally, so QML type
-# resolution exposes these without a file ever writing "import QtQml" itself
-# - this is standard, well-established Qt behavior, not a project quirk).
+# QML builtins and JS globals that never need a project import, plus the QtQml-module
+# types (Connections, Timer, Binding) that any Qt/Quickshell import brings in
+# transitively.
 ALWAYS_OK = {
     "Component", "QtObject", "Qt", "Math", "JSON", "Date", "Number", "String",
     "Array", "Object", "Boolean", "RegExp", "Symbol", "Map", "Set", "Promise",
@@ -74,11 +71,8 @@ ALWAYS_OK = {
 CAELESTIA_CLASS_RE = re.compile(r"class\s+(\w+)\s*(?:final\s*)?(?::[^{;]*)?\{")
 CAELESTIA_NAMED_ELEMENT_RE = re.compile(r'QML_NAMED_ELEMENT\(\s*"(\w+)"\s*\)')
 
-# Real QML module names are always capitalized (Qt*, Quickshell*, Caelestia*,
-# M3Shapes) except the "qs" pseudo-namespace. A bareword import that doesn't
-# match either is not a real QML module - it's a false match from embedded
-# script text (e.g. a Python `import os` inside a `Process { command: [...] }`
-# string), so it must never be tallied as a module or a candidate provider.
+# Real QML modules are Capitalized (Qt*, Quickshell*, Caelestia*, M3Shapes), except
+# the "qs" pseudo-namespace; anything else is a false match from embedded script text.
 VALID_BAREWORD_MODULE_RE = re.compile(r"^(qs(\.[\w.]+)?|[A-Z][\w.]*)$")
 
 
@@ -87,8 +81,8 @@ def strip_comments(text: str) -> str:
 
 
 def strip_imports(text: str) -> str:
-    # Otherwise `import Caelestia.Services` itself gets picked up by
-    # DOT_ACCESS_RE as a "usage" of the bare `Caelestia` type.
+    # Otherwise a DOT_ACCESS_RE match on `import Caelestia.Services` counts as a
+    # "usage" of the bare `Caelestia` type.
     return IMPORT_RE.sub("", text)
 
 
@@ -204,21 +198,15 @@ def main() -> int:
 
     qs_registry = build_qs_registry(shell_root, all_qs_modules)
 
-    # Pass 2: build the correlation registry for everything else (standard Qt
-    # / Quickshell / M3Shapes modules). Blind frequency-based correlation
-    # (majority vote, or greedy set-cover by rarity) both fail here: a type's
-    # true provider is often imported alongside other unrelated-but-common
-    # modules, so any purely statistical approach ends up crediting whichever
-    # module happens to co-occur most/least, not the module that actually
-    # defines the type - e.g. QtQuick.Loader never gets credited because rarer
-    # coincidentally-co-imported modules "explain away" its usages first.
+    # Pass 2: the correlation registry for standard Qt / Quickshell / M3Shapes modules.
     #
-    # Instead, only trust UNAMBIGUOUS evidence: a file whose only standard
-    # (non qs.*/Caelestia.*) import is a single module M proves, with
-    # certainty, that every uppercase type it uses and doesn't get from
-    # local/qs/Caelestia/relative imports is provided by M. Require at least
-    # 2 independent single-module files per type to filter out one-off typos
-    # or accidental unused imports from becoming "evidence".
+    # Statistical correlation (majority vote, greedy set-cover) credits whichever module
+    # co-occurs most, not the one that defines the type: QtQuick.Loader never gets
+    # credited because rarer coincidentally co-imported modules "explain away" its uses.
+    #
+    # So only unambiguous evidence counts: a file whose only standard import is a single
+    # module M proves every uppercase type it uses comes from M. Two such files per type
+    # are required, to filter out one-off typos and unused imports.
     per_file_unresolved: list[tuple[Path, set[str], set[str], set[str]]] = []
     type_module_evidence: dict[str, Counter[str]] = defaultdict(Counter)
     for qml_file, modules, relative_imports, alias_names, used_types in parsed:

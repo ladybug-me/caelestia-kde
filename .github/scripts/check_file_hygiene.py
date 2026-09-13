@@ -37,9 +37,8 @@ SKIP_PATTERNS = [
     "json.hpp",
 ]
 
-# Files/dirs skipped for whitespace/tab checks (vendored/generated)
-# `templates` covers the theming templates vendored from matugen-themes under
-# src/matugen/templates/, which are upstream files with upstream formatting.
+# Skipped for whitespace/tab checks: vendored or generated. `templates` covers the
+# matugen theming templates under src/matugen/templates/, which are upstream files.
 STYLE_SKIP_DIRS = {"QMLTermWidget", "build", "__pycache__", ".git", "templates"}
 
 

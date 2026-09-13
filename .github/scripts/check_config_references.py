@@ -33,10 +33,9 @@ GREEN = "\033[0;32m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
 
-# Matches CONFIG_PROPERTY(bool, name, true) / CONFIG_GLOBAL_PROPERTY / CONFIG_SUBOBJECT(Type, name)
-# and the spellings that name a type first: CONFIG_ENUM_PROPERTY(EnumType, name, default),
-# CONFIG_LIST(EntryList, name, default) and their GLOBAL forms — DOTALL so multi-line
-# macro invocations are handled.
+# CONFIG_PROPERTY / CONFIG_GLOBAL_PROPERTY / CONFIG_SUBOBJECT, plus the type-first forms
+# CONFIG_ENUM_PROPERTY(EnumType, name, default) and CONFIG_LIST(EntryList, name, default)
+# and their GLOBAL spellings. DOTALL so multi-line invocations match.
 PROP_RE = re.compile(r"CONFIG_(?:GLOBAL_)?(?:ENUM_)?(?:PROPERTY|LIST)\(\s*[^,]+,\s*(\w+)", re.DOTALL)
 SUBOBJ_RE = re.compile(r"CONFIG_SUBOBJECT\(\s*(\w+),\s*(\w+)", re.DOTALL)
 CLASS_RE = re.compile(r"class\s+(\w+)\s*:\s*public\s+(\w+)")

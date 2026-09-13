@@ -39,7 +39,7 @@ def ok(msg: str) -> None:
     print(f"{GREEN}[OK]{RESET}   {msg}")
 
 
-# ─── theme.json validation ───
+# theme.json
 
 ANSI_SGR_RE = re.compile(r"^\d+(;\d+)*m$")
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
@@ -121,7 +121,7 @@ def validate_theme(filepath: Path) -> None:
     ok("theme.json passed validation")
 
 
-# ─── menu.json validation ───
+# menu.json
 
 VALID_MENU_TYPES = {"submenu", "boolean", "select", "text", "action"}
 VALID_ACTION_IDS = {"action_review", "action_proceed", "action_back"}

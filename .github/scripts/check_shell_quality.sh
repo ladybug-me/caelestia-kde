@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
-# check_shell_quality.sh - Shell script quality checks for CI.
-#
-# Checks performed:
-#   1. All .sh files parse with `bash -n` (syntax check)
-#   2. All executable .sh files pass shellcheck at warning severity (if installed)
-#   3. All .sh files inside scripts/ and src/bin/ use `set -euo pipefail`
-#   4. No bare `sudo` usage in scripts/ (should use the privilege wrapper)
-#   5. No hardcoded insecure patterns (e.g. curl | bash)
+# check_shell_quality.sh - shell script quality checks for CI.
 #
 # Usage: bash .github/scripts/check_shell_quality.sh [--fix]
 
@@ -38,9 +31,9 @@ is_executable_script() {
     head -c 30 "$file" 2>/dev/null | grep -qE '^#!.*/(ba)?sh'
 }
 
-# Every tracked shell script: *.sh files plus extensionless files with a shell
-# shebang (e.g. src/bin/caelestia-update, src/bin/caelestia-shell-ipc). The
-# extensionless ones are easy to forget, so we enumerate them by shebang.
+# Every tracked shell script: *.sh plus extensionless files with a shell shebang
+# (e.g. src/bin/caelestia-update). Enumerating by shebang catches the easy-to-forget
+# extensionless ones.
 get_shell_files() {
     git ls-files '*.sh'
     git ls-files | while IFS= read -r f; do
@@ -55,7 +48,7 @@ get_shell_files() {
     done
 }
 
-# ─── 1. Syntax check: bash -n on every shell script ───
+# 1. Syntax: bash -n on every shell script
 echo -e "${BOLD}=== Shell Syntax Check (bash -n) ===${RESET}"
 for f in $(get_shell_files); do
     if ! bash -n "$f" 2>/dev/null; then
@@ -67,7 +60,7 @@ if [[ "$EXIT_CODE" -eq 0 ]]; then
     log_ok "All shell scripts passed syntax check"
 fi
 
-# ─── 2. shellcheck ───
+# 2. shellcheck
 echo ""
 echo -e "${BOLD}=== ShellCheck Lint ===${RESET}"
 if command -v shellcheck &>/dev/null; then
@@ -85,7 +78,7 @@ else
     log_warn "shellcheck not installed - skipping (install with: apt install shellcheck)"
 fi
 
-# ─── 3. Strict mode check (set -euo pipefail) ───
+# 3. Strict mode (set -euo pipefail)
 echo ""
 echo -e "${BOLD}=== Strict Mode Check ===${RESET}"
 # Enforced for scripts/ where every script follows the convention. src/bin/*
@@ -108,7 +101,7 @@ if [[ "$EXIT_CODE" -eq 0 ]]; then
     log_ok "All scripts in scripts/ use strict mode"
 fi
 
-# ─── 4. No curl-pipe-bash patterns ───
+# 4. No curl-pipe-bash patterns
 echo ""
 echo -e "${BOLD}=== Unsafe Pattern Detection ===${RESET}"
 CURL_PIPE_FOUND=0
@@ -130,7 +123,7 @@ if [[ "$CURL_PIPE_FOUND" -eq 0 ]]; then
     log_ok "No unsafe curl/wget-pipe-shell patterns found"
 fi
 
-# ─── Summary ───
+# Summary
 echo ""
 if [[ "$EXIT_CODE" -eq 0 ]]; then
     echo -e "${BOLD}${GREEN}All shell quality checks passed.${RESET}"

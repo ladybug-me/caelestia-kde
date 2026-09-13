@@ -32,15 +32,12 @@ YELLOW = "\033[0;33m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
 
-# Process command arrays frequently look like:
-#   command: ["bash", "-c", `...`]
-#   command: ["sh", "-c", "..." , "--", arg]
-# We accept `bash`/`sh`/`/bin/bash` etc. as the interpreter token.
+# Process command arrays look like command: ["bash", "-c", `...`] or
+# ["sh", "-c", "...", "--", arg]; bash/sh//bin/bash all count as the interpreter.
 INTERP_RE = re.compile(r"^(?:/usr)?/?(?:bin/)?(?:ba|da|k)?sh$")
 
-# JS template-literal interpolation: ${...}. In a backtick string this is
-# evaluated by JavaScript before the process runs, so it is not part of the
-# bash source. We replace it with `true` so bash -n sees valid syntax.
+# ${...} in a backtick string is evaluated by JavaScript before the process runs, so it
+# is not bash source. Replaced with `true` so bash -n sees valid syntax.
 JS_INTERP_RE = re.compile(r"\$\{([^{}]*)\}")
 
 
@@ -159,10 +156,8 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
 def _sanitize_script(text: str, is_template: bool) -> str:
     """Remove JS-only constructs so the remainder is pure bash."""
     if is_template:
-        # Unescaped ${...} inside a JS template literal is JS interpolation
-        # evaluated before the process runs, so it is not part of the bash
-        # source. Replace it with `true` so bash -n sees valid syntax.
-        # (In "..." / '...' strings ${...} is literal and must be kept.)
+        # Unescaped ${...} here is JS interpolation, not bash source; in "..." / '...'
+        # strings it is literal and must be kept.
         text = JS_INTERP_RE.sub("true", text)
     return text
 

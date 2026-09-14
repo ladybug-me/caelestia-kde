@@ -26,12 +26,11 @@ make_repo() {
 
 # register_submodule <repo> <name> <path>
 #
-# Reproduces what `git submodule init` leaves behind for a submodule that has
-# since been deleted upstream: the local registration in .git/config plus the
-# module cache and the worktree checkout on disk. `git submodule deinit` cannot
-# clean this up, because it resolves the path through .gitmodules and fails
-# once the entry is gone - which is the state prune_removed_submodules exists
-# for.
+# Reproduces what `git submodule init` leaves behind for a submodule since deleted
+# upstream: the .git/config registration, the module cache and the worktree.
+# `git submodule deinit` cannot clean that up - it resolves the path through
+# .gitmodules and fails once the entry is gone, which is what prune_removed_submodules
+# exists for.
 register_submodule() {
     local repo="$1" name="$2" path="$3"
     git -C "$repo" config "submodule.$name.url" "https://example.invalid/$name.git"
@@ -104,9 +103,8 @@ test_prune_is_a_no_op_without_local_registrations() {
 
 # isolate_git_config <dir>
 #
-# Point git at a throwaway global config, so a test can allow file:// submodule
-# URLs (git refuses them by default, which the next test needs) without touching
-# the developer's own ~/.gitconfig.
+# Points git at a throwaway global config, so a test can allow file:// submodule URLs
+# (refused by default) without touching the developer's ~/.gitconfig.
 isolate_git_config() {
     local dir="$1"
     export HOME="$dir/home"
@@ -130,10 +128,9 @@ make_submodule_source() {
 
 # make_checkout_with_submodule <repo> <source> [registered-url]
 #
-# A checkout with src/dots recorded as a submodule of <source> and its working
-# tree left empty, which is the state an unfetched submodule is in. When
-# registered-url is given, .git/config is pointed at that instead, which is the
-# stale-registration case sync exists for.
+# A checkout with src/dots recorded as a submodule of <source> and an empty working
+# tree - an unfetched submodule. With registered-url, .git/config points there
+# instead, which is the stale-registration case sync exists for.
 make_checkout_with_submodule() {
     local repo="$1" source="$2" registered="${3:-}"
     git init -q "$repo"

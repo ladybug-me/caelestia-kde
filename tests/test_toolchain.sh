@@ -6,17 +6,16 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/toolchain.sh"
 
-# `caelestia_sudo` comes from privileges.sh in real use. These tests deliberately
-# do NOT define it as a shell function: a function would shadow the stub on PATH
-# and hide whether the code went through the privilege helper at all.
+# `caelestia_sudo` comes from privileges.sh in real use; these tests do NOT define
+# it as a function, which would shadow the stub on PATH and hide whether the code
+# went through the privilege helper at all.
 
 # with_path <dir> <lrelease-fallback-path> <command> [args...]
 #
-# Run <command> in a subshell where PATH contains only <dir>, so the code under
-# test sees exactly the stubs this file installed and nothing from the host.
-# CAELESTIA_LRELEASE_FALLBACK is overridden too: it defaults to a fixed absolute
-# path that a developer machine may well have and a CI runner may not, which
-# would otherwise make the check non-deterministic.
+# Runs <command> in a subshell whose PATH holds only <dir>, so the code under test
+# sees exactly the stubs installed here. CAELESTIA_LRELEASE_FALLBACK is overridden
+# too: its default absolute path may exist on a developer machine but not a CI
+# runner, which would make the check non-deterministic.
 with_path() {
     local dir="$1" fallback="$2"
     shift 2

@@ -27,9 +27,8 @@ test_the_checkout_writes_the_unit_instead_of_an_entry() {
     assert_contains "$script" 'ExecStart=%h/.local/bin/caelestia-autostart.sh' "and the unit should run the wrapper that sets the environment"
     assert_contains "$script" 'systemctl --user enable caelestia-shell.service' "and enable it, so it starts on the next login"
 
-    # The entry's writer is gone. The comment above still names it, and the KWin
-    # interface entry further down is a different file that has to stay - it is how
-    # KWin decides whether to offer the screencast protocol.
+    # The entry's writer is gone, but the KWin interface entry further down is a
+    # different file that must stay: it decides whether KWin offers screencasting.
     assert_not_contains "$script" 'AUTOSTART_DIR/caelestiashell.desktop" << EOF' "it must not write the retired autostart entry"
     assert_contains "$script" 'applications/quickshell.desktop' "while the KWin interface entry it writes stays"
 }
@@ -43,19 +42,18 @@ test_an_older_entry_and_its_generated_unit_are_retired() {
 }
 
 test_the_ordering_the_entry_phase_provided_is_kept() {
-    # The shell registers org.freedesktop.Notifications and applications decide once,
-    # at startup, whether a notification server exists. The entry bought that with
-    # X-KDE-AutostartPhase=1; the unit buys it with an ordering against the target
-    # the same generator puts the app units in.
+    # The shell registers org.freedesktop.Notifications, and apps decide once at
+    # startup whether a server exists. The entry bought that with
+    # X-KDE-AutostartPhase=1; the unit with an ordering against the target the
+    # generator puts app units in.
     assert_contains "$(cat "$AUTOSTART_SCRIPT")" 'Before=xdg-desktop-autostart.target' "the checkout's unit should keep the apps behind it"
     assert_contains "$(cat "$PACKAGED_UNIT")" 'Before=xdg-desktop-autostart.target' "and so should the package's"
 }
 
 test_the_wrapper_takes_its_paths_from_the_install_layout() {
-    # These paths used to be written out here, in the environment writer and in the
-    # command's own header - which is how the command came to name a checkout's
-    # directories on a packaged machine. They come from scripts/lib/install-kind.sh now,
-    # and tests/test_install_paths.sh covers the values themselves.
+    # These paths used to be written out in three places, which is how the command
+    # came to name a checkout's directories on a packaged machine. They come from
+    # install-kind.sh now; test_install_paths.sh covers the values themselves.
     local script
     script="$(cat "$AUTOSTART_SCRIPT")"
 
@@ -85,11 +83,10 @@ test_the_environment_writer_uses_the_same_layout() {
 }
 
 test_an_install_clears_a_failed_unit_before_using_it() {
-    # Removing the package leaves this unit enabled and pointing at a tree that has gone:
-    # five failed starts, then `start-limit-hit`, after which systemd refuses to start it
-    # at all until it is reset. An install that is putting the machine back is exactly the
-    # case that finds the unit in that state, so it has to clear it - otherwise the run
-    # reports success and leaves the shell unable to start.
+    # Removing the package leaves this unit enabled pointing at a gone tree: five failed
+    # starts, then `start-limit-hit`, after which systemd refuses to start it until it is
+    # reset. An install repairing the machine is what finds it that way, so it must clear
+    # it - otherwise the run reports success and the shell cannot start.
     local script
     script="$(cat "$AUTOSTART_SCRIPT")"
     assert_contains "$script" 'systemctl --user reset-failed caelestia-shell.service' "the autostart step should clear a failed unit"
@@ -104,11 +101,10 @@ test_restarting_goes_through_that_unit() {
 }
 
 test_a_dead_enable_link_does_not_survive_an_install() {
-    # Taking the user's copy of the unit out leaves the enable link that pointed at it
-    # behind, and systemd counts a unit as enabled whenever a link of that name exists,
-    # however dead - so `enable` leaves it as it is instead of repairing it. That link is
-    # what makes the session start the unit at login, so it has to be dropped and written
-    # again against the unit that survived.
+    # Removing the user's copy leaves the enable link behind, and systemd counts a unit
+    # as enabled whenever a link of that name exists, however dead - so `enable` leaves it
+    # alone instead of repairing it. That link starts the unit at login, so it must be
+    # dropped and rewritten against the unit that survived.
     local script
     script="$(cat "$AUTOSTART_SCRIPT")"
 
@@ -124,9 +120,8 @@ test_uninstall_removes_and_disables_the_unit() {
     assert_contains "$script" 'rm -f "$USER_SYSTEMD/caelestia-shell.service"' "and removed"
     assert_contains "$script" 'disable app-caelestiashell@autostart.service' "the retired generated unit should be disabled too"
 
-    # Disabled by name, and before the check for a user-owned copy rather than inside it.
-    # A packaged install's unit belongs to pacman, so there is no copy here at all, while
-    # the enable link is there either way.
+    # Disabled by name, before the check for a user-owned copy: a package's unit belongs
+    # to pacman, so there is no copy to test for, while the enable link exists either way.
     local disable_line file_line
     disable_line="$(grep -n 'systemctl --user disable --now caelestia-shell.service' "$UNINSTALL_SCRIPT" | cut -d: -f1)"
     file_line="$(grep -n 'if \[\[ -f "\$USER_SYSTEMD/caelestia-shell.service" \]\]' "$UNINSTALL_SCRIPT" | cut -d: -f1)"
@@ -150,9 +145,8 @@ test_the_package_ships_the_unit_and_not_an_entry() {
 }
 
 test_the_ipc_start_helper_does_not_take_the_login_units_name() {
-    # `caelestia shell` starts a transient unit when no shell is running. A transient
-    # unit cannot take a name a loaded unit already has, so it must not be called
-    # caelestia-shell while caelestia-shell.service exists.
+    # A transient unit cannot take a name a loaded unit already has, so `caelestia shell`
+    # must not use caelestia-shell while caelestia-shell.service exists.
     local ipc
     ipc="$(cat "$IPC")"
 

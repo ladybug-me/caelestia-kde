@@ -23,10 +23,9 @@ STATUS=0
 
 # write_stub_matugen
 #
-# A stand-in for matugen. It records its arguments, then walks the config it was
-# given and writes every output path: the scheme template gets a scheme.json
-# built from the metadata and mode it was handed, everything else gets a line
-# naming the template it came from.
+# Stands in for matugen: records its arguments, then walks the config it was given
+# and writes every output path - scheme.json from the metadata and mode, a line
+# naming the template for everything else.
 write_stub_matugen() {
     cat > "$STUB_DIR/matugen" <<'STUB'
 #!/usr/bin/env bash
@@ -93,10 +92,9 @@ STUB
 
 # write_stub_ffmpeg
 #
-# The stand-in for the decoder the smart-variant measurement reads pixels with.
-# It prints raw RGB instead of running ffmpeg, so the thresholds upstream chose
-# are exercised without a real image: FFMPEG_PATTERN picks the pixels, and an
-# unknown one fails the way a file ffmpeg cannot read would.
+# Stands in for the decoder the smart-variant measurement reads: prints raw RGB
+# instead of running ffmpeg, so the thresholds are exercised without a real image.
+# FFMPEG_PATTERN picks the pixels; an unknown one fails as an unreadable file would.
 write_stub_ffmpeg() {
     cat > "$STUB_DIR/ffmpeg" <<'STUB'
 #!/usr/bin/env bash
@@ -111,11 +109,9 @@ STUB
 
 # write_stub_kde
 #
-# Stand-ins for the KDE tools the apply step drives. The applier and the config
-# writer record the arguments they were given, which is what the apply step is
-# made of: a name to apply and a set of keys to write. The reader reports what
-# KREAD_SCHEME says, so a test can put a scheme in effect and see what the next
-# change does about it.
+# Stand-ins for the KDE tools the apply step drives: the applier and config writer
+# record their arguments (a name to apply, keys to write), and the reader reports
+# what KREAD_SCHEME says, so a test can put a scheme in effect.
 write_stub_kde() {
     cat > "$STUB_DIR/plasma-apply-colorscheme" <<'STUB'
 #!/usr/bin/env bash
@@ -135,9 +131,8 @@ STUB
 
 # setup_sandbox
 #
-# A throwaway home: config, state and cache all inside it, with the repository's
-# scheme data pointed at directly. Nothing here touches the developer's own
-# files, which matters because the command writes into XDG directories.
+# A throwaway home (config, state, cache) with the repo's scheme data pointed at
+# directly, so nothing touches the developer's own XDG directories.
 setup_sandbox() {
     SANDBOX="$(new_tmpdir)"
     STUB_DIR="$SANDBOX/bin"
@@ -181,8 +176,8 @@ run_color() {
 
 # wallpaper_image <name>
 #
-# A file to point the command at. The path is canonicalized, because that is
-# what the command stores: it resolves the wallpaper before writing it down.
+# A file to point the command at. The path is canonicalized because that is what
+# the command stores.
 wallpaper_image() {
     local path="$XDG_PICTURES_DIR/$1"
     printf 'not really a png\n' > "$path"
@@ -547,9 +542,8 @@ test_the_palette_reaches_the_desktop() {
     assert_file_exists "$XDG_DATA_HOME/color-schemes/Matugen.colors"
     assert_contains "$(cat "$KDE_CALLS")" "apply Matugen" "the palette is applied to Plasma"
 
-    # Plasma rewrites the focus, link and selection colors from an accent color
-    # of its own, on top of the palette it was just given, so both ways of
-    # having one are cleared.
+    # Plasma rewrites focus, link and selection colors from an accent of its own, on top
+    # of the palette just applied, so both ways of setting one are cleared.
     assert_contains "$(cat "$KDE_CALLS")" "--key AccentColor --delete" \
         "a leftover accent color is dropped"
     assert_contains "$(cat "$KDE_CALLS")" "--key AccentColorFromWallpaper --delete" \

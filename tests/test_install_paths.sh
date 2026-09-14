@@ -27,10 +27,10 @@ layout() {
 # cli_env <bin dir> <home>: what the command exports for everything it spawns, decided
 # from where the command is - which is the whole of the inference it does.
 #
-# The command is sourced with its path in $0 and nothing in $@, because a sourced script
-# inherits the caller's positional parameters and this one ends by calling main "$@": with
-# an argument in $@ it would run that as a subcommand and exit. stdout is silenced so the
-# usage text it prints does not become the answer.
+# Sourced with its path in $0 and nothing in $@: a sourced script inherits the
+# caller's positional parameters, and this one ends by calling main "$@", so an
+# argument would run as a subcommand and exit. stdout is silenced so the usage text
+# does not become the answer.
 cli_env() {
     env -u QML2_IMPORT_PATH -u CAELESTIA_LIB_DIR -u CAELESTIA_INSTALL_KIND \
         HOME="$2" XDG_CONFIG_HOME="$2/.config" CAELESTIA_BIN_DIR="$1" \
@@ -69,9 +69,9 @@ test_the_kind_can_be_stated_rather_than_inferred() {
 }
 
 test_the_command_names_the_installs_own_directories() {
-    # The bug this replaced: the command exported the checkout's paths on every machine,
-    # so a packaged install spawned its shell with ~/.config/quickshell/caelestia ahead of
-    # /etc/xdg/quickshell/caelestia, and /usr/lib/qt6/qml was lost from the import path.
+    # The bug this replaced: the command exported the checkout's paths everywhere, so a
+    # packaged install spawned its shell with ~/.config/quickshell/caelestia ahead of
+    # /etc/xdg, losing /usr/lib/qt6/qml from the import path.
     assert_eq "/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia|/usr/lib/caelestia" \
         "$(cli_env /usr/bin "$HOME")" "a command in /usr/bin belongs to a package"
 
@@ -98,10 +98,9 @@ test_the_command_prefers_what_the_session_told_it() {
 }
 
 test_the_version_comes_from_the_installed_helper() {
-    # Upstream's CLI reads the helper CMake installs into INSTALL_LIBDIR, and so does this
-    # one: the number is compiled into the build, so on a package it is the one pacman
-    # installed. A copy of version.env beside the config could go stale between an upgrade
-    # and the next `caelestia install`, which is exactly what it did.
+    # Both upstream's CLI and this one read the helper CMake installs into INSTALL_LIBDIR:
+    # the number is compiled in, so a package reports what pacman installed. A copy of
+    # version.env beside the config went stale between an upgrade and `caelestia install`.
     local dir home out
     dir="$(new_tmpdir)"
     home="$dir/home"
@@ -130,9 +129,8 @@ test_a_checkout_with_no_helper_reports_its_version_file() {
 }
 
 test_the_command_asks_the_install_for_its_version() {
-    # It used to count two and three directory levels up from wherever it was, guessing at
-    # a checkout's shape, and then read a copy of version.env that an upgrade could leave
-    # behind.
+    # It used to count directory levels up from wherever it was, guessing at a checkout's
+    # shape, then read a version.env copy an upgrade could leave behind.
     local cli
     cli="$(cat "$CLI")"
     assert_contains "$cli" '"$CAELESTIA_LIB_DIR/version" -s' "the version should come from the installed helper"

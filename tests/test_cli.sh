@@ -18,9 +18,8 @@ RUN_STATUS=0
 
 # setup_stubs
 #
-# One recording stub per helper the dispatcher hands off to, plus an
-# XDG_CONFIG_HOME inside the scratch directory so that `version` cannot pick up
-# the version of a shell installed on the machine running these tests.
+# One recording stub per helper, plus an XDG_CONFIG_HOME inside the scratch dir, so
+# `version` cannot pick up a shell installed on the machine running the tests.
 setup_stubs() {
     STUB_DIR="$(new_tmpdir)/bin"
     CALLS="$(dirname "$STUB_DIR")/calls.log"
@@ -36,8 +35,8 @@ setup_stubs() {
 
 # run_cli <args...>
 #
-# Run the dispatcher against the stubs, capturing output and exit status. The
-# call log starts empty, so an assertion sees exactly what this run handed off.
+# Runs the dispatcher against the stubs, capturing output and status. The call log
+# starts empty, so an assertion sees exactly what this run handed off.
 run_cli() {
     [[ -n "$STUB_DIR" ]] || setup_stubs
     : > "$CALLS"
@@ -173,9 +172,9 @@ test_unknown_command_and_option_are_rejected() {
 test_install_with_nothing_to_install_from_explains_itself() {
     setup_stubs
 
-    # Install has two sources now: a checkout, which it hands over to, or a package,
-    # whose step scripts it runs for the user's half. With neither it says so. The
-    # packaged path itself is covered in tests/test_packaged_install.sh.
+    # Install has two sources - a checkout it hands over to, or a package whose step
+    # scripts it runs for the user's half - and says so with neither. The packaged path
+    # itself is covered in test_packaged_install.sh.
     RUN_OUTPUT="$(CAELESTIA_BIN_DIR="$STUB_DIR" \
         CAELESTIA_DIR="$(dirname "$STUB_DIR")/nowhere" \
         CAELESTIA_LIB_DIR="$(dirname "$STUB_DIR")/nowhere" \

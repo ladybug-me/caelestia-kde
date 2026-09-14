@@ -34,11 +34,11 @@ ColumnLayout {
         spacing: Tokens.spacing.small
 
         Repeater {
-            model: true ? Kwin.workspaces.length : 10
+            model: Kwin.workspaces.length
 
             Button {
                 required property int index
-                readonly property int wsId: true ? Kwin.workspaces[index].index : index + 1
+                readonly property int wsId: Kwin.workspaces[index].index
                 readonly property string wsName: wsId.toString()
                 readonly property bool isCurrent: root.client?.workspace?.id === wsId
 

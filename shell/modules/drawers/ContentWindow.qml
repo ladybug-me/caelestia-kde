@@ -147,14 +147,11 @@ StyledWindow {
     WlrLayershell.keyboardFocus: wantsKeyboard ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
     onWantsKeyboardChanged: {
-        if (false)
-            return;
-
         if (wantsKeyboard) {
             // The bridge ignores the shell taking focus, so this is still the
             // application that had it.
             focusReturn = Kwin.activeWindow?.address ?? "";
-            workspaceReturn = true ? Kwin.activeWsId : -1;
+            workspaceReturn = Kwin.activeWsId;
             return;
         }
 
@@ -172,7 +169,7 @@ StyledWindow {
             return;
         }
 
-        const currentWorkspace = true ? Kwin.activeWsId : -1;
+        const currentWorkspace = Kwin.activeWsId;
         if (oldWorkspace !== -1 && currentWorkspace !== oldWorkspace) {
             // User explicitly navigated to a different workspace while the drawer
             // was open (e.g., clicking an empty workspace in the overview).

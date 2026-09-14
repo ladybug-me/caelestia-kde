@@ -24,7 +24,7 @@ StyledRect {
 
     property var currentItem: workspaces.count > 0 ? workspaces.itemAt(currentWsIdx) : null
     readonly property int indicatorSize: currentItem ? (currentItem as Workspace).indicatorSize : 40
-    property real rawSwipeOffset: true ? (Kwin.swipeOffsetByOutput?.[screenName] ?? Kwin.swipeOffset) : 0.0
+    property real rawSwipeOffset: Kwin.swipeOffsetByOutput?.[screenName] ?? Kwin.swipeOffset ?? 0.0
     // isSwiping stays true for a short settle period after swipeOffset returns to 0
     // to let the SmoothedAnimation reach its target before EAnim kicks back in.
     property bool isSwiping: false

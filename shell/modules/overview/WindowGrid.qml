@@ -308,7 +308,7 @@ for (let i = 0; i < count; ++i) {
             height: listView.height
             Component.onCompleted: {
                 _updateWsWindows();
-                //console.log("WindowGrid Page initialized. wsId:", wsId, "windows found:", wsWindows.length, "Total windows globally:", true ? Kwin.windowList.length : -1);
+                //console.log("WindowGrid Page initialized. wsId:", wsId, "windows found:", wsWindows.length, "Total windows globally:", Kwin.windowList.length);
             }
             onWsWindowsChanged: {
                 //console.log("WindowGrid Page updated. wsId:", wsId, "windows found:", wsWindows.length);

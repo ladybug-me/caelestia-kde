@@ -82,13 +82,11 @@ PanelWindow {
         const useSnapshot = root.snapshotWorkspaceId > 0 || root.snapshotWorkspaceUuid !== "";
         const target = useSnapshot
             ? (root.snapshotWorkspaceUuid !== "" ? root.snapshotWorkspaceUuid : root.snapshotWorkspaceId)
-            : (true ? Kwin.activeWsId : 0);
+            : Kwin.activeWsId;
 
         // windowsForWorkspace owns the workspace-field semantics (numeric id /
         // uuid, -1 = all workspaces), so hover-focus cannot drift the filter.
-        const arr = Array.from(true
-            ? Kwin.windowsForWorkspace(target)
-            : []);
+        const arr = Array.from(Kwin.windowsForWorkspace(target));
 
         return arr.sort((a, b) => {
             // Sort floating=true windows before others

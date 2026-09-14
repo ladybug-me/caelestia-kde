@@ -24,8 +24,7 @@ concurrency:
 jobs:
   synchronize:
     runs-on: ubuntu-latest
-    # Skipped on forks: the secrets do not exist there, and the action would
-    # fail on every push rather than simply not running.
+    # Forks have no secrets; without this the action fails on every push.
     if: github.repository == 'ladybug-me/caelestia-kde'
     permissions:
       contents: write
@@ -52,10 +51,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y qt6-l10n-tools qt6-tools-dev
 
-      # English is the source language, so its catalog is not committed --
-      # it would be thousands of lines of empty translations. Crowdin needs one
-      # to slice into the target languages, so it is rebuilt from the QML here
-      # and left uncommitted.
+      # English is the source language and its catalog is not committed (thousands of empty
+      # entries), but Crowdin needs one to slice into the target languages.
       - name: Regenerate the Source Catalog
         run: |
           set -euo pipefail
@@ -66,22 +63,15 @@ jobs:
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
-          # Off by default: translations are edited in Crowdin, and pushing the
-          # committed ones back on every run would let a stale local catalog
-          # overwrite newer work there.
-          #
-          # It has to be on exactly once, though. Crowdin starts empty, so a
-          # first run that only uploads sources and then downloads would export
-          # every target file untranslated -- and open a pull request replacing
-          # a finished translation with a blank one. Seeding first means the
-          # download returns what is already here.
+          # Translations are edited in Crowdin, so pushing the committed ones back would let
+          # a stale local catalog overwrite newer work there. It must be run once with
+          # seed_translations: Crowdin starts empty, and a first run that only uploads would
+          # export every target untranslated, opening a PR that blanks a finished translation.
           upload_translations: ${{ inputs.seed_translations == true }}
           auto_approve_imported: ${{ inputs.seed_translations == true }}
           download_translations: true
-          # Crowdin exports a file for every target language on the project,
-          # including the ones at 0%. Left on, the first run added 26 catalogs
-          # of nothing but untranslated entries, each of which the build would
-          # compile and the language picker would then offer as a language that
+          # Without this Crowdin exports a file for every target language including the 0%
+          # ones, which the build compiles and the picker then offers as a language that
           # renders in English.
           skip_untranslated_files: true
           localization_branch_name: i18n/crowdin
@@ -95,20 +85,15 @@ jobs:
           commit_message: "i18n: new translations from Crowdin"
           config: crowdin.yml
         env:
-          # The caelestia-automation app token, as every workflow here that
-          # opens a pull request uses. Not secrets.GITHUB_TOKEN: a workflow
-          # cannot open a pull request with it unless the repository allows
-          # Actions to, and the first run failed on exactly that ("GitHub
-          # Actions is not permitted to create or approve pull requests").
+          # The caelestia-automation app token, as every PR-opening workflow here uses.
+          # secrets.GITHUB_TOKEN cannot open a PR unless the repository allows Actions to.
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-  # A Crowdin pull request carries .ts files only. The compiled catalogs are
-  # committed so that a build without Qt's Linguist tools still ships every
-  # language, and such a build installs them as they are -- so a .ts that
-  # arrives without its .qm would quietly ship the previous translation. This
-  # keeps the pair together.
+  # A Crowdin PR carries .ts files only, and the compiled .qm catalogs are committed: a
+  # .ts arriving without its .qm would ship the previous translation. This keeps the pair
+  # together.
   compile:
     runs-on: ubuntu-latest
     if: github.repository == 'ladybug-me/caelestia-kde'

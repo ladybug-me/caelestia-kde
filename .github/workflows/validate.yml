@@ -40,8 +40,7 @@ jobs:
       - name: flake8 lint
         run: |
           echo "::group::flake8"
-          # Only check our own Python scripts, not vendored/pre-existing ones
-          # (shell/scripts holds the QML linter and other repo tooling).
+          # Our own Python only, plus shell/scripts (the QML linter and repo tooling).
           flake8 .github/scripts/ shell/scripts/ \
             --exclude 'orion_search.py,menu_perf_stats.py' \
             --max-line-length=120 \
@@ -70,8 +69,7 @@ jobs:
         run: python3 .github/scripts/test_repo_integrity.py
 
       - name: Audit settings search coverage
-        # Gates on settings sub-pages that no search entry can open, and reports
-        # the section headers and setting rows that are still not indexed.
+        # Gates on settings sub-pages no search entry can open; reports unindexed headers and rows.
         run: python3 .github/scripts/audit_search_coverage.py
 
   # Job 3: JSON configuration validation
@@ -102,9 +100,8 @@ jobs:
           python-version: '3.x'
 
       - name: Run file hygiene checks
-        # PRs: only files changed in this PR (hard). Pushes to main/dev: full
-        # repo scan (report-only — there is pre-existing debt that would fail
-        # a hard gate, but the log surfaces it for cleanup).
+        # Changed files only on a PR (hard fail); full scan on a push to main/dev, report-only
+        # since the pre-existing debt would fail a hard gate.
         run: python3 .github/scripts/check_file_hygiene.py ${{ github.event_name == 'push' && '--all' || '' }}
         continue-on-error: ${{ github.event_name == 'push' }}
 
@@ -125,9 +122,8 @@ jobs:
             .github/*.md
 
   # Job 6: QML conventions - project linter regression gate
-  # shell/scripts/qml-lint-conventions.py has thousands of pre-existing
-  # violations, so this job diffs against a stored baseline and fails only when
-  # NEW violations appear. Regenerate with --update when intentional.
+# shell/scripts/qml-lint-conventions.py has thousands of pre-existing violations, so this
+# diffs against a stored baseline and fails only on NEW ones (--update to regenerate).
   qml-conventions:
     runs-on: ubuntu-latest
     steps:
@@ -143,11 +139,9 @@ jobs:
         run: python3 .github/scripts/check_qml_conventions.py
 
   # Job 7: QML structural syntax - brace balance + top-level component
-  # A QML syntax error (an inline `component` declared at the top level, or an
-  # unbalanced brace) makes the whole shell fail to load, and the error
-  # cascades through the module tree so the reported file is not the real
-  # cause. qmllint can't resolve Quickshell's qs.* imports, so this does a
-  # lightweight structural parse instead.
+# An unbalanced brace or a top-level inline `component` fails the whole shell load, and the
+# error cascades so the reported file is not the cause. qmllint cannot resolve Quickshell's
+# qs.* imports, so this does a lightweight structural parse.
   qml-syntax:
     runs-on: ubuntu-latest
     steps:
@@ -163,8 +157,8 @@ jobs:
         run: python3 .github/scripts/check_qml_syntax.py --source-root shell
 
   # Job 8: Embedded bash - syntax-check bash/sh inside QML Process commands
-  # Quickshell runs `command: ["bash", "-c", `<script>`]` strings that qmllint
-  # and shellcheck never see; a typo there only surfaces at runtime.
+# Bash inside QML `command: ["bash", "-c", `...`]` strings, which qmllint and shellcheck
+# never see; a typo there only surfaces at runtime.
   embedded-bash:
     runs-on: ubuntu-latest
     steps:
@@ -180,9 +174,8 @@ jobs:
         run: python3 .github/scripts/check_embedded_bash.py
 
   # Job 9: Config cross-reference - QML config keys vs C++ declarations
-  # Catches Config./GlobalConfig. references that don't exist in the plugin's
-  # CONFIG_PROPERTY declarations (renamed keys, typos) - the shell logs
-  # "Cannot assign to non-existent property" and the widget silently breaks.
+# Config./GlobalConfig. references with no matching CONFIG_PROPERTY (renamed keys, typos):
+# the shell logs "Cannot assign to non-existent property" and the widget silently breaks.
   config-cross-ref:
     runs-on: ubuntu-latest
     steps:
@@ -198,8 +191,8 @@ jobs:
         run: python3 .github/scripts/check_config_references.py
 
   # Job 10: actionlint - validate workflow files themselves
-  # Catches malformed ${{ }} expressions, bad `on:` keys, wrong permission
-  # scopes, etc. that a plain YAML parse cannot.
+# Malformed ${{ }} expressions, bad `on:` keys, wrong permission scopes - things a plain
+# YAML parse accepts.
   actionlint:
     runs-on: ubuntu-latest
     steps:
@@ -217,11 +210,10 @@ jobs:
         run: actionlint -shellcheck= -color -ignore 'missing input "app-id"' -ignore 'input "client-id" is not defined'
 
   # Job 11: Wayland static lifetime - catch exit-time SIGSEGVs
-  # A class inheriting QWaylandClientExtensionTemplate<T> or QtWayland::* owns
-  # a live wl_proxy. Holding one as a function-local (or other) static by
-  # value tears it down from an exit handler after Qt's closed the display,
-  # which segfaults the shell on quit - see windowscreencast.cpp/plasmawindows.cpp
-  # for the fix pattern (leak the pointer instead).
+# A class inheriting QWaylandClientExtensionTemplate<T> or QtWayland::* owns a live
+# wl_proxy; holding one as a static by value tears it down from an exit handler after Qt
+# closed the display, segfaulting the shell on quit. See windowscreencast.cpp for the fix
+# pattern (leak the pointer instead).
   wayland-static-lifetime:
     runs-on: ubuntu-latest
     steps:
@@ -237,12 +229,9 @@ jobs:
         run: python3 .github/scripts/check_wayland_static_lifetime.py
 
   # Job 12: QML import completeness - missing/extra imports
-  # No real Qt/QML toolchain is available here (qmllint6 can't resolve this
-  # repo's qs.* directory-import convention at all), and no other job ever
-  # loads the QML engine - see check_qml_imports.py's module docstring for
-  # the exact/correlation registry design. This is what would have caught
-  # Nmcli.qml shipping without `import Quickshell` ("Singleton is not a
-  # type", cascading into "Type X unavailable" for every transitive importer).
+# No Qt/QML toolchain here (qmllint6 cannot resolve this repo's qs.* directory imports), so
+# check_qml_imports.py builds its own registry. This is what would have caught Nmcli.qml
+# shipping without `import Quickshell`.
   qml-imports:
     runs-on: ubuntu-latest
     steps:
@@ -258,10 +247,8 @@ jobs:
         run: python3 .github/scripts/check_qml_imports.py --shell-root shell
 
   # Job 13: QML template interpolation - unescaped bash ${...}
-  # Bash embedded in QML backtick template literals must escape `${` as
-  # `\${`; an unescaped `${1#v}` is parsed as JavaScript and fails with
-  # "Expected token ','", which then cascades into "Type X unavailable" for
-  # every transitive importer (see shell/services/UpdateChecker.qml).
+# Bash in QML backtick literals must escape `${` as `\${`; an unescaped one parses as
+# JavaScript and fails the load for every transitive importer.
   qml-template-interp:
     runs-on: ubuntu-latest
     steps:
@@ -277,8 +264,8 @@ jobs:
         run: python3 .github/scripts/check_qml_template_interp.py
 
   # Job 14: Shell quality - syntax, shellcheck, strict mode, unsafe patterns
-  # check_shell_quality.sh is written for CI but was not wired into any
-  # workflow, so nothing was gating the shell scripts.
+# check_shell_quality.sh was written for CI but wired into no workflow, so nothing was
+# gating the shell scripts.
   shell-quality:
     runs-on: ubuntu-latest
     steps:

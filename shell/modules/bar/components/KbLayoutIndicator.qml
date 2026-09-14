@@ -27,7 +27,7 @@ StyledRect {
         anchors.rightMargin: Tokens.padding.medium
 
         horizontalAlignment: Text.AlignHCenter
-        text: Hypr.kbLayout.toUpperCase()
+        text: Kwin.kbLayout.toUpperCase()
         color: Colours.palette.m3secondary
         font: Tokens.font.mono.medium
         elide: Text.ElideRight

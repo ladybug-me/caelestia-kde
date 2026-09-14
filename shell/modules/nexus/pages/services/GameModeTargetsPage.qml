@@ -6,7 +6,6 @@ import Quickshell
 import Quickshell.Widgets
 import Caelestia
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.components.containers
 import qs.components.controls
@@ -264,7 +263,7 @@ PageBase {
                         Layout.fillHeight: true
 
                         Connections {
-                            target: KWinActiveWindowBridge
+                            target: Kwin
 
                             function onWindowListChanged() {
                                 list.updateModel();
@@ -273,7 +272,7 @@ PageBase {
 
                         function updateModel() {
                             let toplevels = [];
-                            for (const toplevel of KWinActiveWindowBridge.windowList) {
+                            for (const toplevel of Kwin.windowList) {
                                 if (toplevel.title || toplevel.class) {
                                     toplevels.push(toplevel);
                                 }

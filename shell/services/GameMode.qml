@@ -5,7 +5,6 @@ import Quickshell
 import Quickshell.Io
 import Caelestia
 import Caelestia.Config
-import Caelestia.Services
 import qs.services
 import qs.utils
 
@@ -32,8 +31,8 @@ Singleton {
     property bool autoEnabled: false
 
     readonly property var _windows: {
-        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList && KWinActiveWindowBridge.windowList.length > 0)
-            return KWinActiveWindowBridge.windowList;
+        if (Kwin.windowList.length > 0)
+            return Kwin.windowList;
         return HyprlandData.windowList;
     }
 
@@ -77,7 +76,7 @@ Singleton {
     }
 
     function setDynamicConfs(): void {
-        Hypr.extras.applyOptions({
+        Kwin.extras.applyOptions({
             "animations:enabled": 0,
             "decoration:shadow:enabled": 0,
             "decoration:blur:enabled": 0,
@@ -181,7 +180,7 @@ Singleton {
             }
 
             if (root.onHyprland)
-                Hypr.extras.message("reload");
+                Kwin.extras.message("reload");
             else
                 applyKwin(false);
 
@@ -195,7 +194,7 @@ Singleton {
         id: props
 
         // Plain state, not a binding. It used to read back from
-        // Hypr.options["animations:enabled"], which off Hyprland evaluates
+        // Kwin.options["animations:enabled"], which off Hyprland evaluates
         // undefined === 0 — false — so game mode could never stay switched on
         // there. onConfigReloaded below re-applies the options on Hyprland, so
         // nothing needed the binding anyway.
@@ -233,7 +232,7 @@ Singleton {
                 root.setDynamicConfs();
         }
 
-        target: Hypr
+        target: Kwin
     }
 
     IpcHandler {

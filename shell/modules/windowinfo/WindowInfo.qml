@@ -2,7 +2,6 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.services
 
@@ -11,17 +10,17 @@ StyledRect {
 
     property string clientAddress: ""
     property var client: {
-        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList) {
+        if (Kwin.windowList.length > 0) {
             if (clientAddress !== "") {
-                for (let i = 0; i < KWinActiveWindowBridge.windowList.length; ++i) {
-                    if (KWinActiveWindowBridge.windowList[i].address === clientAddress) {
-                        return KWinActiveWindowBridge.windowList[i];
+                for (let i = 0; i < Kwin.windowList.length; ++i) {
+                    if (Kwin.windowList[i].address === clientAddress) {
+                        return Kwin.windowList[i];
                     }
                 }
             } else {
-                for (let i = 0; i < KWinActiveWindowBridge.windowList.length; ++i) {
-                    if (KWinActiveWindowBridge.activeWindow && KWinActiveWindowBridge.windowList[i].address === KWinActiveWindowBridge.activeWindow.address) {
-                        return KWinActiveWindowBridge.windowList[i];
+                for (let i = 0; i < Kwin.windowList.length; ++i) {
+                    if (Kwin.activeWindow && Kwin.windowList[i].address === Kwin.activeWindow.address) {
+                        return Kwin.windowList[i];
                     }
                 }
             }

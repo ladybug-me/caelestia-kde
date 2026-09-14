@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.services
 
@@ -35,21 +34,18 @@ ColumnLayout {
         spacing: Tokens.spacing.small
 
         Repeater {
-            model: typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState.workspaces.length : 10
+            model: true ? Kwin.workspaces.length : 10
 
             Button {
                 required property int index
-                readonly property int wsId: typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState.workspaces[index].index : index + 1
+                readonly property int wsId: true ? Kwin.workspaces[index].index : index + 1
                 readonly property string wsName: wsId.toString()
                 readonly property bool isCurrent: root.client?.workspace?.id === wsId
 
                 onClicked: {
-                    if (typeof KWinActiveWindowBridge !== "undefined") {
-                        KWinActiveWindowBridge.setWindowDesktop(root.client?.address, wsId);
-                        if (typeof KWinWorkspaceState !== "undefined") {
-                            KWinWorkspaceState.switchTo(wsId);
-                        }
-                    }
+Kwin.setWindowDesktop(root.client?.address, wsId);
+Kwin.switchToWorkspace(wsId);
+                
                     Visibilities.setOverview(false);
                 }
                 color: isCurrent ? Colours.tPalette.m3surfaceContainerHighest : Colours.palette.m3tertiaryContainer
@@ -72,12 +68,9 @@ ColumnLayout {
             text: root.client?.maximized ? qsTr("Restore") : qsTr("Maximize")
             onClicked: {
                 console.log("Maximize clicked. Address:", root.client?.address, "Maximized:", root.client?.maximized);
-                if (typeof KWinActiveWindowBridge !== "undefined") {
-                    console.log("Calling KWinActiveWindowBridge.maximizeWindow");
-                    KWinActiveWindowBridge.maximizeWindow(root.client?.address, !root.client?.maximized, !root.client?.maximized);
-                } else {
-                    console.log("KWinActiveWindowBridge is undefined");
-                }
+console.log("Calling Kwin.maximizeWindow");
+Kwin.maximizeWindow(root.client?.address, !root.client?.maximized, !root.client?.maximized);
+            
                 Visibilities.setOverview(false);
             }
         }
@@ -89,13 +82,12 @@ ColumnLayout {
                 onColor: Colours.palette.m3onSecondaryContainer
                 text: root.client?.minimized ? qsTr("Unminimize") : qsTr("Minimize")
                 onClicked: {
-                    if (typeof KWinActiveWindowBridge !== "undefined") {
-                        if (root.client?.minimized) {
-                            KWinActiveWindowBridge.focusWindow(root.client?.address);
-                        } else {
-                            KWinActiveWindowBridge.minimizeWindow(root.client?.address);
-                        }
-                    }
+if (root.client?.minimized) {
+    Kwin.focusWindow(root.client?.address);
+} else {
+    Kwin.minimizeWindow(root.client?.address);
+}
+                
                     Visibilities.setOverview(false);
                 }
             }
@@ -109,10 +101,9 @@ ColumnLayout {
             text: qsTr("Kill")
             onClicked: {
                 console.log("Kill clicked. Address:", root.client?.address);
-                if (typeof KWinActiveWindowBridge !== "undefined") {
-                    console.log("Calling KWinActiveWindowBridge.closeWindow");
-                    KWinActiveWindowBridge.closeWindow(root.client?.address);
-                }
+console.log("Calling Kwin.closeWindow");
+Kwin.closeWindow(root.client?.address);
+            
                 Visibilities.setOverview(false);
             }
         }

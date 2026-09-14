@@ -1,7 +1,6 @@
 import QtQuick
 import Quickshell
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.services
 import qs.utils
@@ -38,7 +37,7 @@ Item {
         // Derived from KWin so the arrow stays in sync with the real "show
         // desktop" state: toggling it any other way still flips the arrow, and
         // a failed invocation never leaves it pointing the wrong way.
-        rotation: (typeof KWinWorkspaceState !== "undefined" && KWinWorkspaceState.showingDesktop) ? 180 : 0
+        rotation: (Kwin.showingDesktop) ? 180 : 0
 
         Behavior on rotation {
             Anim { type: Anim.FastSpatial }

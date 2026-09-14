@@ -184,7 +184,7 @@ PageBase {
             Layout.fillWidth: true
             last: true
             text: qsTr("Welcome splash")
-            visible: typeof KWinActiveWindowBridge === "undefined"
+            visible: false
             subtext: qsTr("Show a welcome message on the dashboard")
             checked: Config.dashboard.showHyprlandSplash
             onToggled: GlobalConfig.dashboard.showHyprlandSplash = checked

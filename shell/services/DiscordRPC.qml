@@ -127,7 +127,7 @@ Item {
     }
 
     Connections {
-        target: KWinActiveWindowBridge
+        target: Kwin
         enabled: root.active
         ignoreUnknownSignals: true
 
@@ -210,17 +210,17 @@ Item {
         // to match the regex shouldn't describe you better than what you're
         // actually looking at. Seeding the values here means the scan below
         // only fills them in when nothing focused matched.
-        const activeClass = KWinActiveWindowBridge.activeWindow.class ?? "";
+        const activeClass = Kwin.activeWindow.class ?? "";
         if (activeClass !== "") {
             const activeIdx = root.findMatchingIndex(GlobalConfig.services.arpcTargetWindows, activeClass);
             if (activeIdx >= 0) {
                 topTargetClass = activeClass;
-                topTargetTitle = KWinActiveWindowBridge.activeWindow.title ?? "";
+                topTargetTitle = Kwin.activeWindow.title ?? "";
                 topTargetMatchIdx = activeIdx;
             }
         }
 
-        for (const toplevel of KWinActiveWindowBridge.windowList) {
+        for (const toplevel of Kwin.windowList) {
             let winClass = toplevel.class ?? "";
             let winTitle = toplevel.title ?? "";
 

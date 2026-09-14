@@ -4,7 +4,6 @@ import QtCore
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Io
-import Caelestia.Services
 import qs.components.misc
 import qs.services
 
@@ -37,7 +36,7 @@ Scope {
 
             required property var modelData
 
-            active: root.screenshotActive && modelData.name === KWinActiveWindowBridge.cursorOutputName()
+            active: root.screenshotActive && modelData.name === Kwin.cursorOutputName()
 
             sourceComponent: RegionSelection {
                 screen: regionSelectorLoader.modelData

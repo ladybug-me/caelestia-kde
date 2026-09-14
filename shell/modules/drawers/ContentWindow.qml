@@ -10,7 +10,6 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import Caelestia.Blobs
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.components.containers
 import qs.services
@@ -36,15 +35,15 @@ StyledWindow {
     // them, so both survive the dashboard closing and a shell reload.
     readonly property ScreenState screenState: ShellState.forScreen(screen)
     // NOTE: strictly typed as HyprlandMonitor upstream, but under the KDE
-    // fallback bridge Hypr.monitorFor() returns a plain mock QtObject (not
+    // fallback bridge Kwin.monitorFor() returns a plain mock QtObject (not
     // a real qs::hyprland::ipc::HyprlandMonitor), so keep this loosely
     // typed to avoid "Unable to assign QObject to HyprlandMonitor" warnings
     // and the resulting null-monitor cascade.
-    readonly property var monitor: Hypr.monitorFor(screen)
-    // Reference Hypr.activeWsId so QML re-evaluates this binding whenever the
+    readonly property var monitor: Kwin.monitorFor(screen)
+    // Reference Kwin.activeWsId so QML re-evaluates this binding whenever the
     // active workspace changes — hasFullscreenOn() filters by workspace, but
     // a plain function call only re-runs when its direct property deps change.
-    readonly property bool actualFullscreen: (Hypr.activeWsId, Hypr.hasFullscreenOn(screen?.name ?? ""))
+    readonly property bool actualFullscreen: (Kwin.activeWsId, Kwin.hasFullscreenOn(screen?.name ?? ""))
     readonly property bool hasOpenOverlay: focusGrabState.active || panels.popouts.isDetached || desktopContextMenu.expanded || visibilities.overview || visibilities.launcher || visibilities.dashboard || visibilities.sidebar || visibilities.session || visibilities.utilities
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
     property real fsTransitionProg: hasFullscreen ? 1 : 0
@@ -148,21 +147,21 @@ StyledWindow {
     WlrLayershell.keyboardFocus: wantsKeyboard ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
     onWantsKeyboardChanged: {
-        if (typeof KWinActiveWindowBridge === "undefined")
+        if (false)
             return;
 
         if (wantsKeyboard) {
             // The bridge ignores the shell taking focus, so this is still the
             // application that had it.
-            focusReturn = KWinActiveWindowBridge.activeWindow?.address ?? "";
-            workspaceReturn = typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState.activeId : -1;
+            focusReturn = Kwin.activeWindow?.address ?? "";
+            workspaceReturn = true ? Kwin.activeWsId : -1;
             return;
         }
 
         // Whatever the user switched to while the drawer was open wins, so this
         // only falls back to what was remembered.
-        const pending = KWinActiveWindowBridge.pendingFocusAddress ?? "";
-        const addr = (KWinActiveWindowBridge.activeWindow?.address ?? "") || focusReturn;
+        const pending = Kwin.pendingFocusAddress ?? "";
+        const addr = (Kwin.activeWindow?.address ?? "") || focusReturn;
         const oldWorkspace = workspaceReturn;
         focusReturn = "";
         workspaceReturn = -1;
@@ -173,7 +172,7 @@ StyledWindow {
             return;
         }
 
-        const currentWorkspace = typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState.activeId : -1;
+        const currentWorkspace = true ? Kwin.activeWsId : -1;
         if (oldWorkspace !== -1 && currentWorkspace !== oldWorkspace) {
             // User explicitly navigated to a different workspace while the drawer
             // was open (e.g., clicking an empty workspace in the overview).
@@ -182,7 +181,7 @@ StyledWindow {
         }
 
         if (addr)
-            KWinActiveWindowBridge.focusWindow(addr);
+            Kwin.focusWindow(addr);
     }
 
     Overview.Anim {

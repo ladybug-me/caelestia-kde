@@ -7,7 +7,6 @@ import Quickshell.Io
 import Quickshell.Services.Notifications
 import Caelestia
 import Caelestia.Config
-import Caelestia.Services
 import qs.components.misc
 import qs.services
 import qs.utils
@@ -28,18 +27,18 @@ Singleton {
     property bool loaded
 
     function getCursorOutputName(): string {
-        const monitor = (typeof KWinActiveWindowBridge !== "undefined" ? Hypr.monitors[KWinActiveWindowBridge.cursorOutputName()] : null) || Hypr.focusedMonitor;
-        return monitor?.name || (typeof KWinActiveWindowBridge !== "undefined" ? KWinActiveWindowBridge.cursorOutputName() : "") || "";
+        const monitor = (true ? Kwin.monitors[Kwin.cursorOutputName()] : null) || Kwin.focusedMonitor;
+        return monitor?.name || (true ? Kwin.cursorOutputName() : "") || "";
     }
 
     function getTargetOutput(): string {
         const cursorScreen = root.getCursorOutputName();
         if (GlobalConfig.notifs.monitor === "focused") {
-            if (GlobalConfig.notifs.fullscreen === "off" && Hypr.hasFullscreenOn(cursorScreen)) {
+            if (GlobalConfig.notifs.fullscreen === "off" && Kwin.hasFullscreenOn(cursorScreen)) {
                 const scrList = Screens.screens || [];
                 for (let i = 0; i < scrList.length; i++) {
                     const candidate = scrList[i].name;
-                    if (candidate !== cursorScreen && !Hypr.hasFullscreenOn(candidate))
+                    if (candidate !== cursorScreen && !Kwin.hasFullscreenOn(candidate))
                         return candidate;
                 }
                 return "";
@@ -50,7 +49,7 @@ Singleton {
     }
 
     function hasFullscreen(): bool {
-        return Hypr.hasFullscreen();
+        return Kwin.hasFullscreen();
     }
 
     // Called only when an actual list of items is needed (serialisation, clear).
@@ -63,11 +62,11 @@ Singleton {
         if (GlobalConfig.notifs.fullscreen === "off") {
             if (GlobalConfig.notifs.monitor === "focused") {
                 const targetName = root.activeTargetOutput || root.getTargetOutput();
-                if (targetName === "" || Hypr.hasFullscreenOn(targetName))
+                if (targetName === "" || Kwin.hasFullscreenOn(targetName))
                     return false;
             } else {
                 const scrList = Screens.screens || [];
-                if (scrList.length > 0 && scrList.every(s => Hypr.hasFullscreenOn(s.name)))
+                if (scrList.length > 0 && scrList.every(s => Kwin.hasFullscreenOn(s.name)))
                     return false;
                 if (scrList.length === 0 && hasFullscreen())
                     return false;
@@ -84,11 +83,11 @@ Singleton {
         if (GlobalConfig.notifs.fullscreen === "off") {
             if (GlobalConfig.notifs.monitor === "focused") {
                 const targetName = root.activeTargetOutput || root.getTargetOutput();
-                if (targetName === "" || Hypr.hasFullscreenOn(targetName))
+                if (targetName === "" || Kwin.hasFullscreenOn(targetName))
                     return false;
             } else {
                 const scrList = Screens.screens || [];
-                if (scrList.length > 0 && scrList.every(s => Hypr.hasFullscreenOn(s.name)))
+                if (scrList.length > 0 && scrList.every(s => Kwin.hasFullscreenOn(s.name)))
                     return false;
                 if (scrList.length === 0 && hasFullscreen())
                     return false;

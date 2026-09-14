@@ -244,18 +244,17 @@ Singleton {
 
     function reloadHyprRules(): void {
         // Layer rules are Hyprland-only; KWin handles blur via effects.
-        if (typeof KWinActiveWindowBridge !== "undefined")
-            return;
+                    return;
 
         let rule, trEnabled;
-        if (Hypr.usingLua) {
+        if (Kwin.usingLua) {
             rule = `eval hl.layer_rule({ match = { namespace = "caelestia-drawers" }, %1 = %2 })`;
             trEnabled = transparency.enabled;
         } else {
             rule = "keyword layerrule %1 %2, match:namespace caelestia-drawers";
             trEnabled = transparency.enabled ? 1 : 0;
         }
-        Hypr.extras.batchMessage([rule.arg("blur").arg(trEnabled), rule.arg("ignore_alpha").arg(Math.max(0, transparency.base - 0.03))]);
+        Kwin.extras.batchMessage([rule.arg("blur").arg(trEnabled), rule.arg("ignore_alpha").arg(Math.max(0, transparency.base - 0.03))]);
     }
 
     function requestReloadHyprRules(): void {
@@ -280,7 +279,7 @@ Singleton {
             root.reloadHyprRules();
         }
 
-        target: Hypr
+        target: Kwin
     }
 
 

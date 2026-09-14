@@ -50,7 +50,7 @@ Scope {
         else if (action === "unlock")
             root.requestUnlock();
         else if (typeof action === "string")
-            Hypr.dispatch(action);
+            Kwin.dispatch(action);
         else if (!SessionManager.exec(action))
             Launch.exec(action);
     }

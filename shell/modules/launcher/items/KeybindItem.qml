@@ -17,7 +17,7 @@ Item {
             return;
         root.list.visibilities.launcher = false;
 
-        const isKDE = typeof KWinActiveWindowBridge !== "undefined";
+        const isKDE = true;
         let actionStr = root.modelData.action;
 
         if (actionStr.startsWith("command(") && actionStr.endsWith(")")) {

@@ -39,12 +39,12 @@ ColumnLayout {
             spacing: Tokens.spacing.small * root.scaleOffset
 
             StyledText {
-                text: qsTr("Caps Lock: %1").arg(Hypr.capsLock ? "Enabled" : "Disabled")
+                text: qsTr("Caps Lock: %1").arg(Kwin.capsLock ? "Enabled" : "Disabled")
                 font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
             }
 
             StyledText {
-                text: qsTr("Num Lock: %1").arg(Hypr.numLock ? "Enabled" : "Disabled")
+                text: qsTr("Num Lock: %1").arg(Kwin.numLock ? "Enabled" : "Disabled")
                 font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
             }
         }

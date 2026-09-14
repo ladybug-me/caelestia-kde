@@ -2,8 +2,8 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import qs.services
 import Caelestia.Config
-import Caelestia.Services
 
 Singleton {
     id: root
@@ -33,7 +33,7 @@ Singleton {
 
     function refreshHighlight(): void {
         if (GlobalConfig.tabSwitch?.previewOnDesktop && selectedIndex >= 0 && selectedIndex < items.length) {
-            KWinActiveWindowBridge.highlightWindow(items[selectedIndex].address);
+            Kwin.highlightWindow(items[selectedIndex].address);
         }
     }
 
@@ -41,9 +41,9 @@ Singleton {
         if (!client || !client.workspace) return "";
         const wsId = client.workspace.id;
         const wsUuid = client.workspace.uuid;
-        if (typeof KWinWorkspaceState !== "undefined" && KWinWorkspaceState.workspaces) {
-            for (let i = 0; i < KWinWorkspaceState.workspaces.length; ++i) {
-                const ws = KWinWorkspaceState.workspaces[i];
+        if (Kwin.workspaces) {
+            for (let i = 0; i < Kwin.workspaces.length; ++i) {
+                const ws = Kwin.workspaces[i];
                 if ((wsUuid && ws.id === wsUuid) || (wsId !== undefined && wsId !== -1 && ws.index === wsId)) {
                     return ws.name || ("Desktop " + ws.index);
                 }
@@ -54,8 +54,8 @@ Singleton {
     }
 
     function updateItems(): void {
-        const activeAddress = KWinActiveWindowBridge.activeWindow ? KWinActiveWindowBridge.activeWindow.address : "";
-        const winList = (KWinActiveWindowBridge.windowList || []).filter(w => !(w.class && w.class.toLowerCase().includes("xwaylandvideobridge")));
+        const activeAddress = Kwin.activeWindow ? Kwin.activeWindow.address : "";
+        const winList = (Kwin.windowList || []).filter(w => !(w.class && w.class.toLowerCase().includes("xwaylandvideobridge")));
         
         let currentItems = root.items.slice();
         
@@ -115,10 +115,10 @@ Singleton {
         }
 
         // 4. Filter by current desktop if GlobalConfig.tabSwitch.currentDesktopOnly is active (KDE DesktopMode = 0)
-        if (GlobalConfig.tabSwitch?.currentDesktopOnly && typeof KWinWorkspaceState !== "undefined") {
-            const currentWsId = KWinWorkspaceState.activeId;
-            const currentWsUuid = (KWinWorkspaceState.workspaces && currentWsId > 0 && currentWsId <= KWinWorkspaceState.workspaces.length) 
-                ? KWinWorkspaceState.workspaces[currentWsId - 1].id 
+        if (GlobalConfig.tabSwitch?.currentDesktopOnly && true) {
+            const currentWsId = Kwin.activeWsId;
+            const currentWsUuid = (Kwin.workspaces && currentWsId > 0 && currentWsId <= Kwin.workspaces.length) 
+                ? Kwin.workspaces[currentWsId - 1].id 
                 : "";
             currentItems = currentItems.filter(item => {
                 if (!item.workspace && !item.workspaceUuid) return true;
@@ -131,7 +131,7 @@ Singleton {
 
         // 5. Filter by current screen if GlobalConfig.tabSwitch.allScreens is false (KDE MultiScreenMode = 1)
         if (GlobalConfig.tabSwitch && !GlobalConfig.tabSwitch.allScreens) {
-            const activeOut = KWinActiveWindowBridge.activeOutputName || KWinActiveWindowBridge.cursorOutputName();
+            const activeOut = Kwin.activeOutputName || Kwin.cursorOutputName();
             if (activeOut) {
                 currentItems = currentItems.filter(item => !item.monitor || item.monitor === activeOut);
             }
@@ -159,12 +159,12 @@ Singleton {
     }
 
     function focusWindow(address: string): void {
-        KWinActiveWindowBridge.clearHighlight();
-        KWinActiveWindowBridge.focusWindow(address);
+        Kwin.clearHighlight();
+        Kwin.focusWindow(address);
     }
 
     function closeWindow(address: string): void {
-        KWinActiveWindowBridge.closeWindow(address);
+        Kwin.closeWindow(address);
     }
 
     onSelectedIndexChanged: {
@@ -184,7 +184,7 @@ Singleton {
             root.updateItems();
         }
 
-        target: KWinActiveWindowBridge
+        target: Kwin
     }
 
     Connections {
@@ -202,7 +202,7 @@ Singleton {
 
         function onPreviewOnDesktopChanged(): void {
             if (!GlobalConfig.tabSwitch.previewOnDesktop) {
-                KWinActiveWindowBridge.clearHighlight();
+                Kwin.clearHighlight();
             } else {
                 root.refreshHighlight();
             }

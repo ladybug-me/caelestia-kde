@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import Quickshell
 import M3Shapes
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.services
 import qs.utils
@@ -34,7 +33,7 @@ GridLayout {
     readonly property int maxIcons: Config.bar.workspaces.maxWindowIcons
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows
-    property var kwinWindowList: KWinActiveWindowBridge.windowList
+    property var kwinWindowList: Kwin.windowList
 
     // Cache window-icon lists per layout so the Repeater only rebuilds
     // when the set of window identities actually changes, not on every
@@ -125,7 +124,7 @@ GridLayout {
             property int swipeStartWsId: -1
             property bool generatedShapeThisSwipe: false
 
-            property real rawSwipeOffset: typeof KWinWorkspaceState !== "undefined" ? (KWinWorkspaceState.swipeOffsetByOutput?.[root.screenName] ?? KWinWorkspaceState.swipeOffset) : 0.0
+            property real rawSwipeOffset: Kwin.swipeOffsetByOutput?.[root.screenName] ?? Kwin.swipeOffset
             property real lastRawSwipeOffset: 0.0
             property bool isSwiping: false
 
@@ -340,24 +339,16 @@ GridLayout {
                     values: {
                         const ws = root.ws;
                         let windows = [];
-                        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList) {
-                            const wins = KWinActiveWindowBridge.windowList;
-                            for (let i = 0; i < wins.length; ++i) {
-                                const w = wins[i];
-                                if (w.output !== root.screenName)
-                                    continue;
-                                if (w.workspace && w.workspace.id === ws && !Hypr.isIgnoredWindow(w)) {
-                                    windows.push(w);
-                                }
-                            }
-                        } else if (typeof Hypr !== "undefined") {
-                            const wins = Hypr.toplevels.values;
-                            for (let i = 0; i < wins.length; ++i) {
-                                if (wins[i].workspace && wins[i].workspace.id === ws && !Hypr.isIgnoredWindow(wins[i])) {
-                                    windows.push(wins[i]);
-                                }
+                        const wins = Kwin.windowList;
+                        for (let i = 0; i < wins.length; ++i) {
+                            const w = wins[i];
+                            if (w.output !== root.screenName)
+                                continue;
+                            if (w.workspace && w.workspace.id === ws && !Kwin.isIgnoredWindow(w)) {
+                                windows.push(w);
                             }
                         }
+                   
                         const maxIcons = root.Config.bar.workspaces.maxWindowIcons;
                         windows = maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
                         const keys = windows.map(w => w.address || w["class"]).sort().join(",");
@@ -410,24 +401,16 @@ GridLayout {
                     values: {
                         const ws = root.ws;
                         let windows = [];
-                        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList) {
-                            const wins = KWinActiveWindowBridge.windowList;
-                            for (let i = 0; i < wins.length; ++i) {
-                                const w = wins[i];
-                                if (w.output !== root.screenName)
-                                    continue;
-                                if (w.workspace && w.workspace.id === ws && !Hypr.isIgnoredWindow(w)) {
-                                    windows.push(w);
-                                }
-                            }
-                        } else if (typeof Hypr !== "undefined") {
-                            const wins = Hypr.toplevels.values;
-                            for (let i = 0; i < wins.length; ++i) {
-                                if (wins[i].workspace && wins[i].workspace.id === ws && !Hypr.isIgnoredWindow(wins[i])) {
-                                    windows.push(wins[i]);
-                                }
+                        const wins = Kwin.windowList;
+                        for (let i = 0; i < wins.length; ++i) {
+                            const w = wins[i];
+                            if (w.output !== root.screenName)
+                                continue;
+                            if (w.workspace && w.workspace.id === ws && !Kwin.isIgnoredWindow(w)) {
+                                windows.push(w);
                             }
                         }
+                   
                         const maxIcons = root.Config.bar.workspaces.maxWindowIcons;
                         windows = maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
                         const keys = windows.map(w => w.address || w["class"]).sort().join(",");

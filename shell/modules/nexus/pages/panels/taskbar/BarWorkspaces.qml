@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
-import Caelestia.Services
 import qs.components.controls
 import qs.modules.nexus.common
 
@@ -33,10 +32,10 @@ PageBase {
         spacing: Tokens.spacing.extraSmall / 2
 
         Connections {
-            target: typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState : null
+            target: Kwin
 
             function onWorkspacesChanged() {
-                let len = KWinWorkspaceState.workspaces.length;
+                let len = Kwin.workspaces.length;
                 if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
                     GlobalConfig.bar.workspaces.shown = len;
                 }
@@ -44,12 +43,11 @@ PageBase {
         }
 
         Component.onCompleted: {
-            if (typeof KWinWorkspaceState !== "undefined") {
-                let len = KWinWorkspaceState.workspaces.length;
-                if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
-                    GlobalConfig.bar.workspaces.shown = len;
-                }
-            }
+let len = Kwin.workspaces.length;
+if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
+    GlobalConfig.bar.workspaces.shown = len;
+}
+        
         }
 
         StepperRow {
@@ -62,18 +60,17 @@ PageBase {
             stepSize: 1
             onMoved: v => {
                 GlobalConfig.bar.workspaces.shown = v;
-                if (typeof KWinWorkspaceState !== "undefined") {
-                    let d = KWinWorkspaceState.workspaces;
-                    let count = d.length;
-                    while (count < v) {
-                        KWinWorkspaceState.createWorkspace("Desktop " + (count + 1));
-                        count++;
-                    }
-                    while (count > v) {
-                        KWinWorkspaceState.removeWorkspace(d[count - 1].id);
-                        count--;
-                    }
-                }
+let d = Kwin.workspaces;
+let count = d.length;
+while (count < v) {
+    Kwin.createWorkspace("Desktop " + (count + 1));
+    count++;
+}
+while (count > v) {
+    Kwin.removeWorkspace(d[count - 1].id);
+    count--;
+}
+            
             }
         }
 

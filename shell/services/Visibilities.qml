@@ -1,7 +1,6 @@
 pragma Singleton
 
 import Quickshell
-import Caelestia.Services
 import qs.components
 import qs.services
 
@@ -43,7 +42,7 @@ Singleton {
     signal cycleOverview(bool backwards)
 
     function load(screen: ShellScreen, visibilities: DrawerVisibilities): void {
-        screens.set(Hypr.monitorFor(screen), visibilities);
+        screens.set(Kwin.monitorFor(screen), visibilities);
         screens = new Map(screens); // Force QML property change notification
         visibilities.launcherChanged.connect(() => {
             if (!visibilities.launcher)
@@ -59,7 +58,7 @@ Singleton {
         bars = new Map(bars); // Force QML property change notification by changing the Map reference
     }
     function getForActive(): DrawerVisibilities {
-        const monitor = Hypr.monitors[KWinActiveWindowBridge.cursorOutputName()] || Hypr.focusedMonitor;
+        const monitor = Kwin.monitors[Kwin.cursorOutputName()] || Kwin.focusedMonitor;
         return screens.get(monitor) || screens.values().next().value;
     }
     function setDrag(address: string, x: real, y: real, w: real, h: real, originScreen: string): void {

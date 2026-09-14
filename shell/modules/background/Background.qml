@@ -7,7 +7,6 @@ import Quickshell.Hyprland
 import Quickshell.Wayland
 import Caelestia.Blobs
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.components.containers
 import qs.services
@@ -19,7 +18,7 @@ Variants {
         id: win
 
         required property ShellScreen modelData
-        readonly property var drawerVisibilities: Visibilities.screens.get(Hypr.monitorFor(modelData)) ?? Visibilities.screens.get(modelData.name)
+        readonly property var drawerVisibilities: Visibilities.screens.get(Kwin.monitorFor(modelData)) ?? Visibilities.screens.get(modelData.name)
         readonly property bool isOverviewOpen: drawerVisibilities ? drawerVisibilities.overview : false
         readonly property bool wallpaperUp: wallpaper.item?.shown ?? false
         // The fallback black waits for the wallpaper to have something to show, so a
@@ -59,8 +58,8 @@ Variants {
                 if (button === Qt.RightButton && Config.background.wallpaperEnabled) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.LeftButton) {
-                    if (typeof KWinActiveWindowBridge !== "undefined") {
-                        KWinActiveWindowBridge.setActiveOutputName(win.screen.name);
+                    if (true) {
+                        Kwin.setActiveOutputName(win.screen.name);
                     }
                 }
             }

@@ -26,7 +26,7 @@ Item {
     readonly property bool isAllowedByFullscreen: {
         if (GlobalConfig.notifs.fullscreen === "on")
             return true;
-        return !Hypr.hasFullscreenOn(root.screen?.name ?? "");
+        return !Kwin.hasFullscreenOn(root.screen?.name ?? "");
     }
 
     visible: height > 0 && !visibilities.overview && isTargetScreen && isAllowedByFullscreen

@@ -500,8 +500,8 @@ Item {
                                     let activeIdx = -1;
                                     let activeAddr = "";
                                     
-                                    if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.activeWindow) {
-                                        activeAddr = KWinActiveWindowBridge.activeWindow.address ? String(KWinActiveWindowBridge.activeWindow.address) : "";
+                                    if (Kwin.activeWindow) {
+                                        activeAddr = Kwin.activeWindow.address ? String(Kwin.activeWindow.address) : "";
                                         Logger.log("Dock debug: KWin activeWindow address is:", activeAddr);
                                     } else if (root.activeTop && root.activeTop.address) {
                                         activeAddr = String(root.activeTop.address);
@@ -525,21 +525,21 @@ Item {
                                     
                                     Logger.log("Dock debug: Final activeIdx:", activeIdx);
                                     
-                                    const isKWin = (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList);
+                                    const isKWin = (Kwin.windowList.length > 0);
                                     
                                     if (modelData.toplevels.length === 1) {
                                         let addr = String(modelData.toplevels[0].address);
                                         if (activeIdx === 0) {
                                             Logger.log("Dock debug: Single window, currently focused. Minimizing.");
                                             if (isKWin) {
-                                                KWinActiveWindowBridge.minimizeWindow(addr);
+                                                Kwin.minimizeWindow(addr);
                                             }
                                         } else {
                                             Logger.log("Dock debug: Single window, NOT focused. Focusing.");
                                             if (isKWin) {
-                                                KWinActiveWindowBridge.focusWindow(addr);
+                                                Kwin.focusWindow(addr);
                                             } else {
-                                                Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
+                                                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
                                             }
                                         }
                                     } else {
@@ -547,9 +547,9 @@ Item {
                                         let addr = String(modelData.toplevels[nextIdx].address);
                                         Logger.log("Dock debug: Multiple windows. Cycling to index", nextIdx);
                                         if (isKWin) {
-                                            KWinActiveWindowBridge.focusWindow(addr);
+                                            Kwin.focusWindow(addr);
                                         } else {
-                                            Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
+                                            Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
                                         }
                                     }
                                 } else if (modelData.entry) {
@@ -927,8 +927,8 @@ Item {
     }
 
     property var _toplevels: {
-        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList && KWinActiveWindowBridge.windowList.length > 0) {
-            return KWinActiveWindowBridge.windowList;
+        if (Kwin.windowList.length > 0) {
+            return Kwin.windowList;
         }
         return HyprlandData.windowList;
     }
@@ -947,8 +947,8 @@ Item {
     }
 
     property var activeTop: {
-        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.activeWindow && KWinActiveWindowBridge.activeWindow.address) {
-            return KWinActiveWindowBridge.activeWindow;
+        if (Kwin.activeWindow && Kwin.activeWindow.address) {
+            return Kwin.activeWindow;
         }
         return Hyprland.activeToplevel || HyprlandData.activeWindow;
     }

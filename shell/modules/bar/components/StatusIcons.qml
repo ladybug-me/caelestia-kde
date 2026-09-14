@@ -53,9 +53,9 @@ StyledRect {
     function entryActive(id: string): bool {
         switch (id) {
         case "lockStatus":
-            return Hypr.capsLock || Hypr.numLock;
+            return Kwin.capsLock || Kwin.numLock;
         case "kbLayout":
-            return (Hypr.kbLayout || "").length > 0;
+            return (Kwin.kbLayout || "").length > 0;
         case "network":
             return !Nmcli.activeEthernet || Config.bar.status.showWifi;
         case "ethernet":
@@ -248,16 +248,16 @@ StyledRect {
                 rowSpacing: 0
 
                 Item {
-                    implicitWidth: root.isHorizontal ? (Hypr.capsLock ? capslockIcon.implicitWidth : 0) : capslockIcon.implicitWidth
-                    implicitHeight: root.isHorizontal ? capslockIcon.implicitHeight : (Hypr.capsLock ? capslockIcon.implicitHeight : 0)
+                    implicitWidth: root.isHorizontal ? (Kwin.capsLock ? capslockIcon.implicitWidth : 0) : capslockIcon.implicitWidth
+                    implicitHeight: root.isHorizontal ? capslockIcon.implicitHeight : (Kwin.capsLock ? capslockIcon.implicitHeight : 0)
 
                 MaterialIcon {
                     id: capslockIcon
 
                     anchors.centerIn: parent
 
-                    scale: Hypr.capsLock ? 1 : 0.5
-                    opacity: Hypr.capsLock ? 1 : 0
+                    scale: Kwin.capsLock ? 1 : 0.5
+                    opacity: Kwin.capsLock ? 1 : 0
 
                     text: "keyboard_capslock_badge"
                     color: root.colour
@@ -287,19 +287,19 @@ StyledRect {
             }
 
             Item {
-                Layout.topMargin: !root.isHorizontal && Hypr.capsLock && Hypr.numLock ? Tokens.spacing.medium / 2 : 0
-                Layout.leftMargin: root.isHorizontal && Hypr.capsLock && Hypr.numLock ? Tokens.spacing.medium / 2 : 0
+                Layout.topMargin: !root.isHorizontal && Kwin.capsLock && Kwin.numLock ? Tokens.spacing.medium / 2 : 0
+                Layout.leftMargin: root.isHorizontal && Kwin.capsLock && Kwin.numLock ? Tokens.spacing.medium / 2 : 0
 
-                implicitWidth: root.isHorizontal ? (Hypr.numLock ? numlockIcon.implicitWidth : 0) : numlockIcon.implicitWidth
-                implicitHeight: root.isHorizontal ? numlockIcon.implicitHeight : (Hypr.numLock ? numlockIcon.implicitHeight : 0)
+                implicitWidth: root.isHorizontal ? (Kwin.numLock ? numlockIcon.implicitWidth : 0) : numlockIcon.implicitWidth
+                implicitHeight: root.isHorizontal ? numlockIcon.implicitHeight : (Kwin.numLock ? numlockIcon.implicitHeight : 0)
 
                 MaterialIcon {
                     id: numlockIcon
 
                     anchors.centerIn: parent
 
-                    scale: Hypr.numLock ? 1 : 0.5
-                    opacity: Hypr.numLock ? 1 : 0
+                    scale: Kwin.numLock ? 1 : 0.5
+                    opacity: Kwin.numLock ? 1 : 0
 
                     text: "looks_one"
                     color: root.colour
@@ -355,7 +355,7 @@ StyledRect {
 
         StyledText {
             animate: true
-            text: Hypr.kbLayout
+            text: Kwin.kbLayout
             color: root.colour
             font: Tokens.font.mono.medium
         }

@@ -20,7 +20,7 @@ Searcher {
     Process {
         id: getAnimationsProc
 
-        running: typeof KWinActiveWindowBridge === "undefined"
+        running: false
         command: ["sh", "-c", "ls -1 ~/.config/caelestia/animations/*.lua || true"]
         stdout: StdioCollector {
             onStreamFinished: {
@@ -76,10 +76,9 @@ Searcher {
                 }
 
                 // Animation switching is Hyprland-only; no-op on KDE.
-                if (typeof KWinActiveWindowBridge !== "undefined") {
-                    console.log("Animations: animation switching is not supported on KDE");
-                    return;
-                }
+console.log("Animations: animation switching is not supported on KDE");
+return;
+            
 
                 // Remove existing dofile from hypr-user.lua
                 let script = "sed -i '/dofile(\".*\\/animations\\/.*\\.lua\")/d' ~/.config/caelestia/hypr-user.lua\n";

@@ -33,53 +33,30 @@ Item {
         let shouldPause = false;
 
         try {
-            if (typeof KWinActiveWindowBridge !== "undefined") {
-                const wins = KWinActiveWindowBridge.windowList || [];
-                // KWin serialises fullscreen as a boolean (true/false), not
-                // the integer levels Hyprland uses (0/1/2). Use === true so
-                // the check works for both truthy booleans and int > 0.
-                if (pauseOnAllDisplays) {
-                    for (let i = 0; i < wins.length; i++) {
-                        if (pauseOnFullscreen && wins[i].fullscreen === true)
-                            shouldPause = true;
-                        if (pauseOnTiled && !wins[i].floating && !wins[i].fullscreen)
-                            shouldPause = true;
-                    }
-                } else {
-                    const screenName = root.screen ? root.screen.name : "";
-                    const activeOut = KWinActiveWindowBridge.activeOutputName || "";
-                    if (activeOut === screenName || screenName === "") {
-                        for (let i = 0; i < wins.length; i++) {
-                            if (pauseOnFullscreen && wins[i].fullscreen === true)
-                                shouldPause = true;
-                            if (pauseOnTiled && !wins[i].floating && !wins[i].fullscreen)
-                                shouldPause = true;
-                        }
-                    }
-                }
-            } else if (typeof Hypr !== "undefined" && Hypr.monitors) {
-                if (pauseOnAllDisplays) {
-                    let anyFullscreen = false;
-                    let anyTiled = false;
-                    for (const monitor of Hypr.monitors.values) {
-                        const toplevels = monitor?.activeWorkspace?.toplevels?.values || [];
-                        if (pauseOnFullscreen && toplevels.some(t => t?.lastIpcObject?.fullscreen > 1))
-                            anyFullscreen = true;
-                        if (pauseOnTiled && toplevels.some(t => !t?.lastIpcObject?.floating && !t?.lastIpcObject?.fullscreen))
-                            anyTiled = true;
-                    }
-                    shouldPause = anyFullscreen || anyTiled;
-                } else {
-                    const monitor = Hypr.monitorFor(root.screen);
-                    if (monitor) {
-                        const toplevels = monitor.activeWorkspace?.toplevels?.values || [];
-                        if (pauseOnFullscreen && toplevels.some(t => t?.lastIpcObject?.fullscreen > 1))
-                            shouldPause = true;
-                        if (pauseOnTiled && toplevels.some(t => !t?.lastIpcObject?.floating && !t?.lastIpcObject?.fullscreen))
-                            shouldPause = true;
-                    }
-                }
-            }
+const wins = Kwin.windowList || [];
+// KWin serialises fullscreen as a boolean (true/false), not
+// the integer levels Hyprland uses (0/1/2). Use === true so
+// the check works for both truthy booleans and int > 0.
+if (pauseOnAllDisplays) {
+    for (let i = 0; i < wins.length; i++) {
+        if (pauseOnFullscreen && wins[i].fullscreen === true)
+            shouldPause = true;
+        if (pauseOnTiled && !wins[i].floating && !wins[i].fullscreen)
+            shouldPause = true;
+    }
+} else {
+    const screenName = root.screen ? root.screen.name : "";
+    const activeOut = Kwin.activeOutputName || "";
+    if (activeOut === screenName || screenName === "") {
+        for (let i = 0; i < wins.length; i++) {
+            if (pauseOnFullscreen && wins[i].fullscreen === true)
+                shouldPause = true;
+            if (pauseOnTiled && !wins[i].floating && !wins[i].fullscreen)
+                shouldPause = true;
+        }
+    }
+}
+        
         } catch (e) {
             // Ignore error on non-Hyprland (e.g. KDE)
         }

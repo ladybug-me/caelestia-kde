@@ -5,7 +5,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Widgets
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.components.images
 import qs.services
@@ -33,7 +32,7 @@ StyledRect {
     readonly property int maxIcons: 8
     readonly property bool isOccupied: occupied[ws] ?? false
     readonly property bool hasWindows: isOccupied
-    property var kwinWindowList: KWinActiveWindowBridge.windowList
+    property var kwinWindowList: Kwin.windowList
     readonly property bool active: activeWsId === ws
     readonly property real swipeWeight: {
         if (!isSwiping || swipeOffset === 0.0) return active ? 1.0 : 0.0;
@@ -134,17 +133,8 @@ StyledRect {
                     p = p.parent;
                 }
             } else {
-                if (typeof KWinWorkspaceState !== "undefined") {
-                    const wId = KWinWorkspaceState.workspaces[root.ws - 1]?.id || root.ws.toString();
-                    KWinWorkspaceState.switchTo(wId, root.screenName);
-                } else {
-                    const isKWin = typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList;
-                    if (isKWin) {
-                        KWinWorkspaceState.setDesktop(root.ws);
-                    } else {
-                        Quickshell.execDetached(["qdbus6", "org.kde.KWin", "/KWin", "setCurrentDesktop", root.ws.toString()]);
-                    }
-                }
+                const wId = Kwin.workspaces[root.ws - 1]?.id || root.ws.toString();
+                Kwin.switchToWorkspace(wId, root.screenName);
                 selected();
             }
         }
@@ -170,10 +160,9 @@ StyledRect {
             anchors.fill: parent
             radius: parent.width / 2
             onClicked: {
-                if (typeof KWinWorkspaceState !== "undefined") {
-                    const wId = KWinWorkspaceState.workspaces[root.ws - 1].id;
-                    if (wId) KWinWorkspaceState.removeWorkspace(wId);
-                }
+                const wId = Kwin.workspaces[root.ws - 1].id;
+                if (wId)
+                    Kwin.removeWorkspace(wId);
             }
         }
         MaterialIcon {
@@ -232,11 +221,7 @@ StyledRect {
             if (sourceItem && sourceItem.clientAddress) {
                 if (sourceItem.wsId !== root.ws) {
                     sourceItem.visible = false;
-                    if (typeof KWinActiveWindowBridge !== "undefined") {
-                        KWinActiveWindowBridge.setWindowDesktop(sourceItem.clientAddress, root.ws);
-                    } else {
-                        Hypr.dispatch(Hypr.usingLua ? `hl.dsp.movetoworkspace({ workspace = "${root.ws}", window = "address:0x${sourceItem.clientAddress}" })` : `movetoworkspace ${root.ws},address:0x${sourceItem.clientAddress}`);
-                    }
+                    Kwin.setWindowDesktop(sourceItem.clientAddress, root.ws);
                 }
                 drop.accept();
             }
@@ -258,27 +243,18 @@ StyledRect {
                 values: {
                     const wsId = root.ws;
                     let windows = [];
-                    const kwinList = root.kwinWindowList; 
-                    if (typeof KWinActiveWindowBridge !== "undefined" && kwinList) {
-                        const wins = KWinActiveWindowBridge.windowsForWorkspace(wsId, false);
-                        for (let i = 0; i < wins.length; ++i) {
-                            const w = wins[i];
-                            // windowsForWorkspace already filtered by workspace;
-                            // this strip only shows its own screen.
-                            if (w.output !== root.screenName)
-                                continue;
-                            if (!Hypr.isIgnoredWindow(w)) {
-                                windows.push(w);
-                            }
-                        }
-                    } else if (typeof Hypr !== "undefined") {
-                        const wins = Hypr.toplevels.values;
-                        for (let i = 0; i < wins.length; ++i) {
-                            if (wins[i].workspace && wins[i].workspace.id === wsId && !Hypr.isIgnoredWindow(wins[i])) {
-                                windows.push(wins[i]);
-                            }
+                    const wins = Kwin.windowsForWorkspace(wsId, false);
+                    for (let i = 0; i < wins.length; ++i) {
+                        const w = wins[i];
+                        // windowsForWorkspace already filtered by workspace;
+                        // this strip only shows its own screen.
+                        if (w.output !== root.screenName)
+                            continue;
+                        if (!Kwin.isIgnoredWindow(w)) {
+                            windows.push(w);
                         }
                     }
+
                     const maxIcons = root.maxIcons;
                     return maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
                 }
@@ -421,11 +397,7 @@ StyledRect {
                     onClicked: {
                         if (root.active) {
                             if (modelData.address) {
-                                if (typeof KWinActiveWindowBridge !== "undefined") {
-                                    KWinActiveWindowBridge.focusWindow(modelData.address);
-                                } else {
-                                    Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ window = "address:0x${modelData.address}" })` : `focuswindow address:0x${modelData.address}`);
-                                }
+                                Kwin.focusWindow(modelData.address);
                                 
                                 // Try to close overview by finding WindowGrid root
                                 let p = parent;

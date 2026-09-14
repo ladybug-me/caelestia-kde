@@ -82,12 +82,12 @@ PanelWindow {
         const useSnapshot = root.snapshotWorkspaceId > 0 || root.snapshotWorkspaceUuid !== "";
         const target = useSnapshot
             ? (root.snapshotWorkspaceUuid !== "" ? root.snapshotWorkspaceUuid : root.snapshotWorkspaceId)
-            : (typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState.activeId : 0);
+            : (true ? Kwin.activeWsId : 0);
 
         // windowsForWorkspace owns the workspace-field semantics (numeric id /
         // uuid, -1 = all workspaces), so hover-focus cannot drift the filter.
-        const arr = Array.from(typeof KWinActiveWindowBridge !== "undefined"
-            ? KWinActiveWindowBridge.windowsForWorkspace(target)
+        const arr = Array.from(true
+            ? Kwin.windowsForWorkspace(target)
             : []);
 
         return arr.sort((a, b) => {
@@ -177,7 +177,7 @@ PanelWindow {
                     r => r.address === root.targetedWindowAddress
                 );
                 if (stillVisible) {
-                    KWinActiveWindowBridge.focusWindow(root.targetedWindowAddress);
+                    Kwin.focusWindow(root.targetedWindowAddress);
                     root.lastHoverFocusedAddress = root.targetedWindowAddress;
                 }
             }
@@ -276,13 +276,12 @@ PanelWindow {
         }
         root.frozenImageSource = "file://" + root.screenshotPath;
         // Freeze the workspace context so hover-focus never shifts the filter
-        if (typeof KWinWorkspaceState !== "undefined") {
-            const snapId = KWinWorkspaceState.activeId;
-            root.snapshotWorkspaceId = snapId;
-            const snapIdx = snapId > 0 ? snapId - 1 : 0;
-            root.snapshotWorkspaceUuid = KWinWorkspaceState.workspaces[snapIdx]
-                ? KWinWorkspaceState.workspaces[snapIdx].id : "";
-        }
+const snapId = Kwin.activeWsId;
+root.snapshotWorkspaceId = snapId;
+const snapIdx = snapId > 0 ? snapId - 1 : 0;
+root.snapshotWorkspaceUuid = Kwin.workspaces[snapIdx]
+    ? Kwin.workspaces[snapIdx].id : "";
+    
         root.visible = true;
         mouseArea.forceActiveFocus();
     }
@@ -353,7 +352,7 @@ PanelWindow {
 
         // Focus the window, dismiss overlay, then shoot after a short delay
         if (windowAddress) {
-            KWinActiveWindowBridge.focusWindow(windowAddress);
+            Kwin.focusWindow(windowAddress);
         }
         root.dismiss();
         // Small delay so the window has time to come to front before spectacle fires

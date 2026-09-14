@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Io
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.services
 
@@ -28,26 +27,24 @@ Item {
 
         readonly property bool onSpecial: false
         property int workspaceCount: {
-            if (typeof KWinWorkspaceState !== "undefined" && KWinWorkspaceState.workspaces.length > 0) {
-                return KWinWorkspaceState.workspaces.length;
+            if (Kwin.workspaces.length > 0) {
+                return Kwin.workspaces.length;
             }
             return Config.bar.workspaces.shown;
         }
         property int activeWsId: {
-            if (typeof KWinWorkspaceState === "undefined")
-                return 1;
             // With KWin's per-output virtual desktops each screen has its own
             // current desktop, and activeId -- which comes from D-Bus -- only
             // ever reports the focused screen's. Reading it here showed that one
             // on every bar, and made all of them appear to switch whenever the
             // pointer crossed to another monitor.
-            const perOutput = KWinWorkspaceState.activeByOutput[root.screen.name];
+            const perOutput = Kwin.activeByOutput[root.screen.name];
             if (perOutput > 0)
                 return perOutput;
             // Nothing from the tracker yet, or per-output desktops are off, in
             // which case one current desktop is the truth for every screen.
-            if (KWinWorkspaceState.activeId > 0)
-                return KWinWorkspaceState.activeId;
+            if (Kwin.activeWsId > 0)
+                return Kwin.activeWsId;
             return 1;
         }
         readonly property var occupied: {
@@ -72,13 +69,6 @@ Item {
                         occ[w.workspace.id] = true;
                     }
                 }
-            } else if (typeof Hypr !== "undefined") {
-                const wins = Hypr.toplevels.values;
-                for (let i = 0; i < wins.length; ++i) {
-                    if (wins[i].workspace && typeof wins[i].workspace.id === "number") {
-                        occ[wins[i].workspace.id] = true;
-                    }
-                }
             }
             return occ;
         }
@@ -86,7 +76,7 @@ Item {
         property real blur: onSpecial ? 1 : 0
         readonly property bool isHorizontal: root.bar.isHorizontal
         // Force QML dependency tracker to bind to windowList correctly
-        property var kwinWindowList: KWinActiveWindowBridge.windowList
+        property var kwinWindowList: Kwin.windowList
 
         implicitWidth: isHorizontal ? (layout.implicitWidth + Tokens.padding.small) : barThickness
         implicitHeight: isHorizontal ? barThickness : (layout.implicitHeight + Tokens.padding.small)
@@ -95,12 +85,10 @@ Item {
 
         Connections {
             function onWorkspacesChanged() {
-                if (typeof KWinActiveWindowBridge !== "undefined") {
-                    KWinActiveWindowBridge.refreshWindows();
-                }
+                Kwin.refreshWindows();
             }
 
-            target: typeof KWinWorkspaceState !== "undefined" ? KWinWorkspaceState : null
+            target: Kwin
         }
         Item {
             anchors.fill: parent
@@ -166,19 +154,16 @@ Item {
                     const ws = (layout.childAt(event.x, event.y) as Workspace)?.ws;
                     if (!ws)
                         return;
-                    if (container.activeWsId !== ws) {
-                        if (typeof KWinWorkspaceState !== "undefined") {
-                            KWinWorkspaceState.setDesktop(ws);
-                        }
-                    }
+                    if (container.activeWsId !== ws)
+                        Kwin.setDesktop(ws);
                 }
                 onWheel: event => {
                     if (!Config.bar.scrollActions.workspaces) return;
 
                     if (event.angleDelta.y > 0 || event.angleDelta.x > 0) {
-                        KWinWorkspaceState.previousDesktop();
+                        Kwin.previousDesktop();
                     } else if (event.angleDelta.y < 0 || event.angleDelta.x < 0) {
-                        KWinWorkspaceState.nextDesktop();
+                        Kwin.nextDesktop();
                     }
                 }
             }

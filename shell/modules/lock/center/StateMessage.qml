@@ -48,21 +48,21 @@ Item {
     }
 
     readonly property string stateMsg: {
-        if (Hypr.kbLayout !== Hypr.defaultKbLayout) {
-            if (Hypr.capsLock && Hypr.numLock)
-                return qsTr("Caps Lock and Num Lock are ON.\nKeyboard layout: %1").arg(Hypr.kbLayoutFull);
-            if (Hypr.capsLock)
-                return qsTr("Caps Lock is ON. Keyboard layout: %1").arg(Hypr.kbLayoutFull);
-            if (Hypr.numLock)
-                return qsTr("Num Lock is ON. Keyboard layout: %1").arg(Hypr.kbLayoutFull);
-            return qsTr("Keyboard layout: %1").arg(Hypr.kbLayoutFull);
+        if (Kwin.kbLayout !== Kwin.defaultKbLayout) {
+            if (Kwin.capsLock && Kwin.numLock)
+                return qsTr("Caps Lock and Num Lock are ON.\nKeyboard layout: %1").arg(Kwin.kbLayoutFull);
+            if (Kwin.capsLock)
+                return qsTr("Caps Lock is ON. Keyboard layout: %1").arg(Kwin.kbLayoutFull);
+            if (Kwin.numLock)
+                return qsTr("Num Lock is ON. Keyboard layout: %1").arg(Kwin.kbLayoutFull);
+            return qsTr("Keyboard layout: %1").arg(Kwin.kbLayoutFull);
         }
 
-        if (Hypr.capsLock && Hypr.numLock)
+        if (Kwin.capsLock && Kwin.numLock)
             return qsTr("Caps Lock and Num Lock are ON.");
-        if (Hypr.capsLock)
+        if (Kwin.capsLock)
             return qsTr("Caps Lock is ON.");
-        if (Hypr.numLock)
+        if (Kwin.numLock)
             return qsTr("Num Lock is ON.");
 
         return "";

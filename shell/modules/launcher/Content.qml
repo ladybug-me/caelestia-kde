@@ -246,7 +246,7 @@ Item {
             }
 
             Keys.onEscapePressed: {
-                KWinActiveWindowBridge.clearHighlight();
+                Kwin.clearHighlight();
                 root.visibilities.launcher = false;
             }
 
@@ -343,7 +343,7 @@ Item {
                         // the switcher would stay open and stop cycling.
                         search.forceActiveFocus();
                     } else {
-                        KWinActiveWindowBridge.clearHighlight();
+                        Kwin.clearHighlight();
                     }
                 }
 

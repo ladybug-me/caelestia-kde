@@ -4,7 +4,6 @@ import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.components.images
 import qs.services
@@ -37,10 +36,10 @@ StyledRect {
     // fallback below is the correct thing to show.
 
     function closeToplevel(address: string): void {
-        if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList) {
-            KWinActiveWindowBridge.closeWindow(address);
+        if (Kwin.windowList.length > 0) {
+            Kwin.closeWindow(address);
         } else {
-            Hypr.dispatch(Hypr.usingLua ? `hl.dsp.window.close({ window = "address:0x${address}" })` : `closewindow address:0x${address}`);
+            Kwin.dispatch(Kwin.usingLua ? `hl.dsp.window.close({ window = "address:0x${address}" })` : `closewindow address:0x${address}`);
         }
 
         if (!root.model || !root.model.toplevels)
@@ -165,10 +164,10 @@ StyledRect {
                         radius: parent.radius
                         onClicked: {
                             if (card.modelData.address) {
-                                if (typeof KWinActiveWindowBridge !== "undefined" && KWinActiveWindowBridge.windowList) {
-                                    KWinActiveWindowBridge.focusWindow(card.modelData.address);
+                                if (Kwin.windowList.length > 0) {
+                                    Kwin.focusWindow(card.modelData.address);
                                 } else {
-                                    Hypr.dispatch(Hypr.usingLua ? `hl.dsp.focus({ window = "address:0x${card.modelData.address}" })` : `focuswindow address:0x${card.modelData.address}`);
+                                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${card.modelData.address}" })` : `focuswindow address:0x${card.modelData.address}`);
                                 }
                             }
                             root.popouts.hasCurrent = false;

@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.services
 import Caelestia.Config
 import Caelestia.Services
 import qs.components.misc
@@ -27,7 +28,7 @@ Singleton {
 
     function getMonitor(query: string): var {
         if (query === "active") {
-            return monitors.find(m => Hypr.monitorFor(m.modelData)?.focused); // qmllint disable missing-property
+            return monitors.find(m => Kwin.monitorFor(m.modelData)?.focused); // qmllint disable missing-property
         }
 
         if (query.startsWith("model:")) {
@@ -42,7 +43,7 @@ Singleton {
 
         if (query.startsWith("id:")) {
             const id = parseInt(query.slice(3), 10);
-            return monitors.find(m => Hypr.monitorFor(m.modelData)?.id === id); // qmllint disable missing-property
+            return monitors.find(m => Kwin.monitorFor(m.modelData)?.id === id); // qmllint disable missing-property
         }
 
         return monitors.find(m => m.modelData.name === query); // qmllint disable missing-property

@@ -8,7 +8,6 @@
 
 using namespace std;
 
-// Signal flags defined in main.cpp (global scope, not in any namespace).
 extern volatile sig_atomic_t g_sigint_received;
 extern volatile sig_atomic_t g_sigterm_received;
 
@@ -62,7 +61,6 @@ namespace Input {
                 if (errno == EINTR) {
                     if (g_resized) return "resize";
                     if (g_sigint_received || g_sigterm_received) return "signal_interrupt";
-                    // Spurious EINTR: retry.
                     continue;
                 }
             }

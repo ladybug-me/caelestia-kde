@@ -30,7 +30,6 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 
 ANSI_RE = re.compile(r"\x1b\[[0-9;]*m")
-# Rule names contain hyphens (e.g. missing-section-separator, import-order).
 VIOLATION_RE = re.compile(r"\[([\w-]+)\]\s+([^:]+):(\d+):\s*(.+)")
 DIGITS_RE = re.compile(r"\d+")
 

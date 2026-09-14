@@ -1,7 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
 
 import QtQuick
 import ".."
@@ -119,7 +115,6 @@ FocusScope {
             anchors.rightMargin: Math.max(4, Math.round(6 * root.centerScale))
             spacing: Math.max(3, Math.round(6 * root.centerScale))
 
-            // Left: Lock / Fingerprint Icon / Spinner
             Item {
                 id: iconWrapper
                 Layout.preferredWidth: Math.max(16, Math.round(22 * root.centerScale))
@@ -153,7 +148,6 @@ FocusScope {
                 }
             }
 
-            // Middle: Placeholder & Animated Material Shapes
             Item {
                 id: inputContainer
                 Layout.fillWidth: true
@@ -261,7 +255,6 @@ FocusScope {
                 Binding { target: PasswordSync; property: "password"; value: passwordBox.text }
             }
 
-            // Right: MaterialShape Enter Arrow / Circle Button
             Item {
                 id: enterButton
                 implicitWidth: Math.max(20, Math.round(28 * root.centerScale))

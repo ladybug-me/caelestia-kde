@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# setup.sh - the installer entry point. Idempotent and safe to re-run.
 
 set -euo pipefail
 export CAELESTIA_SETUP_RUNNING=1
@@ -11,10 +10,6 @@ SCRIPTS_DIR="$BUNDLE_DIR/scripts"
 export BUNDLE_DIR
 export INSTALL_START_EPOCH="$(date +%s)"
 
-# 08-build-shell.sh installs the `caelestia` command into ~/.local/bin and the steps
-# after it call it by name, but a shell that has not read a profile yet - and fish,
-# which does not add the directory itself - would not have it on PATH, so the step
-# would quietly do nothing.
 export PATH="$HOME/.local/bin:$PATH"
 
 exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock"
@@ -156,25 +151,14 @@ fi
 
 BIN="$BUNDLE_DIR/caelestia-install"
 
-# The TUI data version of this checkout. The prebuilt binary is only reused
-# when it reports the same version - a stale release binary would otherwise
-# render old screens and ignore new menu actions (e.g. action_review).
 tui_version() {
     tr -d '[:space:]' < "$BUNDLE_DIR/installer/data/tui.version" 2>/dev/null || true
 }
 
-# The release tag this checkout corresponds to. The prebuilt installer is
-# attached to the release for this VERSION.
 release_tag() {
     sed -nE 's/^[[:space:]]*VERSION=//p' "$BUNDLE_DIR/.github/version.env" 2>/dev/null | tr -d '[:space:]'
 }
 
-# Try to fetch a prebuilt installer binary from the version release so we
-# don't have to compile the TUI on the user's machine. The binary is built by
-# the build-installer job in .github/workflows/version-release.yml and
-# attached to the release tagged with this checkout's VERSION. Falls back to
-# compiling when unavailable (no curl, offline, unsupported arch), when it
-# does not match this checkout's TUI version, or when forced via env var.
 try_download_prebuilt_installer() {
     local arch
     arch="$(uname -m)"
@@ -186,10 +170,6 @@ try_download_prebuilt_installer() {
     local version tag tmp_bin url
     version="$(tui_version)"
     tag="$(release_tag)"
-    # The release asset name embeds the TUI data version, so a matching
-    # binary is downloaded directly and a stale/old release simply 404s.
-    # This never executes an unknown binary, which is what hung the old
-    # "--version" check (old builds launched the full TUI instead).
     [[ -n "$version" && -n "$tag" ]] || return 1
     tmp_bin="$(mktemp)"
     url="https://github.com/ladybug-me/caelestia-kde/releases/download/${tag}/caelestia-install-${arch}-v${version}"
@@ -243,14 +223,11 @@ else
     else
         echo "[INFO]  No prebuilt binary for v$(tui_version) - compiling locally."
     fi
-    # Reuse a previously compiled binary that matches this checkout's TUI
-    # version so repeated runs don't recompile every time.
     STAMP="$BUNDLE_DIR/installer/build/.tui_stamp"
     if [[ -x "$BIN" && -f "$STAMP" ]] && [[ "$(cat "$STAMP" 2>/dev/null)" == "$(tui_version)" ]]; then
         stop_spinner
         echo "[OK]    Reusing compiled installer binary (matches TUI version)."
     else
-        # Compiling needs build tools; install whatever is missing first.
         MISSING_PKGS=()
         if ! command -v g++ >/dev/null 2>&1; then MISSING_PKGS+=("g++"); fi
         if ! command -v cmake >/dev/null 2>&1; then MISSING_PKGS+=("cmake"); fi
@@ -299,7 +276,6 @@ else
 fi
 
 cleanup_install_state() {
-    # Always reset the terminal state on exit, regardless of how we exited (Ctrl+C, crash, etc.)
     stty sane 2>/dev/null || true
     tput cnorm 2>/dev/null || true
     printf '\033[0m\033[?1049l\033[?25h' 2>/dev/null || true
@@ -360,7 +336,6 @@ elif [[ $_reached_done -eq 0 ]]; then
 fi
 
 if [[ $_show_diagnostic -eq 1 ]]; then
-    # Reset terminal in case the binary left it in raw/alt-screen mode
     stty sane 2>/dev/null || true
     tput cnorm 2>/dev/null || true
     printf '\033[0m\033[?1049l\033[?25h' 2>/dev/null || true

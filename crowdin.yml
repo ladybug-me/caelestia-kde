@@ -1,25 +1,11 @@
-# Crowdin project mapping. Credentials come from the environment; see
-# .github/workflows/crowdin.yml and docs/translations.md.
 project_id_env: CROWDIN_PROJECT_ID
 api_token_env: CROWDIN_PERSONAL_TOKEN
 base_path: "."
 preserve_hierarchy: true
 
 files:
-  # English is the source language; its catalog is not committed, because the workflow
-  # regenerates it from the QML before uploading.
-  #
-  # %two_letters_code%, so Turkish is caelestia_tr.ts - the name it has here and the one Qt
-  # looks for. %locale_with_underscore% writes caelestia_tr_TR.ts, which does not overwrite
-  # the existing catalog so much as sit next to it as an empty duplicate.
-  #
-  # Two variants of one language (pt-BR/pt-PT, zh-CN/zh-TW) would both want the bare code.
-  # That collides only once both are translated, and both Chinese catalogs are, so they are
-  # named explicitly below.
   - source: /shell/translations/caelestia_en.ts
     translation: /shell/translations/caelestia_%two_letters_code%.ts
-    # Per-file, not top-level: the CLI drops unknown root keys silently. Values are the
-    # locale names Qt looks for.
     languages_mapping:
       two_letters_code:
         zh-CN: zh_CN

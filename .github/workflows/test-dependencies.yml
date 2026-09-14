@@ -46,7 +46,6 @@ jobs:
           pacman -Syu --noconfirm base-devel git sudo python cmake nodejs
           useradd -m builduser
           echo "builduser ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builduser
-          # yay and makepkg refuse to run as root, so we install it as our builduser
           su - builduser -c "git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin && cd /tmp/yay-bin && makepkg -si --noconfirm"
       - name: Checkout Code
         uses: actions/checkout@v4

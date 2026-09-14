@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# 00-refresh-mirrors.sh  Rank/refresh package mirrors and sync package databases.
 
 set -euo pipefail
 
@@ -21,7 +20,6 @@ is_cachyos() {
 
 case "$BASE_DISTRO" in
     arch)
-        # Without this the package steps fetch one at a time.
         if [[ -f /etc/pacman.conf ]]; then
             if grep -q '^#\?ParallelDownloads' /etc/pacman.conf; then
                 sudo sed -i 's/^#\?ParallelDownloads.*/ParallelDownloads = 5/' /etc/pacman.conf
@@ -39,7 +37,6 @@ case "$BASE_DISTRO" in
                 warn "cachyos-rate-mirrors is not installed; continuing with current mirrors."
             fi
         else
-            # Fallback for Arch-based systems without CachyOS tooling.
             if ! command -v reflector >/dev/null 2>&1; then
                 sudo pacman -Sy --noconfirm reflector >/dev/null 2>&1 || true
             fi

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# packages.sh - Fedora package installation for Caelestia
 
 set -uo pipefail
 
@@ -10,7 +9,6 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 log()  { printf '  [INFO]  %s\n' "$*"; }
 err()  { printf '  [ERR]   %s\n' "$*" >&2; }
 
-# URL of the Darkly prebuilt RPM for this Fedora version, from the latest release.
 darkly_rpm_asset_url() {
     local release_json ver url
     release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/latest" 2>/dev/null || true)"
@@ -31,31 +29,24 @@ INSTALL_FISH="${INSTALL_FISH:-true}"
 INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
 INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
-# Package groups, selected by PACKAGE_GROUP.
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 CORE_PACKAGES=(
-    # Build tools & compilers
     cmake ninja-build ccache qt6-qttools-devel extra-cmake-modules libgcc glibc
 
-    # CLI & System utilities
     wl-clipboard cliphist wl-clip-persist inotify-tools wireplumber trash-cli jq
 
-    # Audio, Sensors & Hardware
     aubio aubio-devel lm_sensors lm_sensors-devel pipewire-devel
     pulseaudio-qt-qt6-devel pulseaudio-libs-devel fftw-devel
 
-    # Qt6 Framework & Tools
     qt6-qtbase qt6-qtbase-private-devel qt6-qtdeclarative qt6-qtdeclarative-devel
     qt6-qtwayland qt6-qtwayland-devel qt6-qtsvg qt6-qtsvg-devel qt6-qtshadertools-devel
 
-    # KDE 6 Frameworks & KWin
     kf6-kglobalaccel-devel kf6-kwindowsystem-devel kf6-kguiaddons-devel
     kf6-kcoreaddons-devel kwin-devel kf6-kconfig-devel
     kf6-networkmanager-qt-devel kf6-kpipewire kf6-kpipewire-devel
     libepoxy-devel libdrm-devel
 
-    # Media, Calculation & Security
     libqalculate libqalculate-devel libsecret vulkan-headers ksshaskpass libX11-devel
 )
 
@@ -74,7 +65,6 @@ UTILITY_PACKAGES=(
     slurp grim xdg-utils sassc bat ripgrep lazygit xdg-user-dirs
 )
 
-# Packages with no Fedora package: COPR or a manual fallback.
 COPR_CORE=(app2unit libcava)
 COPR_SHELL=(quickshell-git)
 COPR_UTILS=()
@@ -99,7 +89,6 @@ fi
 
 log "Installing packages (group: $PACKAGE_GROUP)..."
 
-# Optional, and only for the groups that want them.
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
     if [[ "$INSTALL_FISH" == "true" ]]; then
         PACKAGES+=(fish)
@@ -127,7 +116,6 @@ fi
 log "Installing packages via dnf (batch mode)..."
 sudo dnf upgrade -y || true
 
-# Everything dnf can provide, in one call; the COPR set is handled after.
 BATCH_PKGS=()
 for pkg in "${PACKAGES[@]}"; do
     _is_copr="no"
@@ -153,7 +141,6 @@ if [[ ${#BATCH_PKGS[@]} -gt 0 ]]; then
 fi
 
 for pkg in "${COPR_PKGS[@]}"; do
-    # Only if the selected group asked for it.
     _needed="no"
     for op in "${PACKAGES[@]}"; do
         if [[ "$op" == "$pkg" ]]; then _needed="yes"; break; fi
@@ -279,7 +266,6 @@ wait $_pid_ms $_pid_cc $_pid_jb
 
 unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; echo "CascadiaCode font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; echo "JetBrains Mono Nerd Font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
-# Material Symbols is a single .ttf, nothing to extract.
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; echo "Material Symbols font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 
 fc-cache -f
@@ -342,7 +328,6 @@ if ! command -v caelestia >/dev/null 2>&1; then
             fi
         fi
 
-        # Fish completions, when fish was installed.
         mkdir -p ~/.config/fish/completions/
         cp ./completions/caelestia.fish ~/.config/fish/completions/ 2>/dev/null || true
     )

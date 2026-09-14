@@ -36,7 +36,6 @@ QtObject {
     }
     property real elementRadius: boundedNumber(getConfig("elementRadius"), 20, 0, 64)
     property real cardRadius: boundedNumber(getConfig("cardRadius"), 30, 0, 80)
-    // Colors
     property color mPrimary: getConfig("mPrimary") || "#4cdadb"
     property color mOnPrimary: getConfig("mOnPrimary") || "#002022"
     property color mSecondary: getConfig("mSecondary") || "#95f4f5"
@@ -54,7 +53,6 @@ QtObject {
     property color mShadow: getConfig("mShadow") || "#000000"
     property color mHover: getConfig("mHover") || mPrimary
     property color mOnHover: getConfig("mOnHover") || mOnPrimary
-    // Welcome message
     property bool enableWelcomeMessage: toBool(getConfig("enableWelcomeMessage"), true)
     property string welcomeMessage: {
         var val = getConfig("welcomeMessage");
@@ -63,7 +61,6 @@ QtObject {
 
         return val.toString().replace(/^"|"$/g, "");
     }
-    // Effects
     property bool dropShadows: toBool(getConfig("dropShadows"), true)
     property bool cardBorder: toBool(getConfig("cardBorder"), false)
     property bool blurEnabled: toBool(getConfig("blurEnabled"), true)
@@ -76,11 +73,9 @@ QtObject {
     property real elementOpacity: boundedNumber(getConfig("elementOpacity"), 0.5, 0.1, 1)
     property int shadowRadius: 16
     property int shadowSamples: 32
-    // Animations
     property int animDurationFast: 200
     property int animDurationNormal: 300
     property int animDurationSlow: 400
-    // Debug
     property bool debugMode: toBool(getConfig("debugMode"), false)
 
     function getConfig(key) {

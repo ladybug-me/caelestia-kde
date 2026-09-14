@@ -1,37 +1,19 @@
 #!/usr/bin/env bash
-# 00a-system-update.sh - full system upgrade, refusing to continue when the
-# upgrade would strand the running session.
 
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 
-# Stale-session guard (issue #627).
-#
-# Upgrading kwin/plasma-workspace/libplasma/qt6-base/qt6-declarative pulls
-# libraries out from under the running session: live KWin keeps the old ones in
-# memory while 08-build-shell.sh compiles the plugin against the new headers and
-# 06-services.sh loads it into that same old process. The resulting Wayland
-# protocol/ABI errors look like a broken build, not a stale session.
-#
-# Session identity is KWin's PID plus its start time in clock ticks; both change
-# on restart, which is the only thing that clears a stale verdict. No running
-# KWin (TTY install, another desktop) means there is no session to invalidate.
 kwin_session_identity() {
     local pid
     pid="$(pgrep -x kwin_wayland 2>/dev/null | head -n1 || true)"
     [[ -n "$pid" ]] || pid="$(pgrep -x kwin_x11 2>/dev/null | head -n1 || true)"
     [[ -n "$pid" ]] || return 1
-    # Field 22 of /proc/<pid>/stat is the start time in clock ticks.
     printf '%s %s\n' "$pid" "$(awk '{print $22}' "/proc/$pid/stat" 2>/dev/null || echo '?')"
 }
 
 STALE_SESSION_STAMP="${XDG_STATE_HOME:-$HOME/.local/state}/caelestia/stale-session"
 
-# Checked before the SKIP_SYSTEM_UPDATE exit: a session flagged by an earlier run
-# is stale whether or not this run updates anything, and "retry" on the failure
-# prompt re-runs this step, by which time the upgrade is no longer a difference
-# to detect.
 if [[ -f "$STALE_SESSION_STAMP" ]]; then
     if [[ "$(cat "$STALE_SESSION_STAMP" 2>/dev/null)" == "$(kwin_session_identity 2>/dev/null)" ]]; then
         err "This Plasma session still predates the last KWin/Qt upgrade. Log out and"
@@ -46,8 +28,6 @@ if [[ "${SKIP_SYSTEM_UPDATE:-false}" == "true" ]]; then
     exit 0
 fi
 
-# Arch-only: the rolling distro where this happens routinely, and where `pacman -Q`
-# is the version query. Fedora and Debian get the stamp check but not this.
 SESSION_PACKAGES=(kwin plasma-workspace libplasma qt6-base qt6-declarative)
 
 session_package_versions() {

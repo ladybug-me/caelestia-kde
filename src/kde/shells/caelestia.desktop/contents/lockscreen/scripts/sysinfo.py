@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-FileCopyrightText: 2024 ladybug-me
 # SPDX-License-Identifier: GPL-3.0-or-later
-#
-# sysinfo.py - lockscreen system info provider. One JSON line with: os, wm, user,
-# uptime, id, logoPath. Called by LockScreenUi.qml through a Plasma5Support
-# DataSource; kept as a file rather than an inline `python3 -c` because the
-# concatenation ran pre-auth (security review).
 
 import json
 import os

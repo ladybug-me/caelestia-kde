@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# 00-backup-themes.sh  Backs up current KDE settings with konsave so uninstall.sh can restore them.
 
 set -euo pipefail
 
@@ -46,7 +45,6 @@ restore_user_konsave_conf() {
         return 0
     fi
 
-    # Keep a pre-existing user config that we never backed up.
     if [[ "$HAD_USER_KONSAVE_CONF" != "true" ]]; then
         rm -f "$USER_KONSAVE_CONF"
     fi
@@ -104,7 +102,6 @@ export:
 ...
 EOF
 
-# Drop a stale profile from a previous run so -s does not collide.
 "$KONSAVE_BIN" -r "$PROFILE_NAME" -f >/dev/null 2>&1 || true
 
 info "Saving konsave profile '$PROFILE_NAME'..."

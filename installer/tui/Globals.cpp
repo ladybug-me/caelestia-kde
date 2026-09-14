@@ -17,7 +17,6 @@ json g_theme;
 json g_menu;
 std::unordered_map<std::string, std::string> g_theme_colors;
 
-// #rrggbb becomes 24-bit truecolor; anything else is a legacy ANSI suffix ("36m").
 std::string color_sequence(const std::string& value) {
     if (value.size() == 7 && value[0] == '#') {
         int r = std::stoi(value.substr(1, 2), nullptr, 16);
@@ -43,7 +42,6 @@ void load_theme() {
                     }
                 }
             } else if (g_theme.contains("colors") && g_theme["colors"].is_object()) {
-                // Legacy theme files store raw ANSI suffixes under "colors".
                 for (auto& [name, value] : g_theme["colors"].items()) {
                     if (value.is_string()) {
                         g_theme_colors[name] = color_sequence(value.get<std::string>());
@@ -73,4 +71,3 @@ void load_theme() {
         g_startup_problems.push_back("menu.json not found - using the built-in menu (re-run setup.sh)");
     }
 }
-

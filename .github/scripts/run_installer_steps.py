@@ -14,7 +14,6 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 
-# Explicit list of CI dependency testing steps (excluding live desktop/systemd/user steps)
 INSTALLER_STEPS = [
     "scripts/00a-system-update.sh",
     "scripts/01-ensure-prereqs.sh",
@@ -144,7 +143,6 @@ def run_steps() -> int:
         proc.wait()
         rc = proc.returncode
 
-        # Double check filtering for any workspace-tracker lines
         build_errors = [
             (ctx, msg)
             for ctx, msg in build_errors

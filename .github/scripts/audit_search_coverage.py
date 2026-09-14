@@ -48,8 +48,6 @@ SETTING_BLOCKS = (
     "NavRow",
 )
 
-# Sub-pages that render whatever the user picked before (a device, a network, an
-# app): opening one from a search hit would show an empty page.
 CONTEXT_DEPENDENT = {
     (0, 2): "wallpaper category, needs the chosen category",
     (3, 1): "ethernet details, needs the chosen interface",

@@ -1,9 +1,4 @@
 
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
-
 import QtQuick
 import ".."
 import QtQuick.Layouts
@@ -109,7 +104,6 @@ Rectangle {
     color: clSurfaceContainer
     clip: true
 
-    // Header
     RowLayout {
         id: headerRow
         anchors.left: parent.left
@@ -163,7 +157,6 @@ Rectangle {
             }
         }
 
-        // Empty/idle state: show DinoGame when there are no notifications.
         Loader {
             id: dinoLoader
             z: 1
@@ -174,7 +167,6 @@ Rectangle {
             anchors.margins: 16 * centerScale
             anchors.topMargin: 12 * centerScale
 
-            // Active when hideNotifs is set, or empty, or while game is running, or system DND is enabled
             active: root.hideNotifs || root.liveNotifs.length === 0 || isGameRunning || root.isSystemDndEnabled
             readonly property bool isGameRunning: item !== null && item.isPlaying === true
 
@@ -193,14 +185,12 @@ Rectangle {
                     anchors.centerIn: parent
                     width: dinoLoader.width
                     height: 200
-                    // Wire palette so the dino matches card colors
                     activeColor: root.clSurfaceVariantFg
                     isCaelestiaMode: root.isCaelestiaMode
                 }
             }
         }
 
-        // Categorized Notifications List
         ListView {
             id: notifListView
             anchors.left: parent.left
@@ -261,7 +251,6 @@ Rectangle {
                     anchors.margins: 12 * root.centerScale
                     spacing: 12 * root.centerScale
 
-                    // Icon / Image Container (44px)
                     Item {
                         Layout.alignment: Qt.AlignTop
                         implicitWidth: 44 * root.centerScale
@@ -300,7 +289,6 @@ Rectangle {
                             }
                         }
 
-                        // App Badge when both image and appIcon exist
                         Rectangle {
                             anchors.right: parent.right
                             anchors.bottom: parent.bottom
@@ -322,12 +310,10 @@ Rectangle {
                         }
                     }
 
-                    // Content Column
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 4 * root.centerScale
 
-                        // Group Header Row
                         RowLayout {
                             Layout.fillWidth: true
                             spacing: 8 * root.centerScale
@@ -346,7 +332,6 @@ Rectangle {
                                 color: root.clOutline
                             }
 
-                            // Expand / Collapse Pill Button (if > 3 notifications)
                             Rectangle {
                                 id: expandPill
                                 visible: modelData.notifs.length > 3
@@ -382,7 +367,6 @@ Rectangle {
                             }
                         }
 
-                        // Notification Lines
                         Repeater {
                             model: groupCard.expanded ? modelData.notifs : modelData.notifs.slice(0, 3)
 

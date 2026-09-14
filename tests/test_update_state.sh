@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# test_update_state.sh - Tests for scripts/lib/update-state.sh
 
 set -uo pipefail
 
@@ -14,8 +13,6 @@ require_git() {
     return 1
 }
 
-# A throwaway checkout that really does have a commit and a version.env, so the
-# helper exercises the same git plumbing it does in production.
 make_repo() {
     local dir="$1" version="$2"
     mkdir -p "$dir/.github"
@@ -76,8 +73,6 @@ test_record_installed_revision_falls_back_to_the_commit_for_the_version() {
     local tmp status
     tmp="$(new_tmpdir)"
     make_repo "$tmp/repo" "v9.9.9"
-    # Sparse checkouts (the updater uses one) omit .github/version.env from the
-    # working tree while it is still present in the commit.
     rm "$tmp/repo/.github/version.env"
 
     record_installed_revision "$tmp/repo" "$tmp/config"

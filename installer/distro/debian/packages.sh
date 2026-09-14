@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# packages.sh - Debian/Ubuntu package installation for Caelestia
 
 set -uo pipefail
 
@@ -10,8 +9,6 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 log()  { printf '  [INFO]  %s\n' "$*"; }
 err()  { printf '  [ERR]   %s\n' "$*" >&2; }
 
-# Return the download URL of the Darkly prebuilt .deb that matches this distro
-# from the latest GitHub release (https://github.com/Bali10050/Darkly/releases).
 darkly_deb_asset_url() {
     local release_json id ver needle url
     release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/latest" 2>/dev/null || true)"
@@ -48,34 +45,25 @@ INSTALL_FISH="${INSTALL_FISH:-true}"
 INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
 INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
-# Package groups, selected by PACKAGE_GROUP.
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 CORE_PACKAGES=(
-    # Build tools & compilers
     cmake ninja-build ccache g++ build-essential qt6-l10n-tools qt6-tools-dev extra-cmake-modules
 
-    # CLI & System utilities
     wl-clipboard cliphist inotify-tools wireplumber trash-cli jq yq libc6
 
-    # Audio, Sensors & Hardware
     libaubio-dev aubio-tools lm-sensors libsensors-dev libpipewire-0.3-dev pipewire libfftw3-dev
 
-    # Qt6 Framework & Tools
     qt6-base-dev qt6-base-private-dev qt6-declarative-dev qml6-module-qtquick qt6-wayland qt6-wayland-dev
     qt6-svg-dev qt6-shadertools-dev
 
-    # KDE 6 Frameworks & KWin
     libkf6globalaccel-dev libkf6windowsystem-dev libkf6guiaddons-dev
     libkf6coreaddons-dev kwin-dev libkf6pulseaudioqt-dev libpulse-dev
     libkf6config-dev libkf6networkmanagerqt-dev libkpipewire-dev
     libepoxy-dev libdrm-dev
 
-    # Media, Calculation & Security
     ffmpeg libavcodec-dev libavformat-dev libavutil-dev libswscale-dev
     libqalculate-dev qalc libvulkan-dev libsecret-1-dev ksshaskpass libx11-dev
-    # secret-tool is in libsecret-tools here, not in the -dev package; the AI API key
-    # fields shell out to it at runtime.
     libsecret-tools
 )
 
@@ -93,12 +81,10 @@ UTILITY_PACKAGES=(
     xdg-utils sassc python3-venv uv konsave
 )
 
-# Targets with no apt package, built or fetched by the fallback below.
 FALLBACK_PKGS=(
     quickshell starship libcava app2unit gpu-screen-recorder cliphist wl-clip-persist satty adw-gtk3 uv konsave matugen
 )
 
-# Build final package list based on selected group
 PACKAGES=()
 FALLBACK_TARGETS=()
 case "$PACKAGE_GROUP" in
@@ -112,7 +98,6 @@ esac
 
 log "Installing packages (group: $PACKAGE_GROUP)..."
 
-# Optional, and only for the groups that want them.
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
     if [[ "$INSTALL_FISH" == "true" ]]; then
         PACKAGES+=(fish)
@@ -134,7 +119,6 @@ sudo apt-get update || true
 
 FAILED_PKGS=()
 
-# Everything apt can provide, in one call; the fallback targets are handled after.
 BATCH_PKGS=()
 for pkg in "${PACKAGES[@]}"; do
     _is_fallback="no"
@@ -259,7 +243,6 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             ;;
         wl-clip-persist)
             sudo apt-get install -y build-essential curl git libwayland-dev || true
-            # Rust >= 1.85 for edition 2024.
             if ! command -v cargo >/dev/null 2>&1 || [ "$(rustc --version 2>/dev/null | awk '{print $2}' | cut -d. -f2 || echo 0)" -lt 85 ]; then
                 log "Modern Rust toolchain (>= 1.85) required. Installing via rustup..."
                 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal || true # ci:allow-curl-pipe
@@ -287,7 +270,6 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             if ! command -v cargo-binstall >/dev/null 2>&1; then
                 curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash || true # ci:allow-curl-pipe
                 export PATH="$PATH:$HOME/.cargo/bin"
-                # Persist for future sessions.
                 for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
                     touch "$rc" 2>/dev/null || true
                     grep -q 'export PATH="$HOME/.cargo/bin:$PATH"' "$rc" 2>/dev/null || echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> "$rc" 2>/dev/null || true
@@ -337,8 +319,6 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             rm -rf "$tmpdir"
             ;;
         matugen)
-            # matugen is not packaged for Debian and its toolchain is not in the package
-            # list either, so both are built here.
             export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
             if ! command -v cargo >/dev/null 2>&1; then
                 log "Installing a Rust toolchain to build matugen..."
@@ -372,7 +352,6 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 log "Downloading and installing required custom fonts (parallel)..."
 mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
 
-# Download all fonts in parallel
 curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
@@ -385,13 +364,10 @@ _pid_jb=$!
 curl -sL "https://github.com/google/fonts/raw/main/ofl/rubik/Rubik-VariableFont_wght.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Rubik-VariableFont_wght.ttf" &
 _pid_ru=$!
 
-# Wait for all downloads to finish
 wait $_pid_ms $_pid_cc $_pid_jb $_pid_ru
 
-# Extract zip files
 unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; echo "CascadiaCode font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; echo "JetBrains Mono Nerd Font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
-# Material Symbols and Rubik are single .ttf files, no extraction needed
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; echo "Material Symbols font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Rubik-VariableFont_wght.ttf" ]] || { err "Failed to download Rubik font."; echo "Rubik font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
 
@@ -452,7 +428,6 @@ if ! command -v caelestia >/dev/null 2>&1; then
             fi
         fi
 
-        # Install fish completions if fish is present
         mkdir -p ~/.config/fish/completions/
         cp ./completions/caelestia.fish ~/.config/fish/completions/ 2>/dev/null || true
     )

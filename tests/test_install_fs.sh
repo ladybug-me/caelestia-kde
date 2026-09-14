@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-# test_install_fs.sh - Tests for scripts/lib/install-fs.sh
 
 set -uo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/install-fs.sh"
 
-# Build a source tree and an already-installed destination holding different
-# content, so every assertion can tell "was replaced" from "was left alone".
 make_fixture() {
     local tmp="$1"
     mkdir -p "$tmp/src/contents" "$tmp/dest"
@@ -34,8 +31,6 @@ test_atomic_replace_tree_keeps_destination_when_copy_is_incomplete() {
     tmp="$(new_tmpdir)"
     make_fixture "$tmp"
 
-    # The source is missing a file the installer requires. The destination is
-    # the only working copy the user has, so it must survive untouched.
     atomic_replace_tree "$tmp/src" "$tmp/dest" does-not-exist.json
     status=$?
 

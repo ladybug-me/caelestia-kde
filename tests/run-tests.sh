@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-# run-tests.sh - run the bash test suite.
-#
-#   bash tests/run-tests.sh                     # every tests/test_*.sh
-#   bash tests/run-tests.sh test_install_fs.sh  # just one file
-#
-# Each file runs in its own bash process, so leaked state cannot affect its
-# neighbours. No `set -e`: a failing test must not abort the runner.
 
 set -uo pipefail
 

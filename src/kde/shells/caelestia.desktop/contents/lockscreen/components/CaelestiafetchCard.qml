@@ -1,7 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
 
 import QtQuick
 import ".."
@@ -31,16 +27,13 @@ Rectangle {
 
     implicitHeight: (36 + 180 + 28 + 2 * 12 + 2 * 18) * centerScale
 
-    // Resolve SVG logo path from python3 provider; falls back to a generic icon
     readonly property string logoPath: {
         if (fetchInfo && fetchInfo.logoPath) return fetchInfo.logoPath;
         return "";
     }
 
-    // Large logo only when the width fits it beside unelided text.
     readonly property bool showLargeLogo: root.width >= (280 * root.centerScale)
 
-    // One monospace string per row keeps the colons aligned; the count adapts to height.
     readonly property var fetchLines: {
         var osStr = "";
         var wmStr = "KDE";
@@ -86,7 +79,6 @@ Rectangle {
         return lines;
     }
 
-    // Large body logo size, from the card bounds.
     readonly property real bodyLogoSize: Math.round(Math.min(root.height * 0.48, root.width * 0.30))
 
     ColumnLayout {
@@ -95,7 +87,6 @@ Rectangle {
         anchors.margins: Math.max(10, 14 * root.centerScale)
         spacing: Math.max(4, 8 * root.centerScale)
 
-        // Titlebar row: "> " pill + "caelestiafetch.sh" (+ small logo when large logo is hidden)
         RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: false
@@ -132,7 +123,6 @@ Rectangle {
                 elide: Text.ElideRight
             }
 
-            // Compact logo in titlebar when width is too narrow for body logo
             Item {
                 id: titlebarLogo
                 visible: !root.showLargeLogo && root.logoPath.length > 0
@@ -162,14 +152,12 @@ Rectangle {
             }
         }
 
-        // Body: vector logo (left) + monospace info lines (right)
         RowLayout {
             id: bodyRow
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             Layout.fillHeight: true
             spacing: root.showLargeLogo ? Math.max(10, Math.round(16 * root.centerScale)) : 0
 
-            // Large logo in body area
             Item {
                 id: logoContainer
                 visible: root.showLargeLogo && root.logoPath.length > 0
@@ -223,7 +211,6 @@ Rectangle {
             }
         }
 
-        // Terminal dot palette, from clTerms in scheme.json; empty while colors load.
         RowLayout {
             id: coloursRow
             visible: (root.centerScale >= 0.85) && (root.height >= 170 * root.centerScale)

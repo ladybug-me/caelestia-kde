@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
-# 11-optional-apps.sh  Deploy the components the main install leaves off:
 # editor integrations, Spicetify, Discord/Equibop, Todoist and Firefox theming.
-#
-# Each is gated by a menu toggle (INSTALL_VSCODE, INSTALL_ZED,
 # INSTALL_SPICETIFY, INSTALL_DISCORD, INSTALL_TODOIST, INSTALL_FIREFOX_THEME),
-# all false by default, so a stock install runs this and does nothing.
-# Idempotent.
 
 set -euo pipefail
 
@@ -70,7 +65,6 @@ deploy_file() {
     fi
 }
 
-# VSCode / VSCodium
 if [[ "${INSTALL_VSCODE:-false}" == "true" ]]; then
     echo "  Setting up VSCode/VSCodium integration..."
     install_if_missing code || install_if_missing visual-studio-code-bin || true
@@ -94,7 +88,6 @@ if [[ "${INSTALL_VSCODE:-false}" == "true" ]]; then
     deploy_vscode "VSCodium" "codium"
 fi
 
-# Zed
 if [[ "${INSTALL_ZED:-false}" == "true" ]]; then
     echo "  Setting up Zed..."
     if [[ "$BASE_DISTRO" == "arch" ]]; then
@@ -106,13 +99,10 @@ if [[ "${INSTALL_ZED:-false}" == "true" ]]; then
     deploy_file "$DOTS_DIR/zed/settings.json" "$HOME/.config/zed/settings.json"
 fi
 
-# Spicetify
 if [[ "${INSTALL_SPICETIFY:-false}" == "true" ]]; then
     echo "  Setting up Spicetify..."
     install_if_missing spicetify-cli || true
 
-    # Prefer our KDE-specific override; fall back to the submodule copy on a
-    # bundle that predates it.
     theme_css="$EXTRA_DIR/spicetify/Themes/caelestia/user.css"
     [[ -f "$theme_css" ]] || theme_css="$DOTS_DIR/spicetify/Themes/caelestia/user.css"
     deploy_file "$theme_css" "$HOME/.config/spicetify/Themes/caelestia/user.css"
@@ -124,7 +114,6 @@ if [[ "${INSTALL_SPICETIFY:-false}" == "true" ]]; then
     fi
 fi
 
-# Discord / Equibop
 if [[ "${INSTALL_DISCORD:-false}" == "true" ]]; then
     echo "  Installing Discord/Equibop..."
     if [[ "$BASE_DISTRO" == "arch" ]]; then
@@ -152,7 +141,6 @@ if [[ "${INSTALL_TODOIST:-false}" == "true" ]]; then
     fi
 fi
 
-# Firefox theming (user.js + userChrome.css)
 if [[ "${INSTALL_FIREFOX_THEME:-false}" == "true" ]]; then
     echo "  Setting up Firefox theming..."
     install_if_missing firefox || true
@@ -173,8 +161,6 @@ if [[ "${INSTALL_FIREFOX_THEME:-false}" == "true" ]]; then
         fi
     fi
 
-    # Not deployed: the caelestiafox native-messaging host and its extension live
-    # in the upstream caelestia repo and are not wired into this build.
 fi
 
 ok "Optional components done."

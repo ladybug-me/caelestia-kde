@@ -1,7 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
 
 import QtQuick
 import ".."
@@ -49,7 +45,6 @@ Rectangle {
         anchors.margins: Math.max(8, 12 * root.centerScale)
         spacing: Math.max(6, 10 * root.centerScale)
 
-        // CPU Resource (MaterialShape.Pentagon)
         ResourceItem {
             id: cpu
             Layout.fillWidth: true
@@ -86,7 +81,6 @@ Rectangle {
             }
         }
 
-        // RAM Resource (MaterialShape.Slanted)
         ResourceItem {
             id: ram
             Layout.fillWidth: true
@@ -102,7 +96,6 @@ Rectangle {
             valueColor: root.clTertiary
         }
 
-        // Storage Resource (MaterialShape.Gem)
         ResourceItem {
             id: disk
             Layout.fillWidth: true

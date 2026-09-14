@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# test_cli.sh - Tests for the `caelestia` command dispatcher (src/bin/caelestia).
-#
-# Every helper is a recording stub, so the assertions are about the hand-off and nothing
-# else runs. What the color command then does with those arguments is test_color.sh.
 
 set -uo pipefail
 
@@ -16,10 +12,6 @@ CALLS=""
 RUN_OUTPUT=""
 RUN_STATUS=0
 
-# setup_stubs
-#
-# One recording stub per helper, plus an XDG_CONFIG_HOME inside the scratch dir, so
-# `version` cannot pick up a shell installed on the machine running the tests.
 setup_stubs() {
     STUB_DIR="$(new_tmpdir)/bin"
     CALLS="$(dirname "$STUB_DIR")/calls.log"
@@ -33,10 +25,6 @@ setup_stubs() {
     XDG_CONFIG_HOME="$(dirname "$STUB_DIR")/config"
 }
 
-# run_cli <args...>
-#
-# Runs the dispatcher against the stubs, capturing output and status. The call log
-# starts empty, so an assertion sees exactly what this run handed off.
 run_cli() {
     [[ -n "$STUB_DIR" ]] || setup_stubs
     : > "$CALLS"
@@ -172,9 +160,6 @@ test_unknown_command_and_option_are_rejected() {
 test_install_with_nothing_to_install_from_explains_itself() {
     setup_stubs
 
-    # Install has two sources - a checkout it hands over to, or a package whose step
-    # scripts it runs for the user's half - and says so with neither. The packaged path
-    # itself is covered in test_packaged_install.sh.
     RUN_OUTPUT="$(CAELESTIA_BIN_DIR="$STUB_DIR" \
         CAELESTIA_DIR="$(dirname "$STUB_DIR")/nowhere" \
         CAELESTIA_LIB_DIR="$(dirname "$STUB_DIR")/nowhere" \
@@ -194,8 +179,6 @@ test_version_reports_the_checkout_version() {
     expected="$(awk -F= '$1 == "VERSION" { print $2; exit }' "$REPO_ROOT/.github/version.env")"
     assert_ne "" "$expected" "version.env should carry a version"
 
-    # Without CAELESTIA_BIN_DIR the dispatcher looks beside itself, which is the
-    # checkout this test is running from.
     RUN_OUTPUT="$(XDG_CONFIG_HOME="$XDG_CONFIG_HOME" bash "$CLI" version 2>&1)"
     RUN_STATUS=$?
 

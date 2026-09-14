@@ -22,12 +22,10 @@
 
 using namespace std;
 
-// Signal flags defined in main.cpp (global scope, not in any namespace).
 extern volatile sig_atomic_t g_sigint_received;
 extern volatile sig_atomic_t g_sigterm_received;
 
 namespace {
-// Spinner frame for the running step, advanced on each poll timeout.
 static size_t g_spin_frame = 0;
 
 std::string env_val(const char* name) {
@@ -37,7 +35,6 @@ std::string env_val(const char* name) {
 
 bool env_is_true(const char* name) { return env_val(name) == "true"; }
 
-// Log bytes appended since start_offset, so a step's own output can be scanned for [WARN].
 bool log_tail_since(const std::string& log_path, long start_offset,
                     std::string& out) {
   FILE* f = fopen(log_path.c_str(), "rb");
@@ -59,7 +56,6 @@ bool log_tail_since(const std::string& log_path, long start_offset,
   return true;
 }
 
-// Forks a step with stdout/stderr appended to the shared log, keeping the terminal for the TUI.
 pid_t spawn_step(const string& script_path, int log_fd) {
   pid_t child = fork();
   if (child < 0)
@@ -70,17 +66,13 @@ pid_t spawn_step(const string& script_path, int log_fd) {
       dup2(log_fd, STDOUT_FILENO);
       dup2(log_fd, STDERR_FILENO);
     }
-    // stdbuf line-buffers stdout/stderr, so lines reach the file (and live view) as printed
-    // rather than in a 4 KiB stdio buffer at step end.
     execlp("stdbuf", "stdbuf", "-oL", "-eL", "bash", script_path.c_str(),
            static_cast<char*>(nullptr));
-    // Fall back to plain bash if stdbuf is unavailable (e.g. minimal image).
     execlp("bash", "bash", script_path.c_str(), static_cast<char*>(nullptr));
     _exit(127);
   }
   return child;
 }
-// Menu answers reach the environment only after the review screen, which reads them directly.
 bool answer_is_true(const char* name) {
   auto it = g_answers.find(name);
   if (it != g_answers.end())
@@ -88,7 +80,6 @@ bool answer_is_true(const char* name) {
   return env_is_true(name);
 }
 
-// The last `max_lines` log lines, ANSI stripped; the log is appended live, so read a tail.
 bool read_log_tail(const std::string& log_path, size_t max_lines,
                    std::vector<std::string>& out) {
   out.clear();
@@ -122,7 +113,6 @@ bool read_log_tail(const std::string& log_path, size_t max_lines,
   return true;
 }
 
-// Animated status glyph for the currently running step.
 string spin_glyph() {
   static const char* frames[] = {"[/]", "[-]", "[\\]", "[|]"};
   return frames[g_spin_frame % 4];
@@ -136,7 +126,6 @@ const vector<Phase> phases = {
     {"finalize", "Finalize"},
 };
 
-// The backup step runs inside Prepare, so the phase order reads true: snapshot, then install.
 vector<Step> steps = {
     {"Refresh mirrors", "scripts/00-refresh-mirrors.sh", "PENDING", "prepare"},
     {"Update system", "scripts/00a-system-update.sh", "PENDING", "prepare"},
@@ -195,7 +184,6 @@ string show_error_dialog(const string &step_name, const string &script_path,
   int selected = 0;
   vector<string> opts = {"Retry", "Ignore", "Exit"};
 
-  // Keeps the last few output lines, so the dialog fits and still shows the real error.
   vector<string> detail;
   {
     string line;

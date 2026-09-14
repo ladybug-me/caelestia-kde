@@ -23,8 +23,6 @@ jobs:
           spam-label: 'spam'
           ai-label: 'ai-generated'
           minimize-detected-comments: true
-          # Built-in prompt configuration (all enabled by default)
           enable-spam-detection: true
           enable-link-spam-detection: true
           enable-ai-detection: true
-          # custom-prompt-path: '.github/prompts/my-custom.prompt.yml'  # Optional

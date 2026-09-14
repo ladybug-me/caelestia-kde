@@ -1,35 +1,11 @@
 #!/usr/bin/env bash
-# toolchain.sh - build-tool prerequisites for the install/update step scripts.
-#
-# Source alongside lib/privileges.sh, which provides caelestia_sudo.
-#
-#   linguist_tools_available   Is Qt's lrelease reachable?
-#   install_linguist_tools     Install it through caelestia_sudo
-#   install_cava_sdk           Download & extract prebuilt CAVA SDK tarball
-#
-# Helpers never log; callers decide what to tell the user.
 
-# linguist_tools_available
-#
-# True when `lrelease` runs, from PATH or from the location distros use when
-# they keep the Qt tools out of PATH.
 linguist_tools_available() {
     local fallback="${CAELESTIA_LRELEASE_FALLBACK:-/usr/lib/qt6/bin/lrelease}"
 
     command -v lrelease >/dev/null 2>&1 || [[ -x "$fallback" ]]
 }
 
-# install_linguist_tools
-#
-# Install Qt's Linguist tools so CMake can compile the translation catalogs.
-# Without lrelease CMake only warns and the shell ships English regardless of
-# the catalogs in shell/translations.
-#
-# Goes through caelestia_sudo, not plain sudo: this also runs from a GUI-driven
-# update with no controlling terminal, where bare sudo has nothing to prompt on
-# and fails silently (#664).
-#
-# Returns 0 when the tools are present or were installed, 1 otherwise.
 install_linguist_tools() {
     if linguist_tools_available; then
         return 0
@@ -46,13 +22,6 @@ install_linguist_tools() {
     fi
 }
 
-# install_cava_sdk [distro]
-#
-# Download and extract the prebuilt CAVA SDK (libcava + headers) from CAVA's
-# continuous release. Distro defaults to $BASE_DISTRO or the detected package
-# manager.
-#
-# Returns 0 on success, 1 on failure.
 install_cava_sdk() {
     local arch="${CAELESTIA_TARGET_ARCH:-}"
     if [[ -z "$arch" ]]; then

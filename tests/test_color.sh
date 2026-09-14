@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-# test_color.sh - Tests for the color pipeline (src/bin/caelestia-color).
-#
-# matugen is stubbed: it reads the config it is handed and writes the file names in it,
-# so what is asserted is what the command owns - what gets rendered, where it lands, and
-# what reaches scheme.json. The palette itself is checked on a real machine.
-#
-# The scheme data is the repo's own src/, the same files a checkout installs.
 
 set -uo pipefail
 
@@ -21,11 +14,6 @@ KDE_CALLS=""
 OUTPUT=""
 STATUS=0
 
-# write_stub_matugen
-#
-# Stands in for matugen: records its arguments, then walks the config it was given
-# and writes every output path - scheme.json from the metadata and mode, a line
-# naming the template for everything else.
 write_stub_matugen() {
     cat > "$STUB_DIR/matugen" <<'STUB'
 #!/usr/bin/env bash
@@ -90,11 +78,6 @@ STUB
     chmod +x "$STUB_DIR/matugen"
 }
 
-# write_stub_ffmpeg
-#
-# Stands in for the decoder the smart-variant measurement reads: prints raw RGB
-# instead of running ffmpeg, so the thresholds are exercised without a real image.
-# FFMPEG_PATTERN picks the pixels; an unknown one fails as an unreadable file would.
 write_stub_ffmpeg() {
     cat > "$STUB_DIR/ffmpeg" <<'STUB'
 #!/usr/bin/env bash
@@ -107,11 +90,6 @@ STUB
     chmod +x "$STUB_DIR/ffmpeg"
 }
 
-# write_stub_kde
-#
-# Stand-ins for the KDE tools the apply step drives: the applier and config writer
-# record their arguments (a name to apply, keys to write), and the reader reports
-# what KREAD_SCHEME says, so a test can put a scheme in effect.
 write_stub_kde() {
     cat > "$STUB_DIR/plasma-apply-colorscheme" <<'STUB'
 #!/usr/bin/env bash
@@ -129,10 +107,6 @@ STUB
     chmod +x "$STUB_DIR/plasma-apply-colorscheme" "$STUB_DIR/kwriteconfig6" "$STUB_DIR/kreadconfig6"
 }
 
-# setup_sandbox
-#
-# A throwaway home (config, state, cache) with the repo's scheme data pointed at
-# directly, so nothing touches the developer's own XDG directories.
 setup_sandbox() {
     SANDBOX="$(new_tmpdir)"
     STUB_DIR="$SANDBOX/bin"
@@ -154,7 +128,6 @@ setup_sandbox() {
     export PATH="$STUB_DIR:$PATH"
 }
 
-# run_color <args...>
 run_color() {
     : > "$CALLS"
     : > "$KDE_CALLS"
@@ -174,17 +147,12 @@ run_color() {
     STATUS=$?
 }
 
-# wallpaper_image <name>
-#
-# A file to point the command at. The path is canonicalized because that is what
-# the command stores.
 wallpaper_image() {
     local path="$XDG_PICTURES_DIR/$1"
     printf 'not really a png\n' > "$path"
     printf '%s' "$(realpath -- "$path")"
 }
 
-# set_cli_config <json>
 set_cli_config() {
     mkdir -p "$XDG_CONFIG_HOME/caelestia"
     printf '%s' "$1" > "$XDG_CONFIG_HOME/caelestia/cli.json"
@@ -204,8 +172,6 @@ test_list_flat_is_the_shape_the_colors_page_reads() {
     run_color scheme list --flat
     assert_status 0 "$STATUS" "scheme list --flat should succeed"
 
-    # Every entry carries the four fields the Colors page builds its cards from,
-    # and the colors are hex digits with no '#' because the shell adds it.
     local described
     described="$(printf '%s' "$OUTPUT" | python3 -c '
 import json, sys
@@ -250,7 +216,6 @@ PY
 
 test_a_named_scheme_without_the_mode_asked_for_says_so() {
     setup_sandbox
-    # catppuccin/mocha ships dark only.
     run_color scheme set -n catppuccin -f mocha -m light
     assert_status 0 "$STATUS" "the switch should still happen"
     assert_contains "$OUTPUT" "has no light colors" "the substitution is reported"
@@ -309,8 +274,6 @@ test_the_roles_the_shell_reads_come_with_a_generated_scheme() {
     run_color wallpaper -f "$image"
     assert_status 0 "$STATUS" "setting a wallpaper should succeed"
 
-    # matugen names the Material roles; these are the ones it does not, and the
-    # palette manager, the toasts, the weather and the greeter read them.
     local described
     described="$(python3 - "$XDG_STATE_HOME/caelestia/scheme.json" <<'PY' 2>&1
 import json, pathlib, sys
@@ -341,7 +304,6 @@ test_the_wallpaper_picks_the_variant_unless_asked_not_to() {
     local image
     image="$(wallpaper_image wall.png)"
 
-    # A flat image has no colourfulness, which upstream called neutral.
     FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
     assert_contains "$(cat "$CALLS")" "--type scheme-neutral" \
         "a flat wallpaper picks the neutral variant"
@@ -349,13 +311,10 @@ test_the_wallpaper_picks_the_variant_unless_asked_not_to() {
     assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "neutral"' \
         "the scheme is filed under the variant it really is"
 
-    # Two far-apart colors are about as colourful as it gets.
     FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
     assert_contains "$(cat "$CALLS")" "--type scheme-tonal-spot" \
         "a colourful wallpaper picks the tonal spot variant"
 
-    # With nothing to measure, matugen chooses and the name is whatever was asked
-    # for - the one case where the two can disagree.
     FFMPEG_PATTERN=unreadable run_color wallpaper -f "$image"
     assert_status 0 "$STATUS" "an unreadable image should still produce a scheme"
     assert_contains "$(cat "$CALLS")" "--type scheme-smart" "matugen picks the variant as a fallback"
@@ -366,7 +325,6 @@ test_no_smart_keeps_the_mode_and_variant() {
     local image
     image="$(wallpaper_image wall.png)"
 
-    # A dynamic scheme needs a wallpaper before it can be derived at all.
     run_color wallpaper -f "$image" --no-smart
     run_color scheme set -n dynamic -v rainbow -m light
     run_color wallpaper -f "$image" --no-smart
@@ -411,7 +369,6 @@ test_the_generated_config_follows_the_user_config() {
     assert_file_exists "$XDG_CACHE_HOME/caelestia/terminal-sequences"
     assert_file_exists "$XDG_DATA_HOME/color-schemes/Matugen.colors"
 
-    # A key upstream defined is still honoured for the targets upstream named.
     set_cli_config '{"theme": {"enableBtop": false, "enableQt": false}}'
     rm -rf "$XDG_CONFIG_HOME/btop" "$XDG_CONFIG_HOME/qt5ct"
     run_color scheme set -n catppuccin -f mocha -m dark
@@ -503,7 +460,6 @@ test_the_wallpaper_preview_changes_nothing() {
     local second
     second="$(wallpaper_image second.png)"
 
-    # With a path it previews that one; without, the wallpaper already set.
     run_color wallpaper -p "$second"
     assert_status 0 "$STATUS" "the preview should succeed"
     assert_contains "$OUTPUT" '"name": "dynamic"' "the preview prints a scheme"
@@ -516,8 +472,6 @@ test_the_wallpaper_preview_changes_nothing() {
     assert_status 0 "$STATUS" "a preview without a path falls back to the wallpaper set"
     assert_contains "$OUTPUT" '"name": "dynamic"' "and prints its scheme"
 
-    # The picker reads the preview to colour its cards, so it has to be the shape
-    # the shell parses: a scheme object with colours in it.
     assert_contains "$OUTPUT" '"colours"' "the preview carries colours"
 }
 
@@ -542,8 +496,6 @@ test_the_palette_reaches_the_desktop() {
     assert_file_exists "$XDG_DATA_HOME/color-schemes/Matugen.colors"
     assert_contains "$(cat "$KDE_CALLS")" "apply Matugen" "the palette is applied to Plasma"
 
-    # Plasma rewrites focus, link and selection colors from an accent of its own, on top
-    # of the palette just applied, so both ways of setting one are cleared.
     assert_contains "$(cat "$KDE_CALLS")" "--key AccentColor --delete" \
         "a leftover accent color is dropped"
     assert_contains "$(cat "$KDE_CALLS")" "--key AccentColorFromWallpaper --delete" \
@@ -555,8 +507,6 @@ test_the_applied_name_rotates_so_a_change_is_an_apply() {
     run_color wallpaper -f "$(wallpaper_image one.png)"
     assert_status 0 "$STATUS" "the first change should succeed"
 
-    # plasma-apply-colorscheme ignores a request for the name already in effect,
-    # so the next change has to arrive under the other one.
     export KREAD_SCHEME="Matugen"
     run_color wallpaper -f "$(wallpaper_image two.png)"
     assert_status 0 "$STATUS" "the second change should succeed"
@@ -583,7 +533,6 @@ test_konsole_gets_a_scheme_in_its_own_format() {
     assert_contains "$(cat "$colours")" "[Color15Intense]" \
         "every colour has the groups Konsole looks for"
 
-    # R,G,B per entry is the format Konsole reads; anything else it ignores.
     local described
     described="$(python3 - "$colours" <<'PY' 2>&1
 import pathlib, re, sys

@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# test_autostart_unit.sh - Tests for the one mechanism that starts the shell.
-#
-# parity-6: the shell starts from a single systemd user unit enabled by `caelestia
-# install`, not from a desktop entry that KDE's xdg-autostart generator turns into a
-# second unit. These tests read the files that must agree on that: the unit name, who
-# writes, restarts and removes it, and the package that ships the other copy.
 
 set -uo pipefail
 
@@ -27,8 +21,6 @@ test_the_checkout_writes_the_unit_instead_of_an_entry() {
     assert_contains "$script" 'ExecStart=%h/.local/bin/caelestia-autostart.sh' "and the unit should run the wrapper that sets the environment"
     assert_contains "$script" 'systemctl --user enable caelestia-shell.service' "and enable it, so it starts on the next login"
 
-    # The entry's writer is gone, but the KWin interface entry further down is a
-    # different file that must stay: it decides whether KWin offers screencasting.
     assert_not_contains "$script" 'AUTOSTART_DIR/caelestiashell.desktop" << EOF' "it must not write the retired autostart entry"
     assert_contains "$script" 'applications/quickshell.desktop' "while the KWin interface entry it writes stays"
 }

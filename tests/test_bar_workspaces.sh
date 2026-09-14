@@ -1,12 +1,4 @@
 #!/usr/bin/env bash
-# test_bar_workspaces.sh - What the bar draws for a workspace: a square when occupied,
-# a circle when empty, something larger for the focused one.
-#
-# This port deliberately omits upstream's organic shapes (Cookie4Sided..Cookie12Sided,
-# Clover4Leaf, Clover8Leaf, SoftBurst, Ghostish) from the random pool - upstream's reads
-# as a Pac-Man sitting in the bar. The rest of the bar syncs from upstream, so this file
-# is the record of that divergence: both the pool and the two places drawing from it are
-# asserted, because two copies of the list is how a divergence survives in only one.
 
 set -uo pipefail
 

@@ -1,7 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
 
 import QtQuick
 import QtQuick.Layouts
@@ -29,7 +25,6 @@ Item {
     readonly property real centerWidth: 400 * centerScale
     readonly property real passwordPillWidth: 300 * centerScale
     readonly property bool isPortrait: height > width * 1.2
-    // use12h: services.useTwelveHourClock from shell.json when set, else the locale.
     property bool use12h: Qt.locale().timeFormat(Locale.ShortFormat).toLowerCase().indexOf("a") !== -1
     property bool isCaelestiaMode: false
     property bool recolourLogo: true
@@ -39,9 +34,6 @@ Item {
     readonly property alias fprintTries: authHandler.fprintTries
     property int profilePicShape: 13
     property bool rotateProfilePic: false
-    // No syncWallpaper: whether the greeter's wallpaper follows the desktop is decided by
-    // the shell that writes kscreenlockerrc (Wallpapers.syncPlasmaWallpaper). A property
-    // of that name here read the config key without using it, so it looked like ours.
     property var sessionIcons: ({})
     property bool showSleep: true
     property bool showHibernate: false
@@ -60,7 +52,6 @@ Item {
     readonly property color clCardBg: alterColour(clSurfaceContainer, 0.60, 1)
     readonly property color clCardBgHigh: alterColour(clSurfaceContainerHigh, 0.60, 1)
 
-    // The scheme's dark values, overridden by schemeLoader once scheme.json is read.
     property color clSurface: "#0a0f0f"
     property color clSurfaceFg: "#dce8e6"
     property color clSurfaceContainer: "#131b1a"
@@ -84,8 +75,6 @@ Item {
     property string authMessage: ""
     property bool ready: false
 
-    // System info comes from the external helper, not an inline `python3 -c` one-liner:
-    // that concatenation ran pre-auth, which review flagged.
     readonly property string sysinfoScriptPath: {
         var url = Qt.resolvedUrl("scripts/sysinfo.py").toString();
         return url.startsWith("file://") ? url.slice(7) : url;
@@ -95,8 +84,6 @@ Item {
     readonly property int liveTemp: Math.round(Cpu.temperature ?? 0)
     readonly property int liveRam: Math.round((Memory.percentage ?? 0) * 100)
     readonly property int liveDisk: Math.round((Storage.percentage ?? 0) * 100)
-    // kscreenlocker inherits neither the session environment nor its PATH, so the helper
-    // path is resolved in the commands below rather than here.
     readonly property string ipcBin: "PATH=\"${CAELESTIA_BIN_DIR:-$HOME/.local/bin}:$PATH\" caelestia-shell-ipc"
     property var liveMedia: ({})
     property var liveNotifs: []
@@ -113,7 +100,6 @@ Item {
         if (!c) return Qt.rgba(0.15, 0.15, 0.15, a);
         var luminance = getLuminance(c);
         if (luminance === 0) return Qt.rgba(0.12, 0.12, 0.12, a);
-        // Brightness elevation offset for frosted widgets over blur (matches Caelestia alterColour)
         var offset = 0.3 * (1 - 0.7) * 1.5;
         var scale = (luminance + offset) / luminance;
         var r = Math.max(0, Math.min(1, c.r * scale));
@@ -161,7 +147,6 @@ Item {
         onTriggered: lockScreenUi.ready = true
     }
 
-    // XHR file:// is blocked inside kscreenlocker, so these files are read with cat.
     Plasma5Support.DataSource {
         id: schemeLoader
 
@@ -173,9 +158,7 @@ Item {
             if (!stdout) return;
             try {
                 var d = JSON.parse(stdout);
-                // Top-level colours, or a colours sub-key.
                 var c = d.colours || d;
-                // Both modes ship correct per-mode values, so read the block as-is.
                 if (c.surface) clSurface = "#" + c.surface;
                 if (c.onSurface) clSurfaceFg = "#" + c.onSurface;
                 if (c.surfaceContainer) clSurfaceContainer = "#" + c.surfaceContainer;
@@ -201,7 +184,6 @@ Item {
         }
     }
 
-    // useTwelveHourClock from shell.json, as set in Nexus.
     Plasma5Support.DataSource {
         id: configLoader
 
@@ -456,7 +438,6 @@ Item {
         target: root
     }
 
-    // Error text: appear → flash → exit
     SequentialAnimation {
         id: msgAppearAnim
 
@@ -574,7 +555,6 @@ Item {
             }
         }
 
-        // kscreenlocker may not hand focus to the greeter immediately
         Item {
             Timer {
                 property int n: 0
@@ -589,7 +569,6 @@ Item {
             }
         }
 
-        // Landscape layout
         Item {
             id: landscapeContent
 
@@ -656,7 +635,6 @@ Item {
                 anchors.margins: lockScreenUi.bgMargin
                 spacing: 40 * (lockScreenUi.lockHeight / 1080)
 
-                // Left Column
                 ColumnLayout {
                     Layout.alignment: Qt.AlignTop
                     Layout.fillWidth: true
@@ -718,7 +696,6 @@ Item {
                     }
                 }
 
-                // Center Column
                 Item {
                     id: centerColumnArea
 
@@ -815,7 +792,6 @@ Item {
                         }
                     }
 
-                    // Status Messages (Caps Lock, Errors / Logs, Fingerprint)
                     Item {
                         id: landscapeStatusContainer
 
@@ -882,7 +858,6 @@ Item {
                     }
                 }
 
-                // Right Column
                 ColumnLayout {
                     Layout.alignment: Qt.AlignTop
                     Layout.fillWidth: true
@@ -942,9 +917,7 @@ Item {
             }
         }
 
-        // Portrait layout
         // TODO: re-instantiates ClockWidget, ProfileAvatar, GreetingPill and PasswordPill
-        // instead of sharing the landscape instances, so the two can drift.
         Item {
             id: portraitContent
 
@@ -1082,7 +1055,6 @@ Item {
                     showShutdown: lockScreenUi.showShutdown
                 }
 
-                // Status Messages (Caps Lock, Errors / Logs, Fingerprint)
                 Item {
                     id: portraitStatusContainer
 

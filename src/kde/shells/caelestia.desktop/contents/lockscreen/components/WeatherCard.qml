@@ -1,7 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
 
 import QtQuick
 import QtQuick.Layouts
@@ -24,12 +20,10 @@ Rectangle {
     color: clSurfaceContainer
     clip: true
 
-    // Height shrinks to fit unless Layout.fillHeight is set.
     implicitHeight: isHorizontalLayout
                     ? (horizontalContent.implicitHeight + Math.max(16, 24 * centerScale))
                     : (compactContent.implicitHeight + Math.max(12, 20 * centerScale))
 
-    // Wide (high-DPI) layout
     RowLayout {
         id: horizontalContent
 
@@ -44,7 +38,6 @@ Rectangle {
             }
         }
 
-        // Left Section: Big Hero Temperature & Weather Icon
         RowLayout {
             id: heroSection
 
@@ -77,7 +70,6 @@ Rectangle {
             }
         }
 
-        // Vertical Divider Separator
         Rectangle {
             id: divider
 
@@ -87,7 +79,6 @@ Rectangle {
             color: Qt.rgba(root.clSurfaceVariantFg.r, root.clSurfaceVariantFg.g, root.clSurfaceVariantFg.b, 0.18)
         }
 
-        // Right Section: Condition, Feels Like, High / Low Range
         ColumnLayout {
             id: detailsSection
 
@@ -137,7 +128,6 @@ Rectangle {
         }
     }
 
-    // Compact (low-DPI) layout
     RowLayout {
         id: compactContent
 

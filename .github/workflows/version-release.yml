@@ -90,7 +90,6 @@ jobs:
           if [ -n "$LAST_TAG" ] && [ "$LAST_TAG" != "$VERSION" ]; then
             git fetch origin dev:refs/remotes/origin/dev --force || true
 
-            # The merge commit on dev where LAST_TAG was synced back (squash-and-merge).
             SYNC_COMMIT=$(git rev-list "$LAST_TAG..origin/dev" --ancestry-path --merges | tail -n 1 || true)
 
             if [ -n "$SYNC_COMMIT" ]; then
@@ -163,12 +162,6 @@ jobs:
             --title "chore: sync main back to dev after $VERSION" \
             --body "This is an automated PR to sync the new release tags from \`main\` back into \`dev\`." || true
 
-  # Precompile the shell (C++ QML plugins + M3Shapes) and bundle it with the QML source,
-  # so an install can download .so files instead of building Qt6/C++ locally.
-  #
-  # Built against Arch's Qt/KF, and the asset name embeds the Qt feature version: a
-  # different Qt misses the asset and falls back to a local build. The KWin effect is
-  # excluded - it links KWin::kwin, whose ABI is Plasma-specific (see 08-build-shell.sh).
   build-shell:
     name: Precompile shell artifacts (x86_64)
     needs: version-release
@@ -189,7 +182,6 @@ jobs:
             libqalculate pipewire libpipewire aubio lm_sensors extra-cmake-modules \
             fftw ncurses alsa-lib iniparser libglvnd sdl2 portaudio sndio libpulse
 
-      # Prebuilt CAVA SDK, so the visualizer plugin links without building libcava from source.
       - name: Install Prebuilt CAVA SDK (Arch)
         run: |
           set -euo pipefail
@@ -228,8 +220,6 @@ jobs:
           ARTIFACT="dist/caelestia-kde-x86_64-qt${QT_ABI}.tar.gz"
           tar -C dist/root -czf "$ARTIFACT" lib quickshell
           echo "ARTIFACT=$ARTIFACT" >> "$GITHUB_ENV"
-          # Next to the archive so 08-build-shell.sh can verify the download before
-          # unpacking (issue #667). Strip the directory: sha256sum -c wants the bare name.
           CHECKSUM="${ARTIFACT}.sha256"
           sha256sum "$ARTIFACT" | sed "s|$(dirname "$ARTIFACT")/||" > "$CHECKSUM"
           echo "CHECKSUM=$CHECKSUM" >> "$GITHUB_ENV"
@@ -240,17 +230,8 @@ jobs:
         run: |
           set -euo pipefail
           # --repo: inside a container gh's git-based repo detection fails ("not a git
-          # repository"), so name it explicitly.
           gh release upload "$TAG" "$ARTIFACT" "$CHECKSUM" --repo "$GITHUB_REPOSITORY" --clobber
 
-  # The source tarball the AUR package builds from. A git source would make every build
-  # download 645 MiB (two submodules and 308 MiB of fonts in history); this is the tree at
-  # the tag with what a build does not need left out - no .git, no fonts (12-fetch-assets.sh
-  # fetches those into the user's own directory), submodules inlined at the pinned commits,
-  # and REVISION written so the version helper can report a revision from a tree with no git.
-  #
-  # The asset name is load bearing: the PKGBUILD's source= names this exact file, and the
-  # sha256 printed here must be copied into its sha256sums by hand.
   build-source:
     name: Build AUR source tarball
     needs: version-release
@@ -268,8 +249,6 @@ jobs:
           set -euo pipefail
           source .github/version.env
           echo "TAG=$VERSION" >> "$GITHUB_ENV"
-          # The tag is vX.Y.Z, the package version X.Y.Z. Both names below must match the
-          # PKGBUILD exactly, so strip the v once here rather than prepend it later.
           echo "PKGVER=${VERSION#v}" >> "$GITHUB_ENV"
 
       - name: Stage the Tree
@@ -277,19 +256,14 @@ jobs:
           set -euo pipefail
           ROOT="caelestia-kde-$PKGVER"
           mkdir -p "dist/$ROOT"
-          # -a keeps the executable bits the package's scripts need; excluding .git also
-          # drops the submodules' .git files.
           rsync -a --exclude '.git' --exclude '.gitmodules' \
             --exclude 'shell/assets/fonts' ./ "dist/$ROOT/"
-          # Read by shell/CMakeLists.txt when there is no .git, so the build reports the
-          # commit rather than "unknown". Same file as upstream's release tarballs.
           git rev-parse HEAD > "dist/$ROOT/REVISION"
 
       - name: Build the Tarball
         run: |
           set -euo pipefail
           ARTIFACT="caelestia-kde-v$PKGVER.tar.gz"
-          # makepkg extracts to $srcdir/$pkgname-$pkgver, which is where the PKGBUILD cd's.
           tar -C dist -czf "$ARTIFACT" "caelestia-kde-$PKGVER"
           sha256sum "$ARTIFACT" | tee "$ARTIFACT.sha256"
           du -h "$ARTIFACT"
@@ -303,8 +277,6 @@ jobs:
           gh release upload "$TAG" "$ARTIFACT" "$ARTIFACT.sha256" \
             --repo "$GITHUB_REPOSITORY" --clobber
 
-  # Prebuilt installer TUI binaries (x86_64 + aarch64) so setup.sh can download instead
-  # of compiling. Versioned executables, so they belong on the version release.
   build-installer:
     name: Build installer TUI (${{ matrix.arch }})
     needs: version-release

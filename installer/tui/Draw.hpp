@@ -6,7 +6,6 @@ namespace Draw {
     extern const std::string bold;
     extern const std::string dim;
 
-    // theme.json palette name to ANSI: hex -> 24-bit, otherwise a legacy suffix. "bold_" works.
     std::string color(const std::string& name);
 
     std::string to(int line, int col);
@@ -14,20 +13,15 @@ namespace Draw {
     std::string sync_start();
     std::string sync_end();
 
-    // Plain-text status markers from the theme: pending, running, ok, warn, failed, skipped,
-    // checkbox_on, checkbox_off, select_left, select_right.
     std::string glyph(const std::string& name);
 
-    // Status is one of PENDING, RUNNING, OK, WARN, FAILED, SKIPPED.
     std::string status_glyph(const std::string& status);
     std::string status_color(const std::string& status);
 
-    // Repeat a string n times, truncate with "...", and strip ANSI from log output.
     std::string repeat(const std::string& s, int n);
     std::string fit(const std::string& text, size_t max_len);
     std::string strip_ansi(const std::string& text);
 
-    // Draws g_startup_problems at (x, y), at most max lines clipped to w; next free line back.
     int problems(int x, int y, int w, int max);
 
     void box(int x, int y, int w, int h, const std::string& title = "", const std::string& border_color = "container", const std::string& title_color = "");

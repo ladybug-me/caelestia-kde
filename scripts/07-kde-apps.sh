@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# 07-kde-apps.sh  Install the KDE theme applications (kvantum). Idempotent.
 
 set -euo pipefail
 
@@ -49,7 +48,6 @@ install_if_missing() {
     fi
 }
 
-# kvantum-qt5 is optional Qt5 support.
 if [[ "${INSTALL_KVANTUM:-true}" == "true" ]]; then
     if [[ "$BASE_DISTRO" == "debian" ]]; then
         install_if_missing qt6-style-kvantum || install_if_missing kvantum
@@ -62,9 +60,6 @@ else
     skip "Skipping Kvantum installation by user choice."
 fi
 
-# darkly comes from installer/distro/<distro>/packages.sh.
-
-# Point plasmac at the Darkly theme.
 kwriteconfig6 --file plasmarc --group "Theme" --key "name" "darkly" 2>/dev/null || true
 
 echo "[OK]  KDE extra apps step complete."

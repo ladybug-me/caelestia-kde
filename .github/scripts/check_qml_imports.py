@@ -47,19 +47,12 @@ IMPORT_RE = re.compile(r'^\s*import\s+(?:"([^"]+)"|([\w.]+))(?:\s+[\d.]+)?(?:\s+
 LINE_COMMENT_RE = re.compile(r"^[ \t]*//.*$", re.MULTILINE)
 BLOCK_COMMENT_RE = re.compile(r"/\*.*?\*/", re.DOTALL)
 
-# Component instantiation: `TypeName {` at the start of a line.
 TYPE_INSTANTIATION_RE = re.compile(r"^[ \t]*([A-Z]\w*)\s*\{", re.MULTILINE)
-# Alias-qualified instantiation: `Alias.TypeName {` (e.g. `import X as T` then `T.Button {}`).
 QUALIFIED_INSTANTIATION_RE = re.compile(r"^[ \t]*(\w+)\.([A-Z]\w*)\s*\{", re.MULTILINE)
-# `property TypeName name`, `readonly property TypeName name`.
 PROPERTY_TYPE_RE = re.compile(r"\bproperty\s+([A-Z]\w*)\s+\w+")
 PROPERTY_LIST_RE = re.compile(r"\bproperty\s+list<([A-Z]\w*)>")
-# Any qualified member/enum/attached-property/singleton access, e.g. `Colours.palette`,
-# `Layout.fillWidth`, `Text.AlignHCenter`.
 DOT_ACCESS_RE = re.compile(r"\b([A-Z]\w*)\.\w+")
 
-# QML builtins, JS globals, and the QtQml types (Connections, Timer, Binding) that any
-# Qt/Quickshell import brings in transitively - none need a project import.
 ALWAYS_OK = {
     "Component", "QtObject", "Qt", "Math", "JSON", "Date", "Number", "String",
     "Array", "Object", "Boolean", "RegExp", "Symbol", "Map", "Set", "Promise",
@@ -70,8 +63,6 @@ ALWAYS_OK = {
 CAELESTIA_CLASS_RE = re.compile(r"class\s+(\w+)\s*(?:final\s*)?(?::[^{;]*)?\{")
 CAELESTIA_NAMED_ELEMENT_RE = re.compile(r'QML_NAMED_ELEMENT\(\s*"(\w+)"\s*\)')
 
-# Real modules are Capitalized (Qt*, Quickshell*, Caelestia*, M3Shapes) or "qs";
-# anything else is a false match from embedded script text.
 VALID_BAREWORD_MODULE_RE = re.compile(r"^(qs(\.[\w.]+)?|[A-Z][\w.]*)$")
 
 
@@ -80,7 +71,6 @@ def strip_comments(text: str) -> str:
 
 
 def strip_imports(text: str) -> str:
-    # Otherwise DOT_ACCESS_RE reads `import Caelestia.Services` as a use of `Caelestia`.
     return IMPORT_RE.sub("", text)
 
 
@@ -180,8 +170,6 @@ def main() -> int:
     local_registry = build_local_registry(shell_root)
     caelestia_registry = build_caelestia_registry(plugin_src_root)
 
-    # Pass 1: parse every file and collect the qs.* modules imported, so the registry
-    # only stats the directories actually referenced.
     parsed: list[tuple[Path, set[str], list[str], set[str], set[str]]] = []
     all_qs_modules: set[str] = set()
     for qml_file in qml_files:
@@ -196,12 +184,6 @@ def main() -> int:
 
     qs_registry = build_qs_registry(shell_root, all_qs_modules)
 
-    # Pass 2: the correlation registry for standard Qt / Quickshell / M3Shapes modules.
-    #
-    # Statistical correlation credits whichever module co-occurs most, not the one that
-    # defines the type (QtQuick.Loader loses to rarer coincidentally co-imported modules).
-    # So only unambiguous evidence counts: a file whose only standard import is a single
-    # module M proves its uppercase types come from M. Two such files per type.
     per_file_unresolved: list[tuple[Path, set[str], set[str], set[str]]] = []
     type_module_evidence: dict[str, Counter[str]] = defaultdict(Counter)
     for qml_file, modules, relative_imports, alias_names, used_types in parsed:
@@ -237,7 +219,6 @@ def main() -> int:
                 continue
             missing_failures.append(f"{rel}: uses '{t}' but none of its known-providing modules ({', '.join(sorted(candidates))}) are imported")
 
-    # Unused-import pass: qs.*/Caelestia.* only (exact registries -> low false-positive rate).
     for qml_file, modules, _unresolved, used_here in per_file_unresolved:
         rel = qml_file.relative_to(shell_root)
         for module in sorted(m for m in modules if is_qs_module(m) or is_caelestia_module(m)):

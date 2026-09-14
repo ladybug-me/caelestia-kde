@@ -32,12 +32,8 @@ YELLOW = "\033[0;33m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
 
-# Process command arrays look like command: ["bash", "-c", `...`] or
-# ["sh", "-c", "...", "--", arg]; bash/sh//bin/bash all count as the interpreter.
 INTERP_RE = re.compile(r"^(?:/usr)?/?(?:bin/)?(?:ba|da|k)?sh$")
 
-# ${...} in a backtick string is evaluated by JavaScript before the process runs, so it
-# is not bash source. Replaced with `true` so bash -n sees valid syntax.
 JS_INTERP_RE = re.compile(r"\$\{([^{}]*)\}")
 
 
@@ -80,17 +76,14 @@ def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Ele
         if ch == "\\" and i + 1 < len(src):
             nxt = src[i + 1]
             if quote == "`":
-                # Keep escapes verbatim except \` and \${ (JS escapes for a literal backtick / param).
                 if nxt == "`":
                     out.append("`")
                 elif nxt == "$":
-                    # \${ in a JS template literal means literal `${` for bash.
                     out.append("${")
                 else:
                     out.append("\\" + nxt)
                 i += 2
                 continue
-            # Regular quoted string: escapes belong to the shell (e.g. \" in a bash -c script).
             out.append("\\" + nxt)
             i += 2
             continue
@@ -98,7 +91,6 @@ def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Ele
             return _Element("".join(out), start_line, is_script=True, is_template=(quote == "`")), i + 1
         out.append(ch)
         i += 1
-    # Unterminated string: take what we have and continue.
     return _Element("".join(out), start_line, is_script=True, is_template=(quote == "`")), i
 
 
@@ -123,7 +115,6 @@ def _extract_command_arrays(src: str) -> list[tuple[int, list[_Element]]]:
                 el, i = _parse_string(src, i, ch, line)
                 elements.append(el)
                 continue
-            # Bare word (bash, -c, sh, etc.)
             j = i
             while j < len(src) and not (src[j].isspace() or src[j] in ",]\""):
                 j += 1
@@ -137,7 +128,6 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
     """Return string elements that follow an `interp -c` sequence."""
     scripts: list[_Element] = []
     for idx, el in enumerate(elements):
-        # Interpreter name ("bash", 'sh', /bin/sh, ...), quoted or bare.
         if INTERP_RE.match(el.text):
             for k in range(idx + 1, len(elements)):
                 nxt = elements[k]
@@ -146,7 +136,6 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
                         scripts.append(elements[k + 1])
                     break
                 if elements[k].is_script:
-                    # A string argument before `-c`: not a script form.
                     break
     return scripts
 
@@ -154,7 +143,6 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
 def _sanitize_script(text: str, is_template: bool) -> str:
     """Remove JS-only constructs so the remainder is pure bash."""
     if is_template:
-        # Unescaped ${...} here is JS interpolation; inside "..." / '...' it is literal.
         text = JS_INTERP_RE.sub("true", text)
     return text
 

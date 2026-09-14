@@ -1,7 +1,3 @@
-/*
-    SPDX-FileCopyrightText: 2024 ladybug-me
-    SPDX-License-Identifier: GPL-3.0-or-later
-*/
 
 import QtQuick
 import ".."
@@ -32,7 +28,6 @@ Rectangle {
 
     implicitHeight: mediaContent.implicitHeight + 28 * root.centerScale
 
-    // Album art background; only shown while media plays.
     Item {
         id: bgContainer
         anchors.fill: parent
@@ -69,7 +64,6 @@ Rectangle {
         anchors.centerIn: parent
         width: parent.width * 0.9
         spacing: 6 * root.centerScale
-        // Dim while nothing is playing, as upstream does.
         opacity: root.hasMedia ? 1.0 : 0.55
         Behavior on opacity { NumberAnimation { duration: 300 } }
 
@@ -96,7 +90,6 @@ Rectangle {
             spacing: 14 * root.centerScale
             Layout.topMargin: 8 * root.centerScale
 
-            // Previous - disabled when !canGoPrevious (as upstream)
             Rectangle {
                 implicitWidth: 36 * root.centerScale
                 implicitHeight: 36 * root.centerScale
@@ -120,7 +113,6 @@ Rectangle {
                 }
             }
 
-            // Play/Pause - pill shape, primary color when active
             Rectangle {
                 implicitWidth: 60 * root.centerScale
                 implicitHeight: 38 * root.centerScale
@@ -144,7 +136,6 @@ Rectangle {
                 }
             }
 
-            // Next - disabled when !canGoNext (as upstream)
             Rectangle {
                 implicitWidth: 36 * root.centerScale
                 implicitHeight: 36 * root.centerScale

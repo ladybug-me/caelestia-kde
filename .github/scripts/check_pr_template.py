@@ -80,7 +80,6 @@ def check_section_filled(body: str, section_header: str) -> bool:
             warn(f"'{section_header}' still contains placeholder text - fill it in?")
             return False
 
-    # Check if section is essentially empty
     cleaned = re.sub(r"[#\-\*\s]", "", section_text)
     if len(cleaned) < 10:
         warn(f"'{section_header}' section is empty - a sentence or two helps reviewers")
@@ -98,10 +97,8 @@ def main() -> int:
 
     print(f"{BOLD}=== PR Description Check ==={RESET}")
 
-    # Only one real check: is there actual content in the description section?
     check_section_filled(body, "What does this change?")
 
-    # Bare minimum: is there ANY content at all?
     if not body or len(body.strip()) < 20:
         error("PR description is empty - please add a sentence about what this changes")
 

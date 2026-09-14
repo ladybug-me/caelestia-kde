@@ -9,14 +9,12 @@ Item {
 
     z: 2
 
-    /// Avatar shape: "hexagon" (Material Design blob) or "circle"
     property string avatarShape: "hexagon"
 
     property bool hovered: false
     property int hexIndex: 0
     property var shapeGetters: [MaterialShapes.getClamShell, MaterialShapes.getCookie6Sided]
 
-    // Hover switches the hexagon shape; a no-op in circle mode.
     MouseArea {
         anchors.fill: parent
         hoverEnabled: true
@@ -34,9 +32,6 @@ Item {
         }
     }
 
-    // Mask sources for OpacityMask.
-
-    // Hexagon mask
     ShapeCanvas {
         id: hexMask
         anchors.fill: parent
@@ -46,7 +41,6 @@ Item {
         clip: true
     }
 
-    // Circular mask
     Rectangle {
         id: circleMask
         anchors.fill: parent

@@ -32,7 +32,6 @@ namespace Draw {
         for (size_t i = 0; i < text.size(); ++i) {
             char c = text[i];
             if (c == '\x1b') {
-                // Skip ESC [ ... final byte. Also skip OSC (ESC ] ... BEL/ST).
                 if (i + 1 < text.size() && text[i + 1] == '[') {
                     i += 2;
                     while (i < text.size()) {
@@ -81,7 +80,6 @@ namespace Draw {
         if (it != g_theme_colors.end()) {
             return it->second;
         }
-        // Use terminal default foreground so light/dark themes remain readable.
         return esc + "39m";
     }
 
@@ -91,7 +89,6 @@ namespace Draw {
             g_theme["glyphs"][name].is_string()) {
             return g_theme["glyphs"][name].get<string>();
         }
-        // Hardcoded fallback keeps the UI working without a theme file.
         static const map<string, string> fallback = {
             {"pending", "[ ]"},     {"running", "[>]"},      {"ok", "[OK]"},
             {"warn", "[WARN]"},     {"failed", "[ERR]"},     {"skipped", "[SKIP]"},
@@ -134,7 +131,6 @@ namespace Draw {
 
     void box(int x, int y, int w, int h, const string& title, const string& border_color, const string& title_color) {
         if (w < 2 || h < 2) return;
-        // Plain ASCII frame: + - + borders with | sides.
         string tl = "+", tr = "+", bl = "+", br = "+", hz = "-", vt = "|";
         string c = color(border_color);
         string tc = title_color.empty() ? reset : color(title_color);

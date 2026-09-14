@@ -110,11 +110,9 @@ Rectangle {
                 return;
             }
             if (event.text && event.text !== "" && event.text.length === 1) {
-                // Clear the error once the user types again.
                 loginCard.clearError();
                 root.buffer += event.text;
             }
-            // DEBUG: Shift+F to simulate failed login (toggle via debugMode in theme.conf)
             if (Theme.debugMode && event.key === Qt.Key_F && (event.modifiers & Qt.ShiftModifier)) {
                 loginCard.showError("Incorrect password");
                 root.clearBuffer();

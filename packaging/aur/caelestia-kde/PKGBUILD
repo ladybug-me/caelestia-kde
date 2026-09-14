@@ -1,24 +1,4 @@
 # Maintainer: ladybug-me <rajveer2027singh@gmail.com>
-#
-# The Caelestia shell ported to KDE Plasma: the Quickshell configuration, the
-# Caelestia QML plugin, the M3Shapes module, the `caelestia` command with the
-# helpers it drives, the data the color pipeline generates from, the Plasma lock
-# screen package, and the workspace-tracker KWin effect.
-#
-# This package owns /usr/bin/caelestia. It used to leave that name to
-# caelestia-cli (upstream) and take its palette from it; the pipeline is part of
-# this project now, so the command, the helpers, the matugen templates and the
-# scheme catalogue all ship here, and nothing depends on caelestia-cli.
-#
-# The source is the tarball the release job attaches, which is the tree at the tag
-# with the two submodules inlined at the commits the tag pins - the dotfiles
-# `caelestia install` deploys and the monochrome icon set the shell reads. A clone of
-# the tag would pin them too, but it also drags this tree's history, and 308 MiB of
-# fonts live there, so it is a 645 MiB download per build against 40 for the tarball.
-#
-# To build before a tag exists, use packaging/aur/makepkg-from-checkout.sh, which
-# builds the same tarball from the checkout and stages this PKGBUILD pointing at it.
-# The version the shell reports is still pkgver, so that is for testing only.
 
 pkgname=caelestia-kde
 pkgver=2.4.3
@@ -32,22 +12,15 @@ depends=(
     'quickshell'
     'matugen'
     'python'
-    # The update checker in the shell and `caelestia-check-updates` both drive git.
     'git'
     'plasma-workspace'
     'qt6-base'
     'qt6-declarative'
-    # The shell imports QtMultimedia for audio and the media popouts, and
-    # OptionsToolbar.qml still imports Qt5Compat.GraphicalEffects. Both are direct
-    # imports, so both are direct dependencies rather than someone's transitive
-    # package that happens to be installed.
     'qt6-multimedia'
     'qt6-5compat'
     'qt6-imageformats'
     'qt6-svg'
     'qt6-wayland'
-    # KDE Frameworks 6, under the names Arch uses. `kf6-` as a prefix is Fedora's
-    # naming; `pacman -S kf6-kconfig` is "target not found".
     'kwindowsystem'
     'kguiaddons'
     'networkmanager-qt'
@@ -58,11 +31,6 @@ depends=(
     'libqalculate'
     'libpipewire'
     'aubio'
-    # Arch's `cava` ships the executable only - no headers, no shared library, no .pc -
-    # and the plugin's audio visualiser provider is compiled only when it can find
-    # libcava. Without this the build succeeds and the shell comes up with a dead
-    # visualiser and nothing to explain it, which is how this package first shipped.
-    # libcava is the AUR package that provides the library and headers.
     'libcava'
     'cava'
     'libx11'
@@ -73,9 +41,6 @@ depends=(
     'power-profiles-daemon'
     'ttf-material-symbols-variable'
 )
-# vulkan-headers is here because KWin's CMake package does find_dependency(Vulkan)
-# and fails the configure with "Could NOT find Vulkan (missing: Vulkan_INCLUDE_DIR)"
-# when only `kwin` is present. Arch's `kwin` does not pull the headers in.
 makedepends=('cmake' 'ninja' 'qt6-shadertools' 'extra-cmake-modules' 'kwin' 'vulkan-headers')
 optdepends=(
     'ttf-rubik-vf: clock and workspace font'
@@ -91,27 +56,6 @@ optdepends=(
 provides=('caelestia-shell')
 conflicts=('caelestia-shell' 'caelestia-shell-git')
 
-# Deliberately no `set -e` here. makepkg sources this file into its own shell, so shell
-# options set here change makepkg itself: `set -u` makes its own lint helpers die with
-# "unbound variable" before the build starts. The paths below are named rather than
-# globbed and checked at the end of package() instead, which is where a silent hole
-# would otherwise come from.
-
-# The source is the tarball the release job attaches, not a clone of the tag, and the
-# reason is size: this tree carries two submodules and 308 MiB of fonts, which makes a
-# git source a 645 MiB download per build. The tarball holds the tree at the tag with the
-# submodules inlined, the fonts left out (12-fetch-assets.sh fetches those into the
-# user's own directory) and REVISION written, which is what the compiled helper reports
-# from a tree with no .git to ask.
-#
-# The first sum is SKIP until a release exists to hash. Refreshing it is part of tagging:
-# once the tag is pushed and the tarball is attached, run `makepkg -g` and copy the line
-# in, or the build stops with "Integrity checks (sha256) differ". The other two are the
-# files beside this PKGBUILD and only change when those do.
-#
-# To build before a tag exists, use packaging/aur/makepkg-from-checkout.sh. It builds the
-# same tarball locally and stages a copy of this file with _source_url and _source_sum
-# set, which is what those two are for. They are not a published interface otherwise.
 _source_url="${_source_url:-$url/releases/download/v$pkgver/$pkgname-v$pkgver.tar.gz}"
 _source_sum="${_source_sum:-SKIP}"
 
@@ -123,9 +67,6 @@ sha256sums=("$_source_sum"
             'f219b72c98ad98418cbe9ef2648d0c2cd3664d36bd06f2870b8c8b253d6d17c8')
 
 prepare() {
-    # The submodules arrive inlined in the tarball. One that did not make it in is an
-    # empty directory, which copies cleanly and then fails at install time, so it is
-    # caught here rather than there.
     cd "$srcdir/$pkgname-$pkgver"
 
     local sub
@@ -147,8 +88,6 @@ build() {
         -DDISTRIBUTOR="AUR (package: $pkgname)"
     cmake --build build || exit 1
 
-    # The workspace-tracker effect is its own CMake project and links KWin, so
-    # it is built against this machine's Plasma instead of shipped prebuilt.
     cmake -B effect-build -S shell/kwin-effects/workspace-tracker -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr
@@ -160,19 +99,8 @@ package() {
     DESTDIR="$pkgdir" cmake --install build
     DESTDIR="$pkgdir" cmake --install effect-build
 
-    # The fonts do not ship, and this is the only place that decides it. They are 309 of
-    # the 401 MiB the CMake install above would otherwise put here: 47 SF Pro files, of
-    # which the shell names two families. Upstream's package carries no fonts at all - it
-    # depends on four font packages - and 12-fetch-assets.sh downloads this one family
-    # into the user's own asset directory (shell/modules/Fonts.qml reads both), because a
-    # download into a tree a package owns would outlive the package.
     rm -rf "$pkgdir/etc/xdg/quickshell/caelestia/assets/fonts"
 
-    # What `caelestia install` runs for the user's half, and the assets it deploys
-    # from. It is the same set of step scripts a checkout's installer runs, which is
-    # what keeps one implementation of that half instead of two that drift. The
-    # scripts read their assets relative to this directory, so the layout here
-    # mirrors the checkout's: scripts/, src/dots, shell/assets, assets/.
     install -d "$pkgdir/usr/share/caelestia"
     install -d "$pkgdir/usr/share/caelestia/scripts"
     install -m755 scripts/[0-9]*.sh "$pkgdir/usr/share/caelestia/scripts/"
@@ -182,17 +110,6 @@ package() {
     cp -r src/dots src/dots-extra "$pkgdir/usr/share/caelestia/src/"
     cp -r shell/assets/wallpapers "$pkgdir/usr/share/caelestia/shell/assets/"
     cp -r assets/org.quickshell.desktop "$pkgdir/usr/share/caelestia/assets/"
-    # No version file is installed. The version the shell and the command report is compiled
-# into the `version` helper the extras module installs into INSTALL_LIBDIR, from the same
-# -DVERSION=$pkgver below, so there is nothing to keep in step and nothing to go stale
-# between an upgrade and the next `caelestia install`.
-
-    # The login screen. The theme, the helper that keeps the greeter in step with the
-    # session, and the drop-in that selects the theme are all /usr and /etc, so a
-    # packaged step cannot write them and they ship here. The full variant is the one
-    # packaged; mini is a source-install choice. The font goes where the theme reads
-    # it from, and the drop-in sorts last so nothing shipped by a distribution or by
-    # sddm-kcm can pick a different theme after it.
     install -d "$pkgdir/usr/share/sddm/themes/caelestia/scripts"
     cp -r src/sddm/themes/full/* "$pkgdir/usr/share/sddm/themes/caelestia/"
     install -m755 src/sddm/sync.sh "$pkgdir/usr/share/sddm/themes/caelestia/scripts/sync.sh"
@@ -207,58 +124,31 @@ GreeterEnvironment=QML_XHR_ALLOW_FILE_READ=1
 Current=caelestia
 DROPIN
 
-    # The rule that lets the 'input' group use /dev/uinput, which the on-screen
-    # keyboard injects through. It is /etc, so it ships here; adding the user to that
-    # group is not, and `caelestia install` says so rather than doing it.
     install -d "$pkgdir/usr/lib/udev/rules.d"
     echo 'KERNEL=="uinput", GROUP="input", MODE="0660"' > "$pkgdir/usr/lib/udev/rules.d/80-uinput.rules"
 
-    # The shell reads the monochrome icon set from its own assets, and it is a
-    # submodule, so the shell's CMake install does not carry it.
     install -d "$pkgdir/etc/xdg/quickshell/caelestia/assets/icons"
     cp -r src/yet-another-monochrome-icon-set \
         "$pkgdir/etc/xdg/quickshell/caelestia/assets/icons/"
 
-    # The command and the helpers it drives. They are one surface: the dispatcher
-    # runs its siblings from its own directory, so they live beside it in /usr/bin
-    # and none of them is documented on its own.
     install -d "$pkgdir/usr/bin"
     install -m755 src/bin/* "$pkgdir/usr/bin/"
 
-    # What a palette is generated from: the matugen templates and the named scheme
-    # catalogue. caelestia-color looks in $CAELESTIA_DATA_DIR, $CAELESTIA_LIB_DIR,
-    # ~/.local/lib/caelestia and /usr/share/caelestia, in that order, so this is
-    # found without an environment variable.
     install -d "$pkgdir/usr/share/caelestia"
     cp -r src/matugen src/schemes "$pkgdir/usr/share/caelestia/"
 
-    # The lock screen is a Plasma shell package, not a Quickshell QML module, so
-    # the shell's CMake knows nothing about it.
     install -d "$pkgdir/usr/share/plasma/shells"
     cp -r src/kde/shells/caelestia.desktop "$pkgdir/usr/share/plasma/shells/"
 
-    # Starting the shell on login is one systemd user unit, which `caelestia install`
-    # enables once (`systemctl --user enable caelestia-shell.service`). There is no
-    # /etc/xdg/autostart entry any more: that would give the same shell two ways to
-    # start, and the generator's app-caelestiashell@autostart.service races the unit
-    # with no ordering between them. The unit name is load bearing in the other
-    # direction instead - restart_shell.sh and uninstall.sh both name it.
     install -Dm755 "$srcdir/caelestia-autostart" "$pkgdir/usr/bin/caelestia-autostart"
     install -Dm644 "$srcdir/caelestia-shell.service" \
         "$pkgdir/usr/lib/systemd/user/caelestia-shell.service"
 
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
-    # The submodules arrive inlined, carrying their own .git files, .github templates and
-    # .gitignore, and the shell's CMake install brings the icon set's. None of it is
-    # content, and all of it is version control metadata in a package.
     find "$pkgdir" \( -name '.git' -o -name '.github' -o -name '.gitignore' \) \
         -prune -exec rm -rf {} + 2>/dev/null || true
 
-    # Nothing above reports its own failure - makepkg does not run these steps with
-    # errexit - so the result is checked. Each path here is one a packaged install, the
-    # shell or the login screen reads, and a copy into a directory that was never
-    # created would otherwise ship a package with a hole in it.
     local required=(
         usr/bin/caelestia
         usr/share/caelestia/scripts/03-deploy-configs.sh
@@ -281,8 +171,6 @@ DROPIN
         fi
     done
 
-    # The other direction, for the one path that must not come back: the fonts are the
-    # install step's business, and the CMake install is what would readd them.
     if [[ -e "$pkgdir/etc/xdg/quickshell/caelestia/assets/fonts" ]]; then
         echo "the fonts are in the package again: 12-fetch-assets.sh downloads them instead" >&2
         exit 1

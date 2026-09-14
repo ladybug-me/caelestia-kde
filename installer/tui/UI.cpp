@@ -28,7 +28,6 @@ std::map<std::string, std::string> g_answers;
 
 namespace {
 
-// Writes the password 0600 at creation, closing the umask-then-chmod TOCTOU window.
 bool write_password_file_secure(const string& path, const string& password) {
     int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0600);
     if (fd == -1) {
@@ -40,7 +39,6 @@ bool write_password_file_secure(const string& path, const string& password) {
     return written == static_cast<ssize_t>(data.size());
 }
 
-// O_EXCL, so an existing file or symlink at @p path is never followed or overwritten.
 bool write_file_excl(const string& path, const string& content, int mode) {
     int fd = open(path.c_str(), O_WRONLY | O_CREAT | O_EXCL | O_CLOEXEC, mode);
     if (fd == -1) {
@@ -74,11 +72,7 @@ void release_kde_inhibit(const string& cookie_file) {
         waitpid(child, nullptr, 0);
 }
 
-// Sets up the sudo askpass environment: password file, askpass helper, sudo wrapper,
-// screen inhibitor, SUDO_PASS.
 bool setup_sudo_environment(const string& pw) {
-    // A per-run temp dir, not a fixed /tmp path: mkdtemp is 0700 and the O_EXCL writes
-    // below cannot follow a symlink planted at a known name.
     char tmpl[] = "/tmp/caelestia-bin.XXXXXX";
     char* dir = mkdtemp(tmpl);
     if (!dir) {
@@ -107,7 +101,6 @@ bool setup_sudo_environment(const string& pw) {
         return false;
     }
 
-    // Also export SUDO_PASS for some scripts (like 09-system-tweaks.sh) that might rely on it
     setenv("SUDO_PASS", pw.c_str(), 1);
 
     const char* runtime = getenv("XDG_RUNTIME_DIR");
@@ -125,7 +118,6 @@ bool setup_sudo_environment(const string& pw) {
     const string pid_file = state_dir + "/inhibit.pid";
     const string cookie_file = state_dir + "/kde_inhibit.cookie";
 
-    // Reaps an inhibitor left by a killed run (EXIT trap never ran), matching our cmdline.
     ifstream old_pid(pid_file);
     pid_t pid = 0;
     old_pid >> pid;
@@ -133,7 +125,6 @@ bool setup_sudo_environment(const string& pw) {
         kill(pid, SIGKILL);
     release_kde_inhibit(cookie_file);
 
-    // Start background keep-awake for display (sleep inhibitor)
     pid = fork();
     if (pid == 0) {
         execlp("systemd-inhibit", "systemd-inhibit", "--what=idle:sleep",
@@ -165,7 +156,6 @@ bool setup_sudo_environment(const string& pw) {
     return true;
 }
 
-// Human-readable distro label shown on the welcome screen.
 string distro_label(const string& id) {
     if (id == "arch") return "Arch-based Linux";
     if (id == "fedora") return "Fedora";
@@ -177,7 +167,6 @@ const char* navigate_hint() {
     return "Up/Down navigate  Enter select  Left/Esc back";
 }
 
-// True when the given step name appears in the failed-steps file.
 bool check_failed(const string& file, const string& target) {
     ifstream f(file);
     string line;
@@ -187,7 +176,6 @@ bool check_failed(const string& file, const string& target) {
     return false;
 }
 
-// True when the caelestia wrapper exists; Update and Uninstall need it.
 bool is_caelestia_installed() {
     auto executable = [](const string& p) {
         return access(p.c_str(), X_OK) == 0;
@@ -201,7 +189,6 @@ bool is_caelestia_installed() {
     if (executable("/usr/bin/caelestia"))
         return true;
 
-    // Fall back to a PATH search for installs in other prefixes.
     const char* path = getenv("PATH");
     if (path) {
         string paths(path);
@@ -223,7 +210,6 @@ bool is_caelestia_installed() {
 
 namespace UI {
     void welcome_screen() {
-        // Drains input buffered during terminal setup, so stale escapes cannot skip a screen.
         for (int drain = 0; drain < 10 && !Input::get().empty(); ++drain) { }
 
         vector<string> art;

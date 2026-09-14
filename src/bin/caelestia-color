@@ -1,18 +1,7 @@
 #!/usr/bin/env bash
 # caelestia-color - the color pipeline behind `caelestia wallpaper` and `caelestia scheme`.
-#
-# Generates the palette with matugen, writes the state below, applies it to the desktop
-# and fans it out to applications that read a file. The state contract is upstream's.
-#
-#   $XDG_STATE_HOME/caelestia/scheme.json          the palette the shell reads
-#   $XDG_STATE_HOME/caelestia/wallpaper/path.txt   the wallpaper on screen
-#   $XDG_STATE_HOME/caelestia/wallpaper/current    a symlink to it
-#   $XDG_STATE_HOME/caelestia/theme/               rendered user templates
-#
-# Config is $XDG_CONFIG_HOME/caelestia/cli.json, under upstream's `theme.*`/`wallpaper.*`
-# keys plus our own for targets it never themed. An absent key is on, unless the target
-# would replace a whole file the user owns. JSON work goes through the python3 helper
-# below, which adds no dependency - the installer already requires python3.
+# State: $XDG_STATE_HOME/caelestia/{scheme.json,wallpaper/,theme/}.
+# Config: $XDG_CONFIG_HOME/caelestia/cli.json; an absent key is on.
 
 set -euo pipefail
 
@@ -44,8 +33,6 @@ PREVIEW_FILE="$WORK_DIR/preview.json"
 
 declare -A CFG=()
 
-# The scheme in effect, read back from the file just written. Hooks get these in their
-# environment - how the SDDM sync script learns which palette to push.
 META_NAME=""
 META_FLAVOUR=""
 META_MODE=""
@@ -97,10 +84,6 @@ prints them.
 EOF
 }
 
-# py <command> [args...]
-#
-# Runs the python helper: reads shipped scheme files, writes the render data matugen
-# renders from, and renders user templates (`{{ role.hex }}`, not matugen's syntax).
 py() {
     python3 - "$@" <<'PY'
 import json
@@ -291,7 +274,6 @@ def cmd_config_dump(path: str) -> int:
         elif isinstance(node, bool):
             print(f"{prefix}\ttrue" if node else f"{prefix}\tfalse")
         elif isinstance(node, (str, int, float)):
-            # A tab or newline would end the line early.
             print(f"{prefix}\t{str(node).replace(chr(9), ' ').replace(chr(10), ' ')}")
 
     walk("", data)
@@ -390,9 +372,7 @@ def cmd_pick_mode(data_dir: str, name: str, flavour: str, mode: str) -> int:
     return 0
 
 
-# Roles a generated scheme needs on top of what matugen names. Each is read by something
-# here, measured not guessed: the palette key colours, the success family (toasts,
-# weather) and `text` (SDDM). Upstream's other extras are read by nothing here.
+# Roles matugen does not name but something here reads.
 PALETTE_KEY_COLORS = {
     # A palette key colour is tone 50 of that palette.
     "primary_paletteKeyColor": "primary",
@@ -402,7 +382,6 @@ PALETTE_KEY_COLORS = {
     "neutral_variant_paletteKeyColor": "neutral_variant",
 }
 
-# Upstream's own values, kept so generated and shipped schemes agree on success.
 SUCCESS_COLORS = {
     "dark": {
         "success": "B5CCBA",
@@ -507,7 +486,6 @@ def cmd_smart_variant(image: str) -> int:
     if shutil.which("ffmpeg") is None:
         return 1
 
-    # Upstream's own thumbnail: 128x128 with the nearest filter.
     result = subprocess.run(
         [
             "ffmpeg", "-v", "error", "-i", image,
@@ -634,10 +612,6 @@ sys.exit(main(sys.argv[1:]))
 PY
 }
 
-# variant_type <name>
-#
-# Our variant names against matugen's (kebab-cased, prefixed). The names are upstream's:
-# what the shell, the launcher and cli.json speak.
 variant_type() {
     case "$1" in
         tonalspot) printf 'scheme-tonal-spot' ;;
@@ -657,10 +631,6 @@ variant_names() {
     printf '%s\n' tonalspot vibrant expressive fidelity fruitsalad monochrome neutral rainbow content
 }
 
-# data_dir
-#
-# Prints the directory holding `matugen/` and `schemes/`. CAELESTIA_DATA_DIR is taken at
-# its word; the rest are where this port puts the files.
 data_dir() {
     if [[ -n "${CAELESTIA_DATA_DIR:-}" ]]; then
         if [[ -f "$CAELESTIA_DATA_DIR/matugen/scheme.json.tmpl" && -d "$CAELESTIA_DATA_DIR/schemes" ]]; then
@@ -697,10 +667,6 @@ EOF
     printf '%s\n' "$dir"
 }
 
-# load_config
-#
-# Reads cli.json into CFG. A missing or unreadable file is not an error: everything has
-# a default, and a broken file must not stop the desktop from getting colors.
 load_config() {
     CFG=()
     [[ -f "$CLI_CONFIG" ]] || return 0
@@ -711,10 +677,7 @@ load_config() {
     done < <(py config-dump "$CLI_CONFIG")
 }
 
-# enabled <key> [default]
-#
-# Whether a fan-out target is on. An absent key is on, as upstream had it, so an
-# existing cli.json keeps working - except where a target would take over a user's file.
+# Absent key means on, except where a target would take over a user's file.
 enabled() {
     local key="theme.$1" default="${2:-true}" value
     value="${CFG[$key]:-}"
@@ -726,11 +689,6 @@ config_value() {
     printf '%s' "${CFG[$1]:-}"
 }
 
-# targets
-#
-# The fan-out, one line per template: key, template files, output, and whether it is on
-# when cli.json says nothing. The `enable*` keys for KDE, Kvantum, Konsole, Starship,
-# VSCode, Rofi, Foot and Kitty are ours; the rest are upstream's names.
 targets() {
     cat <<EOF
 enableKde|Matugen.colors|$DATA_HOME/color-schemes/Matugen.colors|true
@@ -757,11 +715,6 @@ enableStarship|starship-colors.toml|$CONFIG_HOME/starship.toml|false
 EOF
 }
 
-# write_matugen_config <out> <scheme_output|""> <fan_out:true|false>
-#
-# Generated per run: which templates are on is the user's, and matugen takes a config per
-# invocation. An empty scheme output omits the scheme template, which named schemes want
-# - they write scheme.json themselves, in full.
 write_matugen_config() {
     local out="$1" scheme_out="$2" fan_out="$3" data index=0
     data="$(require_data_dir)"
@@ -799,17 +752,10 @@ write_matugen_config() {
     } > "$out"
 }
 
-# meta_string <name> <flavour> <variant>
-#
-# matugen has no keyword for the metadata, so it travels as import data.
 meta_string() {
     python3 -c 'import json, sys; print(json.dumps({"name": sys.argv[1], "flavour": sys.argv[2], "variant": sys.argv[3]}))' "$1" "$2" "$3"
 }
 
-# run_matugen <args...>
-#
-# matugen narrates itself on stderr - noise for something the shell runs on every
-# wallpaper change. Log it beside the generated config and show it only on failure.
 run_matugen() {
     command -v matugen >/dev/null 2>&1 || die "matugen is not installed; it generates the palette"
     if ! matugen "$@" > /dev/null 2> "$MATUGEN_LOG"; then
@@ -820,19 +766,11 @@ run_matugen() {
     fi
 }
 
-# smart_variant <wallpaper>
-#
-# matugen picks the mode itself and reports it; the variant is worked out here, so the
-# name written into scheme.json is the one the palette really is.
 smart_variant() {
     py smart-variant "$1"
 }
 
-# render_image <wallpaper> <flavour> <mode> <variant> <smart> <fan_out> <out>
-#
-# The dynamic scheme: the palette comes from the wallpaper. `--source-color-index 0`
-# stops matugen asking which color to use, since it would get no answer here. With smart
-# on, the variant is replaced by the one the wallpaper picks (upstream's behaviour).
+# --source-color-index 0 stops matugen asking which color to use.
 render_image() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4" smart="$5" fan_out="$6" out="$7"
     local type mode_arg
@@ -842,7 +780,6 @@ render_image() {
         if variant="$(smart_variant "$wallpaper")"; then
             type="$(variant_type "$variant")"
         else
-            # No ffmpeg, no colourfulness to measure: let matugen choose and accept the guess.
             warn "cannot measure the wallpaper's colourfulness; matugen picks the variant"
             type='scheme-smart'
         fi
@@ -862,7 +799,6 @@ render_image() {
     py merge-palette "$out" "$PALETTES_JSON" || die "could not fold the palette key colors in"
 }
 
-# render_named <name> <flavour> <mode> <variant> <fan_out> <out>
 render_named() {
     local name="$1" flavour="$2" mode="$3" variant="$4" fan_out="$5" out="$6" data image=""
     data="$(require_data_dir)"
@@ -878,10 +814,6 @@ render_named() {
     py write-named "$data" "$out" "$name" "$flavour" "$mode" "$variant"
 }
 
-# commit <rendered>
-#
-# Moves the rendered scheme into place and reads its metadata back. The rename is in the
-# same directory, so a reader never sees half a file.
 commit() {
     mkdir -p "$STATE_DIR"
     mv -f "$1" "$SCHEME_FILE"
@@ -903,10 +835,6 @@ commit() {
     META_COLOURS="$(py colours-json "$SCHEME_FILE")"
 }
 
-# current_meta
-#
-# Reads the scheme in effect into META_*. A missing file leaves them empty, which callers
-# treat as "dynamic; derive it when there is a wallpaper".
 current_meta() {
     META_NAME=""
     META_FLAVOUR=""
@@ -928,10 +856,7 @@ current_meta() {
     fi
 }
 
-# apply_terms <file>
-#
-# Pushes the ANSI sequences into terminals running a shell, and only those: a pty running
-# something else used to read the escapes as input and leave garbage in it.
+# Only a shell on a pty wants the escapes; anything else echoed them.
 apply_terms() {
     local file="$1" sequence pty name comm
     [[ -s "$file" ]] || return 0
@@ -949,16 +874,8 @@ apply_terms() {
     done
 }
 
-# apply_kde
-#
-# Puts the palette on the running desktop.
-#
-# KDE reads a scheme file when one is applied, not when it changes, so every color change
-# must be an apply. plasma-apply-colorscheme refuses the name already in effect, hence the
-# rotation between two names holding the same palette.
-#
-# An accent set in System Settings would be a second source of truth (Plasma rewrites
-# focus, link and selection from it), so it is dropped - the scheme carries the accent.
+# KDE applies a scheme only when told to and refuses the name in effect, hence two names.
+# An accent set in System Settings is dropped: Plasma would rewrite focus/link/selection from it.
 apply_kde() {
     local scheme="$DATA_HOME/color-schemes/Matugen.colors" current="" target
 
@@ -966,7 +883,6 @@ apply_kde() {
     if ! command -v plasma-apply-colorscheme >/dev/null 2>&1 ||
         ! command -v kreadconfig6 >/dev/null 2>&1 ||
         ! command -v kwriteconfig6 >/dev/null 2>&1; then
-        # Without the reader there is no way to tell which name is in effect; the wrong one is a no-op.
         warn "the KDE command line tools are missing; the palette was written but not applied"
         return 0
     fi
@@ -987,11 +903,7 @@ apply_kde() {
     plasma-apply-colorscheme "$target" >/dev/null 2>&1 || warn "could not apply the Plasma color scheme"
 }
 
-# apply_konsole
-#
-# Konsole reads its own scheme format (`R,G,B`, not hex) and a profile must name it.
-# matugen has no template for it, so the file is rendered here and existing profiles are
-# pointed at it.
+# Konsole's format is R,G,B, not hex, and matugen has no template for it.
 apply_konsole() {
     local dir="$DATA_HOME/konsole" profile
 
@@ -1008,10 +920,6 @@ apply_konsole() {
     done
 }
 
-# apply_kvantum
-#
-# Selects the Kvantum theme the fan out just wrote. Only which theme is in use changes,
-# set here rather than at install time because the files exist only after a palette.
 apply_kvantum() {
     local theme="$CONFIG_HOME/Kvantum/matugen"
 
@@ -1021,10 +929,6 @@ apply_kvantum() {
         || warn "could not select the Kvantum theme"
 }
 
-# after_fan_out <mode>
-#
-# Steps a template cannot express: telling running applications their file changed. The
-# desktop goes first, since that is what the user is looking at.
 after_fan_out() {
     local mode="$1"
 
@@ -1051,11 +955,7 @@ after_fan_out() {
     py render-templates "$SCHEME_FILE" "$USER_TEMPLATES" "$THEME_DIR" "$mode" || warn "could not render the user templates"
 }
 
-# run_hook <label> <command> [VAR=value ...]
-#
-# The hooks the installer registers, run as upstream did: through a shell with the scheme
-# in the environment. A failing hook is reported but does not fail the color change - the
-# palette is already on disk by then.
+# A failing hook is reported, not fatal: the palette is already on disk.
 run_hook() {
     local label="$1" command="$2"
     shift 2
@@ -1083,7 +983,6 @@ run_wallpaper_hook() {
         "WALLPAPER_PATH=$wallpaper" "THUMBNAIL_PATH=$wallpaper"
 }
 
-# write_wallpaper_state <path>
 write_wallpaper_state() {
     local wallpaper="$1"
     mkdir -p "$(dirname -- "$WALLPAPER_FILE")"
@@ -1091,7 +990,6 @@ write_wallpaper_state() {
     ln -sfn "$wallpaper" "$WALLPAPER_LINK"
 }
 
-# stored_wallpaper
 stored_wallpaper() {
     [[ -s "$WALLPAPER_FILE" ]] || return 1
     local wallpaper
@@ -1100,9 +998,6 @@ stored_wallpaper() {
     printf '%s\n' "$wallpaper"
 }
 
-# derive_from_wallpaper <wallpaper> <flavour> <mode> <variant> <smart>
-#
-# Writes a dynamic scheme for a wallpaper, puts it in place and notifies the applications.
 derive_from_wallpaper() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4" smart="$5"
     render_image "$wallpaper" "$flavour" "$mode" "$variant" "$smart" true "$RENDER_FILE"
@@ -1176,7 +1071,6 @@ cmd_scheme_get() {
     return 0
 }
 
-# cmd_scheme_set [OPTS]
 cmd_scheme_set() {
     local name="" flavour="" mode="" variant="" random=0 preview=0 notify=0
     local data
@@ -1249,7 +1143,6 @@ cmd_scheme_set() {
         return 1
     fi
 
-    # Use the mode the flavour has, but say so - the caller asked for the other one.
     local picked
     picked="$(py pick-mode "$data" "$name" "$flavour" "$mode")"
     if [[ "$picked" != "$mode" ]]; then
@@ -1294,7 +1187,6 @@ cmd_scheme() {
     esac
 }
 
-# cmd_wallpaper [OPTS]
 cmd_wallpaper() {
     local file="" print=0 print_path="" random=0 random_dir="" no_smart=0 smart="true"
 
@@ -1349,8 +1241,7 @@ cmd_wallpaper() {
 
     write_wallpaper_state "$file"
 
-    # A named scheme stays put; only a dynamic one follows the wallpaper, which is what stops
-    # a wallpaper change from undoing the user's choice.
+# Only a dynamic scheme follows the wallpaper; a named one stays.
     if [[ -z "${META_NAME:-}" || "${META_NAME}" == "dynamic" ]]; then
         derive_from_wallpaper "$file" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" \
             "${META_VARIANT:-tonalspot}" "$smart"
@@ -1359,7 +1250,6 @@ cmd_wallpaper() {
     run_wallpaper_hook "$file"
 }
 
-# pick_random_wallpaper [dir]
 pick_random_wallpaper() {
     local dir="${1:-${CAELESTIA_WALLPAPERS_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}/Wallpapers}}"
     [[ -d "$dir" ]] || return 1

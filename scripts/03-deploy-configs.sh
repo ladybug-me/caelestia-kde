@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# 03-deploy-configs.sh  Deploy Caelestia configuration files to ~/.config
 
 set -euo pipefail
 
@@ -19,8 +18,6 @@ if [[ -z "${BACKUP_DIR:-}" ]]; then
         BACKUP_DIR="$(cat "$BACKUP_DIR_FILE" 2>/dev/null || true)"
     fi
 
-    # Reuse the cached dir only if it is one of ours and matches the timestamp
-    # format.
     if [[ -n "$BACKUP_DIR" ]]; then
         case "$BACKUP_DIR" in
             "$BUNDLE_DIR/backups/"[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9][0-9][0-9]) ;;
@@ -34,8 +31,6 @@ if [[ -z "${BACKUP_DIR:-}" ]]; then
     fi
 
     if [[ -z "$BACKUP_DIR" ]]; then
-        # A checkout keeps its backups inside the bundle; a package's bundle is
-        # read-only under /usr, so its backups go beside the user's other state.
         if install_is_packaged; then
             BACKUP_DIR="$CACHE_DIR/backups/$(date +%Y%m%d_%H%M%S)"
         else
@@ -52,9 +47,6 @@ echo ""
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$DEPLOYED_DIR"
 
-# 02a-submodules.sh tries to repair this too, so reaching here without content
-# means that step was skipped or its repair failed - send the user back to it.
-# A package has no submodules: the content ships inside it.
 if [[ ! -d "$DOTS_DIR" ]] || [[ -z "$(ls -A "$DOTS_DIR" 2>/dev/null)" ]]; then
     if install_is_packaged; then
         die "Missing dotfiles in $DOTS_DIR. The package should have installed them; reinstall it."
@@ -68,14 +60,12 @@ getent passwd "$USER" | cut -d: -f7 > "$BACKUP_DIR/previous_shell.txt"
 info "Backing up pre-install configs..."
 mkdir -p "$BACKUP_DIR/shellrc" "$BACKUP_DIR/.config" "$BACKUP_DIR/local"
 
-# Config dirs this install may overwrite or remove.
 for cfg in btop fastfetch fish foot kitty micro thunar; do
     if [[ -e "$HOME/.config/$cfg" ]]; then
         cp -a "$HOME/.config/$cfg" "$BACKUP_DIR/.config/$cfg" 2>/dev/null || true
     fi
 done
 
-# Backup Konsole config and profiles; 09-system-tweaks.sh may modify them.
 if [[ -f "$HOME/.config/konsolerc" ]]; then
     cp -a "$HOME/.config/konsolerc" "$BACKUP_DIR/.config/konsolerc" 2>/dev/null || true
 fi
@@ -189,7 +179,6 @@ if [[ -f "$HOME/.config/starship.toml" ]]; then
     cp "$HOME/.config/starship.toml" "$BACKUP_DIR/.config/starship.toml"
 fi
 
-# Same keep-local-edits rule as deploy_config, but the target is a single file.
 if [[ -f "$DOTS_DIR/starship.toml" ]]; then
     mkdir -p "$HOME/.config"
     starship_target="$HOME/.config/starship.toml"
@@ -215,7 +204,6 @@ if [[ -f "$DOTS_DIR/starship.toml" ]]; then
     fi
 fi
 
-# Bridge files: helper commands, desktop entries, systemd units, KWin script.
 info "Deploying bridge files (bin, applications, systemd, kwin script)..."
 mkdir -p \
     "$HOME/.local/bin" \
@@ -231,7 +219,6 @@ if [[ -d "$SRC_DIR/bin" ]]; then
     done
 fi
 
-# Desktop entries
 update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
 ok "Bridge files deployed."
 

@@ -39,8 +39,6 @@ def ok(msg: str) -> None:
     print(f"{GREEN}[OK]{RESET}   {msg}")
 
 
-# theme.json
-
 ANSI_SGR_RE = re.compile(r"^\d+(;\d+)*m$")
 HEX_COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 
@@ -55,7 +53,6 @@ KNOWN_GLYPHS = {
     "checkbox_on", "checkbox_off", "select_left", "select_right",
 }
 
-# Color names the TUI understands even when absent from the palette.
 SPECIAL_COLORS = {"default", "dim", "bold", "reset"}
 
 
@@ -68,12 +65,10 @@ def validate_theme(filepath: Path) -> None:
         error(f"{filepath}: invalid JSON - {e}")
         return
 
-    # Top-level sections
     for section in REQUIRED_THEME_SECTIONS:
         if section not in data:
             error(f"theme.json: missing required section '{section}'")
 
-    # Palette: hex (#rrggbb) values, or legacy ANSI suffixes ("36m").
     palette = data.get("palette")
     colors = data.get("colors") if not isinstance(palette, dict) else None
     color_section = palette if isinstance(palette, dict) else (colors if isinstance(colors, dict) else {})
@@ -96,7 +91,6 @@ def validate_theme(filepath: Path) -> None:
         if value not in defined_colors:
             error(f"theme.json: {context} references undefined color '{value}'")
 
-    # splash_screen
     splash = data.get("splash_screen", {})
     if isinstance(splash, dict):
         art = splash.get("art")
@@ -109,7 +103,6 @@ def validate_theme(filepath: Path) -> None:
         if "co_author" in splash and not isinstance(splash.get("co_author"), str):
             error("theme.json: splash_screen.co_author must be a string")
 
-    # glyphs: every glyph is a non-empty string
     glyphs = data.get("glyphs", {})
     if isinstance(glyphs, dict):
         for name, value in glyphs.items():
@@ -120,8 +113,6 @@ def validate_theme(filepath: Path) -> None:
 
     ok("theme.json passed validation")
 
-
-# menu.json
 
 VALID_MENU_TYPES = {"submenu", "boolean", "select", "text", "action"}
 VALID_ACTION_IDS = {"action_review", "action_proceed", "action_back"}
@@ -219,7 +210,6 @@ def validate_menu(filepath: Path) -> None:
         error("menu.json: 'menu' array is empty")
         return
 
-    # Check that the root menu has at least one proceed action
     has_proceed = any(
         isinstance(item, dict) and item.get("id") in ("action_review", "action_proceed")
         for item in menu_items

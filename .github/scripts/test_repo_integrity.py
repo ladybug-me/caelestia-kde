@@ -169,8 +169,6 @@ class ShellSurfaceTests(unittest.TestCase):
                 match = re.match(r'^\s*description:\s*"([^"]*)"', line)
                 if not match or not match.group(1):
                     continue
-                # Values substituted into generated QML come from the caller: translating them
-                # belongs at the call site.
                 if "${" in match.group(1):
                     continue
                 offenders.append(f"{path.relative_to(ROOT).as_posix()}:{number}")
@@ -692,7 +690,6 @@ class MetadataConsistencyTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        # shell/CMakeLists.txt must derive its version from version.env, not hardcode a copy.
         self.assertIn(
             ".github/version.env",
             cmake_text,
@@ -766,7 +763,6 @@ class InstallerTests(unittest.TestCase):
             if match:
                 num = int(match.group(1))
                 if num < prev_num:
-                    # Pre-existing ordering quirk - skip assertion
                     pass
                 prev_num = num
 
@@ -908,7 +904,6 @@ class WorkflowYamlTests(unittest.TestCase):
         try:
             import yaml  # type: ignore[import-untyped]
         except ImportError:
-            # PyYAML not installed in CI - skip gracefully
             return
 
         workflows_dir = ROOT / ".github" / "workflows"
@@ -932,7 +927,6 @@ class DocsReferenceTests(unittest.TestCase):
             return
 
         text = contributing.read_text(encoding="utf-8")
-        # Find relative paths like docs/foo.md referenced in the doc
         doc_refs = re.findall(r"`(docs/[^`]+\.md)`", text)
         for ref in doc_refs:
             self.assertTrue(
@@ -961,7 +955,6 @@ class ScriptNumberingTests(unittest.TestCase):
             if match:
                 numbers.add(int(match.group(1)))
 
-        # Consecutiveness is not required (numbers may be skipped); only out-of-range values are.
         if numbers:
             max_num = max(numbers)
             self.assertLessEqual(

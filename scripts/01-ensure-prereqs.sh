@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# 01-ensure-prereqs.sh  Install the per-distro prerequisites. Idempotent.
 
 set -euo pipefail
 
@@ -34,8 +33,6 @@ if [[ "$BASE_DISTRO" == "arch" ]]; then
     ensure_yay
 
     info "Enabling ccache for makepkg builds (caches AUR rebuilds)..."
-    # ccache has to exist BEFORE flipping !ccache -> ccache in makepkg.conf,
-    # or every build aborts with "Cannot find the ccache binary" (exit 15).
     if ! command -v ccache >/dev/null 2>&1; then
         info "ccache not found, installing..."
         sudo pacman -S --needed --noconfirm ccache

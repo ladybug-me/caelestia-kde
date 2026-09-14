@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# test_submodules.sh - Tests for scripts/lib/submodules.sh
 
 set -uo pipefail
 
@@ -14,9 +13,6 @@ require_git() {
     return 1
 }
 
-# make_repo <dir>
-#
-# A throwaway checkout with one commit, so git is willing to operate on it.
 make_repo() {
     local repo="$1"
     git init -q "$repo"
@@ -24,13 +20,6 @@ make_repo() {
         commit -q --allow-empty -m "init"
 }
 
-# register_submodule <repo> <name> <path>
-#
-# Reproduces what `git submodule init` leaves behind for a submodule since deleted
-# upstream: the .git/config registration, the module cache and the worktree.
-# `git submodule deinit` cannot clean that up - it resolves the path through
-# .gitmodules and fails once the entry is gone, which is what prune_removed_submodules
-# exists for.
 register_submodule() {
     local repo="$1" name="$2" path="$3"
     git -C "$repo" config "submodule.$name.url" "https://example.invalid/$name.git"
@@ -73,8 +62,6 @@ test_prune_resolves_the_worktree_path_from_the_local_registration() {
     repo="$tmp/repo"
     make_repo "$repo"
     : > "$repo/.gitmodules"
-    # Name and worktree path differ (a nested submodule), so the path can only
-    # come from .git/config.
     register_submodule "$repo" dots src/dots
 
     prune_removed_submodules "$repo"
@@ -101,10 +88,6 @@ test_prune_is_a_no_op_without_local_registrations() {
     assert_is_dir "$repo/keep" "a submodule that is not registered locally must not be touched"
 }
 
-# isolate_git_config <dir>
-#
-# Points git at a throwaway global config, so a test can allow file:// submodule URLs
-# (refused by default) without touching the developer's ~/.gitconfig.
 isolate_git_config() {
     local dir="$1"
     export HOME="$dir/home"
@@ -115,9 +98,6 @@ isolate_git_config() {
     git config --global init.defaultBranch main
 }
 
-# make_submodule_source <dir>
-#
-# A repository with content, to be used as a submodule's remote.
 make_submodule_source() {
     local source="$1"
     git init -q "$source"
@@ -126,11 +106,6 @@ make_submodule_source() {
     git -C "$source" commit -q -m "content"
 }
 
-# make_checkout_with_submodule <repo> <source> [registered-url]
-#
-# A checkout with src/dots recorded as a submodule of <source> and an empty working
-# tree - an unfetched submodule. With registered-url, .git/config points there
-# instead, which is the stale-registration case sync exists for.
 make_checkout_with_submodule() {
     local repo="$1" source="$2" registered="${3:-}"
     git init -q "$repo"
@@ -138,8 +113,6 @@ make_checkout_with_submodule() {
         > "$repo/.gitmodules"
     git -C "$repo" add .gitmodules
     git -C "$repo" commit -q -m "add submodule"
-    # `submodule init` is what copies the URL into .git/config and leaves the
-    # working tree empty, exactly as an install sees it before the fetch.
     git -C "$repo" submodule init src/dots >/dev/null 2>&1 || true
     if [[ -n "$registered" ]]; then
         git -C "$repo" config submodule.caelestia.url "$registered"
@@ -202,8 +175,6 @@ test_ensure_submodule_content_recovers_from_a_stale_registration() {
     source="$tmp/source"
     make_submodule_source "$source"
     repo="$tmp/repo"
-    # .git/config points somewhere useless while .gitmodules is correct, which
-    # is what a moved or renamed submodule remote looks like from here.
     make_checkout_with_submodule "$repo" "$source" "file://$tmp/gone"
 
     ensure_submodule_content "$repo" "src/dots"
@@ -220,8 +191,6 @@ test_fetch_submodule_by_clone_works_without_submodule_machinery() {
     source="$tmp/source"
     make_submodule_source "$source"
     repo="$tmp/repo"
-    # Deliberately not a repository: the fallback exists for checkouts where
-    # git-submodule has nothing to work with.
     mkdir -p "$repo"
     printf '[submodule "caelestia"]\n\tpath = src/dots\n\turl = file://%s\n' "$source" \
         > "$repo/.gitmodules"

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# packages.sh - Arch package installation for Caelestia
 
 set -uo pipefail
 
@@ -16,7 +15,6 @@ INSTALL_FISH="${INSTALL_FISH:-true}"
 INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
 INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
-# Ensure yay
 if ! command -v yay >/dev/null 2>&1; then
     log "yay not found - installing..."
     sudo pacman -S --needed --noconfirm base-devel git || true
@@ -29,27 +27,20 @@ if ! command -v yay >/dev/null 2>&1; then
     rm -rf "$tmpdir"
 fi
 
-# Package groups, selected by PACKAGE_GROUP.
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 CORE_PACKAGES=(
-    # Build tools & compilers
     cmake ninja ccache qt6-tools extra-cmake-modules gcc-libs glibc
 
-    # CLI & System utilities
     wl-clipboard cliphist wl-clip-persist inotify-tools app2unit wireplumber trash-cli jq
 
-    # Audio, Sensors & Hardware
     aubio lm_sensors libpipewire pulseaudio-qt libpulse fftw
 
-    # Qt6 Framework & Tools
     qt6-base qt6-declarative qt6-wayland qt6-shadertools
 
-    # KDE 6 Frameworks & KWin
     kglobalaccel kglobalacceld kguiaddons kwindowsystem
     kcoreaddons kconfig networkmanager-qt kpipewire kwin
 
-    # Media, Calculation & Security
     ffmpeg libqalculate libsecret ksshaskpass libx11 vulkan-headers
 )
 
@@ -93,7 +84,6 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
     fi
 fi
 
-# Developer SDK (libcava) extracted from prebuilt release assets.
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "core" ]]; then
     if install_cava_sdk arch; then
         log "Installed prebuilt CAVA SDK from release."
@@ -109,8 +99,6 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
     fi
 fi
 
-# An older install may have registered the caelestia-bin repo, which pointed at a
-# now-deleted GitHub release; a stale entry makes `pacman -Sy` fail.
 if grep -q '^\[caelestia-bin\]' /etc/pacman.conf 2>/dev/null; then
     log "Removing stale caelestia-bin repo entry from pacman.conf..."
     sudo sed -i '/^\[caelestia-bin\]/,/^$/d' /etc/pacman.conf
@@ -119,15 +107,11 @@ fi
 log "Installing packages (group: $PACKAGE_GROUP)..."
 FAILED_PKGS=()
 
-# Fallbacks for AUR packages with no reliable binary: build from upstream source when
-# yay cannot fetch the package or its source. Keyed by AUR name -> repo URL.
 SOURCE_BUILD_REPOS=(
-    # package            repo
     "ttf-rubik-vf        https://github.com/googlefonts/rubik"
     "app2unit            https://github.com/Vladimir-csp/app2unit"
 )
 
-# Resolve a package name to its source repo URL (empty if not a source-build target)
 source_repo_for() {
     local name="$1" entry pkg url
     for entry in "${SOURCE_BUILD_REPOS[@]}"; do
@@ -141,7 +125,6 @@ source_repo_for() {
     return 1
 }
 
-# Build with whatever backend the project ships (meson, CMake, autotools, makefile).
 build_from_source() {
     local pkg="$1" repo="$2" tmpdir
     tmpdir="$(mktemp -d)"
@@ -174,11 +157,9 @@ build_from_source() {
     return 0
 }
 
-# One batch install; failures are retried individually below.
 if ! yay -S --needed --noconfirm "${PACKAGES[@]}"; then
     log "Batch install had failures. Retrying individually..."
     for pkg in "${PACKAGES[@]}"; do
-        # Skip packages already installed by the batch attempt
         if pacman -Q "$pkg" >/dev/null 2>&1; then
             continue
         fi
@@ -198,7 +179,6 @@ if ! yay -S --needed --noconfirm "${PACKAGES[@]}"; then
             fi
             rm -rf "$tmpdir"
 
-            # Last resort: build from upstream source when the AUR path failed.
             if [[ "$_built" != "yes" ]]; then
                 repo="$(source_repo_for "$pkg")"
                 if [[ -n "$repo" ]]; then

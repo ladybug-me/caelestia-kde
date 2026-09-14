@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-# test_js_escape.sh - Tests for scripts/lib/js.sh.
-#
-# The value is a wallpaper path interpolated into a script Plasma evaluates, so the
-# assertions are about what the result may contain: the characters JavaScript meant, and
-# none that could end the literal early or be read by the shell on the way.
 
 set -uo pipefail
 
@@ -12,9 +7,6 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 source "$REPO_ROOT/scripts/lib/js.sh"
 
-# Escaping is per character, so a non-ASCII character is escaped as the code point
-# the shell works in (UTF-8 on a Plasma desktop; bytes in a byte locale). The quoting
-# guarantees hold either way, so only the two tests naming a code point are gated.
 locale_is_utf8() {
     [[ "$(locale charmap 2>/dev/null || echo ANSI_X3.4-1968)" == "UTF-8" ]]
 }
@@ -31,8 +23,6 @@ test_quoting_characters_become_escapes() {
 }
 
 test_nothing_the_next_two_layers_read_survives() {
-    # A double-quoted shell string and a JS literal sit between js_string and Plasma, so
-    # the output must carry nothing either would act on.
     local attack escaped
     attack='a'"'"'b"c$HOME`id`$(touch /tmp/x)'$'\n'"d"
     escaped="$(js_string "$attack")"
@@ -46,8 +36,6 @@ test_nothing_the_next_two_layers_read_survives() {
 }
 
 test_a_quote_in_a_name_cannot_end_the_literal() {
-    # The case the helper exists for: a wallpaper called `it's here.png` cut the script
-    # short, leaving Plasma on the previous wallpaper while the step reported success.
     local escaped
     escaped="$(js_string "file:///home/u/it's here.png")"
 
@@ -70,8 +58,6 @@ test_astral_characters_become_a_surrogate_pair() {
         return 0
     fi
 
-    # A \u escape carries four hex digits, so a surrogate pair needs two escapes; one
-    # escape holding the code point is a syntax error.
     assert_eq 'wall\ud83c\udf0d.png' "$(js_string 'wall🌍.png')" "an astral character should become a surrogate pair"
 }
 

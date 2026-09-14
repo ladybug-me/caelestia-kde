@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-# helpers.sh - assertions and fixtures for the bash test suite.
-#
-# A test file sources this, defines functions named `test_*`, and ends with
-# `run_tests`. Assertions record failures instead of aborting, so one broken
-# expectation still reports the rest.
-#
-# The double-source guard is an if so a false test cannot trip `set -e`.
 if [[ -z "${CAELESTIA_TEST_HELPERS_SOURCED:-}" ]]; then
 CAELESTIA_TEST_HELPERS_SOURCED=1
 
@@ -18,13 +11,10 @@ fail() {
     printf '    FAIL: %s\n' "$*" >&2
 }
 
-# Report a test as skipped because a prerequisite is missing here. Neither pass nor
-# failure; the test still returns 0.
 skip_test() {
     printf '    SKIP: %s\n' "$1"
 }
 
-# Like fail, but show the output of a command that was expected to succeed.
 fail_with_output() {
     local message="$1" output="$2"
     CAELESTIA_TEST_FAILURES=$((CAELESTIA_TEST_FAILURES + 1))
@@ -47,7 +37,6 @@ assert_ne() {
     fi
 }
 
-# assert_status <expected-status> <actual-status> <message>
 assert_status() {
     local expected="$1" actual="$2" message="${3:-unexpected exit status}"
     if [[ "$expected" != "$actual" ]]; then
@@ -84,7 +73,6 @@ assert_not_contains() {
     fi
 }
 
-# Scratch directory removed by run_tests when the file finishes.
 new_tmpdir() {
     local dir
     dir="$(mktemp -d "${TMPDIR:-/tmp}/caelestia-test.XXXXXX")"
@@ -101,12 +89,6 @@ cleanup_tmpdirs() {
     return 0
 }
 
-# stub_bin <dir> <name> [body]
-#
-# Writes an executable stub into <dir> so a test can put <dir> first on PATH and
-# observe how the code under test shells out. Body defaults to succeeding. The
-# shebang is /bin/bash, not /usr/bin/env bash, so a PATH limited to the stub dir
-# still finds an interpreter.
 stub_bin() {
     local dir="$1" name="$2" body="${3:-exit 0}"
     mkdir -p "$dir"
@@ -114,19 +96,12 @@ stub_bin() {
     chmod +x "$dir/$name"
 }
 
-# recording_stub <dir> <name> <logfile> [exit-status]
-#
-# Appends "<name> <args>" to <logfile> and exits with <exit-status>, so a test can
-# assert both that a command ran and exactly how it was called.
 recording_stub() {
     local dir="$1" name="$2" log="$3" status="${4:-0}"
     stub_bin "$dir" "$name" "printf '%s %s\n' '$name' \"\$*\" >> '$log'
 exit $status"
 }
 
-# calls_to <logfile> <name>
-#
-# Print the recorded argument strings for <name>, one per line.
 calls_to() {
     local log="$1" name="$2"
     [[ -f "$log" ]] || return 0

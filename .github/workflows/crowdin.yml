@@ -24,7 +24,6 @@ concurrency:
 jobs:
   synchronize:
     runs-on: ubuntu-latest
-    # Forks have no secrets; without this the action fails on every push.
     if: github.repository == 'ladybug-me/caelestia-kde'
     permissions:
       contents: write
@@ -51,8 +50,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y qt6-l10n-tools qt6-tools-dev
 
-      # English is the source language and its catalog is not committed (thousands of empty
-      # entries), but Crowdin needs one to slice into the target languages.
       - name: Regenerate the Source Catalog
         run: |
           set -euo pipefail
@@ -63,16 +60,9 @@ jobs:
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
-          # Translations are edited in Crowdin, so pushing the committed ones back would let
-          # a stale local catalog overwrite newer work there. It must be run once with
-          # seed_translations: Crowdin starts empty, and a first run that only uploads would
-          # export every target untranslated, opening a PR that blanks a finished translation.
           upload_translations: ${{ inputs.seed_translations == true }}
           auto_approve_imported: ${{ inputs.seed_translations == true }}
           download_translations: true
-          # Without this Crowdin exports a file for every target language including the 0%
-          # ones, which the build compiles and the picker then offers as a language that
-          # renders in English.
           skip_untranslated_files: true
           localization_branch_name: i18n/crowdin
           create_pull_request: true
@@ -85,15 +75,10 @@ jobs:
           commit_message: "i18n: new translations from Crowdin"
           config: crowdin.yml
         env:
-          # The caelestia-automation app token, as every PR-opening workflow here uses.
-          # secrets.GITHUB_TOKEN cannot open a PR unless the repository allows Actions to.
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
-  # A Crowdin PR carries .ts files only, and the compiled .qm catalogs are committed: a
-  # .ts arriving without its .qm would ship the previous translation. This keeps the pair
-  # together.
   compile:
     runs-on: ubuntu-latest
     if: github.repository == 'ladybug-me/caelestia-kde'

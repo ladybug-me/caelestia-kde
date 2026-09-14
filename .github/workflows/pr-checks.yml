@@ -10,7 +10,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Job 1: PR template validation - catch empty/placeholder PRs
   pr-template:
     runs-on: ubuntu-latest
     steps:
@@ -25,7 +24,6 @@ jobs:
       - name: Validate PR template
         run: python3 .github/scripts/check_pr_template.py
 
-  # Job 2: Branch naming - gentle suggestion, not a hard rule
   branch-name:
     runs-on: ubuntu-latest
     steps:
@@ -37,7 +35,6 @@ jobs:
             echo "::warning::Branch '$BRANCH_NAME' as source - consider using a feature branch instead."
           fi
 
-  # Job 3: Changed files check - catch common mistakes by scope
   changed-files:
     runs-on: ubuntu-latest
     steps:
@@ -51,19 +48,16 @@ jobs:
           echo "### Changed Files Analysis" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Get list of changed files in this PR
           git diff --name-only origin/${{ github.base_ref }}...HEAD > /tmp/changed_files.txt
 
           CHANGED_COUNT=$(wc -l < /tmp/changed_files.txt)
           echo "Total files changed: $CHANGED_COUNT" >> $GITHUB_STEP_SUMMARY
 
-          # Check for too many files changed (possible accidental commit)
           if [[ "$CHANGED_COUNT" -gt 75 ]]; then
             echo "::warning::Large PR detected: $CHANGED_COUNT files changed. Consider breaking into smaller PRs."
             echo "**$CHANGED_COUNT files changed** - consider breaking into smaller, focused PRs." >> $GITHUB_STEP_SUMMARY
           fi
 
-          # Detect QML changes that don't touch shell/
           QML_CHANGES=$(grep '\.qml$' /tmp/changed_files.txt || true)
           NON_SHELL_QML=$(echo "$QML_CHANGES" | grep -v '^shell/' || true)
           if [[ -n "$NON_SHELL_QML" ]]; then
@@ -71,22 +65,18 @@ jobs:
             echo "QML files outside shell/: $NON_SHELL_QML" >> $GITHUB_STEP_SUMMARY
           fi
 
-          # Detect installer C++ changes - these affect the TUI installer
           if grep -q '^installer/tui/.*\.(cpp|hpp|h)$' /tmp/changed_files.txt; then
             echo "Installer C++ changes - compilation will be verified by validate workflow." >> $GITHUB_STEP_SUMMARY
           fi
 
-          # Detect shell CMakeLists.txt changes - build system changes
           if grep -q 'CMakeLists.txt' /tmp/changed_files.txt; then
             echo "Build system changes - verify with a clean build." >> $GITHUB_STEP_SUMMARY
           fi
 
-          # Detect version.env changes - version bumps need extra care
           if grep -q 'version.env' /tmp/changed_files.txt; then
             echo "Version bump - ensure version-release workflow will fire correctly." >> $GITHUB_STEP_SUMMARY
           fi
 
-  # Job 4: Commit message - gentle reminders, never blocks
   commit-messages:
     runs-on: ubuntu-latest
     steps:
@@ -109,7 +99,6 @@ jobs:
             HASH="${line%% *}"
             MSG="${line#* }"
 
-            # Skip merge commits
             [[ "$MSG" == "Merge "* ]] && continue
 
             FIRST_LINE="${MSG%%$'\n'*}"
@@ -120,9 +109,6 @@ jobs:
 
           echo "Commit message review complete."
 
-  # Job 5: QML source compatibility
-  # This is intentionally independent of the native dependency build. It
-  # catches unsupported QML root types even when package installation fails.
   qml-compatibility:
     runs-on: ubuntu-latest
     steps:
@@ -140,7 +126,6 @@ jobs:
       - name: Check QML import completeness
         run: python3 .github/scripts/check_qml_imports.py --shell-root shell
 
-  # Final PR gate
   pr-gate:
     needs:
       - pr-template

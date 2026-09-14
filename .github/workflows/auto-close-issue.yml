@@ -23,7 +23,6 @@ jobs:
 
           BODY=$(printf '%s' "$ISSUE_BODY" | sed -E 's/^"(.*)"$/\1/' | sed 's/\\"/"/g' | sed 's/\\n/\n/g')
 
-          # Only close if the body is genuinely empty (no meaningful content at all)
           CLEANED=$(printf '%s' "$BODY" | sed 's/[[:space:]]//g' | sed 's/<!--.*-->//g')
           if [[ -n "${CLEANED:-}" ]]; then
             echo "Issue has content - not closing."
@@ -35,4 +34,3 @@ jobs:
           gh issue close "$ISSUE_NUMBER" \
             --reason "not planned" \
             --comment "Hi! It looks like this issue was submitted without any description. If you meant to report something, please open a new issue with details about what happened - we'd love to help!"
-

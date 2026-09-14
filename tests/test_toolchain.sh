@@ -1,21 +1,10 @@
 #!/usr/bin/env bash
-# test_toolchain.sh - Tests for scripts/lib/toolchain.sh
 
 set -uo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/toolchain.sh"
 
-# `caelestia_sudo` comes from privileges.sh in real use; these tests do NOT define
-# it as a function, which would shadow the stub on PATH and hide whether the code
-# went through the privilege helper at all.
-
-# with_path <dir> <lrelease-fallback-path> <command> [args...]
-#
-# Runs <command> in a subshell whose PATH holds only <dir>, so the code under test
-# sees exactly the stubs installed here. CAELESTIA_LRELEASE_FALLBACK is overridden
-# too: its default absolute path may exist on a developer machine but not a CI
-# runner, which would make the check non-deterministic.
 with_path() {
     local dir="$1" fallback="$2"
     shift 2
@@ -78,8 +67,6 @@ test_install_linguist_tools_escalates_through_the_privilege_helper() {
     stub="$tmp/bin"
     log="$tmp/calls.log"
     recording_stub "$stub" pacman "$log"
-    # Records the call, then forwards the arguments so the test also proves the
-    # install command survives the wrapper intact.
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\\n' \"\$*\" >> '$log'
 \"\$@\""
 

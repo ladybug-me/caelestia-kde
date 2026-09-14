@@ -12,7 +12,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Job 1: Python quality - lint, compile, best practices
   python-quality:
     runs-on: ubuntu-latest
     steps:
@@ -40,7 +39,6 @@ jobs:
       - name: flake8 lint
         run: |
           echo "::group::flake8"
-          # Our own Python only, plus shell/scripts (the QML linter and repo tooling).
           flake8 .github/scripts/ shell/scripts/ \
             --exclude 'orion_search.py,menu_perf_stats.py' \
             --max-line-length=120 \
@@ -50,7 +48,6 @@ jobs:
             --statistics
           echo "::endgroup::"
 
-  # Job 2: Repository integrity - cross-cutting consistency checks
   repo-integrity:
     runs-on: ubuntu-latest
     steps:
@@ -69,10 +66,8 @@ jobs:
         run: python3 .github/scripts/test_repo_integrity.py
 
       - name: Audit settings search coverage
-        # Gates on settings sub-pages no search entry can open; reports unindexed headers and rows.
         run: python3 .github/scripts/audit_search_coverage.py
 
-  # Job 3: JSON configuration validation
   json-validation:
     runs-on: ubuntu-latest
     steps:
@@ -87,7 +82,6 @@ jobs:
       - name: Validate theme.json and menu.json
         run: python3 .github/scripts/validate_json_configs.py
 
-  # Job 4: File hygiene - large files, whitespace, merge conflicts
   file-hygiene:
     runs-on: ubuntu-latest
     steps:
@@ -100,12 +94,9 @@ jobs:
           python-version: '3.x'
 
       - name: Run file hygiene checks
-        # Changed files only on a PR (hard fail); full scan on a push to main/dev, report-only
-        # since the pre-existing debt would fail a hard gate.
         run: python3 .github/scripts/check_file_hygiene.py ${{ github.event_name == 'push' && '--all' || '' }}
         continue-on-error: ${{ github.event_name == 'push' }}
 
-  # Job 5: Markdown lint
   markdown-lint:
     runs-on: ubuntu-latest
     steps:
@@ -121,9 +112,6 @@ jobs:
             docs/**/*.md
             .github/*.md
 
-  # Job 6: QML conventions - project linter regression gate
-# shell/scripts/qml-lint-conventions.py has thousands of pre-existing violations, so this
-# diffs against a stored baseline and fails only on NEW ones (--update to regenerate).
   qml-conventions:
     runs-on: ubuntu-latest
     steps:
@@ -138,10 +126,7 @@ jobs:
       - name: Run QML convention regression check
         run: python3 .github/scripts/check_qml_conventions.py
 
-  # Job 7: QML structural syntax - brace balance + top-level component
-# An unbalanced brace or a top-level inline `component` fails the whole shell load, and the
 # error cascades so the reported file is not the cause. qmllint cannot resolve Quickshell's
-# qs.* imports, so this does a lightweight structural parse.
   qml-syntax:
     runs-on: ubuntu-latest
     steps:
@@ -156,9 +141,7 @@ jobs:
       - name: Check QML structural syntax
         run: python3 .github/scripts/check_qml_syntax.py --source-root shell
 
-  # Job 8: Embedded bash - syntax-check bash/sh inside QML Process commands
 # Bash inside QML `command: ["bash", "-c", `...`]` strings, which qmllint and shellcheck
-# never see; a typo there only surfaces at runtime.
   embedded-bash:
     runs-on: ubuntu-latest
     steps:
@@ -173,9 +156,6 @@ jobs:
       - name: Check bash/sh scripts embedded in QML
         run: python3 .github/scripts/check_embedded_bash.py
 
-  # Job 9: Config cross-reference - QML config keys vs C++ declarations
-# Config./GlobalConfig. references with no matching CONFIG_PROPERTY (renamed keys, typos):
-# the shell logs "Cannot assign to non-existent property" and the widget silently breaks.
   config-cross-ref:
     runs-on: ubuntu-latest
     steps:
@@ -191,8 +171,6 @@ jobs:
         run: python3 .github/scripts/check_config_references.py
 
   # Job 10: actionlint - validate workflow files themselves
-# Malformed ${{ }} expressions, bad `on:` keys, wrong permission scopes - things a plain
-# YAML parse accepts.
   actionlint:
     runs-on: ubuntu-latest
     steps:
@@ -209,11 +187,6 @@ jobs:
       - name: Lint workflow files
         run: actionlint -shellcheck= -color -ignore 'missing input "app-id"' -ignore 'input "client-id" is not defined'
 
-  # Job 11: Wayland static lifetime - catch exit-time SIGSEGVs
-# A class inheriting QWaylandClientExtensionTemplate<T> or QtWayland::* owns a live
-# wl_proxy; holding one as a static by value tears it down from an exit handler after Qt
-# closed the display, segfaulting the shell on quit. See windowscreencast.cpp for the fix
-# pattern (leak the pointer instead).
   wayland-static-lifetime:
     runs-on: ubuntu-latest
     steps:
@@ -228,10 +201,7 @@ jobs:
       - name: Check for value-typed statics of Wayland proxy-wrapping types
         run: python3 .github/scripts/check_wayland_static_lifetime.py
 
-  # Job 12: QML import completeness - missing/extra imports
 # No Qt/QML toolchain here (qmllint6 cannot resolve this repo's qs.* directory imports), so
-# check_qml_imports.py builds its own registry. This is what would have caught Nmcli.qml
-# shipping without `import Quickshell`.
   qml-imports:
     runs-on: ubuntu-latest
     steps:
@@ -246,9 +216,6 @@ jobs:
       - name: Check QML import completeness
         run: python3 .github/scripts/check_qml_imports.py --shell-root shell
 
-  # Job 13: QML template interpolation - unescaped bash ${...}
-# Bash in QML backtick literals must escape `${` as `\${`; an unescaped one parses as
-# JavaScript and fails the load for every transitive importer.
   qml-template-interp:
     runs-on: ubuntu-latest
     steps:
@@ -264,8 +231,6 @@ jobs:
         run: python3 .github/scripts/check_qml_template_interp.py
 
   # Job 14: Shell quality - syntax, shellcheck, strict mode, unsafe patterns
-# check_shell_quality.sh was written for CI but wired into no workflow, so nothing was
-# gating the shell scripts.
   shell-quality:
     runs-on: ubuntu-latest
     steps:
@@ -278,7 +243,6 @@ jobs:
       - name: Run shell quality checks
         run: bash .github/scripts/check_shell_quality.sh
 
-  # Final gate: require all non-skippable jobs to pass
   validate-gate:
     needs:
       - python-quality
@@ -334,4 +298,3 @@ jobs:
             echo "Some checks failed. Please review the job logs above." >> $GITHUB_STEP_SUMMARY
             exit 1
           fi
-

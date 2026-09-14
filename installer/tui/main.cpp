@@ -11,7 +11,6 @@
 
 using namespace std;
 
-// sig_atomic_t is the only cross-signal-safe type; cleanup runs in the main loop.
 volatile sig_atomic_t g_sigint_received = 0;
 volatile sig_atomic_t g_sigterm_received = 0;
 
@@ -20,7 +19,6 @@ void handle_sigwinch(int) {
 }
 
 void handle_sigint(int) {
-    // Only set the flag - no library calls from signal context; check_signals() cleans up.
     g_sigint_received = 1;
 }
 
@@ -39,9 +37,6 @@ void check_signals() {
     }
 }
 
-// Hands the terminal to an interactive script (update.sh or uninstall.sh) and exits.
-// Those drive the terminal themselves, so re-entering the TUI's alternate screen
-// afterwards corrupts it and wedges the installer.
 void run_external(const std::string& script_path) {
     Term::restore();
     pid_t child = fork();
@@ -60,8 +55,6 @@ void run_external(const std::string& script_path) {
 }
 
 int main(int argc, char** argv) {
-    // Bundle dir from the executable; a non-action first argument overrides it, while
-    // --update/--uninstall preselect the action.
     char buf[1024];
     ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf)-1);
     if (len != -1) {
@@ -85,18 +78,13 @@ int main(int argc, char** argv) {
         }
     }
 
-    // Early diagnostic: print bundle dir to stderr so setup.sh can capture it
     std::cerr << "[installer] bundle dir: " << g_bundle_dir << std::endl;
 
-    // Hide cursor immediately so the TUI never flashes it
     std::cout << "\x1b[?25l" << std::flush;
     Term::init();
 
     load_theme();
 
-    // The step scripts are the one thing the TUI cannot run without. Theme and menu
-    // failures are recorded by load_theme() for the screens to draw, since the alternate
-    // screen hides stderr.
     {
         std::string scripts_dir = g_bundle_dir + "/scripts";
         if (!std::ifstream(scripts_dir + "/00a-system-update.sh").good()) {
@@ -109,19 +97,16 @@ int main(int argc, char** argv) {
     signal(SIGINT, handle_sigint);
     signal(SIGTERM, handle_sigterm);
 
-    // Distro detection happens in setup.sh and arrives via BASE_DISTRO.
     const char* env_distro = getenv("BASE_DISTRO");
     if (env_distro && string(env_distro) != "") {
         g_base_distro = env_distro;
     }
 
-    // Phase 1: Welcome (splash merged into the frame)
     if (preset_action.empty()) {
         std::cerr << "[installer] phase 1: welcome_screen" << std::endl;
         UI::welcome_screen();
         check_signals();
 
-        // Esc on the welcome screen sets g_quit; exit as cleanly as the other cancels.
         if (g_quit) {
             std::cerr << "[installer] user quit at welcome screen" << std::endl;
             Term::restore();
@@ -130,8 +115,6 @@ int main(int argc, char** argv) {
         }
     }
 
-    // Phase 1.5: action select. Update and uninstall hand off to their scripts on the real
-    // terminal; install continues into the wizard.
     std::string action = preset_action;
     while (true) {
         if (action.empty()) {
@@ -150,7 +133,6 @@ int main(int argc, char** argv) {
         break; // install
     }
 
-    // Phase 2: Sudo Auth
     std::cerr << "[installer] phase 2: sudo_prompt" << std::endl;
     if (!UI::sudo_prompt()) {
         std::cerr << "[installer] user canceled at sudo prompt" << std::endl;
@@ -159,7 +141,6 @@ int main(int argc, char** argv) {
     }
     check_signals();
 
-    // Phase 3: Configure -> Review (review happens before any step runs).
     if (!g_menu.is_null() && g_menu.contains("menu")) {
         std::cerr << "[installer] phase 3: configure + review" << std::endl;
         UI::init_menu_defaults(g_menu["menu"]);
@@ -180,15 +161,10 @@ int main(int argc, char** argv) {
             return 0;
         }
 
-        // Export all answers as environment variables for the bash scripts
         for (const auto& pair : g_answers) {
             setenv(pair.first.c_str(), pair.second.c_str(), 1);
         }
 
-        // Persist the menu choices so update.sh can restore them: a fresh update runs the
-        // deploy/build/tweak scripts with none of these vars set, so every script gate
-        // (${DEFAULT_SHELL:-fish}, ${INSTALL_FISH:-true}, ...) would fall back to its hardcoded
-        // default and silently revert the user's choice.
         if (const char* home = getenv("HOME")) {
             string cfg_dir = string(home) + "/.config/caelestia-kde";
             std::string safe_dir = cfg_dir;
@@ -198,7 +174,6 @@ int main(int argc, char** argv) {
             ofstream env_file(cfg_dir + "/install.env", ios::out | ios::trunc);
             if (env_file.is_open()) {
                 for (const auto& pair : g_answers) {
-                    // Only persist entries that are valid shell env names.
                     if (pair.first.empty())
                         continue;
                     bool valid = (pair.first[0] == '_') ||
@@ -216,7 +191,6 @@ int main(int argc, char** argv) {
                     if (!valid)
                         continue;
 
-                    // Single-quoted so a value with shell metacharacters stays parseable.
                     env_file << pair.first << "='";
                     for (char c : pair.second) {
                         if (c == '\'')
@@ -234,7 +208,6 @@ int main(int argc, char** argv) {
     }
 
     check_signals();
-    // Phase 4: Execute
     std::cerr << "[installer] phase 4: execute (" << Runner::steps.size() << " steps)" << std::endl;
     Runner::execute();
 

@@ -1,10 +1,4 @@
 #!/usr/bin/env bash
-# test_packaged_install.sh - Tests for `caelestia install` on a packaged machine.
-#
-# The split under test is parity-6: a package owns /usr and /etc, the command owns the
-# user's half. So `install` does one of two things, and the packaged half must be the same
-# step scripts the checkout installer runs - told which install they are part of, so the
-# sections that write package-owned files stay out.
 
 set -uo pipefail
 
@@ -13,18 +7,12 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLI="$REPO_ROOT/src/bin/caelestia"
 
-# The steps a packaged install runs, in order. Kept here as the list the test
-# expects, so a change to the dispatcher's list has to be deliberate.
 EXPECTED_STEPS=(03-deploy-configs.sh 03a-wallpapers.sh 04-deploy-kde.sh 05-sddm-theme.sh 06-services.sh 08-build-shell.sh 09-system-tweaks.sh 10-autostart.sh 12-fetch-assets.sh)
 
 DIR=""
 CALLS=""
 DATA=""
 
-# stub_steps <failing-step|"">
-#
-# One stub per step, recording the environment it was given. The stubs are run
-# with `bash <path>`, so they need no shebang and no execute bit.
 stub_steps() {
     local failing="$1" step
     DIR="$(new_tmpdir)"
@@ -42,7 +30,6 @@ stub_steps() {
     done
 }
 
-# run_install <extra-env-assignments...>
 run_install() {
     local env_prefix=()
     while [[ $# -gt 0 ]]; do
@@ -57,7 +44,6 @@ RUN_STATUS=0
 RUN_OUTPUT=""
 
 test_a_checkout_install_is_still_the_installer() {
-    # With a checkout named, install hands over to it, exactly as before.
     DIR="$(new_tmpdir)"
     mkdir -p "$DIR/checkout"
     printf '#!/bin/sh\necho "checkout installer ran"\n' > "$DIR/checkout/install.sh"
@@ -68,8 +54,6 @@ test_a_checkout_install_is_still_the_installer() {
 }
 
 test_a_checkout_that_is_not_named_is_refused_with_its_installer() {
-    # What the packaged path finds from a checkout: the repo's own scripts. Installing
-    # half a checkout would be a half install, so it sends the user to install.sh.
     stub_steps ""
     CAELESTIA_DATA_DIR="$REPO_ROOT" "$CLI" install > "$DIR/out.txt" 2>&1
     local status=$?
@@ -98,8 +82,6 @@ test_the_machine_steps_stay_out_of_a_packaged_install() {
     stub_steps ""
     CAELESTIA_DATA_DIR="$DATA" CAELESTIA_INSTALL_KIND=package "$CLI" install > "$DIR/out.txt" 2>&1
 
-    # Steps that install packages, fetch submodules or build the shell are the package's
-    # own work; rerunning them writes into /usr and /etc behind pacman.
     local calls
     calls="$(cat "$CALLS")"
     local absent
@@ -109,8 +91,6 @@ test_the_machine_steps_stay_out_of_a_packaged_install() {
 }
 
 test_the_greeter_step_selects_without_installing_the_theme() {
-    # 05 runs on a packaged install because choosing a login screen is the user's
-    # half, but everything it would write under /usr and /etc is the package's.
     local script
     script="$(cat "$REPO_ROOT/scripts/05-sddm-theme.sh")"
 
@@ -119,8 +99,6 @@ test_the_greeter_step_selects_without_installing_the_theme() {
     assert_contains "$script" "skip \"The display manager's dependencies belong to the package.\"" "the distro dependencies should be skipped"
     assert_contains "$script" 'register_greeter_sync "SDDM theme installed."' "while the posthook is still registered for both kinds"
 
-    # And the package ships what the step no longer writes, or a packaged install
-    # would have no theme to select at all.
     local pkgbuild
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
     assert_contains "$pkgbuild" 'usr/share/sddm/themes/caelestia' "the package should install the theme"
@@ -140,8 +118,6 @@ test_a_failing_step_stops_the_run() {
 }
 
 test_missing_scripts_say_where_they_come_from() {
-    # A command installed somewhere with no data directory beside it: /usr/bin with
-    # no package, or a copy in a test's scratch space.
     DIR="$(new_tmpdir)"
     mkdir -p "$DIR/bin"
     cp "$CLI" "$DIR/bin/caelestia"
@@ -155,9 +131,6 @@ test_missing_scripts_say_where_they_come_from() {
 }
 
 test_the_package_sources_and_their_hashes_stay_in_step() {
-    # `sha256sums` needs one entry per source, in order, or makepkg stops with "Integrity
-    # checks (sha256) differ in size from the source array" - which is what happened when
-    # a retired desktop entry left `source` but stayed in the sums.
     local pkgbuild_dir="$REPO_ROOT/packaging/aur/caelestia-kde"
     local out
     out="$(
@@ -192,9 +165,6 @@ test_the_package_sources_and_their_hashes_stay_in_step() {
     done
 }
 test_the_package_leaves_the_fonts_to_the_install() {
-    # The CMake install ships the whole shell tree, fonts included (309 of the 401 MiB
-    # the package would otherwise be). The step that fetches fonts is only worth having
-    # if the payload really has none, so both ends are asserted rather than trusted.
     local pkgbuild
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
 
@@ -203,9 +173,6 @@ test_the_package_leaves_the_fonts_to_the_install() {
 }
 
 test_the_release_tarball_is_the_thing_the_package_sources() {
-    # The package's source is an asset the release workflow builds. The two halves live
-    # in different files and languages, so only a test keeps name, contents and
-    # exclusions in step; a rename on one side shows up as a 404 on a user's machine.
     local workflow pkgbuild
     workflow="$(cat "$REPO_ROOT/.github/workflows/version-release.yml")"
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
@@ -214,31 +181,20 @@ test_the_release_tarball_is_the_thing_the_package_sources() {
     assert_contains "$pkgbuild" '$pkgname-v$pkgver.tar.gz' "and the PKGBUILD should source that same name"
     assert_contains "$pkgbuild" 'releases/download/v$pkgver' "from the release the tag publishes"
 
-    # version.env holds the tag (vX.Y.Z), the package version is X.Y.Z. Naming from the
-    # tag publishes caelestia-kde-vvX.Y.Z.tar.gz around a caelestia-kde-vX.Y.Z directory,
-    # satisfying neither side of the PKGBUILD.
     assert_contains "$workflow" 'echo "PKGVER=${VERSION#v}" >> "$GITHUB_ENV"' "the tag's v should be stripped once, where the version is read"
     assert_not_contains "$workflow" 'caelestia-kde-v$VERSION' "the asset name must not double the tag's v"
     assert_not_contains "$workflow" 'caelestia-kde-$VERSION' "and the directory must not carry it at all"
 
-    # Extracted to $srcdir/$pkgname-$pkgver by makepkg, which is where every function in
-    # the PKGBUILD cd's.
     assert_contains "$workflow" 'tar -C dist -czf "$ARTIFACT" "caelestia-kde-$PKGVER"' "the archive should carry the directory makepkg extracts to"
 
-    # The three reasons the tarball exists at all: no submodule commit to fetch, no
-    # 308 MiB of fonts per build, and a revision a git-less tree can still report.
     assert_contains "$workflow" 'submodules: recursive' "the job should check the submodules out to inline them"
     assert_contains "$workflow" "--exclude 'shell/assets/fonts'" "and leave the fonts out"
     assert_contains "$workflow" 'git rev-parse HEAD > "dist/$ROOT/REVISION"' "and write the revision"
 
-    # The sum is filled in by hand at release time, from this job's output.
     assert_contains "$workflow" 'sha256sum "$ARTIFACT" | tee "$ARTIFACT.sha256"' "the job should publish the hash the PKGBUILD needs"
 }
 
 test_the_revision_survives_a_tree_without_git() {
-    # A git-less tree is the point of the tarball, and `caelestia version` reports this
-    # value. REVISION before git: a checkout has both, and the file is the one the
-    # release job wrote deliberately.
     local cmake
     cmake="$(cat "$REPO_ROOT/shell/CMakeLists.txt")"
 
@@ -247,9 +203,6 @@ test_the_revision_survives_a_tree_without_git() {
 }
 
 test_the_checkout_build_script_builds_the_same_tarball() {
-    # Before a tag exists there is nothing to download, so this builds the same tarball
-    # locally and points a staged PKGBUILD at it. If it drifts from the job, the thing
-    # tested before a release is not the thing released.
     local script
     script="$(cat "$REPO_ROOT/packaging/aur/makepkg-from-checkout.sh")"
 
@@ -259,11 +212,8 @@ test_the_checkout_build_script_builds_the_same_tarball() {
     assert_contains "$script" '_source_url=' "and point the staged PKGBUILD at the local tarball"
     assert_contains "$script" '_source_sum=' "with its hash, rather than a SKIP"
 
-    # /tmp is a tmpfs on most machines, and makepkg builds the whole shell in there.
     assert_contains "$script" 'stage="${CAELESTIA_AUR_STAGE:-$HOME/.cache/caelestia-aur}"' 'it should stage under $HOME, not /tmp'
 
-    # The two variables it writes are the ones the PKGBUILD reads, which is what keeps the
-    # real file the only PKGBUILD there is instead of a rewritten copy.
     local pkgbuild
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
     assert_contains "$pkgbuild" '_source_url="${_source_url:-' "the PKGBUILD should default the source URL"
@@ -271,8 +221,6 @@ test_the_checkout_build_script_builds_the_same_tarball() {
 }
 
 test_the_payload_carries_no_version_control_metadata() {
-    # The submodules arrive inlined, so their .git files, .github templates and
-    # .gitignore land in the payload along with the content. None of it is content.
     local pkgbuild
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
 
@@ -291,8 +239,6 @@ test_the_font_step_looks_before_it_downloads() {
 }
 
 test_the_shell_reads_fonts_from_the_user_directory_too() {
-    # Where the download lands, since a package owns the shell's own tree and a
-    # download there would outlive the package.
     local fonts
     fonts="$(cat "$REPO_ROOT/shell/modules/Fonts.qml")"
 
@@ -301,9 +247,6 @@ test_the_shell_reads_fonts_from_the_user_directory_too() {
 }
 
 test_the_install_says_how_to_start_the_shell_now() {
-    # Enabled rather than started: a unit enabled after graphical-session.target is
-    # already active does not start, and a user reading this is inside that session.
-    # "Log out and back in" alone gives them no other way to get the shell.
     local cli
     cli="$(cat "$CLI")"
 

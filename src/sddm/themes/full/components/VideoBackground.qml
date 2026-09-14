@@ -28,7 +28,6 @@ Item {
 
         videoOutput: videoSurface
         loops: MediaPlayer.Infinite
-        // A probe failure tries the next candidate extension; when none works the image stays.
         onErrorOccurred: function (error, errorString) {
             if (root.isActive)
                 return;

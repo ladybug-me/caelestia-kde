@@ -47,7 +47,6 @@ if (hideOnAll) {
 } else {
     return wins.some(w => (currentScreenName === "" || w.output === currentScreenName) && isWindowMaximizedOnWs(w, currentScreenName));
 }
-    
     }
     readonly property bool shouldHide: autoHide && windowHidesShapes
     readonly property bool isPlaying: Players.active?.isPlaying ?? false

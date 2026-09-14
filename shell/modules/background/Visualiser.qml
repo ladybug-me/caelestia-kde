@@ -42,7 +42,6 @@ if (hideOnAll) {
 } else {
     return wins.some(w => (currentScreenName === "" || w.output === currentScreenName) && isWindowMaximizedOnWs(w, currentScreenName));
 }
-    
     }
     readonly property bool shouldBeActive: Config.background.visualiser.enabled && !(GameMode.enabled && GlobalConfig.utilities.gameMode.disableVisualizer) && (!Config.background.visualiser.autoHide || !windowHidesVisualiser)
     property real offset: shouldBeActive ? 0 : screen.height * 0.2

@@ -59,7 +59,6 @@ if (hideOnAll) {
 } else {
     return wins.some(w => (currentScreenName === "" || w.output === currentScreenName) && isWindowMaximizedOnWs(w, currentScreenName));
 }
-    
     }
     readonly property bool allWindowsFloating: !windowHidesLyrics
     readonly property bool shouldHide: autoHide && windowHidesLyrics

@@ -110,7 +110,7 @@ Rectangle {
                 return;
             }
             if (event.text && event.text !== "" && event.text.length === 1) {
-                // Clear error state when user starts typing after a failed attempt
+                // Clear the error once the user types again.
                 loginCard.clearError();
                 root.buffer += event.text;
             }

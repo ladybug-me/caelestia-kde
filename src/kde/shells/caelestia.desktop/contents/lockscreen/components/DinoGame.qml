@@ -2,10 +2,9 @@
     SPDX-FileCopyrightText: 2024 ladybug-me
     SPDX-License-Identifier: GPL-3.0-or-later
 
-    DinoGame.qml — lockscreen port of shell/modules/sidebar/DinoGame.qml
-    Uses DinoGameBackend singleton from Caelestia.Services (same as sidebar).
-    Assets are bundled under ../assets/ (relative to this file).
-    Quickshell/qs.* imports are replaced with plain QtQuick equivalents.
+    DinoGame.qml - lockscreen port of shell/modules/sidebar/DinoGame.qml, using the
+    DinoGameBackend singleton from Caelestia.Services. Assets are under ../assets/;
+    the sidebar's Quickshell/qs.* imports are plain QtQuick equivalents here.
 */
 
 import QtQuick
@@ -17,7 +16,7 @@ import Caelestia.Services
 Item {
     id: root
 
-    // Color theme — wired from NotifDock palette props
+    // Color theme, wired from NotifDock palette props.
     property color activeColor: "#a2adac"
     property color bgColor:     "transparent"
     property bool isCaelestiaMode: false
@@ -87,7 +86,7 @@ Item {
 
         Behavior on opacity { NumberAnimation { duration: 500; easing.type: Easing.OutCubic } }
 
-        // Trigger initial animation
+        // Kick off the initial animation.
         Component.onCompleted: {
             Qt.callLater(function() {
                 show = Qt.binding(function() { return !root.isPlaying && !root.isGameOver; });

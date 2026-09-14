@@ -39,10 +39,9 @@ Item {
     readonly property alias fprintTries: authHandler.fprintTries
     property int profilePicShape: 13
     property bool rotateProfilePic: false
-    // No syncWallpaper: whether the greeter's wallpaper follows the desktop is decided
-    // by the shell that writes kscreenlockerrc (Wallpapers.syncPlasmaWallpaper) and by
-    // the Nexus lock screen page. The Quickshell lock screen's property of that name
-    // read the config key without using it, which made this file look as if it owned it.
+    // No syncWallpaper: whether the greeter's wallpaper follows the desktop is decided by
+    // the shell that writes kscreenlockerrc (Wallpapers.syncPlasmaWallpaper). A property
+    // of that name here read the config key without using it, so it looked like ours.
     property var sessionIcons: ({})
     property bool showSleep: true
     property bool showHibernate: false
@@ -61,8 +60,7 @@ Item {
     readonly property color clCardBg: alterColour(clSurfaceContainer, 0.60, 1)
     readonly property color clCardBgHigh: alterColour(clSurfaceContainerHigh, 0.60, 1)
 
-    // The caelestia scheme's dark values; schemeLoader below overrides them once
-    // scheme.json is read. Components bind to these, so the defaults cannot drift.
+    // The scheme's dark values, overridden by schemeLoader once scheme.json is read.
     property color clSurface: "#0a0f0f"
     property color clSurfaceFg: "#dce8e6"
     property color clSurfaceContainer: "#131b1a"
@@ -87,8 +85,7 @@ Item {
     property bool ready: false
 
     // System info comes from the external helper, not an inline `python3 -c` one-liner:
-    // inline shell-command concatenation runs pre-auth, which review flagged. Qt.resolvedUrl
-    // resolves relative to this file, so the path is right wherever the shell is installed.
+    // that concatenation ran pre-auth, which review flagged.
     readonly property string sysinfoScriptPath: {
         var url = Qt.resolvedUrl("scripts/sysinfo.py").toString();
         return url.startsWith("file://") ? url.slice(7) : url;
@@ -98,9 +95,8 @@ Item {
     readonly property int liveTemp: Math.round(Cpu.temperature ?? 0)
     readonly property int liveRam: Math.round((Memory.percentage ?? 0) * 100)
     readonly property int liveDisk: Math.round((Storage.percentage ?? 0) * 100)
-    // The helper ships with the shell (/usr/bin for a package, ~/.local/bin for a
-    // source install). kscreenlocker inherits neither the session environment nor its
-    // PATH, so resolution happens in the commands below instead of here.
+    // kscreenlocker inherits neither the session environment nor its PATH, so the helper
+    // path is resolved in the commands below rather than here.
     readonly property string ipcBin: "PATH=\"${CAELESTIA_BIN_DIR:-$HOME/.local/bin}:$PATH\" caelestia-shell-ipc"
     property var liveMedia: ({})
     property var liveNotifs: []
@@ -165,8 +161,7 @@ Item {
         onTriggered: lockScreenUi.ready = true
     }
 
-    // XHR file:// is blocked inside kscreenlocker, so scheme.json and shell.json are
-    // read with cat.
+    // XHR file:// is blocked inside kscreenlocker, so these files are read with cat.
     Plasma5Support.DataSource {
         id: schemeLoader
 
@@ -594,7 +589,7 @@ Item {
             }
         }
 
-        // ── Landscape layout ──
+        // Landscape layout
         Item {
             id: landscapeContent
 
@@ -947,10 +942,9 @@ Item {
             }
         }
 
-        // ── Portrait layout ──
-        // TODO: this branch re-instantiates ClockWidget, ProfileAvatar, GreetingPill and
-        // PasswordPill instead of sharing the landscape instances via visible/states, so
-        // the two can drift. Refactor to one ColumnLayout with Layout.visible on isPortrait.
+        // Portrait layout
+        // TODO: re-instantiates ClockWidget, ProfileAvatar, GreetingPill and PasswordPill
+        // instead of sharing the landscape instances, so the two can drift.
         Item {
             id: portraitContent
 

@@ -86,7 +86,7 @@ Rectangle {
         return lines;
     }
 
-    // Large body logo size calculated from card bounds
+    // Large body logo size, from the card bounds.
     readonly property real bodyLogoSize: Math.round(Math.min(root.height * 0.48, root.width * 0.30))
 
     ColumnLayout {
@@ -223,7 +223,7 @@ Rectangle {
             }
         }
 
-        // Terminal dot palette — uses clTerms from scheme.json; empty while colors load
+        // Terminal dot palette, from clTerms in scheme.json; empty while colors load.
         RowLayout {
             id: coloursRow
             visible: (root.centerScale >= 0.85) && (root.height >= 170 * root.centerScale)

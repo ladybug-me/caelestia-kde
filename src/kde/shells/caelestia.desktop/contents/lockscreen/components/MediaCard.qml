@@ -32,7 +32,7 @@ Rectangle {
 
     implicitHeight: mediaContent.implicitHeight + 28 * root.centerScale
 
-    // Album art background — only shown when media is playing
+    // Album art background; only shown while media plays.
     Item {
         id: bgContainer
         anchors.fill: parent

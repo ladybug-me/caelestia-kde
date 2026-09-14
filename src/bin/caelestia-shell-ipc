@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-# caelestia-shell-ipc - manage the shell by config *path*, not by config name.
-# Naming by path avoids the ambiguity between ~/.config/quickshell/shell.qml and
-# ~/.config/quickshell/caelestia/shell.qml when both exist.
+# caelestia-shell-ipc - manage the shell by config *path*, not config name, which avoids
+# the ambiguity between ~/.config/quickshell/shell.qml and .../caelestia/shell.qml.
 #
 # Usage:
 #   caelestia-shell-ipc quit              # gracefully stop the shell
@@ -29,9 +28,8 @@ _quickshell() {
 
 QS="$(_quickshell)"
 
-# CAELESTIA_SHELL_CONFIG wins when set - both autostart scripts do, so anything
-# started from the session inherits it. Otherwise try the two install layouts, package
-# first; both can exist on one machine, and the variable is what tells them apart.
+# CAELESTIA_SHELL_CONFIG wins when set; both autostart scripts set it. Otherwise try the
+# two install layouts, package first - both can exist on one machine.
 resolve_shell_config() {
     local candidate
     for candidate in \
@@ -48,15 +46,13 @@ resolve_shell_config() {
 
 SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$(resolve_shell_config)}"
 
-# Start the shell without handing it, and everything it launches, a stdout that goes
-# nowhere: --daemonize points stdio at /dev/null and that state deadlocks Vesktop
-# (issue #402, reproducible with `vesktop >/dev/null 2>&1`). A transient user service
-# gives the same "returns immediately, survives the terminal" with stdio on the journal.
+# Starts the shell without handing it, and everything it launches, a stdout that goes
+# nowhere: --daemonize points stdio at /dev/null, which deadlocks Vesktop (issue #402).
+# A transient user service returns immediately with stdio on the journal instead.
 _start_shell() {
     if command -v systemd-run >/dev/null 2>&1; then
-        # Deliberately not `caelestia-shell`: that name is the login unit this install
-        # writes, and systemd refuses a transient unit colliding with a loaded one.
-        # A unit left behind by a crashed shell would make --unit fail.
+        # Deliberately not `caelestia-shell`: that name is the login unit, and systemd refuses a
+        # transient unit colliding with a loaded one.
         systemctl --user reset-failed caelestia-shell-start.service 2>/dev/null || true
         exec systemd-run --user --quiet --collect \
             --unit="caelestia-shell-start" \

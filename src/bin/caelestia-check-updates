@@ -105,8 +105,7 @@ if [ "$CAELESTIA_PENDING" -gt "${OLD_C:-0}" ] || [ "$SYSTEM_PENDING" -gt "${OLD_
             LAST_ID=$(cat "$NOTIF_ID_FILE")
         fi
 
-        # -t expires the toast, so an ignored notification does not keep the oneshot
-        # timer unit active forever and pause every later check.
+        # -t expires the toast, so an ignored notification cannot keep the oneshot unit active.
         NOTIF_ARGS=( -w -p -u normal -i system-software-update -a "Caelestia Updates" -t 300000 )
         if [ -n "$LAST_ID" ]; then
             NOTIF_ARGS+=( -r "$LAST_ID" )
@@ -114,8 +113,7 @@ if [ "$CAELESTIA_PENDING" -gt "${OLD_C:-0}" ] || [ "$SYSTEM_PENDING" -gt "${OLD_
         
         NOTIF_ARGS+=( -A "run=Install Updates" -A "close=Close" )
         
-        # -w blocks until the user clicks an action or dismisses, and prints the
-        # clicked action key.
+        # -w blocks until an action is clicked or the toast is dismissed, and prints the key.
         NOTIF_OUT=$(notify-send "${NOTIF_ARGS[@]}" "$TITLE" "$BODY")
         
         # Line 1 is the notification id, line 2 the clicked action.

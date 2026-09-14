@@ -19,13 +19,10 @@ SELF_DIR="$(dirname -- "$SELF")"
 
 # Which install this command belongs to, and where it keeps its files.
 #
-# Everywhere else is told (scripts get CAELESTIA_INSTALL_KIND, a session gets the paths
-# from environment.d), but this command is reached by name with nothing set and must
-# answer before it can find install-kind.sh, which owns the layout. So it decides from its
-# own location: /usr/bin means a package, anything else means a checkout.
-#
-# Using the checkout paths unconditionally put ~/.config/quickshell/caelestia ahead of
-# the installed /etc/xdg tree for everything `caelestia shell` spawned.
+# Everywhere else is told its install kind, but this command is reached by name with
+# nothing set and must answer before it can find install-kind.sh, so it decides from its
+# own location: /usr/bin is a package, anything else a checkout. Using the checkout paths
+# unconditionally put ~/.config/quickshell/caelestia ahead of the installed /etc/xdg tree.
 case "${CAELESTIA_INSTALL_KIND:-$( [[ "$BIN_DIR" == /usr/bin ]] && printf 'package' || printf 'source' )}" in
     package)
         KIND=package
@@ -41,24 +38,22 @@ case "${CAELESTIA_INSTALL_KIND:-$( [[ "$BIN_DIR" == /usr/bin ]] && printf 'packa
         QML_IMPORT_DEFAULT="$HOME/.local/lib/qt6/qml:$HOME/.config/quickshell/caelestia"
         LIB_DIR_DEFAULT="$HOME/.local/lib/caelestia"
         SHELL_CONFIG_DEFAULT="$HOME/.config/quickshell/caelestia/shell.qml"
-        # The tree this copy runs from (a developer sitting in a checkout), else the
-        # checkout `install` would use.
+        # The tree this copy runs from, else the checkout `install` would use.
         VERSION_FILE="$SELF_DIR/../../.github/version.env"
         [[ -f "$VERSION_FILE" ]] || VERSION_FILE="$CHECKOUT/.github/version.env"
         ;;
 esac
 SCRIPTS_DIR="$DATA_DIR/scripts"
 
-# CAELESTIA_DATA_DIR is read but never exported: for caelestia-color it names the
-# directory holding `matugen/` and `schemes/`, which for a checkout is src, not its root.
+# CAELESTIA_DATA_DIR is read but not exported: for a checkout it names src/, not the
+# repo root.
 export QML2_IMPORT_PATH="$QML_IMPORT_DEFAULT${QML2_IMPORT_PATH:+:$QML2_IMPORT_PATH}"
 export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-$LIB_DIR_DEFAULT}"
 export CAELESTIA_SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$SHELL_CONFIG_DEFAULT}"
 
 # helper <name> [args...]
 #
-# Hand off to the command implementing a subcommand. They live beside this file, so a
-# checkout and an installed copy both find them.
+# Runs the command implementing a subcommand. They live beside this file in both installs.
 helper() {
     local name="$1"
     shift
@@ -227,7 +222,7 @@ cmd_screenshot() {
     helper caelestia-screenshot "${args[@]}"
 }
 
-# The step scripts: /usr/share/caelestia for a package, the checkout otherwise. The layout
+# Step scripts: /usr/share/caelestia for a package, the checkout otherwise. The layout
 # above already answered this; an earlier version searched four candidate directories.
 has_step_scripts() {
     [[ -f "$SCRIPTS_DIR/03-deploy-configs.sh" ]]
@@ -235,16 +230,13 @@ has_step_scripts() {
 
 # The user's half, from a package.
 #
-# A package owns /usr and /etc, so there is no machine to set up and nothing to build:
-# only the configuration the user's own files carry. These are the checkout installer's
-# own step scripts, told CAELESTIA_INSTALL_KIND=package so the sections writing
-# package-owned files stay out (parity-6).
+# A package owns /usr and /etc, so only the configuration the user's own files carry is
+# left. These are the checkout installer's own step scripts, told
+# CAELESTIA_INSTALL_KIND=package so the package-owned sections stay out (parity-6).
 #
-# The list is that half in installer order. The steps before it install packages, which
-# the package manager already did; the ones after it install optional apps, which are the
-# package's business. 05-sddm-theme.sh is here because choosing a login screen is the
-# user's half: the package ships the theme and the sync helper, and what is left is the
-# posthook and the greeter's own files.
+# The list is that half in installer order: steps that install packages or optional apps
+# belong to the package manager. 05-sddm-theme.sh is here because choosing a login screen
+# is the user's half - the package ships the theme and helper, leaving the posthook.
 packaged_install() {
     if ! has_step_scripts; then
         cat >&2 <<EOF
@@ -256,8 +248,8 @@ EOF
         return 1
     fi
 
-    # Only a package's install runs from here. A checkout has its own installer, which
-    # also does the machine's half; running half of it would leave those files unwritten.
+    # Only a package's install runs from here: a checkout has its own installer, which also
+    # does the machine's half, so running half of it would leave those files unwritten.
     if [[ "$KIND" != package ]]; then
         printf '[ERR] %s is a checkout, not a package install.\n\n  Run its installer instead: bash %s/install.sh\n' "$DATA_DIR" "$DATA_DIR" >&2
         return 1
@@ -289,10 +281,8 @@ EOF
     done
 
     echo "PROGRESS: done: User configuration applied"
-    # Not just "log out and back in": 10-autostart enables the unit, and enabling does
-    # not start it once graphical-session.target is already reached - which it is if the
-    # user is reading this inside their session. Offering that would send someone who
-    # wants the shell now to the logout screen for nothing.
+    # Not just "log out and back in": enabling a unit does not start it once
+    # graphical-session.target is reached, which it is for a user reading this in-session.
     echo "The shell starts at your next login. To start it now:"
     echo "  systemctl --user start caelestia-shell.service"
 }
@@ -328,14 +318,12 @@ EOF
 }
 
 cmd_version() {
-    # From the helper CMake installs into INSTALL_LIBDIR, which is what upstream's CLI
-    # reads too: compiled with the build's version, so on a package it is what pacman
-    # installed and cannot go stale between an upgrade and the next `caelestia install`.
-    # An unbuilt checkout has no helper and falls back to version.env.
+    # From the helper CMake installs into INSTALL_LIBDIR (what upstream's CLI reads too):
+    # compiled with the build's version, so it cannot go stale on a package. An unbuilt
+    # checkout falls back to version.env.
     local version=""
     if [[ -x "$CAELESTIA_LIB_DIR/version" ]]; then
-        # `caelestia-shell 2.4.3, revision <hash>, distributed by: ...` - field 2 minus
-        # the trailing comma.
+        # `caelestia-shell 2.4.3, revision <hash>, ...`: field 2 minus its trailing comma.
         version="$("$CAELESTIA_LIB_DIR/version" -s 2>/dev/null | awk '{ sub(/,/, "", $2); print $2 }')"
     fi
     if [[ -z "$version" && -f "$VERSION_FILE" ]]; then

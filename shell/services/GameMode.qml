@@ -30,11 +30,7 @@ Singleton {
     // toggle is never undone by a game closing.
     property bool autoEnabled: false
 
-    readonly property var _windows: {
-        if (Kwin.windowList.length > 0)
-            return Kwin.windowList;
-        return HyprlandData.windowList;
-    }
+    readonly property var _windows: Kwin.windowList
 
     function _matchesRule(w): bool {
         const rules = GlobalConfig.utilities.gameMode.autoEnableRegexes || [];

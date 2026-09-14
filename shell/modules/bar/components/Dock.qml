@@ -4,7 +4,6 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Io
 import Quickshell.Widgets
 import Caelestia
@@ -926,12 +925,7 @@ Item {
         root.modelUpdateTrigger += 1;
     }
 
-    property var _toplevels: {
-        if (Kwin.windowList.length > 0) {
-            return Kwin.windowList;
-        }
-        return HyprlandData.windowList;
-    }
+    property var _toplevels: Kwin.windowList
 
     on_ToplevelsChanged: {
         root.rebuildModel()
@@ -946,12 +940,7 @@ Item {
         onTriggered: root.rebuildModel()
     }
 
-    property var activeTop: {
-        if (Kwin.activeWindow && Kwin.activeWindow.address) {
-            return Kwin.activeWindow;
-        }
-        return Hyprland.activeToplevel || HyprlandData.activeWindow;
-    }
+    property var activeTop: (Kwin.activeWindow && Kwin.activeWindow.address) ? Kwin.activeWindow : null
 
     onActiveTopChanged: {
         root.rebuildModel()

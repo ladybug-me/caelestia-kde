@@ -161,6 +161,22 @@ Singleton {
             KWinWorkspaceState.switchTo(wsId);
     }
 
+    function createWorkspace(name: string): void {
+        KWinWorkspaceState.createWorkspace(name ?? "");
+    }
+
+    function removeWorkspace(id: string): void {
+        KWinWorkspaceState.removeWorkspace(id);
+    }
+
+    function indexForId(id: string): int {
+        return KWinWorkspaceState.indexForId(id);
+    }
+
+    function uuidForIndex(index: int): string {
+        return KWinWorkspaceState.uuidForIndex(index);
+    }
+
     function setDesktop(index: int): void {
         KWinWorkspaceState.setDesktop(index);
     }

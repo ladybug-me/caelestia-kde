@@ -250,9 +250,7 @@ Item {
             if (specialWs?.length > 0)
                 Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${specialWs.slice(8)}")` : `togglespecialworkspace ${specialWs.slice(8)}`);
             else {
-                const activeId = true
-                    ? Kwin.activeWsId
-                    : Kwin.activeWsId;
+                const activeId = Kwin.activeWsId;
                 if (angleDelta.y < 0 || activeId > 1)
                     Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ workspace = "r${angleDelta.y > 0 ? "-" : "+"}1" })` : `workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
             }

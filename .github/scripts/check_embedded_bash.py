@@ -80,8 +80,7 @@ def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Ele
         if ch == "\\" and i + 1 < len(src):
             nxt = src[i + 1]
             if quote == "`":
-                # Keep backslash escapes verbatim except \` and \${ which are
-                # JS escapes for literal backtick / literal bash parameter.
+                # Keep escapes verbatim except \` and \${ (JS escapes for a literal backtick / param).
                 if nxt == "`":
                     out.append("`")
                 elif nxt == "$":
@@ -91,8 +90,7 @@ def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Ele
                     out.append("\\" + nxt)
                 i += 2
                 continue
-            # Regular quoted string: keep escapes verbatim (they are for the
-            # shell, e.g. \" inside a bash -c double-quoted script).
+            # Regular quoted string: escapes belong to the shell (e.g. \" in a bash -c script).
             out.append("\\" + nxt)
             i += 2
             continue
@@ -100,7 +98,7 @@ def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Ele
             return _Element("".join(out), start_line, is_script=True, is_template=(quote == "`")), i + 1
         out.append(ch)
         i += 1
-    # Unterminated string — treat what we have as the element and continue.
+    # Unterminated string: take what we have and continue.
     return _Element("".join(out), start_line, is_script=True, is_template=(quote == "`")), i
 
 
@@ -139,7 +137,7 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
     """Return string elements that follow an `interp -c` sequence."""
     scripts: list[_Element] = []
     for idx, el in enumerate(elements):
-        # Interpreter name ("bash", 'sh', /bin/sh, ...) — quoted or bare.
+        # Interpreter name ("bash", 'sh', /bin/sh, ...), quoted or bare.
         if INTERP_RE.match(el.text):
             for k in range(idx + 1, len(elements)):
                 nxt = elements[k]
@@ -148,7 +146,7 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
                         scripts.append(elements[k + 1])
                     break
                 if elements[k].is_script:
-                    # A string argument appeared before `-c` — not a script form
+                    # A string argument before `-c`: not a script form.
                     break
     return scripts
 
@@ -156,8 +154,7 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
 def _sanitize_script(text: str, is_template: bool) -> str:
     """Remove JS-only constructs so the remainder is pure bash."""
     if is_template:
-        # Unescaped ${...} here is JS interpolation, not bash source; in "..." / '...'
-        # strings it is literal and must be kept.
+        # Unescaped ${...} here is JS interpolation; inside "..." / '...' it is literal.
         text = JS_INTERP_RE.sub("true", text)
     return text
 

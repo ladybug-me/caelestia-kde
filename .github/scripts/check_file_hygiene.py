@@ -37,8 +37,8 @@ SKIP_PATTERNS = [
     "json.hpp",
 ]
 
-# Skipped for whitespace/tab checks: vendored or generated. `templates` covers the
-# matugen theming templates under src/matugen/templates/, which are upstream files.
+# Skipped for whitespace/tab checks (vendored or generated). `templates` is the
+# upstream matugen templates under src/matugen/templates/.
 STYLE_SKIP_DIRS = {"QMLTermWidget", "build", "__pycache__", ".git", "templates"}
 
 
@@ -308,8 +308,7 @@ def check_shell_executable(changed_files: list[str]) -> None:
 
 
 def main() -> int:
-    # --all scans every git-tracked file (for push events, where there is no PR diff).
-    # Without it, only changed files are checked.
+    # --all scans every git-tracked file (a push has no PR diff); otherwise changed files.
     all_files = "--all" in sys.argv
     if all_files:
         result = subprocess.run(

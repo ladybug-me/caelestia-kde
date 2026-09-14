@@ -176,8 +176,7 @@ def _skip_regex(text: str, i: int, line: int) -> tuple[int, int]:
 def scan(text: str) -> list[str]:
     """Return human-readable structural issues found in a QML file's text."""
     issues: list[str] = []
-    # (delimiter, line, is_a_QtObject_scope) - the third field is meaningful
-    # only for '{' entries and drives the no-default-property check below.
+    # (delimiter, line, is_a_QtObject_scope); the third field only matters for '{' entries.
     stack: list[tuple[str, int, bool]] = []
     i = 0
     n = len(text)
@@ -194,8 +193,7 @@ def scan(text: str) -> list[str]:
             i += 1
             continue
 
-        # Strings are checked before comments: a // or /* inside a quoted
-        # string is string content, not a comment.
+        # Strings before comments: a // or /* inside a string is content, not a comment.
         if c in "\"'":
             quote = c
             i += 1
@@ -236,8 +234,7 @@ def scan(text: str) -> list[str]:
                 i += 1
             continue
 
-        # A bare `component` token is the inline-component keyword (it is
-        # reserved in QML). Legal only inside an object, i.e. brace depth > 0.
+        # A bare `component` is the reserved inline-component keyword; legal only at depth > 0.
         if text.startswith("component", i):
             prev = text[i - 1] if i > 0 else ""
             after = text[i + 9] if i + 9 < n else ""
@@ -250,8 +247,7 @@ def scan(text: str) -> list[str]:
             i += 9
             continue
 
-        # Identifiers: remember the last one so a following '{' can be
-        # classified as an object declaration (type name) vs a JS block.
+        # Keep the last identifier so a following '{' is classified as object vs JS block.
         if c.isalpha() or c == "_":
             j = i
             while j < n and (text[j].isalnum() or text[j] == "_"):
@@ -270,8 +266,7 @@ def scan(text: str) -> list[str]:
         if c in "([{":
             if c == "{":
                 if pending_qtobject:
-                    # A QtObject declared directly inside another QtObject is
-                    # also an object declaration and equally invalid.
+                    # A QtObject inside another QtObject is also an object declaration, equally invalid.
                     if pending_at_stmt_start and stack and stack[-1][2]:
                         issues.append(
                             f"line {line}: object 'QtObject' declared as a child of "

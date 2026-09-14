@@ -169,8 +169,8 @@ class ShellSurfaceTests(unittest.TestCase):
                 match = re.match(r'^\s*description:\s*"([^"]*)"', line)
                 if not match or not match.group(1):
                     continue
-                # Values substituted into generated QML come from the caller, so
-                # translating them belongs at the call site, not here.
+                # Values substituted into generated QML come from the caller: translating them
+                # belongs at the call site.
                 if "${" in match.group(1):
                     continue
                 offenders.append(f"{path.relative_to(ROOT).as_posix()}:{number}")
@@ -692,8 +692,7 @@ class MetadataConsistencyTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        # shell/CMakeLists.txt must derive its version from version.env (the
-        # single source of truth) instead of hardcoding its own copy.
+        # shell/CMakeLists.txt must derive its version from version.env, not hardcode a copy.
         self.assertIn(
             ".github/version.env",
             cmake_text,
@@ -962,8 +961,7 @@ class ScriptNumberingTests(unittest.TestCase):
             if match:
                 numbers.add(int(match.group(1)))
 
-        # We don't require strict consecutiveness (some numbers may be intentionally
-        # skipped), but we verify there are no wildly out-of-range numbers.
+        # Consecutiveness is not required (numbers may be skipped); only out-of-range values are.
         if numbers:
             max_num = max(numbers)
             self.assertLessEqual(

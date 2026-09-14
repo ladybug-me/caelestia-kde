@@ -58,9 +58,8 @@ PROPERTY_LIST_RE = re.compile(r"\bproperty\s+list<([A-Z]\w*)>")
 # `Layout.fillWidth`, `Text.AlignHCenter`.
 DOT_ACCESS_RE = re.compile(r"\b([A-Z]\w*)\.\w+")
 
-# QML builtins and JS globals that never need a project import, plus the QtQml-module
-# types (Connections, Timer, Binding) that any Qt/Quickshell import brings in
-# transitively.
+# QML builtins, JS globals, and the QtQml types (Connections, Timer, Binding) that any
+# Qt/Quickshell import brings in transitively - none need a project import.
 ALWAYS_OK = {
     "Component", "QtObject", "Qt", "Math", "JSON", "Date", "Number", "String",
     "Array", "Object", "Boolean", "RegExp", "Symbol", "Map", "Set", "Promise",
@@ -71,8 +70,8 @@ ALWAYS_OK = {
 CAELESTIA_CLASS_RE = re.compile(r"class\s+(\w+)\s*(?:final\s*)?(?::[^{;]*)?\{")
 CAELESTIA_NAMED_ELEMENT_RE = re.compile(r'QML_NAMED_ELEMENT\(\s*"(\w+)"\s*\)')
 
-# Real QML modules are Capitalized (Qt*, Quickshell*, Caelestia*, M3Shapes), except
-# the "qs" pseudo-namespace; anything else is a false match from embedded script text.
+# Real modules are Capitalized (Qt*, Quickshell*, Caelestia*, M3Shapes) or "qs";
+# anything else is a false match from embedded script text.
 VALID_BAREWORD_MODULE_RE = re.compile(r"^(qs(\.[\w.]+)?|[A-Z][\w.]*)$")
 
 
@@ -81,8 +80,7 @@ def strip_comments(text: str) -> str:
 
 
 def strip_imports(text: str) -> str:
-    # Otherwise a DOT_ACCESS_RE match on `import Caelestia.Services` counts as a
-    # "usage" of the bare `Caelestia` type.
+    # Otherwise DOT_ACCESS_RE reads `import Caelestia.Services` as a use of `Caelestia`.
     return IMPORT_RE.sub("", text)
 
 
@@ -182,8 +180,8 @@ def main() -> int:
     local_registry = build_local_registry(shell_root)
     caelestia_registry = build_caelestia_registry(plugin_src_root)
 
-    # Pass 1: parse every file, and collect all qs.* modules ever imported so
-    # the qs registry only has to stat the directories actually referenced.
+    # Pass 1: parse every file and collect the qs.* modules imported, so the registry
+    # only stats the directories actually referenced.
     parsed: list[tuple[Path, set[str], list[str], set[str], set[str]]] = []
     all_qs_modules: set[str] = set()
     for qml_file in qml_files:
@@ -200,13 +198,10 @@ def main() -> int:
 
     # Pass 2: the correlation registry for standard Qt / Quickshell / M3Shapes modules.
     #
-    # Statistical correlation (majority vote, greedy set-cover) credits whichever module
-    # co-occurs most, not the one that defines the type: QtQuick.Loader never gets
-    # credited because rarer coincidentally co-imported modules "explain away" its uses.
-    #
+    # Statistical correlation credits whichever module co-occurs most, not the one that
+    # defines the type (QtQuick.Loader loses to rarer coincidentally co-imported modules).
     # So only unambiguous evidence counts: a file whose only standard import is a single
-    # module M proves every uppercase type it uses comes from M. Two such files per type
-    # are required, to filter out one-off typos and unused imports.
+    # module M proves its uppercase types come from M. Two such files per type.
     per_file_unresolved: list[tuple[Path, set[str], set[str], set[str]]] = []
     type_module_evidence: dict[str, Counter[str]] = defaultdict(Counter)
     for qml_file, modules, relative_imports, alias_names, used_types in parsed:

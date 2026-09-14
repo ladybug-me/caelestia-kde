@@ -31,9 +31,8 @@ is_executable_script() {
     head -c 30 "$file" 2>/dev/null | grep -qE '^#!.*/(ba)?sh'
 }
 
-# Every tracked shell script: *.sh plus extensionless files with a shell shebang
-# (e.g. src/bin/caelestia-update). Enumerating by shebang catches the easy-to-forget
-# extensionless ones.
+# Every tracked shell script: *.sh plus extensionless files with a shebang (e.g.
+# src/bin/caelestia-update), which are easy to forget.
 get_shell_files() {
     git ls-files '*.sh'
     git ls-files | while IFS= read -r f; do
@@ -81,16 +80,9 @@ fi
 # 3. Strict mode (set -euo pipefail)
 echo ""
 echo -e "${BOLD}=== Strict Mode Check ===${RESET}"
-# Enforced for scripts/ where every script follows the convention. src/bin/*
-# are covered by syntax + shellcheck above but deliberately vary their `set`
-# flags (e.g. caelestia-check-updates relies on explicit exits), so they are
-# not forced to -euo here.
-# scripts/lib/* are sourced helpers, not entry points: setting -e there would
-# silently impose it on every caller, including ones that deliberately run
-# without it.
-# A step whose header documents that it must never fail the install opts out
-# with a `ci:allow-no-strict-mode` marker, the same way `ci:allow-curl-pipe`
-# opts out of the pattern check below.
+# Enforced for scripts/. src/bin/* vary their `set` flags on purpose (explicit exits)
+# and scripts/lib/* are sourced helpers, where -e would reach every caller. A step
+# that must never fail the install opts out with `ci:allow-no-strict-mode`.
 for f in $(git ls-files 'scripts/*.sh' 2>/dev/null | grep -v '^scripts/lib/' || true); do
     grep -q 'ci:allow-no-strict-mode' "$f" 2>/dev/null && continue
     if ! grep -qE 'set\s+-euo\s+pipefail|set\s+-eu\s+-o\s+pipefail' "$f" 2>/dev/null; then
@@ -106,7 +98,7 @@ echo ""
 echo -e "${BOLD}=== Unsafe Pattern Detection ===${RESET}"
 CURL_PIPE_FOUND=0
 for f in $(git ls-files '*.sh'); do
-    # Skip this checker itself — it describes patterns, not uses them.
+    # Skip this checker itself: it describes patterns, not uses them.
     [[ "$f" == ".github/scripts/check_shell_quality.sh" ]] && continue
     # Skip comment-only lines so doc strings don't self-match.
     if grep -nE 'curl\s.*\|\s*(sudo\s+)?(ba)?sh\b' "$f" 2>/dev/null | grep -vE '(^[0-9]+:\s*#|ci:allow-curl-pipe)'; then

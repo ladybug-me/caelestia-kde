@@ -39,7 +39,7 @@ RESET = "\033[0m"
 PROP_RE = re.compile(r"CONFIG_(?:GLOBAL_)?(?:ENUM_)?(?:PROPERTY|LIST)\(\s*[^,]+,\s*(\w+)", re.DOTALL)
 SUBOBJ_RE = re.compile(r"CONFIG_SUBOBJECT\(\s*(\w+),\s*(\w+)", re.DOTALL)
 CLASS_RE = re.compile(r"class\s+(\w+)\s*:\s*public\s+(\w+)")
-# Computed/non-config Q_PROPERTYs on config classes (e.g. BorderConfig.minThickness)
+# Computed, non-config Q_PROPERTYs (e.g. BorderConfig.minThickness).
 QPROP_RE = re.compile(r"Q_PROPERTY\(\s*[A-Za-z0-9_:]+\s+(\w+)\s+READ")
 ATTACHED_QPROP_RE = re.compile(
     r'Q_PROPERTY\(\s*const\s+caelestia::config::(\w+)\*\s+(\w+)\s+READ'
@@ -69,8 +69,7 @@ def parse_headers() -> tuple[dict[str, dict[str, str]], dict[str, str]]:
         except OSError:
             continue
 
-        # Positions of class declarations, in order, so each member match can be
-        # attributed to the class body that contains it.
+        # Class declarations in order, so a member match can be attributed to its body.
         class_spans: list[tuple[int, str]] = []
         for m in CLASS_RE.finditer(text):
             if m.group(1) == "ConfigObject":
@@ -96,21 +95,20 @@ def parse_headers() -> tuple[dict[str, dict[str, str]], dict[str, str]]:
         for m in SUBOBJ_RE.finditer(text):
             add_member(owner(m.start()), m.group(2), m.group(1))
         for m in QPROP_RE.finditer(text):
-            # Skip the attached type's own Q_PROPERTYs (handled separately); only
-            # pick up computed properties on regular config classes.
+            # Only computed properties on regular config classes; the attached type is separate.
             if owner(m.start()) not in (None, "Config"):
                 add_member(owner(m.start()), m.group(1), LEAF)
 
-        # Top-level roots: Config (attached type) declares Q_PROPERTYs directly.
+        # Top-level roots: the Config attached type declares Q_PROPERTYs directly.
         if hdr.name == "configattached.hpp":
             for m in ATTACHED_QPROP_RE.finditer(text):
                 root_props[m.group(2)] = m.group(1)
             if re.search(r"Q_PROPERTY\(QString screen", text):
                 root_props["screen"] = LEAF
 
-    # GlobalConfig (singleton) sub-objects + its own config properties.
-    # The singleton is ConfigSingleton (QML_NAMED_ELEMENT GlobalConfig), which
-    # wraps ConfigRoot - so the root node's members are the singleton's members.
+    # GlobalConfig sub-objects and its own properties. The singleton is ConfigSingleton
+    # (QML_NAMED_ELEMENT GlobalConfig) wrapping ConfigRoot, so the root node's members
+    # are the singleton's.
     globals_cls = class_members.get("ConfigRoot", {})
     root_props.update(globals_cls)
     for method in ROOT_METHODS:
@@ -127,12 +125,11 @@ def resolve(class_members: dict[str, dict[str, str]], root_props: dict[str, str]
             return i
         member = props[name]
         if member == METHOD:
-            # A callable — nothing statically resolvable after it.
+            # A callable: nothing statically resolvable after it.
             return None
         if member == LEAF:
-            # Reached a concrete value (array/string/number). Anything after it
-            # is JS member access on that value (e.g. .includes, .length, .join)
-            # and cannot be verified statically.
+            # A concrete value (array/string/number): what follows is JS member access on it
+            # (.includes, .length, .join), which cannot be verified statically.
             return None
         if i == len(chain) - 1:
             return None
@@ -188,9 +185,8 @@ def strip_comments_and_strings(src: str) -> str:
     return "".join(out)
 
 
-# Chain starts at a standalone Config/GlobalConfig token, optionally reached
-# through an id like `root.Config.` — the lookbehind rejects the `Config`
-# substring inside longer identifiers (e.g. GlobalConfig's "Config" part).
+# A chain starting at a standalone Config/GlobalConfig token, optionally via an id
+# like `root.Config.`. The lookbehind rejects the `Config` inside longer identifiers.
 CHAIN_RE = re.compile(r"(?<![A-Za-z0-9_$])(Config|GlobalConfig)\.([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)")
 
 

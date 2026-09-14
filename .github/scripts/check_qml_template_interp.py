@@ -49,9 +49,8 @@ GREEN = "\033[0;32m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
 
-# Bash parameter-expansion bodies that are never valid JavaScript. A legitimate
-# JS interpolation here is an identifier/member/call expression, none of which
-# match these forms.
+# Bash parameter-expansion bodies, never valid JavaScript (a legitimate JS
+# interpolation here is an identifier/member/call expression).
 BASH_INTERP_RE = re.compile(
     r"#"            # ${#var} length, ${var#pat} / ${var##pat} removal, ${1#v}
     r"|%"           # ${var%pat} / ${var%%pat} removal
@@ -73,8 +72,7 @@ def _unescaped_interpolations(src: str) -> list[tuple[int, str, bool]]:
     while i < n:
         ch = src[i]
         if ch == "\\" and i + 1 < n:
-            # Escaped char (e.g. \` or \${): skip both so an escaped
-            # interpolation is not mistaken for an unescaped one.
+            # Escaped char (\` or \${): skip both, so an escaped interpolation is not flagged.
             i += 2
             continue
         if ch == "\n":
@@ -96,9 +94,8 @@ def _unescaped_interpolations(src: str) -> list[tuple[int, str, bool]]:
                     depth -= 1
                 j += 1
             body = src[body_start:j - 1]
-            # Anything on a comment line is prose: the engine interpolates it
-            # before bash is ever handed the script, and bash would ignore it
-            # afterwards. Only body shape has to be judged in code.
+            # On a comment line everything is prose: the engine interpolates it before bash sees
+            # the script. Only body shape has to be judged in code.
             in_comment = src[line_start:i].lstrip().startswith("#")
             if in_comment or BASH_INTERP_RE.search(body):
                 found.append((i, body, in_comment))

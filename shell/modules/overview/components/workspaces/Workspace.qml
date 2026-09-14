@@ -242,6 +242,7 @@ StyledRect {
             model: ScriptModel {
                 values: {
                     const wsId = root.ws;
+                    const _ = root.kwinWindowList;
                     let windows = [];
                     const wins = Kwin.windowsForWorkspace(wsId, false);
                     for (let i = 0; i < wins.length; ++i) {

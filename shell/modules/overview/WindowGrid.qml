@@ -79,8 +79,7 @@ Item {
         if (listView.currentIndex >= wsList.length)
             return [];
         const wsId = wsList[listView.currentIndex].index;
-        // windowsForWorkspace already scopes to the workspace; the overview is
-        // per-screen, so drop anything living on another output.
+        const _ = Kwin.windowList;
         return Kwin.windowsForWorkspace(wsId, false).filter(w => w.output === root.screen.name);
     }
 
@@ -665,8 +664,6 @@ for (let i = 0; i < count; ++i) {
                                         elide: Text.ElideRight
                                         Layout.fillWidth: true
                                     }
-
-                                    Behavior on opacity { Anim {} }
                                 }
                             }
 

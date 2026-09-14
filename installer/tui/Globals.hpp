@@ -11,10 +11,10 @@ extern json g_theme;
 extern json g_menu;
 extern std::unordered_map<std::string, std::string> g_theme_colors;
 
-// Startup problems the user must be told about, drawn by the UI because the alternate
-// screen hides stderr: a missing or unparsable data file, or missing step scripts. The
-// usual cause is a prebuilt installer binary from an older release looking for its data
-// where that release kept it; rebuilding via setup.sh fixes it.
+// Startup problems the UI must draw, since the alternate screen hides stderr: a missing
+// or unparsable data file, or missing step scripts. Usually a prebuilt installer binary
+// from an older release looking for its data where that release kept it; rebuilding via
+// setup.sh fixes it.
 extern std::vector<std::string> g_startup_problems;
 
 extern std::atomic<bool> g_resized;

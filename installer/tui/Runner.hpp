@@ -3,8 +3,7 @@
 #include <vector>
 
 namespace Runner {
-    // A phase is a named group of steps; the progress and review screens group by it.
-    // See CONTEXT.md (Installer).
+    // A named group of steps; the progress and review screens group by it.
     struct Phase {
         std::string id;
         std::string name;

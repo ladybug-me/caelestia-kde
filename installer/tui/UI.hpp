@@ -23,12 +23,11 @@ namespace UI {
     // Returns true to begin installation, false to go back to configuration.
     bool review_screen();
 
-    // Full-screen live tail of the install log; returns on L/Tab/Esc.
-    // Blocking: only safe where no step is still running (Complete screen).
+    // Blocking full-screen log tail; returns on L/Tab/Esc. Only safe on the Complete screen.
     void log_view(const std::string& log_path);
 
-    // The runner keeps one instance across steps, so scroll/follow position survives
-    // while the install advances underneath an open log view.
+    // The runner keeps one instance across steps, so scroll/follow position survives while
+    // the install advances underneath.
     struct LogViewState {
         bool redraw = true;   // force a full redraw on the next tick
         long last_size = -1;  // install.log size at the last parse
@@ -38,12 +37,11 @@ namespace UI {
         bool follow = true;   // auto-scroll to the newest line
     };
 
-    // Parse + redraw one frame of the full-screen log view. Non-blocking;
-    // call repeatedly while the view is on screen (handles resize itself).
+    // Parses and redraws one frame of the log view; non-blocking, handles resize itself.
     void log_view_tick(const std::string& log_path, LogViewState& state);
 
-    // Apply one key to the log view state (scroll/follow/next issue).
-    // Returns true when the key asks to leave the view (L/Tab/Esc/Ctrl+C).
+    // Applies one key to the log view (scroll/follow/next issue); true when the key asks to
+    // leave (L/Tab/Esc/Ctrl+C).
     bool log_view_key(const std::string& key, LogViewState& state);
 
     void complete_screen();

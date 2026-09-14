@@ -62,7 +62,7 @@ namespace Input {
                 if (errno == EINTR) {
                     if (g_resized) return "resize";
                     if (g_sigint_received || g_sigterm_received) return "signal_interrupt";
-                    // Spurious EINTR — retry
+                    // Spurious EINTR: retry.
                     continue;
                 }
             }

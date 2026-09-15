@@ -4,6 +4,7 @@ import "blur"
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
+import QtQuick.Layouts
 import QtCore
 import Quickshell
 import Quickshell.Hyprland
@@ -86,6 +87,19 @@ StyledWindow {
     // there is often nothing left to read.
     property string focusReturn: ""
     property int workspaceReturn: -1
+    readonly property string currentLayerName: root.layerToString(root.WlrLayershell.layer)
+
+    function layerToString(layer: int): string {
+        if (layer === WlrLayer.Overlay)
+            return "Overlay";
+        if (layer === WlrLayer.Top)
+            return "Top";
+        if (layer === WlrLayer.Bottom)
+            return "Bottom";
+        if (layer === WlrLayer.Background)
+            return "Background";
+        return `Unknown (${layer})`;
+    }
 
     onHasFullscreenChanged: {
         if (!hasFullscreen)
@@ -734,6 +748,33 @@ StyledWindow {
         }
     }
 
+    PanelWindow {
+        id: layerOsdWindow
+
+        screen: root.screen
+        color: "transparent"
+        visible: true
+        WlrLayershell.namespace: "osd"
+        WlrLayershell.layer: WlrLayer.Overlay
+        WlrLayershell.exclusionMode: ExclusionMode.Ignore
+        WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+        anchors.top: true
+        anchors.bottom: true
+        anchors.left: true
+        anchors.right: true
+        mask: Region {
+            item: hud
+        }
+
+        ConstantLayerHud {
+            id: hud
+
+            anchors.top: parent.top
+            anchors.topMargin: Tokens.spacing.large
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+    }
+
     Config.screen: screen.name
     BackgroundEffect.blurRegion: Region {
         Region { x: -10; y: -10; width: 1; height: 1 } // Prevent fallback to full-window blur when empty
@@ -946,5 +987,94 @@ StyledWindow {
         radius: Tokens.rounding.extraLarge
         deformScale: (GlobalConfig.appearance.blurMask || !GlobalConfig.appearance.transparency.enabled) ? ((deformAmount * Config.appearance.deformScale) / 10000) : 0
         Config.screen: root.screen.name
+    }
+
+    component ConstantLayerHud: Rectangle {
+        id: hud
+
+        z: 999999
+        color: Qt.rgba(0.83, 0.18, 0.18, 0.95)
+        border.color: "#ffcdd2"
+        border.width: 1
+        radius: Tokens.rounding.medium
+        implicitWidth: hudColumn.implicitWidth + Tokens.padding.large * 2
+        implicitHeight: hudColumn.implicitHeight + Tokens.padding.medium * 2
+
+        DragHandler {
+            target: hud
+        }
+
+        ColumnLayout {
+            id: hudColumn
+
+            anchors.centerIn: parent
+            spacing: Tokens.spacing.small
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Tokens.spacing.small
+
+                Rectangle {
+                    implicitWidth: 8
+                    implicitHeight: 8
+                    radius: 4
+                    color: "#ffffff"
+                }
+
+                StyledText {
+                    text: `Layer OSD [${root.currentLayerName}]`
+                    color: "#ffffff"
+                    font: Tokens.font.title.small
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.preferredHeight: 1
+                color: Qt.rgba(1, 1, 1, 0.4)
+            }
+
+            GridLayout {
+                columns: 2
+                columnSpacing: Tokens.spacing.medium
+                rowSpacing: Tokens.spacing.extraSmall
+
+                Repeater {
+                    model: [
+                        { name: "Bar", active: bar.visible, layer: root.currentLayerName },
+                        { name: "Dashboard", active: visibilities.dashboard, layer: root.currentLayerName },
+                        { name: "Launcher", active: visibilities.launcher, layer: root.currentLayerName },
+                        { name: "Session", active: visibilities.session, layer: root.currentLayerName },
+                        { name: "Sidebar", active: visibilities.sidebar, layer: root.currentLayerName },
+                        { name: "OSD", active: visibilities.osd, layer: root.currentLayerName },
+                        { name: "Notifications", active: panels.notifications.visible, layer: root.currentLayerName },
+                        { name: "Utilities", active: visibilities.utilities, layer: root.currentLayerName },
+                        { name: "Popouts", active: panels.popouts.hasCurrent || panels.popouts.isDetached, layer: root.currentLayerName },
+                        { name: "Overview", active: visibilities.overview, layer: root.currentLayerName },
+                        { name: "Toasts", active: panels.toasts.visible, layer: root.currentLayerName },
+                        { name: "ContextMenu", active: desktopContextMenu.expanded, layer: root.currentLayerName }
+                    ]
+
+                    RowLayout {
+                        required property var modelData
+
+                        spacing: Tokens.spacing.small
+
+                        Rectangle {
+                            implicitWidth: 6
+                            implicitHeight: 6
+                            radius: 3
+                            color: modelData.active ? "#a7ffeb" : Qt.rgba(1, 1, 1, 0.5)
+                        }
+
+                        StyledText {
+                            text: `${modelData.name}: ${modelData.layer}${modelData.active ? " (active)" : ""}`
+                            color: modelData.active ? "#ffffff" : Qt.rgba(1, 1, 1, 0.75)
+                            font: Tokens.font.label.small
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ IconImage {
 
     required property color colour
 
-    asynchronous: true
+    asynchronous: false // FIX 759: unsafe with KIconLoader
 
     layer.enabled: true
     layer.effect: Colouriser {

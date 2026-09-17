@@ -38,7 +38,7 @@ Item {
 
         IconImage {
             source: root.source
-            asynchronous: true
+            asynchronous: false // FIX 759: unsafe with KIconLoader
         }
     }
 }

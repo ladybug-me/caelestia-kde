@@ -49,7 +49,7 @@ PageBase {
             spacing: Tokens.spacing.large
 
             IconImage {
-                asynchronous: true
+                asynchronous: false // FIX 759: unsafe with KIconLoader
                 implicitSize: Math.round(Tokens.font.icon.large.pointSize * 3)
                 source: Quickshell.iconPath(root.app?.icon, "image-missing")
             }

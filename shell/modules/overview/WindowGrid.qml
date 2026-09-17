@@ -553,7 +553,7 @@ Item {
                             // one animation drives both, and they cannot drift.
                             IconImage {
                                 anchors.centerIn: parent
-                                asynchronous: true
+                                asynchronous: false // FIX 759: unsafe with KIconLoader
                                 implicitSize: Math.round(Math.min(activeWin.width, activeWin.height) * 0.62)
                                 opacity: activeWin.morphed ? 1 : 0
                                 source: modelData.iconName ? Icons.getAppIcon(modelData.iconName, "image-missing") : (modelData.class ? Icons.getAppIcon(modelData.class, "image-missing") : "")
@@ -652,7 +652,7 @@ Item {
 
                                     IconImage {
                                         implicitSize: Math.round(titleText.implicitHeight * 1.1)
-                                        asynchronous: true
+                                        asynchronous: false // FIX 759: unsafe with KIconLoader
                                         source: root.windowIconSource(modelData)
                                     }
                                     StyledText {

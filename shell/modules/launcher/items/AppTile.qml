@@ -68,7 +68,7 @@ Item {
             id: icon
 
             anchors.horizontalCenter: parent.horizontalCenter
-            asynchronous: true
+            asynchronous: false // FIX 759: unsafe with KIconLoader
             source: Quickshell.iconPath(root.modelData?.icon, "image-missing")
             implicitSize: Math.round(root.implicitWidth * 0.42)
         }

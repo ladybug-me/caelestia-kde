@@ -114,7 +114,7 @@ StyledRect {
                 spacing: Tokens.spacing.medium
 
                 IconImage {
-                    asynchronous: true
+                    asynchronous: false // FIX 759: unsafe with KIconLoader
                     implicitSize: fallbackText.implicitHeight
                     source: root.iconSource
                     Layout.alignment: Qt.AlignVCenter

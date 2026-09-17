@@ -233,7 +233,7 @@ StackView {
                                         active: item.modelData.icon !== ""
 
                                         sourceComponent: IconImage {
-                                            asynchronous: true
+                                            asynchronous: false // FIX 759: unsafe with KIconLoader
                                             implicitSize: label.implicitHeight
 
                                             source: item.modelData.icon

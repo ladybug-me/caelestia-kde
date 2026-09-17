@@ -622,7 +622,7 @@ Item {
                         anchors.centerIn: parent
                         implicitSize: Math.round(((delegateItem.width || 0) * 0.7) / 2) * 2 || 0
                         source: modelData ? WinIcons.sourceFor(modelData.entry, modelData.appClass, modelData.iconName, modelData.pid ?? 0) : ""
-                        asynchronous: true
+                        asynchronous: false // FIX 759: unsafe with KIconLoader
                         visible: !(Config.bar.dock.recolourIcons ?? false)
                         
                         SequentialAnimation {

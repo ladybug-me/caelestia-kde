@@ -171,7 +171,7 @@ Item {
                         id: iconComp
 
                         IconImage {
-                            asynchronous: true
+                            asynchronous: false // FIX 759: unsafe with KIconLoader
                             source: Quickshell.iconPath(action.modelData.identifier)
                         }
                     }

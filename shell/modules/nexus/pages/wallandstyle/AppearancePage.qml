@@ -155,6 +155,22 @@ PageBase {
                 onMoved: v => GlobalConfig.appearance.transparency.layers = v
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }
+            ToggleRow {
+                text: qsTr("Ambient color mode")
+                subtext: qsTr("YouTube-style ambient light glow on window previews and popups")
+                checked: GlobalConfig.appearance.ambientColor
+                onToggled: GlobalConfig.appearance.ambientColor = checked
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+                Layout.fillWidth: true
+            }
+            SliderRow {
+                label: qsTr("Ambient glow opacity")
+                valueLabel: Math.round(value * 100) + "%"
+                value: GlobalConfig.appearance.ambientOpacity
+                enabled: GlobalConfig.appearance.ambientColor
+                onMoved: v => GlobalConfig.appearance.ambientOpacity = v
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+            }
             Process {
                 id: bbdxCheck
 

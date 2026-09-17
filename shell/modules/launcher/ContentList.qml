@@ -46,7 +46,7 @@ Item {
     width: implicitWidth
     height: implicitHeight
 
-    clip: true
+    clip: root.state !== "windowSwitcher"
     state: showAnimations ? "animations" : (showWindowSwitcher ? "windowSwitcher" : (showKeybinds ? "keybinds" : (showWallpapers ? "wallpapers" : "apps")))
 
     onShowWindowSwitcherChanged: {

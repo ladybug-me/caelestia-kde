@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Widgets
 import Caelestia.Config
 import qs.components
+import qs.components.effects
 import qs.components.images
 import qs.services
 
@@ -26,6 +27,18 @@ Item {
         anchors.right: parent.right
         anchors.topMargin: Tokens.padding.large
         anchors.bottomMargin: Tokens.spacing.medium
+
+        AmbientGlow {
+            anchors.fill: preview
+            address: root.client?.address ?? ""
+            fallbackIcon: root.client ? WinIcons.sourceFor(null, root.client.class, root.client.iconName, root.client.pid ?? 0) : ""
+            sourceAspect: preview.windowAspect
+            deform: true
+            glowOpacity: GlobalConfig.appearance.ambientOpacity
+            radius: Tokens.rounding.medium
+            visible: !!root.client && opacity > 0.01
+            z: -1
+        }
 
         StyledClippingRect {
             id: preview

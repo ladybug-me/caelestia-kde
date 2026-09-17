@@ -8,6 +8,7 @@ import Caelestia.Config
 import Caelestia.Models
 import qs.components
 import qs.components.controls
+import qs.components.effects
 import qs.components.images
 import qs.services
 import qs.utils
@@ -65,6 +66,18 @@ Item {
         Behavior on opacity {
             Anim { type: Anim.FastEffects }
         }
+    }
+
+    AmbientGlow {
+        anchors.fill: previewBox
+        address: root.modelData?.address ?? ""
+        fallbackIcon: root.modelData ? WinIcons.sourceFor(null, root.modelData.class, root.modelData.iconName, root.modelData.pid ?? 0) : ""
+        sourceAspect: previewBox.windowAspect
+        glowScaleX: root.ListView.isCurrentItem ? 2.2 : 1.8
+        glowScaleY: root.ListView.isCurrentItem ? 2.2 : 1.8
+        glowOpacity: root.ListView.isCurrentItem ? Math.min(1.0, GlobalConfig.appearance.ambientOpacity * 1.35) : GlobalConfig.appearance.ambientOpacity * 0.6
+        radius: Tokens.rounding.medium
+        z: -1
     }
 
     StyledClippingRect {

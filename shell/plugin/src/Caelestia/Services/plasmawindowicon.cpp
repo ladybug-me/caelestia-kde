@@ -25,8 +25,15 @@ Q_LOGGING_CATEGORY(logPlasmaWindowIcon, "caelestia.services.plasmawindowicon");
 /// Largest pixmap the icon can give us, so the dock has something to scale down
 /// from rather than up.
 QImage largestPixmap(const QIcon& icon) {
-    QSize best;
     const auto sizes = icon.availableSizes();
+
+    //  Ref #759. Discard any icons that are not raw pixel data.
+    // (the pipe is for raw pixel data, not theme lookups.)
+    if (sizes.isEmpty() && !icon.name().isEmpty()) {
+        return {};
+    }
+
+    QSize best;
     for (const auto& size : sizes) {
         if (static_cast<qint64>(size.width()) * size.height() > static_cast<qint64>(best.width()) * best.height()) {
             best = size;

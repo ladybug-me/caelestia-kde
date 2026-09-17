@@ -55,7 +55,7 @@ Item {
         anchors.centerIn: parent
         implicitSize: Math.min(root.width, root.height) * root.fallbackScale
         source: root.fallbackIcon
-        visible: !root.active || (!cachedThumb.visible && !root.hasStream)
+        visible: root.fallbackIcon != "" && (!root.active || (!cachedThumb.visible && !root.hasStream))
     }
 
     CachingImage {

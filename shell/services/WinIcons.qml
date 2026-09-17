@@ -88,7 +88,7 @@ Singleton {
         const wp = root.paths[root.keyFor(appClass, pid ?? 0)];
         if (wp)
             return "file://" + wp;
-        return Quickshell.iconPath(iconName, "application-x-executable");
+        return Quickshell.iconPath(iconName || "application-x-executable", "application-x-executable");
     }
 
     // extract() returns the path directly; the signal carries the same result

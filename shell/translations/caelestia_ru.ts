@@ -16,7 +16,7 @@
     <message>
       <location line="+5"/>
       <source>Hostname</source>
-      <translation>Hostname</translation>
+      <translation>Имя узла</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -26,7 +26,7 @@
     <message>
       <location line="+5"/>
       <source>Distro</source>
-      <translation>Distro</translation>
+      <translation>Дистрибутив</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -41,12 +41,12 @@
     <message>
       <location line="+6"/>
       <source>Software</source>
-      <translation>Программный</translation>
+      <translation>Программы</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Shell</source>
-      <translation>Ракушка</translation>
+      <translation>Оболочка</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -56,7 +56,7 @@
     <message>
       <location line="+5"/>
       <source>Quickshell</source>
-      <translation>Быстрая оболочка</translation>
+      <translation>Quickshell</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -71,12 +71,12 @@
     <message>
       <location line="+10"/>
       <source>Enabled plugins</source>
-      <translation>Плагины включены</translation>
+      <translation>Включённые плагины</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Advanced</source>
-      <translation>Расширенные</translation>
+      <translation>Дополнительно</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -86,7 +86,7 @@
     <message>
       <location line="+1"/>
       <source>Enable verbose debug logging for troubleshooting. Run &apos;caelestia shell -l&apos; to view.</source>
-      <translation>Включить подробное ведение журнала ошибок для устранения неполадок. Запустите &apos;оболочку caelestia -l&apos; для просмотра.</translation>
+      <translation>Подробный журнал отладки для поиска неполадок. Просмотр: &apos;caelestia shell -l&apos;.</translation>
     </message>
   </context>
   <context>
@@ -137,7 +137,7 @@
     <message>
       <location line="+2"/>
       <source>Network name is required</source>
-      <translation>Требуется название сети</translation>
+      <translation>Укажите имя сети</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -147,7 +147,7 @@
     <message>
       <location line="+1"/>
       <source>Actively probe for a network that doesn&apos;t broadcast its name</source>
-      <translation>Активный зонд для сети, которая не&apos;т транслирует свое имя</translation>
+      <translation>Активно искать сеть, которая не транслирует своё имя</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -158,12 +158,12 @@
       <location line="+1"/>
       <location line="+6"/>
       <source>WPA/WPA2/WPA3 Personal</source>
-      <translation>Персональный WPA/WPA2/WPA3</translation>
+      <translation>WPA/WPA2/WPA3 Personal</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>None (open)</source>
-      <translation>Нет (открыть)</translation>
+      <translation>Нет (открытая)</translation>
     </message>
     <message>
       <location line="+48"/>
@@ -173,7 +173,7 @@
     <message>
       <location line="+3"/>
       <source>WPA passwords are at least 8 characters</source>
-      <translation>Пароль WPA не менее 8 символов</translation>
+      <translation>Пароль WPA — не менее 8 символов</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -183,7 +183,7 @@
     <message>
       <location line="+0"/>
       <source>Password must be at least 8 characters</source>
-      <translation>Пароль должен содержать не менее 8 символов</translation>
+      <translation>Пароль — не менее 8 символов</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -201,22 +201,22 @@
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/AddShortcutDialog.qml" line="+62"/>
       <source>Add Custom Shortcut</source>
-      <translation>Добавить ярлык</translation>
+      <translation>Добавить свой ярлык</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Label (e.g. Firefox)</source>
-      <translation>Метка (например, Firefox)</translation>
+      <translation>Название (напр. Firefox)</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Command (e.g. firefox)</source>
-      <translation>Команда (например, firefox)</translation>
+      <translation>Команда (напр. firefox)</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Icon (e.g. firefox)</source>
-      <translation>Значок (например, firefox)</translation>
+      <translation>Значок (напр. firefox)</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -234,17 +234,17 @@
     <message>
       <location filename="../modules/nexus/pages/network/AddVpnPage.qml" line="+76"/>
       <source>Edit VPN provider</source>
-      <translation>Редактировать VPN-провайдера</translation>
+      <translation>Изменить VPN-провайдера</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Add VPN provider</source>
-      <translation>Добавить VPN-провайдер</translation>
+      <translation>Добавить VPN-провайдера</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>Built-in names (wireguard, warp, tailscale, netbird) auto-fill their commands. For others, provide the connect/disconnect commands.</source>
-      <translation>Встроенные имена (wireguard, warp, tailscale, netbird) автоматически заполняют свои команды. Для других используйте команды подключения/отключения.</translation>
+      <translation>Встроенные имена (wireguard, warp, tailscale, netbird) подставляют команды сами. Для остальных укажите команды подключения и отключения.</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -254,22 +254,22 @@
     <message>
       <location line="+2"/>
       <source>Built-in id or a custom name</source>
-      <translation>Встроенный идентификатор или имя пользователя</translation>
+      <translation>Встроенный идентификатор или своё имя</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Provider name is required</source>
-      <translation>Требуется имя провайдера</translation>
+      <translation>Укажите имя провайдера</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Display name</source>
-      <translation>Отображать имя</translation>
+      <translation>Отображаемое имя</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Shown in the list</source>
-      <translation>Показано в списке</translation>
+      <translation>Показывается в списке</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -279,12 +279,12 @@
     <message>
       <location line="+2"/>
       <source>Network interface (for WireGuard / status checks)</source>
-      <translation>Сетевой интерфейс (для проверки WireGuard / статуса)</translation>
+      <translation>Сетевой интерфейс (для WireGuard и проверки статуса)</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Custom commands (optional)</source>
-      <translation>Пользовательские команды (необязательно)</translation>
+      <translation>Свои команды (необязательно)</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -295,12 +295,12 @@
       <location line="+2"/>
       <location line="+12"/>
       <source>Leave empty to use the built-in default</source>
-      <translation>Оставьте пустым для использования встроенного по умолчанию</translation>
+      <translation>Оставьте пустым, чтобы взять встроенную</translation>
     </message>
     <message>
       <location line="-2"/>
       <source>Disconnect command</source>
-      <translation>Отсоединить команду</translation>
+      <translation>Команда отключения</translation>
     </message>
     <message>
       <location line="+23"/>
@@ -329,22 +329,22 @@
       <location filename="../modules/sidebar/AiAssistant.qml" line="+789"/>
       <location line="+1352"/>
       <source>Rate limited - retrying in %1s…</source>
-      <translation>Оценить лимит - повторная попытка в %1s…</translation>
+      <translation>Лимит запросов — повтор через %1 с…</translation>
     </message>
     <message>
       <location line="+292"/>
       <source>Provider</source>
-      <translation>Поставщик</translation>
+      <translation>Провайдер</translation>
     </message>
     <message>
       <location line="+41"/>
       <source>Select Model</source>
-      <translation>Выберите модель</translation>
+      <translation>Выбор модели</translation>
     </message>
     <message>
       <location line="+40"/>
       <source>Effort</source>
-      <translation>Усилия</translation>
+      <translation>Усилие</translation>
     </message>
     <message>
       <location line="+32"/>
@@ -354,22 +354,22 @@
     <message>
       <location line="+358"/>
       <source>Thought Process</source>
-      <translation>Процесс размышлений</translation>
+      <translation>Ход рассуждений</translation>
     </message>
     <message>
       <location line="+187"/>
       <source>Suggestions</source>
-      <translation>Предложения</translation>
+      <translation>Подсказки</translation>
     </message>
     <message>
       <location line="+124"/>
       <source>Ask assistant...</source>
-      <translation>Попросить помощника...</translation>
+      <translation>Спросить ассистента...</translation>
     </message>
     <message>
       <location line="+244"/>
       <source>Clear All</source>
-      <translation>Очистить все</translation>
+      <translation>Очистить всё</translation>
     </message>
     <message>
       <location line="+35"/>
@@ -382,37 +382,37 @@
     <message>
       <location filename="../modules/nexus/pages/AiSettingsPage.qml" line="+18"/>
       <source>AI Assistant</source>
-      <translation>Помощник ИИ</translation>
+      <translation>ИИ-ассистент</translation>
     </message>
     <message>
       <location line="+32"/>
       <source>API key</source>
-      <translation>API ключ</translation>
+      <translation>Ключ API</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Stored in your session keyring, not in shell.json. The %1 environment variable overrides it.</source>
-      <translation>Сохранено не в shell.json. Переменная окружения %1 переопределяет его.</translation>
+      <translation>Хранится в связке ключей сеанса, а не в shell.json. Переменная окружения %1 имеет приоритет.</translation>
     </message>
     <message>
       <location line="+92"/>
       <source>API key saved</source>
-      <translation>API ключ сохранен</translation>
+      <translation>Ключ API сохранён</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>secret-tool exited with code %1</source>
-      <translation>секретный инструмент вышел с кодом %1</translation>
+      <translation>secret-tool завершился с кодом %1</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Couldn&apos;t remove API key</source>
-      <translation>Не удалось&apos;t удалить API ключ</translation>
+      <translation>Не удалось удалить ключ API</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Couldn&apos;t save API key</source>
-      <translation>Не удалось&apos;т сохранить ключ API</translation>
+      <translation>Не удалось сохранить ключ API</translation>
     </message>
     <message>
       <location line="+31"/>
@@ -429,7 +429,7 @@
     <message>
       <location line="-491"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
-      <translation>Демон не запущен - запустите с sudo systemctl start ollama</translation>
+      <translation>Демон не запущен — запустите: sudo systemctl start ollama</translation>
     </message>
     <message>
       <location line="+80"/>
@@ -444,7 +444,7 @@
     <message>
       <location line="+58"/>
       <source>Login done? You can close this window.</source>
-      <translation>Вход завершен? Вы можете закрыть это окно.</translation>
+      <translation>Вход выполнен? Это окно можно закрыть.</translation>
     </message>
     <message>
       <location line="+69"/>
@@ -456,7 +456,7 @@
       <location line="-40"/>
       <location line="+44"/>
       <source>Failed</source>
-      <translation>Неудачный</translation>
+      <translation>Ошибка</translation>
     </message>
     <message>
       <location line="-2"/>
@@ -471,7 +471,7 @@
     <message>
       <location line="+6"/>
       <source>Ollama</source>
-      <translation>Оллама</translation>
+      <translation>Ollama</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -495,18 +495,18 @@
     <message>
       <location line="-160"/>
       <source>Claude</source>
-      <translation>Клод</translation>
+      <translation>Claude</translation>
     </message>
     <message>
       <location line="+5"/>
       <location line="+106"/>
       <source>Claude Code</source>
-      <translation>Код Claude</translation>
+      <translation>Claude Code</translation>
     </message>
     <message>
       <location line="-105"/>
       <source>Uses the Claude CLI and your Claude login</source>
-      <translation>Использует Claude CLI и ваш логин в Claude</translation>
+      <translation>Через Claude CLI и ваш вход в Claude</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -516,7 +516,7 @@
     <message>
       <location line="+1"/>
       <source>Pay-per-token API with an Anthropic key</source>
-      <translation>API Pay-per-token с антропическим ключом</translation>
+      <translation>API с оплатой за токены, ключ Anthropic</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -531,7 +531,7 @@
     <message>
       <location line="+1"/>
       <source>Pay-per-token API with an OpenAI key</source>
-      <translation>API Pay-per token с ключом OpenAI</translation>
+      <translation>API с оплатой за токены, ключ OpenAI</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -541,17 +541,17 @@
     <message>
       <location line="+1"/>
       <source>Google&apos;s OpenAI-compatible endpoint</source>
-      <translation>Google&apos;с OpenAI-совместимой конечной точкой</translation>
+      <translation>Совместимая с OpenAI точка доступа Google</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>OpenRouter</source>
-      <translation>Открытый маршрутизатор</translation>
+      <translation>OpenRouter</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>One key for models from multiple vendors</source>
-      <translation>Один ключ для моделей от нескольких поставщиков</translation>
+      <translation>Один ключ для моделей разных поставщиков</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -561,17 +561,17 @@
     <message>
       <location line="+1"/>
       <source>Curated coding models, pay as you go</source>
-      <translation>Курируемые модели кодирования, платите по ходу</translation>
+      <translation>Отобранные модели для кода, оплата по факту</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>opencode Go</source>
-      <translation>opencode Перейти</translation>
+      <translation>opencode Go</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Monthly subscription; shares Zen&apos;s key</source>
-      <translation>Ежемесячная подписка; разделяет Zen&apos;с ключом</translation>
+      <translation>Месячная подписка; ключ общий с Zen</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -581,12 +581,12 @@
     <message>
       <location line="+67"/>
       <source>Download Claude Code</source>
-      <translation>Скачать код Claude</translation>
+      <translation>Скачать Claude Code</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Update Claude Code</source>
-      <translation>Обновить код Claude</translation>
+      <translation>Обновить Claude Code</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -596,17 +596,17 @@
     <message>
       <location line="+10"/>
       <source>Up to date</source>
-      <translation>Актуально</translation>
+      <translation>Обновлений нет</translation>
     </message>
     <message>
       <location line="+21"/>
       <source>Claude accounts</source>
-      <translation>Учетные записи Claude</translation>
+      <translation>Аккаунты Claude</translation>
     </message>
     <message>
       <location line="+49"/>
       <source>Active</source>
-      <translation>Активный</translation>
+      <translation>Активен</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -622,17 +622,17 @@
       <location line="+1"/>
       <location line="+11"/>
       <source>Install Claude Code first</source>
-      <translation>Сначала установите код Claude</translation>
+      <translation>Сначала установите Claude Code</translation>
     </message>
     <message>
       <location line="-1"/>
       <source>Add another account &amp; log in</source>
-      <translation>Добавить другую учетную запись и войти</translation>
+      <translation>Добавить аккаунт и войти</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Log into a different Claude account</source>
-      <translation>Войти в другую учетную запись Claude</translation>
+      <translation>Войти в другой аккаунт Claude</translation>
     </message>
   </context>
   <context>
@@ -658,12 +658,12 @@
     <message>
       <location line="+15"/>
       <source>Saved</source>
-      <translation>Сохранено</translation>
+      <translation>Сохранённые</translation>
     </message>
     <message>
       <location line="+24"/>
       <source>Secured</source>
-      <translation>Защищено</translation>
+      <translation>Защищённые</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -681,7 +681,7 @@
     <message>
       <location filename="../modules/launcher/AnimationsList.qml" line="+146"/>
       <source>Use default shell animations</source>
-      <translation>Использовать анимацию оболочки по умолчанию</translation>
+      <translation>Стандартные анимации оболочки</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -702,37 +702,37 @@
     <message>
       <location filename="../modules/launcher/items/AppContextMenu.qml" line="+56"/>
       <source>Unpin from dock</source>
-      <translation type="unfinished">Unpin from dock</translation>
+      <translation>Открепить от дока</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Pin to dock</source>
-      <translation type="unfinished">Pin to dock</translation>
+      <translation>Закрепить в доке</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Remove from desktop</source>
-      <translation type="unfinished">Remove from desktop</translation>
+      <translation>Убрать с рабочего стола</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Add to desktop</source>
-      <translation type="unfinished">Add to desktop</translation>
+      <translation>На рабочий стол</translation>
     </message>
     <message>
       <location line="+25"/>
       <source>Show in launcher</source>
-      <translation type="unfinished">Show in launcher</translation>
+      <translation>Показывать в лаунчере</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Hide app</source>
-      <translation type="unfinished">Hide app</translation>
+      <translation>Скрыть</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>App info</source>
-      <translation type="unfinished">App info</translation>
+      <translation>О приложении</translation>
     </message>
   </context>
   <context>
@@ -740,27 +740,27 @@
     <message>
       <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+35"/>
       <source>App info</source>
-      <translation>Информация о приложении</translation>
+      <translation>О приложении</translation>
     </message>
     <message>
       <location line="+47"/>
       <source>Taskbar &amp; Dock</source>
-      <translation type="unfinished">Taskbar &amp; Dock</translation>
+      <translation>Панель задач и док</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Pin to dock</source>
-      <translation type="unfinished">Pin to dock</translation>
+      <translation>Закрепить в доке</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Matched by a regex in pinnedApps - edit the config file to change</source>
-      <translation type="unfinished">Matched by a regex in pinnedApps - edit the config file to change</translation>
+      <translation>Совпало с регулярным выражением в pinnedApps — для изменения правьте файл конфигурации</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Show on the dock even when not running</source>
-      <translation type="unfinished">Show on the dock even when not running</translation>
+      <translation>Показывать в доке, даже если не запущено</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -775,32 +775,32 @@
     <message>
       <location line="+1"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
-      <translation>Соответствует регулярному выражению в избранных приложениях - отредактируйте конфигурационный файл, чтобы изменить</translation>
+      <translation>Совпало с регулярным выражением в favouriteApps — для изменения правьте файл конфигурации</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Pin to the top of the launcher</source>
-      <translation>Закрепить в верхней части лаунчера</translation>
+      <translation>Закрепить вверху лаунчера</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Hidden</source>
-      <translation>Hidden</translation>
+      <translation>Скрыто</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Matched by a regex in hiddenApps - edit the config file to change</source>
-      <translation>Соответствует регулярному выражению в скрытых приложениях - отредактируйте конфигурационный файл, чтобы изменить</translation>
+      <translation>Совпало с регулярным выражением в hiddenApps — для изменения правьте файл конфигурации</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Hide from the launcher</source>
-      <translation>Скрыть от лаунчера</translation>
+      <translation>Скрыть из лаунчера</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Details</source>
-      <translation>Детали</translation>
+      <translation>Сведения</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -818,7 +818,7 @@
     <message>
       <location filename="../components/controls/AppStreamRow.qml" line="+24"/>
       <source>Muted</source>
-      <translation>Заглушён</translation>
+      <translation>Без звука</translation>
     </message>
   </context>
   <context>
@@ -826,7 +826,7 @@
     <message>
       <location filename="../modules/launcher/items/AppTile.qml" line="+147"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
-      <translation>Соответствует регулярному выражению в избранных приложениях - отредактируйте конфигурационный файл, чтобы изменить</translation>
+      <translation>Совпало с регулярным выражением в favouriteApps — для изменения правьте файл конфигурации</translation>
     </message>
   </context>
   <context>
@@ -839,12 +839,12 @@
     <message>
       <location line="+13"/>
       <source>Adjust the volume of individual apps currently playing audio.</source>
-      <translation>Регулировка громкости отдельных приложений, воспроизводимых в настоящее время аудио.</translation>
+      <translation>Громкость отдельных приложений, которые сейчас воспроизводят звук.</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>No apps playing audio</source>
-      <translation>Нет приложений для воспроизведения аудио</translation>
+      <translation>Нет звучащих приложений</translation>
     </message>
   </context>
   <context>
@@ -857,12 +857,12 @@
     <message>
       <location line="+1"/>
       <source>Google Sans Flex</source>
-      <translation>Google без Flex</translation>
+      <translation>Google Sans Flex</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>SF Mono</source>
-      <translation>SF Моно</translation>
+      <translation>SF Mono</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -882,22 +882,22 @@
     <message>
       <location line="+20"/>
       <source>Font</source>
-      <translation>Font</translation>
+      <translation>Шрифт</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Monospace font</source>
-      <translation>Monospace font</translation>
+      <translation>Моноширинный шрифт</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Bezel mode (Pitch black)</source>
-      <translation>Режим Безеля (черный)</translation>
+      <translation>Режим рамок (чистый чёрный)</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Make the shell pitch black to blend with display bezels</source>
-      <translation>Сделать тон оболочки чёрным для смешивания с дисплеем безелей</translation>
+      <translation>Чисто чёрная оболочка, сливающаяся с рамками дисплея</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -907,27 +907,27 @@
     <message>
       <location line="+1"/>
       <source>Everything appears as its own floating widget (Very Experimental)</source>
-      <translation>Все появляется как собственный плавающий виджет (очень экспериментальный)</translation>
+      <translation>Каждый элемент — отдельный плавающий виджет (очень экспериментально)</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Border thickness</source>
-      <translation>Толщина границы</translation>
+      <translation>Толщина рамки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Thickness of the shell border in pixels. Set to 0 for a borderless look</source>
-      <translation>Толщина границы оболочки в пикселях. Установите значение 0 для безграничного вида</translation>
+      <translation>Толщина рамки оболочки в пикселях. 0 — вид без рамки</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Corner radius scale</source>
-      <translation>Масштаб радиуса угла</translation>
+      <translation>Масштаб скругления углов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Multiplies the shell&apos;s corner rounding</source>
-      <translation>Умножает округление оболочки&apos;с углом</translation>
+      <translation>Множитель скругления углов оболочки</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -937,17 +937,17 @@
     <message>
       <location line="+1"/>
       <source>Enable transparency across the shell</source>
-      <translation>Включить прозрачность оболочки</translation>
+      <translation>Включить прозрачность во всей оболочке</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Base opacity</source>
-      <translation>Непрозрачность базы</translation>
+      <translation>Базовая непрозрачность</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Layers opacity</source>
-      <translation>Прозрачность слоев</translation>
+      <translation>Непрозрачность слоёв</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -962,57 +962,57 @@
     <message>
       <location line="+1"/>
       <source>Disabling has no effect if Better Blur dx is enabled</source>
-      <translation>Отключение не имеет эффекта, если включено лучшее размытие dx</translation>
+      <translation>Отключение не действует, если включён Better Blur DX</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Enable a frosted glass effect by blurring the background</source>
-      <translation>Включить эффект марочного стекла, размывая фон</translation>
+      <translation>Эффект матового стекла: размытие фона</translation>
     </message>
     <message>
       <location line="+23"/>
       <source>High Quality Blur Masks</source>
-      <translation>Маски размытия высокого качества</translation>
+      <translation>Качественные маски размытия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Disable this to use high performance Wayland/KWin blur</source>
-      <translation>Отключите это, чтобы использовать высокую производительность Wayland/KWin размытие</translation>
+      <translation>Отключите, чтобы использовать быстрое размытие Wayland/KWin</translation>
     </message>
     <message>
       <location line="+16"/>
       <source>Blur Corner Quality</source>
-      <translation>Качество размытия угла</translation>
+      <translation>Качество размытия углов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Increasing this can cause lags! Requires shell restart</source>
-      <translation>Увеличение может вызвать задержки! Требуется перезапуск оболочки</translation>
+      <translation>Увеличение может вызвать подтормаживания! Нужен перезапуск оболочки</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Scaling</source>
-      <translation>Масштабирование</translation>
+      <translation>Масштаб</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Font scale</source>
-      <translation>Шрифт</translation>
+      <translation>Масштаб шрифта</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Spacing scale</source>
-      <translation>Расстояние</translation>
+      <translation>Масштаб интервалов</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Padding scale</source>
-      <translation>Padding scale</translation>
+      <translation>Масштаб отступов</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Animation speed scale</source>
-      <translation>Скорость анимации</translation>
+      <translation>Скорость анимаций</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -1022,12 +1022,12 @@
     <message>
       <location line="+10"/>
       <source>Border rounding</source>
-      <translation>Округление границ</translation>
+      <translation>Скругление рамки</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Border smoothing</source>
-      <translation>Сглаживание границ</translation>
+      <translation>Сглаживание рамки</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -1050,12 +1050,12 @@
     <message>
       <location line="+7"/>
       <source>Force System Defaults (xdg-open)</source>
-      <translation>Принудительные системные настройки (xdg-open)</translation>
+      <translation>Системные по умолчанию (xdg-open)</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Override applications to use KDE system defaults</source>
-      <translation>Переопределить приложения для использования настроек системы KDE</translation>
+      <translation>Использовать приложения по умолчанию из настроек KDE</translation>
     </message>
     <message>
       <location line="+22"/>
@@ -1070,7 +1070,7 @@
     <message>
       <location line="+8"/>
       <source>Media playback</source>
-      <translation>Воспроизведение</translation>
+      <translation>Воспроизведение медиа</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -1090,17 +1090,17 @@
     <message>
       <location line="+1"/>
       <source>Browse installed apps, set favorites and hidden</source>
-      <translation>Обзор установленных приложений, избранных и скрытых</translation>
+      <translation>Установленные приложения, избранные и скрытые</translation>
     </message>
     <message>
       <location line="+68"/>
       <source>System Default</source>
-      <translation>Система по умолчанию</translation>
+      <translation>Системное по умолчанию</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Uses xdg-open (KDE Default)</source>
-      <translation>Использует xdg-open (KDE по умолчанию)</translation>
+      <translation>Через xdg-open (по умолчанию в KDE)</translation>
     </message>
   </context>
   <context>
@@ -1108,22 +1108,22 @@
     <message>
       <location filename="../modules/areapicker/AreaPicker.qml" line="+99"/>
       <source>Open screenshot tool</source>
-      <translation>Открыть инструмент скриншота</translation>
+      <translation>Открыть инструмент снимка экрана</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Open screenshot tool (freeze mode)</source>
-      <translation>Открыть скриншот (режим заморозки)</translation>
+      <translation>Снимок экрана (с заморозкой)</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Open screenshot tool (clipboard)</source>
-      <translation>Открыть скриншот (буфер обмена)</translation>
+      <translation>Снимок экрана (в буфер обмена)</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Open screenshot tool (freeze mode, clipboard)</source>
-      <translation>Открыть скриншот (режим заморозки, буфер обмена)</translation>
+      <translation>Снимок экрана (заморозка, в буфер)</translation>
     </message>
   </context>
   <context>
@@ -1136,17 +1136,17 @@
     <message>
       <location line="+34"/>
       <source>Broadcast settings</source>
-      <translation>Настройки трансляции</translation>
+      <translation>Параметры трансляции</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Enable rich presence</source>
-      <translation>Включить богатое присутствие</translation>
+      <translation>Включить Rich Presence</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Broadcast custom presence to Vesktop</source>
-      <translation>Трансляция пользовательского присутствия на Vesktop</translation>
+      <translation>Транслировать свой статус в Vesktop</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -1161,12 +1161,12 @@
     <message>
       <location line="+8"/>
       <source>Broadcast Caelestia info</source>
-      <translation>Трансляция данных Caelestia</translation>
+      <translation>Транслировать сведения о Caelestia</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Broadcast shell uptime and system info</source>
-      <translation>Транслировать время ожидания и системную информацию</translation>
+      <translation>Транслировать время работы оболочки и сведения о системе</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -1176,12 +1176,12 @@
     <message>
       <location line="+1"/>
       <source>Hide the presence after %1 minutes away</source>
-      <translation>Скрыть присутствие после %1 минут</translation>
+      <translation>Скрывать статус через %1 мин отсутствия</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Never hide the presence (minutes)</source>
-      <translation>Никогда не скрывать присутствие (в минутах)</translation>
+      <translation>Никогда не скрывать статус (минуты)</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -1191,12 +1191,12 @@
     <message>
       <location line="+30"/>
       <source>SteamGridDB API Key</source>
-      <translation>API ключ SteamGridDB</translation>
+      <translation>Ключ API SteamGridDB</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Used to fetch game icons for Steam games</source>
-      <translation>Используется для получения иконок игр в Steam</translation>
+      <translation>Нужен для загрузки значков игр Steam</translation>
     </message>
     <message>
       <location line="+20"/>
@@ -1206,12 +1206,12 @@
     <message>
       <location line="+27"/>
       <source>Target windows picker</source>
-      <translation>Выбор окна цели</translation>
+      <translation>Выбор окон</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Pick from running windows</source>
-      <translation>Выбрать из запущенных окон</translation>
+      <translation>Выбрать из открытых окон</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1221,7 +1221,7 @@
     <message>
       <location line="+106"/>
       <source>Custom label (optional) - use {class}, {title}</source>
-      <translation>Пользовательская этикетка (опционально) - использовать {class}, {title}</translation>
+      <translation>Своя подпись (необязательно) — доступны {class}, {title}</translation>
     </message>
     <message>
       <location line="+39"/>
@@ -1236,27 +1236,27 @@
     <message>
       <location line="+1"/>
       <source>Select an open Steam game to prevent it from broadcasting</source>
-      <translation>Выберите открытую игру Steam, чтобы предотвратить ее трансляцию</translation>
+      <translation>Выберите запущенную игру Steam, чтобы не транслировать её</translation>
     </message>
     <message>
       <location line="+93"/>
       <source>Manual custom presence</source>
-      <translation>Ручное присутствие</translation>
+      <translation>Свой статус вручную</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Enable manual override</source>
-      <translation>Включить ручное переопределение</translation>
+      <translation>Включить ручной режим</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Force broadcast this custom presence and ignore all other apps</source>
-      <translation>Принудительно транслировать это собственное присутствие и игнорировать все другие приложения</translation>
+      <translation>Принудительно транслировать этот статус, игнорируя все приложения</translation>
     </message>
     <message>
       <location line="+95"/>
       <source>Save presence</source>
-      <translation>Сохранить присутствие</translation>
+      <translation>Сохранить статус</translation>
     </message>
   </context>
   <context>
@@ -1280,12 +1280,12 @@
       <location line="+160"/>
       <location line="+39"/>
       <source>Muted</source>
-      <translation>Заглушён</translation>
+      <translation>Без звука</translation>
     </message>
     <message>
       <location line="-27"/>
       <source>Input</source>
-      <translation>Input</translation>
+      <translation>Вход</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -1295,23 +1295,23 @@
     <message>
       <location line="+21"/>
       <source>Input volume</source>
-      <translation>Input volume</translation>
+      <translation>Громкость входа</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Now playing</source>
-      <translation>Играет сейчас</translation>
+      <translation>Сейчас играет</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>No apps playing audio</source>
-      <translation>Нет приложений для воспроизведения аудио</translation>
+      <translation>Нет звучащих приложений</translation>
     </message>
     <message>
       <location line="+139"/>
       <location filename="../services/Audio.qml" line="+124"/>
       <source>Unknown</source>
-      <translation>Неизвестен</translation>
+      <translation>Неизвестно</translation>
     </message>
     <message>
       <location filename="../services/Audio.qml" line="-35"/>
@@ -1326,18 +1326,18 @@
     <message>
       <location line="+176"/>
       <source>Audio output changed</source>
-      <translation>Аудиовыход изменен</translation>
+      <translation>Аудиовыход изменён</translation>
     </message>
     <message>
       <location line="+0"/>
       <location line="+12"/>
       <source>Now using: %1</source>
-      <translation>Теперь используется: %1</translation>
+      <translation>Теперь: %1</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Audio input changed</source>
-      <translation>Аудиовход изменен</translation>
+      <translation>Аудиовход изменён</translation>
     </message>
   </context>
   <context>
@@ -1345,7 +1345,7 @@
     <message>
       <location filename="../modules/nexus/common/AudioDeviceList.qml" line="+88"/>
       <source>Unknown</source>
-      <translation>Неизвестен</translation>
+      <translation>Неизвестно</translation>
     </message>
   </context>
   <context>
@@ -1359,18 +1359,18 @@
       <location line="+10"/>
       <location line="+6"/>
       <source>Output</source>
-      <translation>Вывод</translation>
+      <translation>Выход</translation>
     </message>
     <message>
       <location line="+9"/>
       <location line="+36"/>
       <source>Muted</source>
-      <translation>Заглушён</translation>
+      <translation>Без звука</translation>
     </message>
     <message>
       <location line="-30"/>
       <source>Show Inactive Devices</source>
-      <translation>Показать неактивные устройства</translation>
+      <translation>Показывать неактивные устройства</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -1381,7 +1381,7 @@
       <location line="+5"/>
       <location line="+6"/>
       <source>Input</source>
-      <translation>Input</translation>
+      <translation>Вход</translation>
     </message>
     <message>
       <location line="+19"/>
@@ -1391,7 +1391,7 @@
     <message>
       <location line="+5"/>
       <source>Device Profiles</source>
-      <translation>Профили устройства</translation>
+      <translation>Профили устройств</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -1411,17 +1411,17 @@
     <message>
       <location line="+1"/>
       <source>No apps playing audio</source>
-      <translation>Нет приложений для воспроизведения аудио</translation>
+      <translation>Нет звучащих приложений</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>1 app playing audio</source>
-      <translation>1 приложение воспроизводит аудио</translation>
+      <translation>Звучит 1 приложение</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 apps playing audio</source>
-      <translation>%1 приложений, играющих аудио</translation>
+      <translation>Звучащих приложений: %1</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -1436,17 +1436,17 @@
     <message>
       <location line="+1"/>
       <source>Feedback sounds and volume</source>
-      <translation>Звуки и громкость обратной связи</translation>
+      <translation>Звуки отклика и их громкость</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Muted notification apps</source>
-      <translation>Отключенные приложения</translation>
+      <translation>Приложения без звука уведомлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose apps that do not play notification sounds</source>
-      <translation>Выберите приложения, которые не проигрывают звуки уведомлений</translation>
+      <translation>Приложения, уведомления которых приходят без звука</translation>
     </message>
   </context>
   <context>
@@ -1460,7 +1460,7 @@
       <location line="+15"/>
       <location line="+19"/>
       <source>Unknown</source>
-      <translation>Неизвестен</translation>
+      <translation>Неизвестно</translation>
     </message>
     <message>
       <location line="-13"/>
@@ -1470,12 +1470,12 @@
     <message>
       <location line="+19"/>
       <source>Volume (%1)</source>
-      <translation>Том (%1)</translation>
+      <translation>Громкость (%1)</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Muted</source>
-      <translation>Заглушён</translation>
+      <translation>Без звука</translation>
     </message>
     <message>
       <location line="+31"/>
@@ -1503,7 +1503,7 @@
     <message>
       <location line="+2"/>
       <source>Good night</source>
-      <translation>Добрый вечер</translation>
+      <translation>Доброй ночи</translation>
     </message>
   </context>
   <context>
@@ -1516,27 +1516,27 @@
     <message>
       <location line="+11"/>
       <source>Background</source>
-      <translation>Справочная информация</translation>
+      <translation>Фон</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Show date</source>
-      <translation>Показать дату</translation>
+      <translation>Показывать дату</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Show icon</source>
-      <translation>Показать значок</translation>
+      <translation>Показывать значок</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Show seconds</source>
-      <translation>Показать секунды</translation>
+      <translation>Показывать секунды</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Add a seconds line to the clock</source>
-      <translation>Добавить секунду в часы</translation>
+      <translation>Добавить в часы строку секунд</translation>
     </message>
   </context>
   <context>
@@ -1549,7 +1549,7 @@
     <message>
       <location line="+1"/>
       <source>Workspaces</source>
-      <translation>Рабочие области</translation>
+      <translation>Рабочие столы</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -1559,7 +1559,7 @@
     <message>
       <location line="+2"/>
       <source>GitHub token not detected</source>
-      <translation>GitHub токен не обнаружен</translation>
+      <translation>Токен GitHub не найден</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -1570,7 +1570,7 @@
     <message>
       <location line="+1"/>
       <source>System tray</source>
-      <translation>Системный трей</translation>
+      <translation>Системный лоток</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1585,7 +1585,7 @@
     <message>
       <location line="+1"/>
       <source>Status icons</source>
-      <translation>Значки статуса</translation>
+      <translation>Значки состояния</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1605,7 +1605,7 @@
     <message>
       <location line="+0"/>
       <source>CPU sensor not detected</source>
-      <translation>Датчик процессора не обнаружен</translation>
+      <translation>Датчик ЦП не найден</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1615,17 +1615,17 @@
     <message>
       <location line="+0"/>
       <source>Memory sensor not detected</source>
-      <translation>Датчик памяти не обнаружен</translation>
+      <translation>Датчик памяти не найден</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Storage</source>
-      <translation>Хранилище</translation>
+      <translation>Накопитель</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Storage disks not detected</source>
-      <translation>Диск памяти не обнаружен</translation>
+      <translation>Накопители не найдены</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1635,12 +1635,12 @@
     <message>
       <location line="+1"/>
       <source>GPU</source>
-      <translation>GPU</translation>
+      <translation>ГП</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>GPU not detected</source>
-      <translation>GPU не обнаружен</translation>
+      <translation>ГП не найден</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1650,7 +1650,7 @@
     <message>
       <location line="+0"/>
       <source>Battery not detected</source>
-      <translation>Батарея не обнаружена</translation>
+      <translation>Батарея не найдена</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1670,12 +1670,12 @@
     <message>
       <location line="+185"/>
       <source>Not detected</source>
-      <translation>Не обнаружено</translation>
+      <translation>Не найдено</translation>
     </message>
     <message>
       <location line="+133"/>
       <source>Toggle &amp; rearrange</source>
-      <translation>Переключить и изменить порядок</translation>
+      <translation>Включение и порядок</translation>
     </message>
     <message>
       <location line="+24"/>
@@ -1685,7 +1685,7 @@
     <message>
       <location line="+6"/>
       <source>Drag to rearrange or disable</source>
-      <translation>Перетащите для изменения или отключения</translation>
+      <translation>Перетащите, чтобы переставить или отключить</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -1695,7 +1695,7 @@
     <message>
       <location line="+52"/>
       <source>Middle Zone</source>
-      <translation>Средняя зона</translation>
+      <translation>Центральная зона</translation>
     </message>
     <message>
       <location line="+52"/>
@@ -1710,17 +1710,17 @@
     <message>
       <location line="+6"/>
       <source>Disabled components</source>
-      <translation>Отключенные компоненты</translation>
+      <translation>Отключённые компоненты</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>RESET</source>
-      <translation>RESET</translation>
+      <translation>СБРОС</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Restore the default taskbar component layout</source>
-      <translation>Восстановить макет компонента панели задач по умолчанию</translation>
+      <translation>Вернуть стандартный набор компонентов панели задач</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -1743,42 +1743,42 @@
     <message>
       <location line="+33"/>
       <source>Icon size</source>
-      <translation>Размер иконки</translation>
+      <translation>Размер значков</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Size of app icons in the dock</source>
-      <translation>Размер значков приложений в док-баре</translation>
+      <translation>Размер значков приложений в доке</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Recolor icons</source>
-      <translation>Перекрасить значки</translation>
+      <translation>Перекрашивать значки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Recolor application icons using the system theme</source>
-      <translation>Перекрасить значки приложений, используя системную тему</translation>
+      <translation>Перекрашивать значки приложений в цвета системной темы</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Filter by current desktop</source>
-      <translation type="unfinished">Filter by current desktop</translation>
+      <translation>Только текущий рабочий стол</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Only show applications and windows belonging to the active virtual desktop</source>
-      <translation type="unfinished">Only show applications and windows belonging to the active virtual desktop</translation>
+      <translation>Показывать только приложения и окна активного виртуального рабочего стола</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Preview window on desktop</source>
-      <translation type="unfinished">Preview window on desktop</translation>
+      <translation>Показ окна на рабочем столе</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Highlight and show the window itself on the workspace while hovering over dock previews</source>
-      <translation type="unfinished">Highlight and show the window itself on the workspace while hovering over dock previews</translation>
+      <translation>При наведении на превью в доке подсвечивать и показывать само окно на рабочем столе</translation>
     </message>
   </context>
   <context>
@@ -1791,12 +1791,12 @@
     <message>
       <location line="+9"/>
       <source>No token set</source>
-      <translation>Токен не установлен</translation>
+      <translation>Токен не задан</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Last fetch failed</source>
-      <translation>Не удалось получить последний файл</translation>
+      <translation>Последняя загрузка не удалась</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -1816,12 +1816,12 @@
     <message>
       <location line="+5"/>
       <source>Paste a token below and save it to enable the widget</source>
-      <translation>Вставьте маркер ниже и сохраните его, чтобы включить виджет</translation>
+      <translation>Вставьте токен ниже и сохраните, чтобы включить виджет</translation>
     </message>
     <message>
       <location line="+49"/>
       <source>Configuration</source>
-      <translation>Конфигурация</translation>
+      <translation>Настройка</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -1831,17 +1831,17 @@
     <message>
       <location line="+1"/>
       <source>Render a solid background behind the GitHub activity widget</source>
-      <translation>Отображение твердого фона за виджет активности GitHub</translation>
+      <translation>Сплошной фон под виджетом активности GitHub</translation>
     </message>
     <message>
       <location line="+31"/>
       <source>Personal Access Token</source>
-      <translation>Персональный токен доступа</translation>
+      <translation>Личный токен доступа</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Used to fetch your contribution graph (read:user)</source>
-      <translation>Используется для получения графика вклада (прочитанное:пользователь)</translation>
+      <translation>Нужен для загрузки графика вашей активности (read:user)</translation>
     </message>
   </context>
   <context>
@@ -1854,7 +1854,7 @@
     <message>
       <location line="+1"/>
       <source>Slideshow</source>
-      <translation>Slideshow</translation>
+      <translation>Слайд-шоу</translation>
     </message>
     <message>
       <location line="+23"/>
@@ -1864,7 +1864,7 @@
     <message>
       <location line="+5"/>
       <source>Reset Defaults</source>
-      <translation>Сбросить настройки по умолчанию</translation>
+      <translation>Сбросить</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -1879,37 +1879,37 @@
     <message>
       <location line="+31"/>
       <source>Compact</source>
-      <translation>Компактный</translation>
+      <translation>Компактно</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Inverted</source>
-      <translation>Инверсия</translation>
+      <translation>Инвертировать</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Show on hover</source>
-      <translation>Показывать при наведении курсора</translation>
+      <translation>Только при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Only show the greeter while hovering</source>
-      <translation>Показывать только приветствие при наведении курсора</translation>
+      <translation>Показывать приветствие только при наведении</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Popout on hover</source>
-      <translation>Покачать при наведении курсора</translation>
+      <translation>Окно при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show a greeter popout when hovering</source>
-      <translation>Показывать всплывающее окно приветствия при наведении курсора</translation>
+      <translation>Показывать всплывающее приветствие при наведении</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Animation Mechanism</source>
-      <translation>Механизм анимации</translation>
+      <translation>Способ анимации</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -1919,22 +1919,22 @@
     <message>
       <location line="+1"/>
       <source>Switch media according to time of day or cycle through a slideshow</source>
-      <translation>Переключать медиа в зависимости от времени суток или цикла на слайд-шоу</translation>
+      <translation>Менять медиа по времени суток или листать слайд-шоу</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Time of Day Periods &amp; Media</source>
-      <translation>Время дневных периодов и медиа</translation>
+      <translation>Время суток и медиа</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Morning Media</source>
-      <translation>Morning Media</translation>
+      <translation>Утреннее медиа</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Select Morning Media</source>
-      <translation>Выберите Morning Media</translation>
+      <translation>Выбор утреннего медиа</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -1943,37 +1943,37 @@
       <location line="+45"/>
       <location line="+191"/>
       <source>Multimedia files (Images, GIFs, Videos)</source>
-      <translation>Мультимедийные файлы (изображения, GIF, видео)</translation>
+      <translation>Медиафайлы (изображения, GIF, видео)</translation>
     </message>
     <message>
       <location line="-315"/>
       <source>Morning start time</source>
-      <translation>Время начала утреннего перерыва</translation>
+      <translation>Начало утра</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Morning Greeting Text</source>
-      <translation>Утренний приветственный текст</translation>
+      <translation>Утреннее приветствие</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Afternoon Media</source>
-      <translation>Afternoon Media</translation>
+      <translation>Дневное медиа</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Select Afternoon Media</source>
-      <translation>Выберите полдень медиа</translation>
+      <translation>Выбор дневного медиа</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Afternoon start time</source>
-      <translation>Afternoon start time</translation>
+      <translation>Начало дня</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Afternoon Greeting Text</source>
-      <translation>После обеда текст приветствия</translation>
+      <translation>Дневное приветствие</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -1983,27 +1983,27 @@
     <message>
       <location line="+7"/>
       <source>Select Evening Media</source>
-      <translation>Выберите вечерний медиа</translation>
+      <translation>Выбор вечернего медиа</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Evening start time</source>
-      <translation>Время начала вечера</translation>
+      <translation>Начало вечера</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Evening Greeting Text</source>
-      <translation>Вечерний приветственный текст</translation>
+      <translation>Вечернее приветствие</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Night Media</source>
-      <translation>Ночной медиа</translation>
+      <translation>Ночное медиа</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Select Night Media</source>
-      <translation>Выберите ночной медиа</translation>
+      <translation>Выбор ночного медиа</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -2018,27 +2018,27 @@
     <message>
       <location line="+14"/>
       <source>Slideshow Timing &amp; Order</source>
-      <translation>Слайд-шоу время и порядок</translation>
+      <translation>Слайд-шоу: время и порядок</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Slide interval</source>
-      <translation>Интервал слайда</translation>
+      <translation>Интервал слайдов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 seconds</source>
-      <translation>%1 секунд</translation>
+      <translation>%1 с</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Random shuffle</source>
-      <translation>Случайное перемешивание</translation>
+      <translation>Случайный порядок</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Pick random media instead of cycling sequentially</source>
-      <translation>Выберите случайный носитель вместо цикла последовательно</translation>
+      <translation>Брать случайное медиа, а не по порядку</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -2048,7 +2048,7 @@
     <message>
       <location line="+1"/>
       <source>Optional custom text on bar, supports {user}</source>
-      <translation>Необязательный пользовательский текст на баре, поддерживает {user}</translation>
+      <translation>Свой текст на панели (необязательно), доступно {user}</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -2058,7 +2058,7 @@
     <message>
       <location line="+1"/>
       <source>Material icon name for the bar widget</source>
-      <translation>Название иконки материала для панели виджета</translation>
+      <translation>Имя значка Material для виджета панели</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -2068,7 +2068,7 @@
     <message>
       <location line="+8"/>
       <source>Add Media Folder</source>
-      <translation>Добавить папку с мультимедиа</translation>
+      <translation>Добавить папку с медиа</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -2078,27 +2078,27 @@
     <message>
       <location line="+6"/>
       <source>Select Media Folder</source>
-      <translation>Выберите папку с мультимедиа</translation>
+      <translation>Выбор папки с медиа</translation>
     </message>
     <message>
       <location line="+64"/>
       <source>Individual Slideshow Media</source>
-      <translation>Индивидуальные Слайд-шоу Медиа</translation>
+      <translation>Отдельные файлы слайд-шоу</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Add Media File</source>
-      <translation>Добавить медиа файл</translation>
+      <translation>Добавить медиафайл</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Select specific image, GIF, or video file to include</source>
-      <translation>Выберите нужное изображение, GIF или видео файл для включения</translation>
+      <translation>Выберите изображение, GIF или видео для добавления</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Select a Media File</source>
-      <translation>Выберите медиа файл</translation>
+      <translation>Выбор медиафайла</translation>
     </message>
   </context>
   <context>
@@ -2106,27 +2106,27 @@
     <message>
       <location filename="../modules/nexus/pages/panels/taskbar/BarPreviewScales.qml" line="+15"/>
       <source>Per Element Scaling Offset</source>
-      <translation>Смещение масштабирования на элемент</translation>
+      <translation>Поправка масштаба по элементам</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Enable per-element offsets</source>
-      <translation>Включить смещение для элемента</translation>
+      <translation>Включить поправки по элементам</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Customize preview scale and font for each popout type</source>
-      <translation>Настроить масштаб и шрифт для каждого всплывающего окна</translation>
+      <translation>Масштаб и шрифт превью для каждого типа всплывающих окон</translation>
     </message>
     <message>
       <location line="+23"/>
       <source>RESET ALL</source>
-      <translation>СБРОСИТЬ ВСЕ</translation>
+      <translation>СБРОСИТЬ ВСЁ</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Reset all to 0</source>
-      <translation>Сбросить все к 0</translation>
+      <translation>Сбросить всё в 0</translation>
     </message>
     <message>
       <location line="+14"/>
@@ -2136,7 +2136,7 @@
     <message>
       <location line="+7"/>
       <source>Font</source>
-      <translation>Font</translation>
+      <translation>Шрифт</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -2171,7 +2171,7 @@
     <message>
       <location line="+13"/>
       <source>Lock status</source>
-      <translation>Заблокировать статус</translation>
+      <translation>Lock-клавиши</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -2186,17 +2186,17 @@
     <message>
       <location line="+13"/>
       <source>Peripheral battery</source>
-      <translation>Периферический аккумулятор</translation>
+      <translation>Батарея периферии</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Tray menu</source>
-      <translation>Меню в трее</translation>
+      <translation>Меню лотка</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Wireless password</source>
-      <translation>Беспроводной пароль</translation>
+      <translation>Пароль Wi-Fi</translation>
     </message>
   </context>
   <context>
@@ -2204,7 +2204,7 @@
     <message>
       <location filename="../modules/nexus/pages/panels/taskbar/BarStatusIcons.qml" line="+12"/>
       <source>Lock keys</source>
-      <translation>Блокировать ключи</translation>
+      <translation>Lock-клавиши</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -2214,7 +2214,7 @@
     <message>
       <location line="+1"/>
       <source>Speakers</source>
-      <translation>Выступающие</translation>
+      <translation>Динамики</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -2244,12 +2244,12 @@
     <message>
       <location line="+1"/>
       <source>Peripheral battery</source>
-      <translation>Периферический аккумулятор</translation>
+      <translation>Батарея периферии</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Night light</source>
-      <translation>Ночной свет</translation>
+      <translation>Ночная подсветка</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -2259,12 +2259,12 @@
     <message>
       <location line="+7"/>
       <source>Status icons</source>
-      <translation>Значки статуса</translation>
+      <translation>Значки состояния</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Visible icons</source>
-      <translation>Видимые иконки</translation>
+      <translation>Видимые значки</translation>
     </message>
     <message>
       <location line="+34"/>
@@ -2289,7 +2289,7 @@
     <message>
       <location line="+1"/>
       <source>Show the Wi-Fi icon alongside the network icon</source>
-      <translation>Показывать значок Wi-Fi рядом с значком сети</translation>
+      <translation>Показывать значок Wi-Fi рядом со значком сети</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -2299,12 +2299,12 @@
     <message>
       <location line="+6"/>
       <source>Popout on hover</source>
-      <translation>Покачать при наведении курсора</translation>
+      <translation>Окно при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show a details popout when hovering the status icons</source>
-      <translation>Показывать всплывающее окно деталей при наведении на значки статуса</translation>
+      <translation>Показывать окно со сведениями при наведении на значки состояния</translation>
     </message>
   </context>
   <context>
@@ -2312,32 +2312,32 @@
     <message>
       <location filename="../modules/nexus/pages/panels/taskbar/BarTray.qml" line="+11"/>
       <source>Tray</source>
-      <translation>Трейд</translation>
+      <translation>Лоток</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Background</source>
-      <translation>Справочная информация</translation>
+      <translation>Фон</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Recolor icons</source>
-      <translation>Перекрасить значки</translation>
+      <translation>Перекрашивать значки</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Compact</source>
-      <translation>Компактный</translation>
+      <translation>Компактно</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Popout on hover</source>
-      <translation>Покачать при наведении курсора</translation>
+      <translation>Окно при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the tray menu popout when hovering</source>
-      <translation>Показывать всплывающее меню при наведении курсора</translation>
+      <translation>Показывать меню лотка при наведении</translation>
     </message>
   </context>
   <context>
@@ -2350,12 +2350,12 @@
     <message>
       <location line="+11"/>
       <source>Show update indicator</source>
-      <translation>Индикатор обновления</translation>
+      <translation>Показывать индикатор обновлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Always-visible icon in the taskbar that changes when a Caelestia update is available</source>
-      <translation>Всегда видимый значок на панели задач, который меняется при наличии обновления Caelestia</translation>
+      <translation>Постоянный значок на панели задач; меняется, когда доступно обновление Caelestia</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -2365,7 +2365,7 @@
     <message>
       <location line="+1"/>
       <source>Enables the update indicator and periodic checks (every 30 minutes)</source>
-      <translation>Включает индикатор обновления и периодические проверки (каждые 30 минут)</translation>
+      <translation>Включает индикатор обновлений и проверку каждые 30 минут</translation>
     </message>
   </context>
   <context>
@@ -2383,32 +2383,32 @@
     <message>
       <location line="+4"/>
       <source>Workspaces</source>
-      <translation>Рабочие области</translation>
+      <translation>Рабочие столы</translation>
     </message>
     <message>
       <location line="+30"/>
       <source>Shown</source>
-      <translation>Показано</translation>
+      <translation>Показывать</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Number of workspaces displayed</source>
-      <translation>Количество отображаемых проектов</translation>
+      <translation>Сколько рабочих столов отображать</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>Active indicator</source>
-      <translation>Активный индикатор</translation>
+      <translation>Индикатор активного</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Active trail</source>
-      <translation>Активный след</translation>
+      <translation>След активного</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Occupied background</source>
-      <translation>Оккупация фона</translation>
+      <translation>Фон занятых</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -2418,32 +2418,32 @@
     <message>
       <location line="+1"/>
       <source>Draw each workspace as a material shape or as its number</source>
-      <translation>Нарисуйте каждое рабочее пространство в виде материала или его количество</translation>
+      <translation>Рисовать рабочий стол фигурой Material или его номером</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Show windows</source>
-      <translation>Показать окна</translation>
+      <translation>Показывать окна</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show icons of open windows on each workspace</source>
-      <translation>Показывать иконки открытых окон на каждом проекте</translation>
+      <translation>Показывать значки открытых окон на каждом рабочем столе</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Show unoccupied</source>
-      <translation>Показать незанятые</translation>
+      <translation>Показывать пустые</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show workspaces that are inactive and empty</source>
-      <translation>Показать неактивные и пустые проекты</translation>
+      <translation>Показывать неактивные и пустые рабочие столы</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Windows on special workspaces</source>
-      <translation>Окна на специальных рабочих местах</translation>
+      <translation>Окна на специальных рабочих столах</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -2453,12 +2453,12 @@
     <message>
       <location line="+12"/>
       <source>Per-monitor workspaces</source>
-      <translation>Индивидуальный мониторинг проектов</translation>
+      <translation>Рабочие столы по мониторам</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show each monitor&apos;s workspaces independently</source>
-      <translation>Показывать каждый монитор&apos;с проектами независимо</translation>
+      <translation>Показывать рабочие столы каждого монитора отдельно</translation>
     </message>
   </context>
   <context>
@@ -2466,12 +2466,12 @@
     <message>
       <location filename="../modules/bar/popouts/Battery.qml" line="+24"/>
       <source>The device is too hot</source>
-      <translation>Устройство слишком жарко</translation>
+      <translation>Устройство перегрелось</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>The device is on a lap</source>
-      <translation>Устройство находится на кругу</translation>
+      <translation>Устройство лежит на коленях</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -2507,12 +2507,12 @@
     <message>
       <location line="-2"/>
       <source>Fully charged!</source>
-      <translation>Полностью заряжен!</translation>
+      <translation>Полностью заряжено!</translation>
     </message>
     <message>
       <location line="+40"/>
       <source>Performance degraded: %1</source>
-      <translation>Производительность ухудшена: %1</translation>
+      <translation>Производительность снижена: %1</translation>
     </message>
   </context>
   <context>
@@ -2520,7 +2520,7 @@
     <message>
       <location filename="../modules/BatteryMonitor.qml" line="+17"/>
       <source>Charger unplugged</source>
-      <translation>Зарядное устройство отключено</translation>
+      <translation>Зарядка отключена</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -2530,32 +2530,32 @@
     <message>
       <location line="+3"/>
       <source>Charger plugged in</source>
-      <translation>Зарядное устройство подключено</translation>
+      <translation>Зарядка подключена</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Battery is charging</source>
-      <translation>Аккумулятор заряжается</translation>
+      <translation>Батарея заряжается</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Battery warning</source>
-      <translation>Предупреждение о батареи</translation>
+      <translation>Предупреждение о батарее</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Battery level is low</source>
-      <translation>Уровень заряда разряжен</translation>
+      <translation>Низкий заряд батареи</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Hibernating in 5 seconds</source>
-      <translation>Спящий режим через 5 секунд</translation>
+      <translation>Гибернация через 5 секунд</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Hibernating to prevent data loss</source>
-      <translation>Гибернация для предотвращения потери данных</translation>
+      <translation>Гибернация, чтобы не потерять данные</translation>
     </message>
   </context>
   <context>
@@ -2568,7 +2568,7 @@
     <message>
       <location line="+13"/>
       <source>Full</source>
-      <translation>Полностью</translation>
+      <translation>Полная</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -2596,17 +2596,17 @@
     <message>
       <location line="+10"/>
       <source>Discovering</source>
-      <translation>Обнаружение</translation>
+      <translation>Поиск</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>%1 device%2 available</source>
-      <translation>%1 устройство%2 доступно</translation>
+      <translation>Доступно устройств: %1</translation>
     </message>
     <message>
       <location line="+3"/>
       <source> (%1 connected)</source>
-      <translation> (%1 подключен)</translation>
+      <translation> (подключено: %1)</translation>
     </message>
     <message>
       <location line="+54"/>
@@ -2624,7 +2624,7 @@
     <message>
       <location filename="../modules/nexus/pages/BluetoothPage.qml" line="+20"/>
       <source>Connected devices</source>
-      <translation>Подключенные устройства</translation>
+      <translation>Подключённые устройства</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -2634,52 +2634,52 @@
     <message>
       <location line="+15"/>
       <source>No saved devices</source>
-      <translation>Нет сохраненных устройств</translation>
+      <translation>Нет сохранённых устройств</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Bluetooth disabled</source>
-      <translation>Bluetooth отключен</translation>
+      <translation>Bluetooth выключен</translation>
     </message>
     <message>
       <location line="+73"/>
       <source>Unknown</source>
-      <translation>Неизвестен</translation>
+      <translation>Неизвестно</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Connected%1</source>
-      <translation>Подключено к%1</translation>
+      <translation>Подключено%1</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Saved</source>
-      <translation>Сохранено</translation>
+      <translation>Сохранённые</translation>
     </message>
     <message>
       <location line="+77"/>
       <source>Pair new device</source>
-      <translation>Соединить новое устройство</translation>
+      <translation>Новое устройство</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Discoverable</source>
-      <translation>Открываемое</translation>
+      <translation>Видимость</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Allow nearby devices to find this one</source>
-      <translation>Позволить близлежащим устройствам найти это устройство</translation>
+      <translation>Разрешить устройствам поблизости находить это</translation>
     </message>
     <message>
       <location line="+16"/>
       <source>Pairable</source>
-      <translation>Совместимость</translation>
+      <translation>Сопряжение</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Allow nearby devices to pair with this one</source>
-      <translation>Разрешить пару ближайших устройств с этим устройством</translation>
+      <translation>Разрешить устройствам поблизости сопрягаться с этим</translation>
     </message>
   </context>
   <context>
@@ -2687,7 +2687,7 @@
     <message>
       <location filename="../modules/nexus/pages/bluetooth/BluetoothPairing.qml" line="+24"/>
       <source>Pair new device</source>
-      <translation>Соединить новое устройство</translation>
+      <translation>Новое устройство</translation>
     </message>
     <message>
       <location line="+35"/>
@@ -2707,7 +2707,7 @@
     <message>
       <location line="+7"/>
       <source>Pairing...</source>
-      <translation>Pairing...</translation>
+      <translation>Сопряжение...</translation>
     </message>
   </context>
   <context>
@@ -2720,7 +2720,7 @@
     <message>
       <location line="+11"/>
       <source>High %1 • Low %2</source>
-      <translation>Высокая %1 • Низкая %2</translation>
+      <translation>Макс. %1 • Мин. %2</translation>
     </message>
   </context>
   <context>
@@ -2746,12 +2746,12 @@
     <message>
       <location line="+0"/>
       <source>Paired</source>
-      <translation>Paired</translation>
+      <translation>Сопряжено</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Not paired</source>
-      <translation>Не в паре</translation>
+      <translation>Не сопряжено</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -2766,22 +2766,22 @@
     <message>
       <location line="+55"/>
       <source>Disconnect</source>
-      <translation>Отключиться</translation>
+      <translation>Отключить</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Connect</source>
-      <translation>Подключиться</translation>
+      <translation>Подключить</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Trusted</source>
-      <translation>Доверенный</translation>
+      <translation>Доверенное</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Allow this device to connect automatically</source>
-      <translation>Разрешить этому устройству автоматическое подключение</translation>
+      <translation>Разрешить устройству подключаться автоматически</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -2791,17 +2791,17 @@
     <message>
       <location line="+1"/>
       <source>Attempt to connect this device when the shell starts</source>
-      <translation>Попытка подключить это устройство при запуске оболочки</translation>
+      <translation>Пробовать подключить устройство при запуске оболочки</translation>
     </message>
     <message>
       <location line="+24"/>
       <source>Blocked</source>
-      <translation>Заблокирован</translation>
+      <translation>Заблокировано</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Prevent this device from connecting</source>
-      <translation>Предотвратить подключение этого устройства</translation>
+      <translation>Запретить устройству подключаться</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -2821,7 +2821,7 @@
     <message>
       <location line="+4"/>
       <source>Unavailable</source>
-      <translation>Unavailable</translation>
+      <translation>Недоступно</translation>
     </message>
     <message>
       <location line="+36"/>
@@ -2834,7 +2834,7 @@
     <message>
       <location filename="../modules/windowinfo/Buttons.qml" line="+22"/>
       <source>Move to workspace</source>
-      <translation>Переместить в рабочую область</translation>
+      <translation>На рабочий стол</translation>
     </message>
     <message>
       <location line="+46"/>
@@ -2844,22 +2844,22 @@
     <message>
       <location line="+0"/>
       <source>Maximize</source>
-      <translation>Maximize</translation>
+      <translation>Развернуть</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Unminimize</source>
-      <translation>Unminimize</translation>
+      <translation>Восстановить</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Minimize</source>
-      <translation>Minimize</translation>
+      <translation>Свернуть</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Kill</source>
-      <translation>Убить</translation>
+      <translation>Завершить</translation>
     </message>
   </context>
   <context>
@@ -2910,7 +2910,7 @@
     <message>
       <location line="+1"/>
       <source>Development</source>
-      <translation>Развитие</translation>
+      <translation>Разработка</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -2960,7 +2960,7 @@
     <message>
       <location line="+1"/>
       <source>Other</source>
-      <translation>Прочие вопросы</translation>
+      <translation>Прочее</translation>
     </message>
   </context>
   <context>
@@ -2991,7 +2991,7 @@
     <message>
       <location line="+1"/>
       <source>Number of entries available in the launcher</source>
-      <translation>Количество записей в лаунчере</translation>
+      <translation>Сколько записей доступно в лаунчере</translation>
     </message>
   </context>
   <context>
@@ -3004,12 +3004,12 @@
     <message>
       <location line="+84"/>
       <source>Dynamic</source>
-      <translation>Динамический</translation>
+      <translation>Динамические</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Colors that follow your wallpaper</source>
-      <translation>Цвета, которые следуют вашим обоям</translation>
+      <translation>Цвета, которые подстраиваются под обои</translation>
     </message>
     <message>
       <location line="+18"/>
@@ -3071,7 +3071,7 @@
     <message>
       <location filename="../modules/dashboard/Content.qml" line="+25"/>
       <source>Dashboard</source>
-      <translation>Панель</translation>
+      <translation>Дашборд</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -3081,7 +3081,7 @@
     <message>
       <location line="+6"/>
       <source>Performance</source>
-      <translation>Производительность</translation>
+      <translation>Нагрузка</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -3116,17 +3116,17 @@
     <message>
       <location line="+8"/>
       <source>Restart</source>
-      <translation>Перезапустить</translation>
+      <translation>Перезагрузка</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Shut Down</source>
-      <translation>Закрыть</translation>
+      <translation>Выключение</translation>
     </message>
     <message>
       <location line="+45"/>
       <source>Type &quot;%1&quot; for commands</source>
-      <translation>Тип &quot;%1&quot; для команд</translation>
+      <translation>Введите «%1» для команд</translation>
     </message>
     <message>
       <location line="+328"/>
@@ -3136,7 +3136,7 @@
     <message>
       <location line="+5"/>
       <source>This removes all clipboard entries.</source>
-      <translation>Это удаляет все записи в буфере обмена.</translation>
+      <translation>Будут удалены все записи буфера обмена.</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -3156,7 +3156,7 @@
     <message>
       <location line="+3"/>
       <source>AI Assistant</source>
-      <translation>Помощник ИИ</translation>
+      <translation>Ассистент</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -3167,14 +3167,14 @@
   <context>
     <name>ContentList</name>
     <message>
-      <location filename="../modules/launcher/ContentList.qml" line="+222"/>
+      <location filename="../modules/launcher/ContentList.qml" line="+225"/>
       <source>Images</source>
       <translation>Изображения</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Animated</source>
-      <translation>Анимация</translation>
+      <translation>Анимированные</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -3184,7 +3184,7 @@
     <message>
       <location line="+238"/>
       <source>cliphist not found</source>
-      <translation>клиент не найден</translation>
+      <translation>cliphist не найден</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -3194,7 +3194,7 @@
     <message>
       <location line="+2"/>
       <source>No keybinds found</source>
-      <translation>Не найдено ни одной комбинации клавиш</translation>
+      <translation>Горячие клавиши не найдены</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -3209,23 +3209,23 @@
     <message>
       <location line="+9"/>
       <source>Install cliphist to enable clipboard history</source>
-      <translation>Установите клип для включения истории буфера обмена</translation>
+      <translation>Установите cliphist, чтобы включить историю буфера обмена</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Try putting some wallpapers in %1</source>
-      <translation>Попробуйте поместить некоторые обои в %1</translation>
+      <translation>Попробуйте положить обои в %1</translation>
     </message>
     <message>
       <location line="+0"/>
       <location line="+5"/>
       <source>Try searching for something else</source>
-      <translation>Попробуйте искать еще что-нибудь</translation>
+      <translation>Попробуйте другой запрос</translation>
     </message>
     <message>
       <location line="-3"/>
       <source>No keybinds match your search</source>
-      <translation>Не найдены комбинации клавиш</translation>
+      <translation>Нет горячих клавиш по вашему запросу</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -3240,7 +3240,7 @@
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+17"/>
       <source>Right Click Menu</source>
-      <translation>Щелкните правой кнопкой мыши</translation>
+      <translation>Меню правой кнопки</translation>
     </message>
     <message>
       <location line="+23"/>
@@ -3281,7 +3281,7 @@
     <message>
       <location line="+6"/>
       <source>Drag to rearrange or disable</source>
-      <translation>Перетащите для изменения или отключения</translation>
+      <translation>Перетащите, чтобы переставить или отключить</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -3296,12 +3296,12 @@
     <message>
       <location line="+6"/>
       <source>Disabled items</source>
-      <translation>Отключенные элементы</translation>
+      <translation>Отключённые пункты</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Create a custom shortcut entry</source>
-      <translation>Создать ярлык запись</translation>
+      <translation>Создать свой ярлык</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -3352,12 +3352,12 @@
     <message>
       <location filename="../modules/screenshot/regionSelector/CursorGuide.qml" line="+27"/>
       <source>Copy region (LMB) or annotate (RMB)</source>
-      <translation>Копировать регион (LMB) или заметку (RMB)</translation>
+      <translation>Копировать область (ЛКМ) или пометки (ПКМ)</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Search with Google Lens</source>
-      <translation>Искать с помощью Google Lens</translation>
+      <translation>Поиск в Google Lens</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -3367,7 +3367,7 @@
     <message>
       <location line="+3"/>
       <source>Record region</source>
-      <translation>Регион записи</translation>
+      <translation>Записать область</translation>
     </message>
   </context>
   <context>
@@ -3375,7 +3375,7 @@
     <message>
       <location filename="../modules/lock/weather/DailyForecast.qml" line="+16"/>
       <source>7-Day Forecast</source>
-      <translation>7 дней прогноз</translation>
+      <translation>Прогноз на 7 дней</translation>
     </message>
     <message>
       <location line="+34"/>
@@ -3399,22 +3399,22 @@
       <location line="+5"/>
       <location line="+85"/>
       <source>Pill</source>
-      <translation>Pill</translation>
+      <translation>Пилюля</translation>
     </message>
     <message>
       <location line="-80"/>
       <source>Diamond</source>
-      <translation>Алмазный</translation>
+      <translation>Ромб</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Clam Shell</source>
-      <translation>Поджигательная раковина</translation>
+      <translation>Ракушка</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Pentagon</source>
-      <translation>Pentagon</translation>
+      <translation>Пятиугольник</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -3424,38 +3424,38 @@
     <message>
       <location line="+5"/>
       <source>Cookie 4-Sided</source>
-      <translation>Печенье 4-х печенье</translation>
+      <translation>Печенье, 4 грани</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 6-Sided</source>
-      <translation>Печенье 6-печенье</translation>
+      <translation>Печенье, 6 граней</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 7-Sided</source>
-      <translation>Печенье 7-разового</translation>
+      <translation>Печенье, 7 граней</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 9-Sided</source>
-      <translation>Печенье 9-печенье</translation>
+      <translation>Печенье, 9 граней</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 12-Sided</source>
-      <translation>Печенье 12-печенье</translation>
+      <translation>Печенье, 12 граней</translation>
     </message>
     <message>
       <location line="+4"/>
       <location line="+64"/>
       <source>Dashboard</source>
-      <translation>Панель</translation>
+      <translation>Дашборд</translation>
     </message>
     <message>
       <location line="-52"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -3465,37 +3465,37 @@
     <message>
       <location line="+7"/>
       <source>Show on hover</source>
-      <translation>Показывать при наведении курсора</translation>
+      <translation>Показ при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Reveal when the cursor reaches the screen edge</source>
-      <translation>Показать когда курсор дойдет до края экрана</translation>
+      <translation>Показывать, когда курсор доходит до края экрана</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Dashboard profile picture shape</source>
-      <translation>Форма изображения в профиле</translation>
+      <translation>Форма аватара в дашборде</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose the shape of the profile picture on the dashboard</source>
-      <translation>Выберите форму изображения профиля на панели управления</translation>
+      <translation>Форма аватара профиля в дашборде</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Show clock seconds</source>
-      <translation>Показывать секунды часов</translation>
+      <translation>Секунды на часах</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Display seconds below the clock in the dashboard</source>
-      <translation>Отображать секунды под часами на панели управления</translation>
+      <translation>Показывать секунды под часами в дашборде</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Tabs</source>
-      <translation>Tabs</translation>
+      <translation>Вкладки</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -3505,7 +3505,7 @@
     <message>
       <location line="+6"/>
       <source>Performance</source>
-      <translation>Производительность</translation>
+      <translation>Нагрузка</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -3520,37 +3520,37 @@
     <message>
       <location line="+7"/>
       <source>Recolor media GIF</source>
-      <translation>Перекрасить медиа GIF</translation>
+      <translation>Перекрашивать медиа-GIF</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Apply system theme colors to the media GIF</source>
-      <translation>Применить цвета системной темы к медиа-GIF</translation>
+      <translation>Применять цвета системной темы к медиа-GIF</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Use material shapes</source>
-      <translation>Использовать формы материала</translation>
+      <translation>Фигуры Material</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Replace the media GIF with audio-reactive material shapes</source>
-      <translation>Замените медиа-GIF аудио-реактивными формами материала</translation>
+      <translation>Заменить медиа-GIF фигурами Material, реагирующими на звук</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Welcome splash</source>
-      <translation>Добро пожаловать на заставку</translation>
+      <translation>Приветствие</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Show a welcome message on the dashboard</source>
-      <translation>Показать приветственное сообщение на панели инструментов</translation>
+      <translation>Показывать приветственное сообщение в дашборде</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Performance widgets</source>
-      <translation>Производительность виджетов</translation>
+      <translation>Виджеты производительности</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -3560,7 +3560,7 @@
     <message>
       <location line="+6"/>
       <source>GPU</source>
-      <translation>GPU</translation>
+      <translation>ГП</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -3575,7 +3575,7 @@
     <message>
       <location line="+6"/>
       <source>Storage</source>
-      <translation>Хранилище</translation>
+      <translation>Накопитель</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -3590,22 +3590,22 @@
     <message>
       <location line="+5"/>
       <source>Hover trigger depth</source>
-      <translation>Hover trigger depth</translation>
+      <translation>Глубина зоны наведения</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Distance in from the screen edge that opens the dashboard</source>
-      <translation>Расстояние от края экрана, которое открывает панель инструментов</translation>
+      <translation>Расстояние от края экрана, на котором открывается дашборд</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Hover trigger width</source>
-      <translation>Hover trigger width</translation>
+      <translation>Ширина зоны наведения</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>How much of the top edge opens the dashboard, as a percentage of its width</source>
-      <translation>Сколько верхнего края открывает панель инструментов, в процентах от ее ширины</translation>
+      <translation>Какая часть верхнего края открывает дашборд, в процентах от его ширины</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -3615,7 +3615,7 @@
     <message>
       <location line="+1"/>
       <source>Pixels dragged before the dashboard opens</source>
-      <translation>Пиксели перетаскиваются до открытия панели инструментов</translation>
+      <translation>Сколько пикселей протащить, чтобы открылся дашборд</translation>
     </message>
   </context>
   <context>
@@ -3628,7 +3628,7 @@
     <message>
       <location line="+5"/>
       <source>Top center</source>
-      <translation>Верхний центр</translation>
+      <translation>Вверху по центру</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -3649,7 +3649,7 @@
     <message>
       <location line="+5"/>
       <source>Bottom center</source>
-      <translation>Нижний центр</translation>
+      <translation>Внизу по центру</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -3669,45 +3669,45 @@
     <message>
       <location line="+5"/>
       <source>Desktop Addons</source>
-      <translation>Дополнения для рабочего стола</translation>
+      <translation>Дополнения стола</translation>
     </message>
     <message>
       <location line="+20"/>
       <location line="+87"/>
       <source>Desktop clock</source>
-      <translation>Часы рабочего стола</translation>
+      <translation>Часы на рабочем столе</translation>
     </message>
     <message>
       <location line="-79"/>
       <location line="+123"/>
       <source>Desktop media shapes</source>
-      <translation>Формы рабочего стола</translation>
+      <translation>Медиафигуры на столе</translation>
     </message>
     <message>
       <location line="-110"/>
       <source>Auto-hide media shapes</source>
-      <translation>Автоскрытие форм медиа</translation>
+      <translation>Автоскрытие медиафигур</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Hide media shapes when a window is open</source>
-      <translation>Скрывать медиа формы при открытии окна</translation>
+      <translation>Скрывать медиафигуры, когда открыто окно</translation>
     </message>
     <message>
       <location line="+8"/>
       <location line="+138"/>
       <source>Desktop lyrics</source>
-      <translation>Текст песни Desktop</translation>
+      <translation>Текст песни на столе</translation>
     </message>
     <message>
       <location line="-125"/>
       <source>Auto-hide lyrics</source>
-      <translation>Автоскрытие текстов песен</translation>
+      <translation>Автоскрытие текста песни</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Hide lyrics when a window is open</source>
-      <translation>Скрывать текст, когда окно открыто</translation>
+      <translation>Скрывать текст песни, когда открыто окно</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -3717,17 +3717,17 @@
     <message>
       <location line="+1"/>
       <source>Show music visualiser on wallpaper (May consume more power)</source>
-      <translation>Показывать визуализатор музыки на обоях (может потреблять больше силы)</translation>
+      <translation>Визуализатор музыки на обоях (может повысить энергопотребление)</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Auto-hide visualiser</source>
-      <translation>Скрывать визуализатор</translation>
+      <translation>Автоскрытие визуализатора</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Hide visualiser when a window is fullscreen</source>
-      <translation>Скрыть визуализатор при полноэкранном окне</translation>
+      <translation>Скрывать визуализатор при полноэкранном окне</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -3737,7 +3737,7 @@
     <message>
       <location line="+1"/>
       <source>Also hide on all other monitors if disabled by a window</source>
-      <translation>Также скрыть на всех других мониторах, если выключено окном</translation>
+      <translation>Скрывать и на остальных мониторах, если его отключило окно</translation>
     </message>
     <message>
       <location line="+18"/>
@@ -3751,7 +3751,7 @@
       <location line="+45"/>
       <location line="+36"/>
       <source>Position</source>
-      <translation>Позиция</translation>
+      <translation>Положение</translation>
     </message>
     <message>
       <location line="-64"/>
@@ -3772,17 +3772,17 @@
     <message>
       <location line="+10"/>
       <source>Blur</source>
-      <translation>Blur</translation>
+      <translation>Размытие</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Rounding</source>
-      <translation>Округление</translation>
+      <translation>Скругление</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Spacing</source>
-      <translation>Расстояние</translation>
+      <translation>Интервал</translation>
     </message>
   </context>
   <context>
@@ -3823,7 +3823,7 @@
     <message>
       <location filename="../modules/background/DesktopLyrics.qml" line="+287"/>
       <source>Loading lyrics...</source>
-      <translation>Загрузка текста...</translation>
+      <translation>Загрузка текста песни...</translation>
     </message>
   </context>
   <context>
@@ -3831,62 +3831,62 @@
     <message>
       <location filename="../modules/nexus/pages/DesktopPage.qml" line="+13"/>
       <source>Desktop &amp; Tiling</source>
-      <translation>Рабочий стол</translation>
+      <translation>Рабочий стол и тайлинг</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Show KDE Desktop</source>
-      <translation>Show KDE Desktop</translation>
+      <translation>Рабочий стол KDE</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Disable Caelestia desktop and use native Plasma 6 desktop instead</source>
-      <translation>Отключить рабочий стол Caelestia и вместо этого использовать рабочий стол Plasma 6</translation>
+      <translation>Отключить рабочий стол Caelestia и использовать штатный рабочий стол Plasma 6</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Show Desktop Icons</source>
-      <translation>Показать иконки рабочего стола</translation>
+      <translation>Значки рабочего стола</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enable icons for Caelestia desktop</source>
-      <translation>Включить иконки для рабочего стола Caelestia</translation>
+      <translation>Включить значки на рабочем столе Caelestia</translation>
     </message>
     <message>
       <location line="+16"/>
       <source>Material You Icons</source>
-      <translation>Иконки материалов</translation>
+      <translation>Значки Material You</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Override the KDE icon theme for desktop icons only</source>
-      <translation>Переопределить тему значка KDE только для настольных иконок</translation>
+      <translation>Заменять тему значков KDE только для значков рабочего стола</translation>
     </message>
     <message>
       <location line="+16"/>
       <source>Vibrant Icons</source>
-      <translation>Яркие иконки</translation>
+      <translation>Яркие значки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Boost saturation of Material You icons for extra vibrancy</source>
-      <translation>Увеличить насыщенность иконок Material You для дополнительной вибрации</translation>
+      <translation>Повысить насыщенность значков Material You</translation>
     </message>
     <message>
       <location line="+16"/>
       <source>Magic Lamp Minimize</source>
-      <translation>Магическая лампа свернуть</translation>
+      <translation>Сворачивание «Волшебная лампа»</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enable the magic lamp effect when minimizing windows</source>
-      <translation>Включить эффект магической лампы при минимизации окон</translation>
+      <translation>Эффект волшебной лампы при сворачивании окон</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>Window Tiling</source>
-      <translation>Окно</translation>
+      <translation>Тайлинг окон</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -3901,22 +3901,22 @@
     <message>
       <location line="+6"/>
       <source>Desktop Addons</source>
-      <translation>Дополнения для рабочего стола</translation>
+      <translation>Дополнения стола</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Clock, Shapes, Lyrics, Visualiser</source>
-      <translation>Clock, Shapes, Lyrics, Visualiser</translation>
+      <translation>Часы, фигуры, текст песни, визуализатор</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Right Click Menu</source>
-      <translation>Щелкните правой кнопкой мыши</translation>
+      <translation>Меню правой кнопки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Configure desktop right click menu</source>
-      <translation>Настройка меню правой кнопки мыши для рабочего стола</translation>
+      <translation>Настроить меню правой кнопки рабочего стола</translation>
     </message>
   </context>
   <context>
@@ -3955,22 +3955,22 @@
     <message>
       <location line="+5"/>
       <source>Workspace: %1</source>
-      <translation>Рабочая область: %1</translation>
+      <translation>Рабочий стол: %1</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Floating: %1</source>
-      <translation>Вспырь: %1</translation>
+      <translation>Плавающее: %1</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Fullscreen state: %1</source>
-      <translation>Состояние полного экрана: %1</translation>
+      <translation>Полноэкранный режим: %1</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Fullscreen state: unknown</source>
-      <translation>Состояние полноэкранного режима: неизвестно</translation>
+      <translation>Полноэкранный режим: неизвестно</translation>
     </message>
   </context>
   <context>
@@ -4014,7 +4014,7 @@
     <message>
       <location filename="../modules/sidebar/DinoGame.qml" line="+256"/>
       <source>All up to date!</source>
-      <translation>Всё в курсе!</translation>
+      <translation>Всё обновлено!</translation>
     </message>
   </context>
   <context>
@@ -4022,12 +4022,12 @@
     <message>
       <location filename="../modules/bar/popouts/DockContext.qml" line="+100"/>
       <source>Unpin from dock</source>
-      <translation>Убрать из док-станции</translation>
+      <translation>Открепить от дока</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Pin to dock</source>
-      <translation>Прикрепить к док-станции</translation>
+      <translation>Закрепить в доке</translation>
     </message>
     <message>
       <location line="+40"/>
@@ -4037,7 +4037,7 @@
     <message>
       <location line="+12"/>
       <source>End task</source>
-      <translation>Конечная задача</translation>
+      <translation>Завершить задачу</translation>
     </message>
   </context>
   <context>
@@ -4053,12 +4053,12 @@
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+23"/>
       <source>Window Switcher Add-ons</source>
-      <translation>Дополнения для переключателя окон</translation>
+      <translation>Дополнения переключателя окон</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The window switcher now runs on a KWin-native backend, and window previews are cached so they appear instantly. Its own page under Settings -&gt; Panels -&gt; Window Switcher adds filtering by current desktop, minimized windows, windows from all screens, a live preview on the workspace, and a switch to turn it off entirely.</source>
-      <translation>Теперь оконный переключатель работает на встроенном KWin-backend, а предпросмотры окон кэшируются, так что они отображаются мгновенно. Собственная страница в разделе Настройки -&gt; Панели -&gt; Переключатель окон добавляет фильтрацию на текущем рабочем столе, минимизированные окна, окна со всех экранов, предварительный просмотр в рабочей области и переключатель, чтобы полностью отключить его.</translation>
+      <translation>Переключатель окон теперь работает на родном бэкенде KWin, а превью окон кэшируются и появляются мгновенно. На его странице Настройки -&gt; Панели -&gt; Переключатель окон добавились фильтр по текущему рабочему столу, свёрнутые окна, окна со всех экранов, живой показ окна на рабочем столе и возможность полностью отключить переключатель.</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -4068,7 +4068,7 @@
     <message>
       <location line="+1"/>
       <source>Notification popups can now follow the screen they belong to instead of always using the focused one, and the shell can stay quiet while a fullscreen app is focused. Both live in Settings -&gt; Services -&gt; Notifications, as &apos;Display on screen&apos; and &apos;Show in fullscreen&apos;.</source>
-      <translation>Всплывающие уведомления теперь могут следить за экраном, к которому они принадлежат, а не всегда использовать сфокусированный и оболочка может оставаться спокойной, пока сосредоточено полноэкранное приложение. Оба живут в Настройках -&gt; Услуги -&gt; Уведомления, как &apos;Отображение на экране&apos; и &apos;Показать в полноэкранном&apos;.</translation>
+      <translation>Всплывающие уведомления теперь могут появляться на том экране, к которому относятся, а не всегда на активном, а оболочка умеет молчать, пока в фокусе полноэкранное приложение. Обе настройки — в Настройки -&gt; Службы -&gt; Уведомления: «Экран показа» и «Показывать в полноэкранном режиме».</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -4078,57 +4078,57 @@
     <message>
       <location line="+1"/>
       <source>The screen recorder can capture a region straight to an animated GIF. Choose Record GIF from the recorder menu - it is enabled by default and can be switched off under Settings -&gt; Utilities -&gt; Utilities panel.</source>
-      <translation>Экранный магнитофон может захватить область прямо на анимированный GIF. Выберите Record GIF из меню регистратора - он включен по умолчанию и может быть выключен в меню Настройки -&gt; Утилиты -&gt; Утилиты.</translation>
+      <translation>Запись экрана умеет сохранять область сразу в анимированный GIF. Выберите «Запись GIF» в меню записи — функция включена по умолчанию, отключается в Настройки -&gt; Утилиты -&gt; Панель утилит.</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>SDDM Theme Out of the Box</source>
-      <translation>SDDM тема вне коробки</translation>
+      <translation>Тема SDDM из коробки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The Material You login screen, with wallpaper and color sync, is now installed by default, so the greeter matches your desktop from the first boot. It remains optional in the installer for anyone who prefers the stock theme.</source>
-      <translation>Экран входа, в который вы входите, с обоями и синхронизацией цветов, теперь устанавливается по умолчанию, поэтому приветствие соответствует вашему рабочему столу после первой загрузки. Он остается необязательным в программе установки для всех, кто предпочитает стоковую тему.</translation>
+      <translation>Экран входа Material You с синхронизацией обоев и цветов теперь ставится по умолчанию, и экран входа совпадает с рабочим столом с первой загрузки. В установщике он остаётся необязательным — для тех, кому нужна штатная тема.</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Audio-Reactive Desktop Shapes</source>
-      <translation>Аудио-реактивные формы рабочего стола</translation>
+      <translation>Фигуры на столе, реагирующие на звук</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The media visualiser is now a set of audio-reactive material shapes, and it can live on the wallpaper as well as in the dashboard. Turn on &apos;Desktop media shapes&apos; under Settings -&gt; Desktop -&gt; Desktop Addons and let it auto-hide while a window is open.</source>
-      <translation>Визуализатор средств массовой информации теперь является набором аудио-реактивных форм материала, и он может жить как на обоях, так и в приборной панели. Включите &apos;Desktop media shapes&apos; в Settings -&gt; Desktop -&gt; Desktop Addons и пусть он автоматически скрывается, когда окно открыто.</translation>
+      <translation>Медиавизуализатор теперь — набор фигур Material, реагирующих на звук, и жить он может не только в дашборде, но и на обоях. Включите «Медиафигуры на столе» в Настройки -&gt; Рабочий стол -&gt; Дополнения стола и разрешите ему скрываться, когда открыто окно.</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Chinese Translations</source>
-      <translation>Китайский перевод</translation>
+      <translation>Китайские переводы</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The shell now ships Simplified and Traditional Chinese catalogues, so the interface follows your language instead of staying English. Pick one from Settings -&gt; Language &amp; region.</source>
-      <translation>Теперь оболочка поставляется Упрощенным и традиционным китайским каталогам, поэтому интерфейс следует за вашим языком вместо того, чтобы оставаться на английском языке. Выберите из Настройки -&gt; Язык и регион.</translation>
+      <translation>В комплекте оболочки теперь каталоги упрощённого и традиционного китайского, так что интерфейс следует вашему языку, а не остаётся английским. Выберите язык в Настройки -&gt; Язык и регион.</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>A New Name and Look</source>
-      <translation>Новое имя и внешний вид</translation>
+      <translation>Новое имя и облик</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The project is now caelestia-kde. The repository, its references and the artwork have been renamed and brought onto one palette and one logo. Your configuration and settings are untouched.</source>
-      <translation>В настоящее время проект caelestia-kde, его ссылки и работы были переименованы в одну палитру и один логотип. Ваши настройки и настройки нетронуты.</translation>
+      <translation>Проект теперь называется caelestia-kde. Репозиторий, ссылки на него и графика переименованы и приведены к одной палитре и одному логотипу. Ваши конфигурация и настройки не затронуты.</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Dock Desktop Filtering &amp; Live Previews</source>
-      <translation type="unfinished">Dock Desktop Filtering &amp; Live Previews</translation>
+      <translation>Фильтр дока по столу и живые превью</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
-      <translation type="unfinished">The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</translation>
+      <translation>Док панели задач теперь умеет показывать только приложения и окна активного виртуального рабочего стола, а при наведении на миниатюру в доке — подсвечивать само окно на рабочем столе. Обе настройки — в Настройки -&gt; Панели -&gt; Панель задач -&gt; Док.</translation>
     </message>
   </context>
   <context>
@@ -4141,12 +4141,12 @@
     <message>
       <location line="+56"/>
       <source>Disconnect</source>
-      <translation>Отключиться</translation>
+      <translation>Отключить</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Connect</source>
-      <translation>Подключиться</translation>
+      <translation>Подключить</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -4166,7 +4166,7 @@
     <message>
       <location line="+0"/>
       <source>Not connected</source>
-      <translation>Не подключен</translation>
+      <translation>Не подключено</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -4200,7 +4200,7 @@
     <message>
       <location line="-69"/>
       <source>MAC address</source>
-      <translation>MAC адрес</translation>
+      <translation>MAC-адрес</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -4216,17 +4216,17 @@
       <location line="+1"/>
       <location line="+11"/>
       <source>Automatic (DHCP)</source>
-      <translation>Автоматический (DHCP)</translation>
+      <translation>Автоматически (DHCP)</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Automatic, DNS only</source>
-      <translation>Автоматически только DNS</translation>
+      <translation>Автоматически, кроме DNS</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Manual</source>
-      <translation>Ручной</translation>
+      <translation>Вручную</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -4236,32 +4236,32 @@
     <message>
       <location line="+2"/>
       <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP и префикс, например 192.168.1.50/24</translation>
+      <translation>IP и префикс, напр. 192.168.1.50/24</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enter a valid address in CIDR notation</source>
-      <translation>Введите правильный адрес в нотации CIDR</translation>
+      <translation>Введите корректный адрес в нотации CIDR</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Enter a valid gateway address</source>
-      <translation>Введите правильный адрес шлюза</translation>
+      <translation>Введите корректный адрес шлюза</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>DNS servers</source>
-      <translation>DNS серверы</translation>
+      <translation>DNS-серверы</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Comma-separated</source>
-      <translation>Разделенные запятыми</translation>
+      <translation>Через запятую</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enter valid DNS server addresses</source>
-      <translation>Введите корректные адреса DNS-сервера</translation>
+      <translation>Введите корректные адреса DNS-серверов</translation>
     </message>
     <message>
       <location line="+55"/>
@@ -4284,22 +4284,22 @@
     <message>
       <location line="+0"/>
       <source>Not connected</source>
-      <translation>Не подключен</translation>
+      <translation>Не подключено</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Data usage: %1</source>
-      <translation>Использование данных: %1</translation>
+      <translation>Трафик: %1</translation>
     </message>
     <message>
       <location line="+72"/>
       <source>Wired connection</source>
-      <translation>Проводное соединение</translation>
+      <translation>Проводное подключение</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Not connected • %1</source>
-      <translation>Не подключен • %1</translation>
+      <translation>Не подключено • %1</translation>
     </message>
     <message>
       <location line="+44"/>
@@ -4309,7 +4309,7 @@
     <message>
       <location line="+6"/>
       <source>Primary DNS</source>
-      <translation>Первичный DNS</translation>
+      <translation>Основной DNS</translation>
     </message>
   </context>
   <context>
@@ -4359,22 +4359,22 @@
     <message>
       <location filename="../services/GameMode.qml" line="+169"/>
       <source>Game mode enabled</source>
-      <translation>Игровой режим включен</translation>
+      <translation>Игровой режим включён</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Disabled Hyprland animations, blur, gaps and shadows</source>
-      <translation>Анимация отключена гипрланд, размытие, пробелы и тени</translation>
+      <translation>Отключены анимации, размытие, отступы и тени Hyprland</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Paused video wallpaper, disabled blur and animations</source>
-      <translation>Приостановленные видеообои, отключено размытие и анимация</translation>
+      <translation>Видеообои на паузе, размытие и анимации отключены</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Game mode disabled</source>
-      <translation>Игровой режим отключен</translation>
+      <translation>Игровой режим выключен</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4392,12 +4392,12 @@
     <message>
       <location filename="../modules/nexus/pages/services/GameModePage.qml" line="+19"/>
       <source>Game mode</source>
-      <translation>Режим игры</translation>
+      <translation>Игровой режим</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Auto-enable rules</source>
-      <translation>Автовключение правил</translation>
+      <translation>Правила автовключения</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -4407,7 +4407,7 @@
     <message>
       <location line="+1"/>
       <source>Turn on game mode when a target window is focused or running</source>
-      <translation>Включить режим игры, когда целевое окно сфокусировано или запущено</translation>
+      <translation>Включать игровой режим, когда целевое окно в фокусе или запущено</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -4417,62 +4417,62 @@
     <message>
       <location line="+1"/>
       <source>Add or remove auto-enable targets</source>
-      <translation>Добавить или удалить ярлыки автовключения</translation>
+      <translation>Добавить или убрать цели автовключения</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Hyprland overrides</source>
-      <translation>Переопределения гипленда</translation>
+      <translation>Переопределения Hyprland</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Disable animations</source>
-      <translation>Отключить анимацию</translation>
+      <translation>Отключать анимации</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Disable blur</source>
-      <translation>Отключить размытие</translation>
+      <translation>Отключать размытие</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Disable gaps and rounding</source>
-      <translation>Отключить разрывы и округление</translation>
+      <translation>Отключать отступы и скругления</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Disable shadows</source>
-      <translation>Отключить тени</translation>
+      <translation>Отключать тени</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Disable window transparency</source>
-      <translation>Отключить прозрачность окна</translation>
+      <translation>Отключать прозрачность окон</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Caelestia feature overrides</source>
-      <translation>Переопределение функции Caelestia</translation>
+      <translation>Переопределения функций Caelestia</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Disable shell transparency</source>
-      <translation>Отключить прозрачность оболочки</translation>
+      <translation>Отключать прозрачность оболочки</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Disable toast notifications transparency</source>
-      <translation>Отключить прозрачность всплывающих уведомлений</translation>
+      <translation>Отключать прозрачность всплывающих уведомлений</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Disable desktop lyrics</source>
-      <translation>Отключить рабочий стол</translation>
+      <translation>Отключать текст песни на столе</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Disable visualizer</source>
-      <translation>Отключить визуализатор</translation>
+      <translation>Отключать визуализатор</translation>
     </message>
   </context>
   <context>
@@ -4490,17 +4490,17 @@
     <message>
       <location line="+28"/>
       <source>Custom regex</source>
-      <translation>Пользовательские регулярные выражения</translation>
+      <translation>Своё выражение</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Add a custom class or regex pattern</source>
-      <translation>Добавить пользовательский класс или регулярный шаблон</translation>
+      <translation>Добавить свой класс или регулярное выражение</translation>
     </message>
     <message>
       <location line="+58"/>
       <source>Pick from running windows</source>
-      <translation>Выбрать из запущенных окон</translation>
+      <translation>Выбрать из открытых окон</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4510,7 +4510,7 @@
     <message>
       <location line="+12"/>
       <source>Target window list</source>
-      <translation>Список адресатов</translation>
+      <translation>Список целевых окон</translation>
     </message>
   </context>
   <context>
@@ -4523,17 +4523,17 @@
     <message>
       <location line="+33"/>
       <source>Not authenticated</source>
-      <translation>Не аутентифицирован</translation>
+      <translation>Нет авторизации</translation>
     </message>
     <message>
       <location line="+19"/>
       <source>Last 7 days</source>
-      <translation>Последние 7 дней</translation>
+      <translation>За 7 дней</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>%1 commits</source>
-      <translation>%1 коммитов</translation>
+      <translation>Коммитов: %1</translation>
     </message>
     <message>
       <location line="+35"/>
@@ -4546,12 +4546,12 @@
     <message>
       <location filename="../modules/bar/components/GithubActivity.qml" line="+85"/>
       <source>GitHub widget needs a token</source>
-      <translation>Виджет GitHub нужен токен</translation>
+      <translation>Виджету GitHub нужен токен</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Add a personal access token in Settings → Panels → Taskbar → GitHub.</source>
-      <translation>Добавьте персональный токен доступа в Настройки → Панели → Панели задач → GitHub.</translation>
+      <translation>Добавьте личный токен доступа в Настройки → Панели → Панель задач → GitHub.</translation>
     </message>
   </context>
   <context>
@@ -4567,7 +4567,7 @@
     <message>
       <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
       <source>Usage</source>
-      <translation>Использование</translation>
+      <translation>Загрузка</translation>
     </message>
   </context>
   <context>
@@ -4575,7 +4575,7 @@
     <message>
       <location filename="../services/HyprSunset.qml" line="+20"/>
       <source>Night Light</source>
-      <translation>Ночной свет</translation>
+      <translation>Ночная подсветка</translation>
     </message>
   </context>
   <context>
@@ -4583,12 +4583,12 @@
     <message>
       <location filename="../modules/utilities/cards/IdleInhibit.qml" line="+52"/>
       <source>Keep Awake</source>
-      <translation>Продолжить пробуждение</translation>
+      <translation>Не засыпать</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Preventing sleep mode</source>
-      <translation>Предотвращение сна</translation>
+      <translation>Спящий режим заблокирован</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -4611,7 +4611,7 @@
     <message>
       <location line="+2"/>
       <source>Type your password to unlock the screen</source>
-      <translation>Введите свой пароль для разблокировки экрана</translation>
+      <translation>Введите пароль, чтобы разблокировать экран</translation>
     </message>
     <message>
       <location line="+39"/>
@@ -4626,12 +4626,12 @@
     <message>
       <location line="+2"/>
       <source>Max tries reached</source>
-      <translation>Достигнуто максимальное количество попыток</translation>
+      <translation>Попытки исчерпаны</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enter your password</source>
-      <translation>Введите ваш пароль</translation>
+      <translation>Введите пароль</translation>
     </message>
   </context>
   <context>
@@ -4639,7 +4639,7 @@
     <message>
       <location filename="../modules/bar/popouts/kblayout/KbLayout.qml" line="+38"/>
       <source>Keyboard Layouts</source>
-      <translation>Раскладка клавиатуры</translation>
+      <translation>Раскладки клавиатуры</translation>
     </message>
   </context>
   <context>
@@ -4647,12 +4647,12 @@
     <message>
       <location filename="../modules/bar/popouts/kblayout/KbLayoutModel.qml" line="+107"/>
       <source>Keyboard layout limit</source>
-      <translation>Лимит раскладки</translation>
+      <translation>Лимит раскладок</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>XKB supports only 4 layouts at a time</source>
-      <translation>XKB поддерживает только 4 макета за раз</translation>
+      <translation>XKB поддерживает не более 4 раскладок одновременно</translation>
     </message>
   </context>
   <context>
@@ -4665,7 +4665,7 @@
     <message>
       <location line="+69"/>
       <source>Press keys now...</source>
-      <translation>Нажмите клавиши сейчас...</translation>
+      <translation>Нажмите клавиши...</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -4683,7 +4683,7 @@
     <message>
       <location filename="../modules/launcher/items/KeybindItem.qml" line="+68"/>
       <source>No keybinds</source>
-      <translation>Нет комбинаций клавиш</translation>
+      <translation>Нет горячих клавиш</translation>
     </message>
   </context>
   <context>
@@ -4692,12 +4692,12 @@
       <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+20"/>
       <location line="+58"/>
       <source>Window Tiling</source>
-      <translation>Окно</translation>
+      <translation>Тайлинг окон</translation>
     </message>
     <message>
       <location line="-53"/>
       <source>BTree</source>
-      <translation>BTдерево</translation>
+      <translation>BTree</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4709,31 +4709,31 @@
       <location line="-271"/>
       <location line="+264"/>
       <source>Floating</source>
-      <translation>Плавающий</translation>
+      <translation>Плавающая</translation>
     </message>
     <message>
       <location line="-263"/>
       <location line="+277"/>
       <source>Quarter</source>
-      <translation>Четверть</translation>
+      <translation>Четверти</translation>
     </message>
     <message>
       <location line="-276"/>
       <location line="+290"/>
       <source>Spread</source>
-      <translation>Распространять</translation>
+      <translation>Распределение</translation>
     </message>
     <message>
       <location line="-289"/>
       <location line="+296"/>
       <source>Stacked</source>
-      <translation>Накоплено</translation>
+      <translation>Стопка</translation>
     </message>
     <message>
       <location line="-295"/>
       <location line="+302"/>
       <source>Stair</source>
-      <translation>Stair</translation>
+      <translation>Лестница</translation>
     </message>
     <message>
       <location line="-301"/>
@@ -4767,47 +4767,47 @@
     <message>
       <location line="+10"/>
       <source>Logout to Apply Changes</source>
-      <translation>Выйти для применения изменений</translation>
+      <translation>Выйдите из сеанса, чтобы применить</translation>
     </message>
     <message>
       <location line="+24"/>
       <source>Automatically tile windows using Krohnkite</source>
-      <translation>Автоматически плиточные окна с помощью Krohnkite</translation>
+      <translation>Автоматический тайлинг окон через Krohnkite</translation>
     </message>
     <message>
       <location line="+38"/>
       <source>Switch Layout</source>
-      <translation>Выключить макет</translation>
+      <translation>Сменить раскладку</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Triggers the KWin shortcut to switch layout</source>
-      <translation>Триггеры клавиш KWin для переключения расположения</translation>
+      <translation>Вызывает сочетание клавиш KWin для смены раскладки окон</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Select Layout...</source>
-      <translation>Выберите раскладку...</translation>
+      <translation>Выбор раскладки...</translation>
     </message>
     <message>
       <location line="+27"/>
       <source>Gaps</source>
-      <translation>Пробелы</translation>
+      <translation>Отступы</translation>
     </message>
     <message>
       <location line="+20"/>
       <source>Gap Between Windows</source>
-      <translation>Провал между окнами</translation>
+      <translation>Отступ между окнами</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Space between tiled windows</source>
-      <translation>Пространство между плитками окон</translation>
+      <translation>Расстояние между окнами в тайлинге</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Top Gap</source>
-      <translation>Верхний разрыв</translation>
+      <translation>Отступ сверху</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4817,7 +4817,7 @@
     <message>
       <location line="+8"/>
       <source>Bottom Gap</source>
-      <translation>Нижний разрыв</translation>
+      <translation>Отступ снизу</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4827,17 +4827,17 @@
     <message>
       <location line="+8"/>
       <source>Left Gap</source>
-      <translation>Левый разрыв</translation>
+      <translation>Отступ слева</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Distance from the left screen edge</source>
-      <translation>Расстояние от левой границы экрана</translation>
+      <translation>Расстояние от левого края экрана</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Right Gap</source>
-      <translation>Разрыв справа</translation>
+      <translation>Отступ справа</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4847,92 +4847,92 @@
     <message>
       <location line="+9"/>
       <source>Ignored Window Classes</source>
-      <translation>Игнорируемые оконные классы</translation>
+      <translation>Игнорируемые классы окон</translation>
     </message>
     <message>
       <location line="+24"/>
       <source>Window Classes</source>
-      <translation>Классы окна</translation>
+      <translation>Классы окон</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Comma separated list of classes to not tile (e.g. quickshell,krunner)</source>
-      <translation>Разделенный запятыми список классов не плитка (например, быстрый shell, krunner)</translation>
+      <translation>Классы через запятую, которые не тайлить (напр. quickshell,krunner)</translation>
     </message>
     <message>
       <location line="+30"/>
       <source>Enabled Layouts</source>
-      <translation>Включены макеты</translation>
+      <translation>Включённые раскладки</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Binary Tree</source>
-      <translation>Двоичное Дерево</translation>
+      <translation>Двоичное дерево</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Splits the screen in half recursively</source>
-      <translation>Разделяет экран наполовину рекурсивно</translation>
+      <translation>Рекурсивно делит экран пополам</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Windows are placed freely, without tiling</source>
-      <translation>Окна устанавливаются свободно, без вышивки</translation>
+      <translation>Окна размещаются свободно, без тайлинга</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Displays one window maximized at a time</source>
-      <translation>Отображает одно окно развернуто за раз</translation>
+      <translation>Показывает по одному развёрнутому окну</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Tiles windows into four equal quarters</source>
-      <translation>Плитки в четыре квартала</translation>
+      <translation>Раскладывает окна по четырём равным четвертям</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Tiles windows in an inward-spiraling pattern</source>
-      <translation>Окна плиток в узоре внутри спирали</translation>
+      <translation>Раскладывает окна по спирали внутрь</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Evenly spreads all windows across the screen</source>
-      <translation>Разовый сбрасывает все окна на экране</translation>
+      <translation>Равномерно распределяет окна по экрану</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>One main window with the rest stacked below or beside</source>
-      <translation>Одно главное окно с остальным складываемым ниже или рядом</translation>
+      <translation>Одно главное окно, остальные стопкой снизу или сбоку</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Tiles windows descending like a staircase</source>
-      <translation>Окна плиток по убыванию как лестница</translation>
+      <translation>Раскладывает окна лесенкой</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Splits the screen into three vertical columns</source>
-      <translation>Разделяет экран на три вертикальных столбца</translation>
+      <translation>Делит экран на три вертикальные колонки</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Standard master and stack tiling layout</source>
-      <translation>Стандартная раскладка мастер и стек</translation>
+      <translation>Классическая раскладка: главное окно и стопка</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Cascade</source>
-      <translation>Cascade</translation>
+      <translation>Каскад</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Windows overlap sequentially like a waterfall</source>
-      <translation>Окна перекрываются последовательно, как водопад</translation>
+      <translation>Окна перекрываются друг за другом, как водопад</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Splits the screen into equal vertical columns</source>
-      <translation>Разделяет экран на равные вертикальные столбцы</translation>
+      <translation>Делит экран на равные вертикальные колонки</translation>
     </message>
   </context>
   <context>
@@ -4940,7 +4940,7 @@
     <message>
       <location filename="../modules/nexus/pages/desktop/KrohnkitePreview.qml" line="+268"/>
       <source>Layout Preview</source>
-      <translation>Предпросмотр макета</translation>
+      <translation>Предпросмотр раскладки</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -4953,42 +4953,42 @@
     <message>
       <location filename="../services/Kwin.qml" line="+458"/>
       <source>Caps lock enabled</source>
-      <translation>Caps lock включен</translation>
+      <translation>Caps Lock включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Caps lock disabled</source>
-      <translation>Caps lock выключен</translation>
+      <translation>Caps Lock выключен</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Caps lock is currently enabled</source>
-      <translation>В настоящее время Caps lock включен</translation>
+      <translation>Сейчас Caps Lock включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Caps lock is currently disabled</source>
-      <translation>Caps lock в настоящее время отключён</translation>
+      <translation>Сейчас Caps Lock выключен</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Num lock enabled</source>
-      <translation>Номер блокировки включен</translation>
+      <translation>Num Lock включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Num lock disabled</source>
-      <translation>Номер блокировки отключен</translation>
+      <translation>Num Lock выключен</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Num lock is currently enabled</source>
-      <translation>В настоящее время включена блокировка Num</translation>
+      <translation>Сейчас Num Lock включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Num lock is currently disabled</source>
-      <translation>В настоящее время блокировка отключена</translation>
+      <translation>Сейчас Num Lock выключен</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -4998,12 +4998,12 @@
     <message>
       <location line="+0"/>
       <source>Layout changed to: %1</source>
-      <translation>Макет изменен на: %1</translation>
+      <translation>Новая раскладка: %1</translation>
     </message>
     <message>
       <location line="+60"/>
       <source>Reload devices</source>
-      <translation>Перезагрузить устройства</translation>
+      <translation>Перечитать устройства</translation>
     </message>
   </context>
   <context>
@@ -5026,12 +5026,12 @@
     <message>
       <location line="+8"/>
       <source>Binary (KiB, MiB)</source>
-      <translation>Двоичный (KiB, MiB)</translation>
+      <translation>Двоичные (KiB, MiB)</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Decimal (KB, MB)</source>
-      <translation>Decimal (KB, MB)</translation>
+      <translation>Десятичные (KB, MB)</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -5042,12 +5042,12 @@
     <message>
       <location line="-45"/>
       <source>24-hour</source>
-      <translation>24 часа</translation>
+      <translation>24-часовой</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>12-hour</source>
-      <translation>12 часов</translation>
+      <translation>12-часовой</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -5067,12 +5067,12 @@
     <message>
       <location line="+1"/>
       <source>Follows your system locale (%1)</source>
-      <translation>Подписан на ваш системный язык (%1)</translation>
+      <translation>Следует языку системы (%1)</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Untranslated text falls back to English</source>
-      <translation>Непереведенный текст возвращается на русский</translation>
+      <translation>Непереведённый текст остаётся английским</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -5082,17 +5082,17 @@
     <message>
       <location line="+32"/>
       <source>Using auto-detected location</source>
-      <translation>Использование определения местоположения</translation>
+      <translation>Местоположение определено автоматически</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Saved weather coordinates: %1</source>
-      <translation>Сохраненные погодные координаты: %1</translation>
+      <translation>Сохранённые координаты погоды: %1</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>No fixed location saved</source>
-      <translation>Нет фиксированного местоположения</translation>
+      <translation>Местоположение не задано</translation>
     </message>
     <message>
       <location line="+17"/>
@@ -5102,7 +5102,7 @@
     <message>
       <location line="+73"/>
       <source>No matching locations</source>
-      <translation>Нет подходящих мест</translation>
+      <translation>Ничего не найдено</translation>
     </message>
     <message>
       <location line="+68"/>
@@ -5112,7 +5112,7 @@
     <message>
       <location line="+7"/>
       <source>Use auto-detect</source>
-      <translation>Использовать автоопределение</translation>
+      <translation>Автоопределение</translation>
     </message>
     <message>
       <location line="+14"/>
@@ -5122,7 +5122,7 @@
     <message>
       <location line="+19"/>
       <source>Units</source>
-      <translation>Единицы измерения</translation>
+      <translation>Единицы</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -5132,17 +5132,17 @@
     <message>
       <location line="+1"/>
       <source>Units for weather temperatures</source>
-      <translation>Единицы измерения температуры</translation>
+      <translation>Единицы температуры в погоде</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>System temperatures</source>
-      <translation>Температура системы</translation>
+      <translation>Температуры системы</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Units for CPU and GPU temperatures</source>
-      <translation>Единицы измерения процессора и GPU</translation>
+      <translation>Единицы температуры ЦП и ГП</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -5152,7 +5152,7 @@
     <message>
       <location line="+1"/>
       <source>Units for data sizes and network speeds</source>
-      <translation>Единицы для размеров данных и скорости сети</translation>
+      <translation>Единицы размеров данных и скорости сети</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -5167,7 +5167,7 @@
     <message>
       <location line="+1"/>
       <source>How times are shown across the shell</source>
-      <translation>Как время показывается в оболочке</translation>
+      <translation>Как показывается время во всей оболочке</translation>
     </message>
   </context>
   <context>
@@ -5180,7 +5180,7 @@
     <message>
       <location line="+12"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -5190,12 +5190,12 @@
     <message>
       <location line="+6"/>
       <source>Use alternative logo</source>
-      <translation>Использовать альтернативный логотип</translation>
+      <translation>Другой логотип</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Use the Caelestia logo or a custom image instead of your distribution&apos;s logo</source>
-      <translation>Использовать логотип Caelestia или пользовательское изображение вместо вашего дистрибутива&apos;s логотип</translation>
+      <translation>Логотип Caelestia или своё изображение вместо логотипа дистрибутива</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -5210,7 +5210,7 @@
     <message>
       <location line="+6"/>
       <source>Select a custom logo</source>
-      <translation>Выберите свой логотип</translation>
+      <translation>Выбор своего логотипа</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -5220,22 +5220,22 @@
     <message>
       <location line="+11"/>
       <source>Select KDE icon</source>
-      <translation>Выберите значок KDE</translation>
+      <translation>Выбрать значок KDE</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Pick an icon from your system theme</source>
-      <translation>Выберите значок из вашей системной темы</translation>
+      <translation>Выбрать значок из системной темы</translation>
     </message>
     <message>
       <location line="+20"/>
       <source>Tint custom logo</source>
-      <translation>Tint custom logo</translation>
+      <translation>Тонировать свой логотип</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Apply the Material You accent color to your custom logo</source>
-      <translation>Применить цвет Material You accent к пользовательскому логотипу</translation>
+      <translation>Окрасить свой логотип акцентным цветом Material You</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -5245,12 +5245,12 @@
     <message>
       <location line="+10"/>
       <source>Show on hover</source>
-      <translation>Показывать при наведении курсора</translation>
+      <translation>Показ при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Reveal when the cursor reaches the screen edge</source>
-      <translation>Показать когда курсор дойдет до края экрана</translation>
+      <translation>Показывать, когда курсор доходит до края экрана</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -5260,52 +5260,52 @@
     <message>
       <location line="+5"/>
       <source>Browse apps when search is empty</source>
-      <translation>Просмотр приложений при пустом поиске</translation>
+      <translation>Приложения при пустом поиске</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the categorized app grid in the launcher when the search field is empty</source>
-      <translation>Показывать сетку категорий в лаунчере, когда поле поиска пустое</translation>
+      <translation>Показывать сетку приложений по категориям, когда поле поиска пустое</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Show power menu</source>
-      <translation>Показать меню питания</translation>
+      <translation>Показывать меню питания</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the quick session controls (shutdown, sleep, logout) at the bottom</source>
-      <translation>Показывать элементы быстрого сеанса (выключение, сн, выйти) в нижней части</translation>
+      <translation>Показывать внизу быстрые действия сеанса (выключение, сон, выход)</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Max items shown</source>
-      <translation>Макс. элементов показано</translation>
+      <translation>Макс. элементов</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Max wallpapers</source>
-      <translation>Максимум обоев</translation>
+      <translation>Макс. обоев</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Hover trigger depth</source>
-      <translation>Hover trigger depth</translation>
+      <translation>Глубина зоны наведения</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Distance in from the screen edge that opens the launcher</source>
-      <translation>Расстояние от края экрана, которое открывает лаунчер</translation>
+      <translation>Расстояние от края экрана, на котором открывается лаунчер</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Hover trigger width</source>
-      <translation>Hover trigger width</translation>
+      <translation>Ширина зоны наведения</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>How much of the bottom edge opens the launcher, as a percentage of its width</source>
-      <translation>Сколько нижних краев открывает лаунчер, в процентах от его ширины</translation>
+      <translation>Какая часть нижнего края открывает лаунчер, в процентах от его ширины</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -5315,7 +5315,7 @@
     <message>
       <location line="+1"/>
       <source>Pixels dragged before the launcher opens</source>
-      <translation>Пиксели перетаскиваются до открытия лаунчера</translation>
+      <translation>Сколько пикселей протащить, чтобы открылся лаунчер</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -5325,17 +5325,17 @@
     <message>
       <location line="+5"/>
       <source>Max clipboard entries</source>
-      <translation>Максимум записей буфера обмена</translation>
+      <translation>Макс. записей буфера обмена</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Number of copied items kept in history</source>
-      <translation>Количество скопированных элементов в истории</translation>
+      <translation>Сколько скопированных элементов хранить в истории</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Confirm clear</source>
-      <translation>Подтвердите очистку</translation>
+      <translation>Подтверждать очистку</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -5350,12 +5350,12 @@
     <message>
       <location line="+5"/>
       <source>Vim keybinds</source>
-      <translation>Привязка вима</translation>
+      <translation>Клавиши Vim</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Navigate results with Ctrl+hjkl</source>
-      <translation>Навигация по результатам с помощью Ctrl+hjkl</translation>
+      <translation>Навигация по результатам через Ctrl+hjkl</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -5365,12 +5365,12 @@
     <message>
       <location line="+1"/>
       <source>Allow actions that shut down or log out</source>
-      <translation>Разрешить отключение или выход из системы</translation>
+      <translation>Разрешить действия выключения и выхода из сеанса</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Fuzzy search</source>
-      <translation>Нечеткий поиск</translation>
+      <translation>Нечёткий поиск</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -5403,7 +5403,7 @@
     <message>
       <location filename="../modules/lock/Lock.qml" line="+78"/>
       <source>Unlock the current session</source>
-      <translation>Разблокировать текущую сессию</translation>
+      <translation>Разблокировать текущий сеанс</translation>
     </message>
   </context>
   <context>
@@ -5436,7 +5436,7 @@
     <message>
       <location line="+8"/>
       <source>Random</source>
-      <translation>Случайный</translation>
+      <translation>Случайная</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -5451,23 +5451,23 @@
     <message>
       <location line="+5"/>
       <source>Pill</source>
-      <translation>Pill</translation>
+      <translation>Пилюля</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Diamond</source>
-      <translation>Алмазный</translation>
+      <translation>Ромб</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Clam Shell</source>
-      <translation>Поджигательная раковина</translation>
+      <translation>Ракушка</translation>
     </message>
     <message>
       <location line="+5"/>
       <location line="+160"/>
       <source>Pentagon</source>
-      <translation>Pentagon</translation>
+      <translation>Пятиугольник</translation>
     </message>
     <message>
       <location line="-155"/>
@@ -5477,27 +5477,27 @@
     <message>
       <location line="+5"/>
       <source>Cookie 4-Sided</source>
-      <translation>Печенье 4-х печенье</translation>
+      <translation>Печенье, 4 грани</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 6-Sided</source>
-      <translation>Печенье 6-печенье</translation>
+      <translation>Печенье, 6 граней</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 7-Sided</source>
-      <translation>Печенье 7-разового</translation>
+      <translation>Печенье, 7 граней</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 9-Sided</source>
-      <translation>Печенье 9-печенье</translation>
+      <translation>Печенье, 9 граней</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cookie 12-Sided</source>
-      <translation>Печенье 12-печенье</translation>
+      <translation>Печенье, 12 граней</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -5512,12 +5512,12 @@
     <message>
       <location line="+6"/>
       <source>Sync with desktop wallpaper</source>
-      <translation>Синхронизация с обоями рабочего стола</translation>
+      <translation>Как на рабочем столе</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Keep the lock screen wallpaper in sync with the desktop wallpaper</source>
-      <translation>Продолжать синхронизировать обои экрана блокировки с обоями рабочего стола</translation>
+      <translation>Держать обои экрана блокировки такими же, как на рабочем столе</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -5532,7 +5532,7 @@
     <message>
       <location line="+6"/>
       <source>Select lock screen wallpaper</source>
-      <translation>Выбрать обои экрана блокировки</translation>
+      <translation>Выбор обоев экрана блокировки</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -5542,97 +5542,97 @@
     <message>
       <location line="+12"/>
       <source>Blur wallpaper</source>
-      <translation>Размытие обоев</translation>
+      <translation>Размывать обои</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Blur the entire wallpaper, not just behind the widgets</source>
-      <translation>Размытие всех обоев, а не только за виджетами</translation>
+      <translation>Размывать обои целиком, а не только под виджетами</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Authentication</source>
-      <translation>Проверка подлинности</translation>
+      <translation>Аутентификация</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Fingerprint unlock</source>
-      <translation>Разблокировка отпечатком пальца</translation>
+      <translation>Разблокировка отпечатком</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Allow fingerprint authentication on the lock screen</source>
-      <translation>Разрешить аутентификацию по отпечаткам пальцев на экране блокировки</translation>
+      <translation>Разрешить вход по отпечатку пальца на экране блокировки</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Fingerprint attempts</source>
-      <translation>Попытки отпечатка пальца</translation>
+      <translation>Попыток отпечатка</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Tries before falling back to password</source>
-      <translation>Пытается перед возвратом к паролю</translation>
+      <translation>Попыток до перехода к паролю</translation>
     </message>
     <message>
       <location line="+17"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Profile picture shape</source>
-      <translation>Форма изображения профиля</translation>
+      <translation>Форма аватара</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose the shape of the profile picture on the lock screen</source>
-      <translation>Выберите форму изображения профиля на экране блокировки</translation>
+      <translation>Форма аватара профиля на экране блокировки</translation>
     </message>
     <message>
       <location line="+19"/>
       <source>Rotate profile picture shape</source>
-      <translation>Повернуть форму изображения профиля</translation>
+      <translation>Вращать форму аватара</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Continuously rotate the profile picture shape</source>
-      <translation>Постоянно поворачивать форму изображения профиля</translation>
+      <translation>Непрерывно вращать форму аватара профиля</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Lock on startup</source>
-      <translation>Заблокировать при запуске</translation>
+      <translation>Блокировать при запуске</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Lock the session shortly after logging in</source>
-      <translation>Заблокировать сессию вскоре после входа</translation>
+      <translation>Блокировать сеанс сразу после входа</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Hide notifications</source>
-      <translation>Скрыть уведомления</translation>
+      <translation>Скрывать уведомления</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Hide notification previews until you unlock</source>
-      <translation>Скрыть превью уведомлений до разблокировки</translation>
+      <translation>Скрывать содержимое уведомлений до разблокировки</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Recolor logo</source>
-      <translation>Перекрасить логотип</translation>
+      <translation>Перекрашивать логотип</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Tint the lock screen artwork to match the palette</source>
-      <translation>Подсказка к изображению экрана блокировки</translation>
+      <translation>Окрашивать графику экрана блокировки под палитру</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Session icons</source>
-      <translation>Значки сессии</translation>
+      <translation>Значки сеанса</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -5642,27 +5642,27 @@
     <message>
       <location line="+1"/>
       <source>Show sleep action on the lock screen</source>
-      <translation>Показывать спящий режим на экране блокировки</translation>
+      <translation>Показывать «Сон» на экране блокировки</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Hibernate</source>
-      <translation>Hibernate</translation>
+      <translation>Гибернация</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show hibernate action on the lock screen</source>
-      <translation>Показать действие спящего режима на экране блокировки</translation>
+      <translation>Показывать «Гибернацию» на экране блокировки</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Switch user</source>
-      <translation>Переключить пользователя</translation>
+      <translation>Сменить пользователя</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show switch user action on the lock screen</source>
-      <translation>Показать действие переключателя на экране блокировки</translation>
+      <translation>Показывать «Сменить пользователя» на экране блокировки</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -5672,27 +5672,27 @@
     <message>
       <location line="+1"/>
       <source>Show log out action on the lock screen</source>
-      <translation>Показать действие выхода на экране блокировки</translation>
+      <translation>Показывать «Выйти» на экране блокировки</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Restart</source>
-      <translation>Перезапустить</translation>
+      <translation>Перезагрузка</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show restart action on the lock screen</source>
-      <translation>Показать действие перезапуска на экране блокировки</translation>
+      <translation>Показывать «Перезагрузку» на экране блокировки</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Shut down</source>
-      <translation>Выключить</translation>
+      <translation>Выключение</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show shut down action on the lock screen</source>
-      <translation>Показать действие отключения на экране блокировки</translation>
+      <translation>Показывать «Выключение» на экране блокировки</translation>
     </message>
   </context>
   <context>
@@ -5700,27 +5700,27 @@
     <message>
       <location filename="../modules/bar/popouts/LockStatus.qml" line="+22"/>
       <source>Keyboard Locks</source>
-      <translation>Блокировка клавиатуры</translation>
+      <translation>Lock-клавиши</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>Caps Lock enabled</source>
-      <translation>Caps Lock включен</translation>
+      <translation>Caps Lock включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Caps Lock disabled</source>
-      <translation>Caps Lock отключен</translation>
+      <translation>Caps Lock выключен</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Num Lock enabled</source>
-      <translation>Блокировка включена</translation>
+      <translation>Num Lock включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Num Lock disabled</source>
-      <translation>Блокировка Num выключена</translation>
+      <translation>Num Lock выключен</translation>
     </message>
   </context>
   <context>
@@ -5728,7 +5728,7 @@
     <message>
       <location filename="../modules/dashboard/media/LyricList.qml" line="+213"/>
       <source>Loading lyrics...</source>
-      <translation>Загрузка текста...</translation>
+      <translation>Загрузка текста песни...</translation>
     </message>
     <message>
       <location line="+32"/>
@@ -5741,12 +5741,12 @@
     <message>
       <location filename="../modules/dashboard/media/LyricsAndSelector.qml" line="+31"/>
       <source>Lyrics</source>
-      <translation>Тексты песен</translation>
+      <translation>Текст песни</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>No players</source>
-      <translation>Нет игроков</translation>
+      <translation>Нет плееров</translation>
     </message>
   </context>
   <context>
@@ -5782,52 +5782,52 @@
     <message>
       <location filename="../modules/launcher/services/M3Variants.qml" line="+41"/>
       <source>Vibrant</source>
-      <translation>Вибрировать</translation>
+      <translation>Яркая</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>A high chroma palette. The primary palette&apos;s chroma is at maximum.</source>
-      <translation>Высокая палитра хрома. Основная палитра&apos;s хрома максимальна.</translation>
+      <translation>Палитра с высокой насыщенностью. Насыщенность основной палитры максимальна.</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Tonal Spot</source>
-      <translation>Тональная точка</translation>
+      <translation>Тональное пятно</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Default for Material theme colors. A pastel palette with a low chroma.</source>
-      <translation>По умолчанию для цветов в стиле Material. Пассивная палитра с низкой хромой.</translation>
+      <translation>Палитра Material по умолчанию: пастельная, с низкой насыщенностью.</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Expressive</source>
-      <translation>Эксклюзивный</translation>
+      <translation>Выразительная</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>A medium chroma palette. The primary palette&apos;s hue is different from the seed color, for variety.</source>
-      <translation>Средняя хрома палитра. Основная палитра&apos;s оттенок отличается от цвета семена, для разновидности.</translation>
+      <translation>Палитра средней насыщенности. Оттенок основной палитры для разнообразия отличается от исходного цвета.</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Fidelity</source>
-      <translation>Верность</translation>
+      <translation>Точная</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Matches the seed color, even if the seed color is very bright (high chroma).</source>
-      <translation>Совпадает с цветом семян, даже если цвет семян очень яркий (высокая хрома).</translation>
+      <translation>Совпадает с исходным цветом, даже если он очень яркий (высокая насыщенность).</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Content</source>
-      <translation>Содержание</translation>
+      <translation>Контент</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Almost identical to fidelity.</source>
-      <translation>Почти идентично верности.</translation>
+      <translation>Почти то же, что «Точная».</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -5838,7 +5838,7 @@
       <location line="+1"/>
       <location line="+6"/>
       <source>A playful theme - the seed color&apos;s hue does not appear in the theme.</source>
-      <translation>Проигрываемая тема - цвет сидов&apos;с оттенком не отображается в теме.</translation>
+      <translation>Игривая тема — оттенок исходного цвета в ней не появляется.</translation>
     </message>
     <message>
       <location line="-1"/>
@@ -5848,22 +5848,22 @@
     <message>
       <location line="+6"/>
       <source>Neutral</source>
-      <translation>Нейтральный</translation>
+      <translation>Нейтральная</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Close to grayscale, a hint of chroma.</source>
-      <translation>Рядом с серыми цветами, намек на хрому.</translation>
+      <translation>Почти оттенки серого, лишь намёк на цвет.</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Monochrome</source>
-      <translation>Монохромный</translation>
+      <translation>Монохромная</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>All colors are grayscale, no chroma.</source>
-      <translation>Все цвета серые, а не хрома.</translation>
+      <translation>Все цвета — оттенки серого, без насыщенности.</translation>
     </message>
   </context>
   <context>
@@ -5895,12 +5895,12 @@
       <location filename="../modules/dashboard/Media.qml" line="+117"/>
       <location filename="../modules/lock/Media.qml" line="-10"/>
       <source>Nothing playing</source>
-      <translation>Ничего не проигрывается</translation>
+      <translation>Ничего не играет</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Play something for it to show up here!</source>
-      <translation>Играйте что-нибудь для того, чтобы оно появилось здесь!</translation>
+      <translation>Включите что-нибудь — и оно появится здесь!</translation>
     </message>
     <message>
       <location filename="../modules/lock/Media.qml" line="+0"/>
@@ -5910,7 +5910,7 @@
     <message>
       <location line="+10"/>
       <source>Try playing some music!</source>
-      <translation>Попробуйте воспроизвести музыку!</translation>
+      <translation>Включите музыку!</translation>
     </message>
   </context>
   <context>
@@ -5923,7 +5923,7 @@
     <message>
       <location line="+35"/>
       <source>Used</source>
-      <translation>Использовано</translation>
+      <translation>Занято</translation>
     </message>
   </context>
   <context>
@@ -5931,7 +5931,7 @@
     <message>
       <location filename="../modules/nexus/NavPane.qml" line="+37"/>
       <source>Search settings</source>
-      <translation>Настройки поиска</translation>
+      <translation>Поиск по настройкам</translation>
     </message>
   </context>
   <context>
@@ -5959,7 +5959,7 @@
     <message>
       <location line="+1"/>
       <source>MAC address</source>
-      <translation>MAC адрес</translation>
+      <translation>MAC-адрес</translation>
     </message>
     <message>
       <location line="+21"/>
@@ -5969,7 +5969,7 @@
     <message>
       <location line="+38"/>
       <source>Wireless</source>
-      <translation>Беспроводной</translation>
+      <translation>Wi-Fi</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -5979,12 +5979,12 @@
     <message>
       <location line="+10"/>
       <source>%1 networks available</source>
-      <translation>Доступны сети %1</translation>
+      <translation>Доступно сетей: %1</translation>
     </message>
     <message>
       <location line="+141"/>
       <source>Rescan networks</source>
-      <translation>Пересканировать сети</translation>
+      <translation>Обновить список сетей</translation>
     </message>
     <message>
       <location line="+27"/>
@@ -5994,7 +5994,7 @@
     <message>
       <location line="+6"/>
       <source>%1 profiles available</source>
-      <translation>Доступны профили %1</translation>
+      <translation>Доступно профилей: %1</translation>
     </message>
     <message>
       <location line="+81"/>
@@ -6009,17 +6009,17 @@
     <message>
       <location line="+9"/>
       <source>%1 devices available</source>
-      <translation>Доступные %1 устройства</translation>
+      <translation>Доступно устройств: %1</translation>
     </message>
     <message>
       <location line="+55"/>
       <source>Unknown</source>
-      <translation>Неизвестен</translation>
+      <translation>Неизвестно</translation>
     </message>
     <message>
       <location line="+34"/>
       <source>Connection details</source>
-      <translation>Детали подключения</translation>
+      <translation>Сведения о подключении</translation>
     </message>
   </context>
   <context>
@@ -6037,17 +6037,17 @@
     <message>
       <location line="+19"/>
       <source>Download</source>
-      <translation>Скачать</translation>
+      <translation>Загрузка</translation>
     </message>
     <message>
       <location line="+28"/>
       <source>Upload</source>
-      <translation>Выгрузить</translation>
+      <translation>Отдача</translation>
     </message>
     <message>
       <location line="+28"/>
       <source>Total</source>
-      <translation>Итого</translation>
+      <translation>Всего</translation>
     </message>
   </context>
   <context>
@@ -6065,7 +6065,7 @@
     <message>
       <location line="+39"/>
       <source>Disconnect</source>
-      <translation>Отключиться</translation>
+      <translation>Отключить</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -6099,7 +6099,7 @@
     <message>
       <location line="+1"/>
       <source>Open</source>
-      <translation>Открыть</translation>
+      <translation>Открытая</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -6125,7 +6125,7 @@
     <message>
       <location line="-153"/>
       <source>MAC address</source>
-      <translation>MAC адрес</translation>
+      <translation>MAC-адрес</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -6135,12 +6135,12 @@
     <message>
       <location line="+7"/>
       <source>Connect automatically</source>
-      <translation>Подключиться автоматически</translation>
+      <translation>Подключаться автоматически</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Join this network when it&apos;s in range</source>
-      <translation>Присоединиться к этой сети, когда она&apos;с в диапазоне</translation>
+      <translation>Подключаться к этой сети, когда она в зоне действия</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -6156,17 +6156,17 @@
       <location line="+1"/>
       <location line="+10"/>
       <source>Automatic (DHCP)</source>
-      <translation>Автоматический (DHCP)</translation>
+      <translation>Автоматически (DHCP)</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Automatic, DNS only</source>
-      <translation>Автоматически только DNS</translation>
+      <translation>Автоматически, кроме DNS</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Manual</source>
-      <translation>Ручной</translation>
+      <translation>Вручную</translation>
     </message>
     <message>
       <location line="+83"/>
@@ -6176,32 +6176,32 @@
     <message>
       <location line="+2"/>
       <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP и префикс, например 192.168.1.50/24</translation>
+      <translation>IP и префикс, напр. 192.168.1.50/24</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enter a valid address in CIDR notation</source>
-      <translation>Введите правильный адрес в нотации CIDR</translation>
+      <translation>Введите корректный адрес в нотации CIDR</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Enter a valid gateway address</source>
-      <translation>Введите правильный адрес шлюза</translation>
+      <translation>Введите корректный адрес шлюза</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>DNS servers</source>
-      <translation>DNS серверы</translation>
+      <translation>DNS-серверы</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Comma-separated</source>
-      <translation>Разделенные запятыми</translation>
+      <translation>Через запятую</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enter valid DNS server addresses</source>
-      <translation>Введите корректные адреса DNS-сервера</translation>
+      <translation>Введите корректные адреса DNS-серверов</translation>
     </message>
     <message>
       <location line="+48"/>
@@ -6219,12 +6219,12 @@
     <message>
       <location line="+0"/>
       <source>Wi-Fi disabled</source>
-      <translation>Wi-Fi отключен</translation>
+      <translation>Wi-Fi выключен</translation>
     </message>
     <message>
       <location line="+126"/>
       <source>Security: %1%2</source>
-      <translation>Безопасность: %1%2</translation>
+      <translation>Защита: %1%2</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -6234,7 +6234,7 @@
     <message>
       <location line="+0"/>
       <source> • Saved</source>
-      <translation> • Сохранено</translation>
+      <translation> • Сохранена</translation>
     </message>
   </context>
   <context>
@@ -6257,7 +6257,7 @@
     <message>
       <location line="+40"/>
       <source>Saved networks</source>
-      <translation>Сохраненные сети</translation>
+      <translation>Сохранённые сети</translation>
     </message>
     <message>
       <location line="+39"/>
@@ -6288,17 +6288,17 @@
     <message>
       <location line="+44"/>
       <source>VPN providers</source>
-      <translation>VPN провайдеры</translation>
+      <translation>VPN-провайдеры</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>WireGuard, WARP, NetBird, and Tailscale</source>
-      <translation>WireGuard, WARP, NetBird и ailscale</translation>
+      <translation>WireGuard, WARP, NetBird и Tailscale</translation>
     </message>
     <message>
       <location line="+25"/>
       <source>No VPN providers configured</source>
-      <translation>Не настроены VPN-провайдеры</translation>
+      <translation>VPN-провайдеры не настроены</translation>
     </message>
     <message>
       <location line="+68"/>
@@ -6343,7 +6343,7 @@
     <message>
       <location line="+20"/>
       <source>%1 ms</source>
-      <translation type="unfinished">%1 ms</translation>
+      <translation>%1 мс</translation>
     </message>
     <message>
       <location line="+28"/>
@@ -6384,7 +6384,7 @@
     <message>
       <location line="+8"/>
       <source>Closing now will let the update keep running in the background, or you can cancel it first.</source>
-      <translation>При закрытии обновление будет работать в фоновом режиме, или вы можете сначала его отменить.</translation>
+      <translation>Если закрыть сейчас, обновление продолжится в фоне; либо сначала отмените его.</translation>
     </message>
     <message>
       <location line="+14"/>
@@ -6394,7 +6394,7 @@
     <message>
       <location line="+11"/>
       <source>Keep Running</source>
-      <translation>Продолжить работу</translation>
+      <translation>Пусть работает</translation>
     </message>
   </context>
   <context>
@@ -6402,7 +6402,7 @@
     <message>
       <location filename="../modules/bar/popouts/NightLight.qml" line="+27"/>
       <source>Night Light</source>
-      <translation>Ночной свет</translation>
+      <translation>Ночная подсветка</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -6412,17 +6412,17 @@
     <message>
       <location line="+0"/>
       <source>Manual</source>
-      <translation>Ручной</translation>
+      <translation>Вручную</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Daylight Temperature (%1K)</source>
-      <translation>Температура дневного света (%1K)</translation>
+      <translation>Температура днём (%1K)</translation>
     </message>
     <message>
       <location line="+38"/>
       <source>Nightlight Temperature (%1K)</source>
-      <translation>Температура Ночного Света (%1K)</translation>
+      <translation>Температура ночью (%1K)</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -6435,17 +6435,17 @@
     <message>
       <location filename="../services/Nmcli.qml" line="+426"/>
       <source>Open</source>
-      <translation>Открыть</translation>
+      <translation>Открытая</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Enterprise</source>
-      <translation>Предприятие</translation>
+      <translation>Enterprise</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Enhanced Open</source>
-      <translation>Открыто</translation>
+      <translation>Enhanced Open</translation>
     </message>
   </context>
   <context>
@@ -6453,7 +6453,7 @@
     <message>
       <location filename="../modules/sidebar/Notif.qml" line="+138"/>
       <source>No body here! :/</source>
-      <translation>Нет тела! :/</translation>
+      <translation>Тут пусто! :/</translation>
     </message>
   </context>
   <context>
@@ -6470,7 +6470,7 @@
     <message>
       <location filename="../modules/lock/NotifDock.qml" line="+26"/>
       <source>%1 notification%2</source>
-      <translation>%1 уведомление%2</translation>
+      <translation>Уведомлений: %1</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -6481,7 +6481,7 @@
     <message>
       <location line="+39"/>
       <source>Unlock for Notifications</source>
-      <translation>Разблокировать для уведомлений</translation>
+      <translation>Разблокируйте, чтобы увидеть</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -6491,12 +6491,12 @@
     <message>
       <location filename="../modules/sidebar/NotifDock.qml" line="+0"/>
       <source>notification%1</source>
-      <translation>уведомление%1</translation>
+      <translation>уведомл.</translation>
     </message>
     <message>
       <location line="+112"/>
       <source>Caelestia Mode</source>
-      <translation>Caelestia Mode</translation>
+      <translation>Режим Caelestia</translation>
     </message>
   </context>
   <context>
@@ -6509,7 +6509,7 @@
     <message>
       <location line="+4"/>
       <source>On</source>
-      <translation>На</translation>
+      <translation>Вкл</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -6519,7 +6519,7 @@
     <message>
       <location line="+4"/>
       <source>Focused screen</source>
-      <translation>Фокусный экран</translation>
+      <translation>Активный экран</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -6534,12 +6534,12 @@
     <message>
       <location line="+4"/>
       <source>Top Center</source>
-      <translation>Верхний центр</translation>
+      <translation>Вверху по центру</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Top Right</source>
-      <translation>Верхний правый</translation>
+      <translation>Вверху справа</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -6549,7 +6549,7 @@
     <message>
       <location line="+4"/>
       <source>Bottom Center</source>
-      <translation>Нижний центр</translation>
+      <translation>Внизу по центру</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -6569,7 +6569,7 @@
     <message>
       <location line="+5"/>
       <source>Show in fullscreen</source>
-      <translation>Показать в полноэкранном режиме</translation>
+      <translation>В полноэкранном режиме</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -6579,7 +6579,7 @@
     <message>
       <location line="+7"/>
       <source>Display on screen</source>
-      <translation>Отображать на экране</translation>
+      <translation>Экран показа</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -6589,32 +6589,32 @@
     <message>
       <location line="+7"/>
       <source>Position</source>
-      <translation>Позиция</translation>
+      <translation>Положение</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Where notification popups appear</source>
-      <translation>Где появляются всплывающие окна уведомлений</translation>
+      <translation>Где появляются всплывающие уведомления</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Expire automatically</source>
-      <translation>Автоматически истекает</translation>
+      <translation>Автоскрытие</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Dismiss notifications after their timeout</source>
-      <translation>Отключить уведомления по истечении их таймаута</translation>
+      <translation>Убирать уведомления по истечении таймаута</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Open expanded</source>
-      <translation>Открыть развернуто</translation>
+      <translation>Открывать развёрнутыми</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show notifications expanded by default</source>
-      <translation>Показывать уведомления в развернутом виде по умолчанию</translation>
+      <translation>Показывать уведомления развёрнутыми по умолчанию</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -6624,37 +6624,37 @@
     <message>
       <location line="+1"/>
       <source>Seconds before a notification dismisses</source>
-      <translation>Секунды до удаления уведомления</translation>
+      <translation>Секунд до скрытия уведомления</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Group preview count</source>
-      <translation>Количество предпросмотров групп</translation>
+      <translation>Превью в группе</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Notifications shown before a group collapses</source>
-      <translation>Уведомления отображаются до сворачивания группы</translation>
+      <translation>Сколько уведомлений показывать, прежде чем группа свернётся</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Max popup notifications</source>
-      <translation>Максимум всплывающих уведомлений</translation>
+      <translation>Макс. всплывающих уведомлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Only the newest popups are shown; the rest stay in the sidebar</source>
-      <translation>Показаны только новейшие всплывающие окна, оставшиеся в боковой панели</translation>
+      <translation>Показываются только самые новые; остальные остаются в боковой панели</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Max stored notifications</source>
-      <translation>Максимальное количество сохраненных уведомлений</translation>
+      <translation>Макс. хранимых уведомлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Older notifications are dropped when the limit is reached</source>
-      <translation>Старые уведомления удаляются по достижении лимита</translation>
+      <translation>При достижении лимита старые уведомления удаляются</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -6664,42 +6664,42 @@
     <message>
       <location line="+5"/>
       <source>Click to activate</source>
-      <translation>Нажмите, чтобы активировать</translation>
+      <translation>Активация по клику</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Activate the notification action on click</source>
-      <translation>Активировать действие уведомления по нажатию</translation>
+      <translation>Выполнять действие уведомления по клику</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Expand threshold</source>
-      <translation>Развернуть порог</translation>
+      <translation>Порог раскрытия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Hover pixels before a docked notification expands</source>
-      <translation>Наведите пиксели до того, как пристыкованное уведомление будет расширено</translation>
+      <translation>Сколько пикселей навести, чтобы уведомление в доке раскрылось</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Fullscreen timeout</source>
-      <translation>Таймаут полноэкранного режима</translation>
+      <translation>Таймаут в полноэкранном режиме</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Milliseconds a notification stays over a fullscreen app</source>
-      <translation>Миллисекунды уведомления остаются в полноэкранном режиме</translation>
+      <translation>Сколько миллисекунд уведомление держится поверх полноэкранного приложения</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Clear threshold</source>
-      <translation>Очистить порог</translation>
+      <translation>Порог смахивания</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Swipe distance before a notification is dismissed</source>
-      <translation>Расстояние свайпа перед отключением уведомления</translation>
+      <translation>Дистанция смахивания, после которой уведомление убирается</translation>
     </message>
   </context>
   <context>
@@ -6707,12 +6707,12 @@
     <message>
       <location filename="../modules/nexus/pages/audio/NotificationSilencingPage.qml" line="+28"/>
       <source>Muted notification apps</source>
-      <translation>Отключенные приложения</translation>
+      <translation>Приложения без звука уведомлений</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Muted apps</source>
-      <translation>Заглушенные приложения</translation>
+      <translation>Без звука</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -6735,17 +6735,17 @@
     <message>
       <location line="+6"/>
       <source>Notifications off</source>
-      <translation>Уведомления выкл</translation>
+      <translation>Уведомления выкл.</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 unread</source>
-      <translation type="unfinished">%1 unread</translation>
+      <translation>Непрочитанных: %1</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Clear all</source>
-      <translation>Очистить все</translation>
+      <translation>Очистить всё</translation>
     </message>
   </context>
   <context>
@@ -6753,12 +6753,12 @@
     <message>
       <location filename="../modules/bar/components/NotificationsIndicator.qml" line="+38"/>
       <source>Notifications and sidebar toggle</source>
-      <translation>Переключение уведомлений и боковой панели</translation>
+      <translation>Уведомления и боковая панель</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Left-click to open the sidebar. Right-click to toggle Do Not Disturb</source>
-      <translation>Щелкните левой кнопкой мыши, чтобы открыть боковую панель. Щелкните правой кнопкой мыши, чтобы переключить режим "Не беспокоить"</translation>
+      <translation>ЛКМ — открыть боковую панель. ПКМ — переключить «Не беспокоить»</translation>
     </message>
   </context>
   <context>
@@ -6777,17 +6777,17 @@
     <message>
       <location line="+7"/>
       <source>Position, timeout, and display behavior</source>
-      <translation>Позиция, таймаут и поведение дисплея</translation>
+      <translation>Положение, таймаут и поведение показа</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Toasts</source>
-      <translation>Токсы</translation>
+      <translation>Тосты</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Fullscreen behavior, appearance, and sound</source>
-      <translation>На весь экран поведение, внешний вид и звук</translation>
+      <translation>Поведение в полноэкранном режиме, вид и звук</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -6797,12 +6797,12 @@
     <message>
       <location line="+7"/>
       <source>Toast events</source>
-      <translation>Toast-события</translation>
+      <translation>События для тостов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose which system changes show a toast</source>
-      <translation>Выберите, какие изменения системы показывают всплывающее уведомление</translation>
+      <translation>Какие изменения в системе показывать тостом</translation>
     </message>
   </context>
   <context>
@@ -6810,22 +6810,22 @@
     <message>
       <location filename="../services/Notifs.qml" line="+144"/>
       <source>Do not disturb enabled</source>
-      <translation>Не беспокоить включено</translation>
+      <translation>«Не беспокоить» включён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Popup notifications are now disabled</source>
-      <translation>Всплывающие уведомления теперь отключены</translation>
+      <translation>Всплывающие уведомления отключены</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Do not disturb disabled</source>
-      <translation>Режим "Не беспокоить" отключен</translation>
+      <translation>«Не беспокоить» выключен</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Popup notifications are now enabled</source>
-      <translation>Всплывающие уведомления теперь включены</translation>
+      <translation>Всплывающие уведомления включены</translation>
     </message>
     <message>
       <location line="+103"/>
@@ -6843,12 +6843,12 @@
     <message>
       <location line="+8"/>
       <source>Screenshot</source>
-      <translation>Скриншот</translation>
+      <translation>Снимок экрана</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Google Lens</source>
-      <translation>Гугл</translation>
+      <translation>Google Lens</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -6861,7 +6861,7 @@
     <message>
       <location filename="../modules/nexus/pages/utilities/OsdPage.qml" line="+9"/>
       <source>On-screen sliders</source>
-      <translation>Ползунки на экране</translation>
+      <translation>Экранные ползунки</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -6876,17 +6876,17 @@
     <message>
       <location line="+1"/>
       <source>Show the on-screen sliders</source>
-      <translation>Показать ползунки на экране</translation>
+      <translation>Показывать экранные ползунки</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Volume</source>
-      <translation>Объем</translation>
+      <translation>Громкость</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the volume slider</source>
-      <translation>Показать слайдер громкости</translation>
+      <translation>Показывать ползунок громкости</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -6896,7 +6896,7 @@
     <message>
       <location line="+1"/>
       <source>Show the microphone slider</source>
-      <translation>Показать ползунок микрофона</translation>
+      <translation>Показывать ползунок микрофона</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -6906,12 +6906,12 @@
     <message>
       <location line="+1"/>
       <source>Show the brightness slider</source>
-      <translation>Показать ползунок яркости</translation>
+      <translation>Показывать ползунок яркости</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Edge trigger</source>
-      <translation>Края триггер</translation>
+      <translation>Зона у края</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -6931,7 +6931,7 @@
     <message>
       <location line="+1"/>
       <source>Portion of the edge that responds</source>
-      <translation>Часть границы, которая отвечает</translation>
+      <translation>Какая часть края реагирует</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -6941,12 +6941,12 @@
     <message>
       <location line="+6"/>
       <source>Hide delay</source>
-      <translation>Скрыть задержку</translation>
+      <translation>Задержка скрытия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Seconds before the slider hides</source>
-      <translation>Секунды до скрытия слайдера</translation>
+      <translation>Секунд до скрытия ползунка</translation>
     </message>
   </context>
   <context>
@@ -6954,7 +6954,7 @@
     <message>
       <location filename="../modules/nexus/pages/panels/OverviewPanel.qml" line="+18"/>
       <source>KDE Grid</source>
-      <translation>KDE Grid</translation>
+      <translation>Сетка KDE</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -6965,73 +6965,73 @@
     <message>
       <location line="-147"/>
       <source>Linear</source>
-      <translation>Линейный</translation>
+      <translation>Линейная</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Quadratic Out</source>
-      <translation>Четырехтичный выход</translation>
+      <translation>Квадратичная, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Quadratic In-Out</source>
-      <translation>Четырехсторонняя</translation>
+      <translation>Квадратичная, вход-выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Cubic Out</source>
-      <translation>Кубический выход</translation>
+      <translation>Кубическая, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Quartic Out</source>
-      <translation>Квартал вне</translation>
+      <translation>4-й степени, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Quintic Out</source>
-      <translation>Квинтик выключен</translation>
+      <translation>5-й степени, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Sine Out</source>
-      <translation>Синяя</translation>
+      <translation>Синус, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Exponential Out</source>
-      <translation>Экспоненциальный выход</translation>
+      <translation>Экспонента, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Circular Out</source>
-      <translation>Круговой выход</translation>
+      <translation>Окружность, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Elastic Out</source>
-      <translation>Эластичный выход</translation>
+      <translation>Упругая, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <location line="+131"/>
       <source>Back In</source>
-      <translation>Назад</translation>
+      <translation>Замах, вход</translation>
     </message>
     <message>
       <location line="-126"/>
       <source>Back Out</source>
-      <translation>Назад</translation>
+      <translation>Замах, выход</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Bounce Out</source>
-      <translation>Отскакивать</translation>
+      <translation>Отскок, выход</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Overview</source>
-      <translation>Общий обзор</translation>
+      <translation>Обзор</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -7046,22 +7046,22 @@
     <message>
       <location line="+5"/>
       <source>Show on hover</source>
-      <translation>Показывать при наведении курсора</translation>
+      <translation>Показ при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Open overview by hovering a corner instead of dragging</source>
-      <translation>Открывать обзор, наведя угол вместо перетаскивания</translation>
+      <translation>Открывать обзор наведением на угол, а не перетаскиванием</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Trigger area size</source>
-      <translation>Размер области триггера</translation>
+      <translation>Размер зоны срабатывания</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Size of the corner activation areas in pixels</source>
-      <translation>Размер угловых областей активации в пикселях</translation>
+      <translation>Размер угловых зон активации в пикселях</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -7071,7 +7071,7 @@
     <message>
       <location line="+1"/>
       <source>Distance to drag from corner to open overview</source>
-      <translation>Расстояние для перетаскивания из угла для просмотра</translation>
+      <translation>Сколько протащить от угла, чтобы открыть обзор</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -7081,22 +7081,22 @@
     <message>
       <location line="+7"/>
       <source>Top-Left corner</source>
-      <translation>Верхний левый угол</translation>
+      <translation>Левый верхний угол</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Top-Right corner</source>
-      <translation>Верхний правый угол</translation>
+      <translation>Правый верхний угол</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Bottom-Left corner</source>
-      <translation>Нижний левый угол</translation>
+      <translation>Левый нижний угол</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Bottom-Right corner</source>
-      <translation>Нижний правый угол</translation>
+      <translation>Правый нижний угол</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7106,47 +7106,47 @@
     <message>
       <location line="+4"/>
       <source>Window layout style</source>
-      <translation>Стиль расположения окна</translation>
+      <translation>Раскладка окон</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose the layout algorithm used in the overview</source>
-      <translation>Выберите алгоритм макета, используемый в обзоре</translation>
+      <translation>Алгоритм раскладки окон в обзоре</translation>
     </message>
     <message>
       <location line="+16"/>
       <source>Disable wallpaper blur</source>
-      <translation>Отключить размытие обоев</translation>
+      <translation>Не размывать обои</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Do not blur the background wallpaper when opening overview</source>
-      <translation>Не размывать фоновые обои при открытии обзора</translation>
+      <translation>Не размывать обои при открытии обзора</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Enable overview blur</source>
-      <translation>Включить размытие обзора</translation>
+      <translation>Размытие в обзоре</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enable QuickShell-based blur effect on overview wallpaper</source>
-      <translation>Включить эффект размытия на основе QuickShell для обоев обзора</translation>
+      <translation>Размытие обоев в обзоре средствами Quickshell</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Animations</source>
-      <translation>Анимация</translation>
+      <translation>Анимации</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Animation easing type</source>
-      <translation>Тип смягчения анимации</translation>
+      <translation>Кривая плавности</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose the easing curve for overview animations</source>
-      <translation>Выберите кривую смягчения для анимации обзора</translation>
+      <translation>Кривая плавности для анимаций обзора</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -7156,17 +7156,17 @@
     <message>
       <location line="+1"/>
       <source>Base duration for overview opening/closing in milliseconds</source>
-      <translation>Базовая длительность для открытия/закрытия обзора в миллисекундах</translation>
+      <translation>Базовая длительность открытия и закрытия обзора, мс</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Blob scale speed</source>
-      <translation>Скорость шкалы Blob</translation>
+      <translation>Скорость масштаба пузырей</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Scaling speed modifier for background blobs</source>
-      <translation>Модификатор скорости масштабирования для фоновых пузырей</translation>
+      <translation>Множитель скорости масштабирования фоновых пузырей</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -7176,7 +7176,7 @@
     <message>
       <location line="+1"/>
       <source>Fade speed modifier for the wallpaper</source>
-      <translation>Модификатор скорости затемнения для обоев</translation>
+      <translation>Множитель скорости затухания обоев</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -7186,7 +7186,7 @@
     <message>
       <location line="+1"/>
       <source>Fade speed modifier for the window grid</source>
-      <translation>Модификатор скорости затемнения для сетки окна</translation>
+      <translation>Множитель скорости затухания сетки окон</translation>
     </message>
   </context>
   <context>
@@ -7194,12 +7194,12 @@
     <message>
       <location filename="../modules/nexus/PageCompRegistry.qml" line="+351"/>
       <source>Page under construction</source>
-      <translation>Страница в стадии строительства</translation>
+      <translation>Страница в разработке</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>This page will be available in a future update.</source>
-      <translation>Эта страница будет доступна в будущем обновлении.</translation>
+      <translation>Страница появится в одном из следующих обновлений.</translation>
     </message>
   </context>
   <context>
@@ -7222,17 +7222,17 @@
     <message>
       <location line="+1"/>
       <source>Font</source>
-      <translation>Font</translation>
+      <translation>Шрифт</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Monospace font</source>
-      <translation>Monospace font</translation>
+      <translation>Моноширинный шрифт</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Font scale</source>
-      <translation>Шрифт</translation>
+      <translation>Масштаб шрифта</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7247,7 +7247,7 @@
     <message>
       <location line="+1"/>
       <source>Corner Radius</source>
-      <translation>Corner Radius</translation>
+      <translation>Радиус углов</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7257,7 +7257,7 @@
     <message>
       <location line="+1"/>
       <source>Wallhaven</source>
-      <translation>Уоллэйн</translation>
+      <translation>Wallhaven</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7267,7 +7267,7 @@
     <message>
       <location line="+1"/>
       <source>Slideshow &amp; Order</source>
-      <translation>Slideshow &amp; Order</translation>
+      <translation>Слайд-шоу и порядок</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7287,37 +7287,37 @@
     <message>
       <location line="+1"/>
       <source>Bezel mode</source>
-      <translation>Режим Безеля</translation>
+      <translation>Режим рамок</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Desktop &amp; Tiling</source>
-      <translation>Рабочий стол</translation>
+      <translation>Рабочий стол и тайлинг</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>KDE Desktop, addons, right click menu</source>
-      <translation>Рабочий стол KDE, аддоны, контекстное меню</translation>
+      <translation>Рабочий стол KDE, дополнения, меню правой кнопки</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>KDE Desktop Integration</source>
-      <translation>KDE Desktop интеграция</translation>
+      <translation>Интеграция с рабочим столом KDE</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Right Click Menu</source>
-      <translation>Щелкните правой кнопкой мыши</translation>
+      <translation>Меню правой кнопки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Desktop Addons</source>
-      <translation>Дополнения для рабочего стола</translation>
+      <translation>Дополнения стола</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Window Tiling</source>
-      <translation>Окно</translation>
+      <translation>Тайлинг окон</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7327,7 +7327,7 @@
     <message>
       <location line="+1"/>
       <source>Virtual Workspaces</source>
-      <translation>Виртуальные рабочие области</translation>
+      <translation>Виртуальные рабочие столы</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -7337,7 +7337,7 @@
     <message>
       <location line="+3"/>
       <source>Dashboard, taskbar, launcher, sidebar</source>
-      <translation>Панель задач, панель запусков, боковую панель</translation>
+      <translation>Дашборд, панель задач, лаунчер, боковая панель</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -7347,7 +7347,7 @@
     <message>
       <location line="+1"/>
       <source>Dashboard</source>
-      <translation>Панель</translation>
+      <translation>Дашборд</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7357,32 +7357,32 @@
     <message>
       <location line="+1"/>
       <source>Sidebar</source>
-      <translation>Sidebar</translation>
+      <translation>Боковая панель</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Quick Toggles Panel</source>
-      <translation>Панель быстрых переключателей</translation>
+      <translation>Панель быстрых настроек</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Overview</source>
-      <translation>Общий обзор</translation>
+      <translation>Обзор</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Toggle &amp; Rearrange</source>
-      <translation>Переключить и изменить порядок</translation>
+      <translation>Включение и порядок</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Workspaces indicator</source>
-      <translation>Индикатор рабочих областей</translation>
+      <translation>Индикатор рабочих столов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Unoccupied workspaces</source>
-      <translation>Непокоренные проекты</translation>
+      <translation>Пустые рабочие столы</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7392,17 +7392,17 @@
     <message>
       <location line="+1"/>
       <source>Greeter slideshow</source>
-      <translation>Приветствие слайд-шоу</translation>
+      <translation>Слайд-шоу приветствия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Tray</source>
-      <translation>Трейд</translation>
+      <translation>Лоток</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Status icons</source>
-      <translation>Значки статуса</translation>
+      <translation>Значки состояния</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7412,7 +7412,7 @@
     <message>
       <location line="+1"/>
       <source>Clock seconds</source>
-      <translation>Секунды часов</translation>
+      <translation>Секунды на часах</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7427,7 +7427,7 @@
     <message>
       <location line="+1"/>
       <source>Per-element scaling offsets</source>
-      <translation>Смещение масштабирования на элемент</translation>
+      <translation>Поправки масштаба по элементам</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7437,12 +7437,12 @@
     <message>
       <location line="+1"/>
       <source>Update indicator</source>
-      <translation>Обновить индикатор</translation>
+      <translation>Индикатор обновлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Preview scale</source>
-      <translation>Масштаб</translation>
+      <translation>Масштаб превью</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7452,12 +7452,12 @@
     <message>
       <location line="+1"/>
       <source>Dashboard clock seconds</source>
-      <translation>Часы в секундах</translation>
+      <translation>Секунды на часах дашборда</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Fuzzy search</source>
-      <translation>Нечеткий поиск</translation>
+      <translation>Нечёткий поиск</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7467,7 +7467,7 @@
     <message>
       <location line="+1"/>
       <source>Window Switcher</source>
-      <translation>Переключатель окна</translation>
+      <translation>Переключатель окон</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7502,17 +7502,17 @@
     <message>
       <location line="+1"/>
       <source>Saved networks</source>
-      <translation>Сохраненные сети</translation>
+      <translation>Сохранённые сети</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Connected devices</source>
-      <translation>Подключенные устройства</translation>
+      <translation>Подключённые устройства</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Bluetooth, pairing, drivers</source>
-      <translation>Bluetooth, подключение, водители</translation>
+      <translation>Bluetooth, сопряжение, драйверы</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -7522,17 +7522,17 @@
     <message>
       <location line="+1"/>
       <source>Discoverable</source>
-      <translation>Открываемое</translation>
+      <translation>Видимость</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Pairable</source>
-      <translation>Совместимость</translation>
+      <translation>Сопряжение</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Pairing</source>
-      <translation>Pairing</translation>
+      <translation>Сопряжение</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -7552,12 +7552,12 @@
     <message>
       <location line="+1"/>
       <source>Microphones</source>
-      <translation>Microphones</translation>
+      <translation>Микрофоны</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>App Volumes</source>
-      <translation>Громкость приложения</translation>
+      <translation>Громкость приложений</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7567,7 +7567,7 @@
     <message>
       <location line="+1"/>
       <source>Muted Notification Apps</source>
-      <translation>Заглушенные приложения уведомлений</translation>
+      <translation>Приложения без звука уведомлений</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7577,22 +7577,22 @@
     <message>
       <location line="+3"/>
       <source>Alerts, toasts, and delivery behavior</source>
-      <translation>Предупреждения и поведение доставки</translation>
+      <translation>Оповещения, тосты и доставка</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Notification behavior</source>
-      <translation>Поведение уведомления</translation>
+      <translation>Поведение уведомлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Toasts</source>
-      <translation>Токсы</translation>
+      <translation>Тосты</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Toast events</source>
-      <translation>Toast-события</translation>
+      <translation>События для тостов</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -7602,12 +7602,12 @@
     <message>
       <location line="+3"/>
       <source>Quick controls, clipboard, game mode</source>
-      <translation>Быстрое управление, буфер обмена, игровой режим</translation>
+      <translation>Быстрые настройки, буфер обмена, игровой режим</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>On-screen Sliders</source>
-      <translation>Слайдеры на экране</translation>
+      <translation>Экранные ползунки</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7622,32 +7622,32 @@
     <message>
       <location line="+1"/>
       <source>Quick Toggles</source>
-      <translation>Quick Toggles</translation>
+      <translation>Быстрые настройки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Game Mode</source>
-      <translation>Режим игры</translation>
+      <translation>Игровой режим</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Auto-enable rules</source>
-      <translation>Автовключение правил</translation>
+      <translation>Правила автовключения</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Power</source>
-      <translation>Сила</translation>
+      <translation>Питание</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Battery indicators, idle suspend</source>
-      <translation>Индикаторы батареи, остановка в режиме ожидания</translation>
+      <translation>Индикаторы батареи, сон при бездействии</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Battery Status</source>
-      <translation>Статус батареи</translation>
+      <translation>Состояние батареи</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7662,52 +7662,52 @@
     <message>
       <location line="+4"/>
       <source>Session</source>
-      <translation>Сессия</translation>
+      <translation>Сеанс</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Shutdown, logout, and reboot menu</source>
-      <translation>Выключение, выход и перезагрузка меню</translation>
+      <translation>Меню выключения, выхода и перезагрузки</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Session Menu</source>
-      <translation>Меню сессии</translation>
+      <translation>Меню сеанса</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Session Icons</source>
-      <translation>Иконки сессии</translation>
+      <translation>Значки сеанса</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Session Commands</source>
-      <translation>Команды сессий</translation>
+      <translation>Команды сеанса</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Shortcuts</source>
-      <translation>Ярлыки</translation>
+      <translation>Горячие клавиши</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Keyboard shortcuts, custom keybinds</source>
-      <translation>Горячие клавиши, пользовательские комбинации клавиш</translation>
+      <translation>Сочетания клавиш, свои горячие клавиши</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>System Shortcuts</source>
-      <translation>Системные ярлыки</translation>
+      <translation>Системные клавиши</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>App Shortcuts</source>
-      <translation>Ярлыки приложений</translation>
+      <translation>Клавиши приложений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Custom Keybinds</source>
-      <translation>Пользовательские комбинации клавиш</translation>
+      <translation>Свои горячие клавиши</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7717,12 +7717,12 @@
     <message>
       <location line="+3"/>
       <source>Default apps, file types, app details</source>
-      <translation>Приложения по умолчанию, типы файлов, детали приложения</translation>
+      <translation>Приложения по умолчанию, типы файлов, сведения</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Default Apps</source>
-      <translation>Приложения по умолчанию</translation>
+      <translation>По умолчанию</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7737,17 +7737,17 @@
     <message>
       <location line="+1"/>
       <source>Favorites &amp; Hidden</source>
-      <translation>Избранное и скрыто</translation>
+      <translation>Избранные и скрытые</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Services</source>
-      <translation>Услуги</translation>
+      <translation>Службы</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Background services, daemon control</source>
-      <translation>Фоновые сервисы, контроль демона</translation>
+      <translation>Фоновые службы, управление демонами</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -7767,7 +7767,7 @@
     <message>
       <location line="+3"/>
       <source>Locale, timezone, formats</source>
-      <translation>Locale, timezone, formats</translation>
+      <translation>Локаль, часовой пояс, форматы</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -7782,7 +7782,7 @@
     <message>
       <location line="+1"/>
       <source>Weather Location</source>
-      <translation>Расположение погоды</translation>
+      <translation>Место для погоды</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7813,7 +7813,7 @@
       <location line="+3"/>
       <location line="+3"/>
       <source>Personalized desktop experience</source>
-      <translation>Персонализированный рабочий стол</translation>
+      <translation>Рабочий стол на свой вкус</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -7828,12 +7828,12 @@
     <message>
       <location line="+3"/>
       <source>Specs, version, system information</source>
-      <translation>Спектакли, версия, информация о системе</translation>
+      <translation>Характеристики, версия, сведения о системе</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Device Info</source>
-      <translation>Информация об устройстве</translation>
+      <translation>Об устройстве</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7843,17 +7843,17 @@
     <message>
       <location line="+7"/>
       <source>AI Assistant</source>
-      <translation>Помощник ИИ</translation>
+      <translation>ИИ-ассистент</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Claude Code, accounts, providers</source>
-      <translation>Код Claude, аккаунты, провайдеры</translation>
+      <translation>Claude Code, аккаунты, провайдеры</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Claude Code</source>
-      <translation>Код Claude</translation>
+      <translation>Claude Code</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7863,7 +7863,7 @@
     <message>
       <location line="+1"/>
       <source>Providers</source>
-      <translation>Поставщики</translation>
+      <translation>Провайдеры</translation>
     </message>
   </context>
   <context>
@@ -7884,7 +7884,7 @@
     <message>
       <location line="+11"/>
       <source>Dashboard</source>
-      <translation>Панель</translation>
+      <translation>Дашборд</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7913,17 +7913,17 @@
     <message>
       <location line="+1"/>
       <source>Always visible</source>
-      <translation>Всегда видно</translation>
+      <translation>Всегда видна</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Reveal on hover</source>
-      <translation>Показать при наведении курсора</translation>
+      <translation>При наведении</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Reveal on drag</source>
-      <translation>Показать при перетаскивании</translation>
+      <translation>При перетаскивании</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7933,22 +7933,22 @@
     <message>
       <location line="+6"/>
       <source>Sidebar</source>
-      <translation>Sidebar</translation>
+      <translation>Боковая панель</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Quick toggle</source>
-      <translation>Быстрое переключение</translation>
+      <translation>Быстрые настройки</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Overview</source>
-      <translation>Общий обзор</translation>
+      <translation>Обзор</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Window Switcher</source>
-      <translation>Переключатель окна</translation>
+      <translation>Переключатель окон</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7976,7 +7976,7 @@
     <message>
       <location line="+1"/>
       <source>Reveal what has been typed into the password field</source>
-      <translation>Показать введенные в поле пароля</translation>
+      <translation>Показать введённое в поле пароля</translation>
     </message>
   </context>
   <context>
@@ -7992,12 +7992,12 @@
     <message>
       <location filename="../modules/dashboard/Performance.qml" line="+36"/>
       <source>No widgets enabled</source>
-      <translation>Виджеты не включены</translation>
+      <translation>Нет включённых виджетов</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Enable widgets in the dashboard settings</source>
-      <translation>Включить виджеты в настройках панели инструментов</translation>
+      <translation>Включите виджеты в настройках дашборда</translation>
     </message>
     <message>
       <location line="+32"/>
@@ -8007,7 +8007,7 @@
     <message>
       <location line="+19"/>
       <source>GPU</source>
-      <translation>GPU</translation>
+      <translation>ГП</translation>
     </message>
   </context>
   <context>
@@ -8025,7 +8025,7 @@
     <message>
       <location line="+33"/>
       <source>Toggle media playback</source>
-      <translation>Переключить воспроизведение</translation>
+      <translation>Пауза/воспроизведение</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -8040,7 +8040,7 @@
     <message>
       <location line="+12"/>
       <source>Stop media playback</source>
-      <translation>Остановить воспроизведение медиа</translation>
+      <translation>Остановить воспроизведение</translation>
     </message>
   </context>
   <context>
@@ -8087,17 +8087,17 @@
     <message>
       <location line="+34"/>
       <source>A shell restart is required for changes to take effect</source>
-      <translation>Требуется перезапуск оболочки, чтобы изменения вступили в силу</translation>
+      <translation>Чтобы изменения вступили в силу, перезапустите оболочку</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Shell Plugins</source>
-      <translation>Плагины Shell</translation>
+      <translation>Плагины оболочки</translation>
     </message>
     <message>
       <location line="+68"/>
       <source>User Installed</source>
-      <translation>Пользователь установлен</translation>
+      <translation>Пользовательские</translation>
     </message>
     <message>
       <location line="+101"/>
@@ -8130,7 +8130,7 @@
     <message>
       <location filename="../components/PolkitDialog.qml" line="+115"/>
       <source>Enter your password</source>
-      <translation>Введите ваш пароль</translation>
+      <translation>Введите пароль</translation>
     </message>
     <message>
       <location line="+99"/>
@@ -8143,12 +8143,12 @@
     <message>
       <location filename="../modules/bar/components/Power.qml" line="+22"/>
       <source>Power and session menu</source>
-      <translation>Меню питания и сессии</translation>
+      <translation>Меню питания и сеанса</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Opens the power, restart, and logout menu</source>
-      <translation>Открывает питание, перезапуск и меню выхода</translation>
+      <translation>Открывает меню выключения, перезагрузки и выхода</translation>
     </message>
   </context>
   <context>
@@ -8156,12 +8156,12 @@
     <message>
       <location filename="../services/PowerDevil.qml" line="+53"/>
       <source>KDE&apos;s suspend timer was not updated</source>
-      <translation>KDE&apos;с таймер приостановки не был обновлен</translation>
+      <translation>Таймер сна KDE не обновлён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Its own timer in System Settings &gt; Power Management can still suspend before the timeout set here.</source>
-      <translation>Собственный таймер в Системных Настройках &gt; Управление питанием все еще может приостановить до установленного здесь таймаута.</translation>
+      <translation>Собственный таймер в Параметры системы &gt; Управление питанием всё ещё может усыпить систему раньше заданного здесь.</translation>
     </message>
   </context>
   <context>
@@ -8169,82 +8169,82 @@
     <message>
       <location filename="../modules/nexus/pages/PowerPage.qml" line="+94"/>
       <source>Power</source>
-      <translation>Сила</translation>
+      <translation>Питание</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Idle &amp; sleep</source>
-      <translation>Нет и спят</translation>
+      <translation>Бездействие и сон</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Idle suspend</source>
-      <translation>Блокировка простоя</translation>
+      <translation>Сон при бездействии</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Suspend the system after inactivity</source>
-      <translation>Приостановить систему после бездействия</translation>
+      <translation>Усыплять систему после бездействия</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Idle suspend timer</source>
-      <translation>Таймер простоя</translation>
+      <translation>Таймер сна при бездействии</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Suspend after %1 minute(s) of inactivity</source>
-      <translation type="unfinished">Suspend after %1 minute(s) of inactivity</translation>
+      <translation>Сон через %1 мин бездействия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enable idle suspend to apply a timer</source>
-      <translation>Разрешить простое приостановка для применения таймера</translation>
+      <translation>Включите сон при бездействии, чтобы задать таймер</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Lock before sleep</source>
-      <translation>Заблокировать перед сном</translation>
+      <translation>Блокировать перед сном</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Lock the session before suspending</source>
-      <translation>Заблокировать сессию до приостановления</translation>
+      <translation>Блокировать сеанс перед уходом в сон</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Inhibit while audio</source>
-      <translation>Запретить аудио</translation>
+      <translation>Не засыпать при звуке</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Prevent idle actions while audio is playing</source>
-      <translation>Предотвратить простое действие во время воспроизведения аудио</translation>
+      <translation>Не выполнять действия бездействия, пока играет звук</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Inhibit while charging</source>
-      <translation>Запретить во время зарядки</translation>
+      <translation>Не засыпать на зарядке</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Prevent idle actions while charging</source>
-      <translation>Предотвращать простое действие во время зарядки</translation>
+      <translation>Не выполнять действия бездействия во время зарядки</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Battery warnings</source>
-      <translation>Предупреждения о батареи</translation>
+      <translation>Предупреждения о батарее</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Critical battery level</source>
-      <translation>Критический уровень заряда батареи</translation>
+      <translation>Критический заряд батареи</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Percentage at which the critical warning fires</source>
-      <translation>Процент, при котором критические предупреждающие огни</translation>
+      <translation>Процент, при котором срабатывает критическое предупреждение</translation>
     </message>
   </context>
   <context>
@@ -8257,7 +8257,7 @@
     <message>
       <location line="+6"/>
       <source>Try switching to a window</source>
-      <translation>Попробуйте переключиться на окно</translation>
+      <translation>Переключитесь на какое-нибудь окно</translation>
     </message>
   </context>
   <context>
@@ -8285,7 +8285,7 @@
     <message>
       <location line="+1"/>
       <source>Color Picker</source>
-      <translation>Палитра цветов</translation>
+      <translation>Пипетка</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -8295,7 +8295,7 @@
     <message>
       <location line="+1"/>
       <source>Bad Apple</source>
-      <translation>Плохое яблоко</translation>
+      <translation>Bad Apple</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -8310,22 +8310,22 @@
     <message>
       <location line="+1"/>
       <source>Game Mode</source>
-      <translation>Режим игры</translation>
+      <translation>Игровой режим</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Pause Wallpaper</source>
-      <translation>Приостановить обои</translation>
+      <translation>Пауза обоев</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Night Light</source>
-      <translation>Ночной свет</translation>
+      <translation>Ночная подсветка</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>EasyEffects</source>
-      <translation>Легкие эффекты</translation>
+      <translation>EasyEffects</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -8335,12 +8335,12 @@
     <message>
       <location line="+3"/>
       <source>Quick toggles</source>
-      <translation>Quick toggles</translation>
+      <translation>Быстрые настройки</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Connectivity</source>
-      <translation>Подключение</translation>
+      <translation>Связь</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -8368,7 +8368,7 @@
     <message>
       <location line="+0"/>
       <source>Running...</source>
-      <translation>Выполняется...</translation>
+      <translation>Идёт запись...</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -8392,12 +8392,12 @@
     <message>
       <location line="-29"/>
       <source>Record with Sound</source>
-      <translation>Запись звуком</translation>
+      <translation>Запись со звуком</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Record with Microphone</source>
-      <translation>Запись с микрофона</translation>
+      <translation>Запись с микрофоном</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8412,12 +8412,12 @@
     <message>
       <location line="+9"/>
       <source>Use Spectacle</source>
-      <translation>Использовать Спектакль</translation>
+      <translation>Использовать Spectacle</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Spectacle</source>
-      <translation>Спектакль</translation>
+      <translation>Spectacle</translation>
     </message>
     <message>
       <location line="+137"/>
@@ -8430,17 +8430,17 @@
     <message>
       <location filename="../modules/screenshot/recorder/Recorder.qml" line="+114"/>
       <source>Screenshot region</source>
-      <translation>Область скриншота</translation>
+      <translation>Снимок области</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Screenshot</source>
-      <translation>Скриншот</translation>
+      <translation>Снимок экрана</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Record region</source>
-      <translation>Регион записи</translation>
+      <translation>Запись области</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8463,7 +8463,7 @@
     <message>
       <location line="+6"/>
       <source>Recording &apos;%1&apos; will be permanently deleted.</source>
-      <translation>Запись &apos;%1&apos; будет окончательно удалена.</translation>
+      <translation>Запись «%1» будет удалена безвозвратно.</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -8486,7 +8486,7 @@
     <message>
       <location line="+56"/>
       <source>Recording at %1</source>
-      <translation>Запись в %1</translation>
+      <translation>Запись от %1</translation>
     </message>
     <message>
       <location line="+126"/>
@@ -8499,17 +8499,17 @@
     <message>
       <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+581"/>
       <source>Full Screen Screenshot</source>
-      <translation>Полноэкранный снимок экрана</translation>
+      <translation>Снимок всего экрана</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Snip selected region (Enter)</source>
-      <translation>Снимок выбранного региона (Enter)</translation>
+      <translation>Снять выбранную область (Enter)</translation>
     </message>
     <message>
       <location line="+21"/>
       <source>Clear selection</source>
-      <translation>Очистить выделенное</translation>
+      <translation>Сбросить выделение</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -8522,12 +8522,12 @@
     <message>
       <location filename="../modules/screenshot/regionSelector/RegionSelector.qml" line="+90"/>
       <source>Takes a screenshot of the selected region</source>
-      <translation>Делает скриншот выбранного региона</translation>
+      <translation>Делает снимок выбранной области</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Searches the selected region</source>
-      <translation>Поиск выбранного региона</translation>
+      <translation>Ищет по выбранной области</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -8537,12 +8537,12 @@
     <message>
       <location line="+5"/>
       <source>Records the selected region</source>
-      <translation>Записывать выбранный регион</translation>
+      <translation>Записывает выбранную область</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Records the selected region with sound</source>
-      <translation>Записывает звук выбранной области</translation>
+      <translation>Записывает выбранную область со звуком</translation>
     </message>
   </context>
   <context>
@@ -8550,22 +8550,22 @@
     <message>
       <location filename="../modules/nexus/pages/network/SavedNetworksPage.qml" line="+15"/>
       <source>Saved networks</source>
-      <translation>Сохраненные сети</translation>
+      <translation>Сохранённые сети</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>No saved networks</source>
-      <translation>Нет сохраненных сетей</translation>
+      <translation>Нет сохранённых сетей</translation>
     </message>
     <message>
       <location line="+61"/>
       <source>Open</source>
-      <translation>Открыть</translation>
+      <translation>Открытая</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Unknown</source>
-      <translation>Неизвестен</translation>
+      <translation>Неизвестно</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -8593,7 +8593,7 @@
     <message>
       <location line="-102"/>
       <source>Generic</source>
-      <translation>Generic</translation>
+      <translation>Общий</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -8603,7 +8603,7 @@
     <message>
       <location line="+17"/>
       <source>Services</source>
-      <translation>Услуги</translation>
+      <translation>Службы</translation>
     </message>
     <message>
       <location line="+26"/>
@@ -8618,7 +8618,7 @@
     <message>
       <location line="+1"/>
       <source>How often the media position updates (ms)</source>
-      <translation>Как часто происходит обновление позиции медиа (мс)</translation>
+      <translation>Как часто обновляется позиция воспроизведения (мс)</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8628,47 +8628,47 @@
     <message>
       <location line="+1"/>
       <source>CPU, memory and GPU update interval (seconds)</source>
-      <translation>Интервал обновления ЦП, памяти и GPU (секунд)</translation>
+      <translation>Интервал обновления ЦП, памяти и ГП (секунды)</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Wi-Fi rescan</source>
-      <translation>Пересканирование Wi-Fi</translation>
+      <translation>Поиск сетей Wi-Fi</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>How often available networks are rescanned (seconds)</source>
-      <translation>Как часто доступные сети пересканированы (в секундах)</translation>
+      <translation>Как часто обновляется список доступных сетей (секунды)</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Media &amp; lyrics</source>
-      <translation>Медиа и тексты песен</translation>
+      <translation>Медиа и текст песен</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Lyrics backend</source>
-      <translation>Текст песни</translation>
+      <translation>Источник текста песен</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Source used to fetch synced lyrics</source>
-      <translation>Источник для получения синхронизированных текстов</translation>
+      <translation>Откуда брать синхронизированный текст песен</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Default player</source>
-      <translation>Игрок по умолчанию</translation>
+      <translation>Плеер по умолчанию</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Preferred media player when several are open</source>
-      <translation>Предпочтительный медиаплеер при открытии нескольких</translation>
+      <translation>Предпочитаемый плеер, когда открыто несколько</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Input increments</source>
-      <translation>Входные приращения</translation>
+      <translation>Шаги регулировки</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -8678,7 +8678,7 @@
     <message>
       <location line="+1"/>
       <source>Amount the volume changes per scroll (%)</source>
-      <translation>Количество изменений громкости на прокрутку (%)</translation>
+      <translation>На сколько меняется громкость за шаг прокрутки (%)</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8688,7 +8688,7 @@
     <message>
       <location line="+1"/>
       <source>Amount the brightness changes per scroll (%)</source>
-      <translation>Количество изменений яркости на прокрутку (%)</translation>
+      <translation>На сколько меняется яркость за шаг прокрутки (%)</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -8698,12 +8698,12 @@
     <message>
       <location line="+1"/>
       <source>Upper limit for output volume (%)</source>
-      <translation>Верхний предел объема выхода (%)</translation>
+      <translation>Верхний предел громкости выхода (%)</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Service tuning</source>
-      <translation>Настройка сервиса</translation>
+      <translation>Тонкая настройка служб</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -8713,22 +8713,22 @@
     <message>
       <location line="+1"/>
       <source>Broadcast your status to Vesktop</source>
-      <translation>Транслируйте ваш статус на Vesktop</translation>
+      <translation>Транслировать ваш статус в Vesktop</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Visualiser bars</source>
-      <translation>Панели визуализации</translation>
+      <translation>Столбцы визуализатора</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Number of bars in the audio visualisers</source>
-      <translation>Количество баров в аудиовизуализаторах</translation>
+      <translation>Число столбцов в аудиовизуализаторах</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>GPU</source>
-      <translation>GPU</translation>
+      <translation>ГП</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -8738,7 +8738,7 @@
     <message>
       <location line="+0"/>
       <source>Override for GPU type</source>
-      <translation>Переопределить тип GPU</translation>
+      <translation>Переопределение типа ГП</translation>
     </message>
   </context>
   <context>
@@ -8746,12 +8746,12 @@
     <message>
       <location filename="../modules/nexus/pages/SessionPage.qml" line="+22"/>
       <source>Session</source>
-      <translation>Сессия</translation>
+      <translation>Сеанс</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -8761,17 +8761,17 @@
     <message>
       <location line="+1"/>
       <source>Show the session (power) menu</source>
-      <translation>Показывать меню сессии (включения)</translation>
+      <translation>Показывать меню сеанса (питания)</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Vim keybinds</source>
-      <translation>Привязка вима</translation>
+      <translation>Клавиши Vim</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Navigate the session menu with hjkl</source>
-      <translation>Перейдите в меню сеанса с помощью hjkl</translation>
+      <translation>Навигация по меню сеанса через hjkl</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -8781,12 +8781,12 @@
     <message>
       <location line="+1"/>
       <source>Pixels to drag before the menu moves</source>
-      <translation>Пиксели для перетаскивания перед перемещением меню</translation>
+      <translation>Сколько пикселей протащить, чтобы меню сдвинулось</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Icons</source>
-      <translation>Иконки</translation>
+      <translation>Значки</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -8798,19 +8798,19 @@
       <location line="-25"/>
       <location line="+31"/>
       <source>Shutdown</source>
-      <translation>Выключить</translation>
+      <translation>Выключение</translation>
     </message>
     <message>
       <location line="-25"/>
       <location line="+31"/>
       <source>Hibernate</source>
-      <translation>Hibernate</translation>
+      <translation>Гибернация</translation>
     </message>
     <message>
       <location line="-24"/>
       <location line="+31"/>
       <source>Reboot</source>
-      <translation>Reboot</translation>
+      <translation>Перезагрузка</translation>
     </message>
     <message>
       <location line="-24"/>
@@ -8823,12 +8823,12 @@
     <message>
       <location filename="../modules/nexus/pages/ShortcutManagerPage.qml" line="+82"/>
       <source>Shortcuts</source>
-      <translation>Ярлыки</translation>
+      <translation>Горячие клавиши</translation>
     </message>
     <message>
       <location line="+40"/>
       <source>Search shortcuts</source>
-      <translation>Поиск ярлыков</translation>
+      <translation>Поиск по клавишам</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -8838,22 +8838,22 @@
     <message>
       <location line="+26"/>
       <source>Applications</source>
-      <translation>Заявления</translation>
+      <translation>Приложения</translation>
     </message>
     <message>
       <location line="+25"/>
       <source>Workspaces</source>
-      <translation>Рабочие области</translation>
+      <translation>Рабочие столы</translation>
     </message>
     <message>
       <location line="+25"/>
       <source>Window Tiling (Krohnkite)</source>
-      <translation>Окно (кронкайт)</translation>
+      <translation>Тайлинг окон (Krohnkite)</translation>
     </message>
     <message>
       <location line="+31"/>
       <source>No shortcuts found</source>
-      <translation>Ярлыки не найдены</translation>
+      <translation>Горячие клавиши не найдены</translation>
     </message>
   </context>
   <context>
@@ -8861,7 +8861,7 @@
     <message>
       <location filename="../modules/nexus/common/ShortcutRow.qml" line="+124"/>
       <source>Collides with: </source>
-      <translation>Коллизирует с: </translation>
+      <translation>Конфликтует с: </translation>
     </message>
   </context>
   <context>
@@ -8869,17 +8869,17 @@
     <message>
       <location filename="../modules/Shortcuts.qml" line="+29"/>
       <source>Open nexus</source>
-      <translation>Открыть nexus</translation>
+      <translation>Открыть Nexus</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Toggle launcher, dashboard and osd</source>
-      <translation>Переключить лаунчер, панель инструментов и osd</translation>
+      <translation>Переключить лаунчер, дашборд и OSD</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Toggle dashboard</source>
-      <translation>Переключить приборную панель</translation>
+      <translation>Переключить дашборд</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -8889,7 +8889,7 @@
     <message>
       <location line="+19"/>
       <source>Toggle screenshot overlay</source>
-      <translation>Переключить наложение скриншота</translation>
+      <translation>Переключить оверлей снимка экрана</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8899,7 +8899,7 @@
     <message>
       <location line="+9"/>
       <source>Recognize text on screen</source>
-      <translation>Распознавать текст на экране</translation>
+      <translation>Распознать текст на экране</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8909,27 +8909,27 @@
     <message>
       <location line="+31"/>
       <source>Toggle session menu</source>
-      <translation>Переключить меню сессии</translation>
+      <translation>Переключить меню сеанса</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Toggle launcher</source>
-      <translation>Переключить лончер</translation>
+      <translation>Переключить лаунчер</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Interrupt launcher keybind</source>
-      <translation>Прерывать привязку клавиш лаунчера</translation>
+      <translation>Прервать сочетание лаунчера</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Toggle sidebar</source>
-      <translation>Включить боковую панель</translation>
+      <translation>Переключить боковую панель</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Toggle AI Assistant</source>
-      <translation>Переключить помощника ИИ</translation>
+      <translation>Переключить ИИ-ассистента</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -8949,12 +8949,12 @@
     <message>
       <location line="+29"/>
       <source>Open window switcher</source>
-      <translation>Открыть окно переключателя</translation>
+      <translation>Открыть переключатель окон</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>Open window switcher (reverse)</source>
-      <translation>Переключатель открытых окон (обратный)</translation>
+      <translation>Открыть переключатель окон (назад)</translation>
     </message>
     <message>
       <location line="+21"/>
@@ -8964,7 +8964,7 @@
     <message>
       <location line="+11"/>
       <source>Open keybinds list</source>
-      <translation>Открыть список комбинаций клавиш</translation>
+      <translation>Открыть список клавиш</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -8984,7 +8984,7 @@
     <message>
       <location line="+5"/>
       <source>Launch GitHub Desktop</source>
-      <translation>Запустите GitHub Desktop</translation>
+      <translation>Запустить GitHub Desktop</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -8994,77 +8994,77 @@
     <message>
       <location line="+5"/>
       <source>Color Picker</source>
-      <translation>Палитра цветов</translation>
+      <translation>Пипетка</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 1</source>
-      <translation>Переключиться на рабочую область 1</translation>
+      <translation>Перейти на рабочий стол 1</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 2</source>
-      <translation>Переключиться на рабочую область 2</translation>
+      <translation>Перейти на рабочий стол 2</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 3</source>
-      <translation>Переключиться на рабочую область 3</translation>
+      <translation>Перейти на рабочий стол 3</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 4</source>
-      <translation>Переключиться на рабочую область 4</translation>
+      <translation>Перейти на рабочий стол 4</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 5</source>
-      <translation>Переключиться на рабочую область 5</translation>
+      <translation>Перейти на рабочий стол 5</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 6</source>
-      <translation>Переключиться на рабочую область 6</translation>
+      <translation>Перейти на рабочий стол 6</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 7</source>
-      <translation>Переключиться на рабочую область 7</translation>
+      <translation>Перейти на рабочий стол 7</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 8</source>
-      <translation>Переключиться на рабочую область 8</translation>
+      <translation>Перейти на рабочий стол 8</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 9</source>
-      <translation>Переключить на рабочую область 9</translation>
+      <translation>Перейти на рабочий стол 9</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to workspace 10</source>
-      <translation>Переключиться на рабочую область 10</translation>
+      <translation>Перейти на рабочий стол 10</translation>
     </message>
     <message>
       <location line="+90"/>
       <source>Focus the window above</source>
-      <translation>Фокус на окне выше</translation>
+      <translation>Фокус на окно выше</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Focus the window below</source>
-      <translation>Фокус на окне ниже</translation>
+      <translation>Фокус на окно ниже</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Focus the window to the left</source>
-      <translation>Сфокусировать окно влево</translation>
+      <translation>Фокус на окно слева</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Focus the window to the right</source>
-      <translation>Сфокусировать окно справа</translation>
+      <translation>Фокус на окно справа</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -9104,72 +9104,72 @@
     <message>
       <location line="+7"/>
       <source>Set active window as Master</source>
-      <translation>Установить активное окно как Мастер</translation>
+      <translation>Сделать активное окно главным</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to next layout</source>
-      <translation>Переключиться на следующий макет</translation>
+      <translation>Следующая раскладка</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to previous layout</source>
-      <translation>Переключиться на предыдущий макет</translation>
+      <translation>Предыдущая раскладка</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to BTree layout</source>
-      <translation>Переключиться на расположение BTree</translation>
+      <translation>Раскладка BTree</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Monocle layout</source>
-      <translation>Переключиться на макет Monocle</translation>
+      <translation>Раскладка «Монокль»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Floating layout</source>
-      <translation>Переключиться на плавающий макет</translation>
+      <translation>Раскладка «Плавающая»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Quarter layout</source>
-      <translation>Переключиться на Quarter layout</translation>
+      <translation>Раскладка «Четверти»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Spread layout</source>
-      <translation>Переключиться на Spread макет</translation>
+      <translation>Раскладка «Распределение»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Stacked layout</source>
-      <translation>Переключиться на раскладку</translation>
+      <translation>Раскладка «Стопка»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Stair layout</source>
-      <translation>Переключиться на лестницу</translation>
+      <translation>Раскладка «Лестница»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Columns layout</source>
-      <translation>Переключиться на макет столбцов</translation>
+      <translation>Раскладка «Столбцы»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Three Column layout</source>
-      <translation>Переключиться на три колонки</translation>
+      <translation>Раскладка «Три колонки»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Spiral layout</source>
-      <translation>Переключиться на Спираль</translation>
+      <translation>Раскладка «Спираль»</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Switch to Tile layout</source>
-      <translation>Переключиться на плитку</translation>
+      <translation>Раскладка «Плитка»</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9194,37 +9194,37 @@
     <message>
       <location line="+7"/>
       <source>Increase master area size</source>
-      <translation>Увеличить размер основной области</translation>
+      <translation>Увеличить главную область</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Decrease master area size</source>
-      <translation>Уменьшить размер основной области</translation>
+      <translation>Уменьшить главную область</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Toggle floating state</source>
-      <translation>Переключить плавающее состояние</translation>
+      <translation>Переключить плавающий режим</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Toggle floating state for all</source>
-      <translation>Переключить плавающее состояние для всех</translation>
+      <translation>Плавающий режим для всех окон</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Rotate the window layout</source>
-      <translation>Повернуть расположение окна</translation>
+      <translation>Повернуть раскладку окон</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Rotate windows within a part</source>
-      <translation>Поворот окон внутри части</translation>
+      <translation>Повернуть окна внутри части</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Toggle dock support</source>
-      <translation>Поддержка док-станции</translation>
+      <translation>Переключить поддержку дока</translation>
     </message>
   </context>
   <context>
@@ -9253,12 +9253,12 @@
     <message>
       <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+15"/>
       <source>Sidebar</source>
-      <translation>Sidebar</translation>
+      <translation>Боковая панель</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -9273,42 +9273,42 @@
     <message>
       <location line="+1"/>
       <source>Pixels dragged before the sidebar opens</source>
-      <translation>Пиксели перетаскиваются до открытия боковой панели</translation>
+      <translation>Сколько пикселей протащить, чтобы открылась боковая панель</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Grab width</source>
-      <translation>Grab width</translation>
+      <translation>Ширина захвата</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Pixels of screen edge reserved for grabbing the sidebar</source>
-      <translation>Пиксели края экрана, зарезервированные для захвата боковой панели</translation>
+      <translation>Сколько пикселей у края экрана отведено под захват боковой панели</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Sidebar Tabs</source>
-      <translation>Sidebar Tabs</translation>
+      <translation>Вкладки боковой панели</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Show News tab</source>
-      <translation>Показать вкладку новостей</translation>
+      <translation>Вкладка «Новости»</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the News tab in the sidebar</source>
-      <translation>Показать вкладку Новости в боковой панели</translation>
+      <translation>Показывать вкладку «Новости» в боковой панели</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Show Caelestia Mode</source>
-      <translation>Show Caelestia Mode</translation>
+      <translation>Режим Caelestia</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the Caelestia Mode toggle at the bottom of notifications</source>
-      <translation>Показывать переключатель режима Caelestia внизу уведомлений</translation>
+      <translation>Показывать переключатель режима Caelestia под уведомлениями</translation>
     </message>
   </context>
   <context>
@@ -9316,7 +9316,7 @@
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/SlideshowAndOrderPage.qml" line="+16"/>
       <source>Slideshow &amp; Order</source>
-      <translation>Slideshow &amp; Order</translation>
+      <translation>Слайд-шоу и порядок</translation>
     </message>
     <message>
       <location line="+20"/>
@@ -9326,7 +9326,7 @@
     <message>
       <location line="+1"/>
       <source>Automatically change wallpaper on a timer</source>
-      <translation>Автоматически изменять обои на таймере</translation>
+      <translation>Менять обои автоматически по таймеру</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -9341,7 +9341,7 @@
     <message>
       <location line="+1"/>
       <source>Affects slideshow and the &apos;Next Wallpaper&apos; right-click menu option</source>
-      <translation>Влияет на слайд-шоу и &apos;Следующие обои&apos; правой кнопкой мыши меню</translation>
+      <translation>Влияет на слайд-шоу и пункт «Следующие обои» в меню правой кнопки</translation>
     </message>
   </context>
   <context>
@@ -9354,7 +9354,7 @@
     <message>
       <location line="+11"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -9364,22 +9364,22 @@
     <message>
       <location line="+8"/>
       <source>Sound effect volume</source>
-      <translation>Громкость звука</translation>
+      <translation>Громкость эффектов</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Feedback</source>
-      <translation>Отзыв</translation>
+      <translation>Отклик</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Camera click</source>
-      <translation>Клик камеры</translation>
+      <translation>Щелчок камеры</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Volume tick</source>
-      <translation>Громкость</translation>
+      <translation>Щелчок громкости</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9389,7 +9389,7 @@
     <message>
       <location line="+5"/>
       <source>Charging started</source>
-      <translation>Зарядка началась</translation>
+      <translation>Начало зарядки</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9417,79 +9417,79 @@
     <message>
       <location filename="../modules/lock/center/StateMessage.qml" line="+16"/>
       <source>FP ERROR: %1</source>
-      <translation>ОШИБКА FP: %1</translation>
+      <translation>ОШИБКА ОТПЕЧАТКА: %1</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>FACE ERROR: %1</source>
-      <translation type="unfinished">FACE ERROR: %1</translation>
+      <translation>ОШИБКА ЛИЦА: %1</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>PW ERROR: %1</source>
-      <translation>ОШИБКА: %1</translation>
+      <translation>ОШИБКА ПАРОЛЯ: %1</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Maximum password and fingerprint attempts reached.</source>
-      <translation>Достигнуто максимальное количество попыток ввода пароля и отпечатка пальца.</translation>
+      <translation>Исчерпаны попытки ввода пароля и отпечатка.</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Maximum password attempts reached. Please use fingerprint.</source>
-      <translation>Достигнуто максимальное количество попыток ввода пароля. Пожалуйста, используйте отпечаток пальца.</translation>
+      <translation>Попытки ввода пароля исчерпаны. Используйте отпечаток.</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Maximum password attempts reached.</source>
-      <translation>Достигнуто максимальное количество попыток ввода пароля.</translation>
+      <translation>Попытки ввода пароля исчерпаны.</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Maximum fingerprint attempts reached. Please use password.</source>
-      <translation>Достигнуто максимальное число попыток отпечатка пальца. Пожалуйста, используйте пароль.</translation>
+      <translation>Попытки отпечатка исчерпаны. Используйте пароль.</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Maximum face unlock attempts reached. Please use password.</source>
-      <translation>Достигнуто максимальное число попыток разблокировки. Пожалуйста, используйте пароль.</translation>
+      <translation>Попытки распознавания лица исчерпаны. Используйте пароль.</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Incorrect password. Please try again or use fingerprint.</source>
-      <translation>Неверный пароль. Попробуйте еще раз или используйте отпечаток пальца.</translation>
+      <translation>Неверный пароль. Повторите или используйте отпечаток.</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Incorrect password. Please try again.</source>
-      <translation>Неверный пароль. Пожалуйста, попробуйте еще раз.</translation>
+      <translation>Неверный пароль. Повторите попытку.</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Fingerprint not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Отпечаток пальца не распознан (%1/%2). Пожалуйста, попробуйте еще раз или используйте пароль.</translation>
+      <translation>Отпечаток не распознан (%1/%2). Повторите или используйте пароль.</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Face not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Лицо не распознано (%1/%2). Пожалуйста, попробуйте еще раз или используйте пароль.</translation>
+      <translation>Лицо не распознано (%1/%2). Повторите или используйте пароль.</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Caps Lock and Num Lock are ON.
 Keyboard layout: %1</source>
-      <translation type="unfinished">Caps Lock and Num Lock are ON.
-Keyboard layout: %1</translation>
+      <translation>Caps Lock и Num Lock включены.
+Раскладка клавиатуры: %1</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Caps Lock is ON. Keyboard layout: %1</source>
-      <translation>Caps Lock включен. Раскладка клавиатуры: %1</translation>
+      <translation>Caps Lock включён. Раскладка клавиатуры: %1</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Num Lock is ON. Keyboard layout: %1</source>
-      <translation>Вкл. клавиатура: %1</translation>
+      <translation>Num Lock включён. Раскладка клавиатуры: %1</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9504,12 +9504,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+2"/>
       <source>Caps Lock is ON.</source>
-      <translation>Caps Lock включен.</translation>
+      <translation>Caps Lock включён.</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Num Lock is ON.</source>
-      <translation>Num Lock включен.</translation>
+      <translation>Num Lock включён.</translation>
     </message>
   </context>
   <context>
@@ -9517,17 +9517,17 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/dashboard/performance/StorageCard.qml" line="+74"/>
       <source>Used</source>
-      <translation>Использовано</translation>
+      <translation>Занято</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Storage</source>
-      <translation>Хранилище</translation>
+      <translation>Накопитель</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>No disks detected</source>
-      <translation>Диск не обнаружен</translation>
+      <translation>Диски не найдены</translation>
     </message>
     <message>
       <location line="+17"/>
@@ -9540,12 +9540,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/nexus/pages/panels/TabSwitcherPanel.qml" line="+31"/>
       <source>Window Switcher</source>
-      <translation>Переключатель окна</translation>
+      <translation>Переключатель окон</translation>
     </message>
     <message>
       <location line="+38"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -9555,7 +9555,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Use Caelestia&apos;s window switcher for Alt+Tab</source>
-      <translation type="unfinished">Use Caelestia&apos;s window switcher for Alt+Tab</translation>
+      <translation>Использовать переключатель окон Caelestia для Alt+Tab</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -9565,7 +9565,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+13"/>
       <source>Backward</source>
-      <translation>Обратно</translation>
+      <translation>Назад</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -9575,22 +9575,22 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Filter by current desktop</source>
-      <translation>Фильтр по текущему столу</translation>
+      <translation>Только текущий рабочий стол</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Only show windows belonging to the active virtual desktop</source>
-      <translation>Показывать только окна, принадлежащие активному рабочему столу</translation>
+      <translation>Показывать только окна активного виртуального рабочего стола</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Preview window on desktop</source>
-      <translation>Предварительный просмотр окна на рабочем столе</translation>
+      <translation>Показ окна на рабочем столе</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Highlight and show the window itself on the workspace while cycling Alt+Tab</source>
-      <translation>Выделить и показать само окно на рабочей области при цикле Alt+Tab</translation>
+      <translation>При переборе Alt+Tab подсвечивать и показывать само окно на рабочем столе</translation>
     </message>
     <message>
       <location line="+14"/>
@@ -9600,22 +9600,22 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Show minimized windows</source>
-      <translation>Показать свёрнутые окна</translation>
+      <translation>Показывать свёрнутые окна</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Include minimized windows in the window switcher</source>
-      <translation>Включить свёрнутые окна в переключатель окон</translation>
+      <translation>Включать свёрнутые окна в переключатель окон</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Show windows from all screens</source>
-      <translation>Показать окна со всех экранов</translation>
+      <translation>Окна со всех экранов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Include windows from all connected monitors</source>
-      <translation>Включать окна из всех подключенных мониторов</translation>
+      <translation>Включать окна со всех подключённых мониторов</translation>
     </message>
   </context>
   <context>
@@ -9633,12 +9633,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>Workspaces</source>
-      <translation>Рабочие области</translation>
+      <translation>Рабочие столы</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Indicators, window icons</source>
-      <translation>Показатели, значки окон</translation>
+      <translation>Индикаторы, значки окон</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -9648,22 +9648,22 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Greeting display, popout</source>
-      <translation>Приветствие на экране, всплывающее окно</translation>
+      <translation>Показ приветствия, всплывающее окно</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Tray</source>
-      <translation>Трейд</translation>
+      <translation>Лоток</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>System tray icons</source>
-      <translation>Значки в панели задач</translation>
+      <translation>Значки системного лотка</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Status icons</source>
-      <translation>Значки статуса</translation>
+      <translation>Значки состояния</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9678,7 +9678,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Date, icon, background</source>
-      <translation>Дата, иконка, фон</translation>
+      <translation>Дата, значок, фон</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -9688,7 +9688,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Positioning, recoloring</source>
-      <translation>Местоположение, перекрашивание</translation>
+      <translation>Расположение, перекрашивание</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -9698,7 +9698,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Contributions, token setup</source>
-      <translation>Вклад, установка токенов</translation>
+      <translation>Активность, настройка токена</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9708,7 +9708,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Indicator visibility, automatic checks</source>
-      <translation>Видимость индикатора, автоматическая проверка</translation>
+      <translation>Видимость индикатора, автопроверка</translation>
     </message>
   </context>
   <context>
@@ -9721,7 +9721,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Bottom</source>
-      <translation>Внизу</translation>
+      <translation>Снизу</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -9736,7 +9736,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>Use global position</source>
-      <translation>Использовать общую позицию</translation>
+      <translation>Общее положение</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -9751,52 +9751,52 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Persistent</source>
-      <translation>Persistent</translation>
+      <translation>Постоянная</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Keep the bar visible at all times</source>
-      <translation>Держать панель видимой в любое время</translation>
+      <translation>Всегда держать панель видимой</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Dodge windows</source>
-      <translation>Окна уклонения</translation>
+      <translation>Уступать окнам</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Retract the bar while a window covers it, and let windows sit underneath</source>
-      <translation>Снять панель при ее закрытии и позволить окнам сидеть под ней</translation>
+      <translation>Убирать панель, когда её перекрывает окно, и пускать окна под неё</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Dodge focused window only</source>
-      <translation>Только для уклонения</translation>
+      <translation>Уступать только активному окну</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Ignore background windows over the bar, and dodge only what you are using</source>
-      <translation>Игнорировать фоновые окна поверх панели и уклонять только то, что вы используете</translation>
+      <translation>Не замечать фоновые окна над панелью и уступать только тому, с чем вы работаете</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Position</source>
-      <translation>Позиция</translation>
+      <translation>Положение</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Screen edge to place the bar on</source>
-      <translation>Края экрана для размещения панели</translation>
+      <translation>Край экрана, у которого стоит панель</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Show on hover</source>
-      <translation>Показывать при наведении курсора</translation>
+      <translation>Показ при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Reveal the bar when the cursor reaches the screen edge</source>
-      <translation>Показывать полоску, когда курсор достигает края экрана</translation>
+      <translation>Показывать панель, когда курсор доходит до края экрана</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9806,12 +9806,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Pixels dragged before the bar reveals</source>
-      <translation>Пиксели перетаскиваемые до того, как панель раскрывает</translation>
+      <translation>Сколько пикселей протащить, чтобы панель показалась</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Per-monitor position</source>
-      <translation>Позиция каждого монитора</translation>
+      <translation>Положение по мониторам</translation>
     </message>
     <message>
       <location line="+19"/>
@@ -9821,72 +9821,72 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+0"/>
       <source>Using global position</source>
-      <translation>Использование глобального положения</translation>
+      <translation>Используется общее положение</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Scaling</source>
-      <translation>Масштабирование</translation>
+      <translation>Масштаб</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Bar scale</source>
-      <translation>Шкала</translation>
+      <translation>Масштаб панели</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Scales taskbar thickness and component sizing</source>
-      <translation>Масштабы толщины панели задач и размера компонента</translation>
+      <translation>Масштабирует толщину панели задач и размеры компонентов</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Preview scale</source>
-      <translation>Масштаб</translation>
+      <translation>Масштаб превью</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Scales taskbar hover previews</source>
-      <translation>Масштабы панели задач при наведении курсора</translation>
+      <translation>Масштабирует превью панели задач при наведении</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Live window previews</source>
-      <translation>Предпросмотр живого окна</translation>
+      <translation>Живые превью окон</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Live thumbnails in hover/overview/alt-tab. Disable if screen sharing or camera in other apps (e.g. Vesktop) freezes</source>
-      <translation>Живые миниатюры в наверху/обзоре/alt-вкладке. Отключите, если функция совместного доступа к экрану или камера в других приложениях (например, Vesktop)</translation>
+      <translation>Живые миниатюры при наведении, в обзоре и Alt+Tab. Отключите, если в других приложениях (напр. Vesktop) зависает демонстрация экрана или камера</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Scale with bar size</source>
-      <translation>Масштаб с размером бара</translation>
+      <translation>Масштаб вместе с панелью</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Multiply the preview scale with the bar scale</source>
-      <translation>Умножение масштаба предварительного просмотра с помощью шкалы</translation>
+      <translation>Умножать масштаб превью на масштаб панели</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Font scaling offset</source>
-      <translation>Смещение масштабирования шрифта</translation>
+      <translation>Поправка масштаба шрифта</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Scales the text size across taskbar popouts</source>
-      <translation>Масштабирует размер текста в всплывающих окнах панели задач</translation>
+      <translation>Масштабирует текст во всплывающих окнах панели задач</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Per-element scaling offsets</source>
-      <translation>Смещение масштабирования на элемент</translation>
+      <translation>Поправки масштаба по элементам</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Customize scale and font for each popout type</source>
-      <translation>Настроить масштаб и шрифт для каждого всплывающего окна</translation>
+      <translation>Масштаб и шрифт для каждого типа всплывающих окон</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -9896,12 +9896,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>Toggle &amp; Rearrange</source>
-      <translation>Переключить и изменить порядок</translation>
+      <translation>Включение и порядок</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Add, remove or reorder components</source>
-      <translation>Добавление, удаление или изменение порядка компонентов</translation>
+      <translation>Добавление, удаление и порядок компонентов</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9911,32 +9911,32 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Workspaces, tray, status icons, clock, dock and more</source>
-      <translation>Рабочая область, трей, иконки статуса, часы, док-бар и многое другое</translation>
+      <translation>Рабочие столы, лоток, значки состояния, часы, док и другое</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Scroll actions</source>
-      <translation>Прокрутка действий</translation>
+      <translation>Действия прокрутки</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Workspaces</source>
-      <translation>Рабочие области</translation>
+      <translation>Рабочие столы</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Scroll over the workspace indicator to switch workspaces</source>
-      <translation>Прокрутите курсор на индикатор рабочего пространства для переключения рабочих областей</translation>
+      <translation>Прокрутка над индикатором рабочих столов переключает их</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Volume</source>
-      <translation>Объем</translation>
+      <translation>Громкость</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Scroll on the top half of the bar to adjust volume</source>
-      <translation>Прокрутите верхнюю половину полосы для настройки громкости</translation>
+      <translation>Прокрутка на верхней половине панели меняет громкость</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9946,7 +9946,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Scroll on the bottom half of the bar to adjust brightness</source>
-      <translation>Прокрутите нижнюю часть полосы для настройки яркости</translation>
+      <translation>Прокрутка на нижней половине панели меняет яркость</translation>
     </message>
   </context>
   <context>
@@ -9954,7 +9954,7 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/nexus/pages/services/ToastEventsPage.qml" line="+9"/>
       <source>Toast events</source>
-      <translation>Toast-события</translation>
+      <translation>События для тостов</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -9964,17 +9964,17 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Charging changes</source>
-      <translation>Изменение зарядки</translation>
+      <translation>Изменения зарядки</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Game mode changes</source>
-      <translation>Изменения в игровом режиме</translation>
+      <translation>Изменения игрового режима</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Night light changes</source>
-      <translation>Изменение ночного света</translation>
+      <translation>Изменения ночной подсветки</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -9989,52 +9989,52 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Audio output changes</source>
-      <translation>Изменения вывода аудио</translation>
+      <translation>Изменения аудиовыхода</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Audio input changes</source>
-      <translation>Изменения аудио входа</translation>
+      <translation>Изменения аудиовхода</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Now playing</source>
-      <translation>Играет сейчас</translation>
+      <translation>Сейчас играет</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Input</source>
-      <translation>Input</translation>
+      <translation>Ввод</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Caps lock changes</source>
-      <translation>Изменения Caps lock</translation>
+      <translation>Изменения Caps Lock</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Num lock changes</source>
-      <translation>Num lock изменения</translation>
+      <translation>Изменения Num Lock</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Keyboard layout changes</source>
-      <translation>Изменение раскладки клавиатуры</translation>
+      <translation>Изменения раскладки клавиатуры</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Keyboard layout limit</source>
-      <translation>Лимит раскладки</translation>
+      <translation>Лимит раскладок</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Other</source>
-      <translation>Прочие вопросы</translation>
+      <translation>Прочее</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Do not disturb changes</source>
-      <translation>Не беспокоить изменения</translation>
+      <translation>Изменения «Не беспокоить»</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -10062,12 +10062,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+4"/>
       <source>On</source>
-      <translation>На</translation>
+      <translation>Вкл</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Toasts</source>
-      <translation>Токсы</translation>
+      <translation>Тосты</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -10077,12 +10077,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+5"/>
       <source>Show in fullscreen</source>
-      <translation>Показать в полноэкранном режиме</translation>
+      <translation>В полноэкранном режиме</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Allow toasts over fullscreen apps</source>
-      <translation>Разрешить всплывающие уведомления поверх полноэкранных приложений</translation>
+      <translation>Разрешить тосты поверх полноэкранных приложений</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -10092,7 +10092,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Maximum number shown at once</source>
-      <translation>Максимальное число, показываемое сразу</translation>
+      <translation>Сколько показывать одновременно</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -10125,7 +10125,7 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/utilities/cards/Toggles.qml" line="+97"/>
       <source>Quick Toggles</source>
-      <translation>Quick Toggles</translation>
+      <translation>Быстрые настройки</translation>
     </message>
   </context>
   <context>
@@ -10133,12 +10133,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/bar/components/TrayItem.qml" line="+46"/>
       <source>Left-click activates, right-click opens the menu, middle-click runs the secondary action.</source>
-      <translation>Щелчок левой кнопкой мыши активируется, правой кнопкой мыши открывается меню, средним щелчком мыши проводится вторичное действие.</translation>
+      <translation>ЛКМ — активация, ПКМ — меню, средняя кнопка — второе действие.</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Left-click activates, middle- or right-click runs the secondary action.</source>
-      <translation>Щелкните левой кнопкой мыши, средняя или правая кнопка мыши запускает вторичное действие.</translation>
+      <translation>ЛКМ — активация, средняя или правая кнопка — второе действие.</translation>
     </message>
   </context>
   <context>
@@ -10179,13 +10179,13 @@ Keyboard layout: %1</translation>
       <location line="+12"/>
       <source>%1 B</source>
       <comment>data unit</comment>
-      <translation>%1 B</translation>
+      <translation>%1 Б</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 KB</source>
       <comment>data unit</comment>
-      <translation>%1 KB</translation>
+      <translation>%1 КБ</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10209,7 +10209,7 @@ Keyboard layout: %1</translation>
       <location line="+1"/>
       <source>%1 KiB</source>
       <comment>data unit</comment>
-      <translation>%1 KiB</translation>
+      <translation>%1 КиБ</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10221,31 +10221,31 @@ Keyboard layout: %1</translation>
       <location line="+1"/>
       <source>%1 GiB</source>
       <comment>data unit</comment>
-      <translation>%1 GiB</translation>
+      <translation>%1 ГиБ</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 TiB</source>
       <comment>data unit</comment>
-      <translation>%1 TiB</translation>
+      <translation>%1 ТиБ</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 B/s</source>
       <comment>data unit</comment>
-      <translation>%1 B/с</translation>
+      <translation>%1 Б/с</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 KB/s</source>
       <comment>data unit</comment>
-      <translation>%1 KB/с</translation>
+      <translation>%1 КБ/с</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 MB/s</source>
       <comment>data unit</comment>
-      <translation>%1 MB/с</translation>
+      <translation>%1 МБ/с</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10263,7 +10263,7 @@ Keyboard layout: %1</translation>
       <location line="+1"/>
       <source>%1 KiB/s</source>
       <comment>data unit</comment>
-      <translation>%1 KiB/s</translation>
+      <translation>%1 КиБ/с</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10275,13 +10275,13 @@ Keyboard layout: %1</translation>
       <location line="+1"/>
       <source>%1 GiB/s</source>
       <comment>data unit</comment>
-      <translation>%1 GiB/s</translation>
+      <translation>%1 ГиБ/с</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 TiB/s</source>
       <comment>data unit</comment>
-      <translation>%1 TiB/s</translation>
+      <translation>%1 ТиБ/с</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -10338,22 +10338,22 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+290"/>
       <source>Update Successful</source>
-      <translation>Успешно обновлено</translation>
+      <translation>Обновление выполнено</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>The update is complete. Please log out to apply changes.</source>
-      <translation>Обновление завершено. Пожалуйста, выйдите для применения изменений.</translation>
+      <translation>Обновление завершено. Выйдите из сеанса, чтобы применить изменения.</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>Update failed (exit code %1)</source>
-      <translation>Ошибка обновления (код выхода %1)</translation>
+      <translation>Сбой обновления (код выхода %1)</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Update Failed</source>
-      <translation>Не удалось обновить</translation>
+      <translation>Сбой обновления</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -10366,12 +10366,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/bar/components/UpdateIndicator.qml" line="+49"/>
       <source>Caelestia updates</source>
-      <translation>Caelestia updates</translation>
+      <translation>Обновления Caelestia</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Left-click to open the Updates page. Right-click to check for updates</source>
-      <translation>Щелкните левой кнопкой мыши, чтобы открыть страницу обновлений. Щелкните правой кнопкой мыши, чтобы проверить наличие обновлений</translation>
+      <translation>ЛКМ — открыть страницу обновлений. ПКМ — проверить обновления</translation>
     </message>
   </context>
   <context>
@@ -10379,12 +10379,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/nexus/common/UpdateTimeline.qml" line="+35"/>
       <source>feat</source>
-      <translation>перенести</translation>
+      <translation>feat</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>fix</source>
-      <translation>исправить</translation>
+      <translation>fix</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10394,12 +10394,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>refactor</source>
-      <translation>рефакторинг</translation>
+      <translation>refactor</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>style</source>
-      <translation>стиль</translation>
+      <translation>style</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10409,12 +10409,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>test</source>
-      <translation>тест</translation>
+      <translation>test</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>build</source>
-      <translation>сборка</translation>
+      <translation>build</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10424,17 +10424,17 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>chore</source>
-      <translation>петь</translation>
+      <translation>chore</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>revert</source>
-      <translation>вернуть</translation>
+      <translation>revert</translation>
     </message>
     <message>
       <location line="+260"/>
       <source>merge</source>
-      <translation>слияние</translation>
+      <translation>merge</translation>
     </message>
   </context>
   <context>
@@ -10452,12 +10452,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+3"/>
       <source>New version available on %1</source>
-      <translation>Доступна новая версия на %1</translation>
+      <translation>На %1 доступна новая версия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 new commits on %2 branch</source>
-      <translation>%1 новых коммитов на ветке %2</translation>
+      <translation>Новых коммитов в ветке %2: %1</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10467,12 +10467,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+11"/>
       <source>%1m %2s</source>
-      <translation type="unfinished">%1m %2s</translation>
+      <translation>%1 мин %2 с</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1s</source>
-      <translation type="unfinished">%1s</translation>
+      <translation>%1 с</translation>
     </message>
     <message>
       <location line="+69"/>
@@ -10483,7 +10483,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="-78"/>
       <source>Last check: not yet</source>
-      <translation>Последняя проверка: еще не проверена</translation>
+      <translation>Последняя проверка: не было</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10493,7 +10493,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+20"/>
       <source>Next check in %1</source>
-      <translation>Следующая регистрация на %1</translation>
+      <translation>Следующая проверка через %1</translation>
     </message>
     <message>
       <location line="+57"/>
@@ -10503,12 +10503,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+41"/>
       <source>Open Updates</source>
-      <translation>Открыть обновления</translation>
+      <translation>Открыть «Обновления»</translation>
     </message>
     <message>
       <location line="+38"/>
       <source>Hide from bar</source>
-      <translation>Скрыть от панели</translation>
+      <translation>Скрыть с панели</translation>
     </message>
   </context>
   <context>
@@ -10526,7 +10526,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+99"/>
       <source>Update complete - log out to apply</source>
-      <translation>Обновление завершено - выйдите для применения</translation>
+      <translation>Обновление завершено — выйдите из сеанса</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10536,12 +10536,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Restore to %1?</source>
-      <translation>Восстановить в %1?</translation>
+      <translation>Восстановить %1?</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Reinstall %1?</source>
-      <translation>Reinstall %1?</translation>
+      <translation>Переустановить %1?</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -10551,12 +10551,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+3"/>
       <source>New version available on %1</source>
-      <translation>Доступна новая версия на %1</translation>
+      <translation>На %1 доступна новая версия</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 new commits on %2</source>
-      <translation>%1 новые коммиты на %2</translation>
+      <translation>Новых коммитов в %2: %1</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -10566,7 +10566,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>You&apos;re up to date</source>
-      <translation>Вы&apos;обновляете</translation>
+      <translation>У вас последняя версия</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -10626,32 +10626,32 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+35"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Update channel</source>
-      <translation>Обновить канал</translation>
+      <translation>Канал обновлений</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Stable releases</source>
-      <translation>Стабильные выпуски</translation>
+      <translation>Стабильные релизы</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Development builds - may be unstable</source>
-      <translation>Разработчики - может быть нестабильной</translation>
+      <translation>Сборки для разработчиков — могут быть нестабильны</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Show Update Indicator</source>
-      <translation>Показать индикатор обновления</translation>
+      <translation>Показывать индикатор обновлений</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show a notification icon in the taskbar when updates are available</source>
-      <translation>Показывать значок уведомления на панели задач при наличии обновлений</translation>
+      <translation>Показывать значок на панели задач, когда доступны обновления</translation>
     </message>
     <message>
       <location line="+67"/>
@@ -10661,32 +10661,32 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+15"/>
       <source>Open Backup Folder</source>
-      <translation>Открыть папку резервного копирования</translation>
+      <translation>Открыть папку бэкапов</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>View your previously backed-up configuration files</source>
-      <translation>Просмотреть ваши ранее резервные файлы конфигурации</translation>
+      <translation>Посмотреть сохранённые ранее файлы конфигурации</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Deploy Configurations</source>
-      <translation>Установка конфигураций</translation>
+      <translation>Развернуть конфигурации</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Update your custom dotfiles in ~/.config</source>
-      <translation>Обновите ваши пользовательские точечные файлы в ~/.config</translation>
+      <translation>Обновить ваши дотфайлы в ~/.config</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Build Shell UI</source>
-      <translation>Создать оболочку</translation>
+      <translation>Собрать оболочку</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Compile and install Quickshell UI updates</source>
-      <translation>Компилировать и установить обновления Quickshell UI</translation>
+      <translation>Скомпилировать и установить обновления интерфейса Quickshell</translation>
     </message>
     <message>
       <location line="+33"/>
@@ -10701,7 +10701,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+0"/>
       <source>Commit History</source>
-      <translation>История изменений</translation>
+      <translation>История коммитов</translation>
     </message>
     <message>
       <location line="+62"/>
@@ -10711,12 +10711,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+0"/>
       <source>Load 10 More</source>
-      <translation>Загрузить еще 10</translation>
+      <translation>Загрузить ещё 10</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Update Log</source>
-      <translation>Обновить журнал</translation>
+      <translation>Журнал обновления</translation>
     </message>
   </context>
   <context>
@@ -10734,12 +10734,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>On-screen sliders</source>
-      <translation>Ползунки на экране</translation>
+      <translation>Экранные ползунки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Volume, microphone, brightness, and edge triggers</source>
-      <translation>Громкость, микрофон, яркость и края триггеры</translation>
+      <translation>Громкость, микрофон, яркость и зоны у края</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -10759,17 +10759,17 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Choose the cards shown in the panel</source>
-      <translation>Выберите карты, показанные на панели</translation>
+      <translation>Какие карточки показывать на панели</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Quick toggles</source>
-      <translation>Quick toggles</translation>
+      <translation>Быстрые настройки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Choose the controls shown in Quick Toggles</source>
-      <translation>Выберите элементы управления, отображаемые на быстрых переключателях</translation>
+      <translation>Какие переключатели показывать в быстрых настройках</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -10779,12 +10779,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+7"/>
       <source>Game mode</source>
-      <translation>Режим игры</translation>
+      <translation>Игровой режим</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Auto-enable rules and performance overrides</source>
-      <translation>Автовключение правил и переопределения производительности</translation>
+      <translation>Правила автовключения и переопределения для производительности</translation>
     </message>
   </context>
   <context>
@@ -10792,12 +10792,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/nexus/pages/panels/UtilitiesPanel.qml" line="+15"/>
       <source>Quick toggle</source>
-      <translation>Быстрое переключение</translation>
+      <translation>Быстрые настройки</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>General</source>
-      <translation>Общие положения</translation>
+      <translation>Общие</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -10807,32 +10807,32 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+7"/>
       <source>Show on hover</source>
-      <translation>Показывать при наведении курсора</translation>
+      <translation>Показ при наведении</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Reveal when the cursor reaches the screen edge</source>
-      <translation>Показать когда курсор дойдет до края экрана</translation>
+      <translation>Показывать, когда курсор доходит до края экрана</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Hover trigger depth</source>
-      <translation>Hover trigger depth</translation>
+      <translation>Глубина зоны наведения</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Distance in from the screen edge that opens the quick toggles</source>
-      <translation>Расстояние от края экрана, которое открывает быстрые переключатели</translation>
+      <translation>Расстояние от края экрана, на котором открываются быстрые настройки</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Hover trigger width</source>
-      <translation>Hover trigger width</translation>
+      <translation>Ширина зоны наведения</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>How much of that edge opens the quick toggles, as a percentage of their width</source>
-      <translation>Сколько этого края открывает переключатели, в процентах от их ширины</translation>
+      <translation>Какая часть этого края открывает быстрые настройки, в процентах от их ширины</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -10842,7 +10842,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Pixels dragged before the quick toggle opens</source>
-      <translation>Пиксели перетаскиваются до открытия быстрых переключателей</translation>
+      <translation>Сколько пикселей протащить, чтобы открылись быстрые настройки</translation>
     </message>
   </context>
   <context>
@@ -10855,17 +10855,17 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+11"/>
       <source>Visible cards</source>
-      <translation>Видимые карты</translation>
+      <translation>Видимые карточки</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Keep Awake</source>
-      <translation>Продолжить пробуждение</translation>
+      <translation>Не засыпать</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the Keep Awake card</source>
-      <translation>Показать карту Keep Awake</translation>
+      <translation>Показывать карточку «Не засыпать»</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -10875,27 +10875,27 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Show the Screen Recorder card</source>
-      <translation>Показать карту записи экрана</translation>
+      <translation>Показывать карточку «Запись экрана»</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>GIF Recorder</source>
-      <translation>GIF Запись</translation>
+      <translation>Запись GIF</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the Record GIF option in the recorder menu</source>
-      <translation>Показать опцию Record GIF в меню регистратора</translation>
+      <translation>Показывать пункт «Запись GIF» в меню записи</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Quick Toggles</source>
-      <translation>Quick Toggles</translation>
+      <translation>Быстрые настройки</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the Quick Toggles card</source>
-      <translation>Показать карту быстрых переключателей</translation>
+      <translation>Показывать карточку «Быстрые настройки»</translation>
     </message>
   </context>
   <context>
@@ -10903,17 +10903,17 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../services/VPN.qml" line="+273"/>
       <source>VPN connection failed</source>
-      <translation>Сбой соединения с VPN</translation>
+      <translation>Не удалось подключить VPN</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>VPN disconnection failed</source>
-      <translation>Сбой отключения VPN</translation>
+      <translation>Не удалось отключить VPN</translation>
     </message>
     <message>
       <location line="+241"/>
       <source>VPN connected</source>
-      <translation>VPN подключен</translation>
+      <translation>VPN подключён</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -10923,12 +10923,12 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+3"/>
       <source>VPN disconnected</source>
-      <translation>VPN отключен</translation>
+      <translation>VPN отключён</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Disconnected from %1</source>
-      <translation>Отключен от %1</translation>
+      <translation>Отключено от %1</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -10950,7 +10950,7 @@ Keyboard layout: %1</translation>
       <location line="+225"/>
       <location line="+69"/>
       <source>Could not start %1. Is it installed?</source>
-      <translation>Не удалось запустить %1. Это установлено?</translation>
+      <translation>Не удалось запустить %1. Он установлен?</translation>
     </message>
     <message>
       <location line="-55"/>
@@ -10963,12 +10963,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/VideoWallpapersPage.qml" line="+17"/>
       <source>Video Wallpapers</source>
-      <translation>Видео обои</translation>
+      <translation>Видеообои</translation>
     </message>
     <message>
       <location line="+13"/>
       <source>Pause video wallpapers</source>
-      <translation>Приостановить видео обои</translation>
+      <translation>Ставить видеообои на паузу</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -10978,22 +10978,22 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>Pause video on fullscreen</source>
-      <translation>Приостановить видео на полноэкранном режиме</translation>
+      <translation>Пауза видео при полноэкранном окне</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Pause video on tiled windows</source>
-      <translation>Приостановить видео в плитках окон</translation>
+      <translation>Пауза видео при окнах в тайлинге</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Pause video on all displays</source>
-      <translation>Приостановить видео на всех экранах</translation>
+      <translation>Пауза видео на всех экранах</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Mute video when media plays</source>
-      <translation>Отключать видео при воспроизведении мультимедиа</translation>
+      <translation>Глушить видео, когда играет медиа</translation>
     </message>
   </context>
   <context>
@@ -11001,7 +11001,7 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/WallhavenPage.qml" line="+7"/>
       <source>Wallhaven</source>
-      <translation>Уоллэйн</translation>
+      <translation>Wallhaven</translation>
     </message>
   </context>
   <context>
@@ -11009,12 +11009,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/dashboard/WallhavenTab.qml" line="+132"/>
       <source>Wallhaven</source>
-      <translation>Уоллэйн</translation>
+      <translation>Wallhaven</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Search, preview, and set wallpapers instantly</source>
-      <translation>Мгновенное поиск, предпросмотр и установка обоев</translation>
+      <translation>Мгновенный поиск, предпросмотр и установка обоев</translation>
     </message>
     <message>
       <location line="+22"/>
@@ -11024,7 +11024,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+39"/>
       <source>Found %1 wallpapers (page %2 of %3)</source>
-      <translation>Найдены обои %1 (страница %2 из %3)</translation>
+      <translation>Найдено обоев: %1 (страница %2 из %3)</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -11034,7 +11034,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+10"/>
       <source>Load more</source>
-      <translation>Загрузить еще</translation>
+      <translation>Загрузить ещё</translation>
     </message>
     <message>
       <location line="+140"/>
@@ -11074,7 +11074,7 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/background/Wallpaper.qml" line="+103"/>
       <source>Wallpaper missing?</source>
-      <translation>Отсутствуют обои?</translation>
+      <translation>Нет обоев?</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -11084,7 +11084,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Media files</source>
-      <translation>Медиа файлы</translation>
+      <translation>Медиафайлы</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -11117,28 +11117,28 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>Wallhaven</source>
-      <translation>Уоллэйн</translation>
+      <translation>Wallhaven</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Download wallpapers from Wallhaven</source>
-      <translation>Скачать обои из Wallhaven</translation>
+      <translation>Скачать обои с Wallhaven</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Open wallpaper folder</source>
-      <translation>Открыть папку обоев</translation>
+      <translation>Открыть папку с обоями</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Add your own wallpapers</source>
-      <translation>Добавить свои собственные обои</translation>
+      <translation>Добавить свои обои</translation>
     </message>
     <message>
       <location line="+6"/>
       <location line="+11"/>
       <source>Lock screen</source>
-      <translation>Блокировка экрана</translation>
+      <translation>Экран блокировки</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -11154,7 +11154,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Dynamic, light and dark palettes</source>
-      <translation>Динамические, светлые и темные палитры</translation>
+      <translation>Динамические, светлые и тёмные палитры</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -11164,7 +11164,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Islands, Pitch Black, Transparency</source>
-      <translation>Чёрная острова, прозрачность</translation>
+      <translation>Острова, чистый чёрный, прозрачность</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -11179,27 +11179,27 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Display, Recolor, Desktop Icons</source>
-      <translation>Отобразить, перекрасить иконки рабочего стола</translation>
+      <translation>Показ, перекрашивание, значки рабочего стола</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Slideshow &amp; Order</source>
-      <translation>Slideshow &amp; Order</translation>
+      <translation>Слайд-шоу и порядок</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Slideshow interval and randomization</source>
-      <translation>Интервал слайд-шоу и рандомизация</translation>
+      <translation>Интервал слайд-шоу и случайный порядок</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Video Wallpapers</source>
-      <translation>Видео обои</translation>
+      <translation>Видеообои</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Audio and pausing behavior</source>
-      <translation>Аудио и поведение на паузе</translation>
+      <translation>Звук и поведение паузы</translation>
     </message>
   </context>
   <context>
@@ -11227,7 +11227,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+10"/>
       <source>Random</source>
-      <translation>Случайный</translation>
+      <translation>Случайные</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -11237,7 +11237,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+20"/>
       <source>Featured wallpaper</source>
-      <translation>Избранные обои</translation>
+      <translation>Обои в фокусе</translation>
     </message>
     <message>
       <location line="+175"/>
@@ -11286,7 +11286,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+1"/>
       <source>Fit</source>
-      <translation>По размеру</translation>
+      <translation>Вписать</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -11296,27 +11296,27 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+30"/>
       <source>Wallpaper scaling</source>
-      <translation>Масштабирование обоев</translation>
+      <translation>Масштаб обоев</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>How the wallpaper image fits the screen</source>
-      <translation>Как изображение соответствует экрану</translation>
+      <translation>Как изображение обоев вписывается в экран</translation>
     </message>
     <message>
       <location line="+17"/>
       <source>Recolor wallpaper</source>
-      <translation>Обои перекрашивания</translation>
+      <translation>Перекрашивать обои</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Tint the wallpaper to match static color schemes</source>
-      <translation>Подсказка к обоям для статических цветовых схем</translation>
+      <translation>Тонировать обои под статические цветовые схемы</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Recolor strength</source>
-      <translation>Сила переполнения</translation>
+      <translation>Сила перекрашивания</translation>
     </message>
   </context>
   <context>
@@ -11324,12 +11324,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../services/Weather.qml" line="+127"/>
       <source>Couldn&apos;t parse location results. Check your connection and try again.</source>
-      <translation>Не удалось&apos;разобрать данные о местоположении. Проверьте подключение и повторите попытку.</translation>
+      <translation>Не удалось разобрать результаты поиска места. Проверьте подключение и повторите попытку.</translation>
     </message>
     <message>
       <location line="+29"/>
       <source>Couldn&apos;t fetch locations. Check your connection and try again.</source>
-      <translation>Не удалось&apos;загрузить местоположение. Проверьте подключение и повторите попытку.</translation>
+      <translation>Не удалось загрузить список мест. Проверьте подключение и повторите попытку.</translation>
     </message>
   </context>
   <context>
@@ -11357,7 +11357,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+6"/>
       <source>Feels Like</source>
-      <translation>Чувствует себя</translation>
+      <translation>Ощущается как</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -11367,7 +11367,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+10"/>
       <source>7-Day Forecast</source>
-      <translation>7 дней прогноз</translation>
+      <translation>Прогноз на 7 дней</translation>
     </message>
     <message>
       <location line="+34"/>
@@ -11381,12 +11381,12 @@ Keyboard layout: %1</translation>
       <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+114"/>
       <location line="+151"/>
       <source>What&apos;s New in Caelestia</source>
-      <translation>Что&apos;с новым в Caelestia</translation>
+      <translation>Что нового в Caelestia</translation>
     </message>
     <message>
       <location line="-99"/>
       <source>What&apos;s New</source>
-      <translation>Что&apos;с новым</translation>
+      <translation>Что нового</translation>
     </message>
   </context>
   <context>
@@ -11410,7 +11410,7 @@ Keyboard layout: %1</translation>
     <message>
       <location line="+13"/>
       <source>Network: %1</source>
-      <translation>Сети: %1</translation>
+      <translation>Сеть: %1</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -11444,12 +11444,12 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../services/WorkspaceTrackerGuard.qml" line="+36"/>
       <source>Workspace tracker effect is not running</source>
-      <translation>Эффект трекера рабочей области не запущен</translation>
+      <translation>Эффект трекера рабочих столов не запущен</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in.</source>
-      <translation>KWin перестал загружать его после обновления KDE. Запустите обновление caelestia, а затем выйдите из системы и возвращайтесь.</translation>
+      <translation>KWin перестал загружать его после обновления KDE. Выполните caelestia update, затем выйдите из сеанса и войдите снова.</translation>
     </message>
   </context>
   <context>
@@ -11457,7 +11457,7 @@ Keyboard layout: %1</translation>
     <message>
       <location filename="../modules/dashboard/Wrapper.qml" line="+20"/>
       <source>Select a profile picture</source>
-      <translation>Выберите изображение профиля</translation>
+      <translation>Выбор аватара профиля</translation>
     </message>
     <message>
       <location line="+1"/>

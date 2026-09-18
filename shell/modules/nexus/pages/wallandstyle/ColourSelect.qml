@@ -140,6 +140,15 @@ PageBase {
                     color: Colours.palette.m3onSecondaryContainer
                     fontStyle: Tokens.font.icon.large
                 }
+
+                IconButton {
+                    id: settingsBtn
+
+                    Layout.alignment: Qt.AlignVCenter
+                    icon: "settings"
+                    type: IconButton.Tonal
+                    onClicked: root.nState.openSubPage(10)
+                }
             }
         }
 

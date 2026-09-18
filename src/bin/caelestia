@@ -23,6 +23,14 @@ SELF_DIR="$(dirname -- "$SELF")"
 # nothing set and must answer before it can find install-kind.sh, so it decides from its
 # own location: /usr/bin is a package, anything else a checkout. Using the checkout paths
 # unconditionally put ~/.config/quickshell/caelestia ahead of the installed /etc/xdg tree.
+#
+# Only a checkout has a version.env to fall back to, so this stays empty for a package;
+# it is defined here because cmd_version tests it under `set -u`.
+VERSION_FILE=""
+# The checkout this command would install from, and the only definition of "there is one"
+# for a package: empty unless the user names one with CAELESTIA_DIR. cmd_install reads it
+# instead of re-deciding, so `install` cannot pick up a stray ~/caelestia-kde on a package.
+CHECKOUT="${CAELESTIA_DIR:-}"
 case "${CAELESTIA_INSTALL_KIND:-$( [[ "$BIN_DIR" == /usr/bin ]] && printf 'package' || printf 'source' )}" in
     package)
         KIND=package
@@ -33,7 +41,7 @@ case "${CAELESTIA_INSTALL_KIND:-$( [[ "$BIN_DIR" == /usr/bin ]] && printf 'packa
         ;;
     *)
         KIND=source
-        CHECKOUT="${CAELESTIA_DIR:-$HOME/caelestia-kde}"
+        [[ -n "$CHECKOUT" ]] || CHECKOUT="$HOME/caelestia-kde"
         DATA_DIR="${CAELESTIA_DATA_DIR:-$CHECKOUT}"
         QML_IMPORT_DEFAULT="$HOME/.local/lib/qt6/qml:$HOME/.config/quickshell/caelestia"
         LIB_DIR_DEFAULT="$HOME/.local/lib/caelestia"
@@ -309,9 +317,13 @@ EOF
         return 2
     fi
 
-    local root="${CAELESTIA_DIR:-$HOME/caelestia-kde}"
-    if [[ -f "$root/install.sh" ]]; then
-        exec sh "$root/install.sh"
+    # A checkout's installer runs when there is a checkout: this command IS one (KIND
+    # above sets it), or the user named one. A package leaves CHECKOUT empty, which is what
+    # stops it from running ~/caelestia-kde's whole installer over a package-owned install
+    # (system packages, ~/.local/lib, a second local C++ build) just because a clone sits
+    # in the documented place.
+    if [[ -n "$CHECKOUT" && -f "$CHECKOUT/install.sh" ]]; then
+        exec sh "$CHECKOUT/install.sh"
     fi
 
     # No checkout, so a package owns this command and what it installed.

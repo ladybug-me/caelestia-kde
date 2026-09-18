@@ -18,6 +18,7 @@ QtObject {
                 { label: qsTr("Monospace font"), keywords: ["monospace", "font", "code", "terminal"], pagePath: "wallandstyle/AppearancePage.qml", subPageIdx: 8 },
                 { label: qsTr("Font scale"), keywords: ["font", "scale", "size", "text"], pagePath: "wallandstyle/AppearancePage.qml", subPageIdx: 8 },
                 { label: qsTr("Colors"), keywords: ["accent", "palette", "scheme", "theme", "color"], pagePath: "wallandstyle/ColourSelect.qml", subPageIdx: 3 },
+                { label: qsTr("Advanced color settings"), keywords: ["advanced", "colors", "palette", "saturation", "contrast", "matugen"], pagePath: "wallandstyle/AdvancedColorsPage.qml", subPageIdx: 10 },
                 { label: qsTr("Blur & Opacity"), pagePath: "wallandstyle/AppearancePage.qml", subPageIdx: 8 },
                 { label: qsTr("Corner Radius"), keywords: ["rounding", "radius"], pagePath: "wallandstyle/AppearancePage.qml", subPageIdx: 8 },
                 { label: qsTr("Wallpapers"), pagePath: "wallandstyle/WallpaperSelect.qml", subPageIdx: 1 },

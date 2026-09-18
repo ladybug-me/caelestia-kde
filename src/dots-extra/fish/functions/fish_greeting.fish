@@ -1,5 +1,5 @@
 function fish_greeting
-    set_color 9bd0cc
+    set_color blue
     echo '   _____            _           _   _'
     echo '  / ____|          | |         | | (_)'
     echo ' | |     __ _  ___ | | ___  ___| |_ _  __ _'

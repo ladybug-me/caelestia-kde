@@ -108,7 +108,8 @@ if [ "$PACKAGED" -eq 1 ]; then
     echo "  Caelestia Update (this install came from a package)"
     echo "---------------------------------------------"
     echo
-    if [ -n "${1:-}" ]; then
+    # $1 is the branch, $2 the version: only the latter means "a version was asked for".
+    if [ -n "${TARGET_REF:-}" ]; then
         echo "  A single version cannot be selected from here; choose it where the"
         echo "  package was installed from."
         echo

@@ -13,9 +13,16 @@ namespace caelestia::services {
 static const QString KROHNKITE_GROUP = QStringLiteral("Script-krohnkite");
 
 /// Class list Krohnkite assumes when kwinrc has no ignoreClass key yet.
+///
+/// Kept identical to IGNORE_CLASSES in shell/services/startuptasks/02-krohnkite-setup.sh:
+/// this is only the fallback for a system the startup task has not touched, but Nexus
+/// shows it and writes it back on the first edit, so a short list here silently drops the
+/// dialog classes for the rest of the session. test_repo_integrity.py guards the parity.
 static const QString DEFAULT_IGNORE_CLASS =
-    QStringLiteral("krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,"
-                   "org.kde.plasmashell,org.kde.polkit-kde-authentication-agent-1,quickshell");
+    QStringLiteral("krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,"
+                   "org.kde.polkit-kde-authentication-agent-1,quickshell,org.quickshell,org.pulseaudio.pavucontrol,"
+                   "com.saivert.pwvucontrol,yad,yad-icon-browser,system-config-printer,nwg-look,org.gnome.Settings,"
+                   "org.gnome.FileRoller,file-roller,blueman-manager,guifetch,wev,zenity,feh,imv,swappy");
 
 KrohnkiteConfig::KrohnkiteConfig(QObject* parent)
     : QObject(parent) {

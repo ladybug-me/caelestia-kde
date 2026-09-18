@@ -112,7 +112,9 @@ Item {
         onCurrentIndexChanged: currentIndex = Qt.binding(() => model.values.findIndex(w => w.name === root.activeSpecial))
 
         model: ScriptModel {
-            values: Kwin.workspaces.values.filter(w => w.name.startsWith("special:") && (!GlobalConfig.bar.workspaces.perMonitorWorkspaces || w.monitor === root.monitor))
+            // Kwin.workspaces is a plain array (KWinWorkspaceState.workspaces): `.values` is
+            // Array.prototype.values, so the filter threw and the strip never rendered.
+            values: Kwin.workspaces.filter(w => w.name.startsWith("special:") && (!GlobalConfig.bar.workspaces.perMonitorWorkspaces || w.monitor === root.monitor))
         }
 
         preferredHighlightBegin: 0

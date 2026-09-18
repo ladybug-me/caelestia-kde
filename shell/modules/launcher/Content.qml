@@ -223,7 +223,7 @@ Item {
                     list.currentList?.incrementCurrentIndex();
             }
             Keys.onLeftPressed: event => {
-                if (list.showWallpapers) {
+                if (list.showWallpapers || list.showWindowSwitcher) {
                     list.currentList?.decrementCurrentIndex();
                     event.accepted = true;
                 } else if (list.showAppsBrowser) {
@@ -234,7 +234,7 @@ Item {
                 }
             }
             Keys.onRightPressed: event => {
-                if (list.showWallpapers) {
+                if (list.showWallpapers || list.showWindowSwitcher) {
                     list.currentList?.incrementCurrentIndex();
                     event.accepted = true;
                 } else if (list.showAppsBrowser) {
@@ -252,7 +252,7 @@ Item {
             }
 
             Keys.onReleased: event => {
-                if (text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
+                if (Windows.isSwitching && text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
                     const switcherKey = (typeof KeybindsModel !== "undefined" && KeybindsModel.getKey("windowSwitcher")) || "Alt+Tab";
                     if (!CUtils.isShortcutModifierPressed(switcherKey)) {
                         Windows.focusSelectedWindow();
@@ -263,7 +263,7 @@ Item {
             }
 
             Keys.onPressed: event => {
-                if (text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
+                if (Windows.isSwitching && text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
                     if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
                         if (event.modifiers & Qt.ShiftModifier || event.key === Qt.Key_Backtab) {
                             Windows.triggerCyclePrev();
@@ -283,7 +283,7 @@ Item {
                         event.accepted = true;
                         return;
                     }
-                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+                    if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
                         Windows.focusSelectedWindow();
                         root.visibilities.launcher = false;
                         event.accepted = true;
@@ -368,7 +368,7 @@ Item {
 
             Connections {
                 function onModifierReleased(): void {
-                    if (root.visibilities.launcher && search.text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
+                    if (Windows.isSwitching && root.visibilities.launcher && search.text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
                         const switcherKey = (typeof KeybindsModel !== "undefined" && KeybindsModel.getKey("windowSwitcher")) || "Alt+Tab";
                         if (!CUtils.isShortcutModifierPressed(switcherKey)) {
                             Windows.focusSelectedWindow();

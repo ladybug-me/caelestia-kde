@@ -48,10 +48,19 @@ def git_tracked_files(glob_pattern: str) -> list[str]:
 class ScriptSyntaxTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("bash"), "bash is required for shell syntax checks")
     def test_shell_scripts_parse(self) -> None:
+        """Every shell script THIS REPOSITORY tracks must parse.
+
+        Only git-tracked files are checked, for the same reason the Python test below
+        does it: a filesystem walk also picks up an untracked scratch directory, an
+        initialized submodule or a vendored virtualenv, and reports a syntax error in
+        somebody else's file as a failure of the change under review.
+        """
         failures: list[str] = []
 
-        for path in repo_files("*.sh"):
-            rel_path = path.relative_to(ROOT).as_posix()
+        tracked = git_tracked_files("*.sh")
+        rel_paths = tracked or [path.relative_to(ROOT).as_posix() for path in repo_files("*.sh")]
+
+        for rel_path in rel_paths:
             result = subprocess.run(
                 ["bash", "-n", rel_path],
                 capture_output=True,
@@ -746,25 +755,39 @@ class InstallerTests(unittest.TestCase):
             f"Duplicate installer step names: {duplicates}",
         )
 
-    def test_runner_steps_ordered(self) -> None:
-        """Installer step numbering (00-*, 01-*, ...) should match Runner.cpp order.
+    def test_every_step_script_is_wired_into_a_step_list(self) -> None:
+        """A numbered scripts/*.sh must be run by a step list, and every listed step must exist.
 
-        The glob result order from git may differ from Runner.cpp order; this test
-        is informational - Runner.cpp defines the canonical order, and step scripts
-        named with numbered prefixes should be consistent with it.
+        Two lists run step scripts: the full install (installer/tui/Runner.cpp) and the
+        user's half of a packaged install (src/bin/caelestia). A script in neither is dead
+        weight that every other check still reports as covered; a list entry with no file
+        fails at install time instead of here. The step numbers are not an order: the TUI
+        runs 00-backup-themes after 02a-submodules, deliberately.
         """
-        runner_text = (ROOT / "installer/tui/Runner.cpp").read_text(encoding="utf-8")
-        scripts = re.findall(r'\{"[^"]+",\s*"(scripts/[^"]+)",\s*"[^"]+",\s*"[^"]+"\}', runner_text)
+        runner_text = (ROOT / "installer" / "tui" / "Runner.cpp").read_text(encoding="utf-8")
+        packaged_text = (ROOT / "src" / "bin" / "caelestia").read_text(encoding="utf-8")
 
-        prev_num = -1
-        for script in scripts:
-            basename = Path(script).name
-            match = re.match(r"^(\d+)", basename)
-            if match:
-                num = int(match.group(1))
-                if num < prev_num:
-                    pass
-                prev_num = num
+        runner_steps = set(re.findall(r"scripts/([0-9][0-9a-z]*-[A-Za-z0-9._-]+\.sh)", runner_text))
+        packaged_steps = set(
+            re.findall(r"^\s+([0-9][0-9a-z]*-[A-Za-z0-9._-]+\.sh)$", packaged_text, re.MULTILINE)
+        )
+        listed = runner_steps | packaged_steps
+        self.assertTrue(listed, "No step scripts found in Runner.cpp or src/bin/caelestia")
+
+        scripts_dir = ROOT / "scripts"
+        numbered = {
+            path.name for path in scripts_dir.glob("*.sh")
+            if re.match(r"^\d+[a-z]?-", path.name)
+        }
+
+        self.assertEqual(
+            sorted(numbered - listed), [],
+            "Step script(s) no step list runs:",
+        )
+        self.assertEqual(
+            sorted(listed - numbered), [],
+            "Step list(s) reference script(s) that do not exist in scripts/:",
+        )
 
 
 class InstallStepSafetyTests(unittest.TestCase):
@@ -937,13 +960,11 @@ class DocsReferenceTests(unittest.TestCase):
 
 class ScriptNumberingTests(unittest.TestCase):
     def test_install_step_scripts_have_consistent_numbers(self) -> None:
-        """Scripts in the scripts/ directory with 00- prefix must be consecutive.
+        """Step numbers stay a two-digit base with an optional letter suffix.
 
-        Scripts: 00-backup-themes.sh, 00a-system-update.sh,
-        01-ensure-prereqs.sh, 02-all-packages.sh, 02-packages.sh,
-        02a-submodules.sh, 03-deploy-configs.sh, 04-deploy-kde.sh,
-        06-services.sh, 07-kde-apps.sh, 08-build-shell.sh,
-        09-system-tweaks.sh, 10-autostart.sh, 11-optional-apps.sh
+        The set is whatever `ls scripts/` shows; the guarantee is only the numbering
+        scheme, so a step added with a number that cannot sort next to its neighbours is
+        caught here. Use the existing names as the examples.
         """
         scripts_dir = ROOT / "scripts"
         if not scripts_dir.is_dir():
@@ -961,6 +982,37 @@ class ScriptNumberingTests(unittest.TestCase):
                 max_num, 99,
                 f"Script number {max_num} seems too high - consider renumbering"
             )
+
+
+class KrohnkiteIgnoreClassTests(unittest.TestCase):
+    """The C++ fallback and the startup task must name the same window classes.
+
+    Nexus renders DEFAULT_IGNORE_CLASS when kwinrc has no ignoreClass key and writes it
+    back on the first edit, so a fallback that lags IGNORE_CLASSES drops every class it is
+    missing from kwinrc for the rest of the session.
+    """
+
+    def test_default_ignore_class_matches_the_startup_task(self) -> None:
+        cpp_path = ROOT / "shell" / "plugin" / "src" / "Caelestia" / "Services" / "krohnkiteconfig.cpp"
+        cpp = cpp_path.read_text(encoding="utf-8")
+        literal = re.search(r"DEFAULT_IGNORE_CLASS\s*=\s*QStringLiteral\((.*?)\);", cpp, re.DOTALL)
+        self.assertIsNotNone(literal, "DEFAULT_IGNORE_CLASS should be built from a QStringLiteral")
+
+        cpp_classes: list[str] = []
+        for chunk in re.findall(r'"([^"]*)"', literal.group(1)):
+            cpp_classes.extend(entry for entry in chunk.split(",") if entry)
+
+        script_path = ROOT / "shell" / "services" / "startuptasks" / "02-krohnkite-setup.sh"
+        script = script_path.read_text(encoding="utf-8")
+        block = re.search(r"IGNORE_CLASSES=\((.*?)\n\)", script, re.DOTALL)
+        self.assertIsNotNone(block, "the startup task should declare IGNORE_CLASSES")
+        script_classes = [line.strip() for line in block.group(1).splitlines() if line.strip()]
+
+        self.assertEqual(
+            cpp_classes,
+            script_classes,
+            "DEFAULT_IGNORE_CLASS in krohnkiteconfig.cpp and IGNORE_CLASSES in 02-krohnkite-setup.sh have drifted",
+        )
 
 
 if __name__ == "__main__":

@@ -23,17 +23,7 @@ Searcher {
         getPreviewColoursProc.running = true;
     }
 
-    Process {
-        id: getPreviewColoursProc
-
-        stdout: StdioCollector {
-            onStreamFinished: {
-                Colours.load(text, true);
-                Colours.showPreview = true;
-            }
-        }
-    }
-
+    useFuzzy: GlobalConfig.launcher.useFuzzy.variants
     list: [
         Variant {
             variant: "vibrant"
@@ -91,7 +81,16 @@ Searcher {
         }
     ]
 
-    useFuzzy: GlobalConfig.launcher.useFuzzy.variants
+    Process {
+        id: getPreviewColoursProc
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                Colours.load(text, true);
+                Colours.showPreview = true;
+            }
+        }
+    }
 
     component Variant: QtObject {
         required property string variant
@@ -103,6 +102,7 @@ Searcher {
             if (list) {
                 list.visibilities.launcher = false;
             }
+            GlobalConfig.services.smartScheme = false;
             Quickshell.execDetached(["caelestia", "scheme", "set", "-v", variant]);
         }
     }

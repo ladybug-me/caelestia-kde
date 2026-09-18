@@ -1,7 +1,13 @@
 function fix_konsole_colors
     if test "$TERM" != "foot"
-        # Parse MaterialYou.colorscheme for Konsole
-        set colorscheme "$HOME/.local/share/konsole/MaterialYou.colorscheme"
+        # Parse Matugen.colorscheme for Konsole
+        set colorscheme "$HOME/.local/share/konsole/Matugen.colorscheme"
+        if not test -f "$colorscheme"
+            set colorscheme "$HOME/.local/share/konsole/Matugen Alt.colorscheme"
+        end
+        if not test -f "$colorscheme"
+            set colorscheme "$HOME/.local/share/konsole/MaterialYou.colorscheme"
+        end
         if test -f "$colorscheme"
             # Get Foreground for Color16
             set fg (grep -A 1 "^\[Foreground\]" "$colorscheme" | grep "Color=" | cut -d '=' -f 2)

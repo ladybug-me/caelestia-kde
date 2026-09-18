@@ -78,7 +78,11 @@ Singleton {
                     if (text.trim().length > 0) {
                         parsed = JSON.parse(text);
                     }
-                } catch (e) {}
+                } catch (e) {
+                    // Otherwise a malformed file silently reverts to the defaults, and the
+                    // user's own entries disappear with nothing in the journal.
+                    console.warn("[ContextMenuStore] ignoring an unreadable menu file:", e);
+                }
 
                 if (!parsed || parsed.length === 0) {
                     parsed = root.defaultEntries();

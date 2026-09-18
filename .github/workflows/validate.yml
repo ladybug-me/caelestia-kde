@@ -307,6 +307,8 @@ jobs:
           job_results[wayland-static-lifetime]="${{ needs.wayland-static-lifetime.result }}"
           job_results[qml-imports]="${{ needs.qml-imports.result }}"
           job_results[qml-template-interp]="${{ needs.qml-template-interp.result }}"
+          job_results[shell-quality]="${{ needs.shell-quality.result }}"
+          job_results[cpp-format]="${{ needs.cpp-format.result }}"
 
           all_passed=true
           for job in "${!job_results[@]}"; do

@@ -3167,7 +3167,7 @@
   <context>
     <name>ContentList</name>
     <message>
-      <location filename="../modules/launcher/ContentList.qml" line="+222"/>
+      <location filename="../modules/launcher/ContentList.qml" line="+225"/>
       <source>Images</source>
       <translation>Imágenes</translation>
     </message>

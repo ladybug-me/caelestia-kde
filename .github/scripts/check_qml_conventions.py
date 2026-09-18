@@ -81,6 +81,15 @@ def main() -> int:
     print(f"{BOLD}=== QML conventions regression check ==={RESET}")
     print(f"Linter reported {len(current)} violations (baseline: {len(baseline)})")
 
+    # A non-zero exit with nothing parsed means the linter itself failed - missing,
+    # moved, or unable to read a file - and an empty result is not "clean". Ignoring
+    # this turned the gate into a permanent pass, and --update would write the empty
+    # set over the baseline, losing every recorded violation.
+    if linter_code != 0 and not current:
+        print(f"{RED}The conventions linter failed (exit {linter_code}) and reported nothing:{RESET}")
+        print(f"  {LINTER}")
+        return 1
+
     if update:
         write_baseline(keys)
         print(f"{GREEN}Baseline updated: {BASELINE.relative_to(ROOT)}{RESET}")

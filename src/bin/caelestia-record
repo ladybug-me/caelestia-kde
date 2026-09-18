@@ -40,20 +40,25 @@ _is_recording() {
 _get_focused_refresh_rate() {
     local rr=60  # fallback
     local active_output=""
-    local runtime_dir="${XDG_RUNTIME_DIR:-/tmp}"
 
-    if [[ -f "$runtime_dir/qs_kwin_active_output.txt" ]]; then
-        active_output=$(cat "$runtime_dir/qs_kwin_active_output.txt" 2>/dev/null || true)
+    # The focused output comes from KWin, the same property the shell's bridge reads
+    # (KWinActiveWindowBridge::cursorOutputName). An earlier build also wrote it to a file
+    # under XDG_RUNTIME_DIR, but that writer was deleted in the same change that added this
+    # reader, so the file is not a source here - it made every recording `-f 60`.
+    if command -v qdbus6 >/dev/null 2>&1; then
+        active_output="$(qdbus6 org.kde.KWin /KWin org.kde.KWin.activeOutputName 2>/dev/null || true)"
     fi
 
     if [[ -n "$active_output" ]] && command -v kscreen-doctor >/dev/null 2>&1; then
         local kscreen_json
         kscreen_json=$(kscreen-doctor -j 2>/dev/null || true)
         if [[ -n "$kscreen_json" ]]; then
-            rr=$(echo "$kscreen_json" | python3 -c "
-import sys, json
+            # The output name is data, not code: pass it through the environment rather
+            # than into the snippet's source text.
+            rr=$(printf '%s' "$kscreen_json" | CAELESTIA_ACTIVE_OUTPUT="$active_output" python3 -c "
+import os, sys, json
 data = json.load(sys.stdin)
-active = '${active_output}'
+active = os.environ['CAELESTIA_ACTIVE_OUTPUT']
 for o in data.get('outputs', []):
     if o.get('name') == active and o.get('connected'):
         current_id = o.get('currentModeId')

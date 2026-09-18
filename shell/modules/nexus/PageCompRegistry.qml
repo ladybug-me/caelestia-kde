@@ -59,6 +59,9 @@ QtObject {
                 Component {
                     LockScreenPage {}
                 }
+                Component {
+                    AdvancedColorsPage {}
+                }
             }
         },
         Component {

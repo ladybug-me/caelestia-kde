@@ -5,8 +5,7 @@ import sys
 from pathlib import Path
 
 PATTERNS = {
-    "desktop_open_ms": re.compile(r"\[perf\]\[DesktopContextMenu\] open latency ms=(\d+)") ,
-    "desktop_read_parse_ms": re.compile(r"\[perf\]\[DesktopContextMenu\] read\+parse ms=(\d+)"),
+    "desktop_open_ms": re.compile(r"\[perf\]\[DesktopContextMenu\] open latency ms=(\d+)"),
     "desktop_build_ms": re.compile(r"\[perf\]\[DesktopContextMenu\] build model .* ms=(\d+)"),
     "context_load_ms": re.compile(r"\[perf\]\[ContextMenuPage\] load source=[^ ]+ ms=(\d+)"),
     "context_save_ms": re.compile(r"\[perf\]\[ContextMenuPage\] save queued ms=(\d+)"),

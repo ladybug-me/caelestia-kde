@@ -46,21 +46,30 @@ METHOD = "<method>"
 ROOT_METHODS = {"forScreen", "defaults", "save", "reload", "resetOption", "instance"}
 
 
-def parse_headers() -> tuple[dict[str, dict[str, str]], dict[str, str]]:
-    """Return (class_members, root_props).
+def parse_headers() -> tuple[dict[str, dict[str, str]], dict[str, str], list[str]]:
+    """Return (class_members, root_props, unreadable).
 
     class_members: class name -> { property name -> LEAF or sub-object type }
     root_props:    top-level Config/GlobalConfig name -> LEAF / type / METHOD
+    unreadable:    headers that are not UTF-8, reported instead of skipped
+
+    A file that cannot be decoded must not read as "no references here" - that is how a
+    gate passes while checking nothing. An OSError stays a silent skip on purpose: a header
+    that vanishes mid-run is a race, not a defect in the tree.
     """
     class_members: dict[str, dict[str, str]] = {}
     root_props: dict[str, str] = {}
+    unreadable: list[str] = []
 
     if not CONFIG_DIR.is_dir():
-        return class_members, root_props
+        return class_members, root_props, unreadable
 
     for hdr in sorted(CONFIG_DIR.glob("*.hpp")):
         try:
             text = hdr.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            unreadable.append(f"{hdr.relative_to(ROOT).as_posix()}: not valid UTF-8 ({exc})")
+            continue
         except OSError:
             continue
 
@@ -103,7 +112,7 @@ def parse_headers() -> tuple[dict[str, dict[str, str]], dict[str, str]]:
     for method in ROOT_METHODS:
         root_props.setdefault(method, METHOD)
 
-    return class_members, root_props
+    return class_members, root_props, unreadable
 
 
 def resolve(class_members: dict[str, dict[str, str]], root_props: dict[str, str], chain: list[str]) -> int | None:
@@ -175,7 +184,7 @@ CHAIN_RE = re.compile(r"(?<![A-Za-z0-9_$])(Config|GlobalConfig)\.([A-Za-z_][A-Za
 
 
 def main() -> int:
-    class_members, root_props = parse_headers()
+    class_members, root_props, unreadable = parse_headers()
 
     print(f"{BOLD}=== Config reference check ==={RESET}")
     print(f"Parsed {len(class_members)} config classes, {len(root_props)} root properties")
@@ -192,6 +201,9 @@ def main() -> int:
             continue
         try:
             src = qml.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            unreadable.append(f"{qml.relative_to(ROOT).as_posix()}: not valid UTF-8 ({exc})")
+            continue
         except OSError:
             continue
         cleaned = strip_comments_and_strings(src)
@@ -213,10 +225,16 @@ def main() -> int:
     for err in errors:
         print(f"{RED}[ERR]{RESET}  {err}")
 
+    for problem in unreadable:
+        print(f"{RED}[ERR]{RESET}  {problem}")
+
     print()
     print(f"Checked {checked} config references across QML files.")
+    if unreadable:
+        print(f"{BOLD}{RED}{len(unreadable)} file(s) could not be read as UTF-8.{RESET}")
     if errors:
         print(f"{BOLD}{RED}{len(errors)} unknown config reference(s) found.{RESET}")
+    if errors or unreadable:
         return 1
     print(f"{BOLD}{GREEN}All config references resolve.{RESET}")
     return 0

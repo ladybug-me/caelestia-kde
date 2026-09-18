@@ -46,6 +46,21 @@ resolve_shell_config() {
 
 SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$(resolve_shell_config)}"
 
+# The directories a shell gets when nothing has exported them already. A package keeps
+# them under /usr and /etc, a checkout under $HOME; the resolved config path decides,
+# which is the rule src/bin/caelestia applies from its own location. Exporting the
+# checkout paths on a package handed the shell - and every command it spawns - a
+# data directory that does not exist there.
+_export_shell_env() {
+    if [[ "$SHELL_CONFIG" == /etc/xdg/* ]]; then
+        export QML2_IMPORT_PATH="${QML2_IMPORT_PATH:-/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia}"
+        export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-/usr/lib/caelestia}"
+    else
+        export QML2_IMPORT_PATH="${QML2_IMPORT_PATH:-$HOME/.local/lib/qt6/qml:$HOME/.config/quickshell/caelestia}"
+        export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-$HOME/.local/lib/caelestia}"
+    fi
+}
+
 # Starts the shell without handing it, and everything it launches, a stdout that goes
 # nowhere: --daemonize points stdio at /dev/null, which deadlocks Vesktop (issue #402).
 # A transient user service returns immediately with stdio on the journal instead.
@@ -119,8 +134,7 @@ case "${1:-}" in
         ;;
 
     start|daemon)
-        export QML2_IMPORT_PATH="${QML2_IMPORT_PATH:-$HOME/.local/lib/qt6/qml}"
-        export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-$HOME/.local/lib/caelestia}"
+        _export_shell_env
         if _is_running; then
             echo "Shell is already running."
         else
@@ -133,8 +147,7 @@ case "${1:-}" in
             _qs_ipc quit 2>/dev/null || _qs_direct kill 2>/dev/null || true
             sleep 2
         fi
-        export QML2_IMPORT_PATH="${QML2_IMPORT_PATH:-$HOME/.local/lib/qt6/qml}"
-        export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-$HOME/.local/lib/caelestia}"
+        _export_shell_env
         _start_shell
         ;;
 

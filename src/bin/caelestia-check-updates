@@ -26,7 +26,13 @@ fi
 export GIT_TERMINAL_PROMPT=0
 GIT_TIMEOUT=30
 
-if ! timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git "$BRANCH" >/dev/null 2>&1; then
+# --exit-code makes git report 2 when no ref matches; every other status is the query
+# itself failing (offline, DNS, timeout). Only "the branch is gone" may rewrite the user's
+# stored choice, or a laptop that is briefly offline silently moves itself to main.
+ls_status=0
+timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git "$BRANCH" >/dev/null 2>&1 || ls_status=$?
+if [ "$ls_status" -eq 2 ]; then
+    echo "[WARN] Branch '$BRANCH' does not exist on the remote; falling back to main." >&2
     BRANCH="main"
     mkdir -p "$HOME/.config/quickshell/caelestia"
     echo "$BRANCH" > "$HOME/.config/quickshell/caelestia/.update_branch"

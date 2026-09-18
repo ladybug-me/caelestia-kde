@@ -172,8 +172,15 @@ def main() -> int:
 
     parsed: list[tuple[Path, set[str], list[str], set[str], set[str]]] = []
     all_qs_modules: set[str] = set()
+    unreadable: list[str] = []
     for qml_file in qml_files:
-        raw = qml_file.read_text(encoding="utf-8")
+        try:
+            raw = qml_file.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            # Report it as a failure of the file, not of the checker: an unhandled
+            # UnicodeDecodeError ends this gate in a traceback that names no file.
+            unreadable.append(f"{qml_file.relative_to(shell_root)}: not valid UTF-8 ({exc})")
+            continue
         code = strip_imports(strip_comments(raw))
         named_imports, relative_imports = parse_imports(raw)
         modules = {module for module, _alias in named_imports}
@@ -233,6 +240,12 @@ def main() -> int:
         for w in unused_warnings:
             print(f"- {w}", file=sys.stderr)
         print("::endgroup::", file=sys.stderr)
+
+    if unreadable:
+        print(f"QML import validation failed ({len(unreadable)} unreadable file(s)):", file=sys.stderr)
+        for f in unreadable:
+            print(f"- {f}", file=sys.stderr)
+        return 1
 
     if missing_failures:
         print(f"QML import validation failed ({len(missing_failures)} missing import(s)):", file=sys.stderr)

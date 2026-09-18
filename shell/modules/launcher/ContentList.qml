@@ -53,6 +53,9 @@ Item {
         if (!showWindowSwitcher) {
             Windows.isSwitching = false;
             Kwin.clearHighlight();
+        } else if (!Windows.isSwitching) {
+            Windows.selectedIndex = 0;
+            Windows.updateItems();
         }
     }
 

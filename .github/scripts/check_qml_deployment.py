@@ -46,7 +46,11 @@ def plugin_exists(module_dir: Path, plugin_name: str) -> bool:
 def check_singleton_roots(source_root: Path) -> list[str]:
     failures: list[str] = []
     for qml_file in source_root.rglob("*.qml"):
-        text = qml_file.read_text(encoding="utf-8")
+        try:
+            text = qml_file.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            failures.append(f"{qml_file.relative_to(source_root)}: not valid UTF-8 ({exc})")
+            continue
         if "pragma Singleton" not in text:
             continue
 

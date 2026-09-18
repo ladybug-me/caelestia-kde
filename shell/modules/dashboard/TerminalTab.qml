@@ -24,26 +24,27 @@ Item {
     property bool isRunning: activeProcessesCount > 0
     property bool renderPending: false
     property int maxOutputLines: 2000
+    property var activeShellProcess: null
 
     readonly property var ansiColors: ({
-            30: Colours.palette.term0,
-            31: Colours.palette.term1,
-            32: Colours.palette.term2,
-            33: Colours.palette.term3,
-            34: Colours.palette.term4,
-            35: Colours.palette.term5,
-            36: Colours.palette.term6,
-            37: Colours.palette.term7
+            30: Colours.palette.m3outline,
+            31: Colours.palette.m3error,
+            32: Colours.palette.m3tertiary,
+            33: Colours.palette.m3secondary,
+            34: Colours.palette.m3primary,
+            35: Colours.palette.m3tertiary,
+            36: Colours.palette.m3onPrimaryContainer,
+            37: Colours.palette.m3onSurface
         })
     readonly property var ansiBrightColors: ({
-            90: Colours.palette.term8,
-            91: Colours.palette.term9,
-            92: Colours.palette.term10,
-            93: Colours.palette.term11,
-            94: Colours.palette.term12,
-            95: Colours.palette.term13,
-            96: Colours.palette.term14,
-            97: Colours.palette.term15
+            90: Colours.palette.m3onSurfaceVariant,
+            91: Colours.palette.m3onErrorContainer,
+            92: Colours.palette.m3onTertiaryContainer,
+            93: Colours.palette.m3onSecondaryContainer,
+            94: Colours.palette.m3onPrimaryContainer,
+            95: Colours.palette.m3onTertiaryContainer,
+            96: Colours.palette.m3onSecondaryContainer,
+            97: Colours.palette.m3onSurfaceVariant
         })
 
     readonly property string prompt: {
@@ -51,38 +52,86 @@ Item {
         return user + "@" + (root.hostname !== "" ? root.hostname : "caelestia");
     }
 
-    function ansiToHtml(ansiStr) {
-        let escaped = ansiStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    function get256Color(n: int): string {
+        if (n >= 0 && n <= 7)
+            return ansiColors[30 + n] || Colours.palette.m3onSurface;
+        if (n >= 8 && n <= 15)
+            return ansiBrightColors[90 + (n - 8)] || Colours.palette.m3onSurfaceVariant;
+        if (n >= 16 && n <= 231) {
+            const idx = n - 16;
+            const b = (idx % 6) * 51;
+            const g = (Math.floor(idx / 6) % 6) * 51;
+            const r = Math.floor(idx / 36) * 51;
+            return `rgb(${r},${g},${b})`;
+        }
+        if (n >= 232 && n <= 255) {
+            const val = 8 + (n - 232) * 10;
+            return `rgb(${val},${val},${val})`;
+        }
+        return Colours.palette.m3onSurface;
+    }
+
+    function ansiToHtml(ansiStr: string): string {
+        const escaped = ansiStr.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
         let result = "";
-        let regex = /\x1b\[([0-9;]*)m/g;
+        const regex = /\x1b\[([0-9;]*)m/g;
         let lastIndex = 0;
         let activeSpans = 0;
         let match;
 
         while ((match = regex.exec(escaped)) !== null) {
             result += escaped.substring(lastIndex, match.index);
-            let codes = match[1].split(';').map(Number);
+            const rawCodes = match[1].split(";").map(Number);
 
-            if (codes.includes(0) || match[1] === "") {
+            if (rawCodes.includes(0) || match[1] === "") {
                 while (activeSpans > 0) {
                     result += "</span>";
                     activeSpans--;
                 }
             }
 
-            let styles = [];
-            for (let code of codes) {
-                if (code === 1) {
+            const styles = [];
+            for (let i = 0; i < rawCodes.length; i++) {
+                const code = rawCodes[i];
+                if (code === 0) {
+                    // Reset handled above
+                } else if (code === 1) {
                     styles.push("font-weight: bold;");
+                } else if (code === 2) {
+                    styles.push("opacity: 0.75;");
                 } else if (code === 3) {
                     styles.push("font-style: italic;");
                 } else if (code === 4) {
                     styles.push("text-decoration: underline;");
                 } else if (code >= 30 && code <= 37) {
                     styles.push("color: " + (ansiColors[code] || Colours.palette.m3onSurface) + ";");
+                } else if (code === 38) {
+                    if (rawCodes[i + 1] === 5 && i + 2 < rawCodes.length) {
+                        styles.push("color: " + get256Color(rawCodes[i + 2]) + ";");
+                        i += 2;
+                    } else if (rawCodes[i + 1] === 2 && i + 4 < rawCodes.length) {
+                        styles.push(`color: rgb(${rawCodes[i + 2]},${rawCodes[i + 3]},${rawCodes[i + 4]});`);
+                        i += 4;
+                    }
+                } else if (code === 39) {
+                    styles.push("color: " + Colours.palette.m3onSurface + ";");
+                } else if (code >= 40 && code <= 47) {
+                    styles.push("background-color: " + (ansiColors[code - 10] || Colours.palette.m3surface) + ";");
+                } else if (code === 48) {
+                    if (rawCodes[i + 1] === 5 && i + 2 < rawCodes.length) {
+                        styles.push("background-color: " + get256Color(rawCodes[i + 2]) + ";");
+                        i += 2;
+                    } else if (rawCodes[i + 1] === 2 && i + 4 < rawCodes.length) {
+                        styles.push(`background-color: rgb(${rawCodes[i + 2]},${rawCodes[i + 3]},${rawCodes[i + 4]});`);
+                        i += 4;
+                    }
+                } else if (code === 49) {
+                    styles.push("background-color: transparent;");
                 } else if (code >= 90 && code <= 97) {
-                    styles.push("color: " + (ansiBrightColors[code] || Colours.palette.m3onSurface) + ";");
+                    styles.push("color: " + (ansiBrightColors[code] || Colours.palette.m3onSurfaceVariant) + ";");
+                } else if (code >= 100 && code <= 107) {
+                    styles.push("background-color: " + (ansiBrightColors[code - 10] || Colours.palette.m3surfaceVariant) + ";");
                 }
             }
 
@@ -105,28 +154,28 @@ Item {
         return "<pre style=\"font-family: 'JetBrains Mono', Consolas, monospace; margin: 0;\">" + result.replace(/\n/g, "<br>") + "</pre>";
     }
 
-    function trimOutputBuffer() {
-        let lines = outputBuffer.split("\n");
+    function trimOutputBuffer(): void {
+        const lines = outputBuffer.split("\n");
         if (lines.length <= maxOutputLines)
             return;
 
         outputBuffer = lines.slice(lines.length - maxOutputLines).join("\n");
     }
 
-    function queueRenderOutput() {
+    function queueRenderOutput(): void {
         if (renderPending)
             return;
         renderPending = true;
         renderTimer.restart();
     }
 
-    function appendOutput(text, isError = false) {
+    function appendOutput(text: string, isError: bool): void {
         outputBuffer += (isError ? "\x1b[31m" + text + "\x1b[0m" : text) + "\n";
         trimOutputBuffer();
         queueRenderOutput();
     }
 
-    function scrollToBottom() {
+    function scrollToBottom(): void {
         Qt.callLater(() => {
             if (outputFlickable) {
                 outputFlickable.contentY = Math.max(0, outputFlickable.contentHeight - outputFlickable.height);
@@ -134,15 +183,13 @@ Item {
         });
     }
 
-    function startShell() {
-        outputBuffer = ""; // Completely blank startup as requested
+    function startShell(): void {
+        outputBuffer = "";
         outputArea.text = "";
     }
 
-    property var activeShellProcess: null
-
-    function sendCommand(text) {
-        let trimmed = text.trim();
+    function sendCommand(text: string): void {
+        const trimmed = text.trim();
         if (trimmed === "")
             return;
 
@@ -161,7 +208,7 @@ Item {
         }
 
         if (trimmed.startsWith("cd ")) {
-            let path = trimmed.substring(3).trim();
+            const path = trimmed.substring(3).trim();
             changeDirectory(path);
             return;
         } else if (trimmed === "cd") {
@@ -177,20 +224,33 @@ Item {
         });
     }
 
-    function changeDirectory(path) {
-        if (path.startsWith("~")) {
-            path = Paths.home + path.substring(1);
+    function changeDirectory(path: string): void {
+        let targetPath = path;
+        if (targetPath.startsWith("~")) {
+            targetPath = Paths.home + targetPath.substring(1);
         }
         pwdResolverComp.createObject(root, {
-            command: ["fish", "-c", "cd " + path + " && pwd"],
+            command: ["fish", "-c", "cd " + targetPath + " && pwd"],
             workingDirectory: currentDirectory,
             running: true
         });
     }
 
-    function clearOutput() {
+    function clearOutput(): void {
         outputBuffer = "";
         outputArea.text = "";
+    }
+
+    implicitWidth: 840
+
+    implicitHeight: 500
+
+    Component.onCompleted: {
+        startShell();
+        hostnameResolverComp.createObject(root, {
+            command: ["cat", "/etc/hostname"],
+            running: true
+        });
     }
 
     Timer {
@@ -205,16 +265,16 @@ Item {
         }
     }
 
-    implicitWidth: 840
+    Connections {
+        function onCurrentLightChanged(): void {
+            root.queueRenderOutput();
+        }
 
-    implicitHeight: 500
+        function onSchemeChanged(): void {
+            root.queueRenderOutput();
+        }
 
-    Component.onCompleted: {
-        startShell();
-        hostnameResolverComp.createObject(root, {
-            command: ["cat", "/etc/hostname"],
-            running: true
-        });
+        target: Colours
     }
 
     Component {
@@ -351,19 +411,22 @@ Item {
                     wrapMode: TextEdit.Wrap
                     font: Tokens.font.mono.small
                     color: Colours.palette.m3onSurface
+                    selectedTextColor: Colours.palette.m3onSecondaryContainer
+                    selectionColor: Colours.palette.m3secondaryContainer
                 }
             }
 
-            // Input area - Switched to a standard Rectangle with Colours.palette.m3surfaceContainer and correct rounding
+            // Input area
             Rectangle {
                 id: inputBoxRect
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 36
 
-                radius: Tokens.rounding.medium // Corrected to match standard dashboard input fields
-                color: Colours.palette.m3surfaceContainer // Solid standard surfaceContainer background
-                border.width: 0 // Removed outline border completely
+                radius: Tokens.rounding.medium
+                color: Colours.palette.m3surfaceContainer
+                border.width: 1
+                border.color: commandInput.activeFocus ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3outlineVariant, 0.4)
 
                 RowLayout {
                     id: inputRow
@@ -376,7 +439,7 @@ Item {
                     StyledText {
                         text: root.prompt + " ❯"
                         font: Tokens.font.mono.small
-                        color: Colours.palette.term2
+                        color: Colours.palette.m3tertiary
                     }
 
                     // Text fields container to overlay ghost autocomplete text behind typing text
@@ -398,7 +461,10 @@ Item {
                             bottomPadding: 0
 
                             font: Tokens.font.mono.small
-                            selectedTextColor: Colours.palette.m3onSurface // Ensure highlighted/selected text is fully visible
+                            color: Colours.palette.m3onSurface
+                            selectedTextColor: Colours.palette.m3onSecondaryContainer
+                            selectionColor: Colours.palette.m3secondaryContainer
+                            placeholderTextColor: Colours.palette.m3onSurfaceVariant
 
                             background: null
                             focus: true

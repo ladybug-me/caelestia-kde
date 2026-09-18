@@ -18,9 +18,9 @@ Singleton {
     readonly property bool enabled: GlobalConfig.services.autoSchemeEnabled
     readonly property bool solar: GlobalConfig.services.autoSchemeMode === "solar"
 
-    /// Reuses the coordinates already configured for the weather service, so
-    /// this needs no location setting of its own.
-    readonly property var coords: Solar.parseCoords(GlobalConfig.services.weatherLocation)
+    /// Reuses the coordinates already configured or auto-detected for the
+    /// weather service, so this needs no location setting of its own.
+    readonly property var coords: Solar.parseCoords(GlobalConfig.services.weatherLocation || Weather.loc)
 
     /// The last mode this service applied, so a manual switch is not undone on
     /// the next tick — it stands until the next real boundary.
@@ -85,19 +85,16 @@ Singleton {
     Component.onCompleted: root.apply(true)
 
     Connections {
-        target: Time
-        enabled: root.enabled
-
         // Minute precision is plenty, and keeps this off the per-second tick.
         function onMinutesChanged(): void {
             root.apply(false);
         }
+
+        target: Time
+        enabled: root.enabled
     }
 
     Connections {
-        target: GlobalConfig.services
-        enabled: root.enabled
-
         function onAutoSchemeModeChanged(): void { root.apply(true); }
 
         function onAutoSchemeLightTimeChanged(): void { root.apply(true); }
@@ -105,5 +102,15 @@ Singleton {
         function onAutoSchemeDarkTimeChanged(): void { root.apply(true); }
 
         function onWeatherLocationChanged(): void { root.apply(true); }
+
+        target: GlobalConfig.services
+        enabled: root.enabled
+    }
+
+    Connections {
+        function onLocChanged(): void { root.apply(true); }
+
+        target: Weather
+        enabled: root.enabled
     }
 }

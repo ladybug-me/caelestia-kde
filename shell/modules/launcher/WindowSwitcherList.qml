@@ -47,11 +47,21 @@ ListView {
     }
 
     function incrementCurrentIndex(): void {
-        Windows.triggerCycleNext();
+        if (scriptModel.search.trim() !== "") {
+            if (root.count > 0)
+                root.currentIndex = (root.currentIndex + 1) % root.count;
+        } else {
+            Windows.triggerCycleNext();
+        }
     }
 
     function decrementCurrentIndex(): void {
-        Windows.triggerCyclePrev();
+        if (scriptModel.search.trim() !== "") {
+            if (root.count > 0)
+                root.currentIndex = (root.currentIndex - 1 + root.count) % root.count;
+        } else {
+            Windows.triggerCyclePrev();
+        }
     }
 
     implicitWidth: Math.min(numItems, count) * itemWidth

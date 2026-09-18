@@ -559,16 +559,34 @@ def cmd_konsole_scheme(scheme_file: str, out: str) -> int:
         f"Color={triple('onSurface', 'cdd6f4')}",
     ]
 
-    for index in range(16):
-        normal = triple(f"term{index}", "cdd6f4")
-        bright = triple(f"term{index + 8}", "cdd6f4") if index < 8 else normal
+    roles = [
+        "outlineVariant",
+        "error",
+        "tertiary",
+        "secondary",
+        "primary",
+        "tertiary",
+        "onPrimaryContainer",
+        "onSurface",
+        "outline",
+        "onErrorContainer",
+        "onTertiaryContainer",
+        "onSecondaryContainer",
+        "onPrimaryContainer",
+        "onTertiaryContainer",
+        "onSecondaryContainer",
+        "onSurfaceVariant",
+    ]
+
+    for index, role in enumerate(roles):
+        color = triple(role, "cdd6f4")
         lines += [
             f"[Color{index}]",
-            f"Color={normal}",
+            f"Color={color}",
             f"[Color{index}Faint]",
-            f"Color={normal}",
+            f"Color={color}",
             f"[Color{index}Intense]",
-            f"Color={bright}",
+            f"Color={color}",
         ]
 
     atomic_write(pathlib.Path(out), "\n".join(lines) + "\n")
@@ -905,18 +923,27 @@ apply_kde() {
 
 # Konsole's format is R,G,B, not hex, and matugen has no template for it.
 apply_konsole() {
-    local dir="$DATA_HOME/konsole" profile
+    local dir="$DATA_HOME/konsole" profile current="" target
 
     mkdir -p "$dir"
     if ! py konsole-scheme "$SCHEME_FILE" "$dir/Matugen.colorscheme"; then
         warn "could not write the Konsole color scheme"
         return 0
     fi
+    cp -f "$dir/Matugen.colorscheme" "$dir/Matugen Alt.colorscheme"
 
     command -v kwriteconfig6 >/dev/null 2>&1 || return 0
+    command -v kreadconfig6 >/dev/null 2>&1 || return 0
+
     for profile in "$dir"/*.profile; do
         [[ -f "$profile" ]] || continue
-        kwriteconfig6 --file "$profile" --group Appearance --key ColorScheme "Matugen" 2>/dev/null || true
+        current="$(kreadconfig6 --file "$profile" --group Appearance --key ColorScheme --default '' 2>/dev/null || true)"
+        if [[ "$current" == "Matugen" ]]; then
+            target="Matugen Alt"
+        else
+            target="Matugen"
+        fi
+        kwriteconfig6 --file "$profile" --group Appearance --key ColorScheme "$target" 2>/dev/null || true
     done
 }
 

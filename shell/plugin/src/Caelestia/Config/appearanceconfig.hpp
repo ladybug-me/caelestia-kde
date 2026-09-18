@@ -1,11 +1,11 @@
 #pragma once
 
-#include "../Settings/objectnode.hpp"
-#include "common.hpp"
-
 #include <qfont.h>
 #include <qstring.h>
 #include <qvariant.h>
+
+#include "../Settings/objectnode.hpp"
+#include "common.hpp"
 
 namespace caelestia::config {
 
@@ -207,7 +207,6 @@ class AppearanceAnim : public settings::ObjectNode {
     CONFIG_NODE(AppearanceAnim, settings::ObjectNode)
 
     CONFIG_SUBOBJECT(AnimDurations, durations)
-
 };
 
 class AppearanceTransparency : public settings::ObjectNode {
@@ -216,7 +215,6 @@ class AppearanceTransparency : public settings::ObjectNode {
     CONFIG_GLOBAL_PROPERTY(bool, enabled, true)
     CONFIG_GLOBAL_PROPERTY(qreal, base, 0.85)
     CONFIG_GLOBAL_PROPERTY(qreal, layers, 0.4)
-
 };
 
 class AppearanceConfig : public settings::ObjectNode {
@@ -236,7 +234,6 @@ class AppearanceConfig : public settings::ObjectNode {
     CONFIG_GLOBAL_PROPERTY(bool, blurMask, true)
     CONFIG_GLOBAL_PROPERTY(bool, ambientColor, true)
     CONFIG_GLOBAL_PROPERTY(qreal, ambientOpacity, 0.45)
-
 };
 
 } // namespace caelestia::config

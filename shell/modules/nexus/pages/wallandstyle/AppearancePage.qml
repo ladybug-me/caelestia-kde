@@ -157,8 +157,9 @@ PageBase {
             }
             ToggleRow {
                 text: qsTr("Ambient color mode")
-                subtext: qsTr("YouTube-style ambient light glow on window previews and popups")
+                subtext: Colours.light ? qsTr("Ambient glow is unavailable in light mode") : qsTr("Ambient light glow on the window switcher and overview")
                 checked: GlobalConfig.appearance.ambientColor
+                enabled: !Colours.light
                 onToggled: GlobalConfig.appearance.ambientColor = checked
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
@@ -167,7 +168,7 @@ PageBase {
                 label: qsTr("Ambient glow opacity")
                 valueLabel: Math.round(value * 100) + "%"
                 value: GlobalConfig.appearance.ambientOpacity
-                enabled: GlobalConfig.appearance.ambientColor
+                enabled: GlobalConfig.appearance.ambientColor && !Colours.light
                 onMoved: v => GlobalConfig.appearance.ambientOpacity = v
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }

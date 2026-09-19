@@ -816,7 +816,7 @@
   <context>
     <name>AppInfo</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+35"/>
+      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+31"/>
       <source>App info</source>
       <translation>Informace o aplikaci</translation>
     </message>
@@ -1340,7 +1340,7 @@
   <context>
     <name>Audio</name>
     <message>
-      <location filename="../modules/bar/popouts/Audio.qml" line="+76"/>
+      <location filename="../modules/bar/popouts/Audio.qml" line="+82"/>
       <source>Audio</source>
       <translation>Zvuk</translation>
     </message>
@@ -1356,7 +1356,7 @@
     </message>
     <message>
       <location line="+160"/>
-      <location line="+39"/>
+      <location line="+43"/>
       <source>Muted</source>
       <translation>Ztlumeno</translation>
     </message>
@@ -1376,7 +1376,7 @@
       <translation>Input volume</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+19"/>
       <source>Now playing</source>
       <translation>Právě hraje</translation>
     </message>
@@ -1386,7 +1386,7 @@
       <translation>Žádné aplikace nepřehrávají zvuk</translation>
     </message>
     <message>
-      <location line="+139"/>
+      <location line="+57"/>
       <location filename="../services/Audio.qml" line="+124"/>
       <source>Unknown</source>
       <translation>Neznámý</translation>
@@ -1562,29 +1562,6 @@
     </message>
   </context>
   <context>
-    <name>BackgroundCenter</name>
-    <message>
-      <location filename="../modules/lock/BackgroundCenter.qml" line="+23"/>
-      <source>Good morning</source>
-      <translation>Dobré ráno</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good afternoon</source>
-      <translation>Dobré odpoledne</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good evening</source>
-      <translation>Dobrý večer</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good night</source>
-      <translation>Dobrá noc</translation>
-    </message>
-  </context>
-  <context>
     <name>BarClock</name>
     <message>
       <location filename="../modules/nexus/pages/panels/taskbar/BarClock.qml" line="+10"/>
@@ -1746,12 +1723,22 @@
       <translation>Menu napájení</translation>
     </message>
     <message>
-      <location line="+185"/>
+      <location line="+189"/>
       <source>Not detected</source>
       <translation>Nezjištěno</translation>
     </message>
     <message>
-      <location line="+133"/>
+      <location line="+12"/>
+      <source>Add to right zone</source>
+      <translation type="unfinished">Add to right zone</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Disable component</source>
+      <translation type="unfinished">Disable component</translation>
+    </message>
+    <message>
+      <location line="+183"/>
       <source>Toggle &amp; rearrange</source>
       <translation>Přepnout a uspořádat</translation>
     </message>
@@ -1771,17 +1758,17 @@
       <translation>Levá zóna</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Střední zóna</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Pravá zóna</translation>
     </message>
     <message>
-      <location line="+57"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Knihovna</translation>
     </message>
@@ -2572,7 +2559,7 @@
       <translation>Nepřichází v úvahu</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+8"/>
       <source>No battery detected</source>
       <translation>Nebyla zjištěna žádná baterie</translation>
     </message>
@@ -2653,11 +2640,6 @@
       <source>Charging</source>
       <translation>Nabíjení</translation>
     </message>
-    <message>
-      <location line="+4"/>
-      <source>...</source>
-      <translation>...</translation>
-    </message>
   </context>
   <context>
     <name>Bluetooth</name>
@@ -2667,12 +2649,12 @@
       <translation>Bluetooth</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+24"/>
       <source>Enabled</source>
       <translation>Povoleno</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Discovering</source>
       <translation>Objevování</translation>
     </message>
@@ -2692,7 +2674,7 @@
       <translation>%1%</translation>
     </message>
     <message>
-      <location line="+59"/>
+      <location line="+58"/>
       <source>Open settings</source>
       <translation>Otevřít nastavení</translation>
     </message>
@@ -2786,19 +2768,6 @@
       <location line="+7"/>
       <source>Pairing...</source>
       <translation>Pairing...</translation>
-    </message>
-  </context>
-  <context>
-    <name>BriefInfo</name>
-    <message>
-      <location filename="../modules/lock/weather/BriefInfo.qml" line="+47"/>
-      <source>Feels like %1</source>
-      <translation>Vypadá to jako %1</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>High %1 • Low %2</source>
-      <translation>Vysoký %1 • Nízký %2</translation>
     </message>
   </context>
   <context>
@@ -3316,12 +3285,7 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+17"/>
-      <source>Right Click Menu</source>
-      <translation>Nabídka pravého tlačítka</translation>
-    </message>
-    <message>
-      <location line="+23"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+36"/>
       <source>Desktop Icons</source>
       <translation>Ikony plochy</translation>
     </message>
@@ -3352,7 +3316,12 @@
       <translation>Přidat zkratku...</translation>
     </message>
     <message>
-      <location line="-95"/>
+      <location line="-154"/>
+      <source>Right Click Menu</source>
+      <translation>Nabídka pravého tlačítka</translation>
+    </message>
+    <message>
+      <location line="+59"/>
       <source>Active menu items</source>
       <translation>Aktivní položky nabídky</translation>
     </message>
@@ -3446,19 +3415,6 @@
       <location line="+3"/>
       <source>Record region</source>
       <translation>Oblast záznamu</translation>
-    </message>
-  </context>
-  <context>
-    <name>DailyForecast</name>
-    <message>
-      <location filename="../modules/lock/weather/DailyForecast.qml" line="+16"/>
-      <source>7-Day Forecast</source>
-      <translation>7denní předpověď</translation>
-    </message>
-    <message>
-      <location line="+34"/>
-      <source>Today</source>
-      <translation>Dnes</translation>
     </message>
   </context>
   <context>
@@ -3864,39 +3820,6 @@
     </message>
   </context>
   <context>
-    <name>DesktopContextMenu</name>
-    <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+25"/>
-      <source>Desktop Icons</source>
-      <translation>Ikony plochy</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Next Wallpaper</source>
-      <translation>Další tapeta</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Wallpaper &amp; style</source>
-      <translation>Tapeta &amp; styl</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>System Settings</source>
-      <translation>Systémová nastavení</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Open Terminal</source>
-      <translation>Otevřít terminál</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Add Shortcut...</source>
-      <translation>Přidat zkratku...</translation>
-    </message>
-  </context>
-  <context>
     <name>DesktopLyrics</name>
     <message>
       <location filename="../modules/background/DesktopLyrics.qml" line="+287"/>
@@ -4000,7 +3923,7 @@
   <context>
     <name>Details</name>
     <message>
-      <location filename="../modules/dashboard/media/Details.qml" line="+46"/>
+      <location filename="../modules/dashboard/media/Details.qml" line="+33"/>
       <source>Unknown artist</source>
       <translation>Neznámý umělec</translation>
     </message>
@@ -4208,16 +4131,26 @@
       <source>The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
       <translation type="unfinished">The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</translation>
     </message>
+    <message>
+      <location line="+6"/>
+      <source>Color Engine &amp; Theme Automation</source>
+      <translation type="unfinished">Color Engine &amp; Theme Automation</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Caelestia now features a high-performance native color pipeline using matugen. Kde-material-you-color has been removed. Color variants automatically switching to Tonal Spot under certain conditions has been fixed.</source>
+      <translation type="unfinished">Caelestia now features a high-performance native color pipeline using matugen. Kde-material-you-color has been removed. Color variants automatically switching to Tonal Spot under certain conditions has been fixed.</translation>
+    </message>
   </context>
   <context>
     <name>EthernetDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+98"/>
+      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+22"/>
       <source>Ethernet</source>
       <translation>Ethernet</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+55"/>
       <source>Disconnect</source>
       <translation>Odpojit</translation>
     </message>
@@ -4271,80 +4204,13 @@
     </message>
     <message>
       <location line="+6"/>
-      <location line="+76"/>
       <source>Gateway</source>
       <translation>Brána</translation>
     </message>
     <message>
-      <location line="-69"/>
+      <location line="+7"/>
       <source>MAC address</source>
       <translation>MAC adresa</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>IPv4</source>
-      <translation>IPv4</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>IP assignment</source>
-      <translation>Přiřazení IP</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+11"/>
-      <source>Automatic (DHCP)</source>
-      <translation>Automaticky (DHCP)</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Automatic, DNS only</source>
-      <translation>Automatický, pouze DNS</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Manual</source>
-      <translation>Ruční</translation>
-    </message>
-    <message>
-      <location line="+15"/>
-      <source>Address (CIDR)</source>
-      <translation>Adresa (CIDR)</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP a prefix, např. 192.168.1.50/24</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter a valid address in CIDR notation</source>
-      <translation>Zadejte platnou adresu do zápisu CIDR</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Enter a valid gateway address</source>
-      <translation>Zadejte platnou adresu brány</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>DNS servers</source>
-      <translation>DNS servery</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Comma-separated</source>
-      <translation>Oddělené čárkami</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter valid DNS server addresses</source>
-      <translation>Zadejte platné adresy DNS serveru</translation>
-    </message>
-    <message>
-      <location line="+55"/>
-      <source>Apply</source>
-      <translation>Použít</translation>
     </message>
   </context>
   <context>
@@ -4417,19 +4283,6 @@
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
       <source>This folder is empty</source>
       <translation>Tato složka je prázdná</translation>
-    </message>
-  </context>
-  <context>
-    <name>Forecast</name>
-    <message>
-      <location filename="../modules/lock/weather/Forecast.qml" line="+34"/>
-      <source>Hourly forecast</source>
-      <translation>Hodinová předpověď</translation>
-    </message>
-    <message>
-      <location line="+64"/>
-      <source>Now</source>
-      <translation>Nyní</translation>
     </message>
   </context>
   <context>
@@ -4680,36 +4533,78 @@
     </message>
   </context>
   <context>
-    <name>InputField</name>
+    <name>Ipv4ConfigSection</name>
     <message>
-      <location filename="../modules/lock/center/InputField.qml" line="+18"/>
-      <source>Password entry</source>
-      <translation>Zadání hesla</translation>
+      <location filename="../modules/nexus/common/Ipv4ConfigSection.qml" line="+98"/>
+      <source>IPv4</source>
+      <translation type="unfinished">IPv4</translation>
     </message>
     <message>
-      <location line="+2"/>
-      <source>Type your password to unlock the screen</source>
-      <translation>Zadejte heslo pro odemknutí obrazovky</translation>
-    </message>
-    <message>
-      <location line="+39"/>
-      <source>Loading...</source>
-      <translation>Načítám...</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Scanning face...</source>
-      <translation>Skenování obličeje...</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Max tries reached</source>
-      <translation>Dosáhli jste maximálního počtu pokusů</translation>
+      <location line="+9"/>
+      <source>IP assignment</source>
+      <translation type="unfinished">IP assignment</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Enter your password</source>
-      <translation>Zadejte své heslo</translation>
+      <location line="+8"/>
+      <source>Automatic (DHCP)</source>
+      <translation type="unfinished">Automatic (DHCP)</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Automatic, DNS only</source>
+      <translation type="unfinished">Automatic, DNS only</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Manual</source>
+      <translation type="unfinished">Manual</translation>
+    </message>
+    <message>
+      <location line="+84"/>
+      <source>Address (CIDR)</source>
+      <translation type="unfinished">Address (CIDR)</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>IP and prefix, e.g. 192.168.1.50/24</source>
+      <translation type="unfinished">IP and prefix, e.g. 192.168.1.50/24</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter a valid address in CIDR notation</source>
+      <translation type="unfinished">Enter a valid address in CIDR notation</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Gateway</source>
+      <translation type="unfinished">Gateway</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Enter a valid gateway address</source>
+      <translation type="unfinished">Enter a valid gateway address</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>DNS servers</source>
+      <translation type="unfinished">DNS servers</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Comma-separated</source>
+      <translation type="unfinished">Comma-separated</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter valid DNS server addresses</source>
+      <translation type="unfinished">Enter valid DNS server addresses</translation>
+    </message>
+    <message>
+      <location line="+45"/>
+      <location line="+26"/>
+      <source>Apply</source>
+      <translation type="unfinished">Apply</translation>
     </message>
   </context>
   <context>
@@ -5029,7 +4924,7 @@
   <context>
     <name>Kwin</name>
     <message>
-      <location filename="../services/Kwin.qml" line="+458"/>
+      <location filename="../services/Kwin.qml" line="+477"/>
       <source>Caps lock enabled</source>
       <translation>Zamykací obrazovka zapnuta</translation>
     </message>
@@ -5079,7 +4974,7 @@
       <translation>Rozložení změněno na: %1</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+56"/>
       <source>Reload devices</source>
       <translation>Znovu načíst zařízení</translation>
     </message>
@@ -5474,14 +5369,6 @@
       <location line="+7"/>
       <source>Wallpapers</source>
       <translation>Tapety</translation>
-    </message>
-  </context>
-  <context>
-    <name>Lock</name>
-    <message>
-      <location filename="../modules/lock/Lock.qml" line="+78"/>
-      <source>Unlock the current session</source>
-      <translation>Odemknout aktuální relaci</translation>
     </message>
   </context>
   <context>
@@ -5965,13 +5852,11 @@
     </message>
     <message>
       <location line="+17"/>
-      <location filename="../modules/lock/Media.qml" line="+69"/>
       <source>Unknown artist</source>
       <translation>Neznámý umělec</translation>
     </message>
     <message>
       <location filename="../modules/dashboard/Media.qml" line="+117"/>
-      <location filename="../modules/lock/Media.qml" line="-10"/>
       <source>Nothing playing</source>
       <translation>Nic nehraje</translation>
     </message>
@@ -5979,16 +5864,6 @@
       <location line="+5"/>
       <source>Play something for it to show up here!</source>
       <translation>Hrajte něco, co se zde zobrazuje!</translation>
-    </message>
-    <message>
-      <location filename="../modules/lock/Media.qml" line="+0"/>
-      <source>Unknown track</source>
-      <translation>Neznámá skladba</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Try playing some music!</source>
-      <translation>Zkuste hrát nějakou hudbu!</translation>
     </message>
   </context>
   <context>
@@ -6050,7 +5925,7 @@
       <translation>Bezdrátové</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Enabled</source>
       <translation>Povoleno</translation>
     </message>
@@ -6065,7 +5940,7 @@
       <translation>Znovu naskenovat sítě</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+29"/>
       <source>VPN</source>
       <translation>VPN</translation>
     </message>
@@ -6095,7 +5970,7 @@
       <translation>Neznámý</translation>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+36"/>
       <source>Connection details</source>
       <translation>Detaily připojení</translation>
     </message>
@@ -6131,7 +6006,7 @@
   <context>
     <name>NetworkDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+90"/>
+      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+40"/>
       <source>Network</source>
       <translation>Síť</translation>
     </message>
@@ -6196,12 +6071,11 @@
     </message>
     <message>
       <location line="+7"/>
-      <location line="+161"/>
       <source>Gateway</source>
       <translation>Brána</translation>
     </message>
     <message>
-      <location line="-153"/>
+      <location line="+8"/>
       <source>MAC address</source>
       <translation>MAC adresa</translation>
     </message>
@@ -6219,72 +6093,6 @@
       <location line="+1"/>
       <source>Join this network when it&apos;s in range</source>
       <translation>Připojit se k této síti, když je&apos;s v dosahu</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>IPv4</source>
-      <translation>IPv4</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>IP assignment</source>
-      <translation>Přiřazení IP</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+10"/>
-      <source>Automatic (DHCP)</source>
-      <translation>Automaticky (DHCP)</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Automatic, DNS only</source>
-      <translation>Automatický, pouze DNS</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Manual</source>
-      <translation>Ruční</translation>
-    </message>
-    <message>
-      <location line="+83"/>
-      <source>Address (CIDR)</source>
-      <translation>Adresa (CIDR)</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP a prefix, např. 192.168.1.50/24</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter a valid address in CIDR notation</source>
-      <translation>Zadejte platnou adresu do zápisu CIDR</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Enter a valid gateway address</source>
-      <translation>Zadejte platnou adresu brány</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>DNS servers</source>
-      <translation>DNS servery</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Comma-separated</source>
-      <translation>Oddělené čárkami</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter valid DNS server addresses</source>
-      <translation>Zadejte platné adresy DNS serveru</translation>
-    </message>
-    <message>
-      <location line="+48"/>
-      <source>Apply</source>
-      <translation>Použít</translation>
     </message>
   </context>
   <context>
@@ -6546,30 +6354,14 @@
   <context>
     <name>NotifDock</name>
     <message>
-      <location filename="../modules/lock/NotifDock.qml" line="+26"/>
-      <source>%1 notification%2</source>
-      <translation>%1 oznámení%2</translation>
-    </message>
-    <message>
-      <location line="+0"/>
       <location filename="../modules/sidebar/NotifDock.qml" line="+68"/>
-      <source>Notifications</source>
-      <translation>Oznámení</translation>
-    </message>
-    <message>
-      <location line="+39"/>
-      <source>Unlock for Notifications</source>
-      <translation>Odemknout pro upozornění</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>No Notifications</source>
-      <translation>Žádná oznámení</translation>
-    </message>
-    <message>
-      <location filename="../modules/sidebar/NotifDock.qml" line="+0"/>
       <source>notification%1</source>
       <translation>oznámení%1</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Notifications</source>
+      <translation>Oznámení</translation>
     </message>
     <message>
       <location line="+112"/>
@@ -6806,7 +6598,7 @@
       <translation>Oznámení</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+25"/>
       <source>Do not disturb</source>
       <translation>Nerušit</translation>
     </message>
@@ -8045,24 +7837,6 @@
     </message>
   </context>
   <context>
-    <name>PasswordInput</name>
-    <message>
-      <location filename="../modules/lock/center/PasswordInput.qml" line="+101"/>
-      <source>Hide password</source>
-      <translation>Skrýt heslo</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Show password</source>
-      <translation>Zobrazit heslo</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Reveal what has been typed into the password field</source>
-      <translation>Zjistit, co bylo zadáno do pole s heslem</translation>
-    </message>
-  </context>
-  <context>
     <name>PerfBattery</name>
     <message>
       <location filename="../modules/bar/components/performance/PerfBattery.qml" line="+12"/>
@@ -8211,7 +7985,7 @@
   <context>
     <name>PolkitDialog</name>
     <message>
-      <location filename="../components/PolkitDialog.qml" line="+115"/>
+      <location filename="../components/PolkitDialog.qml" line="+124"/>
       <source>Enter your password</source>
       <translation>Zadejte své heslo</translation>
     </message>
@@ -8503,7 +8277,7 @@
       <translation>Brýle</translation>
     </message>
     <message>
-      <location line="+137"/>
+      <location line="+124"/>
       <source>Recording %1</source>
       <translation>Nahrávání %1</translation>
     </message>
@@ -9493,106 +9267,6 @@
       <location line="+8"/>
       <source>Screen recording</source>
       <translation>Nahrávání obrazovky</translation>
-    </message>
-  </context>
-  <context>
-    <name>StateMessage</name>
-    <message>
-      <location filename="../modules/lock/center/StateMessage.qml" line="+16"/>
-      <source>FP ERROR: %1</source>
-      <translation>CHYBA: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>FACE ERROR: %1</source>
-      <translation>CHYBA: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>PW ERROR: %1</source>
-      <translation>PW CHYBA: %1</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Maximum password and fingerprint attempts reached.</source>
-      <translation>Bylo dosaženo maximálního počtu hesel a pokusů o otisk prstu.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Maximum password attempts reached. Please use fingerprint.</source>
-      <translation>Bylo dosaženo maximálního počtu pokusů o heslo. Použijte prosím otisk prstu.</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Maximum password attempts reached.</source>
-      <translation>Dosáhli jste maximálního počtu pokusů o heslo.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Maximum fingerprint attempts reached. Please use password.</source>
-      <translation>Bylo dosaženo maximálního počtu pokusů o otisk prstu. Použijte prosím heslo.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Maximum face unlock attempts reached. Please use password.</source>
-      <translation>Bylo dosaženo maximálního počtu pokusů o odemknutí obličejem. Použijte prosím heslo.</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Incorrect password. Please try again or use fingerprint.</source>
-      <translation>Nesprávné heslo. Zkuste to prosím znovu nebo použijte otisk prstu.</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Incorrect password. Please try again.</source>
-      <translation>Nesprávné heslo. Zkuste to prosím znovu.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Fingerprint not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Otisk prstu nebyl rozpoznán (%1/%2). Zkuste to prosím znovu nebo použijte heslo.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Face not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Obličej nebyl rozpoznán (%1/%2). Zkuste to prosím znovu nebo použijte heslo.</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Caps Lock and Num Lock are ON.
-Keyboard layout: %1</source>
-      <translation>Caps Lock a Num Lock jsou zapnuté.
-Rozložení klávesnice: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Caps Lock is ON. Keyboard layout: %1</source>
-      <translation>Caps Lock je zapnutý. Rozvržení klávesnice: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Num Lock is ON. Keyboard layout: %1</source>
-      <translation>Num Lock je zapnutý. Rozvržení klávesnice: %1</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Keyboard layout: %1</source>
-      <translation>Rozložení klávesnice: %1</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Caps Lock and Num Lock are ON.</source>
-      <translation>Caps Lock a Num Lock jsou zapnuté.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Caps Lock is ON.</source>
-      <translation>Caps Lock je zapnutý.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Num Lock is ON.</source>
-      <translation>Num Lock je zapnutý.</translation>
     </message>
   </context>
   <context>

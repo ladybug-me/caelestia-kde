@@ -816,7 +816,7 @@
   <context>
     <name>AppInfo</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+35"/>
+      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+31"/>
       <source>App info</source>
       <translation>Informazioni app</translation>
     </message>
@@ -1340,7 +1340,7 @@
   <context>
     <name>Audio</name>
     <message>
-      <location filename="../modules/bar/popouts/Audio.qml" line="+76"/>
+      <location filename="../modules/bar/popouts/Audio.qml" line="+82"/>
       <source>Audio</source>
       <translation>Audio</translation>
     </message>
@@ -1356,7 +1356,7 @@
     </message>
     <message>
       <location line="+160"/>
-      <location line="+39"/>
+      <location line="+43"/>
       <source>Muted</source>
       <translation>Silenziato</translation>
     </message>
@@ -1376,7 +1376,7 @@
       <translation>Input volume</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+19"/>
       <source>Now playing</source>
       <translation>In riproduzione</translation>
     </message>
@@ -1386,7 +1386,7 @@
       <translation>Nessuna app in riproduzione audio</translation>
     </message>
     <message>
-      <location line="+139"/>
+      <location line="+57"/>
       <location filename="../services/Audio.qml" line="+124"/>
       <source>Unknown</source>
       <translation>Sconosciuto</translation>
@@ -1562,29 +1562,6 @@
     </message>
   </context>
   <context>
-    <name>BackgroundCenter</name>
-    <message>
-      <location filename="../modules/lock/BackgroundCenter.qml" line="+23"/>
-      <source>Good morning</source>
-      <translation>Buongiorno</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good afternoon</source>
-      <translation>Buon pomeriggio</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good evening</source>
-      <translation>Buona sera</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good night</source>
-      <translation>Buona notte</translation>
-    </message>
-  </context>
-  <context>
     <name>BarClock</name>
     <message>
       <location filename="../modules/nexus/pages/panels/taskbar/BarClock.qml" line="+10"/>
@@ -1746,12 +1723,22 @@
       <translation>Menù alimentazione</translation>
     </message>
     <message>
-      <location line="+185"/>
+      <location line="+189"/>
       <source>Not detected</source>
       <translation>Non rilevato</translation>
     </message>
     <message>
-      <location line="+133"/>
+      <location line="+12"/>
+      <source>Add to right zone</source>
+      <translation type="unfinished">Add to right zone</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Disable component</source>
+      <translation type="unfinished">Disable component</translation>
+    </message>
+    <message>
+      <location line="+183"/>
       <source>Toggle &amp; rearrange</source>
       <translation>Commuta &amp; riarrangiamento</translation>
     </message>
@@ -1771,17 +1758,17 @@
       <translation>Zona Sinistra</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Zona Centrale</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Zona Destra</translation>
     </message>
     <message>
-      <location line="+57"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Libreria</translation>
     </message>
@@ -2572,7 +2559,7 @@
       <translation>N/A</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+8"/>
       <source>No battery detected</source>
       <translation>Nessuna batteria rilevata</translation>
     </message>
@@ -2653,11 +2640,6 @@
       <source>Charging</source>
       <translation>Ricarica</translation>
     </message>
-    <message>
-      <location line="+4"/>
-      <source>...</source>
-      <translation>...</translation>
-    </message>
   </context>
   <context>
     <name>Bluetooth</name>
@@ -2667,12 +2649,12 @@
       <translation>Bluetooth</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+24"/>
       <source>Enabled</source>
       <translation>Abilitato</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Discovering</source>
       <translation>Scoprire</translation>
     </message>
@@ -2692,7 +2674,7 @@
       <translation>%1%</translation>
     </message>
     <message>
-      <location line="+59"/>
+      <location line="+58"/>
       <source>Open settings</source>
       <translation>Apri impostazioni</translation>
     </message>
@@ -2786,19 +2768,6 @@
       <location line="+7"/>
       <source>Pairing...</source>
       <translation>Pairing...</translation>
-    </message>
-  </context>
-  <context>
-    <name>BriefInfo</name>
-    <message>
-      <location filename="../modules/lock/weather/BriefInfo.qml" line="+47"/>
-      <source>Feels like %1</source>
-      <translation>Si sente come %1</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>High %1 • Low %2</source>
-      <translation>Alto %1 • Basso %2</translation>
     </message>
   </context>
   <context>
@@ -3316,12 +3285,7 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+17"/>
-      <source>Right Click Menu</source>
-      <translation>Menu Clic Destro</translation>
-    </message>
-    <message>
-      <location line="+23"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+36"/>
       <source>Desktop Icons</source>
       <translation>Icone Desktop</translation>
     </message>
@@ -3352,7 +3316,12 @@
       <translation>Aggiungi Scorciatoia...</translation>
     </message>
     <message>
-      <location line="-95"/>
+      <location line="-154"/>
+      <source>Right Click Menu</source>
+      <translation>Menu Clic Destro</translation>
+    </message>
+    <message>
+      <location line="+59"/>
       <source>Active menu items</source>
       <translation>Voci di menu attive</translation>
     </message>
@@ -3446,19 +3415,6 @@
       <location line="+3"/>
       <source>Record region</source>
       <translation>Registra regione</translation>
-    </message>
-  </context>
-  <context>
-    <name>DailyForecast</name>
-    <message>
-      <location filename="../modules/lock/weather/DailyForecast.qml" line="+16"/>
-      <source>7-Day Forecast</source>
-      <translation>Previsione Di 7 Giorni</translation>
-    </message>
-    <message>
-      <location line="+34"/>
-      <source>Today</source>
-      <translation>Oggi</translation>
     </message>
   </context>
   <context>
@@ -3864,39 +3820,6 @@
     </message>
   </context>
   <context>
-    <name>DesktopContextMenu</name>
-    <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+25"/>
-      <source>Desktop Icons</source>
-      <translation>Icone Desktop</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Next Wallpaper</source>
-      <translation>Sfondo Successivo</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Wallpaper &amp; style</source>
-      <translation>&amp; Stile sfondo</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>System Settings</source>
-      <translation>Impostazioni Di Sistema</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Open Terminal</source>
-      <translation>Apri Terminale</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Add Shortcut...</source>
-      <translation>Aggiungi Scorciatoia...</translation>
-    </message>
-  </context>
-  <context>
     <name>DesktopLyrics</name>
     <message>
       <location filename="../modules/background/DesktopLyrics.qml" line="+287"/>
@@ -4000,7 +3923,7 @@
   <context>
     <name>Details</name>
     <message>
-      <location filename="../modules/dashboard/media/Details.qml" line="+46"/>
+      <location filename="../modules/dashboard/media/Details.qml" line="+33"/>
       <source>Unknown artist</source>
       <translation>Artista sconosciuto</translation>
     </message>
@@ -4208,16 +4131,26 @@
       <source>The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
       <translation type="unfinished">The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</translation>
     </message>
+    <message>
+      <location line="+6"/>
+      <source>Color Engine &amp; Theme Automation</source>
+      <translation type="unfinished">Color Engine &amp; Theme Automation</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Caelestia now features a high-performance native color pipeline using matugen. Kde-material-you-color has been removed. Color variants automatically switching to Tonal Spot under certain conditions has been fixed.</source>
+      <translation type="unfinished">Caelestia now features a high-performance native color pipeline using matugen. Kde-material-you-color has been removed. Color variants automatically switching to Tonal Spot under certain conditions has been fixed.</translation>
+    </message>
   </context>
   <context>
     <name>EthernetDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+98"/>
+      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+22"/>
       <source>Ethernet</source>
       <translation>Ethernet</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+55"/>
       <source>Disconnect</source>
       <translation>Disconnetti</translation>
     </message>
@@ -4271,80 +4204,13 @@
     </message>
     <message>
       <location line="+6"/>
-      <location line="+76"/>
       <source>Gateway</source>
       <translation>Gateway</translation>
     </message>
     <message>
-      <location line="-69"/>
+      <location line="+7"/>
       <source>MAC address</source>
       <translation>Indirizzo MAC</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>IPv4</source>
-      <translation>IPv4</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>IP assignment</source>
-      <translation>Assegnazione IP</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+11"/>
-      <source>Automatic (DHCP)</source>
-      <translation>Automatico (DHCP)</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Automatic, DNS only</source>
-      <translation>Automatico, solo DNS</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Manual</source>
-      <translation>Manuale</translation>
-    </message>
-    <message>
-      <location line="+15"/>
-      <source>Address (CIDR)</source>
-      <translation>Indirizzo (CIDR)</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP e prefisso, ad esempio 192.168.1.50/24</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter a valid address in CIDR notation</source>
-      <translation>Inserire un indirizzo valido nella notazione CIDR</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Enter a valid gateway address</source>
-      <translation>Inserisci un indirizzo di gateway valido</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>DNS servers</source>
-      <translation>Server DNS</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Comma-separated</source>
-      <translation>Separati Da virgole</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter valid DNS server addresses</source>
-      <translation>Inserisci indirizzi server DNS validi</translation>
-    </message>
-    <message>
-      <location line="+55"/>
-      <source>Apply</source>
-      <translation>Applica</translation>
     </message>
   </context>
   <context>
@@ -4417,19 +4283,6 @@
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
       <source>This folder is empty</source>
       <translation>Questa cartella è vuota</translation>
-    </message>
-  </context>
-  <context>
-    <name>Forecast</name>
-    <message>
-      <location filename="../modules/lock/weather/Forecast.qml" line="+34"/>
-      <source>Hourly forecast</source>
-      <translation>Previsione oraria</translation>
-    </message>
-    <message>
-      <location line="+64"/>
-      <source>Now</source>
-      <translation>Ora</translation>
     </message>
   </context>
   <context>
@@ -4680,36 +4533,78 @@
     </message>
   </context>
   <context>
-    <name>InputField</name>
+    <name>Ipv4ConfigSection</name>
     <message>
-      <location filename="../modules/lock/center/InputField.qml" line="+18"/>
-      <source>Password entry</source>
-      <translation>Inserimento password</translation>
+      <location filename="../modules/nexus/common/Ipv4ConfigSection.qml" line="+98"/>
+      <source>IPv4</source>
+      <translation type="unfinished">IPv4</translation>
     </message>
     <message>
-      <location line="+2"/>
-      <source>Type your password to unlock the screen</source>
-      <translation>Digita la password per sbloccare lo schermo</translation>
-    </message>
-    <message>
-      <location line="+39"/>
-      <source>Loading...</source>
-      <translation>Caricamento...</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Scanning face...</source>
-      <translation>Scansione faccia...</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Max tries reached</source>
-      <translation>Max tentativi raggiunti</translation>
+      <location line="+9"/>
+      <source>IP assignment</source>
+      <translation type="unfinished">IP assignment</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Enter your password</source>
-      <translation>Inserisci la tua password</translation>
+      <location line="+8"/>
+      <source>Automatic (DHCP)</source>
+      <translation type="unfinished">Automatic (DHCP)</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Automatic, DNS only</source>
+      <translation type="unfinished">Automatic, DNS only</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Manual</source>
+      <translation type="unfinished">Manual</translation>
+    </message>
+    <message>
+      <location line="+84"/>
+      <source>Address (CIDR)</source>
+      <translation type="unfinished">Address (CIDR)</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>IP and prefix, e.g. 192.168.1.50/24</source>
+      <translation type="unfinished">IP and prefix, e.g. 192.168.1.50/24</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter a valid address in CIDR notation</source>
+      <translation type="unfinished">Enter a valid address in CIDR notation</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Gateway</source>
+      <translation type="unfinished">Gateway</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Enter a valid gateway address</source>
+      <translation type="unfinished">Enter a valid gateway address</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>DNS servers</source>
+      <translation type="unfinished">DNS servers</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Comma-separated</source>
+      <translation type="unfinished">Comma-separated</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter valid DNS server addresses</source>
+      <translation type="unfinished">Enter valid DNS server addresses</translation>
+    </message>
+    <message>
+      <location line="+45"/>
+      <location line="+26"/>
+      <source>Apply</source>
+      <translation type="unfinished">Apply</translation>
     </message>
   </context>
   <context>
@@ -5029,7 +4924,7 @@
   <context>
     <name>Kwin</name>
     <message>
-      <location filename="../services/Kwin.qml" line="+458"/>
+      <location filename="../services/Kwin.qml" line="+477"/>
       <source>Caps lock enabled</source>
       <translation>Blocco maiuscole abilitato</translation>
     </message>
@@ -5079,7 +4974,7 @@
       <translation>Layout cambiato in: %1</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+56"/>
       <source>Reload devices</source>
       <translation>Ricarica dispositivi</translation>
     </message>
@@ -5474,14 +5369,6 @@
       <location line="+7"/>
       <source>Wallpapers</source>
       <translation>Sfondi</translation>
-    </message>
-  </context>
-  <context>
-    <name>Lock</name>
-    <message>
-      <location filename="../modules/lock/Lock.qml" line="+78"/>
-      <source>Unlock the current session</source>
-      <translation>Sblocca la sessione corrente</translation>
     </message>
   </context>
   <context>
@@ -5965,13 +5852,11 @@
     </message>
     <message>
       <location line="+17"/>
-      <location filename="../modules/lock/Media.qml" line="+69"/>
       <source>Unknown artist</source>
       <translation>Artista sconosciuto</translation>
     </message>
     <message>
       <location filename="../modules/dashboard/Media.qml" line="+117"/>
-      <location filename="../modules/lock/Media.qml" line="-10"/>
       <source>Nothing playing</source>
       <translation>Niente in riproduzione</translation>
     </message>
@@ -5979,16 +5864,6 @@
       <location line="+5"/>
       <source>Play something for it to show up here!</source>
       <translation>Gioca qualcosa per esso per presentarsi qui!</translation>
-    </message>
-    <message>
-      <location filename="../modules/lock/Media.qml" line="+0"/>
-      <source>Unknown track</source>
-      <translation>Traccia sconosciuta</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Try playing some music!</source>
-      <translation>Prova a suonare un po' di musica!</translation>
     </message>
   </context>
   <context>
@@ -6050,7 +5925,7 @@
       <translation>Wireless</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Enabled</source>
       <translation>Abilitato</translation>
     </message>
@@ -6065,7 +5940,7 @@
       <translation>Riscansiona le reti</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+29"/>
       <source>VPN</source>
       <translation>VPN</translation>
     </message>
@@ -6095,7 +5970,7 @@
       <translation>Sconosciuto</translation>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+36"/>
       <source>Connection details</source>
       <translation>Dettagli della connessione</translation>
     </message>
@@ -6131,7 +6006,7 @@
   <context>
     <name>NetworkDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+90"/>
+      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+40"/>
       <source>Network</source>
       <translation>Rete</translation>
     </message>
@@ -6196,12 +6071,11 @@
     </message>
     <message>
       <location line="+7"/>
-      <location line="+161"/>
       <source>Gateway</source>
       <translation>Gateway</translation>
     </message>
     <message>
-      <location line="-153"/>
+      <location line="+8"/>
       <source>MAC address</source>
       <translation>Indirizzo MAC</translation>
     </message>
@@ -6219,72 +6093,6 @@
       <location line="+1"/>
       <source>Join this network when it&apos;s in range</source>
       <translation>Entra in questa rete quando&apos;s nell'intervallo</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>IPv4</source>
-      <translation>IPv4</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>IP assignment</source>
-      <translation>Assegnazione IP</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+10"/>
-      <source>Automatic (DHCP)</source>
-      <translation>Automatico (DHCP)</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Automatic, DNS only</source>
-      <translation>Automatico, solo DNS</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Manual</source>
-      <translation>Manuale</translation>
-    </message>
-    <message>
-      <location line="+83"/>
-      <source>Address (CIDR)</source>
-      <translation>Indirizzo (CIDR)</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP e prefisso, ad esempio 192.168.1.50/24</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter a valid address in CIDR notation</source>
-      <translation>Inserire un indirizzo valido nella notazione CIDR</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Enter a valid gateway address</source>
-      <translation>Inserisci un indirizzo di gateway valido</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>DNS servers</source>
-      <translation>Server DNS</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Comma-separated</source>
-      <translation>Separati Da virgole</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter valid DNS server addresses</source>
-      <translation>Inserisci indirizzi server DNS validi</translation>
-    </message>
-    <message>
-      <location line="+48"/>
-      <source>Apply</source>
-      <translation>Applica</translation>
     </message>
   </context>
   <context>
@@ -6546,30 +6354,14 @@
   <context>
     <name>NotifDock</name>
     <message>
-      <location filename="../modules/lock/NotifDock.qml" line="+26"/>
-      <source>%1 notification%2</source>
-      <translation>%1 notifica%2</translation>
-    </message>
-    <message>
-      <location line="+0"/>
       <location filename="../modules/sidebar/NotifDock.qml" line="+68"/>
-      <source>Notifications</source>
-      <translation>Notifiche</translation>
-    </message>
-    <message>
-      <location line="+39"/>
-      <source>Unlock for Notifications</source>
-      <translation>Sblocca per le notifiche</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>No Notifications</source>
-      <translation>Nessuna Notifica</translation>
-    </message>
-    <message>
-      <location filename="../modules/sidebar/NotifDock.qml" line="+0"/>
       <source>notification%1</source>
       <translation>notifica%1</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Notifications</source>
+      <translation>Notifiche</translation>
     </message>
     <message>
       <location line="+112"/>
@@ -6806,7 +6598,7 @@
       <translation>Notifiche</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+25"/>
       <source>Do not disturb</source>
       <translation>Non disturbare</translation>
     </message>
@@ -8045,24 +7837,6 @@
     </message>
   </context>
   <context>
-    <name>PasswordInput</name>
-    <message>
-      <location filename="../modules/lock/center/PasswordInput.qml" line="+101"/>
-      <source>Hide password</source>
-      <translation>Nascondi password</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Show password</source>
-      <translation>Mostra password</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Reveal what has been typed into the password field</source>
-      <translation>Rivela ciò che è stato digitato nel campo password</translation>
-    </message>
-  </context>
-  <context>
     <name>PerfBattery</name>
     <message>
       <location filename="../modules/bar/components/performance/PerfBattery.qml" line="+12"/>
@@ -8211,7 +7985,7 @@
   <context>
     <name>PolkitDialog</name>
     <message>
-      <location filename="../components/PolkitDialog.qml" line="+115"/>
+      <location filename="../components/PolkitDialog.qml" line="+124"/>
       <source>Enter your password</source>
       <translation>Inserisci la tua password</translation>
     </message>
@@ -8503,7 +8277,7 @@
       <translation>Spettacolo</translation>
     </message>
     <message>
-      <location line="+137"/>
+      <location line="+124"/>
       <source>Recording %1</source>
       <translation>Registrazione %1</translation>
     </message>
@@ -9493,106 +9267,6 @@
       <location line="+8"/>
       <source>Screen recording</source>
       <translation>Registrazione schermo</translation>
-    </message>
-  </context>
-  <context>
-    <name>StateMessage</name>
-    <message>
-      <location filename="../modules/lock/center/StateMessage.qml" line="+16"/>
-      <source>FP ERROR: %1</source>
-      <translation>ERRORE FP: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>FACE ERROR: %1</source>
-      <translation>ERRORE FACE: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>PW ERROR: %1</source>
-      <translation>ERRORE PW: %1</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Maximum password and fingerprint attempts reached.</source>
-      <translation>Massimi tentativi di password e impronte digitali raggiunti.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Maximum password attempts reached. Please use fingerprint.</source>
-      <translation>Massimi tentativi di password raggiunti. Si prega di utilizzare l'impronta digitale.</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Maximum password attempts reached.</source>
-      <translation>Massimi tentativi di password raggiunti.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Maximum fingerprint attempts reached. Please use password.</source>
-      <translation>Massimo tentativi di impronte digitali raggiunti. Si prega di utilizzare la password.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Maximum face unlock attempts reached. Please use password.</source>
-      <translation>Massimi tentativi di sblocco facciale raggiunti. Si prega di utilizzare la password.</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Incorrect password. Please try again or use fingerprint.</source>
-      <translation>Password errata. Riprova o usa l'impronta digitale.</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Incorrect password. Please try again.</source>
-      <translation>Password errata. Riprova.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Fingerprint not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Impronta digitale non riconosciuta (%1/%2). Si prega di riprovare o utilizzare la password.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Face not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Faccia non riconosciuta (%1/%2). Si prega di riprovare o utilizzare la password.</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Caps Lock and Num Lock are ON.
-Keyboard layout: %1</source>
-      <translation>Blocco Maiusc e blocco Num sono ACCESO.
-Layout tastiera: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Caps Lock is ON. Keyboard layout: %1</source>
-      <translation>Blocco Maiusc acceso. Layout tastiera: %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Num Lock is ON. Keyboard layout: %1</source>
-      <translation>Blocco Num acceso. Layout tastiera: %1</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Keyboard layout: %1</source>
-      <translation>Layout della tastiera: %1</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Caps Lock and Num Lock are ON.</source>
-      <translation>Blocco Maiusc e blocco Num sono attivi.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Caps Lock is ON.</source>
-      <translation>Blocco Maiusc attivato.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Num Lock is ON.</source>
-      <translation>Blocco Num acceso.</translation>
     </message>
   </context>
   <context>

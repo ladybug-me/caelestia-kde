@@ -1053,6 +1053,26 @@
       <translation>Απαιτεί επανεκκίνηση κελύφους</translation>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Ambient color mode</source>
+      <translation type="unfinished">Ambient color mode</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Ambient glow is unavailable in light mode</source>
+      <translation type="unfinished">Ambient glow is unavailable in light mode</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Ambient light glow in window info panel</source>
+      <translation type="unfinished">Ambient light glow in window info panel</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Ambient glow opacity</source>
+      <translation type="unfinished">Ambient glow opacity</translation>
+    </message>
+    <message>
       <location line="+55"/>
       <source>Background Blur</source>
       <translation>Θόλωμα Φόντου</translation>
@@ -8090,7 +8110,7 @@
   <context>
     <name>Preview</name>
     <message>
-      <location filename="../modules/windowinfo/Preview.qml" line="+72"/>
+      <location filename="../modules/windowinfo/Preview.qml" line="+85"/>
       <source>No active client</source>
       <translation>Κανένας ενεργός πελάτης</translation>
     </message>

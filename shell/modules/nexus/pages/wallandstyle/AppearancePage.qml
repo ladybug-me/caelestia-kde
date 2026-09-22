@@ -157,7 +157,7 @@ PageBase {
             }
             ToggleRow {
                 text: qsTr("Ambient color mode")
-                subtext: Colours.light ? qsTr("Ambient glow is unavailable in light mode") : qsTr("Ambient light glow on the window switcher and overview")
+                subtext: Colours.light ? qsTr("Ambient glow is unavailable in light mode") : qsTr("Ambient light glow in window info panel")
                 checked: GlobalConfig.appearance.ambientColor
                 enabled: !Colours.light
                 onToggled: GlobalConfig.appearance.ambientColor = checked

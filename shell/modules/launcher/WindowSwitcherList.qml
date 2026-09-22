@@ -4,9 +4,7 @@ import QtQuick
 import Quickshell
 import Caelestia.Config
 import qs.components.controls
-import qs.components.effects
 import qs.services
-import qs.utils
 import "items"
 import "services"
 
@@ -19,14 +17,6 @@ ListView {
     required property var content
 
     readonly property int itemWidth: Tokens.sizes.launcher.windowSwitcherWidth * 0.8 + Tokens.padding.largeIncreased * 2
-    readonly property real previewMaxW: Tokens.sizes.launcher.windowSwitcherWidth
-    readonly property real previewMaxH: previewMaxW / 16 * 9
-    readonly property var currentWindow: scriptModel.values && scriptModel.values.length > root.currentIndex && root.currentIndex >= 0 ? scriptModel.values[root.currentIndex] : null
-    readonly property real currentAspect: {
-        const size = root.currentWindow?.size;
-        if (size && size.length >= 2 && size[0] > 0 && size[1] > 0) return size[0] / size[1];
-        return 16.0 / 9.0;
-    }
 
     readonly property int numItems: {
         const screen = (QsWindow.window as QsWindow)?.screen;
@@ -107,32 +97,6 @@ ListView {
 
     delegate: WindowSwitcherItem {
         list: root
-    }
-
-    AmbientGlow {
-        id: switcherGlow
-
-        anchors.horizontalCenter: parent.horizontalCenter
-        y: Tokens.padding.large
-        width: {
-            const h = root.previewMaxW / root.currentAspect;
-            if (h > root.previewMaxH) return root.previewMaxH * root.currentAspect;
-            return root.previewMaxW;
-        }
-        height: {
-            const w = root.previewMaxH * root.currentAspect;
-            if (w > root.previewMaxW) return root.previewMaxW / root.currentAspect;
-            return root.previewMaxH;
-        }
-        address: root.currentWindow?.address ?? ""
-        fallbackIcon: root.currentWindow ? WinIcons.sourceFor(null, root.currentWindow.class, root.currentWindow.iconName, root.currentWindow.pid ?? 0) : ""
-        sourceAspect: root.currentAspect
-        glowScaleX: 2.2
-        glowScaleY: 2.2
-        blurMax: 96
-        glowOpacity: GlobalConfig.appearance.ambientOpacity
-        radius: Tokens.rounding.medium
-        z: -1
     }
 
     MouseArea {

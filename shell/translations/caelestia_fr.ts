@@ -1867,6 +1867,16 @@
     </message>
     <message>
       <location line="+7"/>
+      <source>Show app badges</source>
+      <translation type="unfinished">Show app badges</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Show the count, progress and urgency an app publishes for its dock icon</source>
+      <translation type="unfinished">Show the count, progress and urgency an app publishes for its dock icon</translation>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Filter by current desktop</source>
       <translation>Filtrer par bureau actuel</translation>
     </message>
@@ -4140,6 +4150,36 @@
       <location line="+1"/>
       <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
       <translation type="unfinished">Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Dock App Badges</source>
+      <translation type="unfinished">Dock App Badges</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
+      <translation type="unfinished">Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Ambient Glow</source>
+      <translation type="unfinished">Ambient Glow</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
+      <translation type="unfinished">Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Lock Screen Password Reveal</source>
+      <translation type="unfinished">Lock Screen Password Reveal</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</source>
+      <translation type="unfinished">Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</translation>
     </message>
   </context>
   <context>

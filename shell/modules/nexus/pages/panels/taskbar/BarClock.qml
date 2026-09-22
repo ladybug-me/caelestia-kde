@@ -36,11 +36,18 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: qsTr("Show seconds")
             subtext: qsTr("Add a seconds line to the clock")
             checked: Config.bar.clock.showSeconds
             onToggled: GlobalConfig.bar.clock.showSeconds = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: qsTr("Calendar popout")
+            subtext: qsTr("Show a mini calendar when hovering the clock")
+            checked: Config.bar.popouts.clock
+            onToggled: GlobalConfig.bar.popouts.clock = checked
         }
     }
 }

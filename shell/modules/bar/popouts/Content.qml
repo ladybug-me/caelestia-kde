@@ -110,6 +110,13 @@ Item {
         }
 
         Popout {
+            name: "clock"
+            sourceComponent: CalendarPopout {
+                popouts: root.popouts
+            }
+        }
+
+        Popout {
             name: "battery"
             sourceComponent: Battery {
                 popouts: root.popouts

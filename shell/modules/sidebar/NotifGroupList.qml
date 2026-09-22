@@ -54,13 +54,11 @@ LazyListView {
     }
 
     delegate: Component {
-        MouseArea {
+        NotifSwipeDelegate {
             id: notif
 
             required property int index
             required property NotifData modelData
-
-            property int startY
 
             Component.onCompleted: modelData?.lock(this)
             Component.onDestruction: modelData?.unlock(this)
@@ -72,35 +70,14 @@ LazyListView {
             opacity: LazyListView.removing || LazyListView.adding ? 0 : 1
             scale: LazyListView.removing || LazyListView.adding ? 0.7 : 1
 
-            hoverEnabled: true
             cursorShape: notifInner.body?.hoveredLink ? Qt.PointingHandCursor : pressed ? Qt.ClosedHandCursor : undefined
-            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
-            preventStealing: !root.expanded
-            enabled: !(modelData?.closed ?? true)
+            preventStealingDrag: true
+            allowExpandGesture: false
+            enabled: root.expanded && !(modelData?.closed ?? true)
+            closed: modelData?.closed ?? true
 
-            drag.target: this
-            drag.axis: Drag.XAxis
-
-            onPressed: event => {
-                startY = event.y;
-                if (event.button === Qt.RightButton)
-                    root.requestToggleExpand(!root.expanded);
-                else if (event.button === Qt.MiddleButton)
-                    modelData?.close();
-            }
-            onPositionChanged: event => {
-                if (pressed && !root.expanded) {
-                    const diffY = event.y - startY;
-                    if (Math.abs(diffY) > Config.notifs.expandThreshold)
-                        root.requestToggleExpand(diffY > 0);
-                }
-            }
-            onReleased: event => {
-                if (Math.abs(x) < width * Config.notifs.clearThreshold)
-                    x = 0;
-                else
-                    modelData?.close();
-            }
+            onExpandRequested: expanded => root.requestToggleExpand(expanded)
+            onCloseRequested: modelData?.close()
 
             ParallelAnimation {
                 running: notif.modelData?.closed ?? false
@@ -127,26 +104,6 @@ LazyListView {
                 props: root.props
                 expanded: root.expanded
                 visibilities: root.visibilities
-            }
-
-            Behavior on y {
-                enabled: notif.LazyListView.ready
-
-                Anim {}
-            }
-
-            Behavior on opacity {
-                Anim {
-                    type: Anim.DefaultEffects
-                }
-            }
-
-            Behavior on scale {
-                Anim {}
-            }
-
-            Behavior on x {
-                Anim {}
             }
         }
     }

@@ -205,6 +205,7 @@ git config core.sparseCheckout true
 echo "shell/" > .git/info/sparse-checkout
 echo "src/" >> .git/info/sparse-checkout
 echo "scripts/" >> .git/info/sparse-checkout
+echo "installer/" >> .git/info/sparse-checkout
 echo ".github/version.env" >> .git/info/sparse-checkout
 echo ".gitmodules" >> .git/info/sparse-checkout
 

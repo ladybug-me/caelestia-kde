@@ -1,6 +1,5 @@
 pragma ComponentBehavior: Bound
 
-import "lock"
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
@@ -13,7 +12,6 @@ import qs.utils
 Scope {
     id: root
 
-    required property Lock lock
     readonly property bool hasPlayer: Players.list.some(p => p.isPlaying)
     readonly property bool isCharging: !UPower.onBattery
     readonly property bool enabled: {
@@ -24,21 +22,12 @@ Scope {
         return true;
     }
 
-    readonly property bool isHyprland: !!Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
-
     function requestLock(): void {
-        if (root.isHyprland)
-            lock.lock.locked = true;
-        // the following is commented because it unconditionally locks the session on KDE
-        // else
-        //     Quickshell.execDetached(["loginctl", "lock-session"]);
+        Quickshell.execDetached(["loginctl", "lock-session"]);
     }
 
     function requestUnlock(): void {
-        // On KDE, unlocking is handled by kscreenlocker; only Hyprland uses
-        // the shell's own session lock.
-        if (root.isHyprland)
-            lock.lock.unlock();
+        Quickshell.execDetached(["loginctl", "unlock-session"]);
     }
 
     function handleIdleAction(action: var): void {
@@ -59,18 +48,6 @@ Scope {
         function onAboutToSleep(): void {
             if (GlobalConfig.general.idle.lockBeforeSleep)
                 root.requestLock();
-        }
-
-        function onLockRequested(): void {
-            // On KDE, the login1 Lock signal is already handled by KDE's
-            // kscreenlocker; only Hyprland uses the shell's own session lock.
-            if (root.isHyprland)
-                root.lock.lock.locked = true;
-        }
-
-        function onUnlockRequested(): void {
-            if (root.isHyprland)
-                root.lock.lock.unlock();
         }
 
         target: SessionManager

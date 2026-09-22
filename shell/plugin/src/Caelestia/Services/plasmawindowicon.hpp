@@ -36,13 +36,20 @@ public:
      *
      * The compositor answers on a pipe, so this returns immediately and
      * resolved() carries the result. Repeat calls while one is in flight are
-     * dropped. Nothing is emitted when the window has no icon to give.
+     * dropped. Every ask that is not dropped settles exactly once, through
+     * resolved() or failed().
      */
     Q_INVOKABLE void request(const QString& uuid);
 
 signals:
     /// @p path is a PNG in the same cache the X extractor writes to.
     void resolved(const QString& uuid, const QString& path);
+
+    /// The ask produced no icon: the window is gone, it had none to give, its
+    /// payload did not decode, or the icon could not be written to the cache.
+    /// Carries the @p uuid the request was made with, so a caller that asked
+    /// can stop waiting on an answer that will not come.
+    void failed(const QString& uuid);
 
 private:
     void deliver(const QString& uuid, const QByteArray& payload);

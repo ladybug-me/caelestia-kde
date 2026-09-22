@@ -12,9 +12,6 @@ Slider {
     required property string icon
     property real oldValue
     property bool initialized
-    property bool enableIconTap: false
-
-    signal iconTapped
 
     orientation: Qt.Vertical
 
@@ -95,11 +92,6 @@ Slider {
                             easing: Tokens.anim.standardDecel
                         }
                     }
-                }
-
-                TapHandler {
-                    enabled: root.enableIconTap
-                    onTapped: root.iconTapped()
                 }
             }
         }

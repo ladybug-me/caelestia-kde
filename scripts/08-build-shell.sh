@@ -6,11 +6,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/install-kind.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/install-fs.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/packages.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/toolchain.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/update-state.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/lib/submodules.sh"
 
-BUNDLE_DIR="${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+export BUNDLE_DIR="${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 SHELL_DIR="$BUNDLE_DIR/shell"
 
 write_shell_environment() {
@@ -58,11 +58,11 @@ else
 fi
 
 caelestia_toolchain_stamp() {
-    local cmake_ver qt_ver cava_state
+    local cmake_ver qt_ver cava
     cmake_ver="$(cmake --version | head -n1 | grep -oE '[0-9]+\.[0-9]+' | head -n1)"
     qt_ver="$(pkg-config --modversion Qt6Core 2>/dev/null | grep -oE '^[0-9]+\.[0-9]+' || true)"
-    cava_state="$(pkg-config --modversion libcava 2>/dev/null || pkg-config --modversion cava 2>/dev/null || { [[ -f /usr/include/cava/cavacore.h ]] && echo "sdk"; } || echo "none")"
-    printf 'bundle:%s cmake:%s qt6core:%s gen:%s cava:%s\n' "$BUNDLE_DIR" "$cmake_ver" "$qt_ver" "$CMAKE_GENERATOR" "$cava_state"
+    cava="$(cava_state)"
+    printf 'bundle:%s cmake:%s qt6core:%s gen:%s cava:%s\n' "$BUNDLE_DIR" "$cmake_ver" "$qt_ver" "$CMAKE_GENERATOR" "$cava"
 }
 
 caelestia_normalise_stamp() {
@@ -170,52 +170,35 @@ fi
 
 
 if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
-    info "Running standalone update mode... syncing submodules first."
+    info "Running standalone update mode... ensuring prerequisites."
 
-    if [[ -f "$BUNDLE_DIR/.gitmodules" ]]; then
-        info "Initializing all submodules..."
-        prune_removed_submodules "$BUNDLE_DIR"
-        git -C "$BUNDLE_DIR" submodule sync --recursive >/dev/null 2>&1 || true
-        git -C "$BUNDLE_DIR" submodule update --init --recursive --depth 1 --jobs "$(nproc 2>/dev/null || echo 1)" >/dev/null 2>&1 || die "Failed to initialize all submodules"
+    if [[ -f "$BUNDLE_DIR/scripts/02a-submodules.sh" ]]; then
+        bash "$BUNDLE_DIR/scripts/02a-submodules.sh" || die "Failed to initialize submodules"
     fi
 
-    info "Installing Caelestia Services..."
-    if [[ -f "$BUNDLE_DIR/scripts/06-services.sh" ]]; then
-        bash "$BUNDLE_DIR/scripts/06-services.sh" || warn "06-services.sh failed"
+    # A checkout that predates `installer/` being in the sparse-checkout rules needs
+    # the path adding before anything can read it. src/bin/caelestia-update owns that
+    # list and writes it before it checks the tree out; this is the fallback for the
+    # copies it already deployed. Run from the tree so the path git prints resolves
+    # there, and ask git for it: in a linked worktree .git is a file and the rules
+    # live in the main repository instead.
+    if [[ ! -d "$BUNDLE_DIR/installer" ]]; then
+        (
+            cd "$BUNDLE_DIR" || exit 0
+            sparse_file="$(git rev-parse --git-path info/sparse-checkout 2>/dev/null || true)"
+            [[ -n "$sparse_file" && -f "$sparse_file" ]] || exit 0
+
+            grep -q '^installer/' "$sparse_file" 2>/dev/null || echo "installer/" >> "$sparse_file"
+            git read-tree -mu HEAD 2>/dev/null ||
+                git checkout HEAD -- installer 2>/dev/null || true
+        )
     fi
 
-    missing_packages() {
-        local pkg
-        for pkg in "$@"; do
-            if command -v pacman >/dev/null; then
-                pacman -Qq "$pkg" >/dev/null 2>&1 || printf '%s\n' "$pkg"
-            elif command -v rpm >/dev/null; then
-                rpm -q "$pkg" >/dev/null 2>&1 || printf '%s\n' "$pkg"
-            elif command -v dpkg >/dev/null; then
-                dpkg -s "$pkg" >/dev/null 2>&1 || printf '%s\n' "$pkg"
-            fi
-        done
-    }
-
-    info "Checking Wayland and KDE build dependencies..."
-    if command -v pacman >/dev/null; then
-        mapfile -t MISSING < <(missing_packages qt6-wayland kpipewire kglobalaccel kglobalacceld ksshaskpass matugen)
-        if [[ ${#MISSING[@]} -gt 0 ]]; then
-            info "Installing via pacman: ${MISSING[*]}"
-            caelestia_sudo pacman -S --needed --noconfirm "${MISSING[@]}" || warn "pacman install failed..."
-        fi
-    elif command -v dnf >/dev/null; then
-        mapfile -t MISSING < <(missing_packages qt6-qtwayland qt6-qtwayland-devel kf6-kglobalaccel-devel kf6-kwindowsystem-devel qt6-qtbase-private-devel kf6-kpipewire kf6-kpipewire-devel ksshaskpass)
-        if [[ ${#MISSING[@]} -gt 0 ]]; then
-            info "Installing via dnf: ${MISSING[*]}"
-            caelestia_sudo dnf install -y "${MISSING[@]}" || warn "dnf install failed..."
-        fi
-    elif command -v apt-get >/dev/null; then
-        mapfile -t MISSING < <(missing_packages qt6-wayland qt6-wayland-dev libkf6globalaccel-dev libkf6windowsystem-dev qt6-base-private-dev libkf6kpipewire-dev ksshaskpass)
-        if [[ ${#MISSING[@]} -gt 0 ]]; then
-            info "Installing via apt: ${MISSING[*]}"
-            caelestia_sudo apt-get update && caelestia_sudo apt-get install -y "${MISSING[@]}" || warn "apt install failed..."
-        fi
+    if [[ -f "$BUNDLE_DIR/scripts/02-all-packages.sh" && -d "$BUNDLE_DIR/installer" ]]; then
+        info "Checking core, shell, theme, and utility dependencies..."
+        bash "$BUNDLE_DIR/scripts/02-all-packages.sh" || warn "02-all-packages.sh reported warnings"
+    else
+        warn "Skipping the dependency check: scripts/02-all-packages.sh or installer/ is missing."
     fi
 
     info "Deleting yet-another-monochrome-icon-set for lag free update..."
@@ -229,6 +212,11 @@ if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
             warn "Failed to delete yet-another-monochrome-icon-set."
             return 1 2>/dev/null || exit 1
         fi
+    fi
+
+    info "Installing Caelestia Services..."
+    if [[ -f "$BUNDLE_DIR/scripts/06-services.sh" ]]; then
+        bash "$BUNDLE_DIR/scripts/06-services.sh" || warn "06-services.sh failed"
     fi
 
     info "Updating autostart environment variables"
@@ -377,7 +365,7 @@ if [[ "$SHELL_PREBUILT" -eq 1 ]]; then
 else
     if ! linguist_tools_available; then
         info "Installing Qt Linguist tools for UI translations..."
-        install_linguist_tools || warn "Linguist tools install failed; the shell will stay in English."
+        install_linguist_tools "$BASE_DISTRO" || warn "Linguist tools install failed; the shell will stay in English."
     fi
 
     info "Configuring CMake..."

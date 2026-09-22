@@ -44,8 +44,8 @@ PageBase {
         "power": { icon: "power_settings_new", name: qsTr("Power menu") }
     }
     property bool isGlobalDragging: false
+    property string globalDragCompId: ""
     property string globalDragSourceList: ""
-    property int globalDragSourceIndex: -1
     property string globalDragHoveredList: ""
     readonly property real zonePadding: Tokens.padding.medium
     readonly property real emptyZoneHeight: 72
@@ -56,17 +56,18 @@ PageBase {
             required property int index
             required property string compId
             required property bool isPlaceholder
+
             readonly property bool isAvailable: (componentMeta[compId]?.available ?? true)
-            property string sourceList: {
+            readonly property string sourceList: {
                 if (ListView.view === leftList) return "left";
                 if (ListView.view === middleList) return "middle";
                 if (ListView.view === rightList) return "right";
                 return "library";
             }
-            property bool isDraggingThis: activeDragArea.drag.active
+            readonly property bool isDraggingThis: activeDragArea.drag.active
 
-            width: ListView.view.width
-            height: (root.isGlobalDragging && root.globalDragSourceList === sourceList && root.globalDragSourceIndex === index && root.globalDragHoveredList !== sourceList) ? 0 : 50
+            width: ListView.view ? ListView.view.width : 0
+            height: (root.isGlobalDragging && root.globalDragSourceList === sourceList && root.globalDragCompId === compId && root.globalDragHoveredList !== sourceList) ? 0 : 50
             visible: height > 0
             z: isDraggingThis ? 100 : 1
 
@@ -79,22 +80,24 @@ PageBase {
                     let sourceItem = drag.source;
                     if (!sourceItem) return;
 
-                    let from = -1;
                     let to = delegateWrapper.index;
                     let targetModel = root.getModel(sourceList);
+                    if (!targetModel) return;
 
                     if (sourceItem.sourceList === sourceList) {
-                        from = sourceItem.index;
-                        if (from !== to && from !== -1 && to !== -1) {
+                        let from = root.findItemIndex(targetModel, root.globalDragCompId);
+                        if (from !== -1 && to !== -1 && from !== to) {
                             targetModel.move(from, to, 1);
                         }
                     } else {
                         let phIndex = -1;
                         for (let i = 0; i < targetModel.count; i++) {
-                            if (targetModel.get(i).isPlaceholder) phIndex = i;
+                            if (targetModel.get(i).isPlaceholder) {
+                                phIndex = i;
+                                break;
+                            }
                         }
-
-                        if (phIndex !== -1 && phIndex !== to) {
+                        if (phIndex !== -1 && to !== -1 && phIndex !== to) {
                             targetModel.move(phIndex, to, 1);
                         }
                     }
@@ -110,6 +113,7 @@ PageBase {
                 color: isPlaceholder ? "transparent" : (sourceList !== "library" ? Colours.palette.m3surfaceContainerHigh : Colours.palette.m3surfaceContainerLowest)
                 border.width: isPlaceholder ? 1 : 0
                 border.color: Colours.palette.m3outline
+                opacity: isPlaceholder ? 0.2 : (delegateWrapper.isAvailable ? 1.0 : 0.6)
                 scale: 1.0
                 Drag.active: activeDragArea.drag.active
                 Drag.source: delegateWrapper
@@ -136,8 +140,8 @@ PageBase {
                     enabled: !isPlaceholder
 
                     onPressed: {
+                        root.globalDragCompId = compId;
                         root.globalDragSourceList = sourceList;
-                        root.globalDragSourceIndex = delegateWrapper.index;
                         root.globalDragHoveredList = sourceList;
                     }
 
@@ -148,45 +152,41 @@ PageBase {
                     }
 
                     onReleased: {
-                        root.isGlobalDragging = false;
+                        let draggedId = root.globalDragCompId;
                         let srcList = root.globalDragSourceList;
                         let hovList = root.globalDragHoveredList;
-                        let srcIdx = root.globalDragSourceIndex;
 
-                        if (srcList !== "" && hovList !== "" && srcList !== hovList) {
+                        root.isGlobalDragging = false;
+                        root.globalDragCompId = "";
+                        root.globalDragSourceList = "";
+                        root.globalDragHoveredList = "";
+
+                        if (draggedId !== "" && srcList !== "" && hovList !== "" && srcList !== hovList) {
                             let srcModel = root.getModel(srcList);
                             let dstModel = root.getModel(hovList);
 
-                            let phIndex = -1;
-                            for (let i = 0; i < dstModel.count; i++) {
-                                if (dstModel.get(i).isPlaceholder) phIndex = i;
-                            }
+                            if (srcModel && dstModel) {
+                                let srcIdx = root.findItemIndex(srcModel, draggedId);
+                                let phIndex = -1;
+                                for (let i = 0; i < dstModel.count; i++) {
+                                    if (dstModel.get(i).isPlaceholder) {
+                                        phIndex = i;
+                                        break;
+                                    }
+                                }
 
-                            if (srcIdx >= 0 && srcIdx < srcModel.count) {
-                                let itemCompId = srcModel.get(srcIdx).compId;
-                                srcModel.remove(srcIdx);
-
-                                if (phIndex !== -1) {
-                                    dstModel.set(phIndex, { compId: itemCompId, isPlaceholder: false });
-                                } else {
-                                    dstModel.append({ compId: itemCompId, isPlaceholder: false });
+                                if (srcIdx !== -1) {
+                                    srcModel.remove(srcIdx);
+                                    if (phIndex !== -1) {
+                                        dstModel.set(phIndex, { compId: draggedId, isPlaceholder: false });
+                                    } else {
+                                        dstModel.append({ compId: draggedId, isPlaceholder: false });
+                                    }
                                 }
                             }
                         }
 
-                        for (let i = leftModel.count - 1; i >= 0; i--) {
-                            if (leftModel.get(i).isPlaceholder) leftModel.remove(i);
-                        }
-                        for (let i = middleModel.count - 1; i >= 0; i--) {
-                            if (middleModel.get(i).isPlaceholder) middleModel.remove(i);
-                        }
-                        for (let i = rightModel.count - 1; i >= 0; i--) {
-                            if (rightModel.get(i).isPlaceholder) rightModel.remove(i);
-                        }
-                        for (let i = libraryModel.count - 1; i >= 0; i--) {
-                            if (libraryModel.get(i).isPlaceholder) libraryModel.remove(i);
-                        }
-
+                        root.clearAllPlaceholders();
                         activeDelegate.x = 0;
                         activeDelegate.y = 0;
                         save();
@@ -194,6 +194,10 @@ PageBase {
 
                     onCanceled: {
                         root.isGlobalDragging = false;
+                        root.globalDragCompId = "";
+                        root.globalDragSourceList = "";
+                        root.globalDragHoveredList = "";
+                        root.clearAllPlaceholders();
                         activeDelegate.x = 0;
                         activeDelegate.y = 0;
                     }
@@ -231,6 +235,25 @@ PageBase {
                         }
                         font: Tokens.font.body.small
                         color: sourceList !== "library" ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
+                        elide: Text.ElideRight
+                    }
+
+                    IconButton {
+                        visible: sourceList === "library"
+                        icon: "add"
+                        type: IconButton.Text
+                        ToolTip.text: qsTr("Add to right zone")
+                        ToolTip.visible: hovered
+                        onClicked: root.moveItemToZone(compId, "right")
+                    }
+
+                    IconButton {
+                        visible: sourceList !== "library"
+                        icon: "close"
+                        type: IconButton.Text
+                        ToolTip.text: qsTr("Disable component")
+                        ToolTip.visible: hovered
+                        onClicked: root.moveItemToZone(compId, "library")
                     }
 
                     MaterialIcon {
@@ -242,7 +265,7 @@ PageBase {
         }
     }
 
-    function getModel(name) {
+    function getModel(name: string): ListModel {
         if (name === "left") return leftModel;
         if (name === "middle") return middleModel;
         if (name === "right") return rightModel;
@@ -250,7 +273,61 @@ PageBase {
         return null;
     }
 
-    function load() {
+    function findItemIndex(model: ListModel, compId: string): int {
+        if (!model) return -1;
+        for (let i = 0; i < model.count; i++) {
+            let item = model.get(i);
+            if (item && item.compId === compId && !item.isPlaceholder)
+                return i;
+        }
+        return -1;
+    }
+
+    function clearPlaceholders(exceptModelName: string): void {
+        const listNames = ["left", "middle", "right", "library"];
+        for (let name of listNames) {
+            if (name === exceptModelName) continue;
+            let model = getModel(name);
+            if (model) {
+                for (let i = model.count - 1; i >= 0; i--) {
+                    if (model.get(i).isPlaceholder)
+                        model.remove(i);
+                }
+            }
+        }
+    }
+
+    function clearAllPlaceholders(): void {
+        clearPlaceholders("");
+    }
+
+    function moveItemToZone(compId: string, targetZone: string): void {
+        const listNames = ["left", "middle", "right", "library"];
+        let foundSource = "";
+        let foundIdx = -1;
+
+        for (let name of listNames) {
+            let model = getModel(name);
+            let idx = findItemIndex(model, compId);
+            if (idx !== -1) {
+                foundSource = name;
+                foundIdx = idx;
+                break;
+            }
+        }
+
+        if (foundIdx === -1 || foundSource === targetZone) return;
+
+        let srcModel = getModel(foundSource);
+        let dstModel = getModel(targetZone);
+        if (srcModel && dstModel) {
+            srcModel.remove(foundIdx);
+            dstModel.append({ compId: compId, isPlaceholder: false });
+            save();
+        }
+    }
+
+    function load(): void {
         let entries = Config.bar.entries;
         leftModel.clear();
         middleModel.clear();
@@ -281,7 +358,7 @@ PageBase {
         }
     }
 
-    function defaultEntries() {
+    function defaultEntries(): var {
         return [
             { id: "logo", enabled: true, zone: "left" },
             { id: "workspaces", enabled: true, zone: "left" },
@@ -289,8 +366,6 @@ PageBase {
             { id: "dock", enabled: true, zone: "middle" },
             { id: "tray", enabled: true, zone: "right" },
             { id: "updateIndicator", enabled: true, zone: "right" },
-            // Mirrors the compiled default in barconfig.hpp: the GitHub widget
-            // needs a token, so it ships off.
             { id: "github", enabled: false, zone: "right" },
             { id: "clock", enabled: true, zone: "right" },
             { id: "statusIcons", enabled: true, zone: "right" },
@@ -307,7 +382,7 @@ PageBase {
         ];
     }
 
-    function resetToDefaults() {
+    function resetToDefaults(): void {
         const entries = defaultEntries();
         GlobalConfig.bar.entries = entries;
 
@@ -332,7 +407,7 @@ PageBase {
         }
     }
 
-    function save() {
+    function save(): void {
         let newEntries = [];
 
         for (let i = 0; i < leftModel.count; i++) {
@@ -418,14 +493,18 @@ PageBase {
                         let sourceItem = drag.source;
                         if (!sourceItem) return;
                         root.globalDragHoveredList = "left";
+                        root.clearPlaceholders("left");
 
                         if (sourceItem.sourceList !== "left") {
                             let hasPlaceholder = false;
                             for (let i = 0; i < leftModel.count; i++) {
-                                if (leftModel.get(i).isPlaceholder) hasPlaceholder = true;
+                                if (leftModel.get(i).isPlaceholder) {
+                                    hasPlaceholder = true;
+                                    break;
+                                }
                             }
                             if (!hasPlaceholder) {
-                                leftModel.append({ compId: sourceItem.compId, isPlaceholder: true });
+                                leftModel.append({ compId: root.globalDragCompId, isPlaceholder: true });
                             }
                         }
                     }
@@ -470,14 +549,18 @@ PageBase {
                         let sourceItem = drag.source;
                         if (!sourceItem) return;
                         root.globalDragHoveredList = "middle";
+                        root.clearPlaceholders("middle");
 
                         if (sourceItem.sourceList !== "middle") {
                             let hasPlaceholder = false;
                             for (let i = 0; i < middleModel.count; i++) {
-                                if (middleModel.get(i).isPlaceholder) hasPlaceholder = true;
+                                if (middleModel.get(i).isPlaceholder) {
+                                    hasPlaceholder = true;
+                                    break;
+                                }
                             }
                             if (!hasPlaceholder) {
-                                middleModel.append({ compId: sourceItem.compId, isPlaceholder: true });
+                                middleModel.append({ compId: root.globalDragCompId, isPlaceholder: true });
                             }
                         }
                     }
@@ -522,14 +605,18 @@ PageBase {
                         let sourceItem = drag.source;
                         if (!sourceItem) return;
                         root.globalDragHoveredList = "right";
+                        root.clearPlaceholders("right");
 
                         if (sourceItem.sourceList !== "right") {
                             let hasPlaceholder = false;
                             for (let i = 0; i < rightModel.count; i++) {
-                                if (rightModel.get(i).isPlaceholder) hasPlaceholder = true;
+                                if (rightModel.get(i).isPlaceholder) {
+                                    hasPlaceholder = true;
+                                    break;
+                                }
                             }
                             if (!hasPlaceholder) {
-                                rightModel.append({ compId: sourceItem.compId, isPlaceholder: true });
+                                rightModel.append({ compId: root.globalDragCompId, isPlaceholder: true });
                             }
                         }
                     }
@@ -612,14 +699,18 @@ PageBase {
                         if (!sourceItem) return;
 
                         root.globalDragHoveredList = "library";
+                        root.clearPlaceholders("library");
 
                         if (sourceItem.sourceList !== "library") {
                             let hasPlaceholder = false;
                             for (let i = 0; i < libraryModel.count; i++) {
-                                if (libraryModel.get(i).isPlaceholder) hasPlaceholder = true;
+                                if (libraryModel.get(i).isPlaceholder) {
+                                    hasPlaceholder = true;
+                                    break;
+                                }
                             }
                             if (!hasPlaceholder) {
-                                libraryModel.append({ compId: sourceItem.compId, isPlaceholder: true });
+                                libraryModel.append({ compId: root.globalDragCompId, isPlaceholder: true });
                             }
                         }
                     }

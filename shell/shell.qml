@@ -9,17 +9,6 @@ pragma ComponentBehavior: Bound
 // //@ pragma DefaultEnv QSG_RENDER_LOOP=threaded
 // //@ pragma DefaultEnv QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
 
-import "services" as Services
-import "modules"
-import "modules/drawers"
-import "modules/background"
-import "modules/areapicker"
-import "modules/lock"
-import "modules/polkit"
-import "modules/screenshot/regionSelector"
-import "modules/overview"
-import "modules/whatsnew" as WhatsNew
-import qs.services.api
 import QtQuick
 import QtQml
 import Quickshell
@@ -28,12 +17,34 @@ import Caelestia
 import Caelestia.Config
 import qs.components.containers
 import qs.services
+import qs.services.api
 import qs.utils
+import "services" as Services
+import "modules"
+import "modules/drawers"
+import "modules/background"
+import "modules/areapicker"
+import "modules/polkit"
+import "modules/screenshot/regionSelector"
+import "modules/overview"
+import "modules/whatsnew" as WhatsNew
 
 ShellRoot {
     id: root
 
+    property var regionSelector: RegionSelector {}
+
+    // Force service initialization
+    property var _arpcInit: null
+    property var _gameModeInit: null
+    property var _updateCheckerInit: null
+    property var _autoSchemeInit: null
+
     settings.watchFiles: false
+
+    Component.onCompleted: {
+        deferredStartup.start();
+    }
 
     Binding {
         target: ShellState
@@ -66,43 +77,47 @@ ShellRoot {
 
     Drawers {}
     // AreaPicker {}
-    Lock {
-        id: lock
-    }
     // PolkitModule {}
 
-    property var regionSelector: RegionSelector {}
-
     IpcHandler {
-        target: "region"
-
         function screenshot(): void {
-            regionSelector.screenshot()
+            regionSelector.screenshot();
         }
 
         function search(): void {
-            regionSelector.search()
+            regionSelector.search();
         }
 
         function ocr(): void {
-            regionSelector.ocr()
+            regionSelector.ocr();
         }
 
         function record(): void {
-            regionSelector.record()
+            regionSelector.record();
         }
 
         function recordWithSound(): void {
-            regionSelector.recordWithSound()
+            regionSelector.recordWithSound();
         }
+
+        target: "region"
+    }
+
+    IpcHandler {
+        function lock(): void {
+            Quickshell.execDetached(["loginctl", "lock-session"]);
+            Audio.playLock();
+        }
+
+        function unlock(): void {
+            Quickshell.execDetached(["loginctl", "unlock-session"]);
+        }
+
+        target: "lock"
     }
 
     Shortcuts {}
     ScreenCorners {}
-
-    Component.onCompleted: {
-        deferredStartup.start();
-    }
 
     Timer {
         id: deferredStartup
@@ -181,17 +196,6 @@ ShellRoot {
     }
 
     BatteryMonitor {}
-    IdleMonitors {
-        lock: lock
-    }
+    IdleMonitors {}
     BluetoothReconnect {}
-
-    // Force service initialization
-    property var _arpcInit: null
-
-    property var _gameModeInit: null
-
-    property var _updateCheckerInit: null
-
-    property var _autoSchemeInit: null
 }

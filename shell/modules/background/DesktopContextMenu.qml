@@ -20,21 +20,6 @@ Controls.Menu {
     property var entryByKey: ({})
     property real perfMenuOpenStartedAt: 0
 
-    function defaultEntries() {
-        return [
-            { id: "toggle_desktop_icons", label: qsTr("Desktop Icons"), icon: "desktop_windows", action: "ToggleDesktopIcons", enabled: true, type: "default" },
-            { id: "next_wallpaper", label: qsTr("Next Wallpaper"), icon: "skip_next", action: "Wallpapers.next()", enabled: true, type: "default" },
-            { id: "wallpaper_style", label: qsTr("Wallpaper & style"), icon: "wallpaper", action: "WindowFactory.create()", enabled: true, type: "default" },
-            { id: "system_settings", label: qsTr("System Settings"), icon: "settings", command: "systemsettings", enabled: true, type: "default" },
-            { id: "open_terminal", label: qsTr("Open Terminal"), icon: "terminal", command: "terminal", enabled: true, type: "default" },
-            { id: "add_shortcut", label: qsTr("Add Shortcut..."), icon: "add", action: "OpenRightClickMenu", enabled: true, type: "default" }
-        ];
-    }
-
-    function cloneEntries(entries) {
-        return JSON.parse(JSON.stringify(entries));
-    }
-
     function executeEntryByKey(key) {
         let entry = root.entryByKey[key];
         if (!entry) return;
@@ -76,8 +61,8 @@ Controls.Menu {
     function applyEntries(entries, sourceName) {
         const buildStartedAt = Date.now();
         const normalized = (!entries || entries.length === 0)
-            ? cloneEntries(ContextMenuStore.defaultEntries())
-            : cloneEntries(entries);
+            ? ContextMenuStore.cloneEntries(ContextMenuStore.defaultEntries())
+            : ContextMenuStore.cloneEntries(entries);
         const newArr = [];
         const nextEntryByKey = {};
 

@@ -4,7 +4,13 @@ set -uo pipefail
 
 BUNDLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/log.sh"
+LIB_DIR="$(dirname "${BASH_SOURCE[0]}")/scripts/lib"
+
+source "$LIB_DIR/log.sh"
+# shellcheck source=scripts/lib/packages.sh
+source "$LIB_DIR/packages.sh"
+# shellcheck source=scripts/lib/privileges.sh
+source "$LIB_DIR/privileges.sh"
 
 section() {
     local title="$1"
@@ -13,23 +19,6 @@ section() {
     echo "  $title"
     echo "-------------------------------------------------------------"
 }
-
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    case "$ID" in
-        arch|cachyos|endeavouros|manjaro|artix) BASE_DISTRO="arch" ;;
-        fedora|nobara|bazzite|rhel|centos|almalinux|rocky) BASE_DISTRO="fedora" ;;
-        debian|ubuntu|pop|mint|kali|raspbian|elementary|zorin|deepin|devuan) BASE_DISTRO="debian" ;;
-        *)
-            if echo "${ID_LIKE:-}" | grep -iq "arch"; then BASE_DISTRO="arch"
-            elif echo "${ID_LIKE:-}" | grep -iq "fedora"; then BASE_DISTRO="fedora"
-            elif echo "${ID_LIKE:-}" | grep -iq -E "debian|ubuntu"; then BASE_DISTRO="debian"
-            else BASE_DISTRO="unknown"; fi
-            ;;
-    esac
-else
-    BASE_DISTRO="unknown"
-fi
 
 if [[ "$BASE_DISTRO" == "unknown" ]]; then
     echo "Could not detect distribution. Select base:"
@@ -59,11 +48,8 @@ echo " This will remove Caelestia shell files and configs."
 echo " Backups in $BUNDLE_DIR/backups/ can be restored during uninstall."
 echo
 
-sudo -v || die "Failed to obtain sudo privileges."
-
-(while true; do sudo -v 2>/dev/null || break; sleep 55; done) 2>/dev/null &
-_SUDO_LOOP=$!
-trap 'kill $_SUDO_LOOP 2>/dev/null; true' EXIT
+caelestia_prime_sudo || die "Failed to obtain sudo privileges."
+trap 'caelestia_stop_sudo_keepalive; true' EXIT
 
 echo
 read -r -p "Are you sure you want to uninstall Caelestia? [y/N]: " _confirm
@@ -71,7 +57,7 @@ read -r -p "Are you sure you want to uninstall Caelestia? [y/N]: " _confirm
 
 echo
 echo "Remove installed packages as well? This will uninstall"
-echo "tools like fish, foot, btop, fastfetch, and others."
+echo "tools like foot, btop, fastfetch, and others."
 read -r -p "Remove packages? [y/N]: " _remove_pkgs
 REMOVE_PACKAGES=false
 [[ "${_remove_pkgs,,}" == "y" || "${_remove_pkgs,,}" == "yes" ]] && REMOVE_PACKAGES=true
@@ -207,7 +193,7 @@ fi
 
 if systemctl is-enabled --quiet keyd 2>/dev/null ||
    systemctl is-active  --quiet keyd 2>/dev/null; then
-    sudo systemctl disable --now keyd 2>/dev/null || true
+    caelestia_sudo systemctl disable --now keyd 2>/dev/null || true
     ok "Disabled system service: keyd"
 else
     skip "keyd not active"
@@ -590,7 +576,7 @@ if [[ -z "$_RESTORE_SHELL" ]]; then
 fi
 
 if [[ -n "$_RESTORE_SHELL" ]]; then
-    sudo chsh -s "$_RESTORE_SHELL" "$USER" 2>/dev/null || \
+    caelestia_sudo chsh -s "$_RESTORE_SHELL" "$USER" 2>/dev/null || \
         warn "Could not change login shell to $_RESTORE_SHELL. Run: chsh -s $_RESTORE_SHELL"
     ok "Login shell reverted to $_RESTORE_SHELL"
 fi
@@ -622,20 +608,20 @@ fi
 section "Step 8 - Remove System-level Files"
 
 if [[ -f /etc/keyd/quickshell.conf ]]; then
-    sudo rm -f /etc/keyd/quickshell.conf
+    caelestia_sudo rm -f /etc/keyd/quickshell.conf
     ok "Removed /etc/keyd/quickshell.conf"
-    sudo rmdir /etc/keyd 2>/dev/null || true
+    caelestia_sudo rmdir /etc/keyd 2>/dev/null || true
 fi
 
 if [[ -f /etc/udev/rules.d/80-uinput.rules ]]; then
-    sudo rm -f /etc/udev/rules.d/80-uinput.rules
-    sudo udevadm control --reload-rules 2>/dev/null || true
+    caelestia_sudo rm -f /etc/udev/rules.d/80-uinput.rules
+    caelestia_sudo udevadm control --reload-rules 2>/dev/null || true
     ok "Removed udev rule: 80-uinput.rules"
 fi
 
 CCACHE_FLAG="${XDG_STATE_HOME:-$HOME/.local/state}/caelestia/ccache-enabled"
 if [[ -f "$CCACHE_FLAG" ]] && [[ -f /etc/makepkg.conf ]]; then
-    if sudo sed -i 's/\(^\|[[:space:]]\)ccache\([[:space:]]\|$\)/\1!ccache\2/' /etc/makepkg.conf; then
+    if caelestia_sudo sed -i 's/\(^\|[[:space:]]\)ccache\([[:space:]]\|$\)/\1!ccache\2/' /etc/makepkg.conf; then
         rm -f "$CCACHE_FLAG"
         ok "Reverted ccache in /etc/makepkg.conf"
     else
@@ -644,22 +630,22 @@ if [[ -f "$CCACHE_FLAG" ]] && [[ -f /etc/makepkg.conf ]]; then
 fi
 
 if [[ -f /etc/sudoers.d/ydotoold-nopasswd ]]; then
-    sudo rm -f /etc/sudoers.d/ydotoold-nopasswd
+    caelestia_sudo rm -f /etc/sudoers.d/ydotoold-nopasswd
     ok "Removed sudoers rule: ydotoold-nopasswd"
 fi
 
 if [[ -f /etc/sudoers.d/caelestia-sddm-sync ]]; then
-    sudo rm -f /etc/sudoers.d/caelestia-sddm-sync
+    caelestia_sudo rm -f /etc/sudoers.d/caelestia-sddm-sync
     ok "Removed sudoers rule: caelestia-sddm-sync"
 fi
 
 if [[ -d /usr/share/sddm/themes/caelestia ]]; then
-    sudo rm -rf /usr/share/sddm/themes/caelestia
+    caelestia_sudo rm -rf /usr/share/sddm/themes/caelestia
     ok "Removed SDDM theme: /usr/share/sddm/themes/caelestia"
 fi
 for dropin in /etc/sddm.conf.d/caelestia.conf /etc/sddm.conf.d/zz-caelestia.conf; do
     if [[ -f "$dropin" ]]; then
-        sudo rm -f "$dropin"
+        caelestia_sudo rm -f "$dropin"
         ok "Removed SDDM config drop-in: $(basename "$dropin")"
     fi
 done
@@ -668,38 +654,38 @@ if command -v kwriteconfig6 >/dev/null 2>&1; then
     if [[ -f "$SDDM_CONF_BACKUP" ]]; then
         PREVIOUS_CURRENT="$(cat "$SDDM_CONF_BACKUP")"
         if [[ "$PREVIOUS_CURRENT" == "#none" ]]; then
-            sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current --delete 2>/dev/null || true
+            caelestia_sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current --delete 2>/dev/null || true
             ok "Removed the login screen theme selection from /etc/sddm.conf"
         else
-            sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current "$PREVIOUS_CURRENT" 2>/dev/null || true
+            caelestia_sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current "$PREVIOUS_CURRENT" 2>/dev/null || true
             ok "Restored the login screen theme in /etc/sddm.conf (${PREVIOUS_CURRENT})"
         fi
         rm -f "$SDDM_CONF_BACKUP"
     elif [[ "$(kreadconfig6 --file /etc/sddm.conf --group Theme --key Current 2>/dev/null || true)" == "caelestia" ]]; then
-        sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current --delete 2>/dev/null || true
+        caelestia_sudo kwriteconfig6 --file /etc/sddm.conf --group Theme --key Current --delete 2>/dev/null || true
         ok "Removed the login screen theme selection from /etc/sddm.conf"
     fi
 fi
 
 if [[ -f /usr/local/bin/caelestia-greeter-sync ]]; then
-    sudo rm -f /usr/local/bin/caelestia-greeter-sync
+    caelestia_sudo rm -f /usr/local/bin/caelestia-greeter-sync
     ok "Removed login screen sync helper: caelestia-greeter-sync"
 fi
 if [[ -f /etc/plasmalogin.conf ]] && command -v kwriteconfig6 >/dev/null 2>&1; then
-    sudo kwriteconfig6 --file /etc/plasmalogin.conf --group Greeter --group Wallpaper --group org.kde.image --group General --key Image --delete 2>/dev/null || true
+    caelestia_sudo kwriteconfig6 --file /etc/plasmalogin.conf --group Greeter --group Wallpaper --group org.kde.image --group General --key Image --delete 2>/dev/null || true
     ok "Removed the login screen wallpaper from /etc/plasmalogin.conf"
 fi
 PLASMALOGIN_HOME="$(getent passwd plasmalogin | cut -d: -f6)"
 if [[ -n "$PLASMALOGIN_HOME" && "$PLASMALOGIN_HOME" != "/" ]]; then
     if [[ -d "$PLASMALOGIN_HOME/wallpapers/caelestia" ]]; then
-        sudo rm -rf "$PLASMALOGIN_HOME/wallpapers/caelestia"
+        caelestia_sudo rm -rf "$PLASMALOGIN_HOME/wallpapers/caelestia"
         ok "Removed the login screen's copy of the wallpaper"
     fi
     for file in kdeglobals plasmarc kxkbrc kcminputrc plasma-localerc; do
-        [[ -f "$PLASMALOGIN_HOME/.config/$file" ]] && sudo rm -f "$PLASMALOGIN_HOME/.config/$file"
+        [[ -f "$PLASMALOGIN_HOME/.config/$file" ]] && caelestia_sudo rm -f "$PLASMALOGIN_HOME/.config/$file"
     done
     if [[ -d "$PLASMALOGIN_HOME/.local/share/color-schemes" ]]; then
-        sudo rm -f "$PLASMALOGIN_HOME/.local/share/color-schemes/Matugen"*.colors
+        caelestia_sudo rm -f "$PLASMALOGIN_HOME/.local/share/color-schemes/Matugen"*.colors
         ok "Removed the login screen's copies of the colour schemes"
     fi
 fi
@@ -743,14 +729,14 @@ rm -f "$HOME/.config/caelestia/templates/sddm-theme.conf"
 
 for link in /usr/local/bin/sass /usr/local/bin/qdbus6 /usr/local/bin/caelestia /usr/local/bin/wl-clip-persist /usr/local/bin/gpu-screen-recorder; do
     if [[ -L "$link" || -f "$link" ]]; then
-        sudo rm -f "$link"
+        caelestia_sudo rm -f "$link"
         ok "Removed: $link"
     fi
 done
 
 for effect_lib in /usr/lib/qt6/plugins/kwin/effects/plugins/kwin_workspace_tracker.so /usr/lib64/qt6/plugins/kwin/effects/plugins/kwin_workspace_tracker.so; do
     if [[ -f "$effect_lib" ]]; then
-        sudo rm -f "$effect_lib"
+        caelestia_sudo rm -f "$effect_lib"
         ok "Removed system KWin effect: $effect_lib"
     fi
 done
@@ -761,7 +747,7 @@ if [[ -f "$HOME/.cargo/bin/satty" ]]; then
 fi
 
 if groups "$USER" | grep -q '\binput\b'; then
-    sudo gpasswd -d "$USER" input 2>/dev/null || \
+    caelestia_sudo gpasswd -d "$USER" input 2>/dev/null || \
         warn "Could not remove $USER from input group. Run: sudo gpasswd -d $USER input"
     ok "Removed $USER from 'input' group (takes effect on next login)"
 fi
@@ -769,100 +755,91 @@ fi
 if [[ "$REMOVE_PACKAGES" == "true" ]]; then
     section "Step 9 - Remove Packages (Optional)"
 
+    # Only user-level utilities, standalone apps, custom fonts, and shell tools.
+    # NEVER include core libraries, development headers, compiler toolchains,
+    # desktop environment services, or base system components (e.g. pipewire,
+    # networkmanager, qt6-*, kf6-*, cmake, python, bash).
+    # fish is absent on purpose even though the installer offers it: it may be the
+    # user's login shell, and removing it locks them out of the machine.
     ARCH_PACKAGES=(
-        quickshell matugen python
-        cmake ninja
-        wl-clipboard cliphist inotify-tools app2unit wireplumber trash-cli
-        jq aubio lm_sensors libcava libqalculate
-        foot fish eza fastfetch starship btop
-        adw-gtk-theme papirus-icon-theme
+        quickshell matugen
+        foot eza fastfetch starship btop
+        fuzzel swappy satty gpu-screen-recorder slurp grim
+        wl-clipboard cliphist wl-clip-persist app2unit libcava
+        brightnessctl ddcutil tesseract tesseract-data-eng
+        bat ripgrep lazygit jq trash-cli inotify-tools
+        imagemagick sassc xdg-utils xdg-user-dirs spectacle
+        adw-gtk-theme papirus-icon-theme darkly darkly-bin
         ttf-jetbrains-mono-nerd ttf-material-symbols-variable
-        ttf-rubik-vf ttf-cascadia-code-nerd darkly darkly-bin
-        swappy brightnessctl ddcutil imagemagick
-        tesseract tesseract-data-eng satty spectacle sassc
-        kvantum kvantum-qt5 kde-material-you-colors
-        keyd
+        ttf-rubik-vf ttf-cascadia-code-nerd
     )
 
     FEDORA_PACKAGES=(
         quickshell-git matugen
-        cmake ninja-build
-        wl-clipboard cliphist inotify-tools app2unit wireplumber trash-cli
-        jq aubio lm_sensors lm_sensors-devel libcava libcava-devel libqalculate libqalculate-devel
-        foot fish eza fastfetch starship btop
-        adw-gtk3-theme google-rubik-fonts papirus-icon-theme darkly
-        swappy brightnessctl ddcutil imagemagick
-        tesseract tesseract-langpack-eng spectacle
-        fuzzel satty slurp grim sassc
-        ffmpeg gpu-screen-recorder
-        qt6-qtdeclarative qt6-qtdeclarative-devel
-        qt6-qtsvg qt6-qtsvg-devel qt6-qtshadertools-devel
-        pipewire-devel aubio-devel
-        dbus-devel dbus-glib-devel python3-devel
-        kvantum kde-material-you-colors
-        keyd
+        foot eza fastfetch starship btop
+        fuzzel swappy satty gpu-screen-recorder gpu-screen-recorder-ui slurp grim
+        wl-clipboard cliphist wl-clip-persist app2unit libcava libcava-devel
+        brightnessctl ddcutil tesseract tesseract-langpack-eng
+        bat ripgrep jq trash-cli inotify-tools
+        ImageMagick sassc xdg-utils xdg-user-dirs spectacle
+        adw-gtk3-theme papirus-icon-theme darkly
+        google-rubik-fonts
     )
 
     DEBIAN_PACKAGES=(
-        cmake ninja-build ccache g++ build-essential
-        wl-clipboard cliphist inotify-tools wireplumber trash-cli jq yq
-        libaubio-dev aubio-tools lm-sensors libsensors-dev cava
-        libpipewire-0.3-dev pipewire
-        qt6-base-dev qt6-base-private-dev qt6-declarative-dev qml6-module-qtquick qt6-wayland qt6-wayland-dev qt6-svg-dev qt6-shadertools-dev
-        libkf6globalaccel-dev libkf6windowsystem-dev libkf6kpipewire-dev libsecret-1-dev libkirigami-dev libkdecorations3-dev libkf6style-dev libkf6kcmutils-dev libkf6colorscheme-dev
-        ffmpeg libavcodec-dev libavformat-dev libavutil-dev libswscale-dev libqalculate-dev qalc
-        foot fish eza fastfetch btop bash
-        adw-gtk3-theme fonts-rubik papirus-icon-theme darkly
-        fuzzel swappy brightnessctl ddcutil network-manager imagemagick
-        tesseract-ocr tesseract-ocr-eng kde-spectacle slurp grim xdg-utils sassc
-        libdbus-1-dev libdbus-glib-1-dev python3-dev
-        qt6-style-kvantum kvantum quickshell
-        libxi-dev libdrm-dev libx11-dev libxcomposite-dev libxdamage-dev libxrender-dev libxrandr-dev libpulse-dev libva-dev libcap-dev libavfilter-dev libvulkan-dev
+        quickshell matugen
+        foot eza fastfetch starship btop
+        fuzzel swappy satty gpu-screen-recorder slurp grim
+        wl-clipboard cliphist wl-clip-persist app2unit cava libcava
+        brightnessctl ddcutil tesseract-ocr tesseract-ocr-eng
+        jq yq trash-cli inotify-tools
+        imagemagick sassc xdg-utils kde-spectacle
+        adw-gtk3 adw-gtk3-theme papirus-icon-theme darkly
     )
 
-    if [[ "$BASE_DISTRO" == "arch" ]]; then
+    # One flow for all three: the distro only decides which list to walk and which
+    # remover to call. What is not installed is filtered out first, because a single
+    # unknown name makes dnf and apt refuse the whole batch.
+    case "$BASE_DISTRO" in
+        arch)
+            _pkg_list=("${ARCH_PACKAGES[@]}")
+            _remove_cmd=(yay -Rns --noconfirm)
+            ;;
+        fedora)
+            _pkg_list=("${FEDORA_PACKAGES[@]}")
+            _remove_cmd=(caelestia_sudo dnf remove -y)
+            ;;
+        debian)
+            _pkg_list=("${DEBIAN_PACKAGES[@]}")
+            _remove_cmd=(caelestia_sudo apt-get remove -y)
+            ;;
+        *)
+            _pkg_list=()
+            _remove_cmd=()
+            ;;
+    esac
+
+    if [[ ${#_pkg_list[@]} -gt 0 ]]; then
         warn "The following packages will be removed:"
-        printf '  %s\n' "${ARCH_PACKAGES[@]}"
+        printf '  %s\n' "${_pkg_list[@]}"
         echo
         read -r -p "Proceed? [y/N]: " _pkg_confirm
         if [[ "${_pkg_confirm,,}" == "y" || "${_pkg_confirm,,}" == "yes" ]]; then
-            mapfile -t _installed < <(yay -Qq "${ARCH_PACKAGES[@]}" 2>/dev/null)
+            mapfile -t _installed < <(filter_installed "${_pkg_list[@]}")
             if [[ ${#_installed[@]} -gt 0 ]]; then
-                yay -Rns --noconfirm "${_installed[@]}" 2>/dev/null || \
+                "${_remove_cmd[@]}" "${_installed[@]}" 2>/dev/null || \
                     warn "Some packages could not be removed automatically. Check manually."
+                ok "$BASE_DISTRO packages removed"
+            else
+                skip "None of the listed packages are installed"
             fi
-            ok "Arch packages removed"
-        else
-            skip "Package removal skipped"
-        fi
-    elif [[ "$BASE_DISTRO" == "fedora" ]]; then
-        warn "The following packages will be removed:"
-        printf '  %s\n' "${FEDORA_PACKAGES[@]}"
-        echo
-        read -r -p "Proceed? [y/N]: " _pkg_confirm
-        if [[ "${_pkg_confirm,,}" == "y" || "${_pkg_confirm,,}" == "yes" ]]; then
-            sudo dnf remove -y "${FEDORA_PACKAGES[@]}" 2>/dev/null || \
-                warn "Some packages could not be removed. Check manually."
-            ok "Fedora packages removed"
-        else
-            skip "Package removal skipped"
-        fi
-    elif [[ "$BASE_DISTRO" == "debian" ]]; then
-        warn "The following packages will be removed:"
-        printf '  %s\n' "${DEBIAN_PACKAGES[@]}"
-        echo
-        read -r -p "Proceed? [y/N]: " _pkg_confirm
-        if [[ "${_pkg_confirm,,}" == "y" || "${_pkg_confirm,,}" == "yes" ]]; then
-            sudo apt-get remove -y "${DEBIAN_PACKAGES[@]}" 2>/dev/null || \
-                warn "Some packages could not be removed. Check manually."
-            ok "Debian packages removed"
         else
             skip "Package removal skipped"
         fi
     fi
 
     if command -v caelestia >/dev/null 2>&1 || python3 -m caelestia --help &>/dev/null 2>&1; then
-        sudo pip3 uninstall -y caelestia 2>/dev/null || true
+        caelestia_sudo pip3 uninstall -y caelestia 2>/dev/null || true
         pip3 uninstall -y caelestia 2>/dev/null || true
         ok "Removed caelestia pip package"
     fi

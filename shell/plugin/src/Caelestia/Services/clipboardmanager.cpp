@@ -490,20 +490,28 @@ void ClipboardManager::clearHistory() {
         return;
     }
 
-    m_wipeProc = new QProcess(this);
-    m_wipeProc->setProgram(QStringLiteral("cliphist"));
-    m_wipeProc->setArguments({ QStringLiteral("wipe") });
+    auto* wipeProc = new QProcess(this);
+    wipeProc->setProgram(QStringLiteral("cliphist"));
+    wipeProc->setArguments({ QStringLiteral("wipe") });
+    m_wipeProc = wipeProc;
 
-    connect(m_wipeProc, &QProcess::finished, this, [this](int exitCode, QProcess::ExitStatus exitStatus) {
-        const bool success = (exitStatus == QProcess::NormalExit && exitCode == 0);
+    // One wipe settles once, by whichever signal arrives first. A process that
+    // never started emits only errorOccurred, while a crashed one emits
+    // errorOccurred and finished in an order Qt does not promise. Claiming the
+    // run here, by identity, is what keeps a failed wipe from reloading the
+    // list twice and reporting two completions for the one request QML made.
+    const auto settle = [this, wipeProc](bool success, const QString& reason) {
+        if (m_wipeProc != wipeProc) {
+            return;
+        }
+        m_wipeProc = nullptr;
+        wipeProc->deleteLater();
 
         if (!success) {
-            qCWarning(lcClipboard) << "cliphist wipe failed with exit code" << exitCode;
+            qCWarning(lcClipboard) << "cliphist wipe" << reason;
             // Reload to keep UI and backend state in sync when wipe fails.
             reload();
             emit clearHistoryFinished(false);
-            m_wipeProc->deleteLater();
-            m_wipeProc = nullptr;
             return;
         }
 
@@ -521,24 +529,23 @@ void ClipboardManager::clearHistory() {
         }
 
         emit clearHistoryFinished(true);
-        m_wipeProc->deleteLater();
-        m_wipeProc = nullptr;
+    };
+
+    connect(wipeProc, &QProcess::finished, this, [settle](int exitCode, QProcess::ExitStatus exitStatus) {
+        const bool success = (exitStatus == QProcess::NormalExit && exitCode == 0);
+        settle(success, success ? QString() : QStringLiteral("failed with exit code %1").arg(exitCode));
     });
 
-    connect(m_wipeProc, &QProcess::errorOccurred, this, [this](QProcess::ProcessError err) {
-        qCWarning(lcClipboard) << "cliphist wipe process error:" << err;
-
-        if (err == QProcess::FailedToStart && m_wipeProc) {
-            // Prevent duplicate completion handling if a finished signal follows.
-            m_wipeProc->disconnect(this);
-            m_wipeProc->deleteLater();
-            m_wipeProc = nullptr;
-            reload();
-            emit clearHistoryFinished(false);
+    connect(wipeProc, &QProcess::errorOccurred, this, [settle](QProcess::ProcessError err) {
+        // Only FailedToStart: every other error is followed by finished(), and
+        // settling twice is exactly what the claim above exists to prevent.
+        if (err != QProcess::FailedToStart) {
+            return;
         }
+        settle(false, QStringLiteral("could not be started"));
     });
 
-    m_wipeProc->start();
+    wipeProc->start();
 }
 
 } // namespace caelestia::services

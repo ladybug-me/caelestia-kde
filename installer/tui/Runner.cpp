@@ -404,10 +404,7 @@ void draw_progress_ui(size_t current_index) {
 }
 
 void execute() {
-  string cache_dir =
-      string(getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME")
-                                      : (string(getenv("HOME")) + "/.cache")) +
-      "/caelestia-kde";
+  string cache_dir = xdg_cache_dir() + "/caelestia-kde";
   setenv("CACHE_DIR", cache_dir.c_str(), 1);
   setenv("BUILDDIR", (cache_dir + "/makepkg-build").c_str(), 1);
   setenv("PKGDEST", (cache_dir + "/makepkg-packages").c_str(), 1);
@@ -528,8 +525,8 @@ void execute() {
         int st2 = 0;
         waitpid(child, &st2, 0);
         Term::restore();
-        if (!g_sudo_bin_dir.empty()) {
-          system(("rm -rf \"" + g_sudo_bin_dir + "\"").c_str());
+        if (!g_sudo_bin_dir.empty() && run_shell("rm -rf \"" + g_sudo_bin_dir + "\"") != 0) {
+          cerr << "[installer] warning: could not remove the sudo shim directory " << g_sudo_bin_dir << endl;
         }
         exit(130);
       }

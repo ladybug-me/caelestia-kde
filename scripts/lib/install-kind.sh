@@ -2,6 +2,11 @@
 if [[ -z "${CAELESTIA_INSTALL_KIND_SOURCED:-}" ]]; then
 CAELESTIA_INSTALL_KIND_SOURCED=1
 
+# Resolved at source time: a caller may change directory before asking.
+if ! CAELESTIA_INSTALL_KIND_SOURCED_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"; then
+    CAELESTIA_INSTALL_KIND_SOURCED_DIR=""
+fi
+
 install_kind() {
     case "${CAELESTIA_INSTALL_KIND:-}" in
         source | package)
@@ -10,16 +15,21 @@ install_kind() {
             ;;
     esac
 
-    local lib_dir
-    lib_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-    case "$lib_dir" in
+    if [[ -z "$CAELESTIA_INSTALL_KIND_SOURCED_DIR" ]]; then
+        printf '[ERR]   cannot resolve the directory %s was sourced from\n' "${BASH_SOURCE[0]}" >&2
+        return 1
+    fi
+
+    case "$CAELESTIA_INSTALL_KIND_SOURCED_DIR" in
         /usr/*) printf 'package\n' ;;
         *) printf 'source\n' ;;
     esac
 }
 
 install_is_packaged() {
-    [[ "$(install_kind)" == "package" ]]
+    local kind
+    kind="$(install_kind)" || return 1
+    [[ "$kind" == "package" ]]
 }
 
 install_lib_dir() {

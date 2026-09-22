@@ -324,6 +324,104 @@
     </message>
   </context>
   <context>
+    <name>AdvancedColorsPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/wallandstyle/AdvancedColorsPage.qml" line="+19"/>
+      <source>Sunrise and sunset</source>
+      <translation>Lever et coucher de soleil</translation>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Fixed times</source>
+      <translation>Heure fixe</translation>
+    </message>
+    <message>
+      <location line="+27"/>
+      <source>Advanced Colors</source>
+      <translation>Couleurs avancées</translation>
+    </message>
+    <message>
+      <location line="+25"/>
+      <source>Theme Automation</source>
+      <translation>Automatisation du Thème</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Smart color scheme</source>
+      <translation>Schéma de couleurs intelligent</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Automatically select color variants and theme mode</source>
+      <translation>Sélectionner automatiquement les variantes de couleurs et le mode de thème</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Automatic light and dark</source>
+      <translation type="unfinished">Automatic light and dark</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch the theme mode on a schedule</source>
+      <translation type="unfinished">Switch the theme mode on a schedule</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Schedule</source>
+      <translation>Calendrier</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Sunrise and sunset use your weather location</source>
+      <translation>Le lever et le coucher du soleil utilisent votre localisation météo</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Set a weather location to use sunrise and sunset</source>
+      <translation>Définir une position météo pour utiliser le lever et le coucher du soleil</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Light mode hour</source>
+      <translation>Horaire du mode clair</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switches at %1</source>
+      <translation>Changements à %1</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Dark mode hour</source>
+      <translation>Horaire du mode sombre</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switches at %1, also used when sunrise and sunset are unavailable</source>
+      <translation type="unfinished">Switches at %1, also used when sunrise and sunset are unavailable</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Palette</source>
+      <translation type="unfinished">Palette</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Color intensity</source>
+      <translation type="unfinished">Color intensity</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Chroma of the wallpaper-derived palette, at 100% by default</source>
+      <translation type="unfinished">Chroma of the wallpaper-derived palette, at 100% by default</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 keeps its own colors, so this does not apply</source>
+      <translation type="unfinished">%1 keeps its own colors, so this does not apply</translation>
+    </message>
+  </context>
+  <context>
     <name>AiAssistant</name>
     <message>
       <location filename="../modules/sidebar/AiAssistant.qml" line="+789"/>
@@ -702,55 +800,55 @@
     <message>
       <location filename="../modules/launcher/items/AppContextMenu.qml" line="+56"/>
       <source>Unpin from dock</source>
-      <translation type="unfinished">Unpin from dock</translation>
+      <translation>Désépingler du dock</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Pin to dock</source>
-      <translation type="unfinished">Pin to dock</translation>
+      <translation>Épingler au dock</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Remove from desktop</source>
-      <translation type="unfinished">Remove from desktop</translation>
+      <translation>Supprimer du bureau</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Add to desktop</source>
-      <translation type="unfinished">Add to desktop</translation>
+      <translation>Ajouter au bureau</translation>
     </message>
     <message>
       <location line="+25"/>
       <source>Show in launcher</source>
-      <translation type="unfinished">Show in launcher</translation>
+      <translation>Afficher dans le lanceur</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Hide app</source>
-      <translation type="unfinished">Hide app</translation>
+      <translation>Masquer l'application</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>App info</source>
-      <translation type="unfinished">App info</translation>
+      <translation>Infos sur l'application</translation>
     </message>
   </context>
   <context>
     <name>AppInfo</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+35"/>
+      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+31"/>
       <source>App info</source>
       <translation>Infos sur l'application</translation>
     </message>
     <message>
       <location line="+47"/>
       <source>Taskbar &amp; Dock</source>
-      <translation type="unfinished">Taskbar &amp; Dock</translation>
+      <translation>Barre des tâches et Dock</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Pin to dock</source>
-      <translation type="unfinished">Pin to dock</translation>
+      <translation>Épingler au dock</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -785,7 +883,7 @@
     <message>
       <location line="+11"/>
       <source>Hidden</source>
-      <translation>Hidden</translation>
+      <translation>Masqué</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -882,12 +980,12 @@
     <message>
       <location line="+20"/>
       <source>Font</source>
-      <translation>Font</translation>
+      <translation>Police</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Monospace font</source>
-      <translation>Monospace font</translation>
+      <translation>Police mono</translation>
     </message>
     <message>
       <location line="+18"/>
@@ -1262,7 +1360,7 @@
   <context>
     <name>Audio</name>
     <message>
-      <location filename="../modules/bar/popouts/Audio.qml" line="+76"/>
+      <location filename="../modules/bar/popouts/Audio.qml" line="+82"/>
       <source>Audio</source>
       <translation>Audio</translation>
     </message>
@@ -1278,7 +1376,7 @@
     </message>
     <message>
       <location line="+160"/>
-      <location line="+39"/>
+      <location line="+43"/>
       <source>Muted</source>
       <translation>Coupé en sourdine</translation>
     </message>
@@ -1298,7 +1396,7 @@
       <translation>Input volume</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+19"/>
       <source>Now playing</source>
       <translation>En cours de lecture</translation>
     </message>
@@ -1308,7 +1406,7 @@
       <translation>Aucune application ne joue de l'audio</translation>
     </message>
     <message>
-      <location line="+139"/>
+      <location line="+57"/>
       <location filename="../services/Audio.qml" line="+124"/>
       <source>Unknown</source>
       <translation>Inconnu</translation>
@@ -1484,29 +1582,6 @@
     </message>
   </context>
   <context>
-    <name>BackgroundCenter</name>
-    <message>
-      <location filename="../modules/lock/BackgroundCenter.qml" line="+23"/>
-      <source>Good morning</source>
-      <translation>Bonjour</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good afternoon</source>
-      <translation>Bonjour</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good evening</source>
-      <translation>Bonsoir</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Good night</source>
-      <translation>Bonne nuit</translation>
-    </message>
-  </context>
-  <context>
     <name>BarClock</name>
     <message>
       <location filename="../modules/nexus/pages/panels/taskbar/BarClock.qml" line="+10"/>
@@ -1668,12 +1743,22 @@
       <translation>Menu marche/arrêt</translation>
     </message>
     <message>
-      <location line="+185"/>
+      <location line="+189"/>
       <source>Not detected</source>
       <translation>Non détecté</translation>
     </message>
     <message>
-      <location line="+133"/>
+      <location line="+12"/>
+      <source>Add to right zone</source>
+      <translation>Ajouter à la zone de droite</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Disable component</source>
+      <translation>Désactive le composant</translation>
+    </message>
+    <message>
+      <location line="+183"/>
       <source>Toggle &amp; rearrange</source>
       <translation>Activer/désactiver et réorganiser</translation>
     </message>
@@ -1693,17 +1778,17 @@
       <translation>Zone de gauche</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Zone du milieu</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Zone de droite</translation>
     </message>
     <message>
-      <location line="+57"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Bibliothèque</translation>
     </message>
@@ -1763,22 +1848,22 @@
     <message>
       <location line="+7"/>
       <source>Filter by current desktop</source>
-      <translation type="unfinished">Filter by current desktop</translation>
+      <translation>Filtrer par bureau actuel</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Only show applications and windows belonging to the active virtual desktop</source>
-      <translation type="unfinished">Only show applications and windows belonging to the active virtual desktop</translation>
+      <translation>Afficher uniquement les applications et les fenêtres appartenant au bureau virtuel actif</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Preview window on desktop</source>
-      <translation type="unfinished">Preview window on desktop</translation>
+      <translation>Prévisualiser la fenêtre sur le bureau</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Highlight and show the window itself on the workspace while hovering over dock previews</source>
-      <translation type="unfinished">Highlight and show the window itself on the workspace while hovering over dock previews</translation>
+      <translation>Mettre en surbrillance et afficher la fenêtre elle-même sur l'espace de travail en survolant les aperçus du dock</translation>
     </message>
   </context>
   <context>
@@ -2486,7 +2571,7 @@
     <message>
       <location line="+149"/>
       <source>%1%</source>
-      <translation type="unfinished">%1%</translation>
+      <translation>%1%</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -2494,7 +2579,7 @@
       <translation>N/A</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+8"/>
       <source>No battery detected</source>
       <translation>Aucune batterie détectée</translation>
     </message>
@@ -2575,11 +2660,6 @@
       <source>Charging</source>
       <translation>Recharge en cours</translation>
     </message>
-    <message>
-      <location line="+4"/>
-      <source>...</source>
-      <translation>...</translation>
-    </message>
   </context>
   <context>
     <name>Bluetooth</name>
@@ -2589,12 +2669,12 @@
       <translation>Bluetooth</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+24"/>
       <source>Enabled</source>
       <translation>Activé</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Discovering</source>
       <translation>En cours de découverte</translation>
     </message>
@@ -2611,10 +2691,10 @@
     <message>
       <location line="+54"/>
       <source>%1%</source>
-      <translation type="unfinished">%1%</translation>
+      <translation>%1%</translation>
     </message>
     <message>
-      <location line="+59"/>
+      <location line="+58"/>
       <source>Open settings</source>
       <translation>Ouvrir les paramètres</translation>
     </message>
@@ -2708,19 +2788,6 @@
       <location line="+7"/>
       <source>Pairing...</source>
       <translation>Pairing...</translation>
-    </message>
-  </context>
-  <context>
-    <name>BriefInfo</name>
-    <message>
-      <location filename="../modules/lock/weather/BriefInfo.qml" line="+47"/>
-      <source>Feels like %1</source>
-      <translation>Se sent comme %1</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>High %1 • Low %2</source>
-      <translation>%1 haut • Faible %2</translation>
     </message>
   </context>
   <context>
@@ -3012,7 +3079,7 @@
       <translation>Couleurs qui suivent votre fond d'écran</translation>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+27"/>
       <source>Light</source>
       <translation>Lumière</translation>
     </message>
@@ -3032,7 +3099,7 @@
     <message>
       <location filename="../modules/nexus/common/CommitRow.qml" line="+50"/>
       <source>%1 • %2</source>
-      <translation type="unfinished">%1 • %2</translation>
+      <translation>%1 • %2</translation>
     </message>
   </context>
   <context>
@@ -3238,12 +3305,7 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+17"/>
-      <source>Right Click Menu</source>
-      <translation>Clic droit Menu</translation>
-    </message>
-    <message>
-      <location line="+23"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+36"/>
       <source>Desktop Icons</source>
       <translation>Icônes de bureau</translation>
     </message>
@@ -3274,7 +3336,12 @@
       <translation>Ajouter un raccourci...</translation>
     </message>
     <message>
-      <location line="-95"/>
+      <location line="-154"/>
+      <source>Right Click Menu</source>
+      <translation>Clic droit Menu</translation>
+    </message>
+    <message>
+      <location line="+59"/>
       <source>Active menu items</source>
       <translation>Éléments du menu actif</translation>
     </message>
@@ -3368,19 +3435,6 @@
       <location line="+3"/>
       <source>Record region</source>
       <translation>Enregistrer la région</translation>
-    </message>
-  </context>
-  <context>
-    <name>DailyForecast</name>
-    <message>
-      <location filename="../modules/lock/weather/DailyForecast.qml" line="+16"/>
-      <source>7-Day Forecast</source>
-      <translation>Prévision - 7j</translation>
-    </message>
-    <message>
-      <location line="+34"/>
-      <source>Today</source>
-      <translation>Aujourd'hui</translation>
     </message>
   </context>
   <context>
@@ -3786,39 +3840,6 @@
     </message>
   </context>
   <context>
-    <name>DesktopContextMenu</name>
-    <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+25"/>
-      <source>Desktop Icons</source>
-      <translation>Icônes de bureau</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Next Wallpaper</source>
-      <translation>Fond d'écran suivant</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Wallpaper &amp; style</source>
-      <translation>Fond d'écran &amp; style</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>System Settings</source>
-      <translation>Paramètres du système</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Open Terminal</source>
-      <translation>Ouvrir le terminal</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Add Shortcut...</source>
-      <translation>Ajouter un raccourci...</translation>
-    </message>
-  </context>
-  <context>
     <name>DesktopLyrics</name>
     <message>
       <location filename="../modules/background/DesktopLyrics.qml" line="+287"/>
@@ -3922,7 +3943,7 @@
   <context>
     <name>Details</name>
     <message>
-      <location filename="../modules/dashboard/media/Details.qml" line="+46"/>
+      <location filename="../modules/dashboard/media/Details.qml" line="+33"/>
       <source>Unknown artist</source>
       <translation>Artiste inconnu</translation>
     </message>
@@ -4052,94 +4073,64 @@
     <name>Entries</name>
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+23"/>
-      <source>Window Switcher Add-ons</source>
-      <translation>Modules de changement de fenêtre</translation>
+      <source>Window Rules Out of the Box</source>
+      <translation type="unfinished">Window Rules Out of the Box</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>The window switcher now runs on a KWin-native backend, and window previews are cached so they appear instantly. Its own page under Settings -&gt; Panels -&gt; Window Switcher adds filtering by current desktop, minimized windows, windows from all screens, a live preview on the workspace, and a switch to turn it off entirely.</source>
-      <translation>Le sélecteur de fenêtre s'exécute maintenant sur un backend natif de KWin, et les aperçus de fenêtres sont mis en cache pour qu'ils apparaissent instantanément. Sa propre page sous Réglages -&gt; Panneaux -&gt; Sélecteur de Fenêtres ajoute le filtrage par bureau actuel, des fenêtres minimisées, des fenêtres de tous les écrans, un aperçu en direct de l'espace de travail et un commutateur pour le désactiver entièrement.</translation>
+      <source>The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</source>
+      <translation type="unfinished">The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</translation>
     </message>
     <message>
       <location line="+6"/>
-      <source>Notifications on Any Screen</source>
-      <translation>Notifications sur n'importe quel écran</translation>
+      <source>Right-Click Any App</source>
+      <translation type="unfinished">Right-Click Any App</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Notification popups can now follow the screen they belong to instead of always using the focused one, and the shell can stay quiet while a fullscreen app is focused. Both live in Settings -&gt; Services -&gt; Notifications, as &apos;Display on screen&apos; and &apos;Show in fullscreen&apos;.</source>
-      <translation>Les popups de notification peuvent maintenant suivre l'écran auquel ils appartiennent au lieu d'utiliser toujours celui ciblé, et le shell peut rester silencieux pendant qu'une application en plein écran est mise au point. Les deux en direct dans Paramètres -&gt; Services -&gt; Notifications, as &apos;Display on screen&apos; and &apos;Show in full screen&apos;.</translation>
+      <source>An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</source>
+      <translation type="unfinished">An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</translation>
     </message>
     <message>
       <location line="+6"/>
-      <source>GIF Recording</source>
-      <translation>Enregistrement GIF</translation>
+      <source>Status Icons You Can Arrange</source>
+      <translation type="unfinished">Status Icons You Can Arrange</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>The screen recorder can capture a region straight to an animated GIF. Choose Record GIF from the recorder menu - it is enabled by default and can be switched off under Settings -&gt; Utilities -&gt; Utilities panel.</source>
-      <translation>L'enregistreur d'écran peut capturer une région directement dans un GIF animé. Choisissez Enregistrer GIF dans le menu Enregistreur - il est activé par défaut et peut être éteint dans Paramètres -&gt; Utilitaires -&gt; Panneau Utilitaires.</translation>
+      <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
+      <translation type="unfinished">The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</translation>
     </message>
     <message>
       <location line="+6"/>
-      <source>SDDM Theme Out of the Box</source>
-      <translation>Thème SDDM Hors de la Boîte</translation>
+      <source>Game Mode at a Tap</source>
+      <translation type="unfinished">Game Mode at a Tap</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>The Material You login screen, with wallpaper and color sync, is now installed by default, so the greeter matches your desktop from the first boot. It remains optional in the installer for anyone who prefers the stock theme.</source>
-      <translation>L'écran de connexion Material You , avec fond d'écran et synchronisation de couleur, est maintenant installé par défaut, donc le greeter correspond à votre bureau depuis le premier démarrage. Il reste optionnel dans l'installateur pour tous ceux qui préfèrent le thème de stock.</translation>
+      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</source>
+      <translation type="unfinished">The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</translation>
     </message>
     <message>
       <location line="+6"/>
-      <source>Audio-Reactive Desktop Shapes</source>
-      <translation>Formes de Bureau Audio-Reactive</translation>
+      <source>Color Intensity</source>
+      <translation type="unfinished">Color Intensity</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>The media visualiser is now a set of audio-reactive material shapes, and it can live on the wallpaper as well as in the dashboard. Turn on &apos;Desktop media shapes&apos; under Settings -&gt; Desktop -&gt; Desktop Addons and let it auto-hide while a window is open.</source>
-      <translation>L'visualiseur de média est maintenant un ensemble de formes de matériau audio-réactives, et il peut vivre sur le fond d'écran ainsi que dans le tableau de bord. Activez &apos;Les formes de médias de bureau&apos; dans Paramètres -&gt; Bureau -&gt; Addons de bureau et laissez le cacher automatiquement pendant qu'une fenêtre est ouverte.</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Chinese Translations</source>
-      <translation>Traductions en Chinois</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The shell now ships Simplified and Traditional Chinese catalogues, so the interface follows your language instead of staying English. Pick one from Settings -&gt; Language &amp; region.</source>
-      <translation>Le shell distribue maintenant des catalogues chinois simplifiés et traditionnels, de sorte que l'interface suit votre langue au lieu de rester l'anglais. Choisissez un des paramètres -&gt; Langue et région.</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>A New Name and Look</source>
-      <translation>Un nouveau nom et un nouveau look</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The project is now caelestia-kde. The repository, its references and the artwork have been renamed and brought onto one palette and one logo. Your configuration and settings are untouched.</source>
-      <translation>Le projet est maintenant caelestia-kde, le référentiel, ses références et l'œuvre d'art ont été renommés et ont été mis sur une palette et un logo. Votre configuration et vos paramètres ne sont pas modifiés.</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Dock Desktop Filtering &amp; Live Previews</source>
-      <translation type="unfinished">Dock Desktop Filtering &amp; Live Previews</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
-      <translation type="unfinished">The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</translation>
+      <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
+      <translation type="unfinished">Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</translation>
     </message>
   </context>
   <context>
     <name>EthernetDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+98"/>
+      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+22"/>
       <source>Ethernet</source>
       <translation>Ethernet</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+55"/>
       <source>Disconnect</source>
       <translation>Déconnecter</translation>
     </message>
@@ -4193,80 +4184,13 @@
     </message>
     <message>
       <location line="+6"/>
-      <location line="+76"/>
       <source>Gateway</source>
       <translation>Passerelle</translation>
     </message>
     <message>
-      <location line="-69"/>
+      <location line="+7"/>
       <source>MAC address</source>
       <translation>Adresse MAC</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>IPv4</source>
-      <translation>IPv4</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>IP assignment</source>
-      <translation>Affectation IP</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+11"/>
-      <source>Automatic (DHCP)</source>
-      <translation>Automatique (DHCP)</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Automatic, DNS only</source>
-      <translation>Automatique, DNS uniquement</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Manual</source>
-      <translation>Manuelle</translation>
-    </message>
-    <message>
-      <location line="+15"/>
-      <source>Address (CIDR)</source>
-      <translation>Adresse (CIDR)</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP et préfixe, par exemple 192.168.1.50/24</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter a valid address in CIDR notation</source>
-      <translation>Entrez une adresse valide en notation CIDR</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Enter a valid gateway address</source>
-      <translation>Entrez une adresse de passerelle valide</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>DNS servers</source>
-      <translation>Serveurs DNS</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Comma-separated</source>
-      <translation>Séparés par des virgules</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter valid DNS server addresses</source>
-      <translation>Entrez les adresses de serveur DNS valides</translation>
-    </message>
-    <message>
-      <location line="+55"/>
-      <source>Apply</source>
-      <translation>Appliquer</translation>
     </message>
   </context>
   <context>
@@ -4339,19 +4263,6 @@
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
       <source>This folder is empty</source>
       <translation>Ce dossier est vide</translation>
-    </message>
-  </context>
-  <context>
-    <name>Forecast</name>
-    <message>
-      <location filename="../modules/lock/weather/Forecast.qml" line="+34"/>
-      <source>Hourly forecast</source>
-      <translation>Prévision horaire</translation>
-    </message>
-    <message>
-      <location line="+64"/>
-      <source>Now</source>
-      <translation>Maintenant</translation>
     </message>
   </context>
   <context>
@@ -4602,36 +4513,78 @@
     </message>
   </context>
   <context>
-    <name>InputField</name>
+    <name>Ipv4ConfigSection</name>
     <message>
-      <location filename="../modules/lock/center/InputField.qml" line="+18"/>
-      <source>Password entry</source>
-      <translation>Saisie du mot de passe</translation>
+      <location filename="../modules/nexus/common/Ipv4ConfigSection.qml" line="+98"/>
+      <source>IPv4</source>
+      <translation>IPv4</translation>
     </message>
     <message>
-      <location line="+2"/>
-      <source>Type your password to unlock the screen</source>
-      <translation>Tapez votre mot de passe pour déverrouiller l'écran</translation>
-    </message>
-    <message>
-      <location line="+39"/>
-      <source>Loading...</source>
-      <translation>Chargement en cours...</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Scanning face...</source>
-      <translation>Analyse du visage...</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Max tries reached</source>
-      <translation>Nombre maximum d'essais atteint</translation>
+      <location line="+9"/>
+      <source>IP assignment</source>
+      <translation>Affectation IP</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Enter your password</source>
-      <translation>Entrez votre mot de passe</translation>
+      <location line="+8"/>
+      <source>Automatic (DHCP)</source>
+      <translation type="unfinished">Automatic (DHCP)</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Automatic, DNS only</source>
+      <translation>Automatique, DNS uniquement</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Manual</source>
+      <translation>Manuel</translation>
+    </message>
+    <message>
+      <location line="+84"/>
+      <source>Address (CIDR)</source>
+      <translation>Adresse (CIDR)</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>IP and prefix, e.g. 192.168.1.50/24</source>
+      <translation>IP et préfixe, par exemple 192.168.1.50/24</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter a valid address in CIDR notation</source>
+      <translation>Entrez une adresse valide en notation CIDR</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Gateway</source>
+      <translation type="unfinished">Gateway</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Enter a valid gateway address</source>
+      <translation type="unfinished">Enter a valid gateway address</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>DNS servers</source>
+      <translation type="unfinished">DNS servers</translation>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Comma-separated</source>
+      <translation type="unfinished">Comma-separated</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter valid DNS server addresses</source>
+      <translation type="unfinished">Enter valid DNS server addresses</translation>
+    </message>
+    <message>
+      <location line="+45"/>
+      <location line="+26"/>
+      <source>Apply</source>
+      <translation type="unfinished">Apply</translation>
     </message>
   </context>
   <context>
@@ -4951,7 +4904,7 @@
   <context>
     <name>Kwin</name>
     <message>
-      <location filename="../services/Kwin.qml" line="+458"/>
+      <location filename="../services/Kwin.qml" line="+477"/>
       <source>Caps lock enabled</source>
       <translation>Verrouillage des majuscules activé</translation>
     </message>
@@ -5001,7 +4954,7 @@
       <translation>Mise en page changée en : %1</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+56"/>
       <source>Reload devices</source>
       <translation>Recharger les appareils</translation>
     </message>
@@ -5399,14 +5352,6 @@
     </message>
   </context>
   <context>
-    <name>Lock</name>
-    <message>
-      <location filename="../modules/lock/Lock.qml" line="+78"/>
-      <source>Unlock the current session</source>
-      <translation>Débloquer la session en cours</translation>
-    </message>
-  </context>
-  <context>
     <name>LockScreenPage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/LockScreenPage.qml" line="+25"/>
@@ -5780,7 +5725,7 @@
   <context>
     <name>M3Variants</name>
     <message>
-      <location filename="../modules/launcher/services/M3Variants.qml" line="+41"/>
+      <location filename="../modules/launcher/services/M3Variants.qml" line="+31"/>
       <source>Vibrant</source>
       <translation>Vibreur</translation>
     </message>
@@ -5869,31 +5814,27 @@
   <context>
     <name>Media</name>
     <message>
-      <location filename="../modules/dashboard/dash/Media.qml" line="+86"/>
-      <location line="+17"/>
-      <location line="+17"/>
+      <location filename="../modules/dashboard/dash/Media.qml" line="+91"/>
       <source>No media</source>
       <translation>Aucun média</translation>
     </message>
     <message>
-      <location line="-34"/>
+      <location line="+0"/>
       <source>Unknown title</source>
       <translation>Titre inconnu</translation>
     </message>
     <message>
-      <location line="+17"/>
+      <location line="+14"/>
       <source>Unknown album</source>
       <translation>Album inconnu</translation>
     </message>
     <message>
-      <location line="+17"/>
-      <location filename="../modules/lock/Media.qml" line="+69"/>
+      <location line="+14"/>
       <source>Unknown artist</source>
       <translation>Artiste inconnu</translation>
     </message>
     <message>
       <location filename="../modules/dashboard/Media.qml" line="+117"/>
-      <location filename="../modules/lock/Media.qml" line="-10"/>
       <source>Nothing playing</source>
       <translation>Rien ne joue</translation>
     </message>
@@ -5901,16 +5842,6 @@
       <location line="+5"/>
       <source>Play something for it to show up here!</source>
       <translation>Jouez quelque chose pour qu'il apparaisse ici !</translation>
-    </message>
-    <message>
-      <location filename="../modules/lock/Media.qml" line="+0"/>
-      <source>Unknown track</source>
-      <translation>Piste inconnue</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Try playing some music!</source>
-      <translation>Essayez de jouer de la musique!</translation>
     </message>
   </context>
   <context>
@@ -5972,7 +5903,7 @@
       <translation>Sans-fil</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Enabled</source>
       <translation>Activé</translation>
     </message>
@@ -5982,12 +5913,12 @@
       <translation>Réseaux %1 disponibles</translation>
     </message>
     <message>
-      <location line="+141"/>
+      <location line="+146"/>
       <source>Rescan networks</source>
       <translation>Rescanner les réseaux</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+29"/>
       <source>VPN</source>
       <translation>VPN</translation>
     </message>
@@ -5997,7 +5928,7 @@
       <translation>Profils %1 disponibles</translation>
     </message>
     <message>
-      <location line="+81"/>
+      <location line="+85"/>
       <source>No VPN profiles found</source>
       <translation>Aucun profil VPN trouvé</translation>
     </message>
@@ -6012,12 +5943,12 @@
       <translation>Appareils %1 disponibles</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+48"/>
       <source>Unknown</source>
       <translation>Inconnu</translation>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+47"/>
       <source>Connection details</source>
       <translation>Détails de la connexion</translation>
     </message>
@@ -6053,7 +5984,7 @@
   <context>
     <name>NetworkDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+90"/>
+      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+40"/>
       <source>Network</source>
       <translation>Réseau</translation>
     </message>
@@ -6118,12 +6049,11 @@
     </message>
     <message>
       <location line="+7"/>
-      <location line="+161"/>
       <source>Gateway</source>
       <translation>Passerelle</translation>
     </message>
     <message>
-      <location line="-153"/>
+      <location line="+8"/>
       <source>MAC address</source>
       <translation>Adresse MAC</translation>
     </message>
@@ -6141,72 +6071,6 @@
       <location line="+1"/>
       <source>Join this network when it&apos;s in range</source>
       <translation type="unfinished">Join this network when it&apos;s in range</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>IPv4</source>
-      <translation>IPv4</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>IP assignment</source>
-      <translation>Affectation IP</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+10"/>
-      <source>Automatic (DHCP)</source>
-      <translation>Automatique (DHCP)</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Automatic, DNS only</source>
-      <translation>Automatique, DNS uniquement</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Manual</source>
-      <translation>Manuelle</translation>
-    </message>
-    <message>
-      <location line="+83"/>
-      <source>Address (CIDR)</source>
-      <translation>Adresse (CIDR)</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>IP and prefix, e.g. 192.168.1.50/24</source>
-      <translation>IP et préfixe, par exemple 192.168.1.50/24</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter a valid address in CIDR notation</source>
-      <translation>Entrez une adresse valide en notation CIDR</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Enter a valid gateway address</source>
-      <translation>Entrez une adresse de passerelle valide</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>DNS servers</source>
-      <translation>Serveurs DNS</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Comma-separated</source>
-      <translation>Séparés par des virgules</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enter valid DNS server addresses</source>
-      <translation>Entrez les adresses de serveur DNS valides</translation>
-    </message>
-    <message>
-      <location line="+48"/>
-      <source>Apply</source>
-      <translation>Appliquer</translation>
     </message>
   </context>
   <context>
@@ -6468,30 +6332,14 @@
   <context>
     <name>NotifDock</name>
     <message>
-      <location filename="../modules/lock/NotifDock.qml" line="+26"/>
-      <source>%1 notification%2</source>
-      <translation>Notification %1%2</translation>
-    </message>
-    <message>
-      <location line="+0"/>
       <location filename="../modules/sidebar/NotifDock.qml" line="+68"/>
-      <source>Notifications</source>
-      <translation>Notifications</translation>
-    </message>
-    <message>
-      <location line="+39"/>
-      <source>Unlock for Notifications</source>
-      <translation>Déverrouiller pour les notifications</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>No Notifications</source>
-      <translation>Aucune notification</translation>
-    </message>
-    <message>
-      <location filename="../modules/sidebar/NotifDock.qml" line="+0"/>
       <source>notification%1</source>
       <translation>notification%1</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Notifications</source>
+      <translation>Notifications</translation>
     </message>
     <message>
       <location line="+112"/>
@@ -6728,7 +6576,7 @@
       <translation>Notifications</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+25"/>
       <source>Do not disturb</source>
       <translation>Ne pas déranger</translation>
     </message>
@@ -6808,7 +6656,7 @@
   <context>
     <name>Notifs</name>
     <message>
-      <location filename="../services/Notifs.qml" line="+144"/>
+      <location filename="../services/Notifs.qml" line="+150"/>
       <source>Do not disturb enabled</source>
       <translation>Ne pas déranger activé</translation>
     </message>
@@ -7192,7 +7040,7 @@
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+351"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+354"/>
       <source>Page under construction</source>
       <translation>Page en construction</translation>
     </message>
@@ -7238,6 +7086,16 @@
       <location line="+1"/>
       <source>Colors</source>
       <translation>Couleurs</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Advanced color settings</source>
+      <translation type="unfinished">Advanced color settings</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Color intensity</source>
+      <translation type="unfinished">Color intensity</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7962,24 +7820,6 @@
     </message>
   </context>
   <context>
-    <name>PasswordInput</name>
-    <message>
-      <location filename="../modules/lock/center/PasswordInput.qml" line="+101"/>
-      <source>Hide password</source>
-      <translation>Cacher le mot de passe</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Show password</source>
-      <translation>Afficher le mot de passe</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Reveal what has been typed into the password field</source>
-      <translation>Révéler ce qui a été tapé dans le champ mot de passe</translation>
-    </message>
-  </context>
-  <context>
     <name>PerfBattery</name>
     <message>
       <location filename="../modules/bar/components/performance/PerfBattery.qml" line="+12"/>
@@ -8128,7 +7968,7 @@
   <context>
     <name>PolkitDialog</name>
     <message>
-      <location filename="../components/PolkitDialog.qml" line="+115"/>
+      <location filename="../components/PolkitDialog.qml" line="+124"/>
       <source>Enter your password</source>
       <translation>Entrez votre mot de passe</translation>
     </message>
@@ -8420,7 +8260,7 @@
       <translation>Spectacle</translation>
     </message>
     <message>
-      <location line="+137"/>
+      <location line="+124"/>
       <source>Recording %1</source>
       <translation>Enregistrement %1</translation>
     </message>
@@ -9410,106 +9250,6 @@
       <location line="+8"/>
       <source>Screen recording</source>
       <translation>Enregistrement d'écran</translation>
-    </message>
-  </context>
-  <context>
-    <name>StateMessage</name>
-    <message>
-      <location filename="../modules/lock/center/StateMessage.qml" line="+16"/>
-      <source>FP ERROR: %1</source>
-      <translation>ERREUR FP : %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>FACE ERROR: %1</source>
-      <translation>ERREUR DE FACE : %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>PW ERROR: %1</source>
-      <translation>ERREUR PW: %1</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Maximum password and fingerprint attempts reached.</source>
-      <translation>Le nombre maximum de tentatives de mot de passe et d'empreintes digitales a été atteint.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Maximum password attempts reached. Please use fingerprint.</source>
-      <translation>Nombre maximum de tentatives de mot de passe atteint. Veuillez utiliser l'empreinte digitale.</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Maximum password attempts reached.</source>
-      <translation>Nombre maximum de tentatives de mot de passe atteint.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Maximum fingerprint attempts reached. Please use password.</source>
-      <translation>Nombre maximum de tentatives d'empreinte digitale atteint. Veuillez utiliser le mot de passe.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Maximum face unlock attempts reached. Please use password.</source>
-      <translation>Nombre maximum de tentatives de déverrouillage par visage atteint. Veuillez utiliser le mot de passe.</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Incorrect password. Please try again or use fingerprint.</source>
-      <translation>Mot de passe incorrect. Veuillez réessayer ou utiliser l'empreinte digitale.</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Incorrect password. Please try again.</source>
-      <translation>Mot de passe incorrect. Veuillez réessayer.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Fingerprint not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Empreinte digitale non reconnue (%1/%2). Veuillez réessayer ou utiliser le mot de passe.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Face not recognized (%1/%2). Please try again or use password.</source>
-      <translation>Visage non reconnu (%1/%2). Veuillez réessayer ou utiliser le mot de passe.</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Caps Lock and Num Lock are ON.
-Keyboard layout: %1</source>
-      <translation>Le verrouillage majuscule et le verrouillage Num sont activés.
-Disposition du clavier : %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Caps Lock is ON. Keyboard layout: %1</source>
-      <translation>Le verrouillage majuscule est activé. Disposition du clavier : %1</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Num Lock is ON. Keyboard layout: %1</source>
-      <translation>Le verrouillage Num est activé. Disposition du clavier : %1</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Keyboard layout: %1</source>
-      <translation>Disposition du clavier: %1</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Caps Lock and Num Lock are ON.</source>
-      <translation>Les majuscules et le Num Lock sont activés.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Caps Lock is ON.</source>
-      <translation>Caps Lock est activé.</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Num Lock is ON.</source>
-      <translation>Num Lock est activé.</translation>
     </message>
   </context>
   <context>

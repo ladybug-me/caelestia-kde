@@ -30,6 +30,7 @@ cava/
 /CONTEXT.md
 /CLAUDE.md
 /docs/agents/
+/docs/adr/
 # Generated for Crowdin before upload; never committed.
 /shell/translations/caelestia_en.ts
 /shell/translations/caelestia_en.qm

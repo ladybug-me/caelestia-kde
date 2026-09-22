@@ -96,36 +96,6 @@ Item {
         }
     }
 
-    function testRegexList(list, str) {
-        if (!list || !str) return false;
-        let arr = Array.from(list);
-        for (let i = 0; i < arr.length; i++) {
-            let pattern = arr[i];
-            if (pattern.startsWith("^") && pattern.endsWith("$")) {
-                let re = new RegExp(pattern);
-                if (re.test(str)) return true;
-            } else if (pattern === str) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function findMatchingIndex(list, str) {
-        if (!list || !str) return -1;
-        let arr = Array.from(list);
-        for (let i = 0; i < arr.length; i++) {
-            let pattern = arr[i];
-            if (pattern.startsWith("^") && pattern.endsWith("$")) {
-                let re = new RegExp(pattern);
-                if (re.test(str)) return i;
-            } else if (pattern === str) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     Connections {
         target: Kwin
         enabled: root.active
@@ -212,7 +182,7 @@ Item {
         // only fills them in when nothing focused matched.
         const activeClass = Kwin.activeWindow.class ?? "";
         if (activeClass !== "") {
-            const activeIdx = root.findMatchingIndex(GlobalConfig.services.arpcTargetWindows, activeClass);
+            const activeIdx = Strings.findMatchingIndex(GlobalConfig.services.arpcTargetWindows, activeClass);
             if (activeIdx >= 0) {
                 topTargetClass = activeClass;
                 topTargetTitle = Kwin.activeWindow.title ?? "";
@@ -226,7 +196,7 @@ Item {
 
             if (GlobalConfig.services.arpcSteamAutoDetect && winClass.startsWith("steam_app_")) {
                 let appId = winClass.replace("steam_app_", "");
-                let isBlacklisted = root.testRegexList(GlobalConfig.services.arpcSteamBlacklist, appId) || root.testRegexList(GlobalConfig.services.arpcSteamBlacklist, "steam_app_" + appId);
+                let isBlacklisted = Strings.testRegexList(GlobalConfig.services.arpcSteamBlacklist, appId) || Strings.testRegexList(GlobalConfig.services.arpcSteamBlacklist, "steam_app_" + appId);
                 if (!isBlacklisted) {
                     topSteamClass = winClass;
                     topSteamTitle = winTitle;
@@ -235,7 +205,7 @@ Item {
             }
 
             if (topTargetClass === "") {
-                let matchIdx = root.findMatchingIndex(GlobalConfig.services.arpcTargetWindows, winClass);
+                let matchIdx = Strings.findMatchingIndex(GlobalConfig.services.arpcTargetWindows, winClass);
                 if (matchIdx >= 0) {
                     topTargetClass = winClass;
                     topTargetTitle = winTitle;

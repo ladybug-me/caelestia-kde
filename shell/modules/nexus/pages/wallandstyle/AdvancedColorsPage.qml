@@ -24,6 +24,14 @@ PageBase {
     ]
     readonly property list<string> autoSchemeValues: ["solar", "fixed"]
 
+    /// Where the intensity handle is, 0 to 1. A change is a run of the color engine, the whole
+    /// theme fan out and a re-apply of the Plasma scheme, so the value in effect only moves once
+    /// that lands, seconds later: a handle bound to it would snap back under whoever is dragging
+    /// it until then. The handle is this page's, and `Colours.intensity` is what the palette is.
+    property real intensityPosition: Colours.intensityFraction
+    /// Whether the handle is being dragged, in which case a render landing does not move it.
+    property bool draggingIntensity: false
+
     /// The hour of an "HH:MM" config value, for the steppers.
     function schemeHour(time: string): int {
         const minutes = Solar.parseTime(time);
@@ -48,6 +56,15 @@ PageBase {
         anchors.top: parent.top
         width: root.cappedWidth
         spacing: Tokens.spacing.medium
+
+        Connections {
+            function onIntensityChanged(): void {
+                if (!root.draggingIntensity)
+                    root.intensityPosition = Colours.intensityFraction;
+            }
+
+            target: Colours
+        }
 
         Item {
             Layout.preferredHeight: Tokens.spacing.small
@@ -110,6 +127,33 @@ PageBase {
                 from: 0
                 to: 23
                 onMoved: h => GlobalConfig.services.autoSchemeDarkTime = root.withHour(GlobalConfig.services.autoSchemeDarkTime, h)
+            }
+        }
+
+        SectionHeader {
+            text: qsTr("Palette")
+        }
+
+        // A finished drag is what is rendered, not every step of one, since each is a run of the
+        // color engine, the theme fan out and a re-apply of the Plasma scheme. The wheel, which
+        // emits no more than `moved`, does not reach the palette for that same reason.
+        SliderRow {
+            first: true
+            last: true
+            enabled: Colours.scheme === "dynamic"
+            label: qsTr("Color intensity")
+            subtext: enabled ? qsTr("Chroma of the wallpaper-derived palette, at 100% by default") : qsTr("%1 keeps its own colors, so this does not apply").arg(Colours.scheme)
+            valueLabel: Math.round(value * Colours.maxIntensity * 100) + "%"
+            value: root.intensityPosition
+            onInteraction: root.draggingIntensity = true
+            onMoved: v => {
+                if (root.draggingIntensity)
+                    root.intensityPosition = v;
+            }
+            onReleased: v => {
+                root.draggingIntensity = false;
+                root.intensityPosition = v;
+                Colours.setIntensity(v);
             }
         }
     }

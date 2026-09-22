@@ -190,30 +190,17 @@ ColumnLayout {
                     }
 
                     StyledText {
-                        function formatSeconds(s: int, fallback: string): string {
-                            const day = Math.floor(s / 86400);
-                            const hr = Math.floor(s / 3600) % 24;
-                            const min = Math.floor(s / 60) % 60;
-
-                            let comps = [];
-                            if (day > 0) comps.push(`${day}d`);
-                            if (hr > 0) comps.push(`${hr}h`);
-                            if (min > 0) comps.push(`${min}m`);
-
-                            return comps.join(" ") || fallback;
-                        }
-
                         text: {
                             if (!UPower.displayDevice.isLaptopBattery)
                                 return qsTr("No battery detected");
 
                             if (UPower.onBattery)
-                                return qsTr("~ %1").arg(formatSeconds(UPower.displayDevice.timeToEmpty, "Calculating..."));
+                                return qsTr("~ %1").arg(Units.formatDurationShort(UPower.displayDevice.timeToEmpty, "Calculating..."));
 
                             if (UPower.displayDevice.state === UPowerDeviceState.FullyCharged || UPower.displayDevice.percentage >= 1.0)
                                 return qsTr("Fully charged!");
 
-                            return qsTr("~ %1").arg(formatSeconds(UPower.displayDevice.timeToFull, "Calculating..."));
+                            return qsTr("~ %1").arg(Units.formatDurationShort(UPower.displayDevice.timeToFull, "Calculating..."));
                         }
                         color: Colours.palette.m3onSurfaceVariant
                         font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale

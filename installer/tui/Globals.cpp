@@ -1,6 +1,7 @@
 #include "Globals.hpp"
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 
 std::atomic<bool> g_resized{false};
 std::atomic<bool> g_quit{false};
@@ -16,6 +17,20 @@ bool g_logout = false;
 json g_theme;
 json g_menu;
 std::unordered_map<std::string, std::string> g_theme_colors;
+
+std::string xdg_cache_dir() {
+    if (const char* cache = std::getenv("XDG_CACHE_HOME"))
+        return cache;
+    if (const char* home = std::getenv("HOME"))
+        return std::string(home) + "/.cache";
+    // The same last resort UI.cpp uses for its state directory: somewhere writable
+    // when the environment names no home at all.
+    return "/tmp";
+}
+
+int run_shell(const std::string& command) {
+    return std::system(command.c_str());
+}
 
 std::string color_sequence(const std::string& value) {
     if (value.size() == 7 && value[0] == '#') {

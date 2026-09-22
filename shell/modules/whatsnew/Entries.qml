@@ -17,60 +17,39 @@ QtObject {
 
     readonly property var list: [
         {
-            "id": "window_switcher_addons",
-            "revision": 9,
-            "icon": "tab",
-            "title": qsTr("Window Switcher Add-ons"),
-            "description": qsTr("The window switcher now runs on a KWin-native backend, and window previews are cached so they appear instantly. Its own page under Settings -> Panels -> Window Switcher adds filtering by current desktop, minimized windows, windows from all screens, a live preview on the workspace, and a switch to turn it off entirely.")
+            "id": "installer_window_rules",
+            "revision": 19,
+            "icon": "rule",
+            "title": qsTr("Window Rules Out of the Box"),
+            "description": qsTr("The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia's own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -> Window Rules, or let uninstall.sh take them out again.")
         },
         {
-            "id": "notification_monitor_fullscreen",
-            "revision": 10,
-            "icon": "notifications",
-            "title": qsTr("Notifications on Any Screen"),
-            "description": qsTr("Notification popups can now follow the screen they belong to instead of always using the focused one, and the shell can stay quiet while a fullscreen app is focused. Both live in Settings -> Services -> Notifications, as 'Display on screen' and 'Show in fullscreen'.")
+            "id": "app_context_menu",
+            "revision": 20,
+            "icon": "ads_click",
+            "title": qsTr("Right-Click Any App"),
+            "description": qsTr("An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock's pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher's favorites, and an existing list is carried over.")
         },
         {
-            "id": "gif_recording",
-            "revision": 11,
-            "icon": "gif_box",
-            "title": qsTr("GIF Recording"),
-            "description": qsTr("The screen recorder can capture a region straight to an animated GIF. Choose Record GIF from the recorder menu - it is enabled by default and can be switched off under Settings -> Utilities -> Utilities panel.")
+            "id": "status_icons_and_bar_options",
+            "revision": 21,
+            "icon": "space_dashboard",
+            "title": qsTr("Status Icons You Can Arrange"),
+            "description": qsTr("The bar's status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -> Panels -> Taskbar -> Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.")
         },
         {
-            "id": "sddm_theme_default",
-            "revision": 12,
-            "icon": "login",
-            "title": qsTr("SDDM Theme Out of the Box"),
-            "description": qsTr("The Material You login screen, with wallpaper and color sync, is now installed by default, so the greeter matches your desktop from the first boot. It remains optional in the installer for anyone who prefers the stock theme.")
+            "id": "game_mode_quick_toggle",
+            "revision": 22,
+            "icon": "gamepad",
+            "title": qsTr("Game Mode at a Tap"),
+            "description": qsTr("The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -> Services -> Game mode.")
         },
         {
-            "id": "audio_reactive_desktop_shapes",
-            "revision": 13,
-            "icon": "graphic_eq",
-            "title": qsTr("Audio-Reactive Desktop Shapes"),
-            "description": qsTr("The media visualiser is now a set of audio-reactive material shapes, and it can live on the wallpaper as well as in the dashboard. Turn on 'Desktop media shapes' under Settings -> Desktop -> Desktop Addons and let it auto-hide while a window is open.")
-        },
-        {
-            "id": "chinese_translations",
-            "revision": 14,
-            "icon": "translate",
-            "title": qsTr("Chinese Translations"),
-            "description": qsTr("The shell now ships Simplified and Traditional Chinese catalogues, so the interface follows your language instead of staying English. Pick one from Settings -> Language & region.")
-        },
-        {
-            "id": "caelestia_kde_identity",
-            "revision": 15,
-            "icon": "auto_awesome",
-            "title": qsTr("A New Name and Look"),
-            "description": qsTr("The project is now caelestia-kde. The repository, its references and the artwork have been renamed and brought onto one palette and one logo. Your configuration and settings are untouched.")
-        },
-        {
-            "id": "dock_workspace_and_preview",
-            "revision": 16,
-            "icon": "dock_to_bottom",
-            "title": qsTr("Dock Desktop Filtering & Live Previews"),
-            "description": qsTr("The taskbar dock now supports filtering applications and open windows to the active virtual desktop, alongside live window highlighting on your workspace when hovering over dock thumbnails. Configure both under Settings -> Panels -> Taskbar -> Dock.")
+            "id": "color_intensity",
+            "revision": 23,
+            "icon": "tune",
+            "title": qsTr("Color Intensity"),
+            "description": qsTr("Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and 'caelestia scheme set -i' sets it from the command line.")
         }
     ]
 

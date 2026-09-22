@@ -157,7 +157,7 @@ PageBase {
                         IconImage {
                             asynchronous: true
                             implicitSize: Math.round(Tokens.font.icon.large.pointSize * 1.8)
-                            source: Quickshell.iconPath("system-run", "image-missing")
+                            source: Quickshell.iconPath("system-run", "application-x-executable")
                         }
 
                         ColumnLayout {
@@ -209,7 +209,7 @@ PageBase {
                         IconImage {
                             asynchronous: true
                             implicitSize: Math.round(Tokens.font.icon.large.pointSize * 1.8)
-                            source: Quickshell.iconPath(appItem.modelData.entry.icon, "image-missing")
+                            source: WinIcons.sourceFor(appItem.modelData.entry, "", appItem.modelData.entry?.id ?? "", 0)
                         }
 
                         ColumnLayout {

@@ -18,12 +18,8 @@ PageBase {
     readonly property bool hiddenByRegex: app && matchedByRegex(GlobalConfig.launcher.hiddenApps, app.id)
     readonly property bool pinnedToDockByRegex: app && matchedByRegex(GlobalConfig.bar.dock.pinnedApps, app.id)
 
-    function isRegexEntry(s: string): bool {
-        return /^\^.*\$$/.test(s);
-    }
-
-    function matchedByRegex(filterList: list<string>, id: string): bool {
-        return filterList.some(f => isRegexEntry(f) && new RegExp(f).test(id));
+    function matchedByRegex(filterList: var, id: string): bool {
+        return Array.from(filterList).some(f => Strings.isRegex(f) && Strings.testRegex(f, id));
     }
 
     onAppChanged: {
@@ -51,7 +47,7 @@ PageBase {
             IconImage {
                 asynchronous: true
                 implicitSize: Math.round(Tokens.font.icon.large.pointSize * 3)
-                source: Quickshell.iconPath(root.app?.icon, "image-missing")
+                source: WinIcons.sourceFor(root.app, "", root.app?.id ?? "", 0)
             }
 
             ColumnLayout {

@@ -253,21 +253,7 @@ StyledRect {
 
             StyledText {
                 Layout.fillWidth: true
-                text: {
-                    const elapsed = Recorder.elapsed;
-
-                    const hours = Math.floor(elapsed / 3600);
-                    const mins = Math.floor((elapsed % 3600) / 60);
-                    const secs = Math.floor(elapsed % 60).toString().padStart(2, "0");
-
-                    let time;
-                    if (hours > 0)
-                        time = `${hours}:${mins.toString().padStart(2, "0")}:${secs}`;
-                    else
-                        time = `${mins}:${secs}`;
-
-                    return qsTr("Recording %1").arg(time);
-                }
+                text: qsTr("Recording %1").arg(Units.formatDuration(Recorder.elapsed))
                 font: Tokens.font.body.medium
                 elide: Text.ElideMiddle
             }

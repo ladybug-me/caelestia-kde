@@ -3,6 +3,9 @@
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
+# shellcheck source=scripts/lib/packages.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/packages.sh"
 
 kwin_session_identity() {
     local pid
@@ -40,9 +43,9 @@ session_package_versions() {
 if [[ "${BASE_DISTRO:-unknown}" == "arch" ]]; then
     versions_before="$(session_package_versions)"
     if [[ -n "${CONFIRM_ARG:-}" ]]; then
-        sudo pacman -Syu --noconfirm
+        caelestia_sudo pacman -Syu --noconfirm
     else
-        sudo pacman -Syu
+        caelestia_sudo pacman -Syu
     fi
 
     if [[ "$(session_package_versions)" != "$versions_before" ]]; then
@@ -62,15 +65,15 @@ if [[ "${BASE_DISTRO:-unknown}" == "arch" ]]; then
     fi
 elif [[ "${BASE_DISTRO:-unknown}" == "fedora" ]]; then
     if [[ -n "${CONFIRM_ARG:-}" ]]; then
-        sudo dnf upgrade --refresh -y
+        caelestia_sudo dnf upgrade --refresh -y
     else
-        sudo dnf upgrade --refresh
+        caelestia_sudo dnf upgrade --refresh
     fi
 elif [[ "${BASE_DISTRO:-unknown}" == "debian" ]]; then
     if [[ -n "${CONFIRM_ARG:-}" ]]; then
-        sudo apt-get update && sudo apt-get upgrade -y
+        caelestia_sudo apt-get update && caelestia_sudo apt-get upgrade -y
     else
-        sudo apt-get update && sudo apt-get upgrade
+        caelestia_sudo apt-get update && caelestia_sudo apt-get upgrade
     fi
 else
     warn "Distro not set properly, skipping system update."

@@ -45,7 +45,10 @@ ColumnLayout {
             y: Tokens.padding.medium * root.scaleOffset
             spacing: Tokens.spacing.medium * root.scaleOffset
 
-            Toggle {
+            PopoutToggleRow {
+                scaleOffset: root.scaleOffset
+                fontScale: root.fontScale
+                rightMargin: Tokens.padding.small * root.scaleOffset
                 label: qsTr("Do not disturb")
                 checked: Notifs.dnd
                 toggle.onToggled: Notifs.dnd = checked
@@ -68,25 +71,5 @@ ColumnLayout {
         icon: "clear_all"
 
         onClicked: Notifs.clear()
-    }
-
-    component Toggle: RowLayout {
-        required property string label
-        property alias checked: toggle.checked
-        property alias toggle: toggle
-
-        Layout.fillWidth: true
-        Layout.rightMargin: Tokens.padding.small * root.scaleOffset
-        spacing: Tokens.spacing.medium * root.scaleOffset
-
-        StyledText {
-            Layout.fillWidth: true
-            text: parent.label
-            font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
-        }
-
-        StyledSwitch {
-            id: toggle
-        }
     }
 }

@@ -93,4 +93,56 @@ QtObject {
         const totalText = root.withDataUnit(+total.value.toFixed(1), total.unit);
         return qsTr("%1 / %2", "used / total amount").arg(usedText).arg(totalText);
     }
+
+    // Formats a duration in seconds into H:MM:SS or M:SS
+    function formatDuration(seconds: int, alwaysHours = false): string {
+        if (seconds < 0)
+            return "-1:-1";
+
+        const hours = Math.floor(seconds / 3600);
+        const mins = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60).toString().padStart(2, "0");
+
+        if (hours > 0 || alwaysHours)
+            return `${hours}:${mins.toString().padStart(2, "0")}:${secs}`;
+        return `${mins}:${secs}`;
+    }
+
+    // Formats a unit fraction (e.g. 0.75) into a percentage string (e.g. "75%")
+    function formatPercent(value: real): string {
+        return `${Math.round(value * 100)}%`;
+    }
+
+    // Formats a duration in seconds into short human-readable units (e.g. "2d 4h 15m", "4h 15m", "15m")
+    function formatDurationShort(seconds: int, fallback = ""): string {
+        if (seconds <= 0)
+            return fallback;
+
+        const day = Math.floor(seconds / 86400);
+        const hr = Math.floor(seconds / 3600) % 24;
+        const min = Math.floor(seconds / 60) % 60;
+
+        let comps = [];
+        if (day > 0) comps.push(`${day}d`);
+        if (hr > 0) comps.push(`${hr}h`);
+        if (min > 0) comps.push(`${min}m`);
+
+        return comps.join(" ") || fallback;
+    }
+
+    // Formats system uptime in seconds into a natural language string (e.g. "2 days, 4 hours, 15 minutes")
+    function formatUptime(seconds: int): string {
+        const days = Math.floor(seconds / 86400);
+        const hours = Math.floor((seconds % 86400) / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+
+        let str = "";
+        if (days > 0)
+            str += `${days} day${days === 1 ? "" : "s"}`;
+        if (hours > 0)
+            str += `${str ? ", " : ""}${hours} hour${hours === 1 ? "" : "s"}`;
+        if (minutes > 0 || !str)
+            str += `${str ? ", " : ""}${minutes} minute${minutes === 1 ? "" : "s"}`;
+        return str;
+    }
 }

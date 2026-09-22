@@ -451,6 +451,25 @@ Singleton {
         return cached;
     }
 
+    function refreshDevices(): void {
+        extras.refreshDevices();
+    }
+
+    function listSpecialWorkspaces(): string {
+        return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0).map(w => w.name).join("\n");
+    }
+
+    function getFocusedMonitor(): string {
+        const m = root.focusedMonitor;
+        if (!m)
+            return "null";
+        return JSON.stringify({ id: m.id, name: m.name, focused: m.focused, activeWorkspace: m.activeWorkspace, specialWorkspace: m.specialWorkspace }, null, 2);
+    }
+
+    function listMonitors(): string {
+        return root.monitorNames().join(", ");
+    }
+
     onCapsLockChanged: {
         if (!GlobalConfig.utilities.toasts.capsLockChanged)
             return;
@@ -479,7 +498,7 @@ Singleton {
 
     IpcHandler {
         function refreshDevices(): void {
-            extras.refreshDevices();
+            root.refreshDevices();
         }
 
         function cycleSpecialWorkspace(direction: string): void {
@@ -487,17 +506,15 @@ Singleton {
         }
 
         function listSpecialWorkspaces(): string {
-            return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0).map(w => w.name).join("\n");
+            return root.listSpecialWorkspaces();
         }
 
         function getFocusedMonitor(): string {
-            const m = root.focusedMonitor;
-            if (!m) return "null";
-            return JSON.stringify({ id: m.id, name: m.name, focused: m.focused, activeWorkspace: m.activeWorkspace, specialWorkspace: m.specialWorkspace }, null, 2);
+            return root.getFocusedMonitor();
         }
 
         function listMonitors(): string {
-            return root.monitorNames().join(", ");
+            return root.listMonitors();
         }
 
         target: "kwin"
@@ -505,7 +522,7 @@ Singleton {
 
     IpcHandler {
         function refreshDevices(): void {
-            extras.refreshDevices();
+            root.refreshDevices();
         }
 
         function cycleSpecialWorkspace(direction: string): void {
@@ -513,17 +530,15 @@ Singleton {
         }
 
         function listSpecialWorkspaces(): string {
-            return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0).map(w => w.name).join("\n");
+            return root.listSpecialWorkspaces();
         }
 
         function getFocusedMonitor(): string {
-            const m = root.focusedMonitor;
-            if (!m) return "null";
-            return JSON.stringify({ id: m.id, name: m.name, focused: m.focused, activeWorkspace: m.activeWorkspace, specialWorkspace: m.specialWorkspace }, null, 2);
+            return root.getFocusedMonitor();
         }
 
         function listMonitors(): string {
-            return root.monitorNames().join(", ");
+            return root.listMonitors();
         }
 
         target: "hypr"

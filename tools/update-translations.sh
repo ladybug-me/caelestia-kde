@@ -8,7 +8,6 @@ TS_DIR="$SHELL_DIR/translations"
 
 SOURCES=(
     "$SHELL_DIR/shell.qml"
-    "$SHELL_DIR/lockscreen.qml"
     "$SHELL_DIR/components"
     "$SHELL_DIR/modules"
     "$SHELL_DIR/services"

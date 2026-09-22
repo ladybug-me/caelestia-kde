@@ -20,6 +20,12 @@ Singleton {
     property int openCount: 0
     property int popupCount: 0
 
+    // The configured cap, floored at one. A list that cannot hold the
+    // notification it was just handed is not a smaller list but a broken one:
+    // the newest item would be evicted by the cap itself in the same breath it
+    // was created, after its counters had already been counted.
+    readonly property int notifCap: Math.max(1, GlobalConfig.notifs.maxNotifs)
+
     property alias dnd: props.dnd
     property string lastSavedState: ""
 
@@ -204,7 +210,7 @@ Singleton {
                 root.popupCount++;
 
             const next = [comp, ...root.list];
-            const cap = GlobalConfig.notifs.maxNotifs;
+            const cap = root.notifCap;
             if (next.length > cap) {
                 // Evict oldest items (tail) before assigning — one list update total.
                 const evicted = next.splice(cap);
@@ -224,7 +230,7 @@ Singleton {
         path: `${Paths.state}/notifs.json`
         onLoaded: {
             const data = JSON.parse(text());
-            const cap = GlobalConfig.notifs.maxNotifs;
+            const cap = root.notifCap;
             for (const notif of data.slice(0, cap))
                 root.list.push(notifComp.createObject(root, notif));
             root.list.sort((a, b) => b.time - a.time);

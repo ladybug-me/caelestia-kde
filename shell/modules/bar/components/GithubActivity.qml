@@ -233,9 +233,21 @@ PY
                     return;
                 }
 
-                root.username = (obj.data && obj.data.user && obj.data.user.login) || root.username;
+                // Every level here can be absent. `errors` is not the only
+                // failure shape a GraphQL reply has: an empty payload for a
+                // missing scope comes back as data: null, and reading through
+                // it would land in the catch below, which reports the whole
+                // fetch as failed and hides which part was missing.
+                const user = obj.data && obj.data.user;
+                if (!user) {
+                    root.setUnavailable("no contribution data in the response");
+                    return;
+                }
 
-                const weeks = obj.data.user.contributionsCollection.contributionCalendar.weeks || [];
+                root.username = user.login || root.username;
+
+                const calendar = user.contributionsCollection && user.contributionsCollection.contributionCalendar;
+                const weeks = (calendar && calendar.weeks) || [];
                 const days = [];
                 weeks.forEach(w => w.contributionDays.forEach(d => days.push({
                             date: d.date,

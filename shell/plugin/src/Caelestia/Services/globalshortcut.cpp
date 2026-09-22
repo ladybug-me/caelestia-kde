@@ -53,31 +53,6 @@ QStringList buildRestoreArgs(const QString& component, const QString& action, co
         arrayStr, QStringLiteral("4") };
 }
 
-bool isLockscreen() {
-    static bool checked = false;
-    static bool result = false;
-    if (!checked) {
-        checked = true;
-
-        QFile cmdline(QStringLiteral("/proc/self/cmdline"));
-        if (cmdline.open(QIODevice::ReadOnly)) {
-            QByteArray data = cmdline.readAll();
-            QList<QByteArray> args = data.split('\0');
-            for (const QByteArray& arg : args) {
-                if (arg.endsWith("lockscreen.qml")) {
-                    result = true;
-                    break;
-                }
-            }
-        }
-
-        if (result) {
-            qDebug() << "[Caelestia] Running as lockscreen — global shortcut stealing disabled";
-        }
-    }
-    return result;
-}
-
 } // namespace
 
 GlobalShortcutDispatcher* GlobalShortcutDispatcher::instance() {
@@ -89,57 +64,52 @@ GlobalShortcutDispatcher* GlobalShortcutDispatcher::instance() {
     static bool recovered = false;
     if (!recovered) {
         recovered = true;
-        if (!isLockscreen()) {
-            QString path = stolenShortcutsPath();
-            QFile file(path);
-            if (file.open(QIODevice::ReadOnly)) {
-                QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
-                file.close();
-                if (doc.isArray()) {
-                    const QJsonArray entries = doc.array();
-                    for (const QJsonValue& val : entries) {
-                        QJsonObject obj = val.toObject();
-                        QString component = obj.value(QStringLiteral("component")).toString();
-                        QString action = obj.value(QStringLiteral("action")).toString();
-                        QString componentFriendly = obj.value(QStringLiteral("componentFriendlyName")).toString();
-                        QString actionFriendly = obj.value(QStringLiteral("actionFriendlyName")).toString();
-                        QList<QKeySequence> keys;
-                        for (const QJsonValue& kv : obj.value(QStringLiteral("keys")).toArray()) {
-                            QKeySequence seq = QKeySequence::fromString(kv.toString());
-                            if (!seq.isEmpty())
-                                keys.append(seq);
-                        }
-                        if (!component.isEmpty() && !action.isEmpty()) {
-                            qDebug() << "[Caelestia] Crash recovery: restoring shortcut" << action << "for"
-                                     << component;
-                            QProcess::startDetached(QStringLiteral("gdbus"), buildRestoreArgs(component, action, keys));
-
-                            // Populate the collision index so the blinker shows collisions
-                            // even though no GlobalShortcut instances have been created yet.
-                            QString label = componentFriendly.isEmpty() ? component : componentFriendly;
-                            QString actionLabel = actionFriendly.isEmpty() ? action : actionFriendly;
-                            QString friendlyLabel = label + QStringLiteral(" - ") + actionLabel;
-                            for (const QKeySequence& seq : keys) {
-                                inst->m_collisionIndex.insert(seq.toString(QKeySequence::PortableText), friendlyLabel);
-                            }
-                        }
+        QString path = stolenShortcutsPath();
+        QFile file(path);
+        if (file.open(QIODevice::ReadOnly)) {
+            QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
+            file.close();
+            if (doc.isArray()) {
+                const QJsonArray entries = doc.array();
+                for (const QJsonValue& val : entries) {
+                    QJsonObject obj = val.toObject();
+                    QString component = obj.value(QStringLiteral("component")).toString();
+                    QString action = obj.value(QStringLiteral("action")).toString();
+                    QString componentFriendly = obj.value(QStringLiteral("componentFriendlyName")).toString();
+                    QString actionFriendly = obj.value(QStringLiteral("actionFriendlyName")).toString();
+                    QList<QKeySequence> keys;
+                    for (const QJsonValue& kv : obj.value(QStringLiteral("keys")).toArray()) {
+                        QKeySequence seq = QKeySequence::fromString(kv.toString());
+                        if (!seq.isEmpty())
+                            keys.append(seq);
                     }
-                    if (!inst->m_collisionIndex.isEmpty()) {
-                        emit inst->collisionIndexChanged();
+                    if (!component.isEmpty() && !action.isEmpty()) {
+                        qDebug() << "[Caelestia] Crash recovery: restoring shortcut" << action << "for" << component;
+                        QProcess::startDetached(QStringLiteral("gdbus"), buildRestoreArgs(component, action, keys));
+
+                        // Populate the collision index so the blinker shows collisions
+                        // even though no GlobalShortcut instances have been created yet.
+                        QString label = componentFriendly.isEmpty() ? component : componentFriendly;
+                        QString actionLabel = actionFriendly.isEmpty() ? action : actionFriendly;
+                        QString friendlyLabel = label + QStringLiteral(" - ") + actionLabel;
+                        for (const QKeySequence& seq : keys) {
+                            inst->m_collisionIndex.insert(seq.toString(QKeySequence::PortableText), friendlyLabel);
+                        }
                     }
                 }
-                // Remove recovery file — crash recovery is done
-                QFile::remove(path);
+                if (!inst->m_collisionIndex.isEmpty()) {
+                    emit inst->collisionIndexChanged();
+                }
             }
-        } // close if (!isLockscreen())
+            // Remove recovery file — crash recovery is done
+            QFile::remove(path);
+        }
 
         // Register clean exit handler to delete the recovery file
         if (QCoreApplication::instance()) {
             QObject::connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, [] {
-                if (!isLockscreen()) {
-                    QFile::remove(stolenShortcutsPath());
-                    qDebug() << "[Caelestia] Removed stolen-shortcuts recovery file on clean exit";
-                }
+                QFile::remove(stolenShortcutsPath());
+                qDebug() << "[Caelestia] Removed stolen-shortcuts recovery file on clean exit";
             });
         }
     }
@@ -366,9 +336,6 @@ QList<GlobalShortcut*> GlobalShortcut::allShortcuts() {
 }
 
 void GlobalShortcut::updateShortcut() {
-    if (isLockscreen())
-        return;
-
     if (m_name.isEmpty()) {
         return;
     }
@@ -483,19 +450,38 @@ void GlobalShortcut::updateShortcut() {
         return;
     }
 
-    // Run all steal commands concurrently and bind only after the last one finishes
+    // Run all steal commands concurrently and bind only after the last one has
+    // settled. finished() is not emitted for a process that never started, so
+    // FailedToStart has to be counted through errorOccurred as well: without
+    // that, a gdbus that cannot be spawned leaves the count above zero forever,
+    // the new sequence is never bound, and the shortcut the user just set is
+    // silently lost -- with the KDE binding it replaced already stolen and
+    // cleared above.
     auto pending = std::make_shared<QAtomicInt>(stealCmds.size());
+    const auto settle = [this, pending, newSeqs, myGeneration]() {
+        if (pending->fetchAndSubRelaxed(1) == 1 && m_registerGeneration == myGeneration) {
+            KGlobalAccel::self()->setShortcut(m_action, newSeqs, KGlobalAccel::NoAutoloading);
+        }
+    };
+
     for (const QStringList& args : stealCmds) {
-        auto* proc = new QProcess();
-        connect(
-            proc, &QProcess::finished, proc, [this, pending, newSeqs, myGeneration, proc](int, QProcess::ExitStatus) {
-                proc->deleteLater();
-                if (pending->fetchAndSubRelaxed(1) == 1) {
-                    if (m_registerGeneration == myGeneration) {
-                        KGlobalAccel::self()->setShortcut(m_action, newSeqs, KGlobalAccel::NoAutoloading);
-                    }
-                }
-            });
+        // Parented, so a command that never reaches either handler is still
+        // cleaned up with the dispatcher rather than leaked for the session.
+        auto* proc = new QProcess(this);
+        connect(proc, &QProcess::finished, proc, [proc, settle](int, QProcess::ExitStatus) {
+            proc->deleteLater();
+            settle();
+        });
+        // Only FailedToStart is handled here: every other error is followed by
+        // finished(), and counting both would settle a single command twice.
+        connect(proc, &QProcess::errorOccurred, proc, [proc, settle, args](QProcess::ProcessError err) {
+            if (err != QProcess::FailedToStart) {
+                return;
+            }
+            qWarning() << "[Caelestia] could not run gdbus to release a conflicting shortcut:" << args;
+            proc->deleteLater();
+            settle();
+        });
         proc->start(QStringLiteral("gdbus"), args);
     }
 }

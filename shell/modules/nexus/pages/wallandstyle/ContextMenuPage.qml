@@ -14,10 +14,6 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Right Click Menu")
-    isSubPage: true
-    scrollable: true
-
     property bool isGlobalDragging: false
 
     property string globalDragSourceList: ""
@@ -51,10 +47,6 @@ PageBase {
         return null;
     }
 
-    function cloneEntries(entries) {
-        return JSON.parse(JSON.stringify(entries));
-    }
-
     function collectEntries() {
         let newEntries = [];
         for (let i = 0; i < activeModel.count; i++) {
@@ -75,7 +67,7 @@ PageBase {
     }
 
     function applyEntries(entries) {
-        let json = (!entries || entries.length === 0) ? cloneEntries(ContextMenuStore.defaultEntries()) : cloneEntries(entries);
+        let json = (!entries || entries.length === 0) ? ContextMenuStore.cloneEntries(ContextMenuStore.defaultEntries()) : ContextMenuStore.cloneEntries(entries);
 
         activeModel.clear();
         libraryModel.clear();
@@ -124,6 +116,10 @@ PageBase {
             root.perfLoadStartedAt = 0;
         }
     }
+
+    title: qsTr("Right Click Menu")
+    isSubPage: true
+    scrollable: true
 
     Component.onCompleted: load(true)
 

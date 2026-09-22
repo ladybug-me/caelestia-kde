@@ -47,7 +47,7 @@ Item {
             id: icon
 
             asynchronous: false
-            source: Quickshell.iconPath(root.modelData?.icon, "image-missing")
+            source: WinIcons.sourceFor(root.modelData, "", root.modelData?.id ?? "", 0)
             implicitSize: Math.max(1, parent.height * 0.8)
 
             anchors.verticalCenter: parent.verticalCenter

@@ -55,6 +55,8 @@ PlasmaWindowIcon::PlasmaWindowIcon(QObject* parent)
     connect(PlasmaWindows::instance(), &PlasmaWindows::handleLost, this, [this](const QString& uuid) {
         m_resolved.remove(uuid);
         m_inFlight.remove(uuid);
+        // The window closed before its icon arrived, so no answer is coming.
+        emit failed(uuid);
     });
 }
 
@@ -74,6 +76,7 @@ void PlasmaWindowIcon::request(const QString& uuid) {
 
     auto* handle = PlasmaWindows::instance()->handleFor(key);
     if (!handle) {
+        emit failed(key);
         return;
     }
 
@@ -83,6 +86,7 @@ void PlasmaWindowIcon::request(const QString& uuid) {
     int fds[2];
     if (::pipe2(fds, O_CLOEXEC | O_NONBLOCK) != 0) {
         qCWarning(logPlasmaWindowIcon) << "could not create a pipe for" << key;
+        emit failed(key);
         return;
     }
 
@@ -113,11 +117,19 @@ void PlasmaWindowIcon::request(const QString& uuid) {
             notifier->setEnabled(false);
             notifier->deleteLater();
             ::close(readFd);
-            m_inFlight.remove(key);
+
+            // handleLost() settles the ask when the window goes away, and its pipe still
+            // drains afterwards. Dropping the second settle here is what makes the
+            // header's "exactly once" true: without it a window that closed mid-read got
+            // failed() and then resolved(), and the late resolved() registered an icon
+            // for a window that was already gone.
+            const bool stillWaiting = m_inFlight.remove(key);
 
             const QByteArray data = *payload;
             delete payload;
-            deliver(key, data);
+            if (stillWaiting) {
+                deliver(key, data);
+            }
             return;
         }
     });
@@ -125,6 +137,7 @@ void PlasmaWindowIcon::request(const QString& uuid) {
 
 void PlasmaWindowIcon::deliver(const QString& uuid, const QByteArray& payload) {
     if (payload.isEmpty()) {
+        emit failed(uuid);
         return;
     }
 
@@ -133,11 +146,13 @@ void PlasmaWindowIcon::deliver(const QString& uuid, const QByteArray& payload) {
     stream >> icon;
     if (stream.status() != QDataStream::Ok || icon.isNull()) {
         qCDebug(logPlasmaWindowIcon) << "no usable icon for" << uuid;
+        emit failed(uuid);
         return;
     }
 
     const auto image = largestPixmap(icon);
     if (image.isNull()) {
+        emit failed(uuid);
         return;
     }
 
@@ -146,6 +161,7 @@ void PlasmaWindowIcon::deliver(const QString& uuid, const QByteArray& payload) {
     buffer.open(QIODevice::WriteOnly);
     if (!image.save(&buffer, "PNG")) {
         qCWarning(logPlasmaWindowIcon) << "could not encode icon for" << uuid;
+        emit failed(uuid);
         return;
     }
     buffer.close();
@@ -162,6 +178,7 @@ void PlasmaWindowIcon::deliver(const QString& uuid, const QByteArray& payload) {
         QFile file(path);
         if (!QDir().mkpath(cacheRoot) || !file.open(QIODevice::WriteOnly) || file.write(png) != png.size()) {
             qCWarning(logPlasmaWindowIcon) << "could not write icon cache for" << uuid << "to" << path;
+            emit failed(uuid);
             return;
         }
     }

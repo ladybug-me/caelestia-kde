@@ -63,6 +63,23 @@ test_the_kind_can_be_stated_rather_than_inferred() {
     assert_eq "source" "$(layout source install_kind)" "in both directions"
 }
 
+test_the_kind_survives_walking_into_another_directory() {
+    local dir out
+    dir="$(new_tmpdir)"
+    mkdir -p "$dir/elsewhere"
+
+    out="$(cd "$REPO_ROOT" && bash -c '
+        set -u
+        source scripts/lib/install-kind.sh
+        cd "$1" || exit 1
+        printf "%s|%s" "$(install_shell_config)" "$(install_lib_dir)"
+    ' _ "$dir/elsewhere" 2>&1)"
+
+    assert_not_contains "$out" "[ERR]" "answering from another directory should not complain"
+    assert_eq "$HOME/.config/quickshell/caelestia/shell.qml|$HOME/.local/lib/caelestia" "$out" \
+        "and a checkout's directories should still be the answer"
+}
+
 test_the_command_names_the_installs_own_directories() {
     assert_eq "/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia|/usr/lib/caelestia" \
         "$(cli_env /usr/bin "$HOME")" "a command in /usr/bin belongs to a package"
@@ -123,9 +140,6 @@ test_the_command_asks_the_install_for_its_version() {
 }
 
 test_a_package_with_no_version_helper_reports_unknown() {
-    # The version file is a checkout's, so only that branch defines VERSION_FILE. Reading it
-    # under `set -u` from the packaged branch made this exact case die with
-    # "VERSION_FILE: unbound variable" instead of answering.
     local dir home status out
     dir="$(new_tmpdir)"
     home="$dir/home"
@@ -140,8 +154,6 @@ test_a_package_with_no_version_helper_reports_unknown() {
 }
 
 test_a_package_does_not_run_a_checkout_it_was_not_pointed_at() {
-    # cmd_install defaulted to ~/caelestia-kde, so a packaged install whose user kept a clone
-    # there ran that clone's whole installer (packages, ~/.local/lib, a second C++ build).
     local dir home out
     dir="$(new_tmpdir)"
     home="$dir/home"
@@ -159,17 +171,11 @@ test_a_package_does_not_run_a_checkout_it_was_not_pointed_at() {
 }
 
 test_the_ipc_helper_defaults_to_the_installs_own_directories() {
-    # caelestia-shell-ipc cannot source install-kind.sh (it may run before any tree is
-    # known), so its defaults mirror that table and the resolved config path decides which
-    # half applies. Exporting the checkout paths on a package handed the shell - and every
-    # command it spawns - a data directory that is not there.
     local dir home
     dir="$(new_tmpdir)"
     home="$dir/home"
     mkdir -p "$home/.local/bin" "$home/.config/quickshell/caelestia"
     stub_bin "$dir/stubs" quickshell "exit 0"
-    # The helper refuses to load without a config file; which path it resolves is what the
-    # defaults below are keyed on.
     : > "$home/.config/quickshell/caelestia/shell.qml"
 
     assert_eq "/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia|/usr/lib/caelestia" \

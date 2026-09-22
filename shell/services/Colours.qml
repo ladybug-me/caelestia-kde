@@ -18,6 +18,14 @@ Singleton {
     property string scheme: "dynamic"
     property string flavour: "default"
     property string variant: "default"
+    // How saturated the palette is, carried by the scheme itself: 1 is what the color engine
+    // produced, 0 is a grey palette at the same tones, and 2 is the most the accents take.
+    // That range is what `caelestia scheme set -i` takes, and it is the only place the shell
+    // states it - the page below works in it rather than in its own copy of a slider's range.
+    property real intensity: 1.0
+    readonly property real maxIntensity: 2.0
+    // The same value as a position on a 0 to 1 slider, which is what a slider is.
+    readonly property real intensityFraction: intensity / maxIntensity
     property string previewScheme: ""
     property string previewFlavour: ""
     property string previewVariant: ""
@@ -201,6 +209,12 @@ Singleton {
             root.flavour = (scheme.flavour || "").trim();
             root.variant = (scheme.variant || "").trim();
             root.currentLight = scheme.mode === "light";
+
+            // Absent, null, and a value the range does not take all mean the same thing here:
+            // what is in effect is the palette the engine produced. 0 is a real setting (a grey
+            // palette), so this cannot lean on falsiness either.
+            const intensity = Number(scheme.intensity ?? NaN);
+            root.intensity = Number.isFinite(intensity) ? Math.min(root.maxIntensity, Math.max(0, intensity)) : 1.0;
         } else {
             root.previewScheme = (scheme.name || "").trim();
             root.previewFlavour = (scheme.flavour || "").trim();
@@ -231,6 +245,13 @@ Singleton {
 
     function setMode(mode: string): void {
         Quickshell.execDetached(["caelestia", "scheme", "set", "--notify", "-m", mode]);
+    }
+
+    // Renders the palette at an intensity, given as the slider position rather than as the
+    // multiplier itself. The command writes the value into the scheme, which is what the
+    // palette and this singleton then read it back out of.
+    function setIntensity(fraction: real): void {
+        Quickshell.execDetached(["caelestia", "scheme", "set", "-i", (fraction * maxIntensity).toFixed(2)]);
     }
 
     // caelestia derives dynamic colours from the wallpaper it was last told

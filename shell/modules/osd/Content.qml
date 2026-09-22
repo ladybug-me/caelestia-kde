@@ -112,11 +112,12 @@ Item {
                 FilledSlider {
                     anchors.fill: parent
 
-                    icon: HyprSunset.active ? "bedtime" : `brightness_${(Math.round(value * 6) + 1)}`
+                    // Always the brightness icon, including while night light runs: a moon on the
+                    // brightness slider reads as the night light control, which is the popout's
+                    // and the utilities panel's rather than this one's.
+                    icon: `brightness_${(Math.round(value * 6) + 1)}`
                     value: root.brightness
                     onMoved: root.monitor?.setBrightness(value)
-                    enableIconTap: true
-                    onIconTapped: HyprSunset.toggle(5000)
                 }
             }
         }

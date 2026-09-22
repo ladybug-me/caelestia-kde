@@ -30,8 +30,8 @@ void check_signals() {
     if (g_sigint_received || g_sigterm_received) {
         g_quit = true;
         Term::restore();
-        if (!g_sudo_bin_dir.empty()) {
-            system(("rm -rf \"" + g_sudo_bin_dir + "\"").c_str());
+        if (!g_sudo_bin_dir.empty() && run_shell("rm -rf \"" + g_sudo_bin_dir + "\"") != 0) {
+            cerr << "[installer] warning: could not remove the sudo shim directory " << g_sudo_bin_dir << endl;
         }
         exit(130);
     }
@@ -170,7 +170,9 @@ int main(int argc, char** argv) {
             std::string safe_dir = cfg_dir;
             for (size_t pos = 0; (pos = safe_dir.find('\'', pos)) != std::string::npos; pos += 4)
                 safe_dir.replace(pos, 1, "'\\\''");
-            system(("mkdir -p '" + safe_dir + "'").c_str());
+            if (run_shell("mkdir -p '" + safe_dir + "'") != 0)
+                cerr << "[installer] warning: could not create " << cfg_dir
+                     << "; the step scripts will not get the answers file." << endl;
             ofstream env_file(cfg_dir + "/install.env", ios::out | ios::trunc);
             if (env_file.is_open()) {
                 for (const auto& pair : g_answers) {
@@ -218,18 +220,21 @@ int main(int argc, char** argv) {
     Term::restore();
 
     if (g_answers["REMOVE_CACHE"] == "true") {
-        string cache_dir = string(getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : (string(getenv("HOME")) + "/.cache")) + "/caelestia-kde";
-        system(("rm -rf \"" + cache_dir + "\"").c_str());
+        string cache_dir = xdg_cache_dir() + "/caelestia-kde";
+        // Best effort: the cache is scratch space, and a failed removal only costs
+        // the next run the disk space it was asked to free.
+        (void)run_shell("rm -rf \"" + cache_dir + "\"");
     }
 
     // Secure cleanup of sudo credentials
-    if (!g_sudo_bin_dir.empty()) {
-        system(("rm -rf \"" + g_sudo_bin_dir + "\"").c_str());
+    if (!g_sudo_bin_dir.empty() && run_shell("rm -rf \"" + g_sudo_bin_dir + "\"") != 0) {
+        cerr << "[installer] warning: could not remove the sudo shim directory " << g_sudo_bin_dir << endl;
     }
 
     if (g_logout) {
         cout << "\nLogging out...\n";
-        system("qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null");
+        if (run_shell("qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null") != 0)
+            cerr << "[installer] warning: the session did not accept the logout request; log out manually." << endl;
     } else {
         cout << "\nCaelestia installation complete. Remember to log out to activate your new session.\n";
     }

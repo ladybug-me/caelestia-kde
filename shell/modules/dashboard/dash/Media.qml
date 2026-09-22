@@ -74,60 +74,60 @@ Item {
         implicitHeight: width
     }
 
-    StyledText {
-        id: title
+    Column {
+        id: trackInfo
 
         anchors.top: cover.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.left: parent.left
+        anchors.right: parent.right
         anchors.topMargin: Tokens.spacing.medium
+        spacing: Tokens.spacing.small
 
-        animate: true
-        horizontalAlignment: Text.AlignHCenter
-        text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
-        color: Colours.palette.m3primary
-        font: Tokens.font.title.small
+        StyledText {
+            anchors.horizontalCenter: parent.horizontalCenter
 
-        width: parent.implicitWidth - Tokens.padding.extraLargeIncreased
-        elide: Text.ElideRight
-    }
+            animate: true
+            horizontalAlignment: Text.AlignHCenter
+            text: (Players.active?.trackTitle ?? qsTr("No media")) || qsTr("Unknown title")
+            color: Colours.palette.m3primary
+            font: Tokens.font.title.small
 
-    StyledText {
-        id: album
+            width: root.implicitWidth - Tokens.padding.extraLargeIncreased
+            elide: Text.ElideRight
+        }
 
-        anchors.top: title.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: Tokens.spacing.small
+        StyledText {
+            visible: !!Players.active && text !== ""
+            anchors.horizontalCenter: parent.horizontalCenter
 
-        animate: true
-        horizontalAlignment: Text.AlignHCenter
-        text: (Players.active?.trackAlbum ?? qsTr("No media")) || qsTr("Unknown album")
-        color: Colours.palette.m3outline
-        font: Tokens.font.body.small
+            animate: true
+            horizontalAlignment: Text.AlignHCenter
+            text: Players.active?.trackAlbum || qsTr("Unknown album")
+            color: Colours.palette.m3outline
+            font: Tokens.font.body.small
 
-        width: parent.implicitWidth - Tokens.padding.extraLargeIncreased
-        elide: Text.ElideRight
-    }
+            width: root.implicitWidth - Tokens.padding.extraLargeIncreased
+            elide: Text.ElideRight
+        }
 
-    StyledText {
-        id: artist
+        StyledText {
+            visible: !!Players.active && text !== ""
+            anchors.horizontalCenter: parent.horizontalCenter
 
-        anchors.top: album.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.topMargin: Tokens.spacing.small
+            animate: true
+            horizontalAlignment: Text.AlignHCenter
+            text: Players.active?.trackArtist || qsTr("Unknown artist")
+            color: Colours.palette.m3secondary
 
-        animate: true
-        horizontalAlignment: Text.AlignHCenter
-        text: (Players.active?.trackArtist ?? qsTr("No media")) || qsTr("Unknown artist")
-        color: Colours.palette.m3secondary
-
-        width: parent.implicitWidth - Tokens.padding.extraLargeIncreased
-        elide: Text.ElideRight
+            width: root.implicitWidth - Tokens.padding.extraLargeIncreased
+            elide: Text.ElideRight
+        }
     }
 
     ButtonRow {
         id: controls
 
-        anchors.top: artist.bottom
+        anchors.top: trackInfo.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.topMargin: Tokens.spacing.medium

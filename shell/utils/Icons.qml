@@ -101,9 +101,10 @@ Singleton {
 
     function getAppIcon(name: string, fallback: string): string {
         const icon = DesktopEntries.heuristicLookup(name)?.icon;
-        if (fallback !== "undefined")
-            return Quickshell.iconPath(icon, fallback);
-        return Quickshell.iconPath(icon);
+        const fb = (fallback && fallback !== "undefined") ? fallback : "application-x-executable";
+        if (icon)
+            return Quickshell.iconPath(icon, fb);
+        return Quickshell.iconPath(name || fb, fb);
     }
 
     function getAppCategoryIcon(name: string, fallback: string): string {

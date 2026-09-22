@@ -49,18 +49,6 @@ StyledRect {
     signal selected()
     signal reselected()
 
-    // Prefer an icon extracted from the window's own _NET_WM_ICON, then fall
-    // back to the themed desktop-entry lookup (same as the overview cards).
-    function windowIconSource(client: var): string {
-        if (!client)
-            return "";
-        const wp = WinIcons.paths[WinIcons.keyFor(client.class, client.pid ?? 0)];
-        if (wp)
-            return "file://" + wp;
-        return client.iconName ? Icons.getAppIcon(client.iconName, "image-missing")
-                               : (client.class ? Icons.getAppIcon(client.class, "image-missing") : "");
-    }
-
     implicitWidth: Math.floor(baseWidth * scaleFactor)
     implicitHeight: indicatorSize
     radius: Tokens.rounding.large
@@ -388,7 +376,7 @@ StyledRect {
                     active: iconDelegate.expanded
                     address: iconDelegate.clientAddress
                     anchors.fill: parent
-                    fallbackIcon: root.windowIconSource(modelData)
+                    fallbackIcon: WinIcons.sourceForClient(modelData)
                     fallbackScale: 0.6
                     sourceAspect: iconDelegate.windowAspect
                 }

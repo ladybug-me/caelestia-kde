@@ -108,6 +108,19 @@ calls_to() {
     awk -v want="$name" '$1 == want { sub(/^[^ ]+ /, ""); print }' "$log"
 }
 
+# Runs its command with PATH holding only $1, so the command can only reach the
+# stubs that are in there. $2 is the lrelease fallback path the toolchain tests set,
+# and is unused by callers that do not care.
+with_path() {
+    local dir="$1" fallback="$2"
+    shift 2
+    (
+        PATH="$dir"
+        export CAELESTIA_LRELEASE_FALLBACK="$fallback"
+        "$@"
+    )
+}
+
 run_tests() {
     local fn
     while IFS= read -r fn; do

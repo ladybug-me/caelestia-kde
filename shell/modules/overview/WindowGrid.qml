@@ -97,20 +97,6 @@ Item {
         return null;
     }
 
-    // Resolve an icon for a window card, mirroring the dock: prefer an icon
-    // extracted from the window's own _NET_WM_ICON (apps with no desktop
-    // entry, e.g. Steam games or Minecraft), then fall back to the themed
-    // desktop-entry icon lookup the overview already used.
-    function windowIconSource(client: var): string {
-        if (!client)
-            return "";
-        const wp = WinIcons.paths[WinIcons.keyFor(client.class, client.pid ?? 0)];
-        if (wp)
-            return "file://" + wp;
-        return client.iconName ? Icons.getAppIcon(client.iconName, "image-missing")
-                               : (client.class ? Icons.getAppIcon(client.class, "image-missing") : "");
-    }
-
     function cycleSelection(backwards: bool): void {
         const n = root.currentWindows.length;
         if (n === 0)
@@ -556,7 +542,7 @@ Item {
                                 asynchronous: true
                                 implicitSize: Math.round(Math.min(activeWin.width, activeWin.height) * 0.62)
                                 opacity: activeWin.morphed ? 1 : 0
-                                source: modelData.iconName ? Icons.getAppIcon(modelData.iconName, "image-missing") : (modelData.class ? Icons.getAppIcon(modelData.class, "image-missing") : "")
+                                source: WinIcons.sourceForClient(modelData)
                                 visible: opacity > 0.01
                                 z: 10
 
@@ -624,7 +610,7 @@ Item {
                                             return (wAspect > containerAspect) ? thumb.height : thumb.width / wAspect;
                                         }
                                         anchors.centerIn: parent
-                                        fallbackIcon: root.windowIconSource(modelData)
+                                        fallbackIcon: WinIcons.sourceForClient(modelData)
                                         sourceAspect: activeWin.windowAspect
                                     }
 
@@ -653,7 +639,7 @@ Item {
                                     IconImage {
                                         implicitSize: Math.round(titleText.implicitHeight * 1.1)
                                         asynchronous: true
-                                        source: root.windowIconSource(modelData)
+                                        source: WinIcons.sourceForClient(modelData)
                                     }
                                     StyledText {
                                         id: titleText
@@ -900,12 +886,7 @@ Item {
                 active: incoming.arriving
                 address: Visibilities.dragAddress
                 anchors.fill: parent
-                fallbackIcon: {
-                    const w = incoming.window;
-                    if (!w)
-                        return "";
-                    return w.iconName ? Icons.getAppIcon(w.iconName, "image-missing") : (w.class ? Icons.getAppIcon(w.class, "image-missing") : "");
-                }
+                fallbackIcon: incoming.window ? WinIcons.sourceForClient(incoming.window) : ""
                 sourceAspect: incoming.aspect
             }
         }

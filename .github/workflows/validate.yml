@@ -63,7 +63,7 @@ jobs:
         run: pip install pyyaml
 
       - name: Run repository integrity tests
-        run: python3 .github/scripts/test_repo_integrity.py
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'
 
       - name: Audit settings search coverage
         run: python3 .github/scripts/audit_search_coverage.py

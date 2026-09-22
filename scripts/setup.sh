@@ -15,46 +15,10 @@ export PATH="$HOME/.local/bin:$PATH"
 exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock"
 flock -n 9 || { echo "Another Caelestia setup is already running."; exit 1; }
 
-detect_base_distro() {
-    local detected="unknown"
-
-    if [[ -f /etc/os-release ]]; then
-       # shellcheck disable=SC1091
-        . /etc/os-release
-        case "$ID" in
-            arch|cachyos|endeavouros|manjaro|artix)
-                detected="arch"
-                ;;
-            fedora|nobara|bazzite|rhel|centos|almalinux|rocky)
-                detected="fedora"
-                ;;
-            debian|ubuntu|pop|mint|kali|raspbian|elementary|zorin|deepin|devuan)
-                detected="debian"
-                ;;
-            *)
-                if echo "${ID_LIKE:-}" | grep -iq "arch"; then
-                    detected="arch"
-                elif echo "${ID_LIKE:-}" | grep -iq "fedora"; then
-                    detected="fedora"
-                elif echo "${ID_LIKE:-}" | grep -iq -E "debian|ubuntu"; then
-                    detected="debian"
-                fi
-                ;;
-        esac
-    fi
-
-    if [[ "$detected" == "unknown" ]]; then
-        if command -v pacman >/dev/null 2>&1; then
-            detected="arch"
-        elif command -v dnf >/dev/null 2>&1; then
-            detected="fedora"
-        elif command -v apt-get >/dev/null 2>&1; then
-            detected="debian"
-        fi
-    fi
-
-    echo "$detected"
-}
+# shellcheck source=scripts/lib/privileges.sh
+source "$SCRIPTS_DIR/lib/privileges.sh"
+# shellcheck source=scripts/lib/packages.sh
+source "$SCRIPTS_DIR/lib/packages.sh"
 
 run_arch_pacman_install() {
     local -a pkgs=("$@")
@@ -64,28 +28,15 @@ run_arch_pacman_install() {
         return 0
     fi
 
-    if [[ "${EUID:-$(id -u)}" -eq 0 ]]; then
-        pacman -Sy --noconfirm >/dev/null 2>&1 || echo "[WARN]  Failed to refresh pacman sources before install. Continuing..."
-        pacman "${pacman_args[@]}" "${pkgs[@]}" && return 0
-
-        echo "[WARN]  pacman install failed. Refreshing sources and retrying once..."
-        pacman -Sy --noconfirm >/dev/null 2>&1 || true
-        pacman "${pacman_args[@]}" "${pkgs[@]}"
-        return $?
-    fi
-
-    sudo pacman -Sy --noconfirm >/dev/null 2>&1 || echo "[WARN]  Failed to refresh pacman sources before install. Continuing..."
-    sudo pacman "${pacman_args[@]}" "${pkgs[@]}" && return 0
+    caelestia_sudo pacman -Sy --noconfirm >/dev/null 2>&1 || echo "[WARN]  Failed to refresh pacman sources before install. Continuing..."
+    caelestia_sudo pacman "${pacman_args[@]}" "${pkgs[@]}" && return 0
 
     echo "[WARN]  pacman install failed. Refreshing sources and retrying once..."
-    sudo pacman -Sy --noconfirm >/dev/null 2>&1 || true
-    sudo pacman "${pacman_args[@]}" "${pkgs[@]}"
+    caelestia_sudo pacman -Sy --noconfirm >/dev/null 2>&1 || true
+    caelestia_sudo pacman "${pacman_args[@]}" "${pkgs[@]}"
 }
 
-export BASE_DISTRO="$(detect_base_distro)"
-
 normalize_line_endings_first() {
-    export BASE_DISTRO="$(detect_base_distro)"
     local -a crlf_files=()
     local convert_choice=""
 
@@ -112,10 +63,10 @@ normalize_line_endings_first() {
                             run_arch_pacman_install dos2unix || return 1
                             ;;
                         fedora)
-                            sudo dnf install -y dos2unix || return 1
+                            caelestia_sudo dnf install -y dos2unix || return 1
                             ;;
                         debian)
-                            sudo apt-get update && sudo apt-get install -y dos2unix || return 1
+                            caelestia_sudo apt-get update && caelestia_sudo apt-get install -y dos2unix || return 1
                             ;;
                         *)
                             echo "[WARN]  Could not detect distro for automatic dos2unix installation."
@@ -238,9 +189,9 @@ else
             if [[ "$BASE_DISTRO" == "arch" ]]; then
                 run_arch_pacman_install base-devel cmake
             elif [[ "$BASE_DISTRO" == "fedora" ]]; then
-                sudo dnf install -y gcc-c++ cmake make
+                caelestia_sudo dnf install -y gcc-c++ cmake make
             elif [[ "$BASE_DISTRO" == "debian" ]]; then
-                sudo apt-get update && sudo apt-get install -y build-essential g++ cmake make
+                caelestia_sudo apt-get update && caelestia_sudo apt-get install -y build-essential g++ cmake make
             else
                 echo "Could not auto-install build tools. Please install manually: ${MISSING_PKGS[*]}"
                 exit 1
@@ -250,6 +201,12 @@ else
 
         BUILD_DIR="$BUNDLE_DIR/installer/build"
         BUILD_LOG="/tmp/caelestia_build.log"
+        # Configure from a clean directory: cmake bakes absolute source paths into
+        # CMakeCache.txt and refuses to configure over a cache naming a different tree.
+        # One checkout routinely has two names here - ~/Desktop/caelestia-kwin and
+        # /mnt/c/.../caelestia-kwin are the same tree - and reusing that cache fails the
+        # build outright instead of falling back to anything.
+        rm -rf "$BUILD_DIR"
         mkdir -p "$BUILD_DIR"
         (
             cd "$BUILD_DIR" || exit 1

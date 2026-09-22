@@ -5,6 +5,9 @@
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
+# shellcheck source=scripts/lib/packages.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/packages.sh"
 
 BUNDLE_DIR="${BUNDLE_DIR:?BUNDLE_DIR not set}"
 SRC_DIR="$BUNDLE_DIR/src"
@@ -14,45 +17,6 @@ EXTRA_DIR="$SRC_DIR/dots-extra"
 echo
 echo "  Optional Components"
 echo ""
-
-install_if_missing() {
-    local pkg="$1"
-    if [[ "$BASE_DISTRO" == "arch" ]]; then
-        if pacman -Qi "$pkg" >/dev/null 2>&1; then
-            skip "$pkg already installed."
-            return 0
-        fi
-        info "Installing $pkg..."
-        yay -S --needed ${CONFIRM_ARG:-} "$pkg" 2>/dev/null || \
-        sudo pacman -S --needed ${CONFIRM_ARG:-} "$pkg" 2>/dev/null || {
-            warn "Could not install $pkg, skipping."
-            return 1
-        }
-        ok "$pkg installed."
-    elif [[ "$BASE_DISTRO" == "fedora" ]]; then
-        if dnf list --installed "$pkg" >/dev/null 2>&1; then
-            skip "$pkg already installed."
-            return 0
-        fi
-        info "Installing $pkg..."
-        sudo dnf install -y "$pkg" 2>/dev/null || {
-            warn "Could not install $pkg, skipping."
-            return 1
-        }
-        ok "$pkg installed."
-    elif [[ "$BASE_DISTRO" == "debian" ]]; then
-        if dpkg -s "$pkg" >/dev/null 2>&1; then
-            skip "$pkg already installed."
-            return 0
-        fi
-        info "Installing $pkg..."
-        sudo apt-get install -y "$pkg" 2>/dev/null || {
-            warn "Could not install $pkg, skipping."
-            return 1
-        }
-        ok "$pkg installed."
-    fi
-}
 
 deploy_file() {
     local src="$1" dst="$2"
@@ -67,8 +31,8 @@ deploy_file() {
 
 if [[ "${INSTALL_VSCODE:-false}" == "true" ]]; then
     echo "  Setting up VSCode/VSCodium integration..."
-    install_if_missing code || install_if_missing visual-studio-code-bin || true
-    install_if_missing codium || install_if_missing vscodium-bin || true
+    install_if_missing code visual-studio-code-bin || true
+    install_if_missing codium vscodium-bin || true
 
     deploy_vscode() {
         local cfgdir="$1" bin="$2"
@@ -91,7 +55,7 @@ fi
 if [[ "${INSTALL_ZED:-false}" == "true" ]]; then
     echo "  Setting up Zed..."
     if [[ "$BASE_DISTRO" == "arch" ]]; then
-        install_if_missing zed || install_if_missing zed-editor || true
+        install_if_missing zed zed-editor || true
     else
         install_if_missing zed || true
     fi
@@ -117,7 +81,7 @@ fi
 if [[ "${INSTALL_DISCORD:-false}" == "true" ]]; then
     echo "  Installing Discord/Equibop..."
     if [[ "$BASE_DISTRO" == "arch" ]]; then
-        install_if_missing discord || install_if_missing equibop-bin || true
+        install_if_missing discord equibop-bin || true
     else
         install_if_missing discord || true
     fi

@@ -3,6 +3,9 @@
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
+# shellcheck source=scripts/lib/packages.sh
+source "$(dirname "${BASH_SOURCE[0]}")/lib/packages.sh"
 
 if [[ "$BASE_DISTRO" == "arch" ]]; then
     ensure_yay() {
@@ -17,7 +20,7 @@ if [[ "$BASE_DISTRO" == "arch" ]]; then
             die "pacman not found. This installer requires Arch Linux."
         fi
 
-        sudo pacman -S --needed --noconfirm base-devel git
+        caelestia_sudo pacman -S --needed --noconfirm base-devel git
 
         local tmpdir
         tmpdir="$(mktemp -d)"
@@ -35,13 +38,13 @@ if [[ "$BASE_DISTRO" == "arch" ]]; then
     info "Enabling ccache for makepkg builds (caches AUR rebuilds)..."
     if ! command -v ccache >/dev/null 2>&1; then
         info "ccache not found, installing..."
-        sudo pacman -S --needed --noconfirm ccache
+        caelestia_sudo pacman -S --needed --noconfirm ccache
     fi
     if [[ -f /etc/makepkg.conf ]] && grep -q '!ccache' /etc/makepkg.conf; then
         info "Enabling ccache in /etc/makepkg.conf (system-wide makepkg setting)..."
         mkdir -p "${XDG_STATE_HOME:-$HOME/.local/state}/caelestia"
         touch "${XDG_STATE_HOME:-$HOME/.local/state}/caelestia/ccache-enabled"
-        sudo sed -i 's/!ccache/ccache/' /etc/makepkg.conf
+        caelestia_sudo sed -i 's/!ccache/ccache/' /etc/makepkg.conf
     fi
     ok "makepkg ccache configured."
 
@@ -60,7 +63,7 @@ elif [[ "$BASE_DISTRO" == "fedora" ]]; then
         ok "Prerequisites are already installed."
     else
         info "Missing prerequisites, installing..."
-        sudo dnf install -y yq createrepo_c jq
+        caelestia_sudo dnf install -y yq createrepo_c jq
         ok "Prerequisites installed."
     fi
 elif [[ "$BASE_DISTRO" == "debian" ]]; then
@@ -74,8 +77,8 @@ elif [[ "$BASE_DISTRO" == "debian" ]]; then
         ok "Prerequisites are already installed."
     else
         info "Missing prerequisites, installing..."
-        sudo apt-get update
-        sudo apt-get install -y yq jq build-essential git curl
+        caelestia_sudo apt-get update
+        caelestia_sudo apt-get install -y yq jq build-essential git curl
         ok "Prerequisites installed."
     fi
 fi

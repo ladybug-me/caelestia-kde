@@ -2,12 +2,16 @@
 
 set -uo pipefail
 
+# shellcheck source=scripts/lib/log.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/log.sh"
 # shellcheck source=scripts/lib/toolchain.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/toolchain.sh"
-
-
-log()  { printf '  [INFO]  %s\n' "$*"; }
-err()  { printf '  [ERR]   %s\n' "$*" >&2; }
+# shellcheck source=scripts/lib/privileges.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/privileges.sh"
+# shellcheck source=scripts/lib/packages.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/packages.sh"
+# shellcheck source=scripts/lib/darkly.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/darkly.sh"
 
 darkly_rpm_asset_url() {
     local release_json ver url
@@ -23,7 +27,7 @@ darkly_rpm_asset_url() {
     return 1
 }
 
-log "Installing Fedora packages..."
+info "Installing Fedora packages..."
 
 INSTALL_FISH="${INSTALL_FISH:-true}"
 INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
@@ -41,17 +45,18 @@ CORE_PACKAGES=(
 
     qt6-qtbase qt6-qtbase-private-devel qt6-qtdeclarative qt6-qtdeclarative-devel
     qt6-qtwayland qt6-qtwayland-devel qt6-qtsvg qt6-qtsvg-devel qt6-qtshadertools-devel
+    qt6-qtmultimedia-devel qt6-qt5compat-devel qt6-qtimageformats
 
     kf6-kglobalaccel-devel kf6-kwindowsystem-devel kf6-kguiaddons-devel
     kf6-kcoreaddons-devel kwin-devel kf6-kconfig-devel
-    kf6-networkmanager-qt-devel kf6-kpipewire kf6-kpipewire-devel
+    kf6-networkmanager-qt-devel kpipewire kpipewire-devel
     libepoxy-devel libdrm-devel
 
     libqalculate libqalculate-devel libsecret vulkan-headers ksshaskpass libX11-devel
 )
 
 SHELL_PACKAGES=(
-    foot eza fastfetch starship btop bash
+    foot eza fastfetch starship btop bash matugen
 )
 
 THEME_PACKAGES=(
@@ -62,7 +67,8 @@ THEME_PACKAGES=(
 UTILITY_PACKAGES=(
     fuzzel swappy ddcutil NetworkManager ImageMagick
     tesseract tesseract-langpack-eng spectacle gpu-screen-recorder
-    slurp grim xdg-utils sassc bat ripgrep lazygit xdg-user-dirs
+    slurp grim brightnessctl power-profiles-daemon
+    xdg-utils sassc bat ripgrep xdg-user-dirs
 )
 
 COPR_CORE=(app2unit libcava)
@@ -87,13 +93,13 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
     PACKAGES+=("${COPR_SHELL[@]}")
 fi
 
-log "Installing packages (group: $PACKAGE_GROUP)..."
+info "Installing packages (group: $PACKAGE_GROUP)..."
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
     if [[ "$INSTALL_FISH" == "true" ]]; then
         PACKAGES+=(fish)
     else
-        log "Skipping Fish installation by user choice."
+        info "Skipping Fish installation by user choice."
     fi
 fi
 
@@ -101,20 +107,19 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
     if [[ "$INSTALL_PAPIRUS" == "true" ]]; then
         PACKAGES+=(papirus-icon-theme)
     else
-        log "Skipping Papirus icon theme installation by user choice."
+        info "Skipping Papirus icon theme installation by user choice."
     fi
 fi
 
-log "Enabling RPM Fusion for H264 hardware codecs..."
-sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" || true
-sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing || true
+if ! rpm -q rpmfusion-free-release >/dev/null 2>&1; then
+    info "Enabling RPM Fusion for H264 hardware codecs..."
+    caelestia_sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" || true
+    caelestia_sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing || true
+fi
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "core" ]]; then
     PACKAGES+=(ffmpeg)
 fi
-
-log "Installing packages via dnf (batch mode)..."
-sudo dnf upgrade -y || true
 
 BATCH_PKGS=()
 for pkg in "${PACKAGES[@]}"; do
@@ -129,15 +134,23 @@ done
 
 FAILED_PKGS=()
 
-if [[ ${#BATCH_PKGS[@]} -gt 0 ]]; then
-    if ! sudo dnf install -y "${BATCH_PKGS[@]}"; then
-        log "Batch install had failures. Retrying standard packages individually..."
-        for pkg in "${BATCH_PKGS[@]}"; do
-            if ! rpm -q "$pkg" >/dev/null 2>&1; then
-                sudo dnf install -y "$pkg" || true
+mapfile -t MISSING_PKGS < <(filter_missing "${BATCH_PKGS[@]}")
+
+if (( ${#MISSING_PKGS[@]} > 0 )); then
+    info "Installing packages via dnf (batch mode)..."
+    if ! caelestia_sudo dnf install -y "${MISSING_PKGS[@]}"; then
+        info "Batch install had failures. Retrying standard packages individually..."
+        for pkg in "${MISSING_PKGS[@]}"; do
+            if ! package_present "$pkg"; then
+                if ! caelestia_sudo dnf install -y "$pkg"; then
+                    err "dnf failed to install $pkg."
+                    FAILED_PKGS+=("$pkg")
+                fi
             fi
         done
     fi
+else
+    info "All standard packages for group $PACKAGE_GROUP are already installed."
 fi
 
 for pkg in "${COPR_PKGS[@]}"; do
@@ -147,43 +160,53 @@ for pkg in "${COPR_PKGS[@]}"; do
     done
     if [[ "$_needed" == "no" ]]; then continue; fi
 
-    if sudo dnf install -y "$pkg" 2>/dev/null; then
+    if package_present "$pkg" || command -v "$pkg" >/dev/null 2>&1; then
         continue
     fi
 
-    log "dnf failed to install $pkg. Attempting copr fallback..."
+    # libcava is the one target the package manager cannot report: the prebuilt SDK
+    # provides it without being a package, and asking dnf for it just fails.
+    if [[ "$pkg" == "libcava" ]] && cava_sdk_installed; then
+        continue
+    fi
+
+    if caelestia_sudo dnf install -y "$pkg" 2>/dev/null; then
+        continue
+    fi
+
+    info "dnf failed to install $pkg. Attempting copr fallback..."
     COPR_FAILED="yes"
     case "$pkg" in
         quickshell-git|quickshell)
-            if sudo dnf copr enable -y errornointernet/quickshell && sudo dnf install -y quickshell-git; then
+            if caelestia_sudo dnf copr enable -y errornointernet/quickshell && caelestia_sudo dnf install -y quickshell-git; then
                 COPR_FAILED="no"
             fi
             ;;
         gpu-screen-recorder)
-            if sudo dnf copr enable -y brycensranch/gpu-screen-recorder-git && sudo dnf install -y gpu-screen-recorder-ui; then
+            if caelestia_sudo dnf copr enable -y brycensranch/gpu-screen-recorder-git && caelestia_sudo dnf install -y gpu-screen-recorder-ui; then
                 COPR_FAILED="no"
             fi
             ;;
         app2unit)
-            if sudo dnf copr enable -y celestelove/app2unit && sudo dnf install -y app2unit; then
+            if caelestia_sudo dnf copr enable -y celestelove/app2unit && caelestia_sudo dnf install -y app2unit; then
                 COPR_FAILED="no"
             fi
             ;;
         starship)
-            if sudo dnf copr enable -y atim/starship && sudo dnf install -y starship; then
+            if caelestia_sudo dnf copr enable -y atim/starship && caelestia_sudo dnf install -y starship; then
                 COPR_FAILED="no"
             fi
             ;;
         libcava)
-            if install_cava_sdk fedora; then
-                log "Installed prebuilt CAVA SDK from release."
+            if cava_sdk_installed || install_cava_sdk fedora; then
+                info "CAVA SDK ready."
                 COPR_FAILED="no"
-            elif sudo dnf copr enable -y celestelove/libcava && sudo dnf install -y libcava-devel; then
+            elif caelestia_sudo dnf copr enable -y celestelove/libcava && caelestia_sudo dnf install -y libcava-devel; then
                 COPR_FAILED="no"
             fi
             ;;
         wl-clip-persist)
-            if sudo dnf copr enable -y leloubil/wl-clip-persist && sudo dnf install -y wl-clip-persist; then
+            if caelestia_sudo dnf copr enable -y leloubil/wl-clip-persist && caelestia_sudo dnf install -y wl-clip-persist; then
                 COPR_FAILED="no"
             fi
             ;;
@@ -193,15 +216,15 @@ for pkg in "${COPR_PKGS[@]}"; do
         continue
     fi
 
-    log "Copr fallback failed or not defined for $pkg. Attempting manual build..."
+    info "Copr fallback failed or not defined for $pkg. Attempting manual build..."
     case "$pkg" in
         app2unit)
             tmpdir="$(mktemp -d)"
-            sudo dnf install -y make
+            caelestia_sudo dnf install -y make
             if git clone --depth 1 https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
-                    sudo make install
+                    caelestia_sudo make install
                 ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
             else
                 err "Failed to clone $pkg."
@@ -211,11 +234,11 @@ for pkg in "${COPR_PKGS[@]}"; do
             ;;
         gpu-screen-recorder)
             tmpdir="$(mktemp -d)"
-            sudo dnf install -y meson ninja-build pkgconf libXcomposite-devel libXrandr-devel libXfixes-devel libdrm-devel wayland-devel pipewire-devel libcap-devel ffmpeg-devel
+            caelestia_sudo dnf install -y meson ninja-build pkgconf libXcomposite-devel libXrandr-devel libXfixes-devel libdrm-devel wayland-devel pipewire-devel libcap-devel ffmpeg-devel
             if git clone --depth 1 https://git.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
-                    meson setup build && ninja -C build && sudo meson install -C build
+                    meson setup build && ninja -C build && caelestia_sudo meson install -C build
                 ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
             else
                 err "Failed to clone $pkg."
@@ -225,7 +248,7 @@ for pkg in "${COPR_PKGS[@]}"; do
             ;;
         starship)
             if curl -sS https://starship.rs/install.sh | sh -s -- -y; then  # ci:allow-curl-pipe
-                log "starship installed successfully."
+                info "starship installed successfully."
             else
                 err "Manual build for $pkg failed."
                 FAILED_PKGS+=("$pkg")
@@ -238,19 +261,9 @@ for pkg in "${COPR_PKGS[@]}"; do
     esac
 done
 
-if [ ${#FAILED_PKGS[@]} -ne 0 ]; then
-    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"
-    err "The following packages could not be installed:"
-    for pkg in "${FAILED_PKGS[@]}"; do
-        err "  - $pkg"
-        echo "$pkg" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"
-    done
-fi
-
-
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
-log "Downloading and installing required custom fonts (parallel)..."
+info "Downloading and installing required custom fonts (parallel)..."
 mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
 
 curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
@@ -264,43 +277,40 @@ _pid_jb=$!
 
 wait $_pid_ms $_pid_cc $_pid_jb
 
-unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; echo "CascadiaCode font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
-unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; echo "JetBrains Mono Nerd Font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
-[[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; echo "Material Symbols font" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"; }
+unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; FAILED_PKGS+=("CascadiaCode font"); }
+unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; FAILED_PKGS+=("JetBrains Mono Nerd Font"); }
+[[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
 
 fc-cache -f
 
-log "Installing Darkly KDE Theme from COPR..."
+info "Installing Darkly KDE Theme from COPR..."
 if [[ "$INSTALL_DARKLY" == "true" ]]; then
-    if ! command -v darkly >/dev/null 2>&1 && ! rpm -q darkly >/dev/null 2>&1; then
-        if ! sudo dnf install -y darkly 2>/dev/null; then
-            log "Enabling Darkly COPR (deltacopy/darkly)..."
-            if ! (sudo dnf copr enable -y deltacopy/darkly && sudo dnf install -y darkly); then
-                log "COPR install failed; falling back to prebuilt RPM from GitHub releases..."
+    if ! command -v darkly >/dev/null 2>&1 && ! package_present darkly; then
+        if ! caelestia_sudo dnf install -y darkly 2>/dev/null; then
+            info "Enabling Darkly COPR (deltacopy/darkly)..."
+            if ! (caelestia_sudo dnf copr enable -y deltacopy/darkly && caelestia_sudo dnf install -y darkly); then
+                info "COPR install failed; falling back to prebuilt RPM from GitHub releases..."
                 _darkly_rpm="$(darkly_rpm_asset_url || true)"
                 if [[ -n "$_darkly_rpm" ]]; then
-                    sudo dnf install -y "$_darkly_rpm" || err "Failed to install Darkly RPM."
+                    if ! caelestia_sudo dnf install -y "$_darkly_rpm"; then
+                        err "Failed to install Darkly RPM."
+                        FAILED_PKGS+=("darkly")
+                    fi
                 else
                     err "No prebuilt Darkly RPM found for this Fedora version."
+                    FAILED_PKGS+=("darkly")
                 fi
             fi
         fi
     fi
 
-    log "Installing Darkly GTK theme..."
-    sudo dnf install -y sassc || true
-    tmpdir="$(mktemp -d)"
-    if git clone --depth 1 https://github.com/wrymt/darkly-gtk "$tmpdir"; then
-        (
-            cd "$tmpdir" || exit 1
-            ./install.sh -l || err "Failed to install Darkly GTK theme."
-        )
-    else
-        err "Failed to clone Darkly GTK theme."
+    if ! darkly_gtk_installed; then
+        info "Installing Darkly GTK theme..."
+        caelestia_sudo dnf install -y sassc || true
+        install_darkly_gtk_theme || FAILED_PKGS+=("darkly-gtk")
     fi
-    rm -rf "$tmpdir"
 else
-    log "Skipping Darkly package installation by user choice."
+    info "Skipping Darkly package installation by user choice."
 fi
 
 fi  # end of PACKAGE_GROUP themes/all block
@@ -311,9 +321,9 @@ fi
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
 
-log "Installing Caelestia CLI wrapper..."
+info "Installing Caelestia CLI wrapper..."
 if ! command -v caelestia >/dev/null 2>&1; then
-    sudo dnf install -y python3-pip python3-build python3-installer python3-hatchling python3-hatch-vcs || true
+    caelestia_sudo dnf install -y python3-pip python3-build python3-installer python3-hatchling python3-hatch-vcs || true
     tmpdir="$(mktemp -d)"
     (
         cd "$tmpdir" || exit 1
@@ -321,10 +331,10 @@ if ! command -v caelestia >/dev/null 2>&1; then
         tar -xzf caelestia.tar.gz
         cd caelestia-1.0.8 || exit 1
         python3 -m build --wheel --no-isolation
-        if ! sudo pip3 install dist/*.whl --break-system-packages; then
+        if ! caelestia_sudo pip3 install dist/*.whl --break-system-packages; then
             pip3 install dist/*.whl --user --break-system-packages
             if [[ -f "$HOME/.local/bin/caelestia" ]]; then
-                sudo ln -sf "$HOME/.local/bin/caelestia" /usr/local/bin/caelestia || true
+                caelestia_sudo ln -sf "$HOME/.local/bin/caelestia" /usr/local/bin/caelestia || true
             fi
         fi
 
@@ -334,10 +344,34 @@ if ! command -v caelestia >/dev/null 2>&1; then
     rm -rf "$tmpdir"
 fi
 
+if ! command -v caelestia >/dev/null 2>&1 && [[ ! -f "$HOME/.local/bin/caelestia" ]]; then
+    err "Failed to install Caelestia CLI wrapper."
+    FAILED_PKGS+=("caelestia")
+fi
+
 if command -v sassc >/dev/null 2>&1 && ! command -v sass >/dev/null 2>&1; then
-    sudo ln -sf /usr/bin/sassc /usr/local/bin/sass || true
+    caelestia_sudo ln -sf /usr/bin/sassc /usr/local/bin/sass || true
+fi
+
+if ! command -v qdbus6 >/dev/null 2>&1; then
+    if command -v qdbus-qt6 >/dev/null 2>&1; then
+        caelestia_sudo ln -sf "$(command -v qdbus-qt6)" /usr/local/bin/qdbus6 || true
+    elif [[ -x "/usr/lib64/qt6/bin/qdbus" ]]; then
+        caelestia_sudo ln -sf /usr/lib64/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
+    elif [[ -x "/usr/lib/qt6/bin/qdbus" ]]; then
+        caelestia_sudo ln -sf /usr/lib/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
+    fi
 fi
 
 fi  # end of PACKAGE_GROUP shell/all block
 
-log "Fedora package installation complete."
+if [ ${#FAILED_PKGS[@]} -ne 0 ]; then
+    mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"
+    err "The following packages could not be installed:"
+    for pkg in "${FAILED_PKGS[@]}"; do
+        err "  - $pkg"
+        echo "$pkg" >> "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/failed_packages.txt"
+    done
+fi
+
+info "Fedora package installation complete."

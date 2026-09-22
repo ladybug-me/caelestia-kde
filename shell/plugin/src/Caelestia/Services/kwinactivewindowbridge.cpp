@@ -428,9 +428,9 @@ void KWinActiveWindowBridge::clearHighlight() {
     if (!m_highlightedAddress.isEmpty()) {
         highlightWindow(QString());
     } else {
-        auto msg =
-            QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/org/kde/KWin/HighlightWindow"),
-                QStringLiteral("org.kde.KWin.HighlightWindow"), QStringLiteral("highlightWindows"));
+        auto msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
+            QStringLiteral("/org/kde/KWin/HighlightWindow"), QStringLiteral("org.kde.KWin.HighlightWindow"),
+            QStringLiteral("highlightWindows"));
         msg << QStringList();
         QDBusConnection::sessionBus().send(msg);
     }

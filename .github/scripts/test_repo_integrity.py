@@ -5,7 +5,6 @@ Validates cross-cutting concerns:
   - All shell scripts parse cleanly
   - All Python files compile cleanly
   - version.env is the single source of truth; the CMake build derives from it
-  - Installer entrypoints and referenced scripts exist
   - Submodules are properly initialized
   - Workflow files are valid YAML
   - No duplicate script step names in Runner.cpp
@@ -20,11 +19,6 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-INSTALLER_ENTRYPOINTS = [
-    Path("scripts", "setup.sh"),
-    Path("update.sh"),
-    Path("uninstall.sh"),
-]
 
 
 def repo_files(pattern: str) -> list[Path]:
@@ -723,127 +717,6 @@ class MetadataConsistencyTests(unittest.TestCase):
                 self.assertTrue((ROOT / rel_path).is_file(), f"Missing referenced file: {rel_path}")
 
 
-class InstallerTests(unittest.TestCase):
-    def test_installer_entrypoints_exist(self) -> None:
-        for rel_path in INSTALLER_ENTRYPOINTS:
-            self.assertTrue((ROOT / rel_path).is_file(), f"Missing installer entrypoint: {rel_path.as_posix()}")
-
-    def test_setup_references_existing_step_scripts(self) -> None:
-        runner_text = (ROOT / "installer/tui/Runner.cpp").read_text(encoding="utf-8")
-        matches = re.findall(r'\{"[^"]+",\s*"(scripts/[^"]+)",\s*"[^"]+",\s*"[^"]+"\}', runner_text)
-
-        self.assertTrue(matches, "No installer steps found in Runner.cpp")
-
-        for rel_path in matches:
-            normalized = Path(rel_path.replace("\\", "/"))
-            resolved = ROOT / normalized
-            self.assertTrue(resolved.is_file(), f"Missing installer step referenced by Runner.cpp: {resolved.relative_to(ROOT).as_posix()}")
-
-    def test_no_duplicate_step_names(self) -> None:
-        """Runner.cpp must not define two steps with the same display name."""
-        runner_text = (ROOT / "installer/tui/Runner.cpp").read_text(encoding="utf-8")
-        names = re.findall(r'\{"([^"]+)",\s*"(scripts/[^"]+)",\s*"[^"]+",\s*"[^"]+"\}', runner_text)
-        display_names = [n[0] for n in names]
-
-        seen: dict[str, int] = {}
-        for name in display_names:
-            seen[name] = seen.get(name, 0) + 1
-
-        duplicates = {name: count for name, count in seen.items() if count > 1}
-        self.assertFalse(
-            duplicates,
-            f"Duplicate installer step names: {duplicates}",
-        )
-
-    def test_every_step_script_is_wired_into_a_step_list(self) -> None:
-        """A numbered scripts/*.sh must be run by a step list, and every listed step must exist.
-
-        Two lists run step scripts: the full install (installer/tui/Runner.cpp) and the
-        user's half of a packaged install (src/bin/caelestia). A script in neither is dead
-        weight that every other check still reports as covered; a list entry with no file
-        fails at install time instead of here. The step numbers are not an order: the TUI
-        runs 00-backup-themes after 02a-submodules, deliberately.
-        """
-        runner_text = (ROOT / "installer" / "tui" / "Runner.cpp").read_text(encoding="utf-8")
-        packaged_text = (ROOT / "src" / "bin" / "caelestia").read_text(encoding="utf-8")
-
-        runner_steps = set(re.findall(r"scripts/([0-9][0-9a-z]*-[A-Za-z0-9._-]+\.sh)", runner_text))
-        packaged_steps = set(
-            re.findall(r"^\s+([0-9][0-9a-z]*-[A-Za-z0-9._-]+\.sh)$", packaged_text, re.MULTILINE)
-        )
-        listed = runner_steps | packaged_steps
-        self.assertTrue(listed, "No step scripts found in Runner.cpp or src/bin/caelestia")
-
-        scripts_dir = ROOT / "scripts"
-        numbered = {
-            path.name for path in scripts_dir.glob("*.sh")
-            if re.match(r"^\d+[a-z]?-", path.name)
-        }
-
-        self.assertEqual(
-            sorted(numbered - listed), [],
-            "Step script(s) no step list runs:",
-        )
-        self.assertEqual(
-            sorted(listed - numbered), [],
-            "Step list(s) reference script(s) that do not exist in scripts/:",
-        )
-
-
-class InstallStepSafetyTests(unittest.TestCase):
-    """Ordering and wiring invariants for the install/update step scripts.
-
-    These are guarantees no single-file syntax or lint check can see, and that
-    the reports behind them describe as silent: the step reports success while
-    doing the wrong thing.
-    """
-
-    def test_shell_config_backup_precedes_the_prebuilt_install(self) -> None:
-        """#663: the prebuilt path extracts over $HOME, so it must be backed up first."""
-        script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
-
-        backup_at = script.find("backup_shell_config ||")
-        prebuilt_at = script.find("if try_download_prebuilt_shell;")
-
-        self.assertNotEqual(backup_at, -1, "08-build-shell.sh should back up the shell config")
-        self.assertNotEqual(prebuilt_at, -1, "08-build-shell.sh should still use the prebuilt download")
-        self.assertLess(
-            backup_at,
-            prebuilt_at,
-            "the shell-config backup must run before the prebuilt archive is extracted over $HOME",
-        )
-
-    def test_privileged_package_installs_go_through_the_escalation_helper(self) -> None:
-        """#664: a GUI-triggered update has no terminal, so bare sudo fails silently."""
-        script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
-
-        self.assertIn(
-            "install_linguist_tools",
-            script,
-            "08-build-shell.sh should install the Linguist tools via the shared helper",
-        )
-        self.assertNotIn(
-            "sudo pacman -S --needed --noconfirm qt6-tools",
-            script,
-            "the Linguist tools install must not escalate with bare sudo",
-        )
-
-    def test_scheme_wait_happens_after_the_shell_restart(self) -> None:
-        """#666: waiting before the restart polls for a file from a killed process."""
-        script = (ROOT / "update.sh").read_text(encoding="utf-8")
-
-        start_at = script.find('"$SHELL_IPC" start')
-        wait_at = script.find("wait_for_nonempty_file")
-
-        self.assertNotEqual(start_at, -1, "update.sh should still start the shell through the IPC wrapper")
-        self.assertNotEqual(wait_at, -1, "update.sh should wait for the restarted shell to persist the scheme")
-        self.assertLess(
-            start_at,
-            wait_at,
-            "the scheme.json wait must run after the shell is restarted, not before",
-        )
-
-
 class VersionConsistencyTests(unittest.TestCase):
     def test_cmake_has_no_hardcoded_version(self) -> None:
         """version.env is the single source of truth - CMakeLists derives from it."""
@@ -955,32 +828,6 @@ class DocsReferenceTests(unittest.TestCase):
             self.assertTrue(
                 (ROOT / ref).is_file(),
                 f"CONTRIBUTING.md references '{ref}' which does not exist"
-            )
-
-
-class ScriptNumberingTests(unittest.TestCase):
-    def test_install_step_scripts_have_consistent_numbers(self) -> None:
-        """Step numbers stay a two-digit base with an optional letter suffix.
-
-        The set is whatever `ls scripts/` shows; the guarantee is only the numbering
-        scheme, so a step added with a number that cannot sort next to its neighbours is
-        caught here. Use the existing names as the examples.
-        """
-        scripts_dir = ROOT / "scripts"
-        if not scripts_dir.is_dir():
-            return
-
-        numbers = set()
-        for f in scripts_dir.glob("*.sh"):
-            match = re.match(r"^(\d+)[a-z]?-", f.name)
-            if match:
-                numbers.add(int(match.group(1)))
-
-        if numbers:
-            max_num = max(numbers)
-            self.assertLessEqual(
-                max_num, 99,
-                f"Script number {max_num} seems too high - consider renumbering"
             )
 
 

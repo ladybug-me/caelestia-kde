@@ -100,7 +100,7 @@ Item {
         WindowPreview {
             anchors.fill: parent
             address: root.modelData?.address ?? ""
-            fallbackIcon: root.modelData ? WinIcons.sourceFor(null, root.modelData.class, root.modelData.iconName, root.modelData.pid ?? 0) : ""
+            fallbackIcon: root.modelData ? WinIcons.sourceForClient(root.modelData) : ""
             sourceAspect: previewBox.windowAspect
         }
 

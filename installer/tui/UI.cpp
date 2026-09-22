@@ -703,7 +703,7 @@ namespace UI {
     }
 
     void complete_screen() {
-        string cache_dir = string(getenv("XDG_CACHE_HOME") ? getenv("XDG_CACHE_HOME") : (string(getenv("HOME")) + "/.cache")) + "/caelestia-kde";
+        string cache_dir = xdg_cache_dir() + "/caelestia-kde";
         string steps_file = cache_dir + "/failed_steps.txt";
         string pkgs_file = cache_dir + "/failed_packages.txt";
         string patches_file = cache_dir + "/failed_patches.txt";

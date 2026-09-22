@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Caelestia.Config
 import qs.components
@@ -22,7 +24,7 @@ Item {
         animate: true
         text: Weather.icon
         color: Colours.palette.m3secondary
-        fontStyle: Tokens.font.icon.builders.extraLarge.scale(1.6).build()
+        fontStyle: Tokens.font.icon.builders.extraLarge.scale(2.2).build()
     }
 
     Column {
@@ -40,7 +42,7 @@ Item {
             animate: true
             text: Weather.temp
             color: Colours.palette.m3primary
-            font: Tokens.font.headline.builders.medium.width(110).weight(Font.DemiBold).build()
+            font: Tokens.font.headline.builders.large.scale(1.2).weight(Font.Bold).build()
         }
 
         StyledText {
@@ -48,7 +50,7 @@ Item {
 
             animate: true
             text: Weather.description
-            font: Tokens.font.body.small
+            font: Tokens.font.body.medium
 
             elide: Text.ElideRight
             width: Math.min(implicitWidth, root.parent.width - icon.implicitWidth - info.anchors.leftMargin - Tokens.padding.extraLargeIncreased)

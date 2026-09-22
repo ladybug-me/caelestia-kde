@@ -92,16 +92,7 @@ StyledClippingRect {
                 if (contents.charging)
                     return qsTr("Charging");
 
-                const s = UPower.displayDevice.timeToEmpty;
-                if (s === 0)
-                    return qsTr("...");
-
-                const hr = Math.floor(s / 3600);
-                const min = Math.floor((s % 3600) / 60);
-                if (hr > 0)
-                    return `${hr}h ${min}m`;
-
-                return `${min}m`;
+                return Units.formatDurationShort(UPower.displayDevice.timeToEmpty, "...");
             }
             color: contents.subTextColour
             font: Tokens.font.body.small

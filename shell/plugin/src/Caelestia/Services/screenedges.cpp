@@ -27,19 +27,24 @@ QString stolenEdgesPath() {
 /// The [ElectricBorders] key that names a corner, or empty if not a corner.
 QString electricBorderKey(int corner) {
     switch (corner) {
-    case ScreenEdges::TopLeft: return QStringLiteral("TopLeft");
-    case ScreenEdges::TopRight: return QStringLiteral("TopRight");
-    case ScreenEdges::BottomLeft: return QStringLiteral("BottomLeft");
-    case ScreenEdges::BottomRight: return QStringLiteral("BottomRight");
-    default: return {};
+    case ScreenEdges::TopLeft:
+        return QStringLiteral("TopLeft");
+    case ScreenEdges::TopRight:
+        return QStringLiteral("TopRight");
+    case ScreenEdges::BottomLeft:
+        return QStringLiteral("BottomLeft");
+    case ScreenEdges::BottomRight:
+        return QStringLiteral("BottomRight");
+    default:
+        return {};
     }
 }
 
 /// Groups whose BorderActivate-ish keys reserve an edge. Effects and scripts
 /// each get their own group, and the task switcher has a fixed one.
 bool ownsEdges(const QString& group) {
-    return group.startsWith(QStringLiteral("Effect-")) || group.startsWith(QStringLiteral("Script-"))
-        || group == QStringLiteral("TabBox") || group == QStringLiteral("TabBoxAlternative");
+    return group.startsWith(QStringLiteral("Effect-")) || group.startsWith(QStringLiteral("Script-")) ||
+           group == QStringLiteral("TabBox") || group == QStringLiteral("TabBoxAlternative");
 }
 
 /// Every key shape KWin reads an edge int-list out of, pointer and touch
@@ -130,35 +135,14 @@ QStringList effectsOwningEdges() {
 }
 
 void applyToKwin() {
-    QDBusConnection::sessionBus().call(QDBusMessage::createMethodCall(QLatin1String(kwinService),
-                                           QStringLiteral("/KWin"), QLatin1String(kwinService),
-                                           QStringLiteral("reconfigure")),
+    QDBusConnection::sessionBus().call(
+        QDBusMessage::createMethodCall(QLatin1String(kwinService), QStringLiteral("/KWin"), QLatin1String(kwinService),
+            QStringLiteral("reconfigure")),
         QDBus::NoBlock);
     const QStringList effects = effectsOwningEdges();
     for (const QString& effect : effects) {
         reconfigureEffect(effect);
     }
-}
-
-bool isLockscreenEdges() {
-    static bool checked = false;
-    static bool result = false;
-    if (!checked) {
-        checked = true;
-        
-        QFile cmdline(QStringLiteral("/proc/self/cmdline"));
-        if (cmdline.open(QIODevice::ReadOnly)) {
-            QByteArray data = cmdline.readAll();
-            QList<QByteArray> args = data.split('\0');
-            for (const QByteArray& arg : args) {
-                if (arg.endsWith("lockscreen.qml")) {
-                    result = true;
-                    break;
-                }
-            }
-        }
-    }
-    return result;
 }
 
 } // namespace
@@ -170,14 +154,16 @@ ScreenEdges::ScreenEdges(QObject* parent)
     // reconfigure, and each one is a full KWin settings reload.
     m_reconfigureTimer->setSingleShot(true);
     m_reconfigureTimer->setInterval(50);
-    connect(m_reconfigureTimer, &QTimer::timeout, this, [] { applyToKwin(); });
+    connect(m_reconfigureTimer, &QTimer::timeout, this, [] {
+        applyToKwin();
+    });
 
-    if (!isLockscreenEdges()) {
-        recoverFromCrash();
-    }
+    recoverFromCrash();
 
     if (QCoreApplication::instance()) {
-        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this] { restoreAll(); });
+        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this] {
+            restoreAll();
+        });
     }
 }
 
@@ -202,6 +188,7 @@ void ScreenEdges::recoverFromCrash() {
     const QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
     file.close();
 
+    bool restored = false;
     if (doc.isArray()) {
         const QJsonArray entries = doc.array();
         for (const QJsonValue& val : entries) {
@@ -209,14 +196,23 @@ void ScreenEdges::recoverFromCrash() {
             if (stolen.corner != 0) {
                 qDebug() << "[Caelestia] Crash recovery: restoring screen corner" << stolen.corner;
                 restoreCorner(stolen);
+                restored = true;
             }
         }
     }
     QFile::remove(stolenEdgesPath());
+
+    // restoreCorner() only rewrites kwinrc, and KWin does not re-read that on
+    // its own, so the corners the previous run reserved would stay reserved
+    // until something else happened to reconfigure. The recovery file is gone
+    // by the time we reach here, so this push is the last chance to apply it.
+    if (restored) {
+        scheduleReconfigure();
+    }
 }
 
 void ScreenEdges::claim(int corner) {
-    if (isLockscreenEdges() || electricBorderKey(corner).isEmpty() || m_stolen.contains(corner)) {
+    if (electricBorderKey(corner).isEmpty() || m_stolen.contains(corner)) {
         return;
     }
     stealCorner(corner);

@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Caelestia.Services
+import qs.utils
 
 // Icons pulled straight out of a window's own _NET_WM_ICON (XWayland) for apps
 // that have no resolvable desktop entry or themed icon — Minecraft, most Steam
@@ -20,7 +21,10 @@ Singleton {
     // key -> extracted png path
     property var paths: ({})
 
-    // key -> extraction already attempted (don't re-spawn the helper)
+    // key -> the window instance that key was last asked for, as its address. Remembering
+    // which window, rather than only that an ask happened, is what lets a failed lookup be
+    // retried by a later window that reuses the key while a live window that has no icon
+    // is not re-asked on every dock rebuild.
     property var tried: ({})
 
     // uuid -> the key its icon should be registered under, for the compositor
@@ -48,11 +52,18 @@ Singleton {
     // matches no desktop entry either.
     function request(appClass: string, title: string, pid: int, address: string): void {
         const key = root.keyFor(appClass, pid ?? 0);
-        if (!key || root.tried[key])
+        if (!key)
+            return;
+
+        const asked = root.tried[key];
+        // A key that has already resolved belongs to whichever window won it, and keyFor
+        // says the class is only a fallback, so a second window sharing the key must not
+        // overwrite that answer. Otherwise only the same window instance is skipped.
+        if (asked !== undefined && (root.paths[key] || asked === address))
             return;
 
         const t = root.tried;
-        t[key] = true;
+        t[key] = address;
         root.tried = t;
 
         const path = WindowIcon.extract(appClass || "", title || "", pid ?? 0);
@@ -67,6 +78,21 @@ Singleton {
             root._awaiting = a;
             PlasmaWindowIcon.request(String(address));
         }
+    }
+
+    // Drop the wait for `uuid` once it has been answered either way, so a window
+    // that produced nothing does not leave an entry behind for the session. The
+    // "asked" mark is deliberately left alone: request() scopes it to the window
+    // instance, so a window with no icon is not re-asked, and a later window that
+    // reuses its key retries because its address differs.
+    function finishWait(uuid: string): void {
+        const key = root._awaiting[uuid];
+        if (!uuid || !key)
+            return;
+
+        const a = Object.assign({}, root._awaiting);
+        delete a[String(uuid)];
+        root._awaiting = a;
     }
 
     // Record a freshly extracted icon. Reassigning a copy is what notifies the
@@ -91,24 +117,43 @@ Singleton {
         return Quickshell.iconPath(iconName || "application-x-executable", "application-x-executable");
     }
 
+    // Resolve an icon for a window card / client (e.g. overview, workspaces, windowinfo):
+    // prefer an extracted _NET_WM_ICON, then client.iconName, then client.class themed icon.
+    function sourceForClient(client: var): string {
+        if (!client)
+            return "";
+        const wp = root.paths[root.keyFor(client.class ?? "", client.pid ?? 0)];
+        if (wp)
+            return "file://" + wp;
+        return client.iconName ? Icons.getAppIcon(client.iconName, "application-x-executable")
+                               : (client.class ? Icons.getAppIcon(client.class, "application-x-executable") : "");
+    }
+
     // extract() returns the path directly; the signal carries the same result
     // for any caller that did not go through request().
     Connections {
-        target: WindowIcon
-
         function onExtracted(key: string, path: string): void {
             root.register(key, path);
         }
+
+        target: WindowIcon
     }
 
     Connections {
-        target: PlasmaWindowIcon
-
         // The uuid comes back normalised, which is also how it was stored.
         function onResolved(uuid: string, path: string): void {
             const key = root._awaiting[uuid];
+            root.finishWait(uuid);
             if (key)
                 root.register(key, path);
         }
+
+        // No icon came back for this window. Release the wait; whether the ask is
+        // repeated is request()'s decision, and it decides per window instance.
+        function onFailed(uuid: string): void {
+            root.finishWait(uuid);
+        }
+
+        target: PlasmaWindowIcon
     }
 }

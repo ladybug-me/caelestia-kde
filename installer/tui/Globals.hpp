@@ -24,6 +24,15 @@ extern std::string g_sudo_bin_dir;
 void load_bundle_dir();
 void load_theme();
 
+/// The user's cache root: $XDG_CACHE_HOME, else $HOME/.cache, else /tmp when a caller
+/// has neither. Shared so no caller has to decide what an unset HOME means, and so
+/// none of them can build a string straight from a null getenv() result.
+std::string xdg_cache_dir();
+
+/// Runs a shell command and returns system()'s status, for callers that check it and
+/// for the ones that mark a deliberate ignore with a (void) cast.
+int run_shell(const std::string& command);
+
 struct Config {
   bool enable_transaction_confirm = true;
   bool remove_cache = false;

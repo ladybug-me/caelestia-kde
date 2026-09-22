@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Pipewire
 import Caelestia.Config
+import Caelestia.Services
 import qs.components
 import qs.components.controls
 import qs.services
@@ -25,6 +26,7 @@ ColumnLayout {
     readonly property bool hasOutputChoice: Audio.sinks.length > 1
     readonly property bool hasSources: Audio.sources.length > 0
     readonly property bool hasStreams: Audio.appStreams.length > 0
+    readonly property bool isPlaying: (Players.active?.isPlaying ?? false) || Players.list.some(p => p.isPlaying)
 
     function outputIcon(node: PwNode): string {
         if (!node)
@@ -62,6 +64,10 @@ ColumnLayout {
         }
 
         target: Audio
+    }
+
+    ServiceRef {
+        service: Audio.cava
     }
 
     RowLayout {
@@ -221,7 +227,7 @@ ColumnLayout {
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 28 * root.scaleOffset
-                visible: !!Audio.cava && root.hasStreams && (Audio.cava.values?.some(v => v > 0.01) ?? false)
+                visible: !!Audio.cava && root.isPlaying
                 radius: Tokens.rounding.small * root.scaleOffset
                 color: Colours.tPalette.m3surfaceContainerHigh
 
@@ -316,8 +322,12 @@ ColumnLayout {
         }
     }
 
-    Section {
+    PopoutSection {
         Layout.fillWidth: true
+        scaleOffset: root.scaleOffset
+        fontScale: root.fontScale
+        minHeaderHeight: 40
+        headerRightMargin: Tokens.padding.small * root.scaleOffset
         title: qsTr("Input")
 
         StyledText {
@@ -355,10 +365,14 @@ ColumnLayout {
         }
     }
 
-    Section {
+    PopoutSection {
         id: appsSection
 
         Layout.fillWidth: true
+        scaleOffset: root.scaleOffset
+        fontScale: root.fontScale
+        minHeaderHeight: 40
+        headerRightMargin: Tokens.padding.small * root.scaleOffset
         title: qsTr("Now playing")
         expanded: root.hasStreams
 
@@ -383,88 +397,6 @@ ColumnLayout {
                 muteOnIconClick: true
                 first: index === 0
                 last: index === Audio.appStreams.length - 1
-            }
-        }
-    }
-
-    component Section: ColumnLayout {
-        id: section
-
-        required property string title
-        property bool expanded: false
-        default property alias content: contentColumn.data
-
-        Layout.fillWidth: true
-        spacing: Tokens.spacing.extraSmall * root.scaleOffset
-
-        Item {
-            id: sectionHeader
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: Math.max(titleRow.implicitHeight + Tokens.padding.small * 2 * root.scaleOffset, 40 * root.scaleOffset)
-
-            RowLayout {
-                id: titleRow
-
-                anchors.fill: parent
-                anchors.leftMargin: Tokens.padding.small * root.scaleOffset
-                anchors.rightMargin: Tokens.padding.small * root.scaleOffset
-                spacing: Tokens.spacing.small * root.scaleOffset
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: section.title
-                    font.weight: Font.Medium
-                    font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
-                }
-
-                MaterialIcon {
-                    text: "expand_more"
-                    rotation: section.expanded ? 180 : 0
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle.pointSize: Tokens.font.icon.medium.pointSize * root.fontScale
-
-                    Behavior on rotation {
-                        Anim {
-                            type: Anim.StandardSmall
-                        }
-                    }
-                }
-            }
-
-            StateLayer {
-                anchors.fill: parent
-                radius: Tokens.rounding.medium * root.scaleOffset
-                showHoverBackground: false
-                onClicked: section.expanded = !section.expanded
-            }
-        }
-
-        Item {
-            id: contentWrapper
-
-            Layout.fillWidth: true
-            Layout.preferredHeight: section.expanded ? (contentColumn.implicitHeight + Tokens.spacing.extraSmall * root.scaleOffset) : 0
-            implicitHeight: Layout.preferredHeight
-            clip: true
-
-            Behavior on Layout.preferredHeight {
-                Anim {}
-            }
-
-            ColumnLayout {
-                id: contentColumn
-
-                width: parent.width
-                y: Tokens.spacing.extraSmall * root.scaleOffset
-                spacing: Tokens.spacing.extraSmall * root.scaleOffset
-                opacity: section.expanded ? 1.0 : 0.0
-
-                Behavior on opacity {
-                    Anim {
-                        type: Anim.DefaultEffects
-                    }
-                }
             }
         }
     }

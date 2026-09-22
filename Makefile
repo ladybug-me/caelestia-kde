@@ -60,7 +60,7 @@ test-bash: ## Run the bash helper and step-unit tests
 	$(BASH) $(TESTS_DIR)/run-tests.sh
 
 test-repo: ## Check cross-cutting invariants (paths, versions, workflows, submodules)
-	$(PYTHON) $(CI_DIR)/test_repo_integrity.py
+	$(PYTHON) -m unittest discover -s $(CI_DIR) -p 'test_*.py'
 
 validate: ## Validate the installer's menu.json and theme.json
 	$(PYTHON) $(CI_DIR)/validate_json_configs.py

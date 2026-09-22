@@ -15,6 +15,7 @@ It is packaged in Arch's `extra`, and it is GPL-2.0-or-later, which combines wit
 `shell/services/Colours.qml` reads `$XDG_STATE_HOME/caelestia/scheme.json`:
 
 - `name`, `flavour`, `mode` and `variant` are plain strings, trimmed on read;
+- `intensity` is the saturation the palette was rendered at, a number. Absent reads as 1, which is what matugen produced, so a scheme written before the knob existed is not a change of look;
 - `colours` holds the roles. Each key becomes `m3<Key>` on the QML side, so the file carries `primary`, not `m3primary`. Keys beginning with `term` are used as they are, which is how `term0` to `term15` arrive;
 - a value is the hex digits only. `Colours.qml` prepends the `#` itself, which is why the template asks for `hex_stripped` and not `hex`;
 - a key that is absent leaves the shell's built-in default in place, so the template can grow instead of landing complete.
@@ -130,6 +131,29 @@ Reproducing that adjustment, and tuning these roles back inside the template wit
 were both considered and rejected: each leaves us maintaining a transform derived by
 reverse-engineering someone else's post-processing. The release notes carry the change when it
 ships.
+
+What was not rejected is the same transform under the user's own hand, because the 2024
+specification took the chroma out of the vibrant variant and the people who picked it noticed
+(issue #791). `caelestia scheme set -i` scales the saturation of the palette a render produced,
+which is chroma with the tone left alone, in a range of 0 to 2: 0 leaves a grey palette at the
+tones it already had, 1 is matugen's own output byte for byte, and 2 is as far as the accents go
+before they flatten into one hue. It is off by default, so the palette a fresh install gets is the
+accepted one above.
+
+It lives in `scheme.json` beside the variant rather than in the CLI's config, because every
+re-derive - `wallpaper -f`, the login reseed, the login screen's own `scheme set` - starts by
+reading the scheme in effect, so the factor travels with it and none of those callers has to know
+about it. `shell/services/Colours.qml` reads it from the same file, which is what the slider on
+Nexus's Advanced Colors page is bound to; that page re-renders when the slider is let go rather
+than as it is dragged. A named scheme records the factor but is not scaled: its file is the
+palette.
+
+Scaling it costs a second render. matugen writes the fan out from its own palette, and that is not
+the palette the intensity asks for, so at any intensity but the default the palette is rendered
+once, scaled, and handed back to matugen as data for a second run that writes the fan out - the way
+a named scheme is fed in. Without that, the shell would be themed at the user's intensity while the
+terminals, GTK, Qt and the scheme Plasma is applied stayed at matugen's. At the default intensity,
+which is what every install is on until somebody moves the slider, one pass still does everything.
 
 ## Still open
 

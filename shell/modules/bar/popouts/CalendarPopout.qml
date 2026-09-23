@@ -22,7 +22,7 @@ ColumnLayout {
     readonly property int currMonth: viewDate.getMonth()
     readonly property int currYear: viewDate.getFullYear()
 
-    width: 280 * scaleOffset
+    width: 340 * scaleOffset
     spacing: Tokens.spacing.medium * scaleOffset
 
     StyledText {

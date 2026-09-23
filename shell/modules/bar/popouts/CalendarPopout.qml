@@ -42,6 +42,7 @@ ColumnLayout {
 
         ColumnLayout {
             id: inner
+
             width: parent.width - Tokens.padding.medium * 2 * root.scaleOffset
             x: Tokens.padding.medium * root.scaleOffset
             y: Tokens.padding.medium * root.scaleOffset
@@ -75,6 +76,7 @@ ColumnLayout {
 
             GridLayout {
                 id: daysRow
+
                 Layout.fillWidth: true
                 columns: 7
                 columnSpacing: 0
@@ -85,6 +87,7 @@ ColumnLayout {
 
                     delegate: StyledText {
                         required property int index
+
                         Layout.fillWidth: true
                         horizontalAlignment: Text.AlignHCenter
                         text: Qt.locale().dayName((index + Qt.locale().firstDayOfWeek) % 7, Locale.ShortFormat)
@@ -103,6 +106,7 @@ ColumnLayout {
 
                 MonthGrid {
                     id: grid
+
                     month: root.currMonth
                     year: root.currYear
                     anchors.fill: parent
@@ -111,12 +115,15 @@ ColumnLayout {
 
                     delegate: Item {
                         id: dayItem
+
                         required property var model
+
                         implicitWidth: implicitHeight
                         implicitHeight: text.implicitHeight + Tokens.padding.small
 
                         StyledText {
                             id: text
+
                             anchors.centerIn: parent
                             horizontalAlignment: Text.AlignHCenter
                             text: grid.locale.toString(dayItem.model.day)

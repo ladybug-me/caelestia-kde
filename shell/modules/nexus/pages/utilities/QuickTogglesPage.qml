@@ -11,6 +11,7 @@ PageBase {
 
     readonly property var connectivityToggles: [
         { id: "wifi", label: qsTr("Wi-Fi") },
+        { id: "hotspot", label: qsTr("Hotspot") },
         { id: "bluetooth", label: qsTr("Bluetooth") },
         { id: "vpn", label: qsTr("VPN") },
     ]

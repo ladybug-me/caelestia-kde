@@ -26,6 +26,9 @@ StyledRect {
 
         const builtIn = [
             {
+                id: "hotspot"
+            },
+            {
                 id: "restartShell"
             },
             {
@@ -52,6 +55,12 @@ StyledRect {
 
             if (item.id === "vpn") {
                 return GlobalConfig.utilities.vpn.selectedProvider.length > 0;
+            }
+
+            // Only a wireless device that can run an access point gets a hotspot
+            // button; there is nothing to switch on anywhere else.
+            if (item.id === "hotspot") {
+                return Nmcli.hotspotSupported;
             }
 
             // Nothing to toggle if it is not installed, and a dead button is
@@ -126,6 +135,20 @@ StyledRect {
                         icon: "wifi"
                         checked: Nmcli.wifiEnabled
                         onClicked: Nmcli.toggleWifi()
+                    }
+                }
+                DelegateChoice {
+                    roleValue: "hotspot"
+                    delegate: Toggle {
+                        icon: "wifi_tethering"
+                        checked: Nmcli.hotspotEnabled
+                        onClicked: {
+                            Nmcli.toggleHotspot();
+                            // The tile lights on the tap. Re-reading the backend
+                            // hands the light back to it, so a start that fails or
+                            // is refused does not leave the tile on.
+                            internalChecked = Nmcli.hotspotEnabled;
+                        }
                     }
                 }
                 DelegateChoice {

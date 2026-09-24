@@ -1,16 +1,22 @@
 #pragma once
 
+#include <qdir.h>
+#include <qfile.h>
 #include <qhash.h>
 #include <qobject.h>
+#include <qstringlist.h>
 #include <qstringview.h>
 
 #include "node.hpp"
+#include "rootnode.hpp"
 
 namespace caelestia::settings {
 
-// Derived from Node and has ctor(path, fallback, parent)
+// Derived from RootNode and has ctor(path, fallback, parent). RootNode rather
+// than Node: forgetting a layer reloads it from (the now missing) file, which
+// only roots can do.
 template <typename T>
-concept LayerType = std::derived_from<T, Node> && std::constructible_from<T, const QString&, T*, QObject*>;
+concept LayerType = std::derived_from<T, RootNode> && std::constructible_from<T, const QString&, T*, QObject*>;
 
 template <LayerType T> class LayerRegistry {
 public:
@@ -19,6 +25,8 @@ public:
     [[nodiscard]] QString pathFor(const QString& name) const;
     [[nodiscard]] QString nameFor(T* layer) const;
     [[nodiscard]] T* get(const QString& name, T* fallback, bool* created = nullptr); // Created on demand
+    [[nodiscard]] QStringList names() const; // Screens with a layer file on disk, connected or not
+    bool forget(const QString& name); // Delete the layer file and reset the layer, if any
 
 private:
     const QString m_prefix;
@@ -70,6 +78,38 @@ template <LayerType T> T* LayerRegistry<T>::get(const QString& name, T* fallback
     auto* const layer = new T(pathFor(name), fallback, m_parent);
     m_layers.insert(name, layer);
     return layer;
+}
+
+template <LayerType T> QStringList LayerRegistry<T>::names() const {
+    QStringList names;
+    const QDir dir(m_prefix);
+    if (!dir.exists())
+        return names;
+
+    // Layers are created on demand, so the in-memory registry misses screens
+    // that were never connected this session; the directory is the source of
+    // truth for which screens have settings on disk.
+    const auto entries = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const auto& name : entries) {
+        if (QFile::exists(pathFor(name)))
+            names.push_back(name);
+    }
+    return names;
+}
+
+template <LayerType T> bool LayerRegistry<T>::forget(const QString& name) {
+    // The name comes from QML; never let it escape the layer directory.
+    if (name.isEmpty() || name.contains(QLatin1Char('/')) || name == u"." || name == u"..")
+        return false;
+
+    QFile::remove(pathFor(name));
+    // Only removes the directory when it is empty; another singleton may still
+    // have a file next to this one's (shell.json, shell-tokens.json).
+    QDir(m_prefix).rmdir(name);
+
+    if (auto* const layer = m_layers.value(name))
+        layer->load(); // The missing file reads back as "no overrides"
+    return true;
 }
 
 } // namespace caelestia::settings

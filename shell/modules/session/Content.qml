@@ -136,7 +136,7 @@ Column {
 
         function exec(): void {
             if (!SessionManager.exec(command))
-                Quickshell.execDetached(command);
+                Launch.exec(command);
         }
 
         implicitWidth: Tokens.sizes.session.button

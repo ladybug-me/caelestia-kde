@@ -103,8 +103,20 @@ void SessionManager::suspendThenHibernate() {
     if (queryHibernateAvailable()) {
         callManager(QStringLiteral("SuspendThenHibernate"));
     } else {
-        // Fall back to suspend when no hibernate
+        // Fall back to suspend when no hibernate. Say so rather than letting half the
+        // action look like a broken setting: without a swap device and a resume= kernel
+        // argument logind refuses the hibernate half (issue #575).
         qCInfo(lcSessionManager) << "SuspendThenHibernate unavailable, falling back to suspend";
+
+        auto* const engine = qmlEngine(this);
+        if (engine) {
+            auto* const toaster = engine->singletonInstance<Toaster*>("Caelestia", "Toaster");
+            if (toaster) {
+                toaster->toast(tr("Hibernation is not available"), tr("Falling back to suspend. Hibernation needs a swap partition or file and a resume= kernel argument."), QStringLiteral("warning"),
+                    Toast::Type::Warning);
+            }
+        }
+
         callManager(QStringLiteral("Suspend"));
     }
 }

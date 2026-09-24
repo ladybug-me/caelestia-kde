@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Caelestia.Config
 import qs.components.controls
 import qs.services
@@ -40,6 +41,46 @@ PageBase {
             activeText: root.itemForPosition(GlobalConfig.bar.position).activeText
         }
     ]
+
+    readonly property list<MenuItem> forgetItems: [
+        MenuItem {
+            icon: "delete_forever"
+
+            text: qsTr("Forget this monitor")
+        }
+    ]
+
+    // Bumped by this page when a monitor layer is reset or forgotten, so the
+    // rows below re-read the layers on disk.
+    property int layersVersion: 0
+
+    // One row per connected screen that has a reason to show a per-monitor
+    // position, plus one per remembered monitor: a layer file on disk for a
+    // screen that is no longer connected. The section used to disappear with
+    // a single screen, but an override outlives the second screen, and this
+    // section is the only way back to the global position (issue #708).
+    readonly property var perMonitorRows: {
+        const rev = root.layersVersion; // Unused: registers the re-sort tick
+        const screens = Screens.screens;
+        const rows = [];
+
+        for (let i = 0; i < screens.length; i++) {
+            const bar = GlobalConfig.forScreen(screens[i].name).bar;
+            // bar.position is read alongside the override check so a reset,
+            // which fires positionChanged, re-runs this binding too.
+            if (screens.length > 1 || (bar.position, bar.isOverride("position")))
+                rows.push({ name: screens[i].name, connected: true });
+        }
+
+        const layers = GlobalConfig.monitorLayers();
+        for (const name of layers) {
+            // Quickshell.screens rather than Screens.screens: a disabled screen
+            // is still connected, not a remembered monitor.
+            if (!Quickshell.screens.some(s => s.name === name))
+                rows.push({ name: name, connected: false });
+        }
+        return rows;
+    }
 
     function itemForPosition(pos: string): MenuItem {
         for (let i = 0; i < root.positionItems.length; i++) {
@@ -116,36 +157,44 @@ PageBase {
         }
 
         SectionHeader {
-            visible: Screens.screens.length > 1
+            visible: Screens.screens.length > 1 || root.perMonitorRows.length > 0
             text: qsTr("Per-monitor position")
         }
 
         Repeater {
             id: perMonitorRepeater
 
-            model: Screens.screens.length > 1 ? Screens.screens : []
+            model: root.perMonitorRows
 
             SelectRow {
                 required property var modelData
                 required property int index
 
-                readonly property var screenConfig: GlobalConfig.forScreen(modelData.name)
-                readonly property bool hasOverride: screenConfig ? screenConfig.bar.isOverride("position") : false
+                readonly property var screenConfig: modelData ? GlobalConfig.forScreen(modelData.name) : null
+                // bar.position is read alongside the override check so a reset,
+                // which fires positionChanged, re-runs this binding too.
+                readonly property bool hasOverride: screenConfig ? (screenConfig.bar.position, screenConfig.bar.isOverride("position")) : false
 
                 first: index === 0
                 last: index === perMonitorRepeater.count - 1
                 Layout.fillWidth: true
                 label: modelData.name
-                subtext: hasOverride ? qsTr("Overridden for this monitor") : qsTr("Using global position")
+                subtext: !modelData.connected ? qsTr("Not connected; remembered settings") : hasOverride ? qsTr("Overridden for this monitor") : qsTr("Using global position")
                 active: root.itemForPosition(screenConfig ? screenConfig.bar.position : GlobalConfig.bar.position)
-                menuItems: hasOverride ? root.positionItems.concat(root.useGlobalItems) : root.positionItems
+                menuItems: root.positionItems.concat(hasOverride ? root.useGlobalItems : []).concat(!modelData.connected ? root.forgetItems : [])
                 onSelected: item => {
                     if (!screenConfig)
                         return;
-                    if (item === root.useGlobalItems[0])
+                    if (item === root.useGlobalItems[0]) {
                         screenConfig.bar.resetOption("position");
-                    else
+                        root.layersVersion++;
+                    } else if (item === root.forgetItems[0]) {
+                        GlobalConfig.removeMonitorLayer(modelData.name);
+                        TokenConfig.removeMonitorLayer(modelData.name);
+                        root.layersVersion++;
+                    } else {
                         screenConfig.bar.position = item.value;
+                    }
                 }
             }
         }

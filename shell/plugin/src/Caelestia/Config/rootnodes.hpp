@@ -2,6 +2,7 @@
 
 #include <qjsengine.h>
 #include <qqmlengine.h>
+#include <qstringlist.h>
 
 #include "../Settings/layerregistry.hpp"
 #include "../Settings/rootnode.hpp"
@@ -102,6 +103,8 @@ void saveFailed(ConfigKind kind, const QString& error, const QString& screen);
         static Type* create(QQmlEngine*, QJSEngine*);                                                                  \
                                                                                                                        \
         [[nodiscard]] Q_INVOKABLE Root* forScreen(const QString& screen);                                              \
+        [[nodiscard]] Q_INVOKABLE QStringList monitorLayers() const;                                                   \
+        Q_INVOKABLE bool removeMonitorLayer(const QString& screen);                                                    \
                                                                                                                        \
     private:                                                                                                           \
         explicit Type(QObject* parent = nullptr);                                                                      \

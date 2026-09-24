@@ -2,7 +2,6 @@ pragma Singleton
 
 import ".."
 import QtQuick
-import Quickshell
 import Caelestia.Config
 import Caelestia.Services
 import qs.services
@@ -50,7 +49,7 @@ Searcher {
             } else {
                 list.visibilities.launcher = false;
                 if (!SessionManager.exec(command))
-                    Quickshell.execDetached(command);
+                    Launch.exec(command);
             }
         }
     }

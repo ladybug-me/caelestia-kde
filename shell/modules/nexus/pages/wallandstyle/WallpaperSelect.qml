@@ -40,6 +40,13 @@ PageBase {
         const categories = {};
         const list = [];
         const filter = root.nState ? root.nState.wallpaperFilterType : "all";
+        // Read up front so QML re-runs this binding when a colour sort's
+        // distances are (re)computed: reads inside the sort comparator below
+        // are not tracked as dependencies on their own, and sortVersion is
+        // the tick analyzeColors() bumps once the per-tile analysis lands
+        // (issue #581). sortRev is otherwise unused.
+        const distances = root.colorDistances;
+        const sortRev = root.sortVersion;
 
         for (const w of walls) {
             const isVid = Images.isVideo(w.name);
@@ -69,9 +76,11 @@ PageBase {
 
         if (root.sortColor !== "transparent") {
             list.sort((a, b) => {
-                const distA = root.colorDistances[a.path] ?? 999999;
-                const distB = root.colorDistances[b.path] ?? 999999;
-                return distA - distB;
+                const distA = distances[a.path] ?? Number.POSITIVE_INFINITY;
+                const distB = distances[b.path] ?? Number.POSITIVE_INFINITY;
+                // Unanalysed wallpapers (infinite distance) land last, in name
+                // order, rather than biased toward black like they used to.
+                return distA - distB || a.name.localeCompare(b.name);
             });
         } else {
             list.sort((a, b) => a.name.localeCompare(b.name));
@@ -82,11 +91,33 @@ PageBase {
         return list;
     }
 
+    function srgbChannelToLinear(channel: real): real {
+        return channel <= 0.04045 ? channel / 12.92 : Math.pow((channel + 0.055) / 1.055, 2.4);
+    }
+
+    function oklabOf(c: color): var {
+        const r = srgbChannelToLinear(c.r);
+        const g = srgbChannelToLinear(c.g);
+        const b = srgbChannelToLinear(c.b);
+        const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+        const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+        const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+        return [0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+            0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s];
+    }
+
+    // Perceptual distance between two colours. Plain RGB Euclidean distance
+    // disagrees with how the eye separates colours, so the old ordering did
+    // not match what the user expected (issue #581); OkLab is the comparison
+    // space instead.
     function colorDistance(c1: color, c2: color): real {
-        const dr = c1.r - c2.r;
-        const dg = c1.g - c2.g;
-        const db = c1.b - c2.b;
-        return Math.sqrt(dr * dr + dg * dg + db * db);
+        const a = oklabOf(c1);
+        const b = oklabOf(c2);
+        const dL = a[0] - b[0];
+        const da = a[1] - b[1];
+        const db = a[2] - b[2];
+        return Math.sqrt(dL * dL + da * da + db * db);
     }
 
     function toggleSortColor(color: color) {
@@ -105,7 +136,10 @@ PageBase {
 
         for (const w of walls) {
             if (w.parentDir === baseDir) {
-                newDistances[w.path] = colorDistance(root.wallpaperColors[w.path] ?? "black", root.sortColor);
+                // Unanalysed wallpapers are infinitely far away rather than
+                // black, so they sort last instead of near dark sort colours.
+                const colour = root.wallpaperColors[w.path];
+                newDistances[w.path] = colour !== undefined ? colorDistance(colour, root.sortColor) : Number.POSITIVE_INFINITY;
             }
         }
 
@@ -476,6 +510,10 @@ PageBase {
                     }
 
                     source: String(modelData?.path ?? "")
+                    // While a colour sort is active, wallpapers whose dominant
+                    // colour has not been analysed yet are marked with an
+                    // infinite distance badge (issue #581).
+                    badgeText: root.sortColor !== "transparent" && modelData && modelData.parentDir === Paths.wallsdir && root.wallpaperColors[modelData.path] === undefined ? "∞" : ""
                     text: {
                         if (!modelData)
                             return "";
@@ -502,7 +540,13 @@ PageBase {
                         rescaleSize: 64
                         onDominantColourChanged: {
                             if (wallItem.modelData && dominantColour.a > 0) {
-                                root.wallpaperColors[wallItem.modelData.path] = dominantColour;
+                                // Reassigned rather than mutated so every binding
+                                // reading wallpaperColors (the sort, the unanalysed
+                                // badges) re-runs as the analyses trickle in.
+                                root.wallpaperColors = {
+                                    ...root.wallpaperColors,
+                                    [wallItem.modelData.path]: dominantColour
+                                };
                                 if (root.sortColor !== "transparent") {
                                     sortDebouncer.restart();
                                 }

@@ -103,6 +103,14 @@ TokensRoot::TokensRoot(const QString& path, TokensRoot* fallback, QObject* paren
         return layer;                                                                                                  \
     }                                                                                                                  \
                                                                                                                        \
+    QStringList Type::monitorLayers() const {                                                                          \
+        return m_layers.names();                                                                                       \
+    }                                                                                                                  \
+                                                                                                                       \
+    bool Type::removeMonitorLayer(const QString& screen) {                                                             \
+        return m_layers.forget(screen);                                                                                \
+    }                                                                                                                  \
+                                                                                                                       \
     Type::Type(QObject* parent)                                                                                        \
         : Root(configDir() + QLatin1Char('/') + file, nullptr, parent)                                                 \
         , m_layers(monitorConfigDir(), file, this) {                                                                   \

@@ -15,7 +15,13 @@ Scope {
 
     property bool launcherInterrupted
     property string lastAction: ""
-    readonly property bool hasFullscreen: false
+
+    // Whether a fullscreen window covers the screen the drawers would open on
+    // (Visibilities tracks them per active screen). Kwin.hasFullscreenOn() is a
+    // plain function call, so the Kwin properties it reads are referenced up
+    // front to re-run the binding when the window list, the active workspace or
+    // the active screen changes - the same idiom as ContentWindow.actualFullscreen.
+    readonly property bool hasFullscreen: (Kwin.activeWsId, Kwin.windowList, Kwin.hasFullscreenOn(Kwin.activeOutputName))
 
     Component.onCompleted: {
         // Force KeybindsModel to instantiate and load shortcuts from disk

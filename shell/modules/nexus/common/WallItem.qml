@@ -25,6 +25,9 @@ Item {
     property bool fillLabel: true
     property bool isFolder: false
     property int folderCount: 0
+    // Optional corner badge on the thumbnail, e.g. the infinite distance
+    // marker for wallpapers without an analysed colour. Empty hides it.
+    property string badgeText: ""
 
     signal clicked
 
@@ -86,6 +89,26 @@ Item {
                     Anim {
                         type: Anim.SlowEffects
                     }
+                }
+            }
+
+            StyledRect {
+                anchors.left: parent.left
+                anchors.top: parent.top
+                anchors.margins: Tokens.padding.small
+                radius: Tokens.rounding.full
+                color: Colours.palette.m3secondaryContainer
+                visible: root.badgeText !== ""
+                width: cornerBadge.implicitWidth + Tokens.padding.medium * 2
+                height: cornerBadge.implicitHeight + Tokens.padding.small * 2
+
+                StyledText {
+                    id: cornerBadge
+
+                    anchors.centerIn: parent
+                    text: root.badgeText
+                    color: Colours.palette.m3onSecondaryContainer
+                    font: Tokens.font.label.builders.small.weight(Font.Medium).build()
                 }
             }
 

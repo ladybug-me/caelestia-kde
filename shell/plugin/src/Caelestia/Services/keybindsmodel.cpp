@@ -90,7 +90,11 @@ KeybindsModel::KeybindsModel(QObject* parent)
 }
 
 QVariantList KeybindsModel::keybinds() const {
-    return QVariantList(); // Dummy list to satisfy QML length check
+    // The launcher service guards its load with keybinds.length and re-loads
+    // whenever it reads an empty list, so the dummy kept it loading on every
+    // startup and hid the data from anything else reading the property.
+    // query() with no filter is the same map shape that path already uses.
+    return query(QString());
 }
 
 bool KeybindsModel::initialized() const {

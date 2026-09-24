@@ -55,6 +55,52 @@ bool hasIntelGpu() {
     return false;
 }
 
+// Runtime power management state of a PCI device, straight from sysfs. The
+// whole point of reading it: these nodes are plain device metadata, so the
+// read never wakes a suspended card - unlike any vendor query tool, which
+// initializes the driver and pulls the card out of sleep to ask it a question.
+enum class PciPower {
+    Active,
+    Suspended,
+    Unknown
+};
+
+PciPower pciPowerState(const QString& pciPath) {
+    if (pciPath.isEmpty()) {
+        return PciPower::Unknown;
+    }
+
+    // runtime_status: active/suspended/unknown/error, managed by runtime PM.
+    QFile runtime(pciPath + QStringLiteral("/runtime_status"));
+    if (runtime.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QString s = QString::fromUtf8(runtime.readAll()).trimmed();
+        runtime.close();
+        if (s == QStringLiteral("suspended")) {
+            return PciPower::Suspended;
+        }
+        if (s == QStringLiteral("active")) {
+            return PciPower::Active;
+        }
+        return PciPower::Unknown;
+    }
+
+    // power_state as a fallback on older kernels: d0 is on, anything deeper
+    // is a sleeping device.
+    QFile power(pciPath + QStringLiteral("/power_state"));
+    if (power.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        const QString s = QString::fromUtf8(power.readAll()).trimmed();
+        power.close();
+        if (s == QStringLiteral("d0")) {
+            return PciPower::Active;
+        }
+        if (s.startsWith(QStringLiteral("d"))) {
+            return PciPower::Suspended;
+        }
+    }
+
+    return PciPower::Unknown;
+}
+
 QString cleanName(QString s) {
     static const QRegularExpression noise(
         QStringLiteral("\\(R\\)|\\(TM\\)|Graphics"), QRegularExpression::CaseInsensitiveOption);
@@ -92,25 +138,13 @@ QString parseGlxinfoName(const QByteArray& out) {
     return QString();
 }
 
+// A display-controller line from lspci: the bracketed card name, or the text
+// after the class colon when the bracket form is missing.
 QString parseLspciName(const QByteArray& out) {
-    static const QRegularExpression lineRe(
-        QStringLiteral("vga|3d controller|display"), QRegularExpression::CaseInsensitiveOption);
-
-    const QStringList lines = QString::fromUtf8(out).split(u'\n');
-    QString match;
-    for (const QString& line : lines) {
-        if (lineRe.match(line).hasMatch()) {
-            match = line;
-            break;
-        }
-    }
-
-    if (match.isEmpty()) {
-        return QString();
-    }
+    const QString line = QString::fromUtf8(out).trimmed();
 
     static const QRegularExpression bracketRe(QStringLiteral("\\[([^\\]]+)\\][^\\[]*$"));
-    const auto bracket = bracketRe.match(match);
+    const auto bracket = bracketRe.match(line);
     if (bracket.hasMatch()) {
         return cleanName(bracket.captured(1));
     }
@@ -118,11 +152,54 @@ QString parseLspciName(const QByteArray& out) {
     // Split on a colon followed by whitespace so the PCI slot ("00:02.0") is not
     // mistaken for the class/name separator ("controller: Device").
     static const QRegularExpression colonRe(QStringLiteral(":\\s+(.+)"));
-    const auto colon = colonRe.match(match);
+    const auto colon = colonRe.match(line);
     if (colon.hasMatch()) {
         return cleanName(colon.captured(1));
     }
 
+    return QString();
+}
+
+struct DisplayController {
+    QString slot; // PCI slot as lspci prints it, e.g. "01:00.0"
+    QString name;
+    bool nvidia = false;
+};
+
+QList<DisplayController> parseDisplayControllers(const QByteArray& out) {
+    static const QRegularExpression slotRe(QStringLiteral("^([0-9a-fA-F]{2,}:[0-9a-fA-F]{2}\\.[0-9a-fA-F])\\s"));
+    static const QRegularExpression classRe(
+        QStringLiteral("vga|3d controller|display"), QRegularExpression::CaseInsensitiveOption);
+
+    QList<DisplayController> controllers;
+    const QStringList lines = QString::fromUtf8(out).split(u'\n');
+    for (const QString& line : lines) {
+        const auto slot = slotRe.match(line);
+        if (!slot.hasMatch() || !classRe.match(line).hasMatch()) {
+            continue;
+        }
+        DisplayController controller;
+        controller.slot = slot.captured(1);
+        controller.nvidia = line.contains(QStringLiteral("nvidia"), Qt::CaseInsensitive);
+        controller.name = parseLspciName(line.toUtf8());
+        controllers.append(controller);
+    }
+    return controllers;
+}
+
+// Maps an lspci slot to its sysfs device directory. sysfs names devices with
+// the PCI domain prefix ("0000:01:00.0"); lspci usually leaves it off.
+QString pciDevicePath(const QString& slot) {
+    if (slot.isEmpty()) {
+        return QString();
+    }
+    QDirIterator it(QStringLiteral("/sys/bus/pci/devices"), QDir::Dirs | QDir::NoDotAndDotDot);
+    while (it.hasNext()) {
+        const QString path = it.next();
+        if (it.fileName().endsWith(u':' + slot)) {
+            return path;
+        }
+    }
     return QString();
 }
 
@@ -132,14 +209,13 @@ struct NameSource {
     QString (*parse)(const QByteArray&);
 };
 
-// Name probes in priority order; the first non-empty result wins. The NVIDIA
-// probe is first and doubles as the type probe (see finishNameSource).
-const std::array<NameSource, 3>& nameSources() {
-    static const std::array<NameSource, 3> sources = { {
+// Fallback name probes, used when lspci itself is unavailable. The NVIDIA
+// probe stays first: its result doubles as the type probe (see finishNameSource).
+const std::array<NameSource, 2>& nameSources() {
+    static const std::array<NameSource, 2> sources = { {
         { QStringLiteral("nvidia-smi"), { QStringLiteral("--query-gpu=name"), QStringLiteral("--format=csv,noheader") },
             &parseNvidiaName },
         { QStringLiteral("glxinfo"), { QStringLiteral("-B") }, &parseGlxinfoName },
-        { QStringLiteral("lspci"), {}, &parseLspciName },
     } };
     return sources;
 }
@@ -236,16 +312,29 @@ void Gpu::tick() {
         readGenericUsage();
         readGpuTemperature();
     } else if (t == Nvidia) {
-        startNvidiaUsage();
+        // Asking a sleeping card for its usage is what keeps it awake: every
+        // nvidia-smi run initializes the driver and pulls the device to P0.
+        // Reading the runtime power state from sysfs does not touch the card,
+        // so a suspended dGPU stays suspended and reports zero, and the query
+        // only runs when something else already woke the card (#588, #595).
+        if (pciPowerState(m_nvidiaPciPath) == PciPower::Active) {
+            startNvidiaUsage();
+        } else {
+            resetReadings();
+        }
     } else {
-        if (std::abs(m_percentage) > 0.0001) {
-            m_percentage = 0.0;
-            Q_EMIT percentageChanged();
-        }
-        if (std::abs(m_temperature) > 0.05) {
-            m_temperature = 0.0;
-            Q_EMIT temperatureChanged();
-        }
+        resetReadings();
+    }
+}
+
+void Gpu::resetReadings() {
+    if (std::abs(m_percentage) > 0.0001) {
+        m_percentage = 0.0;
+        Q_EMIT percentageChanged();
+    }
+    if (std::abs(m_temperature) > 0.05) {
+        m_temperature = 0.0;
+        Q_EMIT temperatureChanged();
     }
 }
 
@@ -255,8 +344,76 @@ void Gpu::detectGpu() {
     }
     m_detecting = true;
 
-    // Probe in priority order, stopping at the first result
-    tryNameSource(0);
+    // lspci reads PCI metadata from sysfs, so unlike the old probe chain it
+    // never wakes a runtime-suspended dGPU just to learn what is installed.
+    // The nvidia-smi probe runs later, and only when the card is awake.
+    runProcess(QStringLiteral("lspci"), {}, [this](const QByteArray& out) {
+        finishLspciProbe(out);
+    });
+}
+
+void Gpu::finishLspciProbe(const QByteArray& out) {
+    if (out.trimmed().isEmpty()) {
+        // lspci missing or failed: fall back to the old probe chain, which
+        // derives type from nvidia-smi and the name from glxinfo.
+        tryNameSource(0);
+        return;
+    }
+
+    const QList<DisplayController> controllers = parseDisplayControllers(out);
+    const DisplayController* nvidia = nullptr;
+    const DisplayController* other = nullptr;
+    for (const DisplayController& controller : controllers) {
+        if (controller.nvidia && !nvidia) {
+            nvidia = &controller;
+        } else if (!controller.nvidia && !other) {
+            other = &controller;
+        }
+    }
+
+    if (!nvidia) {
+        // No NVIDIA hardware, so the machines that the old chain probed with
+        // nvidia-smi first never run that probe at all now.
+        m_nvidiaPciPath.clear();
+        setAutoType(!m_busyFiles.isEmpty() || hasIntelGpu() ? Generic : None);
+        if (other && !other->name.isEmpty()) {
+            setName(other->name);
+        }
+        m_detecting = false;
+        return;
+    }
+
+    m_nvidiaPciPath = pciDevicePath(nvidia->slot);
+    if (!nvidia->name.isEmpty()) {
+        setName(nvidia->name);
+    }
+
+    // A suspended NVIDIA device is being power-managed by a bound driver;
+    // its name came from lspci, so there is nothing left that justifies
+    // waking the card here. nvidia-smi first runs from a tick that finds
+    // the card awake, or immediately below when it already is.
+    if (pciPowerState(m_nvidiaPciPath) == PciPower::Suspended) {
+        setAutoType(Nvidia);
+        m_detecting = false;
+        return;
+    }
+
+    probeNvidiaCapability();
+}
+
+// Asks nvidia-smi once whether the proprietary driver answers. On the old
+// chain this was the first probe every machine ran; now only machines with
+// NVIDIA hardware that is already awake get here.
+void Gpu::probeNvidiaCapability() {
+    runProcess(QStringLiteral("nvidia-smi"),
+        { QStringLiteral("--query-gpu=name"), QStringLiteral("--format=csv,noheader") }, [this](const QByteArray& out) {
+            const QString name = parseNvidiaName(out);
+            setAutoType(!name.isEmpty() ? Nvidia : (!m_busyFiles.isEmpty() || hasIntelGpu() ? Generic : None));
+            if (!name.isEmpty()) {
+                setName(std::move(name));
+            }
+            m_detecting = false;
+        });
 }
 
 void Gpu::tryNameSource(int index) {
@@ -333,38 +490,61 @@ void Gpu::readGenericUsage() {
         }
     }
 
-    // Pass 2: Intel iGPUs have no busy-percent node; approximate usage as the
-    // ratio of the current GPU frequency to its maximum.
+    // Pass 2: Intel iGPUs have no busy-percent node. The i915 engines report
+    // real per-engine busy percentages, which is what usage should mean; only
+    // cards without an engines directory fall back to the clock ratio, which
+    // reads far too high on an idle iGPU because an idle card does not
+    // necessarily drop out of its high clock range (#588).
     for (const QString& card : cards) {
         if (QFile::exists(QStringLiteral("/sys/class/drm/%1/device/gpu_busy_percent").arg(card)))
             continue;
-        QFile cur(QStringLiteral("/sys/class/drm/%1/gt/gt0/rps_cur_freq_mhz").arg(card));
-        if (!cur.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            continue;
+
+        qreal cardPerc = -1.0;
+
+        QDirIterator engines(QStringLiteral("/sys/class/drm/%1/engines").arg(card), QDir::Dirs | QDir::NoDotAndDotDot);
+        while (engines.hasNext()) {
+            QFile busy(engines.next() + QStringLiteral("/busy_percent"));
+            if (!busy.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                continue;
+            }
+            bool ok = false;
+            const qreal v = busy.readAll().trimmed().toDouble(&ok);
+            busy.close();
+            if (ok && v > cardPerc) {
+                cardPerc = v;
+            }
         }
-        QFile max(QStringLiteral("/sys/class/drm/%1/gt/gt0/rps_max_freq_mhz").arg(card));
-        if (!max.open(QIODevice::ReadOnly | QIODevice::Text)) {
+
+        if (cardPerc < 0.0) {
+            QFile cur(QStringLiteral("/sys/class/drm/%1/gt/gt0/rps_cur_freq_mhz").arg(card));
+            if (!cur.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                continue;
+            }
+            QFile max(QStringLiteral("/sys/class/drm/%1/gt/gt0/rps_max_freq_mhz").arg(card));
+            if (!max.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                cur.close();
+                continue;
+            }
+            bool curOk = false;
+            bool maxOk = false;
+            const qreal curV = cur.readAll().trimmed().toDouble(&curOk);
+            const qreal maxV = max.readAll().trimmed().toDouble(&maxOk);
             cur.close();
-            continue;
+            max.close();
+            if (curOk && maxOk && maxV > 0.0) {
+                qreal ratio = curV / maxV;
+                if (ratio < 0.0) {
+                    ratio = 0.0;
+                }
+                if (ratio > 1.0) {
+                    ratio = 1.0;
+                }
+                cardPerc = ratio * 100.0;
+            }
         }
-        bool curOk = false;
-        bool maxOk = false;
-        const qreal curV = cur.readAll().trimmed().toDouble(&curOk);
-        const qreal maxV = max.readAll().trimmed().toDouble(&maxOk);
-        cur.close();
-        max.close();
-        if (curOk && maxOk && maxV > 0.0) {
-            qreal ratio = curV / maxV;
-            if (ratio < 0.0) {
-                ratio = 0.0;
-            }
-            if (ratio > 1.0) {
-                ratio = 1.0;
-            }
-            const qreal v = ratio * 100.0;
-            if (v > maxPerc) {
-                maxPerc = v;
-            }
+
+        if (cardPerc > maxPerc) {
+            maxPerc = cardPerc;
         }
     }
 
@@ -388,8 +568,19 @@ void Gpu::startNvidiaUsage() {
 
             const QList<QByteArray> parts = out.trimmed().split(',');
             if (parts.size() < 2) {
+                // The card was awake when the query started, so a dead query
+                // points at an unusable driver rather than a sleeping card.
+                // Two in a row demote an auto-detected Nvidia to the generic
+                // readers, the way the old detection chain fell back; a user
+                // pinned type is respected and keeps retrying.
+                if (m_userType == Auto && ++m_nvidiaFailures >= 2) {
+                    m_nvidiaFailures = 0;
+                    setAutoType(!m_busyFiles.isEmpty() || hasIntelGpu() ? Generic : None);
+                }
                 return;
             }
+            m_nvidiaFailures = 0;
+
             bool ok1 = false;
             bool ok2 = false;
             const qreal usage = parts.at(0).trimmed().toDouble(&ok1) / 100.0;

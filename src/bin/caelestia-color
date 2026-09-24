@@ -801,9 +801,6 @@ variant_names() {
     printf '%s\n' tonalspot vibrant expressive fidelity fruitsalad monochrome neutral rainbow content
 }
 
-# Whether the wallpaper picks the mode and the variant. The shell keeps this in its own config
-# and hands it over as --no-smart when the user turns smart mode off, which is the only place
-# the choice is recorded; there is no key for it in cli.json, so an absent shell config means on.
 smart_scheme_flag() {
     local config="$CONFIG_HOME/caelestia/shell.json"
     [[ -f "$config" ]] || { printf '1\n'; return 0; }
@@ -967,9 +964,6 @@ render_decided() {
 
 # --source-color-index 0 stops matugen asking which color to use.
 #
-# The last two arguments are the mode and the variant the caller was given by hand, empty when it
-# was given neither. Handing a variant to this command is not a statement about the mode, and the
-# launcher sets one without the other, so each choice is handed to the wallpaper separately.
 render_image() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4" smart="$5" fan_out="$6" out="$7"
     local mode_arg_given="${8:-}" variant_arg_given="${9:-}"
@@ -1154,7 +1148,6 @@ apply_kvantum() {
     kwriteconfig6 --file "$CONFIG_HOME/Kvantum/kvantum.kvconfig" --group General --key theme "matugen" 2>/dev/null \
         || warn "could not select the Kvantum theme"
 }
-
 after_fan_out() {
     local mode="$1"
 
@@ -1179,6 +1172,18 @@ after_fan_out() {
     fi
 
     py render-templates "$SCHEME_FILE" "$USER_TEMPLATES" "$THEME_DIR" "$mode" || warn "could not render the user templates"
+}
+
+defer_to_desktop() {
+    local mode="$1"
+
+    if [[ -n "${CAELESTIA_NO_DEFER:-}" ]]; then
+        apply_to_desktop "$mode"
+        return 0
+    fi
+
+    ( apply_to_desktop "$mode" >/dev/null 2>&1 </dev/null & ) || true
+    return 0
 }
 
 # A failing hook is reported, not fatal: the palette is already on disk.
@@ -1230,7 +1235,7 @@ derive_from_wallpaper() {
     render_image "$wallpaper" "$flavour" "$mode" "$variant" "$smart" true "$RENDER_FILE" \
         "$mode_arg" "$variant_arg"
     commit "$RENDER_FILE"
-    after_fan_out "$META_MODE"
+    defer_to_desktop "$META_MODE"
     run_theme_hook
 }
 
@@ -1367,13 +1372,6 @@ cmd_scheme_set() {
 
     if [[ "$name" == "dynamic" ]]; then
         local wallpaper
-        # A dynamic scheme is the wallpaper's palette, and the wallpaper decides it unless smart
-        # mode is off. Deriving at the tonalspot/dark default instead loses what the wallpaper
-        # picked whenever a named scheme was in between.
-        #
-        # The flag is what the caller said; the config is what the shell last wrote down. Both
-        # are consulted because the shell writes its config on a delay, so a caller that has
-        # just turned smart mode off can outrun its own file.
         local smart=false
         if ((no_smart)); then
             smart=false
@@ -1424,7 +1422,7 @@ cmd_scheme_set() {
 
     render_named "$name" "$flavour" "$mode" "$variant" true "$RENDER_FILE"
     commit "$RENDER_FILE"
-    after_fan_out "$META_MODE"
+    defer_to_desktop "$META_MODE"
     run_theme_hook
 }
 

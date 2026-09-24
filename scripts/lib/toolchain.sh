@@ -89,7 +89,9 @@ install_cava_sdk() {
         rm -f "$archive"
         return 1
     elif [[ "$status" -eq 2 ]]; then
-        warn "No published checksum for $url - unpacking without verification (SHA-256 $(file_sha256 "$archive"))."
+        if ! is_own_release "$url"; then
+            warn "No published checksum for $url - unpacking without verification (SHA-256 $(file_sha256 "$archive"))."
+        fi
     fi
 
     # The archive is unpacked as root and tar takes the mode and the owner from it, so

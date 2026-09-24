@@ -140,6 +140,7 @@ setup_sandbox() {
     export MATUGEN_CALLS="$CALLS"
     export KDE_CALLS="$KDE_CALLS"
     export PATH="$STUB_DIR:$PATH"
+    export CAELESTIA_NO_DEFER=1
 }
 
 run_color() {
@@ -405,10 +406,6 @@ test_starship_is_not_written_unless_asked_for() {
     assert_file_exists "$XDG_CONFIG_HOME/starship.toml"
 }
 
-# Switching to dynamic asks for the palette the wallpaper would produce, so it has to ask the
-# same way `wallpaper -f` does. It used to pass the smart flag as false, which rendered the
-# wallpaper at tonalspot/dark however the wallpaper was actually measured: switching to a named
-# scheme and back dropped the variant and the mode the wallpaper had picked.
 test_switching_back_to_dynamic_keeps_what_the_wallpaper_picked() {
     setup_sandbox
     local image
@@ -436,8 +433,6 @@ test_switching_back_to_dynamic_keeps_what_the_wallpaper_picked() {
     assert_contains "$(cat "$scheme")" '"variant": "tonalspot"' "the variant is what the wallpaper gives"
 }
 
-# A wallpaper whose colourfulness reads as something other than tonalspot is the case that
-# shows the difference: the old code rendered it as tonalspot regardless.
 test_switching_back_to_dynamic_keeps_a_neutral_wallpaper_neutral() {
     setup_sandbox
     local image
@@ -455,16 +450,11 @@ test_switching_back_to_dynamic_keeps_a_neutral_wallpaper_neutral() {
         "the round trip does not recolor the wallpaper as tonalspot"
 }
 
-# A named scheme records the mode it was filed under, which has nothing to do with the
-# wallpaper. With smart mode on, the wallpaper picks the mode at every derive, so a later
-# re-derive must not inherit the light/dark of whichever scheme was showing.
 test_the_wallpaper_picks_the_mode_after_a_named_scheme() {
     setup_sandbox
     local image
     image="$(wallpaper_image wall.png)"
 
-    # The wallpaper comes first: a dynamic scheme is derived from one, so there has to be one
-    # before the round trip means anything.
     FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
     assert_status 0 "$STATUS" "setting a wallpaper should succeed"
 
@@ -479,9 +469,6 @@ test_the_wallpaper_picks_the_mode_after_a_named_scheme() {
         "the wallpaper picks the mode again rather than inheriting the named scheme's"
 }
 
-# The variant and the mode can also be given to `scheme set` directly, and then they are what
-# the user asked for rather than the wallpaper's own choice: smart derivation would throw both
-# away. This is the path the shell's own scripts use to pin a scheme.
 test_a_variant_given_to_scheme_set_is_not_overruled_by_smart() {
     setup_sandbox
     local image
@@ -502,14 +489,10 @@ test_a_variant_given_to_scheme_set_is_not_overruled_by_smart() {
     assert_contains "$(cat "$scheme")" '"mode": "light"' "the mode is recorded"
 }
 
-# The shell writes its config on a delay, so a caller that has just turned smart mode off can
-# outrun its own file. --no-smart states the intent in the command instead of leaving the
-# command to read it back.
 test_no_smart_can_be_stated_on_the_command_line() {
     setup_sandbox
     local image
     image="$(wallpaper_image wall.png)"
-    # A config that still says smart is on: what the caller meant must win over what it says.
     mkdir -p "$XDG_CONFIG_HOME/caelestia"
     printf '%s' '{"services":{"smartScheme":true}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
     FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
@@ -526,8 +509,6 @@ test_no_smart_can_be_stated_on_the_command_line() {
         "--no-smart keeps the wallpaper out of it (calls: $calls)"
 }
 
-# The same file, the other way: with the config saying smart is ON and no flag given, the
-# wallpaper picks, which is the fix for the reported round trip.
 test_smart_mode_is_read_from_the_shell_config() {
     setup_sandbox
     local image
@@ -574,6 +555,38 @@ test_a_preview_changes_nothing() {
     assert_eq "$before" "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" \
         "the scheme in effect is untouched"
     assert_ne "$before" "$OUTPUT" "the preview is not the current scheme"
+}
+
+test_the_desktop_apply_does_not_hold_up_the_return() {
+    setup_sandbox
+    unset CAELESTIA_NO_DEFER
+    cat > "$STUB_DIR/plasma-apply-colorscheme" <<'STUB'
+#!/usr/bin/env bash
+printf 'apply %s\n' "$*" >> "$KDE_CALLS"
+sleep 1
+STUB
+    chmod +x "$STUB_DIR/plasma-apply-colorscheme"
+
+    local start end elapsed
+    start="$(date +%s%N)"
+    run_color scheme set -n catppuccin -f mocha -m dark
+    end="$(date +%s%N)"
+    elapsed=$(( (end - start) / 1000000 ))
+    assert_status 0 "$STATUS" "the switch should succeed"
+
+    assert_file_exists "$XDG_STATE_HOME/caelestia/scheme.json"
+
+    if [[ "$elapsed" -ge 1000 ]]; then
+        fail "the command waited for the desktop apply (took ${elapsed} ms)"
+    fi
+
+    local waited=0
+    while [[ ! -s "$KDE_CALLS" && "$waited" -lt 100 ]]; do
+        sleep 0.1
+        waited=$((waited + 1))
+    done
+    assert_contains "$(cat "$KDE_CALLS" 2>/dev/null || true)" "apply Matugen" \
+        "the deferred apply still runs"
 }
 
 test_the_user_templates_are_rendered() {

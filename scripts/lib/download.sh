@@ -29,6 +29,14 @@ verify_download() {
     [[ "$expected" == "$(file_sha256 "$file")" ]]
 }
 
+is_own_release() {
+    local url="$1"
+    case "$url" in
+        https://github.com/ladybug-me/*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 # Refuse an archive that could escape where it is unpacked or leave a setuid binary
 # behind. Extraction runs as root for the SDK, and tar restores the mode and the owner
 # from the archive, so the entries are the thing to check when no hash is published.

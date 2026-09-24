@@ -1,10 +1,3 @@
 module qs.services.api
 singleton CaelestiaApi 1.0 CaelestiaApi.qml
-SystemApi 1.0 SystemApi.qml
-WindowsApi 1.0 WindowsApi.qml
-NetworkApi 1.0 NetworkApi.qml
-MediaApi 1.0 MediaApi.qml
-VisualsApi 1.0 VisualsApi.qml
-UiApi 1.0 UiApi.qml
-ShortcutsApi 1.0 ShortcutsApi.qml
 PluginsApi 1.0 PluginsApi.qml

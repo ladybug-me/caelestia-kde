@@ -60,30 +60,6 @@ PageBase {
             ToggleRow {
                 Layout.fillWidth: true
                 first: true
-                text: qsTr("Disable animations")
-                checked: GlobalConfig.utilities.gameMode.disableHyprlandAnimations
-                onToggled: GlobalConfig.utilities.gameMode.disableHyprlandAnimations = checked
-            }
-            ToggleRow {
-                Layout.fillWidth: true
-                text: qsTr("Disable blur")
-                checked: GlobalConfig.utilities.gameMode.disableHyprlandBlur
-                onToggled: GlobalConfig.utilities.gameMode.disableHyprlandBlur = checked
-            }
-            ToggleRow {
-                Layout.fillWidth: true
-                text: qsTr("Disable gaps and rounding")
-                checked: GlobalConfig.utilities.gameMode.disableHyprlandGaps
-                onToggled: GlobalConfig.utilities.gameMode.disableHyprlandGaps = checked
-            }
-            ToggleRow {
-                Layout.fillWidth: true
-                text: qsTr("Disable shadows")
-                checked: GlobalConfig.utilities.gameMode.disableHyprlandShadows
-                onToggled: GlobalConfig.utilities.gameMode.disableHyprlandShadows = checked
-            }
-            ToggleRow {
-                Layout.fillWidth: true
                 text: qsTr("Disable window transparency")
                 last: true
                 checked: GlobalConfig.utilities.gameMode.disableWindowTransparency

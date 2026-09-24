@@ -176,9 +176,6 @@ Item {
         }
     }
 
-    // Unused in KDE
-    Process { id: fetchLayoutsFromDevices }
-
     Process {
         id: fetchActiveLayouts
 

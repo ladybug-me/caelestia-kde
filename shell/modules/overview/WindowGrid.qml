@@ -294,10 +294,6 @@ Item {
             height: listView.height
             Component.onCompleted: {
                 _updateWsWindows();
-                //console.log("WindowGrid Page initialized. wsId:", wsId, "windows found:", wsWindows.length, "Total windows globally:", Kwin.windowList.length);
-            }
-            onWsWindowsChanged: {
-                //console.log("WindowGrid Page updated. wsId:", wsId, "windows found:", wsWindows.length);
             }
 
             TapHandler {

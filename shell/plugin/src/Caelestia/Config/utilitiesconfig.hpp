@@ -58,10 +58,6 @@ class UtilitiesVpn : public settings::ObjectNode {
 class UtilitiesGameMode : public settings::ObjectNode {
     CONFIG_NODE(UtilitiesGameMode, settings::ObjectNode)
 
-    CONFIG_GLOBAL_PROPERTY(bool, disableHyprlandAnimations, true)
-    CONFIG_GLOBAL_PROPERTY(bool, disableHyprlandBlur, true)
-    CONFIG_GLOBAL_PROPERTY(bool, disableHyprlandGaps, true)
-    CONFIG_GLOBAL_PROPERTY(bool, disableHyprlandShadows, true)
     CONFIG_GLOBAL_PROPERTY(bool, disableShellTransparency, true)
     CONFIG_GLOBAL_PROPERTY(bool, disableWindowTransparency, true)
     CONFIG_GLOBAL_PROPERTY(bool, disableToastTransparency, true)

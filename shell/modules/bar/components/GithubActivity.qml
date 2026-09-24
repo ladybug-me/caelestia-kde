@@ -125,21 +125,7 @@ StyledRect {
                 }
             }
         }
-
-        /* Uncomment for total count beside the widget
-        StyledText {
-            id: text
-            verticalAlignment: StyledText.AlignVCenter
-            text: root.total
-            font.pointSize: Appearance.font.size.smaller
-            font.family: Appearance.font.family.mono
-            color: root.colour
-        }
-        */
     }
-
-    // Could do something with this in the future, nothing currently though to keep things decluttered
-    // var counts root.lastError !== "" ? ("GitHub: " + root.lastError) : root.weekDays.map(d => `${d.date}: ${d.count}`).join("\n")
 
     Process {
         id: proc

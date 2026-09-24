@@ -111,10 +111,6 @@ Singleton {
         );
     }
 
-    property bool cooldownPending
-
-    property real lastBaseTransparency
-
     property bool schemeLoaded: false
 
     property int schemeRetryCount: 0
@@ -263,47 +259,12 @@ Singleton {
         Quickshell.execDetached(["bash", Quickshell.shellPath("scripts/reseed-scheme.sh")]);
     }
 
-    function reloadHyprRules(): void {
-        // Layer rules are Hyprland-only; KWin handles blur via effects.
-                    return;
-
-        let rule, trEnabled;
-        if (Kwin.usingLua) {
-            rule = `eval hl.layer_rule({ match = { namespace = "caelestia-drawers" }, %1 = %2 })`;
-            trEnabled = transparency.enabled;
-        } else {
-            rule = "keyword layerrule %1 %2, match:namespace caelestia-drawers";
-            trEnabled = transparency.enabled ? 1 : 0;
-        }
-        Kwin.extras.batchMessage([rule.arg("blur").arg(trEnabled), rule.arg("ignore_alpha").arg(Math.max(0, transparency.base - 0.03))]);
-    }
-
-    function requestReloadHyprRules(): void {
-        if (cooldownTimer.running) {
-            root.cooldownPending = true;
-        } else {
-            root.reloadHyprRules();
-            cooldownTimer.restart();
-        }
-    }
-
     Component.onCompleted: {
-        root.requestReloadHyprRules()
         Qt.callLater(updatePaletteManager)
         scheduleSchemeReload()
         startupSchemePollTimer.start()
         reseedTimer.start()
     }
-
-    Connections {
-        function onConfigReloaded(): void {
-            root.reloadHyprRules();
-        }
-
-        target: Kwin
-    }
-
-
 
     FileView {
         id: schemeFile
@@ -392,46 +353,10 @@ Singleton {
 
     onShowPreviewChanged: Qt.callLater(updatePaletteManager)
 
-
-
-    Timer {
-        id: cooldownTimer
-
-        interval: 30
-        onTriggered: {
-            if (root.cooldownPending) {
-                root.cooldownPending = false;
-                root.reloadHyprRules();
-                restart();
-            }
-        }
-    }
-
-    Timer {
-        id: cAnimCompleteTimer
-
-        interval: Tokens.anim.durations.expressiveSlowEffects
-        onTriggered: root.requestReloadHyprRules()
-    }
-
     component Transparency: QtObject {
         readonly property bool enabled: Tokens.transparency.enabled && !(GameMode.enabled && GlobalConfig.utilities.gameMode.disableShellTransparency)
         readonly property real base: Math.max(0, Math.min(1, Tokens.transparency.base - (root.light ? 0.1 : 0)))
         readonly property real layers: Math.max(0, Math.min(1, Tokens.transparency.layers))
-
-        onEnabledChanged: {
-            if (enabled)
-                root.requestReloadHyprRules();
-            else
-                cAnimCompleteTimer.start();
-        }
-        onBaseChanged: {
-            if (root.lastBaseTransparency > base)
-                root.requestReloadHyprRules();
-            else
-                cAnimCompleteTimer.start();
-            root.lastBaseTransparency = base;
-        }
     }
 
     component M3TPalette: QtObject {

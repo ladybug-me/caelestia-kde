@@ -54,8 +54,6 @@ Singleton {
             }
 
             color: Colours.tPalette.m3surface
-            // Commented because nexus bg depends on the above
-            // color: GlobalConfig.appearance.transparency.enabled ? Qt.alpha(Colours.tPalette.m3surface, 0) : Colours.tPalette.m3surface
 
             surfaceFormat.opaque: false
 

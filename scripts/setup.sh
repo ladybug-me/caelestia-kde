@@ -133,9 +133,9 @@ try_download_prebuilt_installer() {
 
     verify_download "$url" "$tmp_bin" || status=$?
     if [[ "$status" -eq 1 ]]; then
-        echo "[WARN]  Checksum mismatch for the prebuilt installer - compiling locally."
+        echo "[WARN]  Checksum mismatch for the prebuilt installer - compiling locally." >&2
     elif [[ "$status" -eq 2 ]]; then
-        echo "[WARN]  No published checksum for the prebuilt installer - compiling locally."
+        echo "[WARN]  No published checksum for the prebuilt installer - compiling locally." >&2
     fi
     if [[ "$status" -ne 0 ]]; then
         rm -f "$tmp_bin"
@@ -174,6 +174,11 @@ start_spinner
 PREBUILT_BIN=""
 if [[ -z "${CAELESTIA_FORCE_BUILD_INSTALLER:-}" ]] && command -v curl >/dev/null 2>&1; then
     PREBUILT_BIN="$(try_download_prebuilt_installer || true)"
+fi
+
+if [[ -n "$PREBUILT_BIN" && ! -x "$PREBUILT_BIN" ]]; then
+    echo "[WARN]  The prebuilt installer download did not produce a binary; compiling locally." >&2
+    PREBUILT_BIN=""
 fi
 
 if [[ -n "$PREBUILT_BIN" ]]; then

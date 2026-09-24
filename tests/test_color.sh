@@ -546,8 +546,6 @@ test_smart_mode_is_read_from_the_shell_config() {
     assert_contains "$calls" "--type scheme-neutral" "the wallpaper's own variant is measured"
 }
 
-# The launcher picks a variant and nothing else, because the mode is the wallpaper's business
-# there. Pinning the variant must not take the mode away from the wallpaper with it.
 test_a_variant_alone_still_lets_the_wallpaper_pick_the_mode() {
     setup_sandbox
     local image

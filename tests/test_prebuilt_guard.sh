@@ -144,4 +144,79 @@ test_a_tree_that_is_not_a_checkout_builds_locally() {
     fi
 }
 
+INSTALLER_SOURCE="$(awk '
+    $0 ~ "^try_download_prebuilt_installer\\(\\) \\{" { capture = 1 }
+    capture { print }
+    capture && $0 == "}" { exit }
+' "$REPO_ROOT/scripts/setup.sh")"
+
+if [[ -z "$INSTALLER_SOURCE" ]]; then
+    fail "could not find try_download_prebuilt_installer in scripts/setup.sh"
+fi
+
+installer_stdout_with_status() {
+    local status="$1"
+    bash -c "
+        tui_version() { echo '9.9.9'; }
+        release_tag() { echo 'v9.9.9'; }
+        fetch_asset() { : > \"\$2\"; return 0; }
+        verify_download() { return $status; }
+        uname() { echo x86_64; }
+        $INSTALLER_SOURCE
+        try_download_prebuilt_installer
+    " 2>/dev/null
+}
+
+installer_stderr_with_status() {
+    local status="$1"
+    bash -c "
+        tui_version() { echo '9.9.9'; }
+        release_tag() { echo 'v9.9.9'; }
+        fetch_asset() { : > \"\$2\"; return 0; }
+        verify_download() { return $status; }
+        uname() { echo x86_64; }
+        $INSTALLER_SOURCE
+        try_download_prebuilt_installer
+    " 2>&1 >/dev/null
+}
+
+test_no_checksum_prints_nothing_to_stdout() {
+    local out
+    out="$(installer_stdout_with_status 2)"
+
+    if [[ -n "$out" ]]; then
+        fail "a failed download must print nothing to stdout, got: $out"
+    fi
+}
+
+test_no_checksum_warns_on_stderr() {
+    local err
+    err="$(installer_stderr_with_status 2)"
+
+    case "$err" in
+        *"No published checksum"*) ;;
+        *) fail "the reason should still be reported, on stderr; got: $err" ;;
+    esac
+}
+
+test_checksum_mismatch_prints_nothing_to_stdout() {
+    local out
+    out="$(installer_stdout_with_status 1)"
+
+    if [[ -n "$out" ]]; then
+        fail "a mismatched download must print nothing to stdout, got: $out"
+    fi
+}
+
+test_a_verified_download_prints_only_the_path() {
+    local out
+    out="$(installer_stdout_with_status 0)"
+
+    case "$out" in
+        /tmp/*|/var/*) ;;
+        "") fail "a verified download should print its path, got nothing" ;;
+        *) fail "stdout should carry the path and nothing else, got: $out" ;;
+    esac
+}
+
 run_tests

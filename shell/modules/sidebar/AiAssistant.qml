@@ -1517,6 +1517,12 @@ Item {
     }
 
     function saveHistory() {
+        // saveChatHistory is the user's opt-out: with it off, conversations
+        // stay in the live chat view but never enter the saved history, on
+        // disk or in the sidebar. Clearing stays available for anything that
+        // was saved while the toggle was on.
+        if (!GlobalConfig.ai.saveChatHistory)
+            return;
         var msgs = [];
         for (var i = 0; i < chatHistory.count; i++) {
             var msg = chatHistory.get(i);

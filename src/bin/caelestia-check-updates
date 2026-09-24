@@ -48,11 +48,15 @@ if [ -n "$_localCommit" ]; then
         timeout ${GIT_TIMEOUT} git -C "$REPO" fetch --force origin "$BRANCH:$BRANCH" >/dev/null 2>&1 || true
     fi
 
-    LOCAL_DATE=$(git -C "$REPO" show -s --format=%cI ${_localCommit} 2>/dev/null)
-    if [ -n "$LOCAL_DATE" ]; then
-        CAELESTIA_PENDING=$(git -C "$REPO" log --oneline --since="$LOCAL_DATE" ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+    # Count exactly what the Nexus updates page counts (ancestor-gated
+    # rev-list): a commit-date filter made this timer disagree with the GUI
+    # whenever a commit's date did not match its position in the history
+    # (rebases, carried patches), and a diverged or unknown local commit
+    # must not make every branch commit look new either. Issue #565.
+    if git -C "$REPO" merge-base --is-ancestor "${_localCommit}" "${BRANCH}" 2>/dev/null; then
+        CAELESTIA_PENDING=$(git -C "$REPO" rev-list --count "${_localCommit}..${BRANCH}" 2>/dev/null || echo 0)
     else
-        CAELESTIA_PENDING=$(git -C "$REPO" log --oneline ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+        CAELESTIA_PENDING=0
     fi
 fi
 

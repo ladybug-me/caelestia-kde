@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+                          http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <group name="General">
+    <entry name="barCount" type="Int">
+      <label>Number of spectrum bars</label>
+      <default>60</default>
+    </entry>
+    <entry name="rounding" type="Double">
+      <label>Bar corner rounding multiplier</label>
+      <default>1.0</default>
+    </entry>
+    <entry name="spacing" type="Double">
+      <label>Bar spacing multiplier</label>
+      <default>1.0</default>
+    </entry>
+    <entry name="animationDuration" type="Int">
+      <label>Bar settle animation duration in milliseconds</label>
+      <default>200</default>
+    </entry>
+    <entry name="pauseWhenHidden" type="Bool">
+      <label>Pause audio capture while the applet is not visible</label>
+      <default>true</default>
+    </entry>
+    <entry name="showUnavailableMessage" type="Bool">
+      <label>Show a message when the Caelestia plugin is unavailable</label>
+      <default>true</default>
+    </entry>
+  </group>
+</kcfg>

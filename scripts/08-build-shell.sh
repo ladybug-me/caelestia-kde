@@ -182,6 +182,24 @@ configure_lockscreen_greeter() {
     fi
 }
 
+install_visualiser_plasmoid() {
+    local src="$BUNDLE_DIR/src/kde/plasmoids/org.caelestia.visualiser"
+    local dest="$HOME/.local/share/plasma/plasmoids/org.caelestia.visualiser"
+
+    if [[ ! -d "$src" ]]; then
+        warn "Caelestia visualiser plasmoid source not found: $src"
+        return 1
+    fi
+
+    info "Installing the Caelestia visualiser plasmoid."
+    if ! atomic_replace_tree "$src" "$dest" metadata.json; then
+        warn "Failed to install the Caelestia visualiser plasmoid to $dest"
+        return 1
+    fi
+
+    ok "Caelestia visualiser plasmoid installed. Add it to the desktop from the widget toolbox."
+}
+
 CCACHE_DIR="${CCACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/ccache}"
 export CCACHE_DIR
 mkdir -p "$CCACHE_DIR"
@@ -599,6 +617,14 @@ elif [[ "${APPLY_LOCKSCREEN:-true}" == "false" ]]; then
     skip "Lock screen greeter disabled by user choice."
 else
     info "KDE Lock Screen installation and configuration skipped."
+fi
+
+if [[ "${CAELESTIA_SKIP_DEPLOY:-0}" == "0" && "${APPLY_VISUALISER_PLASMOID:-true}" != "false" ]]; then
+    install_visualiser_plasmoid || true
+elif [[ "${APPLY_VISUALISER_PLASMOID:-true}" == "false" ]]; then
+    skip "Visualiser plasmoid disabled by user choice."
+else
+    info "Visualiser plasmoid installation skipped."
 fi
 
 ok "Caelestia Shell and KDE Bridges built and installed successfully to user directory."

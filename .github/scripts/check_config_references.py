@@ -43,7 +43,9 @@ ATTACHED_QPROP_RE = re.compile(
 LEAF = "<leaf>"
 METHOD = "<method>"
 
-ROOT_METHODS = {"forScreen", "defaults", "save", "reload", "resetOption", "instance"}
+ROOT_METHODS = {
+    "forScreen", "monitorLayers", "removeMonitorLayer", "defaults", "save", "reload", "resetOption", "instance",
+}
 
 
 def parse_headers() -> tuple[dict[str, dict[str, str]], dict[str, str], list[str]]:

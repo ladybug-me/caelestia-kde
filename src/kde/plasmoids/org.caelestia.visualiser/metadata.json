@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API": "declarativeappletscript",
+    "KPlugin": {
+        "Id": "org.caelestia.visualiser",
+        "Name": "Caelestia Visualiser",
+        "Description": "Audio spectrum for the Plasma desktop, rendered by the Caelestia shell's cava provider.",
+        "Category": "Multimedia",
+        "Icon": "audio-volume-high",
+        "Version": "1.0.0",
+        "License": "GPL-3.0-or-later",
+        "Authors": [{ "Name": "0x0nYx" }],
+        "Website": "https://github.com/0x0nYx/caelestia-kde",
+        "BugReportUrl": "https://github.com/0x0nYx/caelestia-kde/issues",
+        "ServiceTypes": ["Plasma/Applet"]
+    }
+}

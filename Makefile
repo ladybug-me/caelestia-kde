@@ -9,6 +9,7 @@
 #   make check      everything CI runs for lint
 
 SHELL_DIR     := shell
+PLASMOIDS_DIR := src/kde/plasmoids
 INSTALLER_DIR := installer
 TUI_DIR       := $(INSTALLER_DIR)/tui
 BUILD_DIR     := $(INSTALLER_DIR)/build
@@ -85,6 +86,7 @@ check-shell: ## shellcheck and syntax-check every shell script
 check-qml: ## QML conventions, syntax, imports, embedded bash, config references
 	$(PYTHON) $(CI_DIR)/check_qml_conventions.py
 	$(PYTHON) $(CI_DIR)/check_qml_syntax.py --source-root $(SHELL_DIR)
+	$(PYTHON) $(CI_DIR)/check_qml_syntax.py --source-root $(PLASMOIDS_DIR)
 	$(PYTHON) $(CI_DIR)/check_qml_imports.py --shell-root $(SHELL_DIR)
 	$(PYTHON) $(CI_DIR)/check_embedded_bash.py
 	$(PYTHON) $(CI_DIR)/check_config_references.py

@@ -3,8 +3,13 @@ pragma Singleton
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
+import QtCore
 import Qt.labs.synchronizer
 import Quickshell
+import Caelestia.Config
+import qs.components
+import qs.components.controls
 import qs.services
 import qs.utils
 
@@ -26,6 +31,17 @@ Singleton {
     property string imageSearchEngineBaseUrl: "https://lens.google.com/uploadbyurl?url="
     property string fileUploadApiEndpoint: "https://uguu.se/upload"
 
+    // Cloud-search consent (default off): the "Search" snip uploads the crop to
+    // a public file host and hands the public link to Google Lens. Nothing
+    // leaves the machine until the user has opted in through the consent
+    // dialog below; the choice is persisted so it only ever has to be given
+    // once.
+    property alias cloudSearchConsent: consentSettings.cloudSearchConsent
+
+    // Parameters of the snip waiting for consent. Replaced if another request
+    // arrives while the dialog is still open.
+    property var pendingCloudSearch: null
+
     function escapeShellStr(str) {
         if (!str) return "''";
         return str.replace(/'/g, "'\\''");
@@ -46,7 +62,7 @@ Singleton {
         const uploadAndGetUrl = (filePath) => {
             return `curl -sF files[]=@'${escapeShellStr(filePath)}' ${root.fileUploadApiEndpoint} | jq -r '.files[0].url'`
         }
-        
+
         const rawSaveDir = saveDir;
 
         switch (action) {
@@ -94,10 +110,20 @@ Singleton {
             }
 
             case ScreenshotAction.SnipAction.Search: {
+                if (!root.cloudSearchConsent) {
+                    // This is the only snip action that sends data off the
+                    // machine. Ask first; the real command runs from the
+                    // consent dialog once (if) the user opts in, and the
+                    // harmless no-op returned here keeps the caller's
+                    // execDetached contract valid.
+                    root.requestCloudSearch(x, y, width, height, screenshotPath, saveDir);
+                    return "true";
+                }
                 const tmpFile = Paths.runtimeTemp("snip-search.png")
                 return `set -euo pipefail; ` +
                     `${cropToFile(tmpFile)} && ` +
-                    `xdg-open "${root.imageSearchEngineBaseUrl}$(${uploadAndGetUrl(tmpFile)})"; ` +
+                    `URL=$(${uploadAndGetUrl(tmpFile)} | tr -d '\\r\\n'); ` +
+                    `case "$URL" in https://*|http://*) xdg-open "${root.imageSearchEngineBaseUrl}$URL";; *) echo "Unexpected upload response" >&2;; esac; ` +
                     `rm -f '${tmpFile}'; ${cleanup}`
             }
 
@@ -130,5 +156,132 @@ Singleton {
     function getCommand(x, y, width, height, screenshotPath, action, saveDir = "") {
         const script = root.getScript(x, y, width, height, screenshotPath, action, saveDir);
         return script ? ["bash", "-c", script] : undefined;
+    }
+
+    // ── Cloud-search consent ──────────────────────────────────────────────
+
+    Settings {
+        id: consentSettings
+
+        category: "Screenshot"
+        property bool cloudSearchConsent: false
+    }
+
+    function requestCloudSearch(x, y, width, height, screenshotPath, saveDir) {
+        pendingCloudSearch = {
+            x: x,
+            y: y,
+            width: width,
+            height: height,
+            screenshotPath: screenshotPath,
+            saveDir: saveDir || ""
+        };
+        consentDialog.active = true;
+    }
+
+    // Runs the snip that was waiting for consent. Only called after the user
+    // accepted the dialog (which persists the opt-in first).
+    function runPendingCloudSearch() {
+        const req = pendingCloudSearch;
+        pendingCloudSearch = null;
+        if (!req)
+            return;
+        const script = getScript(req.x, req.y, req.width, req.height, req.screenshotPath, ScreenshotAction.SnipAction.Search, req.saveDir);
+        if (script)
+            Quickshell.execDetached(["bash", "-c", script]);
+    }
+
+    // Drops the pending snip and removes the captured screenshot so no copy of
+    // it lingers after a refusal.
+    function cancelPendingCloudSearch() {
+        const req = pendingCloudSearch;
+        pendingCloudSearch = null;
+        if (req && req.screenshotPath)
+            Quickshell.execDetached(["rm", "-f", req.screenshotPath]);
+    }
+
+    LazyLoader {
+        id: consentDialog
+
+        active: false
+
+        FloatingWindow {
+            id: consentWindow
+
+            function accept(): void {
+                // Remember the opt-in so the dialog is only ever shown once.
+                consentSettings.cloudSearchConsent = true;
+                consentDialog.active = false;
+                root.runPendingCloudSearch();
+            }
+
+            function reject(): void {
+                consentDialog.active = false;
+                root.cancelPendingCloudSearch();
+            }
+
+            implicitWidth: 500
+            implicitHeight: consentContent.implicitHeight + Tokens.padding.largeIncreased * 2
+            color: Colours.tPalette.m3surface
+            title: qsTr("Allow online image search?")
+
+            onVisibleChanged: {
+                // Closing the window without answering counts as a refusal.
+                if (!visible && consentDialog.active)
+                    reject();
+            }
+
+            ColumnLayout {
+                id: consentContent
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.margins: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.medium
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Searching uploads the selected screenshot to %1, a public file host. Anyone with the link can view the image.").arg("uguu.se")
+                    wrapMode: Text.WordWrap
+                    font: Tokens.font.body.small
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("The image link is then sent to Google Lens (lens.google.com) to run the search.")
+                    wrapMode: Text.WordWrap
+                    font: Tokens.font.body.small
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Nothing is uploaded unless you allow it. Your choice is remembered.")
+                    wrapMode: Text.WordWrap
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.label.small
+                }
+
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.topMargin: Tokens.spacing.small
+                    spacing: Tokens.spacing.medium
+
+                    Item { Layout.fillWidth: true }
+
+                    TextButton {
+                        text: qsTr("Cancel")
+                        type: TextButton.Text
+                        onClicked: consentWindow.reject()
+                    }
+
+                    TextButton {
+                        text: qsTr("Upload and search")
+                        type: TextButton.Filled
+                        onClicked: consentWindow.accept()
+                    }
+                }
+            }
+        }
     }
 }

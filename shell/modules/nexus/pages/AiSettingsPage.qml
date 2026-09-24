@@ -214,6 +214,20 @@ PageBase {
 
     property string installStatus: ""
 
+    // The installer is never piped straight into a shell: it is downloaded to a
+    // temp file first, then shown to the user (source + size) for an explicit
+    // confirmation before anything from the network is executed.
+    // "downloading" -> "confirm" -> "running"
+    property string installStage: "idle"
+
+    property string downloadedInstallerPath: ""
+
+    property int downloadedInstallerSize: 0
+
+    // The only source an installer may be fetched from; shown verbatim in the
+    // confirmation step.
+    readonly property string claudeInstallerUrl: "https://claude.ai/install.sh"
+
     // `claude --version` prints "2.1.220 (Claude Code)"; the bare number is what
     // reads well next to the published one.
     readonly property string claudeVersionShort: {
@@ -250,6 +264,29 @@ PageBase {
     function refreshStatus() {
         statusProc.running = false;
         statusProc.running = true;
+    }
+
+    // Run the confirmed installer. The path is a mktemp file the download
+    // stage produced; it runs as an argv element, never through a shell string.
+    function runInstaller() {
+        if (installStage !== "confirm" || downloadedInstallerPath === "")
+            return;
+        installStage = "running";
+        installStatus = qsTr("Installing…");
+        installerRunProc.command = ["bash", downloadedInstallerPath];
+        installerRunProc.running = true;
+    }
+
+    // Drop the downloaded installer without running it.
+    function cancelInstaller() {
+        if (downloadedInstallerPath !== "") {
+            Quickshell.execDetached(["rm", "-f", downloadedInstallerPath]);
+            downloadedInstallerPath = "";
+        }
+        downloadedInstallerSize = 0;
+        installStage = "idle";
+        installing = false;
+        installStatus = "";
     }
 
     function refreshOllamaStatus() {
@@ -434,17 +471,75 @@ PageBase {
             }
         }
 
+        // Stage 1: download the installer to a temp file. Nothing executes
+        // here; curl -f refuses to keep a partial file on HTTP errors, and the
+        // ERR trap removes the temp file if the download fails, so a failed
+        // download can never be executed. The URL is a fixed constant passed
+        // as an argv element.
         Process {
-            id: installProc
+            id: installerDownloadProc
 
-            command: ["sh", "-c", "curl -fsSL https://claude.ai/install.sh | bash"]
+            command: ["bash", "-c", `set -euo pipefail
+TMP=$(mktemp /tmp/caelestia-claude-install.XXXXXX.sh)
+trap 'rm -f "$TMP"' ERR
+curl -fL --proto '=https' --tlsv1.2 -o "$TMP" "$1"
+printf 'PATH=%s\\nSIZE=%s\\n' "$TMP" "$(wc -c < "$TMP")"`, "--", root.claudeInstallerUrl]
+
+            stdout: StdioCollector {
+                id: installerDownloadOut
+            }
+            stderr: SplitParser {
+                onRead: line => root.installStatus = line
+            }
+
+            onExited: (code) => {
+                if (code !== 0) {
+                    // curl -f: nothing usable was kept, nothing will run.
+                    root.installStage = "idle";
+                    root.installing = false;
+                    root.installStatus = qsTr("Download failed") + " (" + code + ")";
+                    return;
+                }
+                let path = "";
+                let size = 0;
+                const lines = (installerDownloadOut.text || "").split("\n");
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].indexOf("PATH=") === 0)
+                        path = lines[i].slice(5).trim();
+                    else if (lines[i].indexOf("SIZE=") === 0)
+                        size = parseInt(lines[i].slice(5), 10) || 0;
+                }
+                if (path === "") {
+                    root.installStage = "idle";
+                    root.installing = false;
+                    root.installStatus = qsTr("Download failed");
+                    return;
+                }
+                root.downloadedInstallerPath = path;
+                root.downloadedInstallerSize = size;
+                root.installStage = "confirm";
+                root.installStatus = "";
+            }
+        }
+
+        // Stage 2: run the installer the user just confirmed.
+        Process {
+            id: installerRunProc
+
             stdout: SplitParser {
                 onRead: line => root.installStatus = line
             }
             stderr: SplitParser {
                 onRead: line => root.installStatus = line
             }
-            onExited: code => {
+            onExited: (code) => {
+                // The temp installer is single-use; remove it either way.
+                if (root.downloadedInstallerPath !== "") {
+                    Quickshell.execDetached(["rm", "-f", root.downloadedInstallerPath]);
+                    root.downloadedInstallerPath = "";
+                }
+                root.downloadedInstallerSize = 0;
+                root.installStage = "idle";
                 root.installing = false;
                 root.installStatus = code === 0 ? qsTr("Installed.") : (qsTr("Failed") + " (" + code + ")");
                 root.refreshStatus();
@@ -701,7 +796,6 @@ PageBase {
         }
         NavRow {
             visible: GlobalConfig.ai.enableClaudeCode
-            last: true
             // One button, three jobs: install it, update it, or — when it is
             // already current — re-check whether that is still true.
             icon: root.claudeInstalled && !UpdateChecker.claudeCodeHasUpdate ? "refresh" : "download"
@@ -713,6 +807,8 @@ PageBase {
                 return qsTr("Check for updates");
             }
             status: {
+                if (root.installStage === "confirm")
+                    return qsTr("Review the download before running it");
                 if (root.installing)
                     return root.installStatus || qsTr("Installing…");
                 if (UpdateChecker.claudeCodeChecking)
@@ -733,8 +829,115 @@ PageBase {
                     return;
                 }
                 root.installing = true;
-                root.installStatus = qsTr("Installing…");
-                installProc.running = true;
+                root.installStage = "downloading";
+                root.installStatus = qsTr("Downloading…");
+                installerDownloadProc.running = true;
+            }
+        }
+
+        // Explicit review step before anything from the network is executed:
+        // the downloaded installer is shown with its exact source and size and
+        // only runs after the user confirms.
+        ConnectedRect {
+            id: installerConfirmRect
+
+            visible: root.installStage === "confirm"
+            Layout.fillWidth: true
+            first: true
+            last: true
+            implicitHeight: installerConfirmColumn.implicitHeight + Tokens.padding.largeIncreased * 2
+
+            ColumnLayout {
+                id: installerConfirmColumn
+
+                anchors.fill: parent
+                anchors.margins: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.small
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("The installer has been downloaded and is ready to run:")
+                    font: Tokens.font.title.small
+                }
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Source: %1").arg(root.claudeInstallerUrl)
+                    font: Tokens.font.body.small
+                    color: Colours.palette.m3onSurfaceVariant
+                }
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Size: %1 kB").arg((root.downloadedInstallerSize / 1024).toFixed(1))
+                    font: Tokens.font.body.small
+                    color: Colours.palette.m3onSurfaceVariant
+                }
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("The file runs with your user permissions. Only continue if you trust this source.")
+                    font: Tokens.font.body.small
+                    color: Colours.palette.m3onSurfaceVariant
+                }
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.topMargin: Tokens.spacing.small
+                    spacing: Tokens.spacing.medium
+
+                    Item { Layout.fillWidth: true }
+                    TextButton {
+                        text: qsTr("Cancel")
+                        type: TextButton.Text
+                        onClicked: root.cancelInstaller()
+                    }
+                    TextButton {
+                        text: qsTr("Run installer")
+                        type: TextButton.Filled
+                        onClicked: root.runInstaller()
+                    }
+                }
+            }
+        }
+
+        // Unrestricted mode (off by default): while enabled, every Claude Code
+        // session is spawned with --dangerously-skip-permissions, i.e. it runs
+        // commands and edits files without asking first.
+        ToggleRow {
+            visible: GlobalConfig.ai.enableClaudeCode
+            last: !unrestrictedWarning.visible
+            text: qsTr("Unrestricted mode")
+            subtext: qsTr("Let Claude Code run commands without asking")
+            checked: GlobalConfig.ai.claudeCodeSkipPermissions
+            onToggled: GlobalConfig.ai.claudeCodeSkipPermissions = checked
+        }
+
+        // The warning stays visible for as long as unrestricted mode is on.
+        ConnectedRect {
+            id: unrestrictedWarning
+
+            visible: GlobalConfig.ai.enableClaudeCode && GlobalConfig.ai.claudeCodeSkipPermissions
+            Layout.fillWidth: true
+            first: true
+            last: true
+            implicitHeight: unrestrictedWarningLayout.implicitHeight + Tokens.padding.largeIncreased * 2
+
+            RowLayout {
+                id: unrestrictedWarningLayout
+
+                anchors.fill: parent
+                anchors.margins: Tokens.padding.largeIncreased
+                spacing: Tokens.spacing.medium
+
+                MaterialIcon {
+                    Layout.alignment: Qt.AlignTop
+                    text: "warning"
+                    color: Colours.palette.m3error
+                    fontStyle: Tokens.font.icon.large
+                }
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Unrestricted mode is on: Claude Code executes commands and edits files without asking. Turn this off if that is not what you want.")
+                    wrapMode: Text.WordWrap
+                    font: Tokens.font.body.small
+                }
             }
         }
 

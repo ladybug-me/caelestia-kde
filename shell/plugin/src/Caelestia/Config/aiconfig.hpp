@@ -43,6 +43,12 @@ class AiConfig : public settings::ObjectNode {
     // Effort / thinking level passed to `claude --effort` ("default" = don't pass).
     CONFIG_PROPERTY(QString, claudeCodeEffort, u"default"_s)
 
+    // Unrestricted Claude Code mode: pass --dangerously-skip-permissions so the
+    // CLI executes tools without asking. Off by default; the AI settings page
+    // shows a warning while it is enabled (see AiSettingsPage.qml /
+    // claudeCodePermissionFlags() in AiAssistant.qml).
+    CONFIG_PROPERTY(bool, claudeCodeSkipPermissions, false)
+
     // Multiple Claude accounts, each backed by its own CLAUDE_CONFIG_DIR.
     // claudeAccountsJson: JSON array of {"id","name"} (the default ~/.claude login
     // is always available as an implicit "Default" entry, id ""). activeClaudeAccount

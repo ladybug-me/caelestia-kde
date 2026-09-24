@@ -9,6 +9,14 @@ import Quickshell.Io
 Item {
     id: storeRoot
 
+    // GitHub org the plugin repositories are cloned from. Forks point this at
+    // their own org with CAELESTIA_REPO_OWNER so plugin installs come from the
+    // fork instead of upstream. The store index below stays pinned to the
+    // canonical upstream repository (it is the content source).
+    readonly property string repoOwner: Qt.getenv("CAELESTIA_REPO_OWNER") || "ladybug-me"
+    readonly property string pluginsRepoUrl: "https://github.com/" + repoOwner + "/caelestia-kde-plugins.git"
+    readonly property string storeIndexBaseUrl: "https://raw.githubusercontent.com/ladybug-me/caelestia-kde-plugins"
+
     property bool loading: false
     property bool error: false
     property string errorMessage: ""
@@ -27,8 +35,35 @@ Item {
     property var indexData: null
     property ListModel storePlugins: ListModel {}
 
+    // Store index fields are remote-controlled data that ends up in shell
+    // commands and filesystem paths, so every field must pass this allow-list
+    // before it is used anywhere. It admits plain plugin identifiers and repo
+    // paths and rejects everything that could break out of quoting or traverse
+    // directories ($ ` ; & | < > " ' whitespace, control characters, "..",
+    // absolute paths).
+    readonly property var safeFieldRegex: /^[A-Za-z0-9._\/-]{1,128}$/
+
     signal indexFetched()
     signal installedStateChanged()
+
+    function isValidStoreField(field) {
+        return typeof field === "string"
+            && safeFieldRegex.test(field)
+            && field.indexOf("..") === -1
+            && field.charAt(0) !== "/";
+    }
+
+    // Removal never goes through a shell (plain argv), so a display name with
+    // spaces stays valid; the guards that matter there are directory traversal
+    // and absolute paths, since the id becomes an `rm -rf` target.
+    function isRemovablePluginId(field) {
+        return typeof field === "string"
+            && field.length > 0
+            && field.length <= 128
+            && field.indexOf("..") === -1
+            && field.charAt(0) !== "/"
+            && field.indexOf("\n") === -1;
+    }
 
     function fetchIndex(branch) {
         let fetchBranch = branch || "main";
@@ -48,7 +83,7 @@ Item {
             console.log("PluginStore: baseline seeded in fetchIndex:", JSON.stringify(ids));
         }
 
-        fetchProc.command = ["curl", "-sfL", "https://raw.githubusercontent.com/ladybug-me/caelestia-kde-plugins/" + fetchBranch + "/index.json"];
+        fetchProc.command = ["curl", "-sfL", storeIndexBaseUrl + "/" + fetchBranch + "/index.json"];
         fetchProc.running = true;
     }
 
@@ -59,34 +94,63 @@ Item {
 
         let actualRepoPath = repoPath || ("plugins/" + id);
 
+        // id, repoPath and branch come straight from the remote store index, so
+        // they are attacker-controlled. Validate the values that will actually
+        // be used before anything touches the shell or the disk; on failure
+        // surface a graceful error instead of silently doing nothing.
+        if (!isValidStoreField(id) || !isValidStoreField(actualRepoPath) || !isValidStoreField(installBranch)) {
+            error = true;
+            installing = false;
+            installProgress = "";
+            errorMessage = qsTr("Rejected plugin \"%1\": the store entry contains an unsafe id, path or branch").arg(id);
+            console.warn("PluginStore: rejected unsafe store entry", JSON.stringify({
+                id: id,
+                repoPath: actualRepoPath,
+                branch: installBranch
+            }));
+            return;
+        }
+
         installing = true;
-        installProgress = "Cloning plugin '" + id + "'...";
+        installProgress = qsTr("Cloning plugin '%1'...").arg(id);
 
         let targetDir = (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/caelestia/plugins/" + id;
 
-        let script = `set -e
+        // The script is fully static: every remote-controlled value rides as an
+        // argv element after "--" ($1 id, $2 repo path, $3 branch, $4 target
+        // dir, $5 repo url) and is only ever expanded inside double quotes, so
+        // no store entry can inject shell syntax.
+        let script = `set -euo pipefail
 TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
 cd "$TMP_DIR"
 git init -q
-git remote add origin https://github.com/ladybug-me/caelestia-kde-plugins.git
+git remote add origin "$5"
 git config core.sparseCheckout true
-echo "${actualRepoPath}/*" >> .git/info/sparse-checkout
-git fetch -q --depth 1 --filter=blob:none origin "${installBranch}"
-git reset --hard -q "origin/${installBranch}"
-mkdir -p "$(dirname "${targetDir}")"
-rm -rf "${targetDir}"
-mv "${actualRepoPath}" "${targetDir}"
-rm -rf "$TMP_DIR"
+echo "$2/*" >> .git/info/sparse-checkout
+git fetch -q --depth 1 --filter=blob:none origin "$3"
+git reset --hard -q "origin/$3"
+mkdir -p "$(dirname "$4")"
+rm -rf "$4"
+mv "$2" "$4"
 echo "DONE"`;
 
         installProc.pendingId = id;
         installProc.pendingTargetDir = targetDir;
         installProc.pendingRestart = (restart === "true" || restart === true);
-        installProc.command = ["bash", "-c", script];
+        installProc.command = ["bash", "-c", script, "--", id, actualRepoPath, installBranch, targetDir, pluginsRepoUrl];
         installProc.running = true;
     }
 
     function removePlugin(id) {
+        // The id ends up in an `rm -rf` target, so it must be a safe path
+        // component (no traversal, no absolute path).
+        if (!isRemovablePluginId(id)) {
+            error = true;
+            errorMessage = qsTr("Refused to remove plugin \"%1\": unsafe id").arg(id);
+            console.warn("PluginStore: refusing to remove plugin with unsafe id:", id);
+            return;
+        }
         let targetDir = (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/caelestia/plugins/" + id;
         removeProc.pendingId = id;
         // Determine whether this plugin requires a restart when removed.
@@ -175,6 +239,8 @@ echo "DONE"`;
         onExited: (code) => {
             storeRoot.installing = false;
             if (code !== 0) {
+                storeRoot.error = true;
+                storeRoot.errorMessage = qsTr("Failed to install plugin %1").arg(installProc.pendingId);
                 console.log("PluginStore: install error for", installProc.pendingId, ":", installErr.text, installOut.text);
             } else {
                 console.log("PluginStore: install success for", installProc.pendingId);

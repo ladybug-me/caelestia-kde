@@ -154,41 +154,17 @@ Item {
         pendingMeta++;
         console.log("readMetadata called for", pluginInfo.id, "at", metaPath);
 
-        let proc = Qt.createQmlObject(`
-            import Quickshell.Io
-            Process {
-                command: ["cat", "${metaPath}"]
-                stdout: StdioCollector { id: out }
-                stderr: StdioCollector { id: err }
-                onExited: (code) => {
-                    if (code === 0) {
-                        try {
-                            let meta = JSON.parse(out.text);
-                            meta.path = "${pluginInfo.path}";
-                            meta.source = "${pluginInfo.source}";
-
-                            let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
-                            meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
-                            meta.settings = meta.settings || [];
-                            meta.mediaurl = meta.mediaurl || "";
-                            meta.restart = (meta.restart === "true" || meta.restart === true);
-
-                            // Extract author information
-                            meta.authorName = meta.author ? (meta.author.name || "") : "";
-                            let aUrl = meta.author ? (meta.author.url || "") : "";
-                            meta.icon = meta.icon || "extension";
-
-                            pluginLoader.discovered.push(meta);
-                        } catch(e) {
-                            console.log("Failed to parse metadata.json for", "${pluginInfo.id}", e);
-                        }
-                    }
-                    pluginLoader.pendingMeta--;
-                    pluginLoader.checkAndFinalize();
-                    destroy();
-                }
-            }
-        `, pluginLoader, "metaReader_" + pluginInfo.id);
+        let proc = metaReaderComp.createObject(pluginLoader, {
+            "pluginId": String(pluginInfo.id || ""),
+            "pluginPath": String(pluginInfo.path || ""),
+            "pluginSource": String(pluginInfo.source || "")
+        });
+        if (proc === null) {
+            console.log("Failed to create metadata reader for", pluginInfo.id);
+            pendingMeta--;
+            checkAndFinalize();
+            return;
+        }
         proc.running = true;
     }
 
@@ -205,34 +181,15 @@ Item {
         // cannot guess (it defaults to the checkout path), so it is passed in.
         let bundledPlugins = Quickshell.shellPath("modules/plugins");
 
-        let proc = Qt.createQmlObject(`
-            import Quickshell.Io
-            Process {
-                command: ["bash", "${script}", "${bundledPlugins}"]
-                stdout: StdioCollector { id: out }
-                stderr: StdioCollector { id: err }
-                onExited: (code) => {
-                    if (code === 0) {
-                        try {
-                            let list = JSON.parse(out.text);
-                            if (list.length === 0) {
-                                pluginLoader.checkAndFinalize();
-                            }
-                            for (let i = 0; i < list.length; i++) {
-                                pluginLoader.readMetadata(list[i]);
-                            }
-                        } catch(e) {
-                            console.log("Error parsing plugin list:", e);
-                            pluginLoader.checkAndFinalize();
-                        }
-                    } else {
-                        console.log("listPluginsProc exited with code:", code, "stderr:", err.text);
-                        pluginLoader.checkAndFinalize();
-                    }
-                    destroy();
-                }
-            }
-        `, pluginLoader, "listPluginsProc");
+        let proc = listPluginsComp.createObject(pluginLoader, {
+            "scriptPath": script,
+            "bundledPluginsPath": bundledPlugins
+        });
+        if (proc === null) {
+            console.log("Failed to create plugin list process");
+            checkAndFinalize();
+            return;
+        }
         proc.running = true;
     }
 
@@ -279,6 +236,97 @@ Item {
         addMetaReader.pendingSource = source;
         addMetaReader.command = ["cat", path + "/metadata.json"];
         addMetaReader.running = true;
+    }
+
+    // One metadata reader per plugin, instantiated from this inline component
+    // (never from a QML string built with variable data: plugin paths are
+    // untrusted input and must stay data, not QML source). Paths are passed to
+    // `cat` as argv elements, the same pattern addMetaReader below uses.
+    Component {
+        id: metaReaderComp
+
+        Process {
+            id: metaProc
+
+            required property string pluginId
+            required property string pluginPath
+            required property string pluginSource
+
+            command: ["cat", metaProc.pluginPath + "/metadata.json"]
+
+            stdout: StdioCollector { id: metaOut }
+            stderr: StdioCollector { id: metaErr }
+
+            onExited: (code) => {
+                if (code === 0) {
+                    try {
+                        let meta = JSON.parse(metaOut.text);
+                        // Merge the loader's own fields after parsing so no
+                        // variable ever lands inside QML source.
+                        meta.path = metaProc.pluginPath;
+                        meta.source = metaProc.pluginSource;
+
+                        let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
+                        meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
+                        meta.settings = meta.settings || [];
+                        meta.mediaurl = meta.mediaurl || "";
+                        meta.restart = (meta.restart === "true" || meta.restart === true);
+
+                        // Extract author information
+                        meta.authorName = meta.author ? (meta.author.name || "") : "";
+                        let aUrl = meta.author ? (meta.author.url || "") : "";
+                        meta.icon = meta.icon || "extension";
+
+                        pluginLoader.discovered.push(meta);
+                    } catch(e) {
+                        console.log("Failed to parse metadata.json for", metaProc.pluginId, e);
+                    }
+                }
+                pluginLoader.pendingMeta--;
+                pluginLoader.checkAndFinalize();
+                metaProc.destroy();
+            }
+        }
+    }
+
+    // The plugin lister, instantiated from this inline component so no QML
+    // source string is ever built from variable data. The helper script and
+    // the bundled-plugins path are passed as argv elements.
+    Component {
+        id: listPluginsComp
+
+        Process {
+            id: listProc
+
+            required property string scriptPath
+            required property string bundledPluginsPath
+
+            command: ["bash", listProc.scriptPath, listProc.bundledPluginsPath]
+
+            stdout: StdioCollector { id: out }
+            stderr: StdioCollector { id: err }
+
+            onExited: (code) => {
+                if (code === 0) {
+                    try {
+                        let list = JSON.parse(out.text);
+                        if (list.length === 0) {
+                            pluginLoader.checkAndFinalize();
+                        }
+                        for (let i = 0; i < list.length; i++) {
+                            pluginLoader.readMetadata(list[i]);
+                        }
+                    } catch(e) {
+                        console.log("Error parsing plugin list:", e);
+                        pluginLoader.checkAndFinalize();
+                    }
+                } else {
+                    console.log("listPluginsProc exited with code:", code, "stderr:", err.text);
+                    pluginLoader.checkAndFinalize();
+                }
+                listProc.destroy();
+            }
+        }
     }
 
     Process {

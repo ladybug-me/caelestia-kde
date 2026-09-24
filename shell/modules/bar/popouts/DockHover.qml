@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
-import Quickshell
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import Caelestia.Config
@@ -95,15 +94,9 @@ StyledRect {
                 anchors.rightMargin: -Tokens.padding.medium * scaleOffset
                 radius: parent.radius
                 onClicked: {
-                    if (root.model && root.model.entry) {
-                        const subCmd = root.model.entry.runInTerminal
-                            ? [...GlobalConfig.general.apps.terminal, `${Quickshell.shellDir}/assets/wrap_term_launch.sh`, ...root.model.entry.command]
-                            : root.model.entry.command;
-                        Quickshell.execDetached({
-                            command: Launch.wrap(subCmd),
-                            workingDirectory: root.model.entry.workingDirectory
-                        });
-                    }
+                    if (root.model && root.model.entry)
+                        Launch.launchEntry(root.model.entry);
+
                     root.popouts.hasCurrent = false;
                 }
             }

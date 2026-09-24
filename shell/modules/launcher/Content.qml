@@ -3,13 +3,13 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell
 import Caelestia
 import Caelestia.Config
 import Caelestia.Services
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.utils
 import qs.modules.launcher.services
 
 Item {
@@ -32,7 +32,7 @@ Item {
     function triggerSessionCommand(command: list<string>): void {
         root.visibilities.launcher = false;
         if (!SessionManager.exec(command))
-            Quickshell.execDetached(command);
+            Launch.exec(command);
     }
 
     implicitWidth: listWrapper.width + padding * 2

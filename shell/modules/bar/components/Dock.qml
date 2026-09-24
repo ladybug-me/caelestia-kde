@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Quickshell
 import Quickshell.Io
 import Quickshell.Widgets
 import Caelestia
@@ -564,13 +563,7 @@ Item {
                                     newLaunching[modelData.appClass || modelData.id] = true;
                                     root.launchingApps = newLaunching;
 
-                                    const subCmd = modelData.entry.runInTerminal
-                                        ? [...GlobalConfig.general.apps.terminal, `${Quickshell.shellDir}/assets/wrap_term_launch.sh`, ...modelData.entry.command]
-                                        : modelData.entry.command;
-                                    Quickshell.execDetached({
-                                        command: Launch.wrap(subCmd),
-                                        workingDirectory: modelData.entry.workingDirectory
-                                    });
+                                    Launch.launchEntry(modelData.entry);
                                 }
                             } else if (mouse.button === Qt.RightButton) {
                                 bar.popouts.currentName = "dockcontext";

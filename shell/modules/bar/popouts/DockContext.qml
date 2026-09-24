@@ -120,15 +120,9 @@ ColumnLayout {
                     radius: newWinItem.radius
 
                     onClicked: {
-                        if (model.entry) {
-                            const subCmd = model.entry.runInTerminal
-                                ? [...GlobalConfig.general.apps.terminal, `${Quickshell.shellDir}/assets/wrap_term_launch.sh`, ...model.entry.command]
-                                : model.entry.command;
-                            Quickshell.execDetached({
-                                command: Launch.wrap(subCmd),
-                                workingDirectory: model.entry.workingDirectory
-                            });
-                        }
+                        if (model.entry)
+                            Launch.launchEntry(model.entry);
+
                         root.popouts.hasCurrent = false;
                     }
                 }

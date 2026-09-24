@@ -1148,7 +1148,7 @@ apply_kvantum() {
     kwriteconfig6 --file "$CONFIG_HOME/Kvantum/kvantum.kvconfig" --group General --key theme "matugen" 2>/dev/null \
         || warn "could not select the Kvantum theme"
 }
-after_fan_out() {
+apply_to_desktop() {
     local mode="$1"
 
     if enabled enableKde; then

@@ -42,8 +42,6 @@ qml_module(caelestia-services
         sessionmanager.hpp
         discordipc.cpp
         discordipc.hpp
-        hyprlandstate.cpp
-        hyprlandstate.hpp
         hyprdevices.cpp
         hyprdevices.hpp
         hyprextras.cpp

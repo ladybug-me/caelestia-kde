@@ -14,6 +14,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/lib/update-state.sh"
 export BUNDLE_DIR="${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 SHELL_DIR="$BUNDLE_DIR/shell"
 
+# Fork identity: the owner publishing release artifacts (the prebuilt shell
+# archive below). Upstream default stays ladybug-me; a fork that does not
+# publish binaries points this at the owner whose releases it ships.
+: "${CAELESTIA_PREBUILT_OWNER:=ladybug-me}"
+
 write_shell_environment() {
     local env_d="$HOME/.config/environment.d"
     local plasma_env_d="$HOME/.config/plasma-workspace/env"
@@ -301,7 +306,7 @@ try_download_prebuilt_shell() {
     url=""
     info "Downloading prebuilt shell artifacts (${tag}, Qt ${qt_abi})..."
     for asset in "caelestia-kde-${arch}-qt${qt_abi}.tar.gz" "caelestia-shell-${arch}-qt${qt_abi}.tar.gz"; do
-        candidate="https://github.com/ladybug-me/caelestia-kde/releases/download/${tag}/${asset}"
+        candidate="https://github.com/${CAELESTIA_PREBUILT_OWNER}/caelestia-kde/releases/download/${tag}/${asset}"
         if fetch_asset "$candidate" "$tmp_archive" --progress-bar; then
             url="$candidate"
             break

@@ -2,8 +2,9 @@ pragma ComponentBehavior: Bound
 
 // Environment variables originally set via //@ pragma directives moved to
 // the launcher scripts (08-build-shell.sh, 10-autostart.sh) for broader
-// quickshell version compatibility.
-//@ pragma Env QS_CRASHREPORT_URL=https://github.com/ladybug-me/caelestia-kde/issues/new?template=crash.yml
+// quickshell version compatibility. The crash-report URL is not pinned here:
+// forks point QS_CRASHREPORT_URL at their own issue tracker from their
+// launcher scripts, alongside CAELESTIA_REPO_OWNER (see README, "For forks").
 // //@ pragma DefaultEnv QS_NO_RELOAD_POPUP=1
 // //@ pragma DefaultEnv QS_DROP_EXPENSIVE_FONTS=1
 // //@ pragma DefaultEnv QSG_RENDER_LOOP=threaded

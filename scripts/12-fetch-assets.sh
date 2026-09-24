@@ -10,7 +10,12 @@ ASSETS_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/caelestia/assets"
 FONTS_DIR="$ASSETS_DIR/fonts"
 SHELL_FONTS="$(install_assets_dir)/fonts"
 
-REPO="${CAELESTIA_ASSETS_REPO:-https://github.com/ladybug-me/caelestia-kde}"
+# Fork identity: the owner publishing release artifacts (the released tag the
+# fonts are fetched from here). Upstream default stays ladybug-me; a fork
+# points this at the owner whose releases carry the fonts. A full URL
+# override remains available via CAELESTIA_ASSETS_REPO.
+: "${CAELESTIA_PREBUILT_OWNER:=ladybug-me}"
+REPO="${CAELESTIA_ASSETS_REPO:-https://github.com/${CAELESTIA_PREBUILT_OWNER}/caelestia-kde}"
 
 has_fonts() {
     [[ -n "$(find "$1" -maxdepth 2 \( -name '*.ttf' -o -name '*.otf' \) -print -quit 2>/dev/null)" ]]

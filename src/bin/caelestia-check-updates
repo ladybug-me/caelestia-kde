@@ -16,11 +16,27 @@ if command -v jq >/dev/null && [ -f "$HOME/.config/caelestia/shell.json" ]; then
 fi
 
 # UI updates (GitHub)
-REPO="$HOME/.cache/caelestia-update-repo"
-BRANCH=$(cat "$HOME/.config/quickshell/caelestia/.update_branch" 2>/dev/null || echo "main")
+#
+# Fork identity: the owner of the git repositories cloned/pulled for source
+# and updates. Upstream default stays ladybug-me; a fork exports its own user.
+: "${CAELESTIA_REPO_OWNER:=ladybug-me}"
+REPO_URL="https://github.com/${CAELESTIA_REPO_OWNER}/caelestia-kde.git"
+
+STATE_DIR="$HOME/.config/quickshell/caelestia"
+BRANCH=$(cat "$STATE_DIR/.update_branch" 2>/dev/null || echo "main")
 if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "dev" ]; then
     BRANCH="main"
 fi
+
+# Which checkout owns the install (#565): the badge must describe the repo
+# that actually deployed the shell - its origin is the channel the install
+# updates from - not a third clone of upstream that may not even contain the
+# recorded commit.
+UPDATE_REPO=$(cat "$STATE_DIR/.update_repo" 2>/dev/null || true)
+
+repo_is_checkout() {
+    [ -n "$1" ] && git -C "$1" rev-parse --git-dir >/dev/null 2>&1
+}
 
 # No interactive prompts, and a timeout so a hung network cannot stall the timer.
 export GIT_TERMINAL_PROMPT=0
@@ -29,30 +45,51 @@ GIT_TIMEOUT=30
 # --exit-code makes git report 2 when no ref matches; every other status is the query
 # itself failing (offline, DNS, timeout). Only "the branch is gone" may rewrite the user's
 # stored choice, or a laptop that is briefly offline silently moves itself to main.
+REMOTE_URL="$REPO_URL"
+if repo_is_checkout "$UPDATE_REPO"; then
+    REMOTE_URL=$(git -C "$UPDATE_REPO" remote get-url origin 2>/dev/null || printf '%s' "$REPO_URL")
+fi
 ls_status=0
-timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git "$BRANCH" >/dev/null 2>&1 || ls_status=$?
+timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads "$REMOTE_URL" "$BRANCH" >/dev/null 2>&1 || ls_status=$?
 if [ "$ls_status" -eq 2 ]; then
     echo "[WARN] Branch '$BRANCH' does not exist on the remote; falling back to main." >&2
     BRANCH="main"
-    mkdir -p "$HOME/.config/quickshell/caelestia"
-    echo "$BRANCH" > "$HOME/.config/quickshell/caelestia/.update_branch"
+    mkdir -p "$STATE_DIR"
+    echo "$BRANCH" > "$STATE_DIR/.update_branch"
 fi
 
-_localCommit="$(cat "$HOME/.config/quickshell/caelestia/.current_commit" 2>/dev/null)"
+_localCommit="$(cat "$STATE_DIR/.current_commit" 2>/dev/null)"
 CAELESTIA_PENDING=0
 
 if [ -n "$_localCommit" ]; then
-    if [ ! -d "$REPO" ]; then
-        timeout ${GIT_TIMEOUT} git clone --bare --filter=blob:none https://github.com/ladybug-me/caelestia-kde.git "$REPO" >/dev/null 2>&1 || true
+    if repo_is_checkout "$UPDATE_REPO"; then
+        # The owning checkout still holds the recorded commit, so count
+        # pending updates against its own origin: fetch the branch (harmless
+        # to the working tree) and measure from the recorded commit to the
+        # fetched tip.
+        timeout ${GIT_TIMEOUT} git -C "$UPDATE_REPO" fetch origin "$BRANCH" >/dev/null 2>&1 || true
+        LOCAL_DATE=$(git -C "$UPDATE_REPO" show -s --format=%cI ${_localCommit} 2>/dev/null)
+        if [ -n "$LOCAL_DATE" ]; then
+            CAELESTIA_PENDING=$(git -C "$UPDATE_REPO" log --oneline --since="$LOCAL_DATE" ${_localCommit}..FETCH_HEAD 2>/dev/null | wc -l)
+        else
+            CAELESTIA_PENDING=$(git -C "$UPDATE_REPO" log --oneline ${_localCommit}..FETCH_HEAD 2>/dev/null | wc -l)
+        fi
     else
-        timeout ${GIT_TIMEOUT} git -C "$REPO" fetch --force origin "$BRANCH:$BRANCH" >/dev/null 2>&1 || true
-    fi
+        # No recorded checkout (or it is gone): fall back to a bare mirror of
+        # the default repository.
+        REPO="$HOME/.cache/caelestia-update-repo"
+        if [ ! -d "$REPO" ]; then
+            timeout ${GIT_TIMEOUT} git clone --bare --filter=blob:none "$REPO_URL" "$REPO" >/dev/null 2>&1 || true
+        else
+            timeout ${GIT_TIMEOUT} git -C "$REPO" fetch --force origin "$BRANCH:$BRANCH" >/dev/null 2>&1 || true
+        fi
 
-    LOCAL_DATE=$(git -C "$REPO" show -s --format=%cI ${_localCommit} 2>/dev/null)
-    if [ -n "$LOCAL_DATE" ]; then
-        CAELESTIA_PENDING=$(git -C "$REPO" log --oneline --since="$LOCAL_DATE" ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
-    else
-        CAELESTIA_PENDING=$(git -C "$REPO" log --oneline ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+        LOCAL_DATE=$(git -C "$REPO" show -s --format=%cI ${_localCommit} 2>/dev/null)
+        if [ -n "$LOCAL_DATE" ]; then
+            CAELESTIA_PENDING=$(git -C "$REPO" log --oneline --since="$LOCAL_DATE" ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+        else
+            CAELESTIA_PENDING=$(git -C "$REPO" log --oneline ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+        fi
     fi
 fi
 
@@ -82,6 +119,9 @@ fi
 
 # Notify only when a count went up, so a standing backlog does not re-nag.
 CACHE_FILE="$HOME/.cache/caelestia-kde/last_update_counts"
+# Created before the notification block: the notification id file lives in
+# the same directory and is written before this script reaches the bottom.
+mkdir -p "$(dirname "$CACHE_FILE")"
 OLD_C=0
 OLD_S=0
 
@@ -136,5 +176,4 @@ if [ "$CAELESTIA_PENDING" -gt "${OLD_C:-0}" ] || [ "$SYSTEM_PENDING" -gt "${OLD_
     fi
 fi
 
-mkdir -p "$(dirname "$CACHE_FILE")"
 echo "$CAELESTIA_PENDING $SYSTEM_PENDING" > "$CACHE_FILE"

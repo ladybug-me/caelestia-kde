@@ -6,6 +6,11 @@
 source "$(dirname "${BASH_SOURCE[0]}")/download.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/log.sh"
 
+# Fork identity: the owner publishing release artifacts (the prebuilt CAVA
+# SDK below). Upstream default stays ladybug-me; a fork that does not publish
+# binaries points this at the owner whose releases it ships.
+: "${CAELESTIA_PREBUILT_OWNER:=ladybug-me}"
+
 # What the shell build can link against, in the same words 08-build-shell.sh stores
 # in its toolchain stamp: a pkg-config version, "sdk" for the prebuilt headers, or
 # "none". One probe, so the stamp and the guard cannot disagree.
@@ -74,7 +79,7 @@ install_cava_sdk() {
         arch="$(uname -m 2>/dev/null || echo "x86_64")"
     fi
 
-    local url="https://github.com/ladybug-me/cava/releases/download/continuous/cava-${arch}-${asset_suffix}.tar.gz"
+    local url="https://github.com/${CAELESTIA_PREBUILT_OWNER}/cava/releases/download/continuous/cava-${arch}-${asset_suffix}.tar.gz"
     local archive status=0
     archive="$(mktemp)"
 

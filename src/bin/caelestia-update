@@ -19,19 +19,78 @@ run_stage() {
     fi
 }
 
-BRANCH="${1:-main}"
-TARGET_REF="${2:-}"
+usage() {
+    cat << 'EOF'
+Usage: caelestia-update [--takeover] [branch] [tag|commit]
+
+Updates the shell from its own repository clone and redeploys it. The branch
+defaults to the channel recorded by the last update
+(~/.config/quickshell/caelestia/.update_branch), or "main" when nothing is
+recorded; both update paths share that default.
+
+--takeover   Re-own the update state even if the checkout-based updater
+             (update.sh / the installer TUI) owns it. Without this flag this
+             script refuses to clobber state naming a still-live checkout,
+             because the two mechanisms deploy from different checkouts and
+             would otherwise rewind each other (issue #565).
+
+Forks: the clone tracks CAELESTIA_REPO_OWNER/caelestia-kde (default
+ladybug-me); see README.md, "For forks".
+EOF
+}
+
+# Fork identity: the owner of the git repositories cloned/pulled for source
+# and updates. Upstream default stays ladybug-me; a fork exports its own user.
+: "${CAELESTIA_REPO_OWNER:=ladybug-me}"
+REPO_URL="https://github.com/${CAELESTIA_REPO_OWNER}/caelestia-kde.git"
+
+# Positional arguments are the branch and an optional tag/commit target; the
+# one flag this updater takes is the #565 ownership override.
+TAKEOVER=0
+BRANCH_ARG=""
+TARGET_ARG=""
+for arg in "$@"; do
+    case "$arg" in
+        --takeover)
+            TAKEOVER=1
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            if [ -z "$BRANCH_ARG" ]; then
+                BRANCH_ARG="$arg"
+            elif [ -z "$TARGET_ARG" ]; then
+                TARGET_ARG="$arg"
+            else
+                die "Unexpected argument: $arg (see --help)"
+            fi
+            ;;
+    esac
+done
+
+BRANCH="$BRANCH_ARG"
+if [ -z "$BRANCH" ]; then
+    # Same default order as update.sh: the recorded channel, then "main".
+    BRANCH="$(head -n1 "$HOME/.config/quickshell/caelestia/.update_branch" 2>/dev/null || true)"
+    if [ -n "$BRANCH" ]; then
+        echo "[INFO]  Using the recorded update channel: $BRANCH"
+    else
+        BRANCH="main"
+    fi
+fi
 if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "dev" ]; then
     echo "Warning: Branch '$BRANCH' is not allowed. Falling back to 'main'."
     BRANCH="main"
 fi
-if ! git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git "$BRANCH" >/dev/null 2>&1; then
+if ! git ls-remote --exit-code --heads "$REPO_URL" "$BRANCH" >/dev/null 2>&1; then
     echo "Warning: Branch '$BRANCH' does not exist on remote. Falling back to 'main'."
     BRANCH="main"
 fi
-
+TARGET_REF="$TARGET_ARG"
 if [ -n "$TARGET_REF" ]; then
-    if git ls-remote --exit-code --tags https://github.com/ladybug-me/caelestia-kde.git "$TARGET_REF" >/dev/null 2>&1; then
+    if git ls-remote --exit-code --tags "$REPO_URL" "$TARGET_REF" >/dev/null 2>&1; then
         TARGET_KIND="tag"
     elif [ "$BRANCH" = "dev" ] && [[ "$TARGET_REF" =~ ^[0-9a-f]{7,40}$ ]]; then
         # Dev can also install or revert to a specific commit, not just a tag.
@@ -137,6 +196,27 @@ if [ "$PACKAGED" -eq 1 ]; then
     exit 0
 fi
 
+# Ownership guard (#565), before anything is fetched or deployed: when the
+# state names the checkout-based updater (update.sh / installer TUI) and that
+# checkout still exists, rewriting the state from this shadow clone would
+# rewind the recorded revision the checkout-based install depends on. This
+# mirrors update_state_allow_takeover in scripts/lib/update-state.sh; this
+# script ships standalone in ~/.local/bin, so it cannot source the lib before
+# its own clone exists. Packaged installs exited above: they never touch the
+# state, so the guard does not apply to them.
+STATE_CONFIG="$HOME/.config/quickshell/caelestia"
+if [ "$TAKEOVER" -ne 1 ]; then
+    STATE_OWNER="$(head -n1 "$STATE_CONFIG/.update_source" 2>/dev/null || true)"
+    if [ "$STATE_OWNER" = "tui" ]; then
+        STATE_REPO="$(head -n1 "$STATE_CONFIG/.update_repo" 2>/dev/null || true)"
+        if [ -z "$STATE_REPO" ] || git -C "$STATE_REPO" rev-parse --git-dir >/dev/null 2>&1; then
+            die "This install is managed by the checkout-based updater (update.sh / installer TUI)${STATE_REPO:+ at $STATE_REPO}.
+Run 'bash ${STATE_REPO:-<your caelestia-kde checkout>}/update.sh' there, or re-run with --takeover to let the CLI updater take over."
+        fi
+        echo "[INFO]  The checkout that owned this install is gone; taking over the update state."
+    fi
+fi
+
 # Primes escalation once and refreshes it in the background, so the root work below never
 # prompts again, even after a long build.
 if [ "$EUID" -ne 0 ]; then
@@ -190,14 +270,14 @@ if [[ ! -d "$UPD_DIR/repo/.git" ]]; then
     mkdir -p "$UPD_DIR/repo"
     cd "$UPD_DIR/repo" || die "Failed to enter $UPD_DIR/repo"
     git init -q
-    git remote add origin https://github.com/ladybug-me/caelestia-kde.git
+    git remote add origin "$REPO_URL"
 else
     cd "$UPD_DIR/repo" || die "Failed to enter $UPD_DIR/repo"
     if git rev-parse HEAD >/dev/null 2>&1; then
         git reset --hard -q HEAD || die "Failed to reset repository state"
     fi
     git clean -fdx -q
-    git remote set-url origin https://github.com/ladybug-me/caelestia-kde.git
+    git remote set-url origin "$REPO_URL"
 fi
 
 # Always enforce sparse-checkout rules
@@ -323,7 +403,10 @@ fi
 # record_installed_revision() refuses under CAELESTIA_SKIP_BUILD=1: the checkout moved
 # but the shell was deliberately not rebuilt, so the new revision would describe a state
 # nobody can see (#651). The previous value stays, still naming the running shell.
-if record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia"; then
+# The "cli" source and the fetched $BRANCH are passed explicitly: the shadow clone
+# sits on whatever branch git init picked, and records the deploy provenance
+# (.update_source/.update_repo) that the ownership guard above keys off.
+if record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia" "cli" "$BRANCH"; then
     info "Saved commit hash: $(cat "$HOME/.config/quickshell/caelestia/.current_commit" 2>/dev/null || true)"
 elif [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
     info "Shell build skipped; the recorded revision still describes the running shell."

@@ -7,6 +7,58 @@ source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/privileges.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/install-fs.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/submodules.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/update-state.sh"
+
+# Fork identity (#565 support): the owner of the git repositories cloned/pulled
+# for source and updates, and the owner publishing release artifacts. Upstream
+# defaults stay ladybug-me; a fork sets both to its own GitHub user.
+: "${CAELESTIA_REPO_OWNER:=ladybug-me}"
+: "${CAELESTIA_PREBUILT_OWNER:=ladybug-me}"
+
+usage() {
+    cat << 'EOF'
+Usage: bash update.sh [--takeover] [main|dev]
+
+Updates the shell from this checkout and rebuilds/deploys it.
+
+Branch selection, in order:
+  1. the branch given on the command line (main or dev)
+  2. the channel recorded by the last update (~/.config/quickshell/caelestia/.update_branch)
+  3. "main" - the documented default both update paths share
+
+--takeover   Re-own the update state even if the CLI updater
+             (caelestia-update, the Nexus Updates page) owns it. Without this
+             flag update.sh refuses to clobber state that names a still-live
+             CLI install, because the two mechanisms pull from different
+             checkouts and would otherwise rewind each other (issue #565).
+
+Forks: this script pulls from this checkout's own "origin" remote. The
+CAELESTIA_REPO_OWNER and CAELESTIA_PREBUILT_OWNER environment variables
+(default ladybug-me) name the GitHub owners used for fresh clones and
+prebuilt release artifacts respectively; see README.md, "For forks".
+EOF
+}
+
+TAKEOVER=0
+BRANCH_ARG=""
+for arg in "$@"; do
+    case "$arg" in
+        --takeover)
+            TAKEOVER=1
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            if [[ -z "$BRANCH_ARG" ]]; then
+                BRANCH_ARG="$arg"
+            else
+                die "Unexpected argument: $arg (see --help)"
+            fi
+            ;;
+    esac
+done
 
 section() {
     local title="$1"
@@ -43,37 +95,40 @@ if [ -d "$BUNDLE_DIR/.git" ]; then
         STASHED=1
     fi
 
-    if [ -n "${1:-}" ]; then
-        BRANCH="$1"
+    if [ -n "$BRANCH_ARG" ]; then
+        BRANCH="$BRANCH_ARG"
         if [[ "$BRANCH" != "main" && "$BRANCH" != "dev" ]]; then
             warn "Branch '$BRANCH' is not allowed. Falling back to main."
             BRANCH="main"
         fi
         info "Using provided branch: $BRANCH"
-    else
-        if [ -t 1 ]; then
-            BRANCHES="main dev"
-            echo
-            info "Available remote branches (default: main):"
-            select BRANCH in $BRANCHES; do
-                if [ -z "$REPLY" ]; then
-                    BRANCH="main"
-                    info "Defaulted to branch: $BRANCH"
-                    break
-                elif [ -n "$BRANCH" ]; then
-                    info "Selected branch: $BRANCH"
-                    break
-                else
-                    warn "Invalid selection. Please enter a valid number or press Enter for main."
-                fi
-            done
-        else
-            BRANCH=$(git -C "$BUNDLE_DIR" rev-parse --abbrev-ref HEAD)
-            if [ -z "$BRANCH" ] || [ "$BRANCH" == "HEAD" ]; then
+    elif [ -n "$(cat "$HOME/.config/quickshell/caelestia/.update_branch" 2>/dev/null || true)" ]; then
+        # The channel the last update recorded, whatever mechanism wrote it:
+        # both update paths honor it so they cannot disagree on the default.
+        BRANCH="$(cat "$HOME/.config/quickshell/caelestia/.update_branch" 2>/dev/null)"
+        info "Using the recorded update channel: $BRANCH"
+    elif [ -t 1 ]; then
+        BRANCHES="main dev"
+        echo
+        info "Available remote branches (default: main):"
+        select BRANCH in $BRANCHES; do
+            if [ -z "$REPLY" ]; then
                 BRANCH="main"
+                info "Defaulted to branch: $BRANCH"
+                break
+            elif [ -n "$BRANCH" ]; then
+                info "Selected branch: $BRANCH"
+                break
+            else
+                warn "Invalid selection. Please enter a valid number or press Enter for main."
             fi
-            info "Auto-detected branch: $BRANCH (GUI Mode)"
+        done
+    else
+        BRANCH=$(git -C "$BUNDLE_DIR" rev-parse --abbrev-ref HEAD)
+        if [ -z "$BRANCH" ] || [ "$BRANCH" == "HEAD" ]; then
+            BRANCH="main"
         fi
+        info "Auto-detected branch: $BRANCH (GUI Mode)"
     fi
 
     if [[ "$BRANCH" != "main" && "$BRANCH" != "dev" ]]; then
@@ -121,6 +176,34 @@ if [ -f "$HOME/.config/caelestia-kde/install.env" ]; then
 fi
 
 trap 'caelestia_stop_sudo_keepalive' EXIT
+
+# Ownership guard (#565): the CLI updater (caelestia-update / Nexus) deploys
+# from its own shadow clone while this script deploys from this checkout. If
+# its state is still live, rewriting it here would rewind the recorded
+# revision; refuse instead unless --takeover was passed.
+if ! update_state_allow_takeover "$HOME/.config/quickshell/caelestia" "tui" "$TAKEOVER"; then
+    exit 1
+fi
+
+# Snapshot the deployed tree before this update overwrites it, so a bad
+# deploy can be rolled back by hand. Kept next to the install, newest three
+# retained - the build step takes its own snapshot as well, but only after
+# the config deploy below has already mutated parts of the tree.
+backup_deployed_tree() {
+    local src="$HOME/.config/quickshell/caelestia"
+    local root dest
+
+    if [[ ! -d "$src" ]]; then
+        return 0
+    fi
+    root="$(dirname -- "$src")/caelestia-backups"
+    if ! dest="$(snapshot_dir "$src" "$root" "update" 3)"; then
+        die "Could not back up the deployed tree into $root; refusing to update without a backup."
+    fi
+    info "Backed up the deployed tree to $dest"
+}
+
+backup_deployed_tree
 
 bash "$BUNDLE_DIR/scripts/03-deploy-configs.sh" || die "Config deployment failed."
 

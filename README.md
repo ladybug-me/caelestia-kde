@@ -44,6 +44,27 @@ Choose *Uninstall* from the installer TUI, or run:
 bash ./uninstall.sh
 ```
 
+## For forks
+
+Every update and prebuilt-artifact path reads the repository owner from the
+environment, so a fork is self-contained without patching URLs:
+
+- `CAELESTIA_REPO_OWNER` (default `ladybug-me`) - the GitHub owner of the
+  repositories cloned and pulled for source and updates: the
+  `caelestia-update` shadow clone, the `caelestia-check-updates` queries and
+  the Nexus Updates page. (`install.sh` takes a full clone URL via
+  `CAELESTIA_REPO`.)
+- `CAELESTIA_PREBUILT_OWNER` (default `ladybug-me`) - the GitHub owner of the
+  published release artifacts: the prebuilt installer TUI, the prebuilt shell
+  archive, the bundled fonts and the CAVA SDK. Forks that do not publish
+  binaries leave this at the default.
+
+For example, a fork published as `example/caelestia-kde` that only carries
+source changes exports `CAELESTIA_REPO_OWNER=example` and keeps
+`CAELESTIA_PREBUILT_OWNER` at the default, so binaries keep coming from the
+releases they were built from. The variables are plain environment variables;
+export them in the session that runs the installer or the update.
+
 ## Keybinds
 
 | Shortcut | Action |

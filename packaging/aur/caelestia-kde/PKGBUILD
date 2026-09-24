@@ -1,7 +1,7 @@
 # Maintainer: ladybug-me <rajveer2027singh@gmail.com>
 
 pkgname=caelestia-kde
-pkgver=2.4.3
+pkgver=2.5.0
 pkgrel=1
 pkgdesc='The Caelestia desktop shell, ported to KDE Plasma'
 arch=('x86_64' 'aarch64')
@@ -56,6 +56,17 @@ optdepends=(
 provides=('caelestia-shell')
 conflicts=('caelestia-shell' 'caelestia-shell-git')
 
+# The source tarball is published by the release workflow as v$pkgver, so pkgver
+# must match .github/version.env (currently v2.5.0) - keeping them in sync is what
+# stops a packaged install from reporting an update on day one.
+#
+# _source_sum defaults to SKIP so local builds work before a release publishes the
+# tarball: makepkg will not verify the main source. Do not invent a checksum. To fill
+# it in, either take the sha256 of the exact release tarball:
+#   curl -sL "$_source_url" | sha256sum
+# or run packaging/aur/makepkg-from-checkout.sh, which reproduces the tarball from a
+# checkout (submodules inlined, fonts excluded, REVISION written), hashes it, and
+# prints/injects both _source_url and _source_sum for a verified local build.
 _source_url="${_source_url:-$url/releases/download/v$pkgver/$pkgname-v$pkgver.tar.gz}"
 _source_sum="${_source_sum:-SKIP}"
 

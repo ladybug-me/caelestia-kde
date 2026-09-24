@@ -22,6 +22,11 @@ source "$SCRIPTS_DIR/lib/packages.sh"
 # shellcheck source=scripts/lib/download.sh
 source "$SCRIPTS_DIR/lib/download.sh"
 
+# Fork identity: the owner publishing release artifacts (the prebuilt TUI
+# binary here). Upstream default stays ladybug-me; a fork that does not
+# publish binaries points this at the owner whose releases it ships.
+: "${CAELESTIA_PREBUILT_OWNER:=ladybug-me}"
+
 run_arch_pacman_install() {
     local -a pkgs=("$@")
     local -a pacman_args=(-S --needed --noconfirm)
@@ -125,7 +130,7 @@ try_download_prebuilt_installer() {
     tag="$(release_tag)"
     [[ -n "$version" && -n "$tag" ]] || return 1
     tmp_bin="$(mktemp)"
-    url="https://github.com/ladybug-me/caelestia-kde/releases/download/${tag}/caelestia-install-${arch}-v${version}"
+    url="https://github.com/${CAELESTIA_PREBUILT_OWNER}/caelestia-kde/releases/download/${tag}/caelestia-install-${arch}-v${version}"
     if ! fetch_asset "$url" "$tmp_bin" --max-time 30 2>/dev/null; then
         rm -f "$tmp_bin"
         return 1

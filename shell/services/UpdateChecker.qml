@@ -28,7 +28,13 @@ Singleton {
     // Owner of the repositories this checker consults. Forks set the
     // CAELESTIA_REPO_OWNER environment variable to their own GitHub user so
     // the shell's update badge tracks the fork instead of upstream.
-    readonly property string repoOwner: Qt.getenv("CAELESTIA_REPO_OWNER") || "ladybug-me"
+    // The owner ends up interpolated into shell scripts below, so a hostile
+    // or malformed CAELESTIA_REPO_OWNER falls back to the default instead of
+    // riding into a command string. Owner names are [A-Za-z0-9-].
+    readonly property string repoOwner: {
+        const owner = Qt.getenv("CAELESTIA_REPO_OWNER") || "ladybug-me";
+        return /^[A-Za-z0-9-]{1,64}$/.test(owner) ? owner : "ladybug-me";
+    }
 
     property string _localCommit: ""
     property bool loaded: false

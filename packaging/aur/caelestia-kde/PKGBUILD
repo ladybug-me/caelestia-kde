@@ -110,6 +110,13 @@ package() {
     DESTDIR="$pkgdir" cmake --install build
     DESTDIR="$pkgdir" cmake --install effect-build
 
+    # The Plasma visualiser applet ships as plain package files: the packaged
+    # install path never runs 08-build-shell.sh's plasmoid step, so the applet
+    # must land in the system plasmoids dir from here.
+    install -d "$pkgdir/usr/share/plasma/plasmoids"
+    cp -r src/kde/plasmoids/org.caelestia.visualiser \
+        "$pkgdir/usr/share/plasma/plasmoids/"
+
     rm -rf "$pkgdir/etc/xdg/quickshell/caelestia/assets/fonts"
 
     install -d "$pkgdir/usr/share/caelestia"

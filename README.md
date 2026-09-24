@@ -65,6 +65,12 @@ source changes exports `CAELESTIA_REPO_OWNER=example` and keeps
 releases they were built from. The variables are plain environment variables;
 export them in the session that runs the installer or the update.
 
+The installer persists whatever owners the installing session resolved into
+`~/.config/environment.d/caelestia.conf` and the Plasma session environment, so
+the shell's systemd unit, the update-checker timer and the Nexus Updates page
+all see the same source the install came from - not just terminals. Re-running
+the installer or an update refreshes those lines to the newly exported values.
+
 ## Keybinds
 
 | Shortcut | Action |

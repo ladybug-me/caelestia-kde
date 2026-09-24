@@ -71,6 +71,34 @@ QtObject {
             "icon": "visibility",
             "title": qsTr("Lock Screen Password Reveal"),
             "description": qsTr("Click or tap the lock icon inside the greeter's password pill to reveal your typed password before unlocking.")
+        },
+        {
+            "id": "wifi_hotspot_toggle",
+            "revision": 27,
+            "icon": "wifi_tethering",
+            "title": qsTr("Wi-Fi Hotspot at a Tap"),
+            "description": qsTr("Turn your machine into a Wi-Fi hotspot from the network quick settings or the bar's network popout. The toggle creates, starts and stops the hotspot with your saved name and password, and the Network settings page shows who is connected.")
+        },
+        {
+            "id": "clock_calendar_popout",
+            "revision": 28,
+            "icon": "calendar_month",
+            "title": qsTr("Calendar From the Clock"),
+            "description": qsTr("Click the bar's clock for a month calendar that walks through months and highlights today. Vertical bars open it just like horizontal ones, and the popout width adapts to the calendar.")
+        },
+        {
+            "id": "plasma_visualiser_plasmoid",
+            "revision": 29,
+            "icon": "equalizer",
+            "title": qsTr("Visualiser as a Plasma Widget"),
+            "description": qsTr("The audio visualiser is now available as a native Plasma desktop widget: add it from the desktop's widget menu. It renders with the shell's cava engine, adapts to its size, and stops audio polling whenever it is hidden.")
+        },
+        {
+            "id": "safer_installs_and_plugins",
+            "revision": 30,
+            "icon": "verified_user",
+            "title": qsTr("Safer Installs and Plugins"),
+            "description": qsTr("Every downloaded artifact - the prebuilt shell, the installer and the CAVA SDK - is now checksum-verified and safety-checked before it is unpacked, plugins from the store are validated before any command runs, and remote installer scripts are shown for review before they execute. Lock screen passwords are also wiped from memory shortly after typing stops.")
         }
     ]
 

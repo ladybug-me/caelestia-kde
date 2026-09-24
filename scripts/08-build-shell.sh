@@ -17,6 +17,7 @@ SHELL_DIR="$BUNDLE_DIR/shell"
 # Fork identity: the owner publishing release artifacts (the prebuilt shell
 # archive below). Upstream default stays ladybug-me; a fork that does not
 # publish binaries points this at the owner whose releases it ships.
+: "${CAELESTIA_REPO_OWNER:=ladybug-me}"
 : "${CAELESTIA_PREBUILT_OWNER:=ladybug-me}"
 
 write_shell_environment() {
@@ -33,8 +34,16 @@ QML2_IMPORT_PATH=$(install_qml_import_path)
 CAELESTIA_LIB_DIR=$(install_lib_dir)
 CAELESTIA_BIN_DIR=$(install_bin_dir)
 CAELESTIA_SHELL_CONFIG=$(install_shell_config)
+CAELESTIA_REPO_OWNER=${CAELESTIA_REPO_OWNER}
+CAELESTIA_PREBUILT_OWNER=${CAELESTIA_PREBUILT_OWNER}
 EOF
     ok "Shell environment written."
+    # The resolved owners are persisted on purpose: quickshell (systemd user
+    # unit), the update-checker timer and Nexus Updates all run outside the
+    # terminal session that ran the installer, so without this a fork owner
+    # override would only apply to scripts launched by hand and every other
+    # path would keep pulling upstream. Re-running install/update refreshes
+    # these lines to whatever the session exported.
 
     info "Writing the Plasma session environment to $plasma_env_d/caelestia.sh"
     mkdir -p "$plasma_env_d"
@@ -44,6 +53,8 @@ EOF
 # kscreenlocker_greet, and graphical session processes.
 export QML2_IMPORT_PATH="$(install_qml_import_path)\${QML2_IMPORT_PATH:+:\$QML2_IMPORT_PATH}"
 export CAELESTIA_LIB_DIR="$(install_lib_dir)"
+export CAELESTIA_REPO_OWNER="${CAELESTIA_REPO_OWNER}"
+export CAELESTIA_PREBUILT_OWNER="${CAELESTIA_PREBUILT_OWNER}"
 export CAELESTIA_BIN_DIR="$(install_bin_dir)"
 export CAELESTIA_SHELL_CONFIG="$(install_shell_config)"
 EOF

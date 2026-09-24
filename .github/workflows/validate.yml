@@ -141,6 +141,9 @@ jobs:
       - name: Check QML structural syntax
         run: python3 .github/scripts/check_qml_syntax.py --source-root shell
 
+      - name: Check plasmoid QML structural syntax
+        run: python3 .github/scripts/check_qml_syntax.py --source-root src/kde/plasmoids
+
 # Bash inside QML `command: ["bash", "-c", `...`]` strings, which qmllint and shellcheck
   embedded-bash:
     runs-on: ubuntu-latest

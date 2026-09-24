@@ -60,6 +60,9 @@ Item {
         return typeof field === "string"
             && field.length > 0
             && field.length <= 128
+            && field !== "."
+            && field !== ".."
+            && field !== "/"
             && field.indexOf("..") === -1
             && field.charAt(0) !== "/"
             && field.indexOf("\n") === -1;

@@ -210,6 +210,13 @@ Singleton {
             root.variant = (scheme.variant || "").trim();
             root.currentLight = scheme.mode === "light";
 
+            // The palette that was in effect has arrived, so a preview that was standing in for
+            // it has done its job and gives way. The launcher clears its own preview when it
+            // leaves the scheme list; nothing on the Colors page does, so this is what ends a
+            // preview there.
+            previewExpiry.stop();
+            root.showPreview = false;
+
             // Absent, null, and a value the range does not take all mean the same thing here:
             // what is in effect is the palette the engine produced. 0 is a real setting (a grey
             // palette), so this cannot lean on falsiness either.
@@ -241,6 +248,34 @@ Singleton {
             return;
         if (!schemeRetryTimer.running)
             schemeRetryTimer.start();
+    }
+
+    // Repaint the shell from a palette we already hold, before the pipeline that writes it runs.
+    // Switching colors goes through `caelestia scheme set`, which renders the palette, fans it
+    // out to every target and only then replaces scheme.json - the file this singleton watches.
+    // So the shell, whose colors are the ones the user is looking at while it happens, was the
+    // last thing to change, which is what made the switch feel slow. The Colors page has every
+    // role of a named scheme in hand already, so it can show the result now and let the write
+    // catch up. This is the preview the launcher already uses for a highlighted variant, so a
+    // palette shown this way is replaced by the one the file brings, which clears the preview.
+    //
+    // The timer is the other way out. A preview is a guess at what the command will write, and a
+    // command that fails writes nothing, so without an expiry the shell would be left showing
+    // colors the scheme does not have, with no write coming to correct it.
+    function previewNamed(name: string, flavour: string, variant: string, colours: var, light: bool): void {
+        if (!colours)
+            return;
+        root.previewScheme = name;
+        root.previewFlavour = flavour;
+        root.previewVariant = variant;
+        root.previewLight = light;
+        for (const [role, colour] of Object.entries(colours)) {
+            const propName = role.startsWith("term") ? role : `m3${role}`;
+            if (root.preview.hasOwnProperty(propName))
+                root.preview[propName] = colour.startsWith("#") ? colour : `#${colour}`;
+        }
+        root.showPreview = true;
+        previewExpiry.restart();
     }
 
     function setMode(mode: string): void {
@@ -351,6 +386,17 @@ Singleton {
             if (!root.schemeLoaded)
                 restart();
         }
+    }
+
+    // A preview the file never replaces has stopped being true. Long enough for a render and the
+    // fan out that follows it, and short enough that a command which failed does not leave the
+    // shell on colors the scheme does not have for the rest of the session.
+    Timer {
+        id: previewExpiry
+
+        interval: 30000
+        repeat: false
+        onTriggered: root.showPreview = false
     }
 
     Timer {

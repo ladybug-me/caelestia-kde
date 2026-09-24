@@ -405,6 +405,121 @@ test_starship_is_not_written_unless_asked_for() {
     assert_file_exists "$XDG_CONFIG_HOME/starship.toml"
 }
 
+# Switching to dynamic asks for the palette the wallpaper would produce, so it has to ask the
+# same way `wallpaper -f` does. It used to pass the smart flag as false, which rendered the
+# wallpaper at tonalspot/dark however the wallpaper was actually measured: switching to a named
+# scheme and back dropped the variant and the mode the wallpaper had picked.
+test_switching_back_to_dynamic_keeps_what_the_wallpaper_picked() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "tonalspot"' \
+        "the wallpaper picked a variant, so the round trip has something to lose"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_status 0 "$STATUS" "the named scheme should be set"
+
+    FFMPEG_PATTERN=redblue run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "switching back to dynamic should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-tonal-spot" \
+        "the wallpaper's own variant is rendered again, not the tonalspot default"
+    assert_contains "$calls" "--mode smart" "the wallpaper picks the mode again"
+
+    local scheme="$XDG_STATE_HOME/caelestia/scheme.json"
+    assert_contains "$(cat "$scheme")" '"name": "dynamic"' "the dynamic scheme is in effect"
+    assert_contains "$(cat "$scheme")" '"variant": "tonalspot"' "the variant is what the wallpaper gives"
+}
+
+# A wallpaper whose colourfulness reads as something other than tonalspot is the case that
+# shows the difference: the old code rendered it as tonalspot regardless.
+test_switching_back_to_dynamic_keeps_a_neutral_wallpaper_neutral() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image gray.png)"
+
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "neutral"' \
+        "a grey wallpaper is neutral"
+
+    run_color scheme set -n gruvbox -f medium -m dark
+    FFMPEG_PATTERN=gray run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "switching back to dynamic should succeed"
+
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "neutral"' \
+        "the round trip does not recolor the wallpaper as tonalspot"
+}
+
+# A named scheme records the mode it was filed under, which has nothing to do with the
+# wallpaper. With smart mode on, the wallpaper picks the mode at every derive, so a later
+# re-derive must not inherit the light/dark of whichever scheme was showing.
+test_the_wallpaper_picks_the_mode_after_a_named_scheme() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+
+    # The wallpaper comes first: a dynamic scheme is derived from one, so there has to be one
+    # before the round trip means anything.
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    run_color scheme set -n catppuccin -f latte -m light
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"mode": "light"' \
+        "the named scheme's own mode is recorded"
+
+    FFMPEG_PATTERN=redblue run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "switching back to dynamic should succeed"
+    assert_contains "$(cat "$CALLS")" "--mode smart" \
+        "the wallpaper picks the mode again rather than inheriting the named scheme's"
+}
+
+# The variant and the mode can also be given to `scheme set` directly, and then they are what
+# the user asked for rather than the wallpaper's own choice: smart derivation would throw both
+# away. This is the path the shell's own scripts use to pin a scheme.
+test_a_variant_given_to_scheme_set_is_not_overruled_by_smart() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n dynamic -v rainbow -m light
+    assert_status 0 "$STATUS" "pinning a variant and a mode should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-rainbow" "the variant that was asked for is rendered"
+    assert_contains "$calls" "--mode light" "the mode that was asked for is rendered"
+
+    local scheme="$XDG_STATE_HOME/caelestia/scheme.json"
+    assert_contains "$(cat "$scheme")" '"variant": "rainbow"' "the variant is recorded"
+    assert_contains "$(cat "$scheme")" '"mode": "light"' "the mode is recorded"
+}
+
+# The launcher picks a variant and nothing else, because the mode is the wallpaper's business
+# there. Pinning the variant must not take the mode away from the wallpaper with it.
+test_a_variant_alone_still_lets_the_wallpaper_pick_the_mode() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -v vibrant
+    assert_status 0 "$STATUS" "setting a variant on its own should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-vibrant" "the variant that was asked for is rendered"
+    assert_contains "$calls" "--mode smart" "the wallpaper still picks the mode"
+}
+
 test_a_preview_changes_nothing() {
     setup_sandbox
     run_color scheme set -n catppuccin -f mocha -m dark

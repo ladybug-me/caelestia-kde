@@ -137,7 +137,7 @@ vector<Step> steps = {
      "prepare"},
     {"Install packages", "scripts/02-all-packages.sh", "PENDING",
      "packages"},
-    {"Install lock screen greeter", "scripts/02-packages.sh", "PENDING",
+    {"Install Python tooling and matugen", "scripts/02-packages.sh", "PENDING",
      "packages"},
     {"Deploy config files", "scripts/03-deploy-configs.sh", "PENDING",
      "configure"},

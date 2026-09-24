@@ -33,9 +33,9 @@ The installer compiles the `caelestia-install` TUI binary during `setup.sh`. The
 |---|---|---|
 | `g++: command not found` | Build tools not installed | Arch: `sudo pacman -S base-devel` — Fedora: `sudo dnf install gcc-c++` |
 | `cmake: command not found` | CMake missing | Auto-installer handles this if `BASE_DISTRO` is detected; otherwise install manually |
-| `[FATAL] Failed to build the Caelestia installer` | General CMake/make error | Read build log: `cat /tmp/caelestia_build.log` |
+| `[FATAL] Failed to build the Caelestia installer` | General CMake/make error | The failure output prints the last 60 log lines and the log's full path (a fresh `/tmp/caelestia-build-log.*` file) - read that file |
 | Compiler error about modern C++ features | GCC older than 10 | Ensure GCC 10+ is installed: `g++ --version` |
-| Exit 139 (SIGSEGV) at runtime | C++ bug in the TUI | Check stderr log at `/tmp/caelestia_installer_err.log` |
+| Exit 139 (SIGSEGV) at runtime | C++ bug in the TUI | The failure output prints the stderr log's full path (a fresh `/tmp/caelestia-installer-err.*` file) - read that file |
 | Exit 127 at runtime | Missing shared library | Run `ldd` on the binary to find missing `.so` files |
 
 ### 1.2 Shell / Plugin Compilation Fails
@@ -806,11 +806,12 @@ cat $XDG_CACHE_HOME/caelestia-kde/failed_packages.txt 2>/dev/null
 # View failed patches log
 cat $XDG_CACHE_HOME/caelestia-kde/failed_patches.txt 2>/dev/null
 
-# View installer build log
-cat /tmp/caelestia_build.log 2>/dev/null | tail -60
+# View installer build log (the path is printed when the build fails;
+# setup.sh names it /tmp/caelestia-build-log.XXXXXX)
+cat /tmp/caelestia-build-log.* 2>/dev/null | tail -60
 
-# View installer stderr log
-cat /tmp/caelestia_installer_err.log 2>/dev/null
+# View installer stderr log (same: the exact file is printed on failure)
+cat /tmp/caelestia-installer-err.* 2>/dev/null
 ```
 
 ### Network Diagnostics
@@ -849,6 +850,6 @@ systemctl --user restart plasma-plasmashell
 | No window thumbnails | `kbuildsycoca6 --noincremental && qdbus6 org.kde.KWin /KWin reconfigure` |
 | Git submodule error | `git submodule update --init --recursive src/dots` |
 | Colors not updating | Run `caelestia scheme set -n dynamic`, and check that `plasma-apply-colorscheme --list-schemes` names Matugen |
-| Installer compiles but flashes/exits | Check `/tmp/caelestia_installer_err.log` |
+| Installer compiles but flashes/exits | The failure output names the stderr log it captured (a `/tmp/caelestia-installer-err.*` file) |
 | Recording not working | Verify `gpu-screen-recorder` is installed |
 | Screenshot not working | Verify `spectacle` is installed |

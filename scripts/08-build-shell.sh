@@ -318,6 +318,10 @@ try_download_prebuilt_shell() {
         return 1
     fi
 
+    # Both checksum failures refuse the archive, exactly like the prebuilt
+    # installer binary in setup.sh: a sidecar that is missing (2) is not a
+    # license to extract code into $HOME unverified - it means falling back to
+    # a local build instead.
     checksum_status=0
     verify_download "$url" "$tmp_archive" || checksum_status=$?
     if [[ "$checksum_status" -eq 1 ]]; then
@@ -325,9 +329,19 @@ try_download_prebuilt_shell() {
         rm -f "$tmp_archive"
         return 1
     elif [[ "$checksum_status" -eq 2 ]]; then
-        warn "No published checksum for $url - extracting without verification."
-    else
-        ok "Prebuilt shell artifacts match the published checksum."
+        warn "No published checksum for $url - falling back to a local build."
+        rm -f "$tmp_archive"
+        return 1
+    fi
+    ok "Prebuilt shell artifacts match the published checksum."
+
+    # The archive is unpacked straight into $HOME, so its listing is audited
+    # before tar runs: a member with an absolute path, a ".." component or a
+    # link pointing outside would write outside ~/.local and ~/.config.
+    if ! archive_is_safe "$tmp_archive"; then
+        warn "Prebuilt shell archive failed the safety audit - falling back to a local build."
+        rm -f "$tmp_archive"
+        return 1
     fi
 
     info "Extracting prebuilt shell artifacts..."

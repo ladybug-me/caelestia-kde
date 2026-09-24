@@ -278,6 +278,7 @@ jobs:
       - file-hygiene
       - markdown-lint
       - qml-conventions
+      - qml-syntax
       - embedded-bash
       - config-cross-ref
       - actionlint
@@ -301,6 +302,7 @@ jobs:
           job_results[file-hygiene]="${{ needs.file-hygiene.result }}"
           job_results[markdown-lint]="${{ needs.markdown-lint.result }}"
           job_results[qml-conventions]="${{ needs.qml-conventions.result }}"
+          job_results[qml-syntax]="${{ needs.qml-syntax.result }}"
           job_results[embedded-bash]="${{ needs.embedded-bash.result }}"
           job_results[config-cross-ref]="${{ needs.config-cross-ref.result }}"
           job_results[actionlint]="${{ needs.actionlint.result }}"

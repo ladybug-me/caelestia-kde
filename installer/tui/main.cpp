@@ -101,6 +101,13 @@ int main(int argc, char** argv) {
     const char* env_distro = getenv("BASE_DISTRO");
     if (env_distro && string(env_distro) != "") {
         g_base_distro = env_distro;
+    } else {
+        // setup.sh exports BASE_DISTRO from /etc/os-release; a direct run of
+        // the compiled binary has no setup.sh, and the "unknown" default dies
+        // at scripts/02-all-packages.sh ("No package list for 'unknown'").
+        const std::string detected = detect_distro_from_os_release();
+        if (!detected.empty())
+            g_base_distro = detected;
     }
 
     if (preset_action.empty()) {

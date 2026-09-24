@@ -1,6 +1,9 @@
 #include "Globals.hpp"
+#include <cctype>
 #include <iostream>
 #include <fstream>
+#include <iterator>
+#include <sstream>
 #include <cstdlib>
 
 std::atomic<bool> g_resized{false};
@@ -26,6 +29,92 @@ std::string xdg_cache_dir() {
     // The same last resort UI.cpp uses for its state directory: somewhere writable
     // when the environment names no home at all.
     return "/tmp";
+}
+
+namespace {
+
+// The same ID lists detect_base_distro() in scripts/lib/packages.sh reads,
+// so the TUI and the step scripts cannot disagree about a distro's family.
+const char* const kArchIds[] = {
+    "arch", "cachyos", "endeavouros", "manjaro", "artix", "archlinux",
+};
+const char* const kFedoraIds[] = {
+    "fedora", "nobara", "bazzite", "rhel", "centos", "almalinux", "rocky",
+};
+const char* const kDebianIds[] = {
+    "debian", "ubuntu", "pop", "mint", "kali", "raspbian",
+    "elementary", "zorin", "deepin", "devuan",
+};
+
+bool known_id(const char* const* ids, size_t count, const std::string& value) {
+    for (size_t i = 0; i < count; ++i) {
+        if (value == ids[i])
+            return true;
+    }
+    return false;
+}
+
+std::string unquote(std::string value) {
+    if (value.size() >= 2 && value.front() == '"' && value.back() == '"')
+        value.erase(value.size() - 1, 1).erase(0, 1);
+    return value;
+}
+
+std::string lowercase(std::string value) {
+    for (char& c : value)
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    return value;
+}
+
+} // namespace
+
+std::string detect_distro_from_os_release(const std::string& path) {
+    // The TUI normally gets BASE_DISTRO from setup.sh, which reads
+    // /etc/os-release through scripts/lib/packages.sh. A direct run of the
+    // compiled binary (CONTRIBUTING's ./installer/build/caelestia-install
+    // "$PWD") has no setup.sh, and the "unknown" default then dies at
+    // scripts/02-all-packages.sh with "No package list for 'unknown'". ID is
+    // consulted first, then ID_LIKE, exactly like the shell-side detection;
+    // the package-manager fallback has no equivalent here because the step
+    // scripts run it themselves.
+    std::ifstream in(path);
+    if (!in)
+        return "";
+
+    std::string id;
+    std::string id_like;
+    std::string line;
+    while (std::getline(in, line)) {
+        if (line.compare(0, 3, "ID=") == 0)
+            id = unquote(line.substr(3));
+        else if (line.compare(0, 8, "ID_LIKE=") == 0)
+            id_like = unquote(line.substr(8));
+    }
+
+    id = lowercase(id);
+    if (known_id(kArchIds, std::size(kArchIds), id))
+        return "arch";
+    if (known_id(kFedoraIds, std::size(kFedoraIds), id))
+        return "fedora";
+    if (known_id(kDebianIds, std::size(kDebianIds), id))
+        return "debian";
+
+    // ID_LIKE names the families a distro is compatible with ("archlinux",
+    // "rhel fedora", "debian ubuntu"), space- or comma-separated.
+    for (char& c : id_like)
+        if (c == ',')
+            c = ' ';
+    std::istringstream like(lowercase(id_like));
+    std::string token;
+    while (like >> token) {
+        if (known_id(kArchIds, std::size(kArchIds), token))
+            return "arch";
+        if (known_id(kFedoraIds, std::size(kFedoraIds), token))
+            return "fedora";
+        if (known_id(kDebianIds, std::size(kDebianIds), token))
+            return "debian";
+    }
+    return "";
 }
 
 int run_shell(const std::string& command) {

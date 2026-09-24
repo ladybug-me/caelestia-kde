@@ -62,7 +62,9 @@ install_linguist_tools() {
 # Unpacks the prebuilt SDK into /usr, which needs escalation. Callers that cannot
 # know the SDK is missing should ask cava_sdk_installed first: this asks for a
 # password, and asking for one to re-unpack what is already there is a password for
-# nothing.
+# nothing. The archive is only unpacked when the release publishes a matching
+# checksum beside it and its listing stays inside include/, lib/ and bin/; anything
+# else is left to the caller's distro-package fallback.
 install_cava_sdk() {
     local distro="${1:-}"
 
@@ -88,16 +90,31 @@ install_cava_sdk() {
         return 1
     fi
 
+    # The archive is unpacked into /usr, so both checksum failures refuse it -
+    # a mismatch (1) and a missing sidecar (2) alike, exactly like the prebuilt
+    # installer binary in setup.sh. Callers fall back to a distro package.
     verify_download "$url" "$archive" || status=$?
-    if [[ "$status" -eq 1 ]]; then
-        warn "Checksum mismatch for $url - not unpacking it."
+    if [[ "$status" -ne 0 ]]; then
+        if [[ "$status" -eq 1 ]]; then
+            warn "Checksum mismatch for $url - not unpacking it."
+        else
+            warn "No published checksum for $url - not unpacking it."
+        fi
         rm -f "$archive"
         return 1
-    elif [[ "$status" -eq 2 ]]; then
-        warn "No published checksum for $url - unpacking without verification."
     fi
 
-    local tar_cmd=(tar --exclude='bin' -C /usr -xzf "$archive")
+    # It may only hold the trees an SDK ships into /usr: include/, lib/ and the
+    # bin/ the extraction itself excludes. Everything else - a member with a
+    # ".." component, an absolute path, a link pointing outside, or a tree that
+    # has no business in /usr - is refused before tar runs as root.
+    if ! archive_is_safe "$archive" include lib bin; then
+        warn "Refusing to unpack $url into /usr: unexpected archive content."
+        rm -f "$archive"
+        return 1
+    fi
+
+    local tar_cmd=(tar --no-same-owner --exclude='bin' -C /usr -xzf "$archive")
     if [[ "$EUID" -ne 0 ]]; then
         if command -v caelestia_sudo >/dev/null 2>&1; then
             tar_cmd=(caelestia_sudo "${tar_cmd[@]}")
@@ -106,7 +123,6 @@ install_cava_sdk() {
         fi
     fi
 
-    local status=0
     "${tar_cmd[@]}" 2>/dev/null || status=$?
     rm -f "$archive"
     return "$status"

@@ -219,7 +219,10 @@ else
         fi
 
         BUILD_DIR="$BUNDLE_DIR/installer/build"
-        BUILD_LOG="/tmp/caelestia_build.log"
+        # mktemp, not a fixed /tmp name: a predictable path in a world-writable
+        # directory lets a pre-created symlink aim the truncating redirect at any
+        # file the attacking user cannot otherwise write.
+        BUILD_LOG="$(mktemp "${TMPDIR:-/tmp}/caelestia-build-log.XXXXXX")"
         # Configure from a clean directory: cmake bakes absolute source paths into
         # CMakeCache.txt and refuses to configure over a cache naming a different tree.
         # One checkout routinely has two names here - ~/Desktop/caelestia-kwin and
@@ -287,12 +290,15 @@ if [[ ! -x "$BIN" ]]; then
 fi
 
 _installer_start=$(date +%s)
-"$BIN" "$@" 2>/tmp/caelestia_installer_err.log
+# mktemp for the same reason as the build log above: a fixed /tmp name is a
+# symlink-clobber target, and the diagnostic output below needs this file.
+INSTALLER_ERR_LOG="$(mktemp "${TMPDIR:-/tmp}/caelestia-installer-err.XXXXXX")"
+"$BIN" "$@" 2>"$INSTALLER_ERR_LOG"
 _exit_code=$?
 _installer_elapsed=$(($(date +%s) - _installer_start))
 
 _reached_done=0
-if grep -q '\[installer\] done (success)' /tmp/caelestia_installer_err.log 2>/dev/null; then
+if grep -q '\[installer\] done (success)' "$INSTALLER_ERR_LOG" 2>/dev/null; then
     _reached_done=1
 fi
 
@@ -322,9 +328,9 @@ if [[ $_show_diagnostic -eq 1 ]]; then
     echo "============================================================"
     echo ""
 
-    if [[ -s /tmp/caelestia_installer_err.log ]]; then
+    if [[ -s "$INSTALLER_ERR_LOG" ]]; then
         echo "--- stderr output ---"
-        cat /tmp/caelestia_installer_err.log
+        cat "$INSTALLER_ERR_LOG"
         echo "--- end stderr ------"
         echo ""
     else

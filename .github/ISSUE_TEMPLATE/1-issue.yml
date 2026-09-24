@@ -44,7 +44,7 @@ body:
   - type: input
     attributes:
       label: Caelestia version
-      description: What version of Caelestia are you running? Check with `cat ~/.config/caelestia/version` or look for the version string in the shell.
+      description: What version of Caelestia are you running? Check with `cat ~/.config/quickshell/caelestia/.current_version` or look for the version string in the shell.
       placeholder: e.g. v2.2.2
     validations:
       required: true

@@ -3,6 +3,11 @@ name: Test Dependencies
 on:
   schedule:
     - cron: '0 0 * * 0' # Runs every Sunday at midnight
+  # The weekly run alone lets a broken distro package list sit unfixed for days;
+  # a PR that changes one gets the same container smoke test immediately.
+  pull_request:
+    paths:
+      - 'installer/distro/**'
   workflow_dispatch:
     inputs:
       distro:

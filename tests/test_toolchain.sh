@@ -116,14 +116,85 @@ test_install_linguist_tools_fails_for_an_unknown_distro() {
     assert_status 1 "$status" "an unknown distro should be reported as a failure, not a success"
 }
 
+test_install_cava_sdk_fails_on_unknown_distro() {
+    local tmp stub status
+    tmp="$(new_tmpdir)"
+    stub="$tmp/bin"
+    mkdir -p "$stub"
+
+    with_path "$stub" "" install_cava_sdk unknown
+    status=$?
+
+    assert_status 1 "$status" "an unknown distro should be reported as a failure"
+}
+
+# install_cava_sdk legitimately calls core utilities (mktemp for the archive,
+# sha256sum and cut for the checksum); symlink the real ones into the stub
+# directory so with_path's package-manager isolation keeps working. tar stays a
+# recording stub: these tests assert on what tar is asked to extract, not on
+# real extraction. The listing audit itself has its own tests, against real
+# archives, in tests/test_download_hardening.sh.
+expose_core_tools() {
+    local stub="$1" tool
+    shift
+    mkdir -p "$stub"
+    for tool in "$@"; do
+        ln -sf "$(command -v "$tool")" "$stub/$tool"
+    done
+}
+
+# A release server: serves the SDK archive from a fixture and publishes its
+# sha256 beside it, the way the publishing workflow does. The published hash
+# can be overridden to simulate a mismatch.
+release_server_stub() {
+    local stub="$1" log="$2" fixture="$3" published_sha="${4:-}"
+    if [[ -z "$published_sha" ]]; then
+        published_sha="$(sha256sum "$fixture" | cut -d' ' -f1)"
+    fi
+    mkdir -p "$stub"
+    cat > "$stub/curl" <<STUB
+#!/bin/bash
+printf 'curl %s\n' "\$*" >> '$log'
+url=""
+dest=""
+prev=""
+for arg in "\$@"; do
+    [[ "\$prev" == "-o" ]] && dest="\$arg"
+    case "\$arg" in
+        http*) url="\$arg" ;;
+    esac
+    prev="\$arg"
+done
+if [[ "\$url" == *.sha256 ]]; then
+    printf '%s\n' '$published_sha' > "\$dest"
+else
+    cp "$fixture" "\$dest"
+fi
+STUB
+    chmod +x "$stub/curl"
+}
+
+# An SDK-shaped fixture: the trees the real archive unpacks into /usr.
+make_cava_release() {
+    local dir="$1"
+    mkdir -p "$dir/root/include/cava" "$dir/root/lib" "$dir/root/bin"
+    printf 'header\n' > "$dir/root/include/cava/cavacore.h"
+    printf 'library\n' > "$dir/root/lib/libcava.a"
+    printf 'binary\n' > "$dir/root/bin/cava"
+    tar -C "$dir/root" -czf "$dir/cava-sdk.tar.gz" include lib bin
+    printf '%s\n' "$dir/cava-sdk.tar.gz"
+}
+
 test_install_cava_sdk_fetches_and_extracts_for_arch() {
-    local tmp stub log status
+    local tmp stub log status fixture
     tmp="$(new_tmpdir)"
     stub="$tmp/bin"
     log="$tmp/calls.log"
+    fixture="$(make_cava_release "$tmp/release")"
     stub_bin "$stub" uname "echo x86_64"
-    recording_stub "$stub" curl "$log"
+    release_server_stub "$stub" "$log" "$fixture"
     recording_stub "$stub" tar "$log"
+    expose_core_tools "$stub" mktemp rm sha256sum cut cp
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
@@ -133,16 +204,19 @@ test_install_cava_sdk_fetches_and_extracts_for_arch() {
     assert_status 0 "$status" "installing the cava sdk for arch should succeed"
     assert_contains "$(calls_to "$log" curl)" "cava-x86_64-arch.tar.gz" "curl must fetch the arch archive"
     assert_contains "$(calls_to "$log" tar)" "--exclude=bin" "tar must pass --exclude=bin"
+    assert_contains "$(calls_to "$log" tar)" "--no-same-owner" "tar must not restore the archive's own owner as root"
 }
 
 test_install_cava_sdk_fetches_for_aarch64() {
-    local tmp stub log status
+    local tmp stub log status fixture
     tmp="$(new_tmpdir)"
     stub="$tmp/bin"
     log="$tmp/calls.log"
+    fixture="$(make_cava_release "$tmp/release")"
     stub_bin "$stub" uname "echo aarch64"
-    recording_stub "$stub" curl "$log"
+    release_server_stub "$stub" "$log" "$fixture"
     recording_stub "$stub" tar "$log"
+    expose_core_tools "$stub" mktemp rm sha256sum cut cp
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
@@ -154,13 +228,15 @@ test_install_cava_sdk_fetches_for_aarch64() {
 }
 
 test_install_cava_sdk_maps_debian_to_ubuntu() {
-    local tmp stub log status
+    local tmp stub log status fixture
     tmp="$(new_tmpdir)"
     stub="$tmp/bin"
     log="$tmp/calls.log"
+    fixture="$(make_cava_release "$tmp/release")"
     stub_bin "$stub" uname "echo x86_64"
-    recording_stub "$stub" curl "$log"
+    release_server_stub "$stub" "$log" "$fixture"
     recording_stub "$stub" tar "$log"
+    expose_core_tools "$stub" mktemp rm sha256sum cut cp
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
@@ -171,16 +247,46 @@ test_install_cava_sdk_maps_debian_to_ubuntu() {
     assert_contains "$(calls_to "$log" curl)" "cava-x86_64-ubuntu.tar.gz" "curl must fetch the ubuntu archive for debian"
 }
 
-test_install_cava_sdk_fails_on_unknown_distro() {
-    local tmp stub status
+test_install_cava_sdk_refuses_an_archive_without_a_published_checksum() {
+    local tmp stub log status
     tmp="$(new_tmpdir)"
     stub="$tmp/bin"
-    mkdir -p "$stub"
+    log="$tmp/calls.log"
+    stub_bin "$stub" uname "echo x86_64"
+    # fetches the artifact but never publishes a sidecar: verify_download
+    # returns 2, and an archive destined for /usr must not survive that.
+    recording_stub "$stub" curl "$log"
+    recording_stub "$stub" tar "$log"
+    expose_core_tools "$stub" mktemp rm sha256sum cut cp
+    stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
+\"\$@\""
 
-    with_path "$stub" "" install_cava_sdk unknown
+    with_path "$stub" "" install_cava_sdk arch
     status=$?
 
-    assert_status 1 "$status" "an unknown distro should be reported as a failure"
+    assert_status 1 "$status" "an unverified archive must not be unpacked into /usr"
+    assert_eq "" "$(calls_to "$log" tar)" "tar must never run for an unverified archive"
+}
+
+test_install_cava_sdk_refuses_an_archive_with_a_mismatched_checksum() {
+    local tmp stub log status fixture
+    tmp="$(new_tmpdir)"
+    stub="$tmp/bin"
+    log="$tmp/calls.log"
+    fixture="$(make_cava_release "$tmp/release")"
+    stub_bin "$stub" uname "echo x86_64"
+    release_server_stub "$stub" "$log" "$fixture" \
+        "0000000000000000000000000000000000000000000000000000000000000000"
+    recording_stub "$stub" tar "$log"
+    expose_core_tools "$stub" mktemp rm sha256sum cut cp
+    stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
+\"\$@\""
+
+    with_path "$stub" "" install_cava_sdk arch
+    status=$?
+
+    assert_status 1 "$status" "a checksum mismatch must not be unpacked into /usr"
+    assert_eq "" "$(calls_to "$log" tar)" "tar must never run for a mismatched archive"
 }
 
 run_tests

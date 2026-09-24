@@ -29,6 +29,13 @@ void load_theme();
 /// none of them can build a string straight from a null getenv() result.
 std::string xdg_cache_dir();
 
+/// The distro family (arch, fedora, debian) /etc/os-release reports, read the
+/// same way scripts/lib/packages.sh reads it: the ID list first, then ID_LIKE.
+/// Returns "" when the file or the family is unknown; g_base_distro keeps its
+/// "unknown" default then. Used when no BASE_DISTRO came from the environment,
+/// as happens on a direct run of the compiled binary.
+std::string detect_distro_from_os_release(const std::string& path = "/etc/os-release");
+
 /// Runs a shell command and returns system()'s status, for callers that check it and
 /// for the ones that mark a deliberate ignore with a (void) cast.
 int run_shell(const std::string& command);

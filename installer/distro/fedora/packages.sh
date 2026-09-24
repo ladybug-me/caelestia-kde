@@ -264,22 +264,29 @@ done
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
 info "Downloading and installing required custom fonts (parallel)..."
-mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+FONTS_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+mkdir -p "$FONTS_DIR"
 
-curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
+# mktemp, not a fixed /tmp name: a predictable path in a world-writable
+# directory is a symlink-clobber target. curl -f fails on HTTP errors, so a
+# 404 page can never be saved as a font.
+_cascadia_zip="$(mktemp "${TMPDIR:-/tmp}/caelestia-cascadia.XXXXXX")"
+_jetbrains_zip="$(mktemp "${TMPDIR:-/tmp}/caelestia-jetbrains.XXXXXX")"
+
+curl -fsL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "$FONTS_DIR/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
-curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "/tmp/CascadiaCode.zip" &
+curl -fsL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "$_cascadia_zip" &
 _pid_cc=$!
 
-curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "/tmp/JetBrainsMono.zip" &
+curl -fsL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "$_jetbrains_zip" &
 _pid_jb=$!
 
 wait $_pid_ms $_pid_cc $_pid_jb
 
-unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; FAILED_PKGS+=("CascadiaCode font"); }
-unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; FAILED_PKGS+=("JetBrains Mono Nerd Font"); }
-[[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
+unzip -qo "$_cascadia_zip" -d "$FONTS_DIR" 2>/dev/null && rm -f "$_cascadia_zip" || { rm -f "$_cascadia_zip"; err "Failed to extract CascadiaCode font."; FAILED_PKGS+=("CascadiaCode font"); }
+unzip -qo "$_jetbrains_zip" -d "$FONTS_DIR" 2>/dev/null && rm -f "$_jetbrains_zip" || { rm -f "$_jetbrains_zip"; err "Failed to extract JetBrains Mono Nerd Font."; FAILED_PKGS+=("JetBrains Mono Nerd Font"); }
+[[ -s "$FONTS_DIR/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
 
 fc-cache -f
 
@@ -327,7 +334,7 @@ if ! command -v caelestia >/dev/null 2>&1; then
     tmpdir="$(mktemp -d)"
     (
         cd "$tmpdir" || exit 1
-        curl -sL "https://github.com/caelestia-dots/cli/releases/download/v1.0.8/caelestia-1.0.8.tar.gz" -o caelestia.tar.gz
+        curl -fsL "https://github.com/caelestia-dots/cli/releases/download/v1.0.8/caelestia-1.0.8.tar.gz" -o caelestia.tar.gz
         tar -xzf caelestia.tar.gz
         cd caelestia-1.0.8 || exit 1
         python3 -m build --wheel --no-isolation

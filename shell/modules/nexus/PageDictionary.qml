@@ -270,7 +270,7 @@ QtObject {
             settings: [
                 { label: qsTr("Claude Code"), keywords: ["claude", "cli", "subscription", "login"] },
                 { label: qsTr("Accounts"), keywords: ["claude", "account", "login", "switch"] },
-                { label: qsTr("Providers"), keywords: ["ollama", "openai", "chatgpt", "gemini", "openrouter", "api key"] }
+                { label: qsTr("Providers"), keywords: ["ollama", "openai", "chatgpt", "gemini", "openrouter", "requesty", "api key"] }
             ]
         }
     ]

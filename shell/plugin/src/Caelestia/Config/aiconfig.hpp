@@ -86,6 +86,14 @@ class AiConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(QString, openrouterUrl, u"https://openrouter.ai/api/v1"_s)
     CONFIG_PROPERTY(QString, defaultOpenrouterModel, u""_s)
 
+    // REQUESTY_API_KEY: aggregator like OpenRouter. The model list comes from its
+    // managed policies (/models/managed), short ids such as "claude-sonnet-4-5".
+    // Point requestyUrl at https://router.eu.requesty.ai/v1 to keep traffic in the EU.
+    CONFIG_PROPERTY(bool, enableRequesty, false)
+    CONFIG_PROPERTY(QString, requestyApiKey, u""_s)
+    CONFIG_PROPERTY(QString, requestyUrl, u"https://router.requesty.ai/v1"_s)
+    CONFIG_PROPERTY(QString, defaultRequestyModel, u""_s)
+
     // opencode zen and go (https://opencode.ai/docs/zen, https://opencode.ai/docs/go).
     // Two products behind one gateway and one account, so they share a single key
     // (OPENCODE_API_KEY) and are separate providers only because the base URL and

@@ -473,7 +473,7 @@ Item {
     // and it authenticates with x-api-key. See opencodeWire() and setAuthHeader().
     readonly property bool isOpencode: provider === "opencode" || provider === "opencode-go"
 
-    readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go"]
+    readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "requesty", "opencode", "opencode-go"]
 
     function openaiCompatBase(p) {
         const which = p || provider;
@@ -481,6 +481,8 @@ Item {
             return GlobalConfig.ai.geminiUrl || "https://generativelanguage.googleapis.com/v1beta/openai";
         if (which === "openrouter")
             return GlobalConfig.ai.openrouterUrl || "https://openrouter.ai/api/v1";
+        if (which === "requesty")
+            return GlobalConfig.ai.requestyUrl || "https://router.requesty.ai/v1";
         if (which === "opencode")
             return GlobalConfig.ai.opencodeUrl || "https://opencode.ai/zen/v1";
         if (which === "opencode-go")
@@ -627,6 +629,9 @@ Item {
         } else if (which === "openrouter") {
             envName = "OPENROUTER_API_KEY";
             configured = GlobalConfig.ai.openrouterApiKey;
+        } else if (which === "requesty") {
+            envName = "REQUESTY_API_KEY";
+            configured = GlobalConfig.ai.requestyApiKey;
         } else if (which === "opencode" || which === "opencode-go") {
             envName = "OPENCODE_API_KEY";
             configured = GlobalConfig.ai.opencodeApiKey;
@@ -649,6 +654,7 @@ Item {
         "openai": "openaiApiKey",
         "gemini": "geminiApiKey",
         "openrouter": "openrouterApiKey",
+        "requesty": "requestyApiKey",
         "opencode": "opencodeApiKey"
     })
 
@@ -686,6 +692,8 @@ Item {
             return "defaultGeminiModel";
         if (which === "openrouter")
             return "defaultOpenrouterModel";
+        if (which === "requesty")
+            return "defaultRequestyModel";
         if (which === "opencode")
             return "defaultOpencodeModel";
         if (which === "opencode-go")
@@ -708,6 +716,8 @@ Item {
             l.push("gemini");
         if (GlobalConfig.ai.enableOpenrouter)
             l.push("openrouter");
+        if (GlobalConfig.ai.enableRequesty)
+            l.push("requesty");
         if (GlobalConfig.ai.enableOpencode)
             l.push("opencode");
         if (GlobalConfig.ai.enableOpencodeGo)
@@ -728,6 +738,8 @@ Item {
             return "Gemini";
         if (p === "openrouter")
             return "OpenRouter";
+        if (p === "requesty")
+            return "Requesty";
         if (p === "opencode")
             return "opencode Zen";
         if (p === "opencode-go")
@@ -1373,14 +1385,18 @@ Item {
         if (!force && root.modelsFetched[which])
             return;
         const key = root.getApiKeyFor(which);
-        // OpenRouter and opencode publish their catalogues without auth; the rest
-        // need the key.
-        const publicCatalogue = which === "openrouter" || which === "opencode" || which === "opencode-go";
+        // OpenRouter, Requesty and opencode publish their catalogues without auth;
+        // the rest need the key.
+        const publicCatalogue = which === "openrouter" || which === "requesty" || which === "opencode" || which === "opencode-go";
         if (key === "" && !publicCatalogue)
             return;
 
+        // Requesty's full catalogue runs to several hundred models, so offer its
+        // curated managed policies instead; each id is sent as-is as the model.
+        const modelsPath = which === "requesty" ? "/models/managed" : "/models";
+
         var xhr = new XMLHttpRequest();
-        xhr.open("GET", root.openaiCompatBase(which) + "/models", true);
+        xhr.open("GET", root.openaiCompatBase(which) + modelsPath, true);
         if (key !== "")
             root.setAuthHeader(xhr, which);
         xhr.onreadystatechange = () => {
@@ -1784,6 +1800,7 @@ Item {
                 "openai": "OPENAI_API_KEY",
                 "gemini": "GEMINI_API_KEY",
                 "openrouter": "OPENROUTER_API_KEY",
+                "requesty": "REQUESTY_API_KEY",
                 "opencode": "OPENCODE_API_KEY",
                 "opencode-go": "OPENCODE_API_KEY"
             };
@@ -1840,8 +1857,8 @@ Item {
             root.setAuthHeader(xhr);
             if (useAnthropic)
                 xhr.setRequestHeader("anthropic-version", "2023-06-01");
-            if (root.provider === "openrouter") {
-                // OpenRouter attributes requests to an app via these; harmless elsewhere.
+            if (root.provider === "openrouter" || root.provider === "requesty") {
+                // OpenRouter and Requesty attribute requests to an app via these; harmless elsewhere.
                 xhr.setRequestHeader("HTTP-Referer", "https://github.com/ladybug-me/caelestia-kde");
                 xhr.setRequestHeader("X-Title", "Caelestia Shell");
             }

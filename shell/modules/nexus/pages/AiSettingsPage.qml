@@ -230,7 +230,7 @@ PageBase {
 
     function loadStoredKeys() {
         // opencode go shares the zen entry, so it is not listed separately.
-        const provs = ["claude", "openai", "gemini", "openrouter", "opencode"];
+        const provs = ["claude", "openai", "gemini", "openrouter", "requesty", "opencode"];
         for (let i = 0; i < provs.length; i++)
             keyLoadComp.createObject(root, { provider: provs[i] });
     }
@@ -619,6 +619,13 @@ PageBase {
         }
 
         ToggleRow {
+            text: qsTr("Requesty")
+            subtext: qsTr("One key for models from multiple vendors")
+            checked: GlobalConfig.ai.enableRequesty
+            onToggled: GlobalConfig.ai.enableRequesty = checked
+        }
+
+        ToggleRow {
             text: qsTr("opencode Zen")
             subtext: qsTr("Curated coding models, pay as you go")
             checked: GlobalConfig.ai.enableOpencode
@@ -638,6 +645,7 @@ PageBase {
                      || GlobalConfig.ai.enableOpenai
                      || GlobalConfig.ai.enableGemini
                      || GlobalConfig.ai.enableOpenrouter
+                     || GlobalConfig.ai.enableRequesty
                      || GlobalConfig.ai.enableOpencode
                      || GlobalConfig.ai.enableOpencodeGo
             text: qsTr("API keys")
@@ -670,6 +678,13 @@ PageBase {
             value: root.apiKeyFor("openrouter")
             envName: "OPENROUTER_API_KEY"
             onCommitted: v => root.storeApiKey("openrouter", v)
+        }
+
+        ApiKeyField {
+            visible: GlobalConfig.ai.enableRequesty
+            value: root.apiKeyFor("requesty")
+            envName: "REQUESTY_API_KEY"
+            onCommitted: v => root.storeApiKey("requesty", v)
         }
 
         // opencode Zen and Go share one account key.

@@ -19,7 +19,7 @@ Item {
     readonly property bool isBarHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property bool showPopoutSeparator: isBarHorizontal && root.visibilities.sidebar && popouts && popouts.hasCurrent && popouts.currentName !== "dockhover" && popouts.currentName !== "dockcontext" && popouts.currentName !== "activewindow" && popouts.currentName !== "greeter" && popouts.currentName !== "greetercontext" && popouts.currentName !== "github"
     readonly property bool aiBusy: aiLoader.item ? (aiLoader.item.isTyping || aiLoader.item.inAgentLoop) : false
-    readonly property bool aiEnabled: GlobalConfig.ai.enableAiAssistant && (GlobalConfig.ai.enableOllama || GlobalConfig.ai.enableClaudeCode || GlobalConfig.ai.enableClaude || GlobalConfig.ai.enableOpenai || GlobalConfig.ai.enableGemini || GlobalConfig.ai.enableOpenrouter || GlobalConfig.ai.enableOpencode || GlobalConfig.ai.enableOpencodeGo)
+    readonly property bool aiEnabled: GlobalConfig.ai.enableAiAssistant && (GlobalConfig.ai.enableOllama || GlobalConfig.ai.enableClaudeCode || GlobalConfig.ai.enableClaude || GlobalConfig.ai.enableOpenai || GlobalConfig.ai.enableGemini || GlobalConfig.ai.enableOpenrouter || GlobalConfig.ai.enableRequesty || GlobalConfig.ai.enableOpencode || GlobalConfig.ai.enableOpencodeGo)
 
     function checkAiTab(): void {
         if (!root.aiEnabled && root.activeTab === "ai") {
@@ -40,6 +40,7 @@ Item {
         function onEnableOpenaiChanged(): void { checkAiTab(); }
         function onEnableGeminiChanged(): void { checkAiTab(); }
         function onEnableOpenrouterChanged(): void { checkAiTab(); }
+        function onEnableRequestyChanged(): void { checkAiTab(); }
         function onEnableOpencodeChanged(): void { checkAiTab(); }
         function onEnableOpencodeGoChanged(): void { checkAiTab(); }
         function onShowNewsChanged(): void { checkAiTab(); }

@@ -103,7 +103,9 @@ Searcher {
                 list.visibilities.launcher = false;
             }
             GlobalConfig.services.smartScheme = false;
-            Quickshell.execDetached(["caelestia", "scheme", "set", "-v", variant]);
+            // The config write above is batched and debounced, so the command cannot rely on
+            // reading it back; it is told what the user just chose.
+            Quickshell.execDetached(["caelestia", "scheme", "set", "--no-smart", "-v", variant]);
         }
     }
 }

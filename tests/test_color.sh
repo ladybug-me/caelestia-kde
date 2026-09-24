@@ -502,6 +502,50 @@ test_a_variant_given_to_scheme_set_is_not_overruled_by_smart() {
     assert_contains "$(cat "$scheme")" '"mode": "light"' "the mode is recorded"
 }
 
+# The shell writes its config on a delay, so a caller that has just turned smart mode off can
+# outrun its own file. --no-smart states the intent in the command instead of leaving the
+# command to read it back.
+test_no_smart_can_be_stated_on_the_command_line() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    # A config that still says smart is on: what the caller meant must win over what it says.
+    mkdir -p "$XDG_CONFIG_HOME/caelestia"
+    printf '%s' '{"services":{"smartScheme":true}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set --no-smart -n dynamic -v rainbow -m light
+    assert_status 0 "$STATUS" "an explicit --no-smart should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-rainbow" "the variant that was asked for is rendered"
+    assert_contains "$calls" "--mode light" "the mode that was asked for is rendered"
+    assert_eq "0" "$(printf '%s' "$calls" | grep -c -- '--mode smart' || true)" \
+        "--no-smart keeps the wallpaper out of it (calls: $calls)"
+}
+
+# The same file, the other way: with the config saying smart is ON and no flag given, the
+# wallpaper picks, which is the fix for the reported round trip.
+test_smart_mode_is_read_from_the_shell_config() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    mkdir -p "$XDG_CONFIG_HOME/caelestia"
+    printf '%s' '{"services":{"smartScheme":true}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "a dynamic scheme should derive"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--mode smart" "the config says smart, so the wallpaper picks the mode"
+    assert_contains "$calls" "--type scheme-neutral" "the wallpaper's own variant is measured"
+}
+
 # The launcher picks a variant and nothing else, because the mode is the wallpaper's business
 # there. Pinning the variant must not take the mode away from the wallpaper with it.
 test_a_variant_alone_still_lets_the_wallpaper_pick_the_mode() {

@@ -74,6 +74,8 @@ Scheme
       -r, --random        a random named scheme
       -P, --preview       print the scheme this would produce and change
                           nothing
+      -N, --no-smart      keep the mode and variant instead of letting the
+                          wallpaper choose them, for a dynamic scheme
           --notify        send a notification when it fails
 
 Wallpaper
@@ -1303,7 +1305,7 @@ cmd_scheme_get() {
 
 cmd_scheme_set() {
     local name="" flavour="" mode="" variant="" intensity="" random=0 preview=0 notify=0
-    local mode_arg="" variant_arg=""
+    local mode_arg="" variant_arg="" no_smart=0
     local data
 
     while [[ $# -gt 0 ]]; do
@@ -1315,6 +1317,7 @@ cmd_scheme_set() {
             -i|--intensity) intensity="${2:-}"; [[ -n "$intensity" ]] || die "-i needs an intensity"; shift 2 ;;
             -r|--random) random=1; shift ;;
             -P|--preview) preview=1; shift ;;
+            -N|--no-smart) no_smart=1; shift ;;
             --notify) notify=1; shift ;;
             -h|--help) usage; return 0 ;;
             *) die "unknown option for scheme set: $1" ;;
@@ -1367,8 +1370,16 @@ cmd_scheme_set() {
         # A dynamic scheme is the wallpaper's palette, and the wallpaper decides it unless smart
         # mode is off. Deriving at the tonalspot/dark default instead loses what the wallpaper
         # picked whenever a named scheme was in between.
+        #
+        # The flag is what the caller said; the config is what the shell last wrote down. Both
+        # are consulted because the shell writes its config on a delay, so a caller that has
+        # just turned smart mode off can outrun its own file.
         local smart=false
-        [[ "$(smart_scheme_flag)" == "1" ]] && smart=true
+        if ((no_smart)); then
+            smart=false
+        else
+            [[ "$(smart_scheme_flag)" == "1" ]] && smart=true
+        fi
 
         if ((preview)); then
             if ! wallpaper="$(stored_wallpaper)"; then

@@ -606,24 +606,11 @@ def cmd_smart_variant(image: str) -> int:
     measure and handed to matugen as a concrete type. ffmpeg decodes.
     """
     import math
-    import shutil
-    import subprocess
 
-    if shutil.which("ffmpeg") is None:
+    data = decode_thumbnail(image)
+    if data is None:
         return 1
 
-    result = subprocess.run(
-        [
-            "ffmpeg", "-v", "error", "-i", image,
-            "-vf", "scale=w=128:h=128:force_original_aspect_ratio=decrease:flags=neighbor",
-            "-f", "rawvideo", "-pix_fmt", "rgb24", "-",
-        ],
-        capture_output=True,
-    )
-    if result.returncode != 0 or not result.stdout:
-        return 1
-
-    data = result.stdout
     rg_diffs: list[float] = []
     yb_diffs: list[float] = []
     for index in range(0, len(data) - 2, 3):
@@ -649,6 +636,56 @@ def cmd_smart_variant(image: str) -> int:
         print("content")
     else:
         print("tonalspot")
+    return 0
+
+
+def decode_thumbnail(image: str) -> bytes | None:
+    """Decode the image into the 128x128 rgb24 thumbnail upstream measured."""
+    import shutil
+    import subprocess
+
+    if shutil.which("ffmpeg") is None:
+        return None
+
+    result = subprocess.run(
+        [
+            "ffmpeg", "-v", "error", "-i", image,
+            "-vf", "scale=w=128:h=128:force_original_aspect_ratio=decrease:flags=neighbor",
+            "-f", "rawvideo", "-pix_fmt", "rgb24", "-",
+        ],
+        capture_output=True,
+    )
+    if result.returncode != 0 or not result.stdout:
+        return None
+
+    return result.stdout
+
+
+def cmd_source_colour(image: str) -> int:
+    """Measure the colour a render starts from, for a matugen that cannot pick one.
+
+    `--source-color-index` arrived in matugen 4.2.0; without it matugen asks which
+    colour to use, which needs a terminal this pipeline does not have, and Fedora
+    users who built it from crates.io have exactly that (issue #814). The fallback
+    is the most saturated pixel of the same thumbnail `smart-variant` measures: the
+    colour that carries the wallpaper. ffmpeg decodes.
+    """
+    data = decode_thumbnail(image)
+    if data is None:
+        return 1
+
+    best_saturation = -1.0
+    best_rgb = (0.0, 0.0, 0.0)
+    for index in range(0, len(data) - 2, 3):
+        r = data[index] / 255
+        g = data[index + 1] / 255
+        b = data[index + 2] / 255
+        saturation = colorsys.rgb_to_hsv(r, g, b)[1]
+        if saturation > best_saturation:
+            best_saturation = saturation
+            best_rgb = (r, g, b)
+
+    print("#%02x%02x%02x" % tuple(round(value * 255) for value in best_rgb))
     return 0
 
 
@@ -751,6 +788,8 @@ def main(argv: list[str]) -> int:
         return cmd_render_templates(*args)
     if command == "smart-variant":
         return cmd_smart_variant(*args)
+    if command == "source-colour":
+        return cmd_source_colour(*args)
     if command == "konsole-scheme":
         return cmd_konsole_scheme(*args)
     raise SystemExit(f"unknown python helper: {command}")
@@ -918,6 +957,24 @@ run_matugen() {
     fi
 }
 
+# matugen's --source-color-index arrived in 4.2.0; the release Fedora users build from
+# crates.io predates it, and without the flag matugen asks which colour to use, which
+# needs a terminal this pipeline does not have (issue #814). The help text says which
+# one is here, and the answer is cached for the run. The cache's name is deliberately
+# not the one any environment would carry, so an exported variable cannot shadow it.
+MATUGEN_HAS_SOURCE_COLOR_INDEX=""
+
+matugen_supports_source_color_index() {
+    if [[ -z "$MATUGEN_HAS_SOURCE_COLOR_INDEX" ]]; then
+        if matugen image --help 2>&1 | grep -q -- '--source-color-index'; then
+            MATUGEN_HAS_SOURCE_COLOR_INDEX="yes"
+        else
+            MATUGEN_HAS_SOURCE_COLOR_INDEX="no"
+        fi
+    fi
+    [[ "$MATUGEN_HAS_SOURCE_COLOR_INDEX" == "yes" ]]
+}
+
 smart_variant() {
     py smart-variant "$1"
 }
@@ -931,10 +988,12 @@ render_decided() {
     run_matugen "$FANOUT_CONFIG" json "$import_json" --import-json-string "$meta"
 }
 
-# --source-color-index 0 stops matugen asking which color to use.
+# --source-color-index 0 stops matugen asking which color to use. Without it the
+# source colour is measured here and handed over as one, the way render_decided
+# hands over a palette, so an older matugen still renders (issue #814).
 render_image() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4" smart="$5" fan_out="$6" out="$7"
-    local type mode_arg intensity="${META_INTENSITY:-1}"
+    local type mode_arg source_colour intensity="${META_INTENSITY:-1}"
     local fan_out_with_palette="$fan_out" fan_out_after=false
 
     if [[ "$smart" == "true" ]]; then
@@ -964,11 +1023,21 @@ render_image() {
     fi
 
     write_matugen_config "$GENERATED_CONFIG" "$out" "$fan_out_with_palette"
-    run_matugen "$GENERATED_CONFIG" image "$wallpaper" \
-        --source-color-index 0 \
-        --type "$type" \
-        --mode "$mode_arg" \
-        --import-json-string "$(meta_string dynamic "$flavour" "$variant")"
+    if matugen_supports_source_color_index; then
+        run_matugen "$GENERATED_CONFIG" image "$wallpaper" \
+            --source-color-index 0 \
+            --type "$type" \
+            --mode "$mode_arg" \
+            --import-json-string "$(meta_string dynamic "$flavour" "$variant")"
+    else
+        source_colour="$(py source-colour "$wallpaper")" \
+            || die "could not measure a source colour from the wallpaper for this matugen"
+        warn "this matugen has no --source-color-index (4.2.0 or newer has it); rendering from the measured colour $source_colour"
+        run_matugen "$GENERATED_CONFIG" hex "$source_colour" \
+            --type "$type" \
+            --mode "$mode_arg" \
+            --import-json-string "$(meta_string dynamic "$flavour" "$variant")"
+    fi
 
     py finish-palette "$out" "$PALETTES_JSON" "$intensity" \
         || die "could not render the palette at that intensity"
@@ -1111,6 +1180,37 @@ apply_kvantum() {
         || warn "could not select the Kvantum theme"
 }
 
+# Running terminals read their colours from a file the fan out has just rewritten, and
+# none of them look again unless they are made to (issue #778). kitty reloads its whole
+# config on SIGUSR1; Konsole is asked to re-apply its sessions' profiles; foot watches
+# its config file itself and needs nothing. Every step is guarded and non-fatal: the
+# palette is already on disk.
+signal_terms() {
+    if enabled enableKitty && command -v pkill >/dev/null 2>&1 && pgrep -x kitty >/dev/null 2>&1; then
+        pkill -USR1 -x kitty 2>/dev/null || true
+    fi
+
+    if enabled enableKonsole; then
+        signal_konsole
+    fi
+}
+
+# Konsole has no "reload the scheme" call. Setting a session's profile to the one it
+# already uses makes it read the files behind it again, so each session's profile is
+# asked for first and "Default" stands in when Konsole does not say.
+signal_konsole() {
+    command -v qdbus6 >/dev/null 2>&1 || return 0
+    pgrep -x konsole >/dev/null 2>&1 || return 0
+
+    local session profile
+    while IFS= read -r session; do
+        [[ -n "$session" ]] || continue
+        profile="$(qdbus6 org.kde.konsole "$session" org.kde.konsole.Session.profile 2>/dev/null || true)"
+        [[ -n "$(printf '%s' "$profile" | tr -d '[:space:]')" ]] || profile="Default"
+        qdbus6 org.kde.konsole "$session" setProfile "$profile" >/dev/null 2>&1 || true
+    done < <(qdbus6 org.kde.konsole 2>/dev/null | grep '^/Sessions/' || true)
+}
+
 after_fan_out() {
     local mode="$1"
 
@@ -1129,6 +1229,8 @@ after_fan_out() {
     if enabled enableTerm; then
         apply_terms "$CACHE_HOME/caelestia/terminal-sequences"
     fi
+
+    signal_terms
 
     if enabled enableSpicetify && command -v spicetify >/dev/null 2>&1 && pgrep -x spotify >/dev/null 2>&1; then
         spicetify apply >/dev/null 2>&1 || warn "spicetify apply failed"

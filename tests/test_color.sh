@@ -19,6 +19,18 @@ write_stub_matugen() {
 #!/usr/bin/env bash
 set -euo pipefail
 
+# caelestia-color probes "matugen image --help" to ask whether this matugen can pick
+# the source colour itself. The probe is answered and not logged, so call-count
+# assertions stay about renders; MATUGEN_SOURCE_COLOR_INDEX=0 answers like the
+# crates.io release Fedora users build (no flag, issue #814).
+if [[ "${1:-}" == "image" && "${2:-}" == "--help" ]]; then
+    printf 'Usage: matugen image <PATH>\n'
+    if [[ "${MATUGEN_SOURCE_COLOR_INDEX:-1}" != "0" ]]; then
+        printf '      --source-color-index <INDEX>  the color to use from the image\n'
+    fi
+    exit 0
+fi
+
 printf '%s\n' "$*" >> "$MATUGEN_CALLS"
 
 config=""
@@ -32,7 +44,7 @@ for ((i = 0; i < ${#args[@]}; i++)); do
         --config) config="${args[i + 1]}" ;;
         --mode) mode="${args[i + 1]}" ;;
         --import-json-string) meta="${args[i + 1]}" ;;
-        image|json) kind="${args[i]}"; source="${args[i + 1]}" ;;
+        image|json|hex) kind="${args[i]}"; source="${args[i + 1]}" ;;
     esac
 done
 
@@ -121,15 +133,64 @@ STUB
     chmod +x "$STUB_DIR/plasma-apply-colorscheme" "$STUB_DIR/kwriteconfig6" "$STUB_DIR/kreadconfig6"
 }
 
+# The terminals that are told to re-read their config after a fan out (issue #778).
+# pgrep answers from PGREP_PROCS, pkill records what it was asked, and qdbus6 stands
+# in for Konsole's D-Bus: KONSOLE_SESSION_COUNT sessions, the first answering
+# KONSOLE_SESSION1_PROFILE to the profile query and the rest answering nothing.
+write_stub_signals() {
+    cat > "$STUB_DIR/pgrep" <<'STUB'
+#!/usr/bin/env bash
+set -u
+name="${*: -1}"
+case " ${PGREP_PROCS:-} " in
+    *" $name "*) printf '1234\n'; exit 0 ;;
+    *) exit 1 ;;
+esac
+STUB
+    cat > "$STUB_DIR/pkill" <<'STUB'
+#!/usr/bin/env bash
+set -u
+printf 'pkill %s\n' "$*" >> "${SIGNAL_CALLS:?}"
+exit 0
+STUB
+    cat > "$STUB_DIR/qdbus6" <<'STUB'
+#!/usr/bin/env bash
+set -u
+printf 'qdbus %s\n' "$*" >> "${SIGNAL_CALLS:?}"
+if [[ "${1:-}" == "org.kde.konsole" && $# -eq 1 ]]; then
+    count="${KONSOLE_SESSION_COUNT:-0}"
+    i=1
+    while (( i <= count )); do
+        printf '/Sessions/%d\n' "$i"
+        i=$((i + 1))
+    done
+    exit 0
+fi
+if [[ "${*: -1}" == *.profile ]]; then
+    if [[ "$2" == "/Sessions/1" ]]; then
+        printf '%s\n' "${KONSOLE_SESSION1_PROFILE:-}"
+    else
+        printf '\n'
+    fi
+    exit 0
+fi
+exit 0
+STUB
+    chmod +x "$STUB_DIR/pgrep" "$STUB_DIR/pkill" "$STUB_DIR/qdbus6"
+}
+
 setup_sandbox() {
     SANDBOX="$(new_tmpdir)"
     STUB_DIR="$SANDBOX/bin"
     CALLS="$SANDBOX/matugen-calls.log"
     KDE_CALLS="$SANDBOX/kde-calls.log"
+    SIGNAL_CALLS="$SANDBOX/signal-calls.log"
+    unset MATUGEN_SOURCE_COLOR_INDEX PGREP_PROCS KONSOLE_SESSION_COUNT KONSOLE_SESSION1_PROFILE
     mkdir -p "$STUB_DIR" "$SANDBOX/config" "$SANDBOX/state" "$SANDBOX/cache" "$SANDBOX/data" "$SANDBOX/pictures"
     write_stub_matugen
     write_stub_ffmpeg
     write_stub_kde
+    write_stub_signals
 
     export CAELESTIA_DATA_DIR="$REPO_ROOT/src"
     export XDG_CONFIG_HOME="$SANDBOX/config"
@@ -139,12 +200,14 @@ setup_sandbox() {
     export XDG_PICTURES_DIR="$SANDBOX/pictures"
     export MATUGEN_CALLS="$CALLS"
     export KDE_CALLS="$KDE_CALLS"
+    export SIGNAL_CALLS="$SIGNAL_CALLS"
     export PATH="$STUB_DIR:$PATH"
 }
 
 run_color() {
     : > "$CALLS"
     : > "$KDE_CALLS"
+    : > "$SIGNAL_CALLS"
     OUTPUT="$(
         XDG_CONFIG_HOME="$XDG_CONFIG_HOME" \
         XDG_STATE_HOME="$XDG_STATE_HOME" \
@@ -154,6 +217,11 @@ run_color() {
         CAELESTIA_DATA_DIR="$CAELESTIA_DATA_DIR" \
         MATUGEN_CALLS="$CALLS" \
         KDE_CALLS="$KDE_CALLS" \
+        SIGNAL_CALLS="$SIGNAL_CALLS" \
+        MATUGEN_SOURCE_COLOR_INDEX="${MATUGEN_SOURCE_COLOR_INDEX:-}" \
+        PGREP_PROCS="${PGREP_PROCS:-}" \
+        KONSOLE_SESSION_COUNT="${KONSOLE_SESSION_COUNT:-0}" \
+        KONSOLE_SESSION1_PROFILE="${KONSOLE_SESSION1_PROFILE:-}" \
         FFMPEG_PATTERN="${FFMPEG_PATTERN:-gray}" \
         PATH="$PATH" \
         bash "$COLOR" "$@" 2>&1
@@ -351,6 +419,74 @@ test_no_smart_keeps_the_mode_and_variant() {
         "no smart type is passed with --no-smart (calls: $calls)"
     assert_eq "0" "$(printf '%s' "$calls" | grep -c -- '--mode smart' || true)" \
         "no smart mode is passed with --no-smart (calls: $calls)"
+}
+
+# The crates.io release Fedora users can build predates --source-color-index, and
+# without the flag matugen asks which colour to use, which no pipeline answers
+# (issue #814). The render falls back to a colour measured from the same thumbnail
+# the smart variant comes from.
+test_an_old_matugen_renders_from_a_measured_source_colour() {
+    setup_sandbox
+    export MATUGEN_SOURCE_COLOR_INDEX=0
+    local image
+    image="$(wallpaper_image wall.png)"
+
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "an old matugen should still render the scheme"
+    assert_contains "$OUTPUT" "no --source-color-index" "the fallback is reported"
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_not_contains "$calls" "--source-color-index" "the flag the old matugen lacks is not passed"
+    assert_contains "$calls" 'hex #ff0000' "the most saturated pixel is the colour handed over"
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"name": "dynamic"' \
+        "the scheme is still written"
+
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "a flat wallpaper should render too"
+    assert_contains "$(cat "$CALLS")" 'hex #808080' "a flat wallpaper measures to its own grey"
+}
+
+# Terminals read their colours from files the fan out rewrites, and none of them look
+# again unless they are told to (issue #778).
+test_running_terminals_are_signalled_after_the_fan_out() {
+    setup_sandbox
+    export PGREP_PROCS="kitty"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_contains "$(cat "$SIGNAL_CALLS")" 'pkill -USR1 -x kitty' \
+        "kitty is asked to reload its config"
+
+    set_cli_config '{"theme": {"enableKitty": false}}'
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_not_contains "$(cat "$SIGNAL_CALLS")" 'pkill' \
+        "a kitty target that is off is not signalled"
+}
+
+test_konsole_sessions_re_apply_their_own_profile() {
+    setup_sandbox
+    export PGREP_PROCS="konsole"
+    export KONSOLE_SESSION_COUNT=2
+    export KONSOLE_SESSION1_PROFILE="Custom"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    local calls
+    calls="$(cat "$SIGNAL_CALLS")"
+    assert_contains "$calls" 'qdbus org.kde.konsole /Sessions/1 setProfile Custom' \
+        "a session that names its profile is set back to it"
+    assert_contains "$calls" 'qdbus org.kde.konsole /Sessions/2 setProfile Default' \
+        "a session that does not say falls back to the default profile"
+
+    set_cli_config '{"theme": {"enableKonsole": false}}'
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_not_contains "$(cat "$SIGNAL_CALLS")" 'setProfile' \
+        "a Konsole target that is off is not asked"
+}
+
+test_running_terminals_without_any_target_are_not_signalled() {
+    setup_sandbox
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_eq "" "$(cat "$SIGNAL_CALLS")" "nothing is signalled with no terminals running"
 }
 
 test_a_named_scheme_does_not_follow_the_wallpaper() {

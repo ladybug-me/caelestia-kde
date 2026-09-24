@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Services.UPower
 import Caelestia.Config
@@ -21,6 +22,13 @@ Scope {
             return false;
         return true;
     }
+
+    /// Whether KDE's kscreenlocker will lock the session by itself when the machine
+    /// wakes (kscreenlockerrc [Daemon] LockOnResume, on by default). When it does,
+    /// the lockBeforeSleep lock below is skipped: locking the session twice around a
+    /// suspend leaves the greeter that survives it rendering without its wallpaper,
+    /// palette and avatar (issue #815).
+    property bool kdeLocksOnResume: true
 
     function requestLock(): void {
         Quickshell.execDetached(["loginctl", "lock-session"]);
@@ -46,11 +54,26 @@ Scope {
 
     Connections {
         function onAboutToSleep(): void {
-            if (GlobalConfig.general.idle.lockBeforeSleep)
+            // ksmserver locks on resume by itself when LockOnResume is on; firing our
+            // lock as well locks the session twice around the suspend, which is the
+            // double-lock that breaks the greeter (issue #815).
+            if (GlobalConfig.general.idle.lockBeforeSleep && !root.kdeLocksOnResume)
                 root.requestLock();
         }
 
         target: SessionManager
+    }
+
+    Process {
+        id: kdeLockConfig
+
+        // Read once at startup: the setting lives in KDE's lock screen settings, and
+        // absent or unreadable answers mean "on", the KDE default.
+        command: ["bash", "-c", "kreadconfig6 --file kscreenlockerrc --group Daemon --key LockOnResume --default true 2>/dev/null || printf 'true\\n'"]
+        running: true
+        stdout: StdioCollector {
+            onStreamFinished: root.kdeLocksOnResume = text.trim() !== "false"
+        }
     }
 
     Variants {

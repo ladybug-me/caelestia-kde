@@ -70,6 +70,11 @@ Item {
 
     property var clTerms: []
 
+    // Bumped whenever the greeter detects a resume, so the wallpaper blur binding
+    // below looks the host's wallpaper item up again: it can be absent or
+    // mid-teardown around a suspend (issue #815).
+    property int wallpaperResolveNonce: 0
+
     readonly property bool isAuthenticating: authHandler.isAuthenticating
     readonly property var activePasswordPill: isPortrait ? portraitPasswordPill : passwordPill
     property string authMessage: ""
@@ -132,6 +137,16 @@ Item {
 
     function ensureAuthenticating() {
         authHandler.ensureAuthenticating();
+    }
+
+    // Re-runs the one-shot loaders below once the view is shown again: each disconnects
+    // its source after its first answer, so a suspend in between leaves the greeter
+    // running on the palette and config it read before the sleep (issue #815).
+    function rearmAfterResume() {
+        schemeLoader.connectSource("cat ~/.local/state/caelestia/scheme.json 2>/dev/null");
+        configLoader.connectSource("cat ~/.config/caelestia/shell.json 2>/dev/null");
+        fetchLoader.connectSource("python3 " + lockScreenUi.sysinfoScriptPath);
+        lockScreenUi.wallpaperResolveNonce++;
     }
 
     ServiceRef { service: Cpu }
@@ -281,11 +296,22 @@ Item {
     Timer {
         id: mprisTimer
 
+        property double lastTick: 0
+
         interval: 2000
         repeat: true
         running: true
         triggeredOnStart: true
-        onTriggered: mprisSource.poll()
+        onTriggered: {
+            // A tick that lands far late means the greeter was frozen through a
+            // suspend: timers stop while the machine sleeps, so the gap is the
+            // resume signal the host does not give the theme (issue #815).
+            var now = Date.now();
+            if (mprisTimer.lastTick > 0 && now - mprisTimer.lastTick > 10000)
+                lockScreenUi.rearmAfterResume();
+            mprisTimer.lastTick = now;
+            mprisSource.poll()
+        }
     }
 
     Plasma5Support.DataSource {
@@ -435,6 +461,13 @@ Item {
             if (portraitPasswordPill) portraitPasswordPill.clearPassword();
         }
 
+        function onViewVisibleChanged() {
+            // The host raises viewVisible when the greeter is shown, including again
+            // after a resume, which is when the one-shot data above is stale.
+            if (root.viewVisible)
+                lockScreenUi.rearmAfterResume();
+        }
+
         target: root
     }
 
@@ -497,7 +530,14 @@ Item {
         id: wallpaperBlur
 
         anchors.fill: parent
-        source: wallpaper
+        // The wallpaper item belongs to the greeter host and can be missing around a
+        // suspend; resolving it to null blanks the blur for the rest of the lock. The
+        // nonce makes the lookup happen again whenever a resume is detected
+        // (issue #815).
+        source: {
+            lockScreenUi.wallpaperResolveNonce;
+            return (typeof wallpaper !== "undefined" && wallpaper) ? wallpaper : null;
+        }
         radius: 64
         visible: false
     }

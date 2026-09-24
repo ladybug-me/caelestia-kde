@@ -56,7 +56,7 @@ CORE_PACKAGES=(
 )
 
 SHELL_PACKAGES=(
-    foot eza fastfetch starship btop bash matugen
+    foot eza fastfetch starship btop bash
 )
 
 THEME_PACKAGES=(
@@ -327,6 +327,29 @@ if command -v xdg-user-dirs-update >/dev/null 2>&1; then
 fi
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
+
+# matugen generates the color palette but Fedora has no package for it. The crates.io
+# release cargo builds by default predates --source-color-index, which the color
+# pipeline needs, so the fallback builds it from the repository (issue #814).
+matugen_usable() {
+    command -v matugen >/dev/null 2>&1 || return 1
+    matugen image --help 2>&1 | grep -q -- '--source-color-index'
+}
+
+if ! matugen_usable; then
+    export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+    if ! command -v cargo >/dev/null 2>&1; then
+        info "Installing a Rust toolchain to build matugen..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal || true # ci:allow-curl-pipe
+        export PATH="$HOME/.cargo/bin:$PATH"
+    fi
+    if command -v cargo >/dev/null 2>&1; then
+        cargo install --git https://github.com/InioX/matugen || { err "cargo install matugen failed."; FAILED_PKGS+=("matugen"); }
+    else
+        err "matugen generates the color palette but has no Fedora package; install a Rust toolchain and run 'cargo install --git https://github.com/InioX/matugen'."
+        FAILED_PKGS+=("matugen")
+    fi
+fi
 
 info "Installing Caelestia CLI wrapper..."
 if ! command -v caelestia >/dev/null 2>&1; then

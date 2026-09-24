@@ -180,4 +180,73 @@ test_a_non_numeric_timeout_is_ignored() {
     assert_eq "" "$(writes_to "$log")" "a nonsense timeout must not reach powerdevil"
 }
 
+# Locking the session twice around a suspend - once by ksmserver on resume, once by our
+# lockBeforeSleep - is the double-lock that leaves the greeter without its elements
+# (issue #815). These keep the deference and the greeter's re-arm from being dropped;
+# they are greps the way test_lock_password_reveal.sh guards its feature, because the
+# greeter and the idle monitors only run inside a session.
+IDLE_MONITORS="$REPO_ROOT/shell/modules/IdleMonitors.qml"
+GENERAL_CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/generalconfig.hpp"
+POWER_PAGE="$REPO_ROOT/shell/modules/nexus/pages/PowerPage.qml"
+LOCK_SCREEN_UI="$REPO_ROOT/src/kde/shells/caelestia.desktop/contents/lockscreen/LockScreenUi.qml"
+SESSION_MANAGER="$REPO_ROOT/shell/plugin/src/Caelestia/Services/sessionmanager.cpp"
+
+test_the_suspend_lock_defers_to_kdes_own_resume_lock() {
+    local qml
+    qml="$(cat "$IDLE_MONITORS")"
+
+    assert_contains "$qml" "kreadconfig6 --file kscreenlockerrc --group Daemon --key LockOnResume" \
+        "KDE's own resume lock is read before ours is fired"
+    assert_contains "$qml" 'if (GlobalConfig.general.idle.lockBeforeSleep && !root.kdeLocksOnResume)' \
+        "our lock is skipped when KDE locks on resume itself"
+}
+
+test_the_default_idle_lock_is_exposed_where_it_fires() {
+    local hpp qml
+    hpp="$(cat "$GENERAL_CONFIG")"
+    assert_contains "$hpp" '{ u"timeout"_s, 180 },' "the 180 second idle lock default is still shipped"
+
+    qml="$(cat "$POWER_PAGE")"
+    assert_contains "$qml" 'qsTr("Idle lock")' "the idle lock has a row on the Power page"
+    assert_contains "$qml" "lockTimeout" "the row edits the idle timeouts' lock entry"
+}
+
+test_the_greeter_re_arms_after_a_resume() {
+    local qml
+    qml="$(cat "$LOCK_SCREEN_UI")"
+
+    assert_contains "$qml" "rearmAfterResume" "a resume re-runs the one-shot loaders"
+    assert_contains "$qml" 'schemeLoader.connectSource' "the scheme is re-read"
+    assert_contains "$qml" 'configLoader.connectSource' "the config is re-read"
+    assert_contains "$qml" 'fetchLoader.connectSource' "the system info is re-read"
+    assert_contains "$qml" 'now - mprisTimer.lastTick > 10000' \
+        "a poll that lands far late is taken as the resume the host does not signal"
+}
+
+test_the_wallpaper_blur_survives_a_missing_wallpaper_item() {
+    local qml
+    qml="$(cat "$LOCK_SCREEN_UI")"
+
+    assert_contains "$qml" 'typeof wallpaper !== "undefined" && wallpaper' \
+        "the blur resolves the host's wallpaper to null rather than erroring"
+    assert_contains "$qml" "wallpaperResolveNonce" "the lookup is repeated after a resume"
+}
+
+test_the_power_page_reports_and_documents_hibernation() {
+    local qml
+    qml="$(cat "$POWER_PAGE")"
+
+    assert_contains "$qml" "CanHibernate" "logind is asked whether hibernation is available"
+    assert_contains "$qml" "HibernateDelaySecUSec" "the hibernate delay is surfaced"
+    assert_contains "$qml" "resume=" "the swap and resume= requirement is stated where the toggle lives"
+}
+
+test_the_suspend_fallback_to_plain_suspend_is_announced() {
+    local cpp
+    cpp="$(cat "$SESSION_MANAGER")"
+
+    assert_contains "$cpp" 'tr("Hibernation is not available")' \
+        "the fallback from suspend-then-hibernate to suspend says so"
+}
+
 run_tests

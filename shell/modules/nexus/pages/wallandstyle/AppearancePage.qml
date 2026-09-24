@@ -27,6 +27,23 @@ PageBase {
         { label: qsTr("CaskaydiaCove NF"), family: "CaskaydiaCove NF", mono: true },
     ]
 
+    // The manual light/dark switch the launcher commands used to be the only way to
+    // reach (issue #778). Auto defers to the schedule on the Advanced Colors page.
+    readonly property list<MenuItem> modeItems: [
+        MenuItem {
+            text: qsTr("Light")
+            icon: "light_mode"
+        },
+        MenuItem {
+            text: qsTr("Dark")
+            icon: "dark_mode"
+        },
+        MenuItem {
+            text: qsTr("Auto")
+            icon: "routine"
+        }
+    ]
+
     function applyFont(family: string): void {
         GlobalConfig.appearance.font.headline.family = family;
         GlobalConfig.appearance.font.title.family = family;
@@ -63,6 +80,33 @@ PageBase {
 
         SectionHeader {
             first: true
+            text: qsTr("Color mode")
+        }
+
+        SelectRow {
+            first: true
+            last: true
+            label: qsTr("Theme mode")
+            subtext: GlobalConfig.services.autoSchemeEnabled
+                     ? qsTr("Follows the schedule set on the Advanced Colors page")
+                     : (Colours.light ? qsTr("Manual: the light palette is in use") : qsTr("Manual: the dark palette is in use"))
+            menuItems: root.modeItems
+            active: GlobalConfig.services.autoSchemeEnabled
+                ? root.modeItems[2]
+                : (Colours.light ? root.modeItems[0] : root.modeItems[1])
+            fallbackIcon: "routine"
+            fallbackText: qsTr("Auto")
+            onSelected: item => {
+                if (item === root.modeItems[2]) {
+                    GlobalConfig.services.autoSchemeEnabled = true;
+                } else {
+                    GlobalConfig.services.autoSchemeEnabled = false;
+                    Colours.setMode(item === root.modeItems[0] ? "light" : "dark");
+                }
+            }
+        }
+
+        SectionHeader {
             text: qsTr("Font")
         }
 

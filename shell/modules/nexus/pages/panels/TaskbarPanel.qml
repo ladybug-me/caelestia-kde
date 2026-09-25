@@ -41,12 +41,38 @@ PageBase {
         }
     ]
 
+    // Whether any connected screen carries a per-monitor position override.
+    // The per-monitor section stays visible while this is true, so an
+    // override can never end up hidden on a single-monitor setup.
+    readonly property bool hasPositionOverrides: {
+        let overridden = false;
+        for (let i = 0; i < Screens.screens.length; i++) {
+            const screenConfig = GlobalConfig.forScreen(Screens.screens[i].name);
+            if (screenConfig && screenConfig.bar.isOverride("position")) {
+                overridden = true;
+                break;
+            }
+        }
+        return overridden;
+    }
+
     function itemForPosition(pos: string): MenuItem {
         for (let i = 0; i < root.positionItems.length; i++) {
             if (root.positionItems[i].value === pos)
                 return root.positionItems[i];
         }
         return root.positionItems[0];
+    }
+
+    // Choosing a global position is authoritative: drop every per-monitor
+    // position override so all connected monitors follow the global edge
+    // again, mirroring how the desktop page applies its global toggles.
+    function resetScreenPositionOverrides(): void {
+        for (let i = 0; i < Screens.screens.length; i++) {
+            const screenConfig = GlobalConfig.forScreen(Screens.screens[i].name);
+            if (screenConfig)
+                screenConfig.bar.resetOption("position");
+        }
     }
 
     title: qsTr("Taskbar")
@@ -94,7 +120,10 @@ PageBase {
             subtext: qsTr("Screen edge to place the bar on")
             active: root.itemForPosition(GlobalConfig.bar.position)
             menuItems: root.positionItems
-            onSelected: item => GlobalConfig.bar.position = item.value
+            onSelected: item => {
+                GlobalConfig.bar.position = item.value;
+                root.resetScreenPositionOverrides();
+            }
         }
 
         ToggleRow {
@@ -116,14 +145,14 @@ PageBase {
         }
 
         SectionHeader {
-            visible: Screens.screens.length > 1
+            visible: Screens.screens.length > 1 || root.hasPositionOverrides
             text: qsTr("Per-monitor position")
         }
 
         Repeater {
             id: perMonitorRepeater
 
-            model: Screens.screens.length > 1 ? Screens.screens : []
+            model: Screens.screens.length > 1 || root.hasPositionOverrides ? Screens.screens : []
 
             SelectRow {
                 required property var modelData

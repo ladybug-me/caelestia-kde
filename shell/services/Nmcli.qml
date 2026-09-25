@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Caelestia
+import Caelestia.Config
 import Caelestia.Services
 import qs.components.misc
 
@@ -39,6 +40,10 @@ Singleton {
     readonly property var vpnConnections: NmQt.vpnConnections
     readonly property var activeVpn: NmQt.activeVpn
     property string vpnPendingConnection: NmQt.vpnPendingConnection
+
+    readonly property bool hotspotSupported: NmQt.hotspotSupported
+    readonly property bool hotspotEnabled: NmQt.hotspotEnabled
+    readonly property string hotspotSsid: NmQt.hotspotSsid
 
     property list<string> savedConnections: NmQt.savedConnections
     property list<string> savedConnectionSsids: NmQt.savedConnectionSsids
@@ -346,6 +351,39 @@ Singleton {
 
     function hasSavedProfile(ssid: string): bool { return NmQt.hasSavedProfile(ssid); }
     function forgetNetwork(ssid: string, callback: var): void { NmQt.forgetNetwork(ssid, callback); }
+
+    function enableHotspot(ssid: string, password: string, callback: var): void {
+        NmQt.enableHotspot(ssid, password, callback);
+    }
+
+    function disableHotspot(callback: var): void {
+        NmQt.disableHotspot(callback);
+    }
+
+    /// Start or stop the hotspot from a one-tap toggle, using the name and
+    /// password kept in the settings. A hotspot that has never been set up is
+    /// not started: one tap should not share an open network, so the toggle
+    /// points at the settings page instead. The failure keeps its toast here,
+    /// where both the utilities tile and the bar popout get it.
+    function toggleHotspot(): void {
+        if (NmQt.hotspotEnabled) {
+            NmQt.disableHotspot(reportHotspotFailure);
+            return;
+        }
+
+        if (GlobalConfig.services.hotspotSsid.length === 0 && GlobalConfig.services.hotspotPassword.length === 0) {
+            Toaster.toast(qsTr("Hotspot"), qsTr("Give it a name and a password in Settings > Network > Hotspot"), "wifi_tethering");
+            return;
+        }
+
+        NmQt.enableHotspot(GlobalConfig.services.hotspotSsid, GlobalConfig.services.hotspotPassword, reportHotspotFailure);
+    }
+
+    function reportHotspotFailure(result: var): void {
+        if (!result || result.success)
+            return;
+        Toaster.toast(qsTr("Hotspot"), result.error || qsTr("The hotspot could not be started"), "wifi_tethering");
+    }
 
     function disconnect(interfaceName: string, callback: var): void {
         NmQt.disconnectFromNetwork();

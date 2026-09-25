@@ -166,7 +166,6 @@ PageBase {
         ConnectedRect {
             Layout.fillWidth: true
             implicitHeight: addNetworkLayout.implicitHeight + addNetworkLayout.anchors.margins * 2
-            last: true
 
             StateLayer {
                 onClicked: root.nState.openSubPage(2) // Add network sub-page
@@ -192,6 +191,54 @@ PageBase {
                     text: qsTr("Add network")
                     font: Tokens.font.body.small
                     elide: Text.ElideRight
+                }
+            }
+        }
+
+        ConnectedRect {
+            Layout.fillWidth: true
+            implicitHeight: hotspotLayout.implicitHeight + hotspotLayout.anchors.margins * 2
+            last: true
+
+            StateLayer {
+                onClicked: root.nState.openSubPage(7) // Hotspot sub-page
+            }
+
+            RowLayout {
+                id: hotspotLayout
+
+                anchors.fill: parent
+                anchors.margins: Tokens.padding.medium
+                anchors.leftMargin: Tokens.padding.largeIncreased
+                anchors.rightMargin: Tokens.padding.largeIncreased
+
+                spacing: Tokens.spacing.medium
+
+                MaterialIcon {
+                    text: "wifi_tethering"
+                    color: Colours.palette.m3onSurfaceVariant
+                    fontStyle: Tokens.font.icon.medium
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Hotspot")
+                    font: Tokens.font.body.small
+                    elide: Text.ElideRight
+                }
+
+                StyledText {
+                    visible: Nmcli.hotspotEnabled
+                    text: Nmcli.hotspotSsid
+                    color: Colours.palette.m3primary
+                    font: Tokens.font.body.small
+                    elide: Text.ElideRight
+                }
+
+                MaterialIcon {
+                    text: "chevron_right"
+                    color: Colours.palette.m3onSurfaceVariant
+                    fontStyle: Tokens.font.icon.medium
                 }
             }
         }

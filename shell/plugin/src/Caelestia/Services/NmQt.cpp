@@ -23,6 +23,7 @@
 #include <QFileInfo>
 #include <QHash>
 #include <QHostAddress>
+#include <QHostInfo>
 #include <QJSEngine>
 #include <QList>
 #include <QLoggingCategory>
@@ -35,6 +36,12 @@ Q_LOGGING_CATEGORY(lcNmQt, "caelestia.services.nmqt", QtInfoMsg)
 namespace caelestia::services {
 
 namespace {
+
+// The access point profile the shell owns. Found by id so a second enable
+// updates the profile it made the first time instead of adding a numbered
+// duplicate beside it, and so Plasma's own network applet shows the hotspot
+// under a name that says where it came from.
+constexpr QLatin1String hotspotConnectionId("caelestia-hotspot");
 
 // NetworkManager reports container and VM veth pairs (Docker, Podman, ...) as type
 // Ethernet too, so they would otherwise be listed beside real NICs. A physical
@@ -216,6 +223,18 @@ QVariantMap NmQt::ethernetDeviceDetails() const {
 
 QVariantMap NmQt::savedConnectionSecurity() const {
     return m_savedConnectionSecurity;
+}
+
+bool NmQt::hotspotSupported() const {
+    return m_hotspotSupported;
+}
+
+bool NmQt::hotspotEnabled() const {
+    return m_hotspotEnabled;
+}
+
+QString NmQt::hotspotSsid() const {
+    return m_hotspotSsid;
 }
 
 // ---
@@ -1001,6 +1020,106 @@ void NmQt::addHiddenNetwork(
     });
 }
 
+void NmQt::enableHotspot(const QString& ssid, const QString& password, QJSValue callback) {
+    const auto wifiDev = hotspotDevice();
+    if (!wifiDev) {
+        invokeCallback(callback, false, {}, QStringLiteral("No wireless device can run a hotspot"), -1);
+        return;
+    }
+
+    // An empty name falls back to the hostname. Only a password between one and
+    // seven characters is refused: WPA cannot carry it, and quietly sharing an
+    // open network instead is not what asking for a password means.
+    const QString hotspotSsid = ssid.trimmed().isEmpty() ? QHostInfo::localHostName() : ssid.trimmed();
+    if (hotspotSsid.isEmpty()) {
+        invokeCallback(callback, false, {}, QStringLiteral("No hotspot name"), -1);
+        return;
+    }
+    if (!password.isEmpty() && password.size() < 8) {
+        invokeCallback(callback, false, {}, QStringLiteral("Hotspot passwords are at least 8 characters"), -1);
+        return;
+    }
+
+    const auto existing = findConnectionByName(QString(hotspotConnectionId));
+    const NMVariantMapMap settings = buildHotspotSettings(
+        hotspotSsid, password, existing ? existing->uuid() : NetworkManager::ConnectionSettings::createNewUuid());
+    if (settings.isEmpty()) {
+        invokeCallback(callback, false, {}, QStringLiteral("Could not create hotspot settings"), -1);
+        return;
+    }
+
+    if (existing) {
+        // Update in place, then activate. The profile uuid has to survive, or the
+        // hotspot loses the name NetworkManager and Plasma know it by.
+        QDBusPendingReply<> reply = existing->update(settings);
+        auto* watcher = new QDBusPendingCallWatcher(reply, this);
+        connect(watcher, &QDBusPendingCallWatcher::finished, this,
+            [this, wifiDev, existing, callback](QDBusPendingCallWatcher* w) {
+                w->deleteLater();
+                QDBusPendingReply<> r = *w;
+                if (r.isError()) {
+                    invokeCallback(callback, false, {}, r.error().message(), -1);
+                    return;
+                }
+
+                QDBusPendingReply<QDBusObjectPath> activateReply =
+                    NetworkManager::activateConnection(existing->path(), wifiDev->uni(), QString());
+                auto* activateWatcher = new QDBusPendingCallWatcher(activateReply, this);
+                connect(activateWatcher, &QDBusPendingCallWatcher::finished, this,
+                    [this, callback](QDBusPendingCallWatcher* aw) {
+                        aw->deleteLater();
+                        QDBusPendingReply<QDBusObjectPath> ar = *aw;
+                        refreshHotspot();
+                        if (ar.isError()) {
+                            invokeCallback(callback, false, {}, ar.error().message(), -1);
+                            return;
+                        }
+                        invokeCallback(callback, true, QStringLiteral("Hotspot started"));
+                    });
+            });
+        return;
+    }
+
+    QDBusPendingReply<QDBusObjectPath, QDBusObjectPath> reply =
+        NetworkManager::addAndActivateConnection(settings, wifiDev->uni(), QString());
+    auto* watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, callback](QDBusPendingCallWatcher* w) {
+        w->deleteLater();
+        QDBusPendingReply<QDBusObjectPath, QDBusObjectPath> r = *w;
+        refreshHotspot();
+        if (r.isError()) {
+            invokeCallback(callback, false, {}, r.error().message(), -1);
+            return;
+        }
+        refreshSavedConnections();
+        invokeCallback(callback, true, QStringLiteral("Hotspot started"));
+    });
+}
+
+void NmQt::disableHotspot(QJSValue callback) {
+    const QString path = runningHotspot().path;
+    if (path.isEmpty()) {
+        refreshHotspot();
+        invokeCallback(callback, true, QStringLiteral("Hotspot is already off"));
+        return;
+    }
+
+    // Deactivating leaves the profile saved, so turning the hotspot back on needs
+    // no credentials typed in again.
+    QDBusPendingReply<> reply = NetworkManager::deactivateConnection(path);
+    auto* watcher = new QDBusPendingCallWatcher(reply, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, callback](QDBusPendingCallWatcher* w) {
+        w->deleteLater();
+        QDBusPendingReply<> r = *w;
+        refreshHotspot();
+        if (r.isError()) {
+            invokeCallback(callback, false, {}, r.error().message(), -1);
+            return;
+        }
+        invokeCallback(callback, true, QStringLiteral("Hotspot stopped"));
+    });
+}
+
 QString NmQt::ethernetSpeed(const QString& interfaceName) const {
     if (interfaceName.isEmpty())
         return {};
@@ -1246,6 +1365,7 @@ void NmQt::refreshNetworks() {
 void NmQt::refreshDevices() {
     refreshEthernetDevices();
     refreshNetworks();
+    refreshHotspot();
 }
 
 void NmQt::refreshEthernetDevices() {
@@ -1298,6 +1418,26 @@ void NmQt::refreshEthernetDevices() {
     if (activeEthChanged) {
         m_activeEthernet = activeEth;
         emit activeEthernetChanged();
+    }
+}
+
+void NmQt::refreshHotspot() {
+    const bool supported = !hotspotDevice().isNull();
+
+    const auto hotspot = runningHotspot();
+    const bool enabled = !hotspot.path.isEmpty();
+
+    if (supported != m_hotspotSupported) {
+        m_hotspotSupported = supported;
+        emit hotspotSupportedChanged();
+    }
+    if (enabled != m_hotspotEnabled) {
+        m_hotspotEnabled = enabled;
+        emit hotspotEnabledChanged();
+    }
+    if (hotspot.ssid != m_hotspotSsid) {
+        m_hotspotSsid = hotspot.ssid;
+        emit hotspotSsidChanged();
     }
 }
 
@@ -1536,6 +1676,77 @@ void NmQt::refreshEthernetDeviceDetails(const QString& interfaceName) {
 // ─────────────────────────────────────────────────────────────────────────────
 //  Static helpers
 // ─────────────────────────────────────────────────────────────────────────────
+
+NetworkManager::WirelessDevice::Ptr NmQt::hotspotDevice() {
+    for (const auto& dev : NetworkManager::networkInterfaces()) {
+        const auto wd = dev.dynamicCast<NetworkManager::WirelessDevice>();
+        if (wd && wd->wirelessCapabilities().testFlag(NetworkManager::WirelessDevice::ApCap))
+            return wd;
+    }
+    return {};
+}
+
+NmQt::RunningHotspot NmQt::runningHotspot() {
+    // Every access point connection counts, not only the shell's own profile: a
+    // hotspot started from Plasma's applet is just as on, and the toggle that
+    // reads this should say so and be able to switch it off again.
+    const auto activePaths = NetworkManager::activeConnectionsPaths();
+    for (const auto& path : activePaths) {
+        const auto ac = NetworkManager::findActiveConnection(path);
+        const auto conn = ac ? ac->connection() : NetworkManager::Connection::Ptr();
+        const auto connSettings = conn ? conn->settings() : NetworkManager::ConnectionSettings::Ptr();
+        if (!connSettings)
+            continue;
+
+        const auto ws = connSettings->setting(NetworkManager::Setting::SettingType::Wireless)
+                            .dynamicCast<NetworkManager::WirelessSetting>();
+        if (ws && ws->mode() == NetworkManager::WirelessSetting::Ap)
+            return { path, QString::fromUtf8(ws->ssid()) };
+    }
+    return {};
+}
+
+NMVariantMapMap NmQt::buildHotspotSettings(const QString& ssid, const QString& password, const QString& uuid) {
+    NetworkManager::ConnectionSettings settings(NetworkManager::ConnectionSettings::Wireless);
+    settings.setId(QString(hotspotConnectionId));
+    settings.setUuid(uuid);
+    // A hotspot is switched on by hand. Leaving the default autoconnect on would
+    // start an access point on every boot, from a profile the user never asked
+    // to make permanent.
+    settings.setAutoconnect(false);
+
+    const auto wireless =
+        settings.setting(NetworkManager::Setting::SettingType::Wireless).dynamicCast<NetworkManager::WirelessSetting>();
+    const auto ipv4 =
+        settings.setting(NetworkManager::Setting::SettingType::Ipv4).dynamicCast<NetworkManager::Ipv4Setting>();
+    if (!wireless || !ipv4)
+        return {};
+
+    wireless->setSsid(ssid.toUtf8());
+    wireless->setMode(NetworkManager::WirelessSetting::Ap);
+    // 2.4 GHz: every driver that can run an access point can run it there, and a
+    // hotspot is for the phone in the room rather than for throughput.
+    wireless->setBand(NetworkManager::WirelessSetting::Bg);
+    wireless->setInitialized(true);
+
+    if (!password.isEmpty()) {
+        const auto security = settings.setting(NetworkManager::Setting::SettingType::WirelessSecurity)
+                                  .dynamicCast<NetworkManager::WirelessSecuritySetting>();
+        if (!security)
+            return {};
+        security->setKeyMgmt(NetworkManager::WirelessSecuritySetting::WpaPsk);
+        security->setPsk(password);
+        security->setInitialized(true);
+        wireless->setSecurity(security->name());
+    }
+
+    // Shared IPv4 is what hands addresses to the clients: NM runs the DHCP server
+    // and the NAT itself, so a hotspot needs nothing else installed.
+    ipv4->setMethod(NetworkManager::Ipv4Setting::Shared);
+    ipv4->setInitialized(true);
+
+    return settings.toMap();
+}
 
 QVariantMap NmQt::buildApMap(
     const QString& ssid, const QString& bssid, int strength, int frequency, bool active, const QString& security) {

@@ -92,6 +92,9 @@ Item {
     }
 
     function checkPopout(pos: real): void {
+        if (popouts.hasCurrent && (popouts.currentName === "clockcontext" || popouts.currentName === "dockcontext" || popouts.currentName === "greetercontext"))
+            return;
+
         const ch = getLoaderAt(isHorizontal ? pos : width / 2, isHorizontal ? height / 2 : pos) as WrappedLoader;
 
         if (currentHoveredItem && currentHoveredItem !== ch?.item) {
@@ -104,7 +107,7 @@ Item {
             closeTray();
 
         if (!ch) {
-            if (popouts.hasCurrent && (popouts.currentName === "dockcontext" || popouts.currentName === "dockhover" || popouts.currentName === "greeter" || popouts.currentName === "greetercontext" || popouts.currentName === "activewindow")) return;
+            if (popouts.hasCurrent && (popouts.currentName === "dockhover" || popouts.currentName === "greeter" || popouts.currentName === "activewindow")) return;
             if (!Config.bar.popouts.tray && popouts.currentName.startsWith("traymenu")) return;
             // skip hover-driven tray recalculation in click mode
             popouts.hasCurrent = false;
@@ -229,15 +232,19 @@ Item {
             } else {
                 popouts.hasCurrent = false;
             }
-        } else if (id === "clock" && Config.bar.popouts.clock) {
-            const item = ch.item as Item;
-            if (item) {
-                const relPos = pos - top;
-                const inside = isHorizontal ? (relPos >= 0 && relPos <= item.implicitWidth) : (relPos >= 0 && relPos <= item.implicitHeight);
-                if (inside) {
-                    popouts.currentName = "clock";
-                    popouts.currentCenter = isHorizontal ? item.mapToItem(null, item.implicitWidth / 2, 0).x : (item.mapToItem(null, 0, item.implicitHeight / 2).y ?? 0);
-                    popouts.hasCurrent = true;
+        } else if (id === "clock") {
+            if (Config.bar.popouts.clock) {
+                const item = ch.item as Item;
+                if (item) {
+                    const relPos = pos - top;
+                    const inside = isHorizontal ? (relPos >= 0 && relPos <= item.implicitWidth) : (relPos >= 0 && relPos <= item.implicitHeight);
+                    if (inside) {
+                        popouts.currentName = "clock";
+                        popouts.currentCenter = isHorizontal ? item.mapToItem(null, item.implicitWidth / 2, 0).x : (item.mapToItem(null, 0, item.implicitHeight / 2).y ?? 0);
+                        popouts.hasCurrent = true;
+                    } else {
+                        popouts.hasCurrent = false;
+                    }
                 } else {
                     popouts.hasCurrent = false;
                 }
@@ -433,7 +440,9 @@ Item {
             DelegateChoice {
                 roleValue: "clock"
                 delegate: WrappedLoader {
-                    sourceComponent: Clock {}
+                    sourceComponent: Clock {
+                        bar: root
+                    }
                 }
             }
             DelegateChoice {

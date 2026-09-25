@@ -24,7 +24,7 @@ Item {
     readonly property Item current: (content.item as Content)?.current ?? null
     readonly property bool isDetached: detachedMode.length > 0
     readonly property bool sidebarOpen: popoutState.sidebarOpen
-    readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "updateIndicator"
+    readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "updateIndicator" || currentName === "clock" || currentName === "clockcontext"
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
     property alias dockModel: popoutState.dockModel

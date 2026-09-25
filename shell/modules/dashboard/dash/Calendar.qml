@@ -234,7 +234,7 @@ CustomMouseArea {
                 }
 
                 x: today ? today.x + (today.width - implicitWidth) / 2 : 0
-                y: today ? today.y - Tokens.padding.extraSmall - 1 : 0
+                y: today ? today.y + (today.height - implicitHeight) / 2 : 0
 
                 implicitSize: today ? Math.max(today.implicitWidth, today.implicitHeight) + Tokens.padding.extraSmall * 2 : 0
                 shape: MaterialShape.Sunny

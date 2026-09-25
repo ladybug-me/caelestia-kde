@@ -117,6 +117,14 @@ Item {
         }
 
         Popout {
+            name: "clockcontext"
+            previewKey: "clock"
+            sourceComponent: ClockContext {
+                popouts: root.popouts
+            }
+        }
+
+        Popout {
             name: "battery"
             sourceComponent: Battery {
                 popouts: root.popouts

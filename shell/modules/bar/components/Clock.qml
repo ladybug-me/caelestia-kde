@@ -9,6 +9,9 @@ import qs.services
 StyledRect {
     id: root
 
+    property var bar: null
+    readonly property var popouts: bar?.popouts ?? null
+
     readonly property color colour: Colours.palette.m3tertiary
     readonly property int padding: Config.bar.clock.background ? Tokens.padding.medium : Tokens.padding.extraSmall
     readonly property var font: Tokens.font.body.builders.small.scale(1.1)
@@ -29,6 +32,36 @@ StyledRect {
 
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.clock.background ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        onClicked: mouse => {
+            const popouts = root.popouts;
+            if (!popouts)
+                return;
+
+            if (mouse.button === Qt.RightButton) {
+                if (popouts.hasCurrent && popouts.currentName === "clockcontext") {
+                    popouts.hasCurrent = false;
+                } else {
+                    popouts.currentName = "clockcontext";
+                    popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+                    popouts.hasCurrent = true;
+                }
+            } else if (mouse.button === Qt.LeftButton) {
+                if (popouts.hasCurrent && (popouts.currentName === "clock" || popouts.currentName === "clockcontext")) {
+                    popouts.hasCurrent = false;
+                } else if (Config.bar.popouts.clock) {
+                    popouts.currentName = "clock";
+                    popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+                    popouts.hasCurrent = true;
+                }
+            }
+        }
+    }
 
     RowLayout {
         id: horizontalLayout

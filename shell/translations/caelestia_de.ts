@@ -1634,7 +1634,7 @@
       <translation>Symbol anzeigen</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Show seconds</source>
       <translation>Sekunden anzeigen</translation>
     </message>
@@ -1642,6 +1642,16 @@
       <location line="+1"/>
       <source>Add a seconds line to the clock</source>
       <translation>Eine Sekundenzeile zur Uhr hinzufügen</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Calendar popout</source>
+      <translation type="unfinished">Calendar popout</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Show a mini calendar when hovering the clock</source>
+      <translation type="unfinished">Show a mini calendar when hovering the clock</translation>
     </message>
   </context>
   <context>
@@ -2282,6 +2292,11 @@
       <location line="+13"/>
       <source>Bluetooth</source>
       <translation>Bluetooth</translation>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>Clock</source>
+      <translation type="unfinished">Clock</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -3089,6 +3104,14 @@
       <location line="+1"/>
       <source>Number of entries available in the launcher</source>
       <translation>Anzahl der verfügbaren Einträge im Launcher</translation>
+    </message>
+  </context>
+  <context>
+    <name>ClockContext</name>
+    <message>
+      <location filename="../modules/bar/popouts/ClockContext.qml" line="+81"/>
+      <source>Clock settings</source>
+      <translation type="unfinished">Clock settings</translation>
     </message>
   </context>
   <context>

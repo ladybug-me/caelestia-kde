@@ -115,6 +115,33 @@ Item {
         }
     }
 
+    // The local endpoint is typed by hand, so editing the host or port has to
+    // invalidate what came from the previous address — otherwise the picker keeps
+    // offering the old server's models while sends go to the new one.
+    function refetchLocalModels(): void {
+        // Both maps are replaced rather than mutated: openaiCompatModels feeds a
+        // binding, so a fresh object is what makes the picker update at all.
+        const seen = Object.assign({}, root.modelsFetched);
+        delete seen["local"];
+        root.modelsFetched = seen;
+
+        const models = Object.assign({}, root.openaiCompatModels);
+        delete models["local"];
+        root.openaiCompatModels = models;
+
+        if (GlobalConfig.ai.enableLocal)
+            root.fetchOpenaiCompatModels("local", true);
+    }
+
+    // Re-fetch when the typed address changes, so the picker never offers the
+    // previous server's models while sends already go to the new one.
+    Connections {
+        target: GlobalConfig.ai
+
+        onLocalHostChanged: root.refetchLocalModels()
+        onLocalPortChanged: root.refetchLocalModels()
+    }
+
     Component.onCompleted: {
         loadAllKeys();
         refreshAllModels();
@@ -130,6 +157,14 @@ Item {
         Logger.log("[AI] Network error fetching models from " + (provider || "unknown"));
     }
 
+    // The local address is typed by hand, so a failure there is nearly always a
+    // wrong host, port, or a server that is not running. Name the endpoint that
+    // was actually tried — the generic "check your connection" tells the user
+    // nothing when the only connection involved is one they configured.
+    function localEndpointHint(): string {
+        return qsTr("Could not reach %1. Check the host and port in AI settings, and that the server is running.").arg(root.openaiCompatBase());
+    }
+
     function handleSendError() {
         isTyping = false;
         isThinking = false;
@@ -141,8 +176,9 @@ Item {
             if (!em.isUser && !em.isFinished) {
                 chatHistory.setProperty(ei, "isFinished", true);
                 if (!em.text)
-                    chatHistory.setProperty(ei, "text",
-                        "⚠️ Network error - check your connection and try again.");
+                    chatHistory.setProperty(ei, "text", root.isLocal
+                        ? "⚠️ " + root.localEndpointHint()
+                        : "⚠️ Network error - check your connection and try again.");
                 break;
             }
         }
@@ -462,6 +498,12 @@ Item {
         return "Continue this conversation. Conversation so far:\n\n" + lines.join("\n\n") + "\n\nReply to the last user message.";
     }
 
+    // A user-supplied OpenAI-compatible endpoint: a plain llama.cpp llama-server,
+    // a llama.cpp router, or anything else that serves /v1/models and
+    // /v1/chat/completions. It needs no API key, so it is kept out of the key
+    // paths below while still speaking the OpenAI-compatible wire format.
+    readonly property bool isLocal: provider === "local"
+
     // Resolve the Anthropic API key: ANTHROPIC_API_KEY env var wins, config field is the fallback.
     // These providers all expose the same /models catalogue and take the same
     // /chat/completions request, so they share one model list, key handling and
@@ -473,7 +515,7 @@ Item {
     // and it authenticates with x-api-key. See opencodeWire() and setAuthHeader().
     readonly property bool isOpencode: provider === "opencode" || provider === "opencode-go"
 
-    readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go"]
+    readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go", "local"]
 
     function openaiCompatBase(p) {
         const which = p || provider;
@@ -485,6 +527,11 @@ Item {
             return GlobalConfig.ai.opencodeUrl || "https://opencode.ai/zen/v1";
         if (which === "opencode-go")
             return GlobalConfig.ai.opencodeGoUrl || "https://opencode.ai/zen/go/v1";
+        if (which === "local")
+            // The URL is assembled from the host and port fields by Paths, which
+            // the settings page uses too, so the address shown there is the
+            // address requests are actually sent to.
+            return Paths.openaiCompatBase(GlobalConfig.ai.localHost, GlobalConfig.ai.localPort);
         return GlobalConfig.ai.openaiUrl || "https://api.openai.com/v1";
     }
 
@@ -531,6 +578,10 @@ Item {
     // whichever wire the chosen model needs. The others take the bearer token.
     function setAuthHeader(xhr, p) {
         const which = p || provider;
+        // A local server has no key to send, and some reject an unexpected
+        // Authorization header outright — leave the request unauthenticated.
+        if (which === "local")
+            return;
         const key = root.getApiKeyFor(which);
         if (which === "opencode" || which === "opencode-go")
             xhr.setRequestHeader("x-api-key", key);
@@ -663,8 +714,9 @@ Item {
         return root.getApiKeyFor(root.provider);
     }
 
-    // Providers that need a key before they can send anything.
-    readonly property bool needsApiKey: isClaude || isOpenaiCompat
+    // Providers that need a key before they can send anything. The local server
+    // is OpenAI-compatible but unauthenticated, so it is excluded here.
+    readonly property bool needsApiKey: (isClaude || isOpenaiCompat) && !isLocal
 
     // The model to send for the active provider. Nothing is hardcoded: until a
     // provider's list has been fetched the saved choice is used as-is, and when
@@ -686,6 +738,8 @@ Item {
             return "defaultGeminiModel";
         if (which === "openrouter")
             return "defaultOpenrouterModel";
+        if (which === "local")
+            return "defaultLocalModel";
         if (which === "opencode")
             return "defaultOpencodeModel";
         if (which === "opencode-go")
@@ -698,6 +752,8 @@ Item {
         var l = [];
         if (GlobalConfig.ai.enableOllama)
             l.push("ollama");
+        if (GlobalConfig.ai.enableLocal)
+            l.push("local");
         if (GlobalConfig.ai.enableClaudeCode)
             l.push("claude-code");
         if (GlobalConfig.ai.enableClaude)
@@ -722,6 +778,8 @@ Item {
             return "Claude Code";
         if (p === "claude")
             return "Claude API";
+        if (p === "local")
+            return "Local server";
         if (p === "openai")
             return "ChatGPT";
         if (p === "gemini")
@@ -1374,8 +1432,8 @@ Item {
             return;
         const key = root.getApiKeyFor(which);
         // OpenRouter and opencode publish their catalogues without auth; the rest
-        // need the key.
-        const publicCatalogue = which === "openrouter" || which === "opencode" || which === "opencode-go";
+        // need the key. A local server is unauthenticated by definition.
+        const publicCatalogue = which === "openrouter" || which === "opencode" || which === "opencode-go" || which === "local";
         if (key === "" && !publicCatalogue)
             return;
 
@@ -1401,8 +1459,12 @@ Item {
                     // but the bare id is what users recognise.
                     list.push(id.indexOf("models/") === 0 ? id.substring(7) : id);
                 }
-                // Only chat-capable models are useful here — drop embedding/audio/image ones.
-                list = list.filter(m => !/embed|whisper|tts|audio|image|vision-preview|moderation|rerank|dall-e/i.test(m));
+                // Only chat-capable models are useful here — drop embedding/audio/image
+                // ones. A local server is exempt: its list is the user's own model
+                // files, so a filename that happens to contain "image" or "vision"
+                // is still the one model they chose to serve.
+                if (which !== "local")
+                    list = list.filter(m => !/embed|whisper|tts|audio|image|vision-preview|moderation|rerank|dall-e/i.test(m));
                 // opencode lists models the shell has no wire format for; offering them
                 // would only produce a failed send once the user picked one.
                 if (which === "opencode" || which === "opencode-go")
@@ -2153,6 +2215,12 @@ Item {
                             hint = " This model's daily free quota is used up - it resets tomorrow. Pick another model, or use Claude Code, which is not on this quota.";
                         else if (xhr.status === 429)
                             hint = " Rate limit reached and still limited after " + root.maxRateLimitRetries + " retries - wait a minute and try again.";
+                        else if (root.isLocal && (xhr.status === 400 || xhr.status === 404 || xhr.status === 422))
+                            // A local server has no key to be wrong about; 404 here
+                            // nearly always means the saved model is not the one this
+                            // server currently has loaded, which is normal when a
+                            // llama-server has been switched to a different model.
+                            hint = " The server rejected model \"" + model + "\" - pick one from the model list.";
                         else if (root.needsApiKey && (xhr.status === 401 || xhr.status === 403))
                             hint = " Check your API key.";
                         var errMsg = (xhr.status === 0) ? "Generation canceled" : (providerName + " request failed (status " + xhr.status + ")." + hint + apiDetail);

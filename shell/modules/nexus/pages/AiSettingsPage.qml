@@ -206,6 +206,30 @@ PageBase {
         return "";
     }
 
+    // ── Local OpenAI-compatible server ─────────────────────────
+    // The host and port are entered by hand, so the page shows the exact URL it
+    // will request and whether anything answers there (see checkLocalServer()
+    // below). Without that feedback the only result of a mistyped address is a
+    // failed send in the sidebar.
+    readonly property string localEndpointText: Paths.openaiCompatBase(GlobalConfig.ai.localHost, GlobalConfig.ai.localPort)
+
+    // "" unknown, "checking", "ok" or "error".
+    property string localStatus: ""
+
+    property var localModelNames: []
+
+    readonly property string localModelsText: {
+        if (localStatus === "checking")
+            return qsTr("Checking…");
+        if (localStatus === "ok")
+            return localModelNames.length > 0
+                ? qsTr("%1 model(s) available").arg(localModelNames.length)
+                : qsTr("Connected, but the server reported no models");
+        if (localStatus === "error")
+            return qsTr("Nothing answered at this address - is the server running?");
+        return "";
+    }
+
     property string claudeVersion: ""
 
     readonly property bool claudeInstalled: claudeVersion !== "" && claudeVersion !== "NOT_INSTALLED"
@@ -226,6 +250,8 @@ PageBase {
     Component.onCompleted: {
         UpdateChecker.checkClaudeCodeUpdate();
         loadStoredKeys();
+        if (GlobalConfig.ai.enableLocal)
+            root.checkLocalServer();
     }
 
     function loadStoredKeys() {
@@ -266,6 +292,64 @@ PageBase {
         if (!id || id === "")
             return homeDir() + "/.claude.json";
         return homeDir() + "/.config/caelestia/claude/" + id + "/.claude.json";
+    }
+
+    // Ask the configured endpoint for its model list to report reachability, so a
+    // mistyped host or port is visible in settings instead of surfacing as a failed
+    // send in the sidebar. A 200 is trusted on its own: some server builds answer
+    // the request but report no models, which still proves the address is right.
+    function checkLocalServer(): void {
+        if (!GlobalConfig.ai.enableLocal)
+            return;
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", root.localEndpointText + "/models", true);
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState !== XMLHttpRequest.DONE)
+                return;
+            if (xhr.status !== 200) {
+                root.localStatus = "error";
+                root.localModelNames = [];
+                return;
+            }
+            root.localStatus = "ok";
+            try {
+                const names = [];
+                const data = JSON.parse(xhr.responseText).data || [];
+                for (var i = 0; i < data.length; i++)
+                    if (data[i].id)
+                        names.push(data[i].id);
+                root.localModelNames = names;
+            } catch (e) {
+                root.localModelNames = [];
+            }
+        };
+        // A refused connection or an unresolvable host never reaches
+        // onreadystatechange with a status, so the failure has to be caught here or
+        // the row would sit on "Checking…" forever.
+        xhr.onerror = () => {
+            root.localStatus = "error";
+            root.localModelNames = [];
+        };
+        root.localStatus = "checking";
+        xhr.send();
+    }
+
+    // Re-check whenever the address is edited or the provider is switched on, so
+    // the status row always describes the endpoint as it stands now.
+    Connections {
+        target: GlobalConfig.ai
+
+        onLocalHostChanged: root.checkLocalServer()
+        onLocalPortChanged: root.checkLocalServer()
+        onEnableLocalChanged: {
+            if (GlobalConfig.ai.enableLocal)
+                root.checkLocalServer();
+            else {
+                root.localStatus = "";
+                root.localModelNames = [];
+            }
+        }
     }
 
     function accountIds() {
@@ -543,7 +627,7 @@ PageBase {
 
         ToggleRow {
             first: true
-            last: !GlobalConfig.ai.enableOllama
+            last: !GlobalConfig.ai.enableOllama && !GlobalConfig.ai.enableLocal
             text: qsTr("Ollama")
             checked: GlobalConfig.ai.enableOllama
             onToggled: GlobalConfig.ai.enableOllama = checked
@@ -559,7 +643,6 @@ PageBase {
 
         NavRow {
             visible: root.ollamaActionVisible
-            last: true
             icon: "download"
             label: qsTr("Download Ollama")
             status: root.ollamaInstalling ? (root.ollamaInstallStatus || qsTr("Installing…")) : root.ollamaInstallStatus
@@ -570,6 +653,57 @@ PageBase {
                 root.ollamaInstallStatus = qsTr("Installing…");
                 ollamaInstallProc.running = true;
             }
+        }
+
+        ToggleRow {
+            // Always visible: this row is how the user turns the provider on, so
+            // tying it to the Ollama toggle would make Local server unreachable
+            // for anyone who does not use Ollama.
+            last: !root.ollamaActionVisible && !GlobalConfig.ai.enableLocal
+            text: qsTr("Local server")
+            subtext: qsTr("llama.cpp, llama-server, or any OpenAI-compatible endpoint")
+            checked: GlobalConfig.ai.enableLocal
+            onToggled: GlobalConfig.ai.enableLocal = checked
+        }
+
+        TextFieldRow {
+            visible: GlobalConfig.ai.enableLocal
+            label: qsTr("Host")
+            subtext: qsTr("Host or IP of the server, e.g. localhost or 192.168.0.126")
+            placeholderText: "localhost"
+            value: GlobalConfig.ai.localHost
+            onEditingFinished: text => {
+                GlobalConfig.ai.localHost = text.trim() || "localhost";
+                GlobalConfig.save();
+            }
+        }
+
+        TextFieldRow {
+            visible: GlobalConfig.ai.enableLocal
+            last: true
+            label: qsTr("Port")
+            subtext: qsTr("Port the server listens on, e.g. 8080 or 8989")
+            placeholderText: "8080"
+            smallField: true
+            maximumLength: 5
+            errorText: qsTr("Enter a port between 1 and 65535")
+            value: String(GlobalConfig.ai.localPort)
+            validate: /^[0-9]{1,5}$/
+            onEditingFinished: text => {
+                const port = Number(text);
+                if (!Number.isInteger(port) || port < 1 || port > 65535)
+                    return;
+                GlobalConfig.ai.localPort = port;
+                GlobalConfig.save();
+            }
+        }
+
+        InfoRow {
+            visible: GlobalConfig.ai.enableLocal
+            last: true
+            label: qsTr("Endpoint")
+            value: root.localEndpointText
+            subtext: root.localModelsText
         }
 
         SectionHeader {

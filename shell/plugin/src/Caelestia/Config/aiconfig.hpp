@@ -102,6 +102,17 @@ class AiConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(QString, opencodeGoUrl, u"https://opencode.ai/zen/go/v1"_s)
     CONFIG_PROPERTY(QString, defaultOpencodeGoModel, u""_s)
 
+    // Local OpenAI-compatible server: a plain llama.cpp llama-server (or any
+    // server that speaks /v1/chat/completions and /v1/models) reached over the
+    // network, e.g. a llama.cpp router on another machine. Host and port are
+    // separate fields — the shell builds the base URL from them — so the user
+    // can point the assistant at wherever the server actually runs.
+    // No API key: local servers do not authenticate.
+    CONFIG_PROPERTY(bool, enableLocal, false)
+    CONFIG_PROPERTY(QString, localHost, u"localhost"_s)
+    CONFIG_PROPERTY(int, localPort, 8080)
+    CONFIG_PROPERTY(QString, defaultLocalModel, u""_s)
+
 };
 
 } // namespace caelestia::config

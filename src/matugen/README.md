@@ -38,9 +38,13 @@ are folded in after the render now, which the section below describes.
 
 ## The wallpaper picks the variant
 
-`wallpaper -f` and `wallpaper -p` ask the wallpaper which mode and variant to use unless `--no-smart`
-says otherwise. The mode is matugen's own `--mode smart`, which resolves to light or dark during the
-render and is read back out of the rendered file, so it is the one that is really in effect.
+Every command that derives a scheme - `wallpaper -f`, `wallpaper -p` and `scheme set -n dynamic` -
+asks the wallpaper which mode and variant to use unless `--no-smart` says otherwise, per field: a
+mode or a variant given on the command line is the caller's, and not the wallpaper's to choose. The
+setting itself belongs to the shell, which states it as `--no-smart`; the command reads no config
+for it, so a caller that says nothing gets the wallpaper's choice. The mode is matugen's own `--mode
+smart`, which resolves to light or dark during the render and is read back out of the rendered file,
+so it is the one that is really in effect.
 
 The variant cannot be done that way. matugen's `scheme-smart` makes that choice too, but it does not
 say which scheme type it used, and the variant is written into scheme.json and read by the shell to

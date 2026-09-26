@@ -29,10 +29,14 @@ verify_download() {
     [[ "$expected" == "$(file_sha256 "$file")" ]]
 }
 
+# A release asset this project publishes itself. The archive is ours, so a missing published
+# checksum is the expected case for it rather than something to report; any other URL is a third
+# party's, where the absence of a hash is what the warning is for. The path is anchored to
+# `releases/download` so that a repository or tag page under the same account does not qualify.
 is_own_release() {
     local url="$1"
     case "$url" in
-        https://github.com/ladybug-me/*) return 0 ;;
+        https://github.com/ladybug-me/*/releases/download/*) return 0 ;;
         *) return 1 ;;
     esac
 }

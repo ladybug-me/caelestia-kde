@@ -235,6 +235,9 @@ test_own_release_is_recognized() {
     if is_own_release "https://github.com/other-org/thing/releases/download/v1/thing.tar.gz"; then
         fail "another org's asset is not one of ours"
     fi
+    if is_own_release "https://github.com/ladybug-me/caelestia-kde/archive/refs/tags/v1.0.tar.gz"; then
+        fail "a page under our account that is not a release asset is not one of ours"
+    fi
 }
 
 test_the_cava_sdk_download_does_not_warn_about_the_missing_checksum() {

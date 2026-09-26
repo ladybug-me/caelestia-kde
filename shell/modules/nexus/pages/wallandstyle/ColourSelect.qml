@@ -72,8 +72,9 @@ PageBase {
                     // the wallpaper first is what makes it work, and the two have to be one
                     // process because the switch reads the path the seed writes.
                     const wall = Wallpapers.actualCurrent || Wallpapers.fallback;
+                    const smartArg = Colours.smartArg.join(" ");
                     Quickshell.execDetached(["sh", "-c",
-                        'caelestia wallpaper -f "$1" >/dev/null 2>&1; caelestia scheme set -n dynamic',
+                        `caelestia wallpaper -f "$1" ${smartArg} >/dev/null 2>&1; caelestia scheme set ${smartArg} -n dynamic`,
                         "--", wall]);
                 }
             }
@@ -299,8 +300,21 @@ PageBase {
             onClicked: {
                 // The card carries the whole palette, so the shell can show the result of this
                 // switch at once instead of waiting for the render and the fan out to finish.
-                Colours.previewNamed(card.modelData.name, card.modelData.flavour, Colours.variant, card.modelData.colours, card.modelData.mode === "light");
-                Quickshell.execDetached(["caelestia", "scheme", "set", "-n", card.modelData.name, "-f", card.modelData.flavour, "-m", card.modelData.mode]);
+                Colours.previewNamed(card.modelData.name, card.modelData.flavour, card.modelData.colours, card.modelData.mode === "light");
+                setScheme.command = ["caelestia", "scheme", "set", "-n", card.modelData.name,
+                    "-f", card.modelData.flavour, "-m", card.modelData.mode, ...Colours.smartArg];
+                setScheme.running = true;
+            }
+        }
+
+        // A switch that fails writes no scheme, so the preview standing in for it would keep
+        // showing colors that are not coming. A successful one is ended by the write itself.
+        Process {
+            id: setScheme
+
+            onExited: code => {
+                if (code !== 0)
+                    Colours.clearPreview();
             }
         }
 

@@ -494,8 +494,6 @@ test_no_smart_can_be_stated_on_the_command_line() {
     setup_sandbox
     local image
     image="$(wallpaper_image wall.png)"
-    mkdir -p "$XDG_CONFIG_HOME/caelestia"
-    printf '%s' '{"services":{"smartScheme":true}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
     FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
     assert_status 0 "$STATUS" "setting a wallpaper should succeed"
 
@@ -510,12 +508,10 @@ test_no_smart_can_be_stated_on_the_command_line() {
         "--no-smart keeps the wallpaper out of it (calls: $calls)"
 }
 
-test_smart_mode_is_read_from_the_shell_config() {
+test_a_dynamic_scheme_derives_with_the_wallpaper_choosing() {
     setup_sandbox
     local image
     image="$(wallpaper_image wall.png)"
-    mkdir -p "$XDG_CONFIG_HOME/caelestia"
-    printf '%s' '{"services":{"smartScheme":true}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
     FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
     assert_status 0 "$STATUS" "setting a wallpaper should succeed"
 
@@ -524,8 +520,24 @@ test_smart_mode_is_read_from_the_shell_config() {
 
     local calls
     calls="$(cat "$CALLS")"
-    assert_contains "$calls" "--mode smart" "the config says smart, so the wallpaper picks the mode"
+    assert_contains "$calls" "--mode smart" "the wallpaper picks the mode"
     assert_contains "$calls" "--type scheme-neutral" "the wallpaper's own variant is measured"
+}
+
+test_the_shell_config_does_not_reach_the_pipeline() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    mkdir -p "$XDG_CONFIG_HOME/caelestia"
+    printf '%s' '{"services":{"smartScheme":false}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "a dynamic scheme should derive"
+
+    assert_contains "$(cat "$CALLS")" "--mode smart" \
+        "the setting is the shell's to state: the file on its own does not silence the wallpaper"
 }
 
 test_a_variant_alone_still_lets_the_wallpaper_pick_the_mode() {
@@ -561,32 +573,34 @@ test_a_preview_changes_nothing() {
 test_the_desktop_apply_does_not_hold_up_the_return() {
     setup_sandbox
     unset CAELESTIA_NO_DEFER
-    cat > "$STUB_DIR/plasma-apply-colorscheme" <<'STUB'
+
+    # The stub records only after its delay, so the record arriving after the command has already
+    # returned is what says the apply was left running behind it. An absolute millisecond budget
+    # would be a budget on the machine instead: this command's own cost is seconds here. A marker
+    # of its own keeps the other KDE calls, which are written straight away, out of the question.
+    local apply_delay=2 applied="$SANDBOX/applied.log"
+    cat > "$STUB_DIR/plasma-apply-colorscheme" <<STUB
 #!/usr/bin/env bash
-printf 'apply %s\n' "$*" >> "$KDE_CALLS"
-sleep 1
+sleep $apply_delay
+printf 'apply %s\n' "\$*" >> "$applied"
 STUB
     chmod +x "$STUB_DIR/plasma-apply-colorscheme"
 
-    local start end elapsed
-    start="$(date +%s%N)"
     run_color scheme set -n catppuccin -f mocha -m dark
-    end="$(date +%s%N)"
-    elapsed=$(( (end - start) / 1000000 ))
     assert_status 0 "$STATUS" "the switch should succeed"
-
     assert_file_exists "$XDG_STATE_HOME/caelestia/scheme.json"
 
-    if [[ "$elapsed" -ge 1000 ]]; then
-        fail "the command waited for the desktop apply (took ${elapsed} ms)"
+    # Nothing has applied it yet: the command returned while the apply was still asleep.
+    if [[ -s "$applied" ]]; then
+        fail "the command waited for the desktop apply (${apply_delay}s) to finish"
     fi
 
     local waited=0
-    while [[ ! -s "$KDE_CALLS" && "$waited" -lt 100 ]]; do
+    while [[ ! -s "$applied" && "$waited" -lt 100 ]]; do
         sleep 0.1
         waited=$((waited + 1))
     done
-    assert_contains "$(cat "$KDE_CALLS" 2>/dev/null || true)" "apply Matugen" \
+    assert_contains "$(cat "$applied" 2>/dev/null || true)" "apply Matugen" \
         "the deferred apply still runs"
 }
 

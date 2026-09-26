@@ -336,7 +336,17 @@
       <translation type="unfinished">Fixed times</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+7"/>
+      <source>Light</source>
+      <translation type="unfinished">Light</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Dark</source>
+      <translation type="unfinished">Dark</translation>
+    </message>
+    <message>
+      <location line="+28"/>
       <source>Advanced Colors</source>
       <translation type="unfinished">Advanced Colors</translation>
     </message>
@@ -402,6 +412,26 @@
     </message>
     <message>
       <location line="+9"/>
+      <source>Theme mode</source>
+      <translation type="unfinished">Theme mode</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Mode</source>
+      <translation type="unfinished">Mode</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch the color scheme between light and dark</source>
+      <translation type="unfinished">Switch the color scheme between light and dark</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Managed by the automatic light and dark schedule</source>
+      <translation type="unfinished">Managed by the automatic light and dark schedule</translation>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Palette</source>
       <translation type="unfinished">Palette</translation>
     </message>
@@ -425,7 +455,7 @@
     <name>AiAssistant</name>
     <message>
       <location filename="../modules/sidebar/AiAssistant.qml" line="+792"/>
-      <location line="+1358"/>
+      <location line="+1360"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>Tarief beperkt - opnieuw proberen in %1s…</translation>
     </message>
@@ -741,6 +771,21 @@
       <location line="+1"/>
       <source>Log into a different Claude account</source>
       <translation>Log in op een andere Claude account</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>History</source>
+      <translation type="unfinished">History</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Save chat history</source>
+      <translation type="unfinished">Save chat history</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</source>
+      <translation type="unfinished">Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</translation>
     </message>
   </context>
   <context>
@@ -2959,7 +3004,7 @@
       <translation>Maximize</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+13"/>
       <source>Unminimize</source>
       <translation>Unminimize</translation>
     </message>
@@ -3145,14 +3190,6 @@
       <location line="+19"/>
       <source>Variants</source>
       <translation>Varianten</translation>
-    </message>
-  </context>
-  <context>
-    <name>CommitRow</name>
-    <message>
-      <location filename="../modules/nexus/common/CommitRow.qml" line="+50"/>
-      <source>%1 • %2</source>
-      <translation>%1 • %2</translation>
     </message>
   </context>
   <context>
@@ -6073,22 +6110,27 @@
   <context>
     <name>NetworkDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+40"/>
+      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+52"/>
       <source>Network</source>
       <translation>Netwerk</translation>
     </message>
     <message>
-      <location line="+53"/>
+      <location line="+23"/>
       <source>Forget</source>
       <translation>Vergeet</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+14"/>
+      <source>Connect</source>
+      <translation type="unfinished">Connect</translation>
+    </message>
+    <message>
+      <location line="+14"/>
       <source>Disconnect</source>
       <translation>Verbreek</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Connection</source>
       <translation>Verbindingsinstellingen</translation>
     </message>
@@ -6175,7 +6217,7 @@
       <translation>Wifi uitgeschakeld</translation>
     </message>
     <message>
-      <location line="+126"/>
+      <location line="+127"/>
       <source>Security: %1%2</source>
       <translation>Beveiliging: %1%2</translation>
     </message>
@@ -6386,7 +6428,7 @@
   <context>
     <name>Nmcli</name>
     <message>
-      <location filename="../services/Nmcli.qml" line="+426"/>
+      <location filename="../services/Nmcli.qml" line="+432"/>
       <source>Open</source>
       <translation>Open</translation>
     </message>
@@ -8361,7 +8403,7 @@
   <context>
     <name>SavedNetworksPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/SavedNetworksPage.qml" line="+15"/>
+      <location filename="../modules/nexus/pages/network/SavedNetworksPage.qml" line="+16"/>
       <source>Saved networks</source>
       <translation>Opgeslagen netwerken</translation>
     </message>
@@ -8371,7 +8413,12 @@
       <translation>Geen opgeslagen netwerken</translation>
     </message>
     <message>
-      <location line="+61"/>
+      <location line="+53"/>
+      <source>%1 (%2)</source>
+      <translation type="unfinished">%1 (%2)</translation>
+    </message>
+    <message>
+      <location line="+10"/>
       <source>Open</source>
       <translation>Open</translation>
     </message>
@@ -10918,7 +10965,7 @@
   <context>
     <name>WallpaperSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+116"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+132"/>
       <source>Select wallpaper</source>
       <translation>Achtergrond selecteren</translation>
     </message>

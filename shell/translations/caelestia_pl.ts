@@ -4141,7 +4141,7 @@
       <translation>Przypnij do doku</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Otwórz nowe okno</translation>
     </message>

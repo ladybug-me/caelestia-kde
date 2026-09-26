@@ -4141,7 +4141,7 @@
       <translation>Fixează pentru a andoca</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Deschide o fereastră nouă</translation>
     </message>

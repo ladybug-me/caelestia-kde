@@ -4141,7 +4141,7 @@
       <translation type="unfinished">Pin to dock</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation type="unfinished">Open new window</translation>
     </message>

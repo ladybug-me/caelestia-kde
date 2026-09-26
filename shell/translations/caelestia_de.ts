@@ -4141,7 +4141,7 @@
       <translation>Zum Docken anheften</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Neues Fenster öffnen</translation>
     </message>

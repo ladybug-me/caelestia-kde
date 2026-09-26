@@ -4141,7 +4141,7 @@
       <translation>Vastmaken aan dock</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Nieuw venster openen</translation>
     </message>

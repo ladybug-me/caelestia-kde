@@ -4141,7 +4141,7 @@
       <translation>Fäst på docka</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Öppna nytt fönster</translation>
     </message>

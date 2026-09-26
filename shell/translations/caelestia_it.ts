@@ -4141,7 +4141,7 @@
       <translation>Aggiungi al dock</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Apri una nuova finestra</translation>
     </message>

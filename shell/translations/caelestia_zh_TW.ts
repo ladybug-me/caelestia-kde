@@ -4141,7 +4141,7 @@
       <translation>固定到底座</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>開啟新視窗</translation>
     </message>

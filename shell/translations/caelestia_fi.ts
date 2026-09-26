@@ -4141,7 +4141,7 @@
       <translation>Kiinnitä telakkaan</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Avaa uusi ikkuna</translation>
     </message>

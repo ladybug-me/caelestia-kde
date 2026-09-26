@@ -4141,7 +4141,7 @@
       <translation>Připnout k doku</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Otevřít nové okno</translation>
     </message>

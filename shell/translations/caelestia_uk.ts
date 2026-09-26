@@ -4141,7 +4141,7 @@
       <translation>Прикріпити до панелі</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Відкрити нове вікно</translation>
     </message>

@@ -83,4 +83,64 @@ test_record_installed_revision_falls_back_to_the_commit_for_the_version() {
         ".current_version should fall back to the committed version.env"
 }
 
+test_update_state_set_branch_accepts_only_channels() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/config"
+
+    update_state_set_branch "$tmp/config" "dev"
+    assert_eq "dev" "$(cat "$tmp/config/.update_branch")" "dev is a valid channel"
+
+    update_state_set_branch "$tmp/config" "main"
+    assert_eq "main" "$(cat "$tmp/config/.update_branch")" "main is a valid channel"
+
+    update_state_set_branch "$tmp/config" "feature/foo"
+    status=$?
+    assert_status 1 "$status" "a non-channel branch must be rejected"
+    assert_eq "main" "$(cat "$tmp/config/.update_branch")" \
+        "a rejected branch must not touch the tracked channel"
+}
+
+test_update_state_read_branch_defaults_to_main() {
+    local tmp
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/config"
+
+    assert_eq "main" "$(update_state_read_branch "$tmp/config")" "no state file means main"
+
+    printf 'feature/foo\n' > "$tmp/config/.update_branch"
+    assert_eq "main" "$(update_state_read_branch "$tmp/config")" "an unknown channel reads as main"
+
+    printf 'dev\n' > "$tmp/config/.update_branch"
+    assert_eq "dev" "$(update_state_read_branch "$tmp/config")" "a recorded channel reads back"
+}
+
+test_update_state_read_commit_is_empty_without_a_recording() {
+    local tmp
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/config"
+
+    assert_eq "" "$(update_state_read_commit "$tmp/config")" "no recording means no commit"
+
+    printf 'abc1234\n' > "$tmp/config/.current_commit"
+    assert_eq "abc1234" "$(update_state_read_commit "$tmp/config")" "the recording reads back"
+}
+
+test_record_installed_revision_keeps_the_channel_on_a_feature_branch() {
+    require_git || return 0
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_repo "$tmp/repo" "v9.9.9"
+    mkdir -p "$tmp/config"
+    printf 'dev\n' > "$tmp/config/.update_branch"
+
+    git -C "$tmp/repo" checkout -q -b feature/local
+    record_installed_revision "$tmp/repo" "$tmp/config"
+    status=$?
+
+    assert_status 0 "$status" "recording on a feature branch still records the revision"
+    assert_eq "dev" "$(cat "$tmp/config/.update_branch")" \
+        "a feature checkout must not re-point the tracked update channel"
+}
+
 run_tests

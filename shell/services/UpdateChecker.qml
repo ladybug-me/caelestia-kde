@@ -64,9 +64,13 @@ Singleton {
         return (branch === "dev" || branch === "main") ? branch : "main";
     }
 
-    function checkUpdates(branch) {
+    function checkUpdates(branch, persistBranch) {
         if (branch === undefined) branch = "";
         if (!GlobalConfig.general.checkUpdates) return;
+        // Only an explicit branch pick re-points the tracked update channel;
+        // background checks must not fight the channel the updater recorded
+        // from the tree it actually installed (issue #565).
+        if (persistBranch === undefined) persistBranch = branch !== "";
         if (branch !== "") currentBranch = clampBranch(branch);
         else currentBranch = clampBranch(currentBranch);
         checkingUpdates = true;
@@ -99,8 +103,10 @@ if ! echo ",main,dev," | grep -q ",$CURRENT_BRANCH,"; then
     CURRENT_BRANCH="main"
 fi
 
-mkdir -p "$HOME/.config/quickshell/caelestia"
-echo "$CURRENT_BRANCH" > "$HOME/.config/quickshell/caelestia/.update_branch"
+if [ "$2" = "1" ]; then
+    mkdir -p "$HOME/.config/quickshell/caelestia"
+    printf '%s\n' "$CURRENT_BRANCH" > "$HOME/.config/quickshell/caelestia/.update_branch"
+fi
 REPO="$HOME/.cache/caelestia-update-repo"
 if [ ! -d "$REPO" ]; then
     git clone --bare --filter=blob:none https://github.com/ladybug-me/caelestia-kde.git "$REPO" >/dev/null 2>&1
@@ -333,7 +339,7 @@ else
     echo "LOCAL|$LOCAL_COMMIT"
 fi
 `
-    gitProcess.command = ["bash", "-c", bashCmd, "update-check", currentBranch];
+    gitProcess.command = ["bash", "-c", bashCmd, "update-check", currentBranch, persistBranch ? "1" : "0"];
         gitProcess.running = true;
     }
 

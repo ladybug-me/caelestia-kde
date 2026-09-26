@@ -23,8 +23,6 @@ import "services" as Services
 import "modules"
 import "modules/drawers"
 import "modules/background"
-import "modules/areapicker"
-import "modules/polkit"
 import "modules/screenshot/regionSelector"
 import "modules/overview"
 import "modules/whatsnew" as WhatsNew
@@ -76,8 +74,6 @@ ShellRoot {
     BadAppleOverlay {}
 
     Drawers {}
-    // AreaPicker {}
-    // PolkitModule {}
 
     IpcHandler {
         function screenshot(): void {

@@ -10,7 +10,6 @@ import qs.components
 import qs.components.controls
 import qs.components.effects
 import qs.services
-import qs.modules.drawers
 
 MouseArea {
     id: root

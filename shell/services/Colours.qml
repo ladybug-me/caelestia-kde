@@ -150,12 +150,6 @@ Singleton {
         return layer === 0 ? Qt.alpha(c, transparency.base) : alterColour(c, transparency.layers, layer ?? 1);
     }
 
-    function on(c: color): color {
-        if (c.hslLightness < 0.5)
-            return Qt.hsla(c.hslHue, c.hslSaturation, 0.9, 1);
-        return Qt.hsla(c.hslHue, c.hslSaturation, 0.1, 1);
-    }
-
     function harmonizeWith(designColor: color, sourceColor: color): color {
         let fromHue = designColor.hslHue;
         let toHue = sourceColor.hslHue;

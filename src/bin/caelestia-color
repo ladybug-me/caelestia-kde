@@ -74,6 +74,8 @@ Scheme
       -r, --random        a random named scheme
       -P, --preview       print the scheme this would produce and change
                           nothing
+      -N, --no-smart      keep the mode and variant instead of letting the
+                          wallpaper choose them, for a dynamic scheme
           --notify        send a notification when it fails
 
 Wallpaper
@@ -931,15 +933,18 @@ render_decided() {
     run_matugen "$FANOUT_CONFIG" json "$import_json" --import-json-string "$meta"
 }
 
-# --source-color-index 0 stops matugen asking which color to use.
+# --source-color-index 0 stops matugen asking which color to use. Whether the wallpaper picks the
+# variant or the mode is the caller's answer, per field: a value it was given by hand is not the
+# wallpaper's to choose, and the two are separate choices - a caller may pin one and not the other.
 render_image() {
-    local wallpaper="$1" flavour="$2" mode="$3" variant="$4" smart="$5" fan_out="$6" out="$7"
-    local type mode_arg intensity="${META_INTENSITY:-1}"
+    local wallpaper="$1" flavour="$2" mode="$3" variant="$4" fan_out="$5" out="$6"
+    local variant_smart="${7:-false}" mode_smart="${8:-false}"
+    local type mode_arg measured intensity="${META_INTENSITY:-1}"
     local fan_out_with_palette="$fan_out" fan_out_after=false
 
-    if [[ "$smart" == "true" ]]; then
-        mode_arg='smart'
-        if variant="$(smart_variant "$wallpaper")"; then
+    if [[ "$variant_smart" == "true" ]]; then
+        if measured="$(smart_variant "$wallpaper")"; then
+            variant="$measured"
             type="$(variant_type "$variant")"
         else
             warn "cannot measure the wallpaper's colourfulness; matugen picks the variant"
@@ -947,6 +952,11 @@ render_image() {
         fi
     else
         type="$(variant_type "$variant")" || die "unknown variant: $variant"
+    fi
+
+    if [[ "$mode_smart" == "true" ]]; then
+        mode_arg='smart'
+    else
         mode_arg="$mode"
     fi
 
@@ -1110,8 +1120,7 @@ apply_kvantum() {
     kwriteconfig6 --file "$CONFIG_HOME/Kvantum/kvantum.kvconfig" --group General --key theme "matugen" 2>/dev/null \
         || warn "could not select the Kvantum theme"
 }
-
-after_fan_out() {
+apply_to_desktop() {
     local mode="$1"
 
     if enabled enableKde; then
@@ -1135,6 +1144,18 @@ after_fan_out() {
     fi
 
     py render-templates "$SCHEME_FILE" "$USER_TEMPLATES" "$THEME_DIR" "$mode" || warn "could not render the user templates"
+}
+
+defer_to_desktop() {
+    local mode="$1"
+
+    if [[ -n "${CAELESTIA_NO_DEFER:-}" ]]; then
+        apply_to_desktop "$mode"
+        return 0
+    fi
+
+    ( apply_to_desktop "$mode" >/dev/null 2>&1 </dev/null & ) || true
+    return 0
 }
 
 # A failing hook is reported, not fatal: the palette is already on disk.
@@ -1181,10 +1202,12 @@ stored_wallpaper() {
 }
 
 derive_from_wallpaper() {
-    local wallpaper="$1" flavour="$2" mode="$3" variant="$4" smart="$5"
-    render_image "$wallpaper" "$flavour" "$mode" "$variant" "$smart" true "$RENDER_FILE"
+    local wallpaper="$1" flavour="$2" mode="$3" variant="$4"
+    local variant_smart="$5" mode_smart="$6"
+    render_image "$wallpaper" "$flavour" "$mode" "$variant" true "$RENDER_FILE" \
+        "$variant_smart" "$mode_smart"
     commit "$RENDER_FILE"
-    after_fan_out "$META_MODE"
+    defer_to_desktop "$META_MODE"
     run_theme_hook
 }
 
@@ -1259,17 +1282,19 @@ cmd_scheme_get() {
 
 cmd_scheme_set() {
     local name="" flavour="" mode="" variant="" intensity="" random=0 preview=0 notify=0
+    local mode_stated=0 variant_stated=0 no_smart=0
     local data
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -n|--name) name="${2:-}"; [[ -n "$name" ]] || die "-n needs a name"; shift 2 ;;
             -f|--flavour) flavour="${2:-}"; [[ -n "$flavour" ]] || die "-f needs a flavour"; shift 2 ;;
-            -m|--mode) mode="${2:-}"; [[ -n "$mode" ]] || die "-m needs a mode"; shift 2 ;;
-            -v|--variant) variant="${2:-}"; [[ -n "$variant" ]] || die "-v needs a variant"; shift 2 ;;
+            -m|--mode) mode="${2:-}"; mode_stated=1; [[ -n "$mode" ]] || die "-m needs a mode"; shift 2 ;;
+            -v|--variant) variant="${2:-}"; variant_stated=1; [[ -n "$variant" ]] || die "-v needs a variant"; shift 2 ;;
             -i|--intensity) intensity="${2:-}"; [[ -n "$intensity" ]] || die "-i needs an intensity"; shift 2 ;;
             -r|--random) random=1; shift ;;
             -P|--preview) preview=1; shift ;;
+            -N|--no-smart) no_smart=1; shift ;;
             --notify) notify=1; shift ;;
             -h|--help) usage; return 0 ;;
             *) die "unknown option for scheme set: $1" ;;
@@ -1318,13 +1343,23 @@ cmd_scheme_set() {
     fi
 
     if [[ "$name" == "dynamic" ]]; then
+        # The wallpaper picks a field the caller left out and never one they stated, unless the
+        # caller has turned the wallpaper's choice off for the command as a whole. The pipeline
+        # owns no copy of that setting: the shell states it as --no-smart.
+        local smart=true
+        ((no_smart)) && smart=false
+        local variant_smart="$smart" mode_smart="$smart"
+        ((variant_stated)) && variant_smart=false
+        ((mode_stated)) && mode_smart=false
+
         local wallpaper
         if ((preview)); then
             if ! wallpaper="$(stored_wallpaper)"; then
                 fail_or_notify "$notify" "no wallpaper has been set yet"
                 return 1
             fi
-            render_image "$wallpaper" "$flavour" "$mode" "$variant" false false "$PREVIEW_FILE"
+            render_image "$wallpaper" "$flavour" "$mode" "$variant" false "$PREVIEW_FILE" \
+                "$variant_smart" "$mode_smart"
             cat "$PREVIEW_FILE"
             printf '\n'
             return 0
@@ -1334,7 +1369,7 @@ cmd_scheme_set() {
             fail_or_notify "$notify" "no wallpaper has been set yet; pick one first"
             return 1
         fi
-        derive_from_wallpaper "$wallpaper" "$flavour" "$mode" "$variant" false
+        derive_from_wallpaper "$wallpaper" "$flavour" "$mode" "$variant" "$variant_smart" "$mode_smart"
         return 0
     fi
 
@@ -1362,7 +1397,7 @@ cmd_scheme_set() {
 
     render_named "$name" "$flavour" "$mode" "$variant" true "$RENDER_FILE"
     commit "$RENDER_FILE"
-    after_fan_out "$META_MODE"
+    defer_to_desktop "$META_MODE"
     run_theme_hook
 }
 
@@ -1426,7 +1461,7 @@ cmd_wallpaper() {
         [[ -n "$source" ]] || source="$(stored_wallpaper)" || die "no wallpaper has been set yet"
         [[ -f "$source" ]] || die "no such wallpaper: $source"
         render_image "$source" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" "${META_VARIANT:-tonalspot}" \
-            "$smart" false "$PREVIEW_FILE"
+            false "$PREVIEW_FILE" "$smart" "$smart"
         cat "$PREVIEW_FILE"
         printf '\n'
         return 0
@@ -1442,10 +1477,10 @@ cmd_wallpaper() {
 
     write_wallpaper_state "$file"
 
-# Only a dynamic scheme follows the wallpaper; a named one stays.
+    # Only a dynamic scheme follows the wallpaper; a named one stays.
     if [[ -z "${META_NAME:-}" || "${META_NAME}" == "dynamic" ]]; then
         derive_from_wallpaper "$file" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" \
-            "${META_VARIANT:-tonalspot}" "$smart"
+            "${META_VARIANT:-tonalspot}" "$smart" "$smart"
     fi
 
     run_wallpaper_hook "$file"

@@ -14,7 +14,6 @@ Searcher {
     id: root
 
     readonly property string currentNamePath: `${Paths.state}/wallpaper/path.txt`
-    readonly property list<string> smartArg: GlobalConfig.services.smartScheme ? [] : ["--no-smart"]
     readonly property string fallback: Quickshell.shellPath("assets/wallpapers/Minimal-Paper.png")
 
     property bool showPreview: false
@@ -118,15 +117,15 @@ Searcher {
         if (Images.isVideo(path)) {
             const thumb = thumbFor(path);
             if (thumb !== "") {
-                const script = 'caelestia wallpaper -f "$1" ' + root.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
+                const script = 'caelestia wallpaper -f "$1" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
                 Quickshell.execDetached(["sh", "-c", script, "--", thumb, path, root.currentNamePath]);
                 syncPlasmaWallpaper(thumb);
             } else {
-                Quickshell.execDetached(["sh", "-c", 'printf "%s" "$1" > "$2"', "--", path, root.currentNamePath]);
+                Quickshell.execDetached(["sh", "-c", 'printf "%s" > "$1"', "--", path, root.currentNamePath]);
                 // Still frame not ready yet — onVideoThumb() syncs Plasma once it is.
             }
         } else {
-            Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...smartArg]);
+            Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...Colours.smartArg]);
             syncPlasmaWallpaper(path);
         }
     }
@@ -219,7 +218,7 @@ Searcher {
             m[path] = out;
             root.videoThumbs = Object.assign({}, m);   // a copy, so bindings re-run
             if (path === root.actualCurrent) {
-                const script = 'caelestia wallpaper -f "$1" ' + root.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
+                const script = 'caelestia wallpaper -f "$1" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
                 Quickshell.execDetached(["sh", "-c", script, "--", out, path, root.currentNamePath]);
                 syncPlasmaWallpaper(out);
             }
@@ -268,7 +267,7 @@ Searcher {
             let wall = text().trim();
             if (!wall) {
                 wall = root.fallback;
-                Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...root.smartArg]);
+                Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...Colours.smartArg]);
             }
             if (Images.isVideo(root.actualCurrent) && wall === root.getThumbnailPath(root.actualCurrent)) {
                 return;
@@ -285,7 +284,7 @@ Searcher {
         onLoadFailed: {
             root.actualCurrent = root.fallback;
             root.previewColourLock = false;
-            Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...root.smartArg]);
+            Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...Colours.smartArg]);
             syncPlasmaWallpaper(root.fallback);
         }
     }
@@ -302,7 +301,7 @@ Searcher {
     Process {
         id: getPreviewColoursProc
 
-        command: ["caelestia", "wallpaper", "-p", root.previewPath, ...root.smartArg]
+        command: ["caelestia", "wallpaper", "-p", root.previewPath, ...Colours.smartArg]
         stdout: StdioCollector {
             onStreamFinished: {
                 Colours.load(text, true);

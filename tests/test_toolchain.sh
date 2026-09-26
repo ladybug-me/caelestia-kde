@@ -228,4 +228,55 @@ test_archive_entries_are_safe_rejects_a_setuid_entry() {
     fi
 }
 
+test_own_release_is_recognized() {
+    if ! is_own_release "https://github.com/ladybug-me/cava/releases/download/continuous/cava-x86_64-arch.tar.gz"; then
+        fail "a ladybug-me asset is one of ours"
+    fi
+    if is_own_release "https://github.com/other-org/thing/releases/download/v1/thing.tar.gz"; then
+        fail "another org's asset is not one of ours"
+    fi
+    if is_own_release "https://github.com/ladybug-me/caelestia-kde/archive/refs/tags/v1.0.tar.gz"; then
+        fail "a page under our account that is not a release asset is not one of ours"
+    fi
+}
+
+test_the_cava_sdk_download_does_not_warn_about_the_missing_checksum() {
+    local tmp stub log out status
+    tmp="$(new_tmpdir)"
+    stub="$tmp/bin"
+    log="$tmp/calls.log"
+    stub_bin "$stub" uname "echo x86_64"
+    recording_stub "$stub" curl "$log"
+    recording_stub "$stub" tar "$log"
+    stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\\n' \"\$*\" >> '$log'
+\"\$@\""
+
+    out="$(with_path "$stub" "" install_cava_sdk arch 2>&1)"
+    status=$?
+
+    assert_status 0 "$status" "installing the cava sdk should still succeed"
+    assert_not_contains "$out" "No published checksum" \
+        "our own release's missing checksum is expected and should not be reported"
+    assert_not_contains "$out" "WARN" "nothing should be warned about for our own cava release"
+}
+
+test_a_missing_checksum_is_still_warned_about_in_general() {
+    local tmp out
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/bin"
+
+    out="$(bash -c "
+        source '$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/download.sh'
+        source '$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/log.sh'
+        if is_own_release 'https://github.com/other-org/thing/releases/download/v1/t.tar.gz'; then
+            echo 'OWN'
+        else
+            warn 'No published checksum for the third party archive'
+        fi
+    " 2>&1)"
+
+    assert_contains "$out" "No published checksum" \
+        "a third-party archive with no checksum must still be reported"
+}
+
 run_tests

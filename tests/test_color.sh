@@ -140,6 +140,7 @@ setup_sandbox() {
     export MATUGEN_CALLS="$CALLS"
     export KDE_CALLS="$KDE_CALLS"
     export PATH="$STUB_DIR:$PATH"
+    export CAELESTIA_NO_DEFER=1
 }
 
 run_color() {
@@ -152,6 +153,7 @@ run_color() {
         XDG_DATA_HOME="$XDG_DATA_HOME" \
         XDG_PICTURES_DIR="$XDG_PICTURES_DIR" \
         CAELESTIA_DATA_DIR="$CAELESTIA_DATA_DIR" \
+        CAELESTIA_NO_DEFER="${CAELESTIA_NO_DEFER:-}" \
         MATUGEN_CALLS="$CALLS" \
         KDE_CALLS="$KDE_CALLS" \
         FFMPEG_PATTERN="${FFMPEG_PATTERN:-gray}" \
@@ -405,6 +407,155 @@ test_starship_is_not_written_unless_asked_for() {
     assert_file_exists "$XDG_CONFIG_HOME/starship.toml"
 }
 
+test_switching_back_to_dynamic_keeps_what_the_wallpaper_picked() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "tonalspot"' \
+        "the wallpaper picked a variant, so the round trip has something to lose"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_status 0 "$STATUS" "the named scheme should be set"
+
+    FFMPEG_PATTERN=redblue run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "switching back to dynamic should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-tonal-spot" \
+        "the wallpaper's own variant is rendered again, not the tonalspot default"
+    assert_contains "$calls" "--mode smart" "the wallpaper picks the mode again"
+
+    local scheme="$XDG_STATE_HOME/caelestia/scheme.json"
+    assert_contains "$(cat "$scheme")" '"name": "dynamic"' "the dynamic scheme is in effect"
+    assert_contains "$(cat "$scheme")" '"variant": "tonalspot"' "the variant is what the wallpaper gives"
+}
+
+test_switching_back_to_dynamic_keeps_a_neutral_wallpaper_neutral() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image gray.png)"
+
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "neutral"' \
+        "a grey wallpaper is neutral"
+
+    run_color scheme set -n gruvbox -f medium -m dark
+    FFMPEG_PATTERN=gray run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "switching back to dynamic should succeed"
+
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"variant": "neutral"' \
+        "the round trip does not recolor the wallpaper as tonalspot"
+}
+
+test_the_wallpaper_picks_the_mode_after_a_named_scheme() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    run_color scheme set -n catppuccin -f latte -m light
+    assert_contains "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" '"mode": "light"' \
+        "the named scheme's own mode is recorded"
+
+    FFMPEG_PATTERN=redblue run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "switching back to dynamic should succeed"
+    assert_contains "$(cat "$CALLS")" "--mode smart" \
+        "the wallpaper picks the mode again rather than inheriting the named scheme's"
+}
+
+test_a_variant_given_to_scheme_set_is_not_overruled_by_smart() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n dynamic -v rainbow -m light
+    assert_status 0 "$STATUS" "pinning a variant and a mode should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-rainbow" "the variant that was asked for is rendered"
+    assert_contains "$calls" "--mode light" "the mode that was asked for is rendered"
+
+    local scheme="$XDG_STATE_HOME/caelestia/scheme.json"
+    assert_contains "$(cat "$scheme")" '"variant": "rainbow"' "the variant is recorded"
+    assert_contains "$(cat "$scheme")" '"mode": "light"' "the mode is recorded"
+}
+
+test_no_smart_can_be_stated_on_the_command_line() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set --no-smart -n dynamic -v rainbow -m light
+    assert_status 0 "$STATUS" "an explicit --no-smart should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-rainbow" "the variant that was asked for is rendered"
+    assert_contains "$calls" "--mode light" "the mode that was asked for is rendered"
+    assert_eq "0" "$(printf '%s' "$calls" | grep -c -- '--mode smart' || true)" \
+        "--no-smart keeps the wallpaper out of it (calls: $calls)"
+}
+
+test_a_dynamic_scheme_derives_with_the_wallpaper_choosing() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "a dynamic scheme should derive"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--mode smart" "the wallpaper picks the mode"
+    assert_contains "$calls" "--type scheme-neutral" "the wallpaper's own variant is measured"
+}
+
+test_the_shell_config_does_not_reach_the_pipeline() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    mkdir -p "$XDG_CONFIG_HOME/caelestia"
+    printf '%s' '{"services":{"smartScheme":false}}' > "$XDG_CONFIG_HOME/caelestia/shell.json"
+    FFMPEG_PATTERN=gray run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -n dynamic
+    assert_status 0 "$STATUS" "a dynamic scheme should derive"
+
+    assert_contains "$(cat "$CALLS")" "--mode smart" \
+        "the setting is the shell's to state: the file on its own does not silence the wallpaper"
+}
+
+test_a_variant_alone_still_lets_the_wallpaper_pick_the_mode() {
+    setup_sandbox
+    local image
+    image="$(wallpaper_image wall.png)"
+    FFMPEG_PATTERN=redblue run_color wallpaper -f "$image"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    run_color scheme set -v vibrant
+    assert_status 0 "$STATUS" "setting a variant on its own should succeed"
+
+    local calls
+    calls="$(cat "$CALLS")"
+    assert_contains "$calls" "--type scheme-vibrant" "the variant that was asked for is rendered"
+    assert_contains "$calls" "--mode smart" "the wallpaper still picks the mode"
+}
+
 test_a_preview_changes_nothing() {
     setup_sandbox
     run_color scheme set -n catppuccin -f mocha -m dark
@@ -417,6 +568,40 @@ test_a_preview_changes_nothing() {
     assert_eq "$before" "$(cat "$XDG_STATE_HOME/caelestia/scheme.json")" \
         "the scheme in effect is untouched"
     assert_ne "$before" "$OUTPUT" "the preview is not the current scheme"
+}
+
+test_the_desktop_apply_does_not_hold_up_the_return() {
+    setup_sandbox
+    unset CAELESTIA_NO_DEFER
+
+    # The stub records only after its delay, so the record arriving after the command has already
+    # returned is what says the apply was left running behind it. An absolute millisecond budget
+    # would be a budget on the machine instead: this command's own cost is seconds here. A marker
+    # of its own keeps the other KDE calls, which are written straight away, out of the question.
+    local apply_delay=2 applied="$SANDBOX/applied.log"
+    cat > "$STUB_DIR/plasma-apply-colorscheme" <<STUB
+#!/usr/bin/env bash
+sleep $apply_delay
+printf 'apply %s\n' "\$*" >> "$applied"
+STUB
+    chmod +x "$STUB_DIR/plasma-apply-colorscheme"
+
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_status 0 "$STATUS" "the switch should succeed"
+    assert_file_exists "$XDG_STATE_HOME/caelestia/scheme.json"
+
+    # Nothing has applied it yet: the command returned while the apply was still asleep.
+    if [[ -s "$applied" ]]; then
+        fail "the command waited for the desktop apply (${apply_delay}s) to finish"
+    fi
+
+    local waited=0
+    while [[ ! -s "$applied" && "$waited" -lt 100 ]]; do
+        sleep 0.1
+        waited=$((waited + 1))
+    done
+    assert_contains "$(cat "$applied" 2>/dev/null || true)" "apply Matugen" \
+        "the deferred apply still runs"
 }
 
 test_the_user_templates_are_rendered() {

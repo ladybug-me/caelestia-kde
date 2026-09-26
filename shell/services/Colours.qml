@@ -29,6 +29,10 @@ Singleton {
     property string previewScheme: ""
     property string previewFlavour: ""
     property string previewVariant: ""
+    // Whether the wallpaper may pick the mode and the variant. The shell states this on every
+    // command that can derive a scheme, so the pipeline keeps no copy of the setting; a shell
+    // that omits it is asking for the wallpaper's choice, which is what it would get anyway.
+    readonly property list<string> smartArg: GlobalConfig.services.smartScheme ? [] : ["--no-smart"]
     readonly property bool light: showPreview ? previewLight : currentLight
     property bool currentLight
     property bool previewLight
@@ -210,6 +214,12 @@ Singleton {
             root.variant = (scheme.variant || "").trim();
             root.currentLight = scheme.mode === "light";
 
+            // The palette that was in effect has arrived, so a preview that was standing in for
+            // it has done its job and gives way. The launcher clears its own preview when it
+            // leaves the scheme list, so this is what ends one on the Colors page, where the
+            // write is the only thing that could.
+            root.showPreview = false;
+
             // Absent, null, and a value the range does not take all mean the same thing here:
             // what is in effect is the palette the engine produced. 0 is a real setting (a grey
             // palette), so this cannot lean on falsiness either.
@@ -222,11 +232,7 @@ Singleton {
             root.previewLight = scheme.mode === "light";
         }
 
-        for (const [name, colour] of Object.entries(scheme.colours)) {
-            const propName = name.startsWith("term") ? name : `m3${name}`;
-            if (colours.hasOwnProperty(propName))
-                colours[propName] = `#${colour}`;
-        }
+        applyColours(colours, scheme.colours);
 
         if (!isPreview) {
             root.schemeLoaded = true;
@@ -243,15 +249,51 @@ Singleton {
             schemeRetryTimer.start();
     }
 
+    /// Fold a scheme's `colours` into a palette. A file leaves the leading `#` off and names a
+    /// terminal role plainly, so the role a palette holds is not the key the file uses.
+    function applyColours(palette: M3Palette, colours: var): void {
+        for (const [role, colour] of Object.entries(colours)) {
+            const propName = role.startsWith("term") ? role : `m3${role}`;
+            if (palette.hasOwnProperty(propName))
+                palette[propName] = colour.startsWith("#") ? colour : `#${colour}`;
+        }
+    }
+
+    // Repaint the shell from a palette we already hold, before the pipeline that writes it runs.
+    // Switching colors goes through `caelestia scheme set`, which renders the palette, fans it
+    // out to every target and only then replaces scheme.json - the file this singleton watches.
+    // So the shell, whose colors are the ones the user is looking at while it happens, was the
+    // last thing to change, which is what made the switch feel slow. The Colors page has every
+    // role of a named scheme in hand already, so it can show the result now and let the write
+    // catch up. This is the preview the launcher already uses for a highlighted variant, so a
+    // palette shown this way is replaced by the one the file brings, which clears the preview.
+    function previewNamed(name: string, flavour: string, colours: var, light: bool): void {
+        if (!colours)
+            return;
+        root.previewScheme = name;
+        root.previewFlavour = flavour;
+        // A named scheme keeps the variant and the mode in effect; only its colors change.
+        root.previewVariant = root.variant;
+        root.previewLight = light;
+        applyColours(root.preview, colours);
+        root.showPreview = true;
+    }
+
+    /// End a preview the file never replaced. A command that fails writes no scheme, so this is
+    /// what stops the shell showing colors that nothing is going to confirm.
+    function clearPreview(): void {
+        root.showPreview = false;
+    }
+
     function setMode(mode: string): void {
-        Quickshell.execDetached(["caelestia", "scheme", "set", "--notify", "-m", mode]);
+        Quickshell.execDetached(["caelestia", "scheme", "set", "--notify", "-m", mode, ...root.smartArg]);
     }
 
     // Renders the palette at an intensity, given as the slider position rather than as the
     // multiplier itself. The command writes the value into the scheme, which is what the
     // palette and this singleton then read it back out of.
     function setIntensity(fraction: real): void {
-        Quickshell.execDetached(["caelestia", "scheme", "set", "-i", (fraction * maxIntensity).toFixed(2)]);
+        Quickshell.execDetached(["caelestia", "scheme", "set", "-i", (fraction * maxIntensity).toFixed(2), ...root.smartArg]);
     }
 
     // caelestia derives dynamic colours from the wallpaper it was last told
@@ -260,7 +302,7 @@ Singleton {
     // wallpaper on screen once per start. Delivery is the scheme.json write the
     // loader already watches, so nothing here waits for the result.
     function reseedScheme(): void {
-        Quickshell.execDetached(["bash", Quickshell.shellPath("scripts/reseed-scheme.sh")]);
+        Quickshell.execDetached(["bash", Quickshell.shellPath("scripts/reseed-scheme.sh"), ...root.smartArg]);
     }
 
     function reloadHyprRules(): void {

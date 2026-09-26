@@ -11,6 +11,10 @@
 #
 # Run at shell start so a session always ends up on the wallpaper it is showing.
 # A scheme the user picked is left alone.
+#
+# Arguments are passed on to the `caelestia` commands below, which is how the shell states its
+# smart-scheme setting (`--no-smart`): the pipeline keeps no copy of it, so a caller that says
+# nothing gets the wallpaper's choice.
 
 set -euo pipefail
 
@@ -46,11 +50,11 @@ scheme_mtime() {
 }
 
 before="$(scheme_mtime)"
-timeout 10s caelestia scheme set -n dynamic >/dev/null 2>&1 || true
+timeout 10s caelestia scheme set -n dynamic "$@" >/dev/null 2>&1 || true
 
 # Nothing written means the CLI had no wallpaper to derive from. Hand it the one
 # that is on screen and ask again.
 if [[ "$(scheme_mtime)" == "$before" ]]; then
-    timeout 10s caelestia wallpaper -f "$WALLPAPER" >/dev/null 2>&1 || true
-    timeout 10s caelestia scheme set -n dynamic >/dev/null 2>&1 || true
+    timeout 10s caelestia wallpaper -f "$WALLPAPER" "$@" >/dev/null 2>&1 || true
+    timeout 10s caelestia scheme set -n dynamic "$@" >/dev/null 2>&1 || true
 fi

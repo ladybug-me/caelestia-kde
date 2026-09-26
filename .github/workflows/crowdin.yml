@@ -63,6 +63,7 @@ jobs:
           upload_sources: true
           upload_translations: true
           auto_approve_imported: true
+          import_eq_suggestions: true
           download_translations: true
           # Off on purpose. On, it omits any file that is not fully translated,
           # which held back every language machine translation left a few

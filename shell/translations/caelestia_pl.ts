@@ -338,12 +338,12 @@
     <message>
       <location line="+7"/>
       <source>Light</source>
-      <translation type="unfinished">Light</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Dark</source>
-      <translation type="unfinished">Dark</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+28"/>
@@ -413,22 +413,22 @@
     <message>
       <location line="+9"/>
       <source>Theme mode</source>
-      <translation type="unfinished">Theme mode</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Switch the color scheme between light and dark</source>
-      <translation type="unfinished">Switch the color scheme between light and dark</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Managed by the automatic light and dark schedule</source>
-      <translation type="unfinished">Managed by the automatic light and dark schedule</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+7"/>
@@ -775,17 +775,17 @@
     <message>
       <location line="+8"/>
       <source>History</source>
-      <translation type="unfinished">History</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Save chat history</source>
-      <translation type="unfinished">Save chat history</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</source>
-      <translation type="unfinished">Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -1691,12 +1691,12 @@
     <message>
       <location line="+7"/>
       <source>Calendar popout</source>
-      <translation type="unfinished">Calendar popout</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show a mini calendar when hovering the clock</source>
-      <translation type="unfinished">Show a mini calendar when hovering the clock</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -2341,7 +2341,7 @@
     <message>
       <location line="+13"/>
       <source>Clock</source>
-      <translation type="unfinished">Clock</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+13"/>
@@ -3156,7 +3156,7 @@
     <message>
       <location filename="../modules/bar/popouts/ClockContext.qml" line="+81"/>
       <source>Clock settings</source>
-      <translation type="unfinished">Clock settings</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -6122,7 +6122,7 @@
     <message>
       <location line="+14"/>
       <source>Connect</source>
-      <translation type="unfinished">Connect</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+14"/>
@@ -8415,7 +8415,7 @@
     <message>
       <location line="+53"/>
       <source>%1 (%2)</source>
-      <translation type="unfinished">%1 (%2)</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+10"/>

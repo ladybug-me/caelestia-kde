@@ -338,12 +338,12 @@
     <message>
       <location line="+7"/>
       <source>Light</source>
-      <translation type="unfinished">Light</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Dark</source>
-      <translation type="unfinished">Dark</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+28"/>
@@ -368,12 +368,12 @@
     <message>
       <location line="+7"/>
       <source>Automatic light and dark</source>
-      <translation type="unfinished">Automatic light and dark</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Switch the theme mode on a schedule</source>
-      <translation type="unfinished">Switch the theme mode on a schedule</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+9"/>
@@ -408,47 +408,47 @@
     <message>
       <location line="+1"/>
       <source>Switches at %1, also used when sunrise and sunset are unavailable</source>
-      <translation type="unfinished">Switches at %1, also used when sunrise and sunset are unavailable</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Theme mode</source>
-      <translation type="unfinished">Theme mode</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Mode</source>
-      <translation type="unfinished">Mode</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Switch the color scheme between light and dark</source>
-      <translation type="unfinished">Switch the color scheme between light and dark</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Managed by the automatic light and dark schedule</source>
-      <translation type="unfinished">Managed by the automatic light and dark schedule</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Palette</source>
-      <translation type="unfinished">Palette</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Color intensity</source>
-      <translation type="unfinished">Color intensity</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Chroma of the wallpaper-derived palette, at 100% by default</source>
-      <translation type="unfinished">Chroma of the wallpaper-derived palette, at 100% by default</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 keeps its own colors, so this does not apply</source>
-      <translation type="unfinished">%1 keeps its own colors, so this does not apply</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -535,12 +535,12 @@
     <message>
       <location line="+1"/>
       <source>Couldn&apos;t remove API key</source>
-      <translation type="unfinished">Couldn&apos;t remove API key</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Couldn&apos;t save API key</source>
-      <translation type="unfinished">Couldn&apos;t save API key</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+31"/>
@@ -639,12 +639,12 @@
     <message>
       <location line="+7"/>
       <source>Let the CLI run its own tools</source>
-      <translation type="unfinished">Let the CLI run its own tools</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Off by default; the assistant&apos;s own tools do not need it</source>
-      <translation type="unfinished">Off by default; the assistant&apos;s own tools do not need it</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+7"/>
@@ -775,17 +775,17 @@
     <message>
       <location line="+8"/>
       <source>History</source>
-      <translation type="unfinished">History</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Save chat history</source>
-      <translation type="unfinished">Save chat history</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</source>
-      <translation type="unfinished">Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -908,12 +908,12 @@
     <message>
       <location line="+1"/>
       <source>Matched by a regex in pinnedApps - edit the config file to change</source>
-      <translation type="unfinished">Matched by a regex in pinnedApps - edit the config file to change</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Show on the dock even when not running</source>
-      <translation type="unfinished">Show on the dock even when not running</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+11"/>
@@ -1110,22 +1110,22 @@
     <message>
       <location line="+8"/>
       <source>Ambient color mode</source>
-      <translation type="unfinished">Ambient color mode</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Ambient glow is unavailable in light mode</source>
-      <translation type="unfinished">Ambient glow is unavailable in light mode</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Ambient light glow in window info panel</source>
-      <translation type="unfinished">Ambient light glow in window info panel</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Ambient glow opacity</source>
-      <translation type="unfinished">Ambient glow opacity</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+55"/>
@@ -1691,12 +1691,12 @@
     <message>
       <location line="+7"/>
       <source>Calendar popout</source>
-      <translation type="unfinished">Calendar popout</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show a mini calendar when hovering the clock</source>
-      <translation type="unfinished">Show a mini calendar when hovering the clock</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -1933,12 +1933,12 @@
     <message>
       <location line="+7"/>
       <source>Show app badges</source>
-      <translation type="unfinished">Show app badges</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the count, progress and urgency an app publishes for its dock icon</source>
-      <translation type="unfinished">Show the count, progress and urgency an app publishes for its dock icon</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+7"/>
@@ -2341,7 +2341,7 @@
     <message>
       <location line="+13"/>
       <source>Clock</source>
-      <translation type="unfinished">Clock</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+13"/>
@@ -2638,12 +2638,12 @@
     <message>
       <location line="+12"/>
       <source>Per monitor</source>
-      <translation type="unfinished">Per monitor</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Hide workspaces not on the current monitor</source>
-      <translation type="unfinished">Hide workspaces not on the current monitor</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -2819,7 +2819,7 @@
     <message>
       <location line="+7"/>
       <source>Connected%1</source>
-      <translation type="unfinished">Connected%1</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
@@ -3156,7 +3156,7 @@
     <message>
       <location filename="../modules/bar/popouts/ClockContext.qml" line="+81"/>
       <source>Clock settings</source>
-      <translation type="unfinished">Clock settings</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -4164,82 +4164,82 @@
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+23"/>
       <source>Window Rules Out of the Box</source>
-      <translation type="unfinished">Window Rules Out of the Box</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</source>
-      <translation type="unfinished">The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Right-Click Any App</source>
-      <translation type="unfinished">Right-Click Any App</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</source>
-      <translation type="unfinished">An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Status Icons You Can Arrange</source>
-      <translation type="unfinished">Status Icons You Can Arrange</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
-      <translation type="unfinished">The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Game Mode at a Tap</source>
-      <translation type="unfinished">Game Mode at a Tap</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</source>
-      <translation type="unfinished">The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Color Intensity</source>
-      <translation type="unfinished">Color Intensity</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
-      <translation type="unfinished">Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Dock App Badges</source>
-      <translation type="unfinished">Dock App Badges</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
-      <translation type="unfinished">Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Ambient Glow</source>
-      <translation type="unfinished">Ambient Glow</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
-      <translation type="unfinished">Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Lock Screen Password Reveal</source>
-      <translation type="unfinished">Lock Screen Password Reveal</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</source>
-      <translation type="unfinished">Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -4648,7 +4648,7 @@
       <location line="+1"/>
       <location line="+8"/>
       <source>Automatic (DHCP)</source>
-      <translation type="unfinished">Automatic (DHCP)</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+6"/>
@@ -4678,33 +4678,33 @@
     <message>
       <location line="+9"/>
       <source>Gateway</source>
-      <translation type="unfinished">Gateway</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Enter a valid gateway address</source>
-      <translation type="unfinished">Enter a valid gateway address</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+11"/>
       <source>DNS servers</source>
-      <translation type="unfinished">DNS servers</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Comma-separated</source>
-      <translation type="unfinished">Comma-separated</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Enter valid DNS server addresses</source>
-      <translation type="unfinished">Enter valid DNS server addresses</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+45"/>
       <location line="+26"/>
       <source>Apply</source>
-      <translation type="unfinished">Apply</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -5085,7 +5085,7 @@
       <location filename="../modules/nexus/pages/LanguageAndRegion.qml" line="+45"/>
       <location line="+44"/>
       <source>Auto</source>
-      <translation type="unfinished">Auto</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="-40"/>
@@ -6122,7 +6122,7 @@
     <message>
       <location line="+14"/>
       <source>Connect</source>
-      <translation type="unfinished">Connect</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+14"/>
@@ -6142,7 +6142,7 @@
     <message>
       <location line="+1"/>
       <source>%1%</source>
-      <translation type="unfinished">%1%</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
@@ -6201,7 +6201,7 @@
     <message>
       <location line="+1"/>
       <source>Join this network when it&apos;s in range</source>
-      <translation type="unfinished">Join this network when it&apos;s in range</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -6719,7 +6719,7 @@
     <message>
       <location line="+0"/>
       <source>%1 unread</source>
-      <translation type="unfinished">%1 unread</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+12"/>
@@ -7221,12 +7221,12 @@
     <message>
       <location line="+1"/>
       <source>Advanced color settings</source>
-      <translation type="unfinished">Advanced color settings</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Color intensity</source>
-      <translation type="unfinished">Color intensity</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7822,7 +7822,7 @@
     <message>
       <location line="+1"/>
       <source>Let the CLI run its own tools</source>
-      <translation type="unfinished">Let the CLI run its own tools</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7971,7 +7971,7 @@
     <message>
       <location line="+0"/>
       <source>%1 - %2</source>
-      <translation type="unfinished">%1 - %2</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+33"/>
@@ -8415,7 +8415,7 @@
     <message>
       <location line="+53"/>
       <source>%1 (%2)</source>
-      <translation type="unfinished">%1 (%2)</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+10"/>
@@ -9963,7 +9963,7 @@
       <location line="+1"/>
       <source>%1 TB</source>
       <comment>data unit</comment>
-      <translation type="unfinished">%1 TB</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10217,7 +10217,7 @@
     <message>
       <location line="+1"/>
       <source>%1 new commits on %2 branch</source>
-      <translation type="unfinished">%1 new commits on %2 branch</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10316,7 +10316,7 @@
     <message>
       <location line="+1"/>
       <source>%1 new commits on %2</source>
-      <translation type="unfinished">%1 new commits on %2</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+3"/>
@@ -10326,7 +10326,7 @@
     <message>
       <location line="+1"/>
       <source>You&apos;re up to date</source>
-      <translation type="unfinished">You&apos;re up to date</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+8"/>
@@ -10699,7 +10699,7 @@
       <location line="+0"/>
       <location line="+5"/>
       <source>%1: %2</source>
-      <translation type="unfinished">%1: %2</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
@@ -11084,12 +11084,12 @@
     <message>
       <location filename="../services/Weather.qml" line="+127"/>
       <source>Couldn&apos;t parse location results. Check your connection and try again.</source>
-      <translation type="unfinished">Couldn&apos;t parse location results. Check your connection and try again.</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+29"/>
       <source>Couldn&apos;t fetch locations. Check your connection and try again.</source>
-      <translation type="unfinished">Couldn&apos;t fetch locations. Check your connection and try again.</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -11141,12 +11141,12 @@
       <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+114"/>
       <location line="+151"/>
       <source>What&apos;s New in Caelestia</source>
-      <translation type="unfinished">What&apos;s New in Caelestia</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="-99"/>
       <source>What&apos;s New</source>
-      <translation type="unfinished">What&apos;s New</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>
@@ -11204,12 +11204,12 @@
     <message>
       <location filename="../services/WorkspaceTrackerGuard.qml" line="+36"/>
       <source>Workspace tracker effect is not running</source>
-      <translation type="unfinished">Workspace tracker effect is not running</translation>
+      <translation type="unfinished"></translation>
     </message>
     <message>
       <location line="+0"/>
       <source>KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in.</source>
-      <translation type="unfinished">KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in.</translation>
+      <translation type="unfinished"></translation>
     </message>
   </context>
   <context>

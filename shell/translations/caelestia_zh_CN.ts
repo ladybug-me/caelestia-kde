@@ -4545,7 +4545,7 @@
     <message>
         <location filename="../modules/nexus/common/Ipv4ConfigSection.qml" line="+98"/>
         <source>IPv4</source>
-        <translation type="unfinished">IPv4</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+9"/>
@@ -7140,7 +7140,7 @@
     <message>
         <location line="+1"/>
         <source>Wallhaven</source>
-        <translation type="unfinished">Wallhaven</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7305,7 +7305,7 @@
     <message>
         <location line="+1"/>
         <source>GitHub</source>
-        <translation type="unfinished">GitHub</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7375,7 +7375,7 @@
     <message>
         <location line="+1"/>
         <source>IPv4</source>
-        <translation type="unfinished">IPv4</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>

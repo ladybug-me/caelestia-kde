@@ -46,6 +46,18 @@ PageBase {
 
     readonly property list<string> gpuValues: ["", "NVIDIA", "GENERIC", "None"]
 
+    // Visualiser capture source (there must be one for each value of the VisualiserInput enum)
+    readonly property list<MenuItem> visualiserInputItems: [
+        MenuItem {
+            text: qsTr("Output")
+            value: VisualiserInput.Output
+        },
+        MenuItem {
+            text: qsTr("Input")
+            value: VisualiserInput.Input
+        }
+    ]
+
     function gpuKeyToIndex(key: string): int {
         const u = (key ?? "").trim().toUpperCase();
         if (u === "")
@@ -201,6 +213,14 @@ PageBase {
             to: 120
             stepSize: 2
             onMoved: v => GlobalConfig.services.visualiserBars = v
+        }
+
+        SelectRow {
+            label: qsTr("Visualiser input")
+            subtext: qsTr("Audio the visualisers react to")
+            menuItems: root.visualiserInputItems
+            active: root.visualiserInputItems.find(i => i.value === GlobalConfig.services.visualiserInput)
+            onSelected: item => GlobalConfig.services.visualiserInput = item.value
         }
 
         SelectRow {

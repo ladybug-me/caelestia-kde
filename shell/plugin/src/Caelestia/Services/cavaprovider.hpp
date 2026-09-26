@@ -1,8 +1,11 @@
 #pragma once
 
-#include "audioprovider.hpp"
-#include <cava/cavacore.h>
 #include <qqmlintegration.h>
+
+#include <cava/cavacore.h>
+
+#include "../Config/enums.hpp"
+#include "audioprovider.hpp"
 
 namespace caelestia::services {
 
@@ -41,6 +44,8 @@ class CavaProvider : public AudioProvider {
 
     Q_PROPERTY(int bars READ bars WRITE setBars NOTIFY barsChanged)
 
+    Q_PROPERTY(caelestia::config::VisualiserInput::Enum input READ input WRITE setInput NOTIFY inputChanged)
+
     Q_PROPERTY(QVector<double> values READ values NOTIFY valuesChanged)
 
 public:
@@ -49,14 +54,19 @@ public:
     [[nodiscard]] int bars() const;
     void setBars(int bars);
 
+    [[nodiscard]] caelestia::config::VisualiserInput::Enum input() const;
+    void setInput(caelestia::config::VisualiserInput::Enum input);
+
     [[nodiscard]] QVector<double> values() const;
 
 signals:
     void barsChanged();
+    void inputChanged();
     void valuesChanged();
 
 private:
     int m_bars;
+    caelestia::config::VisualiserInput::Enum m_input;
     QVector<double> m_values;
 
     void updateValues(const QVector<double>& values);

@@ -11,6 +11,7 @@
 #include <thread>
 #include <vector>
 
+#include "../Config/enums.hpp"
 #include "service.hpp"
 
 namespace caelestia::services {
@@ -60,6 +61,12 @@ public:
     quint32 readChunk(float* out, quint32 count = 0);
     quint32 readChunk(double* out, quint32 count = 0);
 
+    // Which endpoint the capture stream taps: the default output's monitor
+    // (Output) or the default input (Input). The worker reads the mode once
+    // when it builds its stream, so a change restarts the stream.
+    [[nodiscard]] caelestia::config::VisualiserInput::Enum captureMode() const;
+    void setCaptureMode(caelestia::config::VisualiserInput::Enum mode);
+
 private:
     explicit AudioCollector(QObject* parent = nullptr);
     ~AudioCollector();
@@ -69,9 +76,8 @@ private:
     std::vector<float> m_buffer2;
     std::atomic<std::vector<float>*> m_readBuffer;
     std::atomic<std::vector<float>*> m_writeBuffer;
-    quint32 m_sampleCount;
+    std::atomic<caelestia::config::VisualiserInput::Enum> m_captureMode;
 
-    void reload();
     void start() override;
     void stop() override;
 };

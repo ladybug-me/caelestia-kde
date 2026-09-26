@@ -145,6 +145,7 @@ void CavaProcessor::initCava() {
 CavaProvider::CavaProvider(QObject* parent)
     : AudioProvider(parent)
     , m_bars(0)
+    , m_input(caelestia::config::VisualiserInput::Output)
     , m_values(m_bars, 0.0) {
     m_processor = new CavaProcessor();
     init();
@@ -173,6 +174,23 @@ void CavaProvider::setBars(int bars) {
 
     QMetaObject::invokeMethod(
         static_cast<CavaProcessor*>(m_processor), &CavaProcessor::setBars, Qt::QueuedConnection, bars);
+}
+
+caelestia::config::VisualiserInput::Enum CavaProvider::input() const {
+    return m_input;
+}
+
+void CavaProvider::setInput(caelestia::config::VisualiserInput::Enum input) {
+    if (m_input == input) {
+        return;
+    }
+
+    m_input = input;
+    emit inputChanged();
+
+    // The visualiser and the beat tracker share the one AudioCollector, so
+    // switching its capture mode switches both to the chosen source.
+    AudioCollector::instance().setCaptureMode(m_input);
 }
 
 QVector<double> CavaProvider::values() const {

@@ -62,6 +62,9 @@ public:
 private:
     CONFIG_GLOBAL_PROPERTY(QString, gpuType, QString())
     CONFIG_GLOBAL_PROPERTY(int, visualiserBars, 60)
+    // What the audio visualisers (and the beat tracker sharing their capture
+    // stream) react to: the default output's monitor, or the default input.
+    CONFIG_GLOBAL_ENUM_PROPERTY(VisualiserInput, visualiserInput, VisualiserInput::Output)
     CONFIG_GLOBAL_PROPERTY(qreal, audioIncrement, 0.1)
     CONFIG_GLOBAL_PROPERTY(qreal, brightnessIncrement, 0.1)
     CONFIG_GLOBAL_PROPERTY(qreal, maxVolume, 1.0)

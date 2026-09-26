@@ -4141,7 +4141,7 @@
       <translation>Fijar en el dock</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>Abrir nueva ventana</translation>
     </message>
@@ -7625,31 +7625,6 @@
     </message>
     <message>
       <location line="+4"/>
-      <source>Power</source>
-      <translation>Energía</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Battery indicators, idle suspend</source>
-      <translation>Indicadores de batería, suspensión por inactividad</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Battery Status</source>
-      <translation>Estado de la batería</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Power Saving</source>
-      <translation>Ahorro de energía</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Screen Timeout</source>
-      <translation>Tiempo de espera de la pantalla</translation>
-    </message>
-    <message>
-      <location line="+4"/>
       <source>Session</source>
       <translation>Sesión</translation>
     </message>
@@ -8125,89 +8100,6 @@
       <location line="+2"/>
       <source>Opens the power, restart, and logout menu</source>
       <translation>Abre el menú de apagado, reinicio y cierre de sesión</translation>
-    </message>
-  </context>
-  <context>
-    <name>PowerPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/PowerPage.qml" line="+94"/>
-      <source>Power</source>
-      <translation>Energía</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Idle &amp; sleep</source>
-      <translation>Inactividad y suspensión</translation>
-    </message>
-    <message>
-      <location line="+5"/>
-      <source>Idle suspend</source>
-      <translation>Suspender por inactividad</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Suspend the system after inactivity</source>
-      <translation>Suspender el sistema después de un período de inactividad</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Idle suspend timer</source>
-      <translation>Temporizador de suspensión por inactividad</translation>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Suspend after %1 minute(s) of inactivity</source>
-      <translation>Suspender después de %1 minuto(s) de inactividad</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enable idle suspend to apply a timer</source>
-      <translation>Activa la suspensión por inactividad para usar un temporizador</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Lock before sleep</source>
-      <translation>Bloquear antes de suspender</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Lock the session before suspending</source>
-      <translation>Bloquear la sesión antes de suspender</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Inhibit while audio</source>
-      <translation>Evitar suspensión durante la reproducción de audio</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Prevent idle actions while audio is playing</source>
-      <translation>Evitar acciones por inactividad mientras se reproduce audio</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Inhibit while charging</source>
-      <translation>Evitar suspensión durante la carga</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Prevent idle actions while charging</source>
-      <translation>Evitar acciones por inactividad mientras se carga la batería</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Battery warnings</source>
-      <translation>Advertencias de batería</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Critical battery level</source>
-      <translation>Nivel crítico de batería</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Percentage at which the critical warning fires</source>
-      <translation>Porcentaje en el que se activa la advertencia de batería crítica</translation>
     </message>
   </context>
   <context>

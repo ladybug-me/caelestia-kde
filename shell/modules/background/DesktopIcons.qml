@@ -9,6 +9,7 @@ import Quickshell.Wayland
 import Caelestia.Config
 import qs.components
 import qs.components.containers
+import qs.components.controls
 import qs.components.effects
 import qs.services
 import qs.utils
@@ -100,6 +101,48 @@ Item {
         return {col: 0, row: 0};
     }
 
+    // True while an icon's inline rename editor is open; the background window
+    // raises its layer-shell keyboard focus on this so the editor can type.
+    property bool renameActive: false
+
+    // Trash and rename go through kioclient so both run through KIO: the move
+    // lands in real trash metadata and the folder watchers refresh the model.
+    Process {
+        id: fileOpProc
+
+        property var commandLine: []
+
+        command: commandLine
+        stderr: StdioCollector {
+            onStreamFinished: {
+                if (text.trim().length > 0)
+                    console.warn("[DesktopIcons] kioclient:", text.trim());
+            }
+        }
+    }
+
+    function runFileOp(args) {
+        fileOpProc.commandLine = args;
+        fileOpProc.running = true;
+    }
+
+    function trashIcon(path) {
+        if (path.length === 0)
+            return;
+        runFileOp(["kioclient", "move", path, "trash:/"]);
+    }
+
+    function renameIcon(oldPath, newName) {
+        const idx = Math.max(oldPath.lastIndexOf("/"), 0);
+        const dir = oldPath.substring(0, idx);
+        const trimmed = newName.trim();
+        // An empty name or an unchanged name means nothing to do; kioclient
+        // reports collisions itself and the model refreshes either way.
+        if (trimmed.length === 0 || trimmed === oldPath.substring(idx + 1))
+            return;
+        runFileOp(["kioclient", "move", oldPath, dir + "/" + trimmed]);
+    }
+
     Item {
         id: gridItem
 
@@ -152,6 +195,28 @@ Item {
                 property int col: -1
 
                 property int row: -1
+
+                property bool renaming: false
+
+                function startRename() {
+                    renaming = true;
+                    root.renameActive = true;
+                    renameField.text = fileName;
+                    renameField.forceActiveFocus();
+                }
+
+                function commitRename() {
+                    if (!renaming)
+                        return;
+                    renaming = false;
+                    root.renameActive = false;
+                    root.renameIcon(path, renameField.text);
+                }
+
+                function cancelRename() {
+                    renaming = false;
+                    root.renameActive = false;
+                }
 
                 x: col * root.cellWidth + (dragHandler.active ? dragHandler.translation.x : 0)
                 y: row * root.cellHeight + (dragHandler.active ? dragHandler.translation.y : 0)
@@ -347,6 +412,7 @@ Item {
                         }
                     }
                     Text {
+                        visible: !delegateItem.renaming
                         Layout.fillWidth: true
                         text: fileName.toLowerCase().endsWith(".desktop") ? desktopName : fileName
                         color: Colours.palette.m3onSurface
@@ -358,12 +424,26 @@ Item {
                         style: Text.Outline
                         styleColor: Colours.palette.m3surface
                     }
+                    StyledTextField {
+                        id: renameField
+
+                        visible: delegateItem.renaming
+                        Layout.fillWidth: true
+                        onAccepted: delegateItem.commitRename()
+                        onActiveFocusChanged: {
+                            // Clicking anywhere outside the editor cancels the rename.
+                            if (!activeFocus && delegateItem.renaming)
+                                delegateItem.cancelRename();
+                        }
+                        Keys.onEscapePressed: delegateItem.cancelRename()
+                    }
                 }
 
                 DragHandler {
                     id: dragHandler
 
                     target: null
+                    enabled: !delegateItem.renaming
                     
                     property real lastTranslationX: 0
 
@@ -418,16 +498,36 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                     acceptedButtons: Qt.LeftButton | Qt.RightButton
                     onClicked: (mouse) => {
-                        if (mouse.button === Qt.LeftButton) {
-                            if (fileName.toLowerCase().endsWith(".desktop")) {
-                                Launch.exec(["kioclient", "exec", path]);
-                            } else {
-                                Launch.exec(["xdg-open", path]);
-                            }
+                        if (mouse.button === Qt.RightButton) {
+                            // Suppress the popup when a rename is in progress - the
+                            // click that dismisses the editor should not immediately
+                            // open a new menu on the same icon.
+                            if (!delegateItem.renaming)
+                                iconMenu.openFor(delegateItem, mouse.x, mouse.y);
+                            return;
+                        }
+                        if (delegateItem.renaming) {
+                            renameField.forceActiveFocus();
+                            return;
+                        }
+                        if (fileName.toLowerCase().endsWith(".desktop")) {
+                            Launch.exec(["kioclient", "exec", path]);
+                        } else {
+                            Launch.exec(["xdg-open", path]);
                         }
                     }
                 }
             }
         }
+    }
+
+    DesktopIconContextMenu {
+        id: iconMenu
+
+        onRenameRequested: (delegateTarget) => {
+            if (delegateTarget)
+                delegateTarget.startRename();
+        }
+        onTrashRequested: path => root.trashIcon(path)
     }
 }

@@ -88,6 +88,8 @@ Variants {
             }
         }
         DesktopIcons {
+            id: desktopIcons
+
             screenData: win.modelData
             z: 3
         }
@@ -470,5 +472,8 @@ Variants {
         }
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Bottom
+        // The desktop surface never takes keyboard focus except while a desktop
+        // icon's rename editor is open, which needs key events (issue #853).
+        WlrLayershell.keyboardFocus: desktopIcons.renameActive ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
     }
 }

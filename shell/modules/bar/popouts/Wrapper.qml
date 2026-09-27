@@ -24,7 +24,12 @@ Item {
     readonly property Item current: (content.item as Content)?.current ?? null
     readonly property bool isDetached: detachedMode.length > 0
     readonly property bool sidebarOpen: popoutState.sidebarOpen
-    readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "updateIndicator" || currentName === "clock" || currentName === "clockcontext" || currentName === "statusiconscontext"
+    // Popouts excluded from pushing the notification column / sidebar out of the
+    // way (Panels.qml) and from visually merging with the sidebar (ContentWindow.qml):
+    // hover previews and context menus are transient, so shoving panels around for
+    // them feels jittery. The clock popout is deliberately NOT here — the calendar
+    // is a real panel-sized popout and displaces notifications like audio/network do.
+    readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "updateIndicator" || currentName === "clockcontext" || currentName === "statusiconscontext"
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
     property alias dockModel: popoutState.dockModel

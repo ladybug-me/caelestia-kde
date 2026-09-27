@@ -315,28 +315,6 @@ Item {
                 // Returns the search directories within the icon set, ordered by priority
                 readonly property string iconSetBase: Qt.resolvedUrl(Quickshell.shellDir + "/assets/icons/yet-another-monochrome-icon-set")
 
-                readonly property var iconSetDirs: ["apps/scalable", "mimetypes/scalable", "places/scalable", "actions/scalable", "devices/scalable", "status/scalable"]
-
-                function getMaterialYouIconUrl(iconName) {
-                    if (!iconName) return "";
-                    for (let i = 0; i < iconSetDirs.length; i++) {
-                        let url = iconSetBase + "/" + iconSetDirs[i] + "/" + iconName + ".svg";
-                        // Qt.resolvedUrl normalises it; we return it for use as Image.source
-                        return url; // try first candidate; Image will report Error and we fallback
-                    }
-                    return "";
-                }
-
-                function getMaterialYouIconUrlByPriority(iconName) {
-                    // Build ordered candidate list: apps first (for .desktop icons), then mimetypes, then places
-                    if (!iconName) return "";
-                    let candidates = [];
-                    for (let i = 0; i < iconSetDirs.length; i++) {
-                        candidates.push(iconSetBase + "/" + iconSetDirs[i] + "/" + iconName + ".svg");
-                    }
-                    return candidates;
-                }
-
                 property bool useMaterialYouIcons: GlobalConfig.forScreen(screenData.name).background.materialYouIconsEnabled
 
                 property bool useVibrantIcons: GlobalConfig.forScreen(screenData.name).background.materialYouIconsVibrant

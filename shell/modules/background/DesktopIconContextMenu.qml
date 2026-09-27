@@ -14,13 +14,13 @@ Controls.Menu {
     id: root
 
     // The icon delegate the menu acts on; set by openFor() before expanding.
-    property var target: null
+    property Item target: null
 
     // Approximate menu extent, used to keep the popup on screen. The real
     // background width is consulted once the menu has been laid out.
     property real menuExtent: 260
 
-    signal renameRequested(var delegateTarget)
+    signal renameRequested(Item delegateTarget)
 
     signal trashRequested(string path)
 

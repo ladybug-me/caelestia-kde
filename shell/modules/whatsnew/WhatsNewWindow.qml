@@ -583,7 +583,10 @@ FloatingWindow {
                                 onClicked: {
                                     const pageIdx = PageRegistry.indexForKey(featureData.settingsPage);
                                     if (pageIdx >= 0) {
-                                        WindowFactory.create(null, { initialPageIdx: pageIdx });
+                                        WindowFactory.create(null, {
+                                            initialPageIdx: pageIdx,
+                                            initialSubPageIdx: featureData.settingsSubPage ?? -1
+                                        });
                                         root.dismiss();
                                     }
                                 }

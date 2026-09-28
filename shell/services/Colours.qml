@@ -107,7 +107,6 @@ Singleton {
     }
 
 
-
     property bool schemeLoaded: false
 
     property int schemeRetryCount: 0
@@ -278,7 +277,6 @@ Singleton {
         reseedTimer.start()
     }
 
-
     FileView {
         id: schemeFile
 
@@ -360,12 +358,10 @@ Singleton {
     onShowPreviewChanged: Qt.callLater(updatePaletteManager)
 
 
-
     component Transparency: QtObject {
         readonly property bool enabled: Tokens.transparency.enabled && !(GameMode.enabled && GlobalConfig.utilities.gameMode.disableShellTransparency)
         readonly property real base: Math.max(0, Math.min(1, Tokens.transparency.base - (root.light ? 0.1 : 0)))
         readonly property real layers: Math.max(0, Math.min(1, Tokens.transparency.layers))
-
     }
 
     component M3TPalette: QtObject {

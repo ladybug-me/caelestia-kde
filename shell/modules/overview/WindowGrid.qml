@@ -18,10 +18,6 @@ Item {
     property var cardItems: []
     property var activeInfoClient: null
     property var panels: null
-    /// The screen this overview belongs to. Everything below is scoped to it:
-    /// KWin gives each output its own current desktop, and each window lives on
-    /// one output, so an overview that ignores this shows the other monitor's
-    /// desktop and the other monitor's windows.
     required property ShellScreen screen
     property var closingWindows: []
     property alias indicatorContainer: indicatorContainer
@@ -29,9 +25,6 @@ Item {
     readonly property real indicatorSpace: indicatorContainer.height + Tokens.padding.large * 2
     readonly property real verticalOffset: indicatorSpace - overviewBorderThickness
     readonly property int activeWsId: {
-        // activeId comes from D-Bus, which exposes a single current desktop and
-        // reports whichever output is focused. Per screen, only the tracker
-        // knows.
         const perOutput = Kwin.activeByOutput[root.screen.name];
         if (perOutput > 0)
             return perOutput;
@@ -40,30 +33,14 @@ Item {
     property bool ignoreNextSwitch: false
     property bool _initialized: false
     property bool isDragging: false
-    /// -1 while a drag rests against the left edge, +1 against the right, 0
-    /// otherwise. Drives the dwell that pages through workspaces.
-    ///
-    /// Read from the drag's own position rather than from drop areas at the
-    /// edges. Those reported entry and exit, and paging moves the grid under the
-    /// pointer, which counted as leaving -- so the second page never came while
-    /// the drag was held perfectly still. A position cannot be confused that way.
-    /// How far in from a screen edge counts as resting against it. Wide enough
-    /// to be reachable without pressing the pointer into the very last pixels:
-    /// on a shared edge the pointer glides onto the next monitor rather than
-    /// stopping, so a narrow band leaves almost nothing to aim at. The dwell,
-    /// not the width, is what keeps passing through from paging.
     readonly property real edgeBand: 140
     readonly property int edgeDirection: {
         if (!root.isDragging || Visibilities.dragAddress === "" || Visibilities.dragOriginScreen !== root.screen.name)
             return 0;
-        // Screen coordinates on both sides. The published position is relative
-        // to the window, which covers the screen; root is an item inside it and
-        // narrower, so measuring one against the other put the edge in the wrong
-        // place -- far enough out that it was never reached.
         const local = Visibilities.dragX - root.screen.x;
         const span = root.screen.width;
         if (local < 0 || local >= span)
-            return 0; // gone to another screen; that is a move, not a page
+            return 0;
         if (local < root.edgeBand)
             return -1;
         if (local > span - root.edgeBand)
@@ -119,14 +96,6 @@ Item {
         root.requestClose();
     }
     function syncPage() {
-        // Never while a window is being dragged. The page a drag has reached is
-        // chosen by the drag itself, but activeWsId only catches up once the
-        // compositor has switched and the tracker's payload has come back over
-        // its socket -- and any activeWsId notification arriving before that
-        // still carries the desktop the drag started on. Acting on it snaps the
-        // view back to that page, so the drop then finds the window already
-        // where it is and does nothing: the card flies home and the drag looks
-        // like it was ignored.
         if (root.isDragging) return;
         for (let i = 0; i < Kwin.workspaces.length; ++i) {
             const wId = Kwin.workspaces[i].index;
@@ -146,8 +115,6 @@ Item {
     onOpacityChanged: {
         if (opacity <= 0) {
             selectedIndex = -1;
-            // A card destroyed mid-drag never reports the drag ending, and a
-            // stuck flag would leave syncPage() disabled for good.
             root.isDragging = false;
         } else {
             if (Visibilities.preOverviewActiveWindowAddress !== "") {
@@ -162,7 +129,7 @@ Item {
                         }
                     }
                 }
-                root.selectedIndex = foundIndex; // -1 if not found
+                root.selectedIndex = foundIndex;
             } else {
                 root.selectedIndex = -1;
             }
@@ -241,21 +208,15 @@ Item {
         anchors.bottomMargin: verticalOffset
         orientation: ListView.Horizontal
         highlightRangeMode: ListView.NoHighlightRange
-        cacheBuffer: 100000 // Keep all pages instantiated to prevent drag-and-drop interruption
+        cacheBuffer: 100000
         boundsBehavior: Flickable.StopAtBounds
-        interactive: false // Disable native scroll to prevent fighting KWin swipe tracking
+        interactive: false
         contentX: root._initialized ? targetContentX : currentIndex * width
         model: workspaceModel
 
         onCountChanged: Qt.callLater(root.syncPage)
         onCurrentIndexChanged: {
             if (root.ignoreNextSwitch) return;
-            // Not while a window is being dragged. Switching the compositor's
-            // desktop cancels the pointer grab the drag is riding on, so the
-            // drag ended the instant the first page turned and the window was
-            // dropped on the page it had just reached -- holding on could never
-            // carry it further. The view still pages; the desktop catches up
-            // once the drag is over.
             if (root.isDragging) return;
             switchTimer.restart();
         }
@@ -305,16 +266,6 @@ Item {
             }
             DropArea {
                 anchors.fill: parent
-                // Accepted only when this page actually took the window in.
-                //
-                // Qt re-resolves which DropArea a drag is over on drag movement,
-                // not when the scene moves underneath it. Paging by holding the
-                // drag against an edge does exactly that -- the pages scroll
-                // while the pointer is deliberately still -- so the drag is
-                // still registered against the page it started on. Accepting
-                // there regardless reported the drop as handled, and the card's
-                // own release path, which goes by the page actually on screen,
-                // never ran: the workspace changed and the window stayed behind.
                 onDropped: drop => {
                     const sourceItem = drop.source;
                     if (sourceItem && sourceItem.clientAddress) {
@@ -359,24 +310,9 @@ Item {
 
                             property bool closing: false
                             property url infoScreenshot: ""
-                            /// Set by a workspace thumbnail's DropArea while the
-                            /// card hovers it, so the card shrinks to the size it
-                            /// would occupy there. 0 means "not over one".
                             property real dropTargetScale: 0
-                            /// Over a workspace thumbnail: the preview collapses
-                            /// into the application's icon, the way a window does
-                            /// when it is dropped onto a workspace in GNOME. It is
-                            /// what the slot will actually contain once dropped, so
-                            /// the drag shows its own result; dragging back out
-                            /// reverses it.
                             readonly property bool morphed: dragHandler.active && activeWin.dropTargetScale > 0
 
-                            // The pointer, not the card's middle. The card is held
-                            // wherever it was grabbed, so its centre sits at an
-                            // offset that drifts across boundaries on its own --
-                            // enough to cross the screen edge while the pointer was
-                            // still well inside it, which read as leaving the screen
-                            // and reset the edge dwell every time it wobbled.
                             function publishDrag(): void {
                                 if (!dragHandler.active)
                                     return;
@@ -393,10 +329,6 @@ Item {
                             scale: {
                                 if (closing)
                                     return 0;
-                                // Dragged onto a workspace thumbnail: shrink to
-                                // roughly what it will look like once dropped, so
-                                // the target reads as a target rather than the
-                                // card just floating over it.
                                 if (dragHandler.active && activeWin.dropTargetScale > 0)
                                     return activeWin.dropTargetScale;
                                 return activeWin.isSelected && !dragHandler.active ? root.hoverScale : 1;
@@ -408,9 +340,6 @@ Item {
                             border.width: activeWin.isSelected && !activeWin.morphed ? 2 : 0
                             border.color: Colours.palette.m3primary
 
-                            // Published on every move so the screen the pointer
-                            // has reached can draw what is coming; this one cannot
-                            // draw past its own edge.
                             onXChanged: activeWin.publishDrag()
                             onYChanged: activeWin.publishDrag()
 
@@ -446,24 +375,9 @@ Item {
                                     if (!active) {
                                         activeWin.dropTargetScale = 0;
                                         Visibilities.clearDrag();
-                                        // Held back for the length of the drag; the
-                                        // desktop follows the page the drag landed on.
                                         switchTimer.restart();
 
 
-                                        // Checked before Drag.drop(), not after.
-                                        // Each screen has its own overview in its
-                                        // own window, so a drag can never be handed
-                                        // to the other one's drop areas -- but the
-                                        // pointer does travel there and the card
-                                        // goes with it, so where it was let go is
-                                        // enough to act on. This one's drop areas
-                                        // still claim a release out there, though,
-                                        // and one of them answering first is what
-                                        // made a window dragged to the next monitor
-                                        // land on a workspace of the monitor it came
-                                        // from. Leaving the screen is the stronger
-                                        // signal, so it is read first.
                                         const target = root.screenAtGlobal(Visibilities.dragX, Visibilities.dragY);
                                         if (target && target.name !== root.screen.name) {
                                             const addr = clientAddress;
@@ -477,7 +391,7 @@ Item {
 
                                         let dropAction = activeWin.Drag.drop();
                                         if (dropAction !== Qt.IgnoreAction) {
-                                            return; // Handled by DropArea
+                                            return;
                                         }
 
                                         const targetWsId = Kwin.workspaces[listView.currentIndex].index;
@@ -492,10 +406,6 @@ Item {
                                 }
                             }
                             Behavior on scale {
-                                // Slower while a drag is in progress: this is the
-                                // preview collapsing into its icon and opening back
-                                // out, which is meant to be read, not the snap of a
-                                // hover highlight.
                                 Anim {
                                     type: dragHandler.active ? Anim.SlowSpatial : Anim.DefaultSpatial
                                 }
@@ -533,10 +443,6 @@ Item {
                                 }
                             }
 
-                            // The icon the card collapses into over a workspace
-                            // thumbnail. Sized as a share of the card so that the
-                            // card's own drop scale carries it down to icon size --
-                            // one animation drives both, and they cannot drift.
                             IconImage {
                                 anchors.centerIn: parent
                                 asynchronous: true
@@ -578,22 +484,6 @@ Item {
                                     radius: Tokens.rounding.medium
 
                                     WindowPreview {
-                                        // Only the page in view and its immediate
-                                        // neighbours: a workspace three swipes away
-                                        // is not worth a stream. The window shown in
-                                        // the info panel is excluded too -- that
-                                        // panel puts up its own frozen frame. And
-                                        // not while something outside the grid has
-                                        // claimed the stream: KWin serves one node
-                                        // per window and a node feeds one consumer,
-                                        // so holding on would leave the other one
-                                        // drawing black.
-                                        // The neighbour rule is about pages that
-                                        // cannot be seen, so it must not apply to a
-                                        // card being carried: a drag held across two
-                                        // pages left its own page two away, and the
-                                        // card in the user's hand collapsed to an
-                                        // icon mid-gesture.
                                         active: root.opacity > 0
                                             && (dragHandler.active || Math.abs(page.index - listView.currentIndex) <= 1)
                                             && !(root.activeInfoClient && root.activeInfoClient.address === modelData.address)
@@ -672,9 +562,6 @@ Item {
                                 anchors.right: cardLayout.right
                                 anchors.margins: Tokens.padding.small
                                 spacing: Tokens.spacing.small
-                                // Hidden for the whole drag: it belongs to the
-                                // card sitting in the grid, and left up it hovers
-                                // over the collapsed icon with nothing to act on.
                                 opacity: hover.hovered && !dragHandler.active ? 1 : 0
                                 visible: opacity > 0.01
 
@@ -747,11 +634,6 @@ Item {
             onTriggered: {
                 if (Kwin.workspaces.length > listView.currentIndex) {
                     const wId = Kwin.workspaces[listView.currentIndex].index;
-                    // Compared against this screen's desktop, not the global
-                    // activeId: with per-output desktops the global one belongs
-                    // to whichever screen is focused, so testing against it made
-                    // this fire on the screen that had not moved and stay quiet
-                    // on the one that had.
                     if (root.activeWsId !== wId) {
                         Kwin.switchToWorkspace(wId, root.screen.name);
                     }
@@ -823,14 +705,6 @@ Item {
         interval: 500
         onTriggered: root.ignoreNextSwitch = false
     }
-    // What a drag arriving from another screen looks like here.
-    //
-    // The card itself belongs to the overview it started in and is clipped at
-    // that screen's edge, so without this a window dragged across simply
-    // disappears halfway and is released onto nothing visible. This follows the
-    // published pointer position and shows the same live preview the card was
-    // showing, so the window keeps its identity across the gap rather than
-    // turning into an icon on the way.
     Item {
         id: incoming
 
@@ -857,8 +731,6 @@ Item {
             return 16 / 9;
         }
 
-        // The size the card had on the screen it left, so crossing the gap does
-        // not resize the thing being carried.
         height: Visibilities.dragHeight > 0 ? Visibilities.dragHeight : Math.round(width / Math.max(0.2, incoming.aspect))
         opacity: arriving ? 1 : 0
         visible: opacity > 0.01
@@ -867,8 +739,6 @@ Item {
         y: Visibilities.dragY - root.screen.y - height / 2
         z: 1000
 
-        // Claimed while it is here so the card back on the origin screen gives
-        // the stream up; a node feeds one consumer.
         onArrivingChanged: Visibilities.streamClaim = incoming.arriving ? Visibilities.dragAddress : ""
 
         Behavior on opacity {
@@ -892,24 +762,9 @@ Item {
         }
     }
 
-    // Holding a drag against an edge pages through workspaces, one step at a
-    // time for as long as it is held.
-    //
-    // It used to page the instant the drag touched the edge, which made the
-    // edge unusable as a way off the screen: on a side with another monitor,
-    // simply travelling towards it paged a workspace on the way past. Waiting
-    // for the drag to actually rest there separates the two gestures -- pass
-    // through and you reach the next monitor, stop and you page -- so both work
-    // on the same edge without a mode.
     Timer {
         id: edgeDwell
 
-        // running is bound rather than started and stopped by hand. A drag
-        // released while still inside an edge area never delivers an exit, so
-        // the stop call that was meant to pair with the start never arrived and
-        // the timer kept paging on its own long after the pointer was gone --
-        // workspaces flipping by themselves with nothing held. Tying it to the
-        // drag itself means it cannot outlive one.
         interval: 900
         repeat: true
         running: root.isDragging && root.edgeDirection !== 0

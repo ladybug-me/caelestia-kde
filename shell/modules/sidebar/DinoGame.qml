@@ -13,14 +13,12 @@ import qs.utils
 Item {
     id: root
     
-    // Smoothly animated theme color
     property color activeColor: DinoGameBackend.isInverted ? Colours.palette.m3inverseOnSurface : Colours.palette.m3onSurface
     property color bgColor: DinoGameBackend.isInverted ? Colours.palette.m3inverseSurface : "transparent"
 
     Behavior on activeColor { CAnim { duration: 500 } }
     Behavior on bgColor { CAnim { duration: 500 } }
     
-    // Game variables alias
     property bool isPlaying: DinoGameBackend.isPlaying
 
     property bool isGameOver: DinoGameBackend.isGameOver
@@ -91,14 +89,12 @@ Item {
         }
     }
     
-    // Background Block for Day/Night Cycle
     Rectangle {
         anchors.fill: parent
         color: root.bgColor
         z: -1
     }
     
-    // Scrolling Authentic Ground
     Item {
         visible: root.isPlaying || root.isGameOver
         width: parent.width
@@ -136,7 +132,6 @@ Item {
         }
     }
     
-    // Static Scene (when not playing)
     ColumnLayout {
         anchors.centerIn: parent
         visible: !root.isPlaying && !root.isGameOver
@@ -259,12 +254,10 @@ Item {
         }
     }
     
-    // Dynamic Scene (when playing)
     Item {
         anchors.fill: parent
         visible: root.isPlaying || root.isGameOver
         
-        // Parallax Clouds
         Repeater {
             model: DinoGameBackend.clouds
 
@@ -284,7 +277,6 @@ Item {
             }
         }
         
-        // Dino
         Image {
             id: dino
 
@@ -307,7 +299,6 @@ Item {
             }
         }
         
-        // Score
         StyledText {
             text: "HI " + ("00000" + Math.floor(DinoGameBackend.highScore)).slice(-5) + "  " + ("00000" + Math.floor(DinoGameBackend.score)).slice(-5)
             anchors.top: parent.top
@@ -318,7 +309,6 @@ Item {
             Component.onCompleted: font.features = {"tnum": 1}
         }
         
-        // Obstacles renderer
         Repeater {
             model: DinoGameBackend.obstacles
 
@@ -341,7 +331,6 @@ Item {
         }
     }
     
-    // Game Over Text
     StyledText {
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) < 99999
         text: "G A M E   O V E R\nClick to restart"
@@ -352,7 +341,6 @@ Item {
         color: root.activeColor
     }
     
-    // Win Text
     StyledText {
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) >= 99999
         text: "Y O U   W I N !\nNow go touch grass"

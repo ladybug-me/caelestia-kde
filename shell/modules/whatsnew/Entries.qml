@@ -1,18 +1,7 @@
 import QtQuick
 import Quickshell
 
-// The What's New release notes.
-//
-// Append new entries to the end of `list` with a revision higher than every
-// entry above them. Never renumber or reorder an entry that has already
-// shipped: an entry's revision is how the shell records that a user has
-// acknowledged it, so changing one either re-shows the entry to everybody or
-// hides it from them. Pruning old entries is fine, but their revisions stay
-// used up, which is why this list does not start at 1. See the authoring notes
-// in ../../assets/whatsnew/README.md.
 QtObject {
-    // Bare media names are resolved against this directory; "root:" addresses a
-    // shared shell asset, matching the convention used by GlobalConfig paths.
     readonly property string assetDir: "../../assets/whatsnew/"
 
     readonly property var list: [

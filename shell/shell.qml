@@ -34,7 +34,6 @@ ShellRoot {
 
     property var regionSelector: RegionSelector {}
 
-    // Force service initialization
     property var _arpcInit: null
     property var _gameModeInit: null
     property var _updateCheckerInit: null
@@ -52,10 +51,6 @@ ShellRoot {
         value: root
     }
 
-    // UI translations. The catalogues live next to the shell (shell/translations,
-    // installed as <shell>/translations/caelestia_<code>.qm), so resolving the
-    // path relative to this file works both from the install tree and when
-    // running the shell straight from a checkout.
     Binding {
         target: Translations
         property: "extraSearchPaths"
@@ -68,7 +63,6 @@ ShellRoot {
         value: GlobalConfig.general.language
     }
 
-    Fonts {}
     GSFLoader {}
     ServiceLoader {}
 
@@ -76,8 +70,6 @@ ShellRoot {
     BadAppleOverlay {}
 
     Drawers {}
-    // AreaPicker {}
-    // PolkitModule {}
 
     IpcHandler {
         function screenshot(): void {

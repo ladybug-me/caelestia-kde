@@ -35,15 +35,11 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Visible icons
         SectionHeader {
             first: true
             text: qsTr("Visible icons")
         }
 
-        // An ordered list rather than a wall of switches: what is in it is what the
-        // bar draws, in the order it draws it, and entries can be added, removed
-        // and dragged from here.
         ListEditor {
             function labelFor(item: var): string {
                 return root.builtinIcons[item.id] ?? item.id;
@@ -61,11 +57,6 @@ PageBase {
             onItemToggled: (index, checked) => GlobalConfig.bar.statusIcons.at(index).enabled = checked
         }
 
-        // Only what the list does not have yet: an entry that is in it is already
-        // there to be switched or dragged, and adding a second copy would draw the
-        // icon twice and leave `move` unable to tell the two apart, as it finds an
-        // entry by id. When everything is in the list the row goes away rather than
-        // offering an empty picker.
         DialogSelectButton {
             id: addItemContainer
 
@@ -84,7 +75,6 @@ PageBase {
             }
         }
 
-        // Not an icon of its own: the Wi-Fi glyph rides on the network entry.
         ToggleRow {
             Layout.fillWidth: true
             text: qsTr("Wi-Fi")
@@ -93,7 +83,6 @@ PageBase {
             onToggled: GlobalConfig.bar.status.showWifi = checked
         }
 
-        // Behaviour
         SectionHeader {
             text: qsTr("Behavior")
         }

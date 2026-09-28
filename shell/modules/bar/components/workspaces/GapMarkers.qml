@@ -12,9 +12,7 @@ import qs.services
 Item {
     id: root
 
-    /// The strip's live pills, in strip order.
     required property var workspaces
-    /// Gap the strip leaves between pills.
     required property int wsSpacing
     required property bool isHorizontal
 
@@ -31,11 +29,6 @@ Item {
             required property int index
             required property Workspace modelData
 
-            /// A marker only belongs in a gap the strip made by leaving a
-            /// desktop out, which is the case when the pill before this one is
-            /// not the desktop right before it. It also slides out of the way of
-            /// the active pill, whose indicator grows into that gap, and of the
-            /// pill the active one just left.
             property real shift: {
                 if (!modelData || index === 0)
                     return 0;

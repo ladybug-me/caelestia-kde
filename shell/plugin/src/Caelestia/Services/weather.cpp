@@ -333,7 +333,7 @@ void Weather::start() {
     }
     if (!m_refreshTimer) {
         m_refreshTimer = new QTimer(this);
-        m_refreshTimer->setInterval(900000); // 15 minutes
+        m_refreshTimer->setInterval(900000);
         connect(m_refreshTimer, &QTimer::timeout, this, &Weather::fetchWeatherData);
     }
     m_refreshTimer->start();
@@ -364,7 +364,7 @@ void Weather::stop() {
 
 void Weather::fetchLocation() {
     if (m_locReply) {
-        return; // Already in-flight
+        return;
     }
 
     QUrl url(QStringLiteral("https://ipinfo.io/json"));
@@ -404,7 +404,7 @@ void Weather::fetchCityFromCoords(const QString& coords) {
     if (coords.isEmpty() || !coords.contains(QLatin1Char(',')))
         return;
     if (m_cityReply) {
-        return; // Already in-flight
+        return;
     }
 
     const auto parts = coords.split(QLatin1Char(','));
@@ -482,7 +482,7 @@ void Weather::fetchWeatherData() {
     }
 
     if (m_weatherReply) {
-        return; // Already in-flight
+        return;
     }
 
     QUrl url(QStringLiteral("https://api.open-meteo.com/v1/forecast"));
@@ -572,12 +572,6 @@ void Weather::parseWeatherJson(const QJsonObject& json) {
         m_sunset = dt.isValid() ? dt.time().toString(timeFormat) : QStringLiteral("--:--");
     }
 
-    // Parse 7-day forecast
-    //
-    // Each field arrives as its own array, and nothing makes them the same
-    // length: a truncated or partially-written reply leaves `time` longer than
-    // the rest, and reading past the end of one yields an Undefined value that
-    // silently becomes 0. Walk the shortest of them instead.
     const qsizetype dailyCount =
         qMin(dailyTimes.size(), qMin(dailyMax.size(), qMin(dailyMin.size(), dailyCodes.size())));
     QVariantList forecastList;
@@ -600,15 +594,12 @@ void Weather::parseWeatherJson(const QJsonObject& json) {
     }
     m_forecast = forecastList;
 
-    // Parse hourly forecast
     QVariantList hourlyList;
     const auto hourlyTimes = hourly.value(QStringLiteral("time")).toArray();
     const auto hourlyTemps = hourly.value(QStringLiteral("temperature_2m")).toArray();
     const auto hourlyPrecip = hourly.value(QStringLiteral("precipitation_probability")).toArray();
     const auto hourlyCodes = hourly.value(QStringLiteral("weather_code")).toArray();
 
-    // The same cross-array assumption as the daily block above, and the same
-    // guard against it.
     const qsizetype hourlyCount =
         qMin(hourlyTimes.size(), qMin(hourlyTemps.size(), qMin(hourlyPrecip.size(), hourlyCodes.size())));
 

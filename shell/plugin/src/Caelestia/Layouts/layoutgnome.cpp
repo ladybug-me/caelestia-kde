@@ -124,7 +124,7 @@ QVariantMap LayoutGnome::calculateLayout(
 
         double horizontalScale = (areaWidth - hspacing) / std::max(1.0, gridWidth);
         double verticalScale = (areaHeight - vspacing) / std::max(1.0, gridHeight);
-        double scale = std::min({ horizontalScale, verticalScale, 0.95 }); // WINDOW_PREVIEW_MAXIMUM_SCALE
+        double scale = std::min({ horizontalScale, verticalScale, 0.95 });
 
         double scaledLayoutWidth = gridWidth * scale + hspacing;
         double scaledLayoutHeight = gridHeight * scale + vspacing;
@@ -140,7 +140,6 @@ QVariantMap LayoutGnome::calculateLayout(
         lastNumColumns = numColumns;
     }
 
-    // Apply layout slots
     for (RowInfo& row : bestRowsData) {
         row.width = row.fullWidth * bestScale + std::max(0, (int)row.windows.size() - 1) * columnSpacing;
         row.height = row.fullHeight * bestScale;

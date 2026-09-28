@@ -36,14 +36,14 @@ KWinWorkspaceState* KWinWorkspaceState::instance() {
 int KWinWorkspaceState::indexForId(const QString& id) const {
     for (int i = 0; i < m_desktops.size(); ++i) {
         if (m_desktops[i].id == id) {
-            return i + 1; // Workspaces are 1-indexed in QML
+            return i + 1;
         }
     }
     return -1;
 }
 
 QString KWinWorkspaceState::uuidForIndex(int index) const {
-    int pos = index - 1; // Workspaces are 1-indexed in QML
+    int pos = index - 1;
     if (pos >= 0 && pos < m_desktops.size()) {
         return m_desktops[pos].id;
     }
@@ -125,14 +125,7 @@ void KWinWorkspaceState::setupTrackerServer() {
             qDebug() << "KWinWorkspaceState: New connection to tracker server";
             QLocalSocket* clientSocket = m_trackerServer->nextPendingConnection();
             connect(clientSocket, &QLocalSocket::readyRead, this, [this, clientSocket]() {
-                // Two record formats. The current one names the output the
-                // report is about; the older one, which a stale effect still
-                // sends, does not -- and a stale effect is normal after an
-                // update, because a rebuilt one only loads once the session
-                // restarts. They are told apart by the magic in the first
-                // field, which the old format used for a small desktop number
-                // and so can never produce.
-                constexpr quint32 kMagic = 0x43414557; // 'CAEW'
+                constexpr quint32 kMagic = 0x43414557;
                 struct DesktopReport {
                     quint32 magic;
                     qint32 desktop;
@@ -154,7 +147,7 @@ void KWinWorkspaceState::setupTrackerServer() {
 
                     if (magic == kMagic) {
                         if (clientSocket->bytesAvailable() < static_cast<qint64>(sizeof(DesktopReport))) {
-                            break; // wait for the rest of the record
+                            break;
                         }
                         DesktopReport report;
                         clientSocket->read(reinterpret_cast<char*>(&report), sizeof(report));
@@ -349,13 +342,6 @@ void KWinWorkspaceState::switchTo(const QString& id, const QString& output) {
     const QString targetUuid = resolveDesktopUuid(id);
 
     if (!targetUuid.isEmpty()) {
-        // Naming the screen needs the workspace-tracker effect, which can target
-        // an output directly; D-Bus can only set the desktop of whichever output
-        // is active. The effect is installed system-wide and a rebuilt one does
-        // not load until the session restarts, so a shell update routinely runs
-        // against a version without this method -- and a fire-and-forget call to
-        // a method that is not there fails silently, which would leave switching
-        // workspaces doing nothing at all. Probed once, then remembered.
         if (!output.isEmpty()) {
             if (m_perOutputSwitchAvailable == -1) {
                 QDBusMessage probe = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"),
@@ -409,9 +395,6 @@ void KWinWorkspaceState::previousDesktop() {
 }
 
 void KWinWorkspaceState::setShowingDesktop(bool showing) {
-    // showDesktop() takes the state to end up in rather than a toggle request,
-    // and it is the same state the showingDesktop property reports back, so the
-    // caller always sends the opposite of what it last read.
     QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"),
         QStringLiteral("org.kde.KWin"), QStringLiteral("showDesktop"));
     msg << showing;
@@ -479,9 +462,7 @@ void KWinWorkspaceState::onCurrentChanged(const QString& id) {
     updateActiveId();
 }
 
-void KWinWorkspaceState::onCountChanged(uint count) {
-    // Rely on desktopCreated / desktopRemoved for actual data
-}
+void KWinWorkspaceState::onCountChanged(uint count) {}
 
 void KWinWorkspaceState::onRowsChanged(uint rows) {
     if (rows > 0 && rows != m_rows) {

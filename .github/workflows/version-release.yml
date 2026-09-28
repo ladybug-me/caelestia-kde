@@ -298,8 +298,7 @@ jobs:
           mkdir -p "dist/$ROOT"
           # /dist is anchored: the staging directory lives inside the tree being
           # staged, and without this rsync copies it into itself.
-          rsync -a --exclude '/dist' --exclude '.git' --exclude '.gitmodules' \
-            --exclude 'shell/assets/fonts' ./ "dist/$ROOT/"
+          rsync -a --exclude '/dist' --exclude '.git' --exclude '.gitmodules' ./ "dist/$ROOT/"
           git rev-parse HEAD > "dist/$ROOT/REVISION"
 
       - name: Build the Tarball

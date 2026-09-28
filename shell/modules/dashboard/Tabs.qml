@@ -116,7 +116,7 @@ Item {
         readonly property bool current: TabBar.tabBar.currentItem === this
 
         Layout.fillWidth: true
-        Layout.preferredWidth: 1 // Uniform width across all tabs
+        Layout.preferredWidth: 1
         implicitWidth: implicitContentWidth
         implicitHeight: implicitContentHeight
         background: null

@@ -148,7 +148,7 @@ Item {
 
             anchors.left: parent.left
             anchors.right: parent.right
-            height: Math.min(implicitHeight, parent.height) // Clamp to parent height due to overshoot anim
+            height: Math.min(implicitHeight, parent.height)
             color: "transparent"
 
             last: true

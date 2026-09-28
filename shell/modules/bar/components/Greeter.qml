@@ -174,7 +174,6 @@ Item {
         anchors.left: bar.isHorizontal ? icon.right : undefined
         anchors.leftMargin: bar.isHorizontal ? Tokens.spacing.small : 0
 
-        // Custom Title component does not have font/color directly, StyledText child does
         opacity: root.current === this ? 1 : 0
 
         StyledText {

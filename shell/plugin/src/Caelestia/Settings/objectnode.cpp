@@ -17,7 +17,6 @@ void ObjectNode::resetOption(const QString& key) {
         return;
     }
 
-    // Warn and ignore if this is a global node property and we are an overlay
     if (desc->isNode && (m_globalOnly || desc->globalOnly()) && fallbackNode()) {
         qCWarning(lcSettings,
             "Attempted to reset global node %s, ignoring. "
@@ -58,7 +57,7 @@ QJsonValue ObjectNode::toJson(bool sparse) const {
         if (sparse && !isOverride(desc.key))
             continue;
 
-        if (!desc.codec) { // This should not happen
+        if (!desc.codec) {
             qCCritical(lcSettings, "No codec found for type %s, not serialising %s", desc.type.name(),
                 qUtf8Printable(pathFor(desc.key)));
             continue;
@@ -74,7 +73,7 @@ QJsonValue ObjectNode::toJson(bool sparse) const {
 }
 
 bool ObjectNode::syncJson(const QJsonValue& json, QList<Diagnostic>& diagnostics) {
-    m_quarantine.reset(); // Clear out old quarantine
+    m_quarantine.reset();
 
     if (!json.isObject()) {
         const auto d = Diagnostic::mismatch(ExpectedType::Object, json, path());
@@ -83,7 +82,6 @@ bool ObjectNode::syncJson(const QJsonValue& json, QList<Diagnostic>& diagnostics
         return false;
     }
 
-    // Refuse syncs to global only nodes on overlays
     if (rejectGlobalSync(diagnostics))
         return false;
 
@@ -110,7 +108,6 @@ QSet<QString> ObjectNode::loadFromJson(const QJsonObject& json, QList<Diagnostic
     QSet<QString> visited;
     visited.reserve(json.size());
 
-    // Convenience macro for quarantine then skip
 #define SKIP                                                                                                           \
     quarantineKey(key, v);                                                                                             \
     continue
@@ -130,14 +127,13 @@ QSet<QString> ObjectNode::loadFromJson(const QJsonObject& json, QList<Diagnostic
             SKIP;
         }
 
-        // Recurse into child nodes
         if (desc->isNode) {
             qCDebug(lcSettings) << "  Recursing into" << key;
             auto* const node = value(key).value<Node*>();
             if (node->syncJson(v, diagnostics))
                 visited << key;
             else
-                quarantineKey(key, v); // Quarantine entire node cause sync failed
+                quarantineKey(key, v);
             continue;
         }
 
@@ -146,7 +142,7 @@ QSet<QString> ObjectNode::loadFromJson(const QJsonObject& json, QList<Diagnostic
             SKIP;
         }
 
-        if (!desc->codec) { // This should not happen
+        if (!desc->codec) {
             qCCritical(lcSettings, "No codec found for type %s, not loading %s", desc->type.name(),
                 qUtf8Printable(pathFor(key)));
             SKIP;
@@ -178,13 +174,11 @@ void ObjectNode::resetUnvisited(const QSet<QString>& visited) {
         if (visited.contains(desc.key))
             continue;
 
-        // Reset nodes recursively
         if (desc.isNode) {
             value(desc.key).value<Node*>()->resetToDefaults();
             continue;
         }
 
-        // Skip global options on overlays
         if ((m_globalOnly || desc.globalOnly()) && fallbackNode())
             continue;
 

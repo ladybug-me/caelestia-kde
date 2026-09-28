@@ -14,7 +14,6 @@ Item {
     property bool isFetching: false
     property string errorMessage: ""
     
-    // Bind colors at the root to avoid delegate scope resolution issues
     readonly property color cBgHigh: Colours.tPalette.m3surfaceContainerHigh
     readonly property color cBgHighest: Colours.tPalette.m3surfaceContainerHighest
     readonly property color cOnSurface: Colours.palette.m3onSurface
@@ -46,9 +45,6 @@ Item {
         isFetching = true;
         errorMessage = "";
         
-        // Default to Arch; re-read /etc/os-release to decide at fetch time
-        // so the feed is correct even if the shell was started before the OS
-        // release file was updated.
         var feedUrl = "https://archlinux.org/feeds/news/";
         if (_distroId === "") {
             var proc = newsFeedUrl();
@@ -115,11 +111,9 @@ Item {
             var dateMatch = dateRegex.exec(itemContent);
             
             if (titleMatch && linkMatch && dateMatch) {
-                // Remove CDATA if present or unescape basic HTML entities
                 var title = titleMatch[1].replace(/<!\[CDATA\[(.*?)\]\]>/g, "$1").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&#039;/g, "'");
                 var dateStr = dateMatch[1];
                 
-                // Format date nicely
                 var dateObj = new Date(dateStr);
                 var formattedDate = dateObj.toLocaleDateString();
                 if (formattedDate === "Invalid Date") formattedDate = dateStr;
@@ -146,7 +140,6 @@ Item {
         anchors.margins: Tokens.padding.medium
         spacing: Tokens.spacing.medium
 
-        // Header
         RowLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.small
@@ -164,7 +157,6 @@ Item {
             }
         }
 
-        // Error message
         StyledText {
             Layout.fillWidth: true
             visible: root.errorMessage !== ""
@@ -173,7 +165,6 @@ Item {
             wrapMode: Text.WordWrap
         }
 
-        // Loading Indicator
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -186,7 +177,6 @@ Item {
             }
         }
 
-        // List
         ListView {
             id: newsListView
 

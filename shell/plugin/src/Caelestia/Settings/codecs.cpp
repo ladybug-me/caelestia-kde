@@ -10,7 +10,6 @@ namespace caelestia::settings {
 
 namespace {
 
-// We don't know the option here so it isn't set, it should be set by the caller
 DecodeResult error(DiagnosticType::Type type, const QString& message) {
     Diagnostic error;
     error.type = type;
@@ -73,10 +72,8 @@ ExpectedType ValueCodec::expected() const {
 }
 
 ValueCodec* ValueCodec::codecFor(const QMetaType& type) {
-    // Cache for codecs, keyed by type id
     static QHash<int, ValueCodec*> registry;
 
-    // Cached lookup
     if (const auto it = registry.constFind(type.id()); it != registry.constEnd())
         return *it;
 
@@ -108,7 +105,6 @@ ValueCodec* ValueCodec::codecFor(const QMetaType& type) {
         break;
     }
 
-    // Cache codec
     if (codec)
         registry.insert(type.id(), codec);
 
@@ -116,7 +112,6 @@ ValueCodec* ValueCodec::codecFor(const QMetaType& type) {
 }
 
 ValueCodec* ValueCodec::unionFor(const QList<QMetaType>& types) {
-    // Cache for union codecs, keyed by their alternatives
     static QHash<QString, ValueCodec*> registry;
 
     if (types.size() < 2) {
@@ -126,7 +121,6 @@ ValueCodec* ValueCodec::unionFor(const QList<QMetaType>& types) {
 
     const auto key = unionKey(types);
 
-    // Cached lookup
     if (const auto it = registry.constFind(key); it != registry.constEnd())
         return *it;
 
@@ -153,7 +147,6 @@ QJsonValue BoolCodec::encode(const QVariant& value) const {
 }
 
 DecodeResult BoolCodec::decode(const QJsonValue& value) const {
-    // 1 and "true" are not booleans
     if (!value.isBool())
         return mismatch(ExpectedType::Bool, value);
 
@@ -300,7 +293,6 @@ template <typename Container> DecodeResult ListCodec<Container>::decode(const QJ
     for (qsizetype i = 0; i < array.size(); ++i) {
         auto result = m_elementCodec->decode(array.at(i));
 
-        // Reject the entire list if any element is invalid
         if (result.error) {
             result.indexPath.prepend(i);
             result.error->message = QStringLiteral("Element %1: %2").arg(i).arg(result.error->message);
@@ -324,7 +316,6 @@ UnionCodec::UnionCodec(const QList<const ValueCodec*>& alternatives)
 }
 
 QJsonValue UnionCodec::encode(const QVariant& value) const {
-    // An unset union is simply absent from the file
     if (!value.isValid())
         return QJsonValue::Undefined;
 
@@ -343,15 +334,12 @@ DecodeResult UnionCodec::decode(const QJsonValue& value) const {
     for (const auto* codec : m_alternatives) {
         auto result = codec->decode(value);
 
-        // The first alternative to accept the value wins
         if (!result.error)
             return result;
 
-        // Non-nested type mismatch just means try another alternative
         if (result.indexPath.isEmpty() && result.error->type == DiagnosticType::TypeMismatch)
             continue;
 
-        // Report the deepest error that isn't a plain type mismatch
         if (!best || result.indexPath.size() > best->indexPath.size())
             best = std::move(result);
     }
@@ -359,11 +347,9 @@ DecodeResult UnionCodec::decode(const QJsonValue& value) const {
     if (best)
         return *best;
 
-    // Nothing matched the shape, so report every alternative
     return mismatch(m_expectedTypes, value);
 }
 
-// Instantiated for types as needed
 template class ListCodec<QStringList>;
 template class ListCodec<QList<qreal>>;
 

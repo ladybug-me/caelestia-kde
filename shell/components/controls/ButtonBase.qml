@@ -19,7 +19,7 @@ StyledRect {
 
     property bool radiusMorph: true
     property alias shapeMorph: stateLayer.shapeMorph
-    property bool fillWidth // For ButtonRow
+    property bool fillWidth
 
     property font font: Tokens.font.body.small
     property int type: ButtonBase.Filled
@@ -41,7 +41,7 @@ StyledRect {
     property color disabledOnColour: Qt.alpha(Colours.palette.m3onSurface, 0.38)
 
     property bool internalChecked
-    property real shapeMorphExpansion: shapeMorph && pressed ? 24 : 0 // Apparently it's always 24px no matter the width of the button
+    property real shapeMorphExpansion: shapeMorph && pressed ? 24 : 0
     readonly property color onColour: disabled ? disabledOnColour : internalChecked ? activeOnColour : inactiveOnColour
 
     property real pressedRadius: Tokens.rounding.small
@@ -61,13 +61,8 @@ StyledRect {
             return (implicitHeight || height) / 2 * Math.min(1, Tokens.rounding.scale);
         return defaultRadius;
     }
-    // Text-type buttons have no background - fade the (otherwise unused)
-    // inactiveColour's alpha to 0 instead of switching to the literal
-    // "transparent" string, which would animate the RGB channels through
-    // black as Behavior on color (inherited from StyledRect) interpolates.
     color: type === ButtonBase.Text ? Qt.alpha(inactiveColour, 0) : disabled ? disabledColour : internalChecked ? activeColour : inactiveColour
 
-    // Make size required so we don't forget to set it
     required implicitWidth
     required implicitHeight
 

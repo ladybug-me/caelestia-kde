@@ -42,7 +42,6 @@ StyledRect {
             }
         }
 
-        // Sparkline graph
         Item {
             Layout.topMargin: Tokens.spacing.medium
             Layout.bottomMargin: Tokens.spacing.small
@@ -90,7 +89,6 @@ StyledRect {
                 }
             }
 
-            // "Collecting data" placeholder
             StyledText {
                 anchors.centerIn: parent
                 text: qsTr("Collecting data...")
@@ -100,7 +98,6 @@ StyledRect {
             }
         }
 
-        // Download row
         RowLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.small
@@ -128,7 +125,6 @@ StyledRect {
             }
         }
 
-        // Upload row
         RowLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.small
@@ -156,7 +152,6 @@ StyledRect {
             }
         }
 
-        // Session totals
         RowLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.small

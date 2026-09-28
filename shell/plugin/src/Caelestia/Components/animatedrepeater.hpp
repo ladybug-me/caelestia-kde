@@ -85,18 +85,14 @@ private:
         Model
     };
 
-    // Delegate properties in the order they must be applied
     using PropertyList = QList<std::pair<QString, QVariant>>;
 
-    // Attached properties
     [[nodiscard]] static AnimatedRepeaterAttached* attachedFor(QQuickItem* item, bool create = false);
 
-    // Model access
     [[nodiscard]] int modelCount() const;
     [[nodiscard]] PropertyList itemProperties(int index) const;
     void updateItemData(int index);
 
-    // Item lifecycle
     void regenerate();
     [[nodiscard]] QQuickItem* createItem(int index, bool adding);
     void insertItems(int first, int last, bool adding);
@@ -108,7 +104,6 @@ private:
     void scheduleAddFlush();
     void flushPendingAdds();
 
-    // Model connection
     void connectModel();
     void disconnectModel();
     void onRowsInserted(const QModelIndex& parent, int first, int last);

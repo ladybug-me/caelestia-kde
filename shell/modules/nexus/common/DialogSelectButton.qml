@@ -46,7 +46,7 @@ DialogRowButton {
 
                 anchors.left: ListView.view.contentItem.left
                 anchors.right: ListView.view.contentItem.right
-                anchors.margins: 1 // Gets cut off for some reason without this
+                anchors.margins: 1
                 implicitHeight: label.implicitHeight + Tokens.padding.medium * 2
 
                 radius: stateLayer.pressed ? Tokens.rounding.extraSmall : selected ? Tokens.rounding.largeIncreased : Tokens.rounding.medium

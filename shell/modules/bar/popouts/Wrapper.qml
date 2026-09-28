@@ -36,11 +36,9 @@ Item {
     property alias tasksModel: popoutState.tasksModel
     property real currentCenter
     property string detachedMode
-    // Dummy object so Tokens attached prop resolves to global config
-    // Anim configs are not per-monitor
     readonly property QtObject dummy: QtObject {}
     property int animLength: dummy.Tokens.anim.durations.expressiveDefaultSpatial
-    property var animCurve: dummy.Tokens.anim.expressiveDefaultSpatial // The easingCurve type is Qt 6.11+ so we gotta use var for now
+    property var animCurve: dummy.Tokens.anim.expressiveDefaultSpatial
 
     function setAnims(detach: bool): void {
         const type = `expressive${detach ? "Slow" : "Default"}Spatial`;
@@ -53,7 +51,6 @@ Item {
             detachedMode = mode;
             focus = true;
         } else {
-            // The mode string is a page key; the registry owns the position.
             const pageIdx = PageRegistry.indexForKey(mode);
             WindowFactory.create(null, { initialPageIdx: pageIdx >= 0 ? pageIdx : 0 });
             close();
@@ -80,7 +77,6 @@ Item {
         close();
     }
     Keys.onPressed: event => {
-        // Don't intercept keys when password popout is active - let it handle them
         if (currentName === "wirelesspassword") {
             event.accepted = false;
         }
@@ -149,7 +145,6 @@ Item {
 
         active: false
         opacity: 0
-        // Makes the loader load on the same frame shouldBeActive becomes true, which ensures size is set
         states: State {
             name: "active"
             when: comp.shouldBeActive

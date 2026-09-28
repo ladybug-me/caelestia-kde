@@ -34,8 +34,6 @@ void CircularBuffer::setCapacity(int capacity) {
         return;
     }
 
-    // Re-push old values, keeping the most recent ones.
-    // Initialize maximum from the first restored value to preserve negative-only ranges.
     const auto start = old.size() > capacity ? old.size() - capacity : 0;
     bool hasRestoredValue = false;
     for (auto i = start; i < old.size(); ++i) {

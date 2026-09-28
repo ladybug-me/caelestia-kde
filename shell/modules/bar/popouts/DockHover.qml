@@ -16,26 +16,16 @@ StyledRect {
 
     required property PopoutState popouts
     property var model: popouts.dockModel
-    // Resolved through the same helper the taskbar tile uses, so the hover popup
-    // can never disagree with the tile it belongs to.
     readonly property string iconSource: model ? WinIcons.sourceFor(model.entry, model.appClass, model.iconName, model.pid ?? 0) : ""
     property MprisPlayer player: {
         if (!model) return null;
         return Players.list.find(p => p.identity.toLowerCase().includes(model.appClass.toLowerCase()) || (model.id && p.identity.toLowerCase().includes(model.id.toLowerCase().replace(".desktop", "")))) || null;
     }
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
     readonly property int previewWidth: Math.round(Tokens.sizes.bar.windowPreviewSize * scaleOffset)
     readonly property int cardWidth: (root.model && root.model.toplevels && root.model.toplevels.length > 1) ? Math.round(previewWidth * 0.55) : previewWidth
-    // root.model is a snapshot taken when the popout opened, not a live binding, so
-    // it never learns a window closed on its own — that card's screencast dies
-    // (KWin has nothing left to stream) and falls back to the app icon instead of
-    // the card disappearing. Closing a window here therefore also has to patch the
-    // snapshot by hand: drop the closed toplevel, and if none are left, close the
-    // popout outright unless the app is pinned, in which case the empty-state
-    // fallback below is the correct thing to show.
 
     function closeToplevel(address: string): void {
         Kwin.clearHighlight();
@@ -68,7 +58,6 @@ StyledRect {
     clip: true
     implicitWidth: mainLayout.implicitWidth + Tokens.padding.medium * scaleOffset * 2
     implicitHeight: mainLayout.implicitHeight + Tokens.padding.medium * scaleOffset * 2
-    // Explicit sizing for popout positioning calculations
     width: implicitWidth
     height: implicitHeight
 
@@ -122,7 +111,6 @@ StyledRect {
                 }
             }
         }
-        // Active windows row - live thumbnail previews, native Plasma taskbar style
         RowLayout {
             id: windowsRow
 
@@ -136,10 +124,6 @@ StyledRect {
 
                     required property var modelData
                     required property int index
-                    // Match thumbnail height to the window's actual aspect ratio
-                    // (modelData.width/height come from KWin's frameGeometry via DBus),
-                    // clamped to a reasonable max height so tall windows don't explode
-                    // the popout.  Fall back to 16:10 if the geometry isn't available yet.
                     readonly property real windowAspect: {
                         const w = card.modelData.width;
                         const h = card.modelData.height;
@@ -147,7 +131,7 @@ StyledRect {
                     }
                     readonly property int thumbHeight: {
                         const raw = Math.round(root.cardWidth / windowAspect);
-                        const max = Math.round(root.cardWidth * 1.6); // never taller than 1.6× width
+                        const max = Math.round(root.cardWidth * 1.6);
                         const min = Math.round(root.cardWidth * 0.4);
                         return Math.max(min, Math.min(max, raw));
                     }
@@ -218,7 +202,6 @@ StyledRect {
                                 sourceAspect: card.windowAspect
                             }
 
-                            // Close button - only revealed while hovering this thumbnail
                             StyledRect {
                                 anchors.top: parent.top
                                 anchors.right: parent.right
@@ -267,14 +250,12 @@ StyledRect {
             }
             Layout.alignment: Qt.AlignLeft
         }
-        // Media controls separator
         StyledRect {
             implicitHeight: 1
             color: Colours.tPalette.m3surfaceVariant
             visible: !!root.player
             Layout.fillWidth: true
         }
-        // Media controls
         RowLayout {
             spacing: Tokens.spacing.medium
             visible: !!root.player

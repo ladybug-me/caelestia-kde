@@ -20,9 +20,6 @@ PageBase {
     isSubPage: true
 
     function saveToken(token) {
-        // The token goes to the child's environment, not its command line: /proc shows a
-        // command line to every user on the machine, and an environment is only readable
-        // by the process's own user.
         saveTokenProc.environment = ({ CAELESTIA_STEAMGRIDDB_KEY: token });
         if (!token) {
             saveTokenProc.command = ["secret-tool", "clear", "service", "caelestia-shell", "account", "steamgriddb"];

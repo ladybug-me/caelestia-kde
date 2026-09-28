@@ -14,7 +14,6 @@ StyledListView {
     property real bottomFadeOpacity: fadeShouldBeActive(false) ? 0 : 1
 
     function fadeShouldBeActive(isStart: bool): bool {
-        // When content is smaller than flickable size, hide fade when rebound starts
         if (contentHeight + topMargin + bottomMargin < height && rebound.running && ((isStart ? verticalOvershoot > 0 : verticalOvershoot < 0)))
             return false;
 

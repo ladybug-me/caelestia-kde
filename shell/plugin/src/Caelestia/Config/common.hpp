@@ -55,17 +55,14 @@ CONFIG_LIST_TYPE(IconRule, IconRuleList)
 
 } // namespace caelestia::config
 
-// Shorthand for declaring an ID'd entry (bar entries/status icons, quick toggles, etc)
 #define LIST_ENTRY(id, enabled) caelestia::settings::vmap({ { u"id"_s, u## #id##_s }, { u"enabled"_s, enabled } })
 
-// Shorthand for declaring an icon rule matched by name
 #define ICON_RULE_EXACT(name, icon)                                                                                    \
     caelestia::settings::vmap({                                                                                        \
         { u"name"_s, QStringLiteral(name) },                                                                           \
         { u"icon"_s, QStringLiteral(icon) },                                                                           \
     })
 
-// Shorthand for declaring an icon rule matched by regex
 #define ICON_RULE_REGEX(regex, flags, icon)                                                                            \
     caelestia::settings::vmap({                                                                                        \
         { u"regex"_s, QStringLiteral(regex) },                                                                         \

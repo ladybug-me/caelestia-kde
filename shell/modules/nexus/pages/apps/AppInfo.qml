@@ -23,7 +23,6 @@ PageBase {
     }
 
     onAppChanged: {
-        // Auto close when app lost
         if (!app)
             nState.closeSubPage();
     }
@@ -37,7 +36,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Header
         RowLayout {
             Layout.fillWidth: true
             Layout.leftMargin: Tokens.padding.small
@@ -72,7 +70,6 @@ PageBase {
             }
         }
 
-        // Dock
         SectionHeader {
             first: true
             text: qsTr("Taskbar & Dock")
@@ -91,7 +88,6 @@ PageBase {
             }
         }
 
-        // Launcher
         SectionHeader {
             text: qsTr("Launcher")
         }
@@ -120,7 +116,6 @@ PageBase {
             }
         }
 
-        // Details
         SectionHeader {
             text: qsTr("Details")
         }
@@ -178,7 +173,7 @@ PageBase {
                 id: value
 
                 Layout.fillWidth: true
-                Layout.maximumWidth: implicitWidth + 1 // Whyyyyyyyyy
+                Layout.maximumWidth: implicitWidth + 1
                 color: Colours.palette.m3onSurfaceVariant
                 font: Tokens.font.body.small
                 wrapMode: Text.WrapAtWordBoundaryOrAnywhere

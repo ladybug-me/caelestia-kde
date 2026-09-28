@@ -70,7 +70,6 @@ StyledWindow {
             MaterialShape.Cookie4Sided,
             MaterialShape.Cookie6Sided
         ];
-        // Fisher-Yates shuffle
         for (let i = shapes.length - 1; i > 0; i--) {
             let j = Math.floor(Math.random() * (i + 1));
             [shapes[i], shapes[j]] = [shapes[j], shapes[i]];
@@ -106,7 +105,6 @@ StyledWindow {
                 Anim { target: dialogContainer; property: "opacity"; to: 1; type: Anim.FastEffects }
                 Anim { target: dialogContainer; property: "scale"; to: 1; type: Anim.Emphasized }
             }
-            // Delegate size expansion to Behaviors so they constantly evaluate layout recalculations
             PropertyAction { target: dialogContainer; property: "isExpanded"; value: true }
             ParallelAnimation {
                 Anim { target: lockIcon; property: "scale"; to: 0; type: Anim.Emphasized }
@@ -129,7 +127,6 @@ StyledWindow {
         id: closeAnim
 
         ParallelAnimation {
-            // Trigger collapse logic via the Behavior state
             PropertyAction { target: dialogContainer; property: "isExpanded"; value: false }
             Anim { target: dialogBg; property: "radius"; to: dialogContainer.initialRadius }
             Anim { target: dialogContent; property: "scale"; to: 0 }
@@ -165,7 +162,6 @@ StyledWindow {
         implicitHeight: isExpanded ? targetHeight : iconSize
         scale: 0
 
-        // This prevents the snapshotting issue by persistently interpolating dynamically updating bindings
         Behavior on implicitWidth { Anim { type: Anim.EmphasizedLarge } }
         Behavior on implicitHeight { Anim { type: Anim.EmphasizedLarge } }
 
@@ -204,7 +200,6 @@ StyledWindow {
             scale: 0
             spacing: Tokens.spacing.large
 
-            // Title Container
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: titleLayout.implicitHeight + Tokens.padding.large * 2
@@ -228,7 +223,6 @@ StyledWindow {
                 }
             }
 
-            // Message and Command
             Column {
                 Layout.fillWidth: true
                 spacing: Tokens.spacing.medium

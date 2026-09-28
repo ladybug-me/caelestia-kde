@@ -40,16 +40,13 @@ Item {
     property color activeColor: Colours.palette.m3primary
     property bool hasAudio: false
 
-    // Raw values from CAVA (updated live at 60Hz)
     property real rawBass: 0.0
     property real rawEnergy: 0.0
     property real peakBass: 0.2
 
-    // Smoothed values for continuous motion
     property real smoothBass: 0.0
     property real smoothEnergy: 0.0
 
-    // Animation variables
     property real breathPhase: 0.0
     property real baseRotation: 0.0
     property real beatPulse: 0.0
@@ -88,20 +85,17 @@ Item {
             return;
         }
 
-        // Bass: lowest 4 frequency bins
         let bassSum = 0.0;
         const bassCount = Math.min(vals.length, 4);
         for (let i = 0; i < bassCount; ++i)
             bassSum += vals[i];
         const bassAvg = bassSum / Math.max(1, bassCount);
 
-        // Overall spectrum energy
         let energySum = 0.0;
         for (let i = 0; i < vals.length; ++i)
             energySum += vals[i];
         const energyAvg = energySum / Math.max(1, vals.length);
 
-        // Peak tracking with gentle decay
         root.peakBass = Math.max(0.2, Math.max(bassAvg * 1.1, root.peakBass * 0.996));
         const normBass = Math.min(1.0, bassAvg / Math.max(0.05, root.peakBass));
         const normEnergy = Math.min(1.0, energyAvg * 3.0);
@@ -112,22 +106,15 @@ Item {
         root.rawBass = soundActive ? normBass : 0.0;
         root.rawEnergy = soundActive ? normEnergy : 0.0;
 
-        // "Too Loud Bass" Trigger:
-        // Heavy bass hit (normalized bass > 0.72 or sudden heavy surge > 0.55)
         const isTooLoudBass = (normBass > 0.72) || (normBass > root.smoothBass + 0.28 && normBass > 0.55);
 
         if (isTooLoudBass) {
             root.beatPulse = 1.0;
-            // Shift shape when heavy bass strikes (debounced to avoid rumble flutter)
             if (root.lastMorphTime > 320.0)
                 root.morphRandomShape();
         }
     }
 
-    // The audio services are refcounted, and holding them open costs two analysis threads
-    // running whether or not there is anything to analyse. These shapes are only shown while
-    // media plays (on the desktop) or while the media view is up (in the dashboard), so the
-    // reference belongs to that state and not to the shapes existing at all.
     Loader {
         active: root.visible
         sourceComponent: ServiceRef {
@@ -162,16 +149,13 @@ Item {
             root.smoothBass += (targetBass - root.smoothBass) * Math.min(1.0, bassRate * dt);
             root.smoothEnergy += (targetEnergy - root.smoothEnergy) * Math.min(1.0, energyRate * dt);
 
-            // Subtle organic breath
             const breathSpeed = active
                 ? ((root.currentBpm / 120.0) * (0.6 + root.smoothEnergy * 2.0))
                 : 0.4;
             root.breathPhase = (root.breathPhase + dt * breathSpeed * 2.0 * Math.PI) % (2.0 * Math.PI);
 
-            // Decay percussive pulses
             root.beatPulse = Math.max(0.0, root.beatPulse - dt * 4.5);
 
-            // Rotation
             if (active) {
                 const tempoSpin = (root.currentBpm / 60.0) * 30.0;
                 const bassSpin = root.smoothBass * 70.0;
@@ -180,7 +164,6 @@ Item {
                 root.baseRotation = (root.baseRotation + 8.0 * dt) % 360.0;
             }
 
-            // If audio stops or is quiet for a while (>2.5s), return to calm circle
             if (!active && root.lastMorphTime > 2500.0 && materialShape.shape !== MaterialShape.Circle) {
                 materialShape.shape = MaterialShape.Circle;
                 root.lastMorphTime = 0.0;
@@ -223,7 +206,6 @@ Item {
         color: {
             const idleColor = root.activeColor;
             const maxRed = Colours.palette.m3error;
-            // Strict lower bound is idleColor (0.0 bass), upper bound is maxRed (1.0 bass)
             const bassFactor = Math.max(0.0, Math.min(1.0, root.rawBass));
             return root.lerpColor(idleColor, maxRed, bassFactor);
         }

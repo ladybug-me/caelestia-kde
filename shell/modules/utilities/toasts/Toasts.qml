@@ -81,7 +81,7 @@ Item {
         opacity: modelData.closed || previewHidden ? 0 : 1
         scale: modelData.closed || previewHidden ? 0.7 : 1
         anchors.bottomMargin: {
-            root.flag; // Force update
+            root.flag;
             let y = 0;
             for (let i = 0; i < index; i++) {
                 const item = repeater.itemAt(i) as ToastWrapper;

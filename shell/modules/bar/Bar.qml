@@ -109,13 +109,11 @@ Item {
         if (!ch) {
             if (popouts.hasCurrent && (popouts.currentName === "dockhover" || popouts.currentName === "greeter" || popouts.currentName === "activewindow")) return;
             if (!Config.bar.popouts.tray && popouts.currentName.startsWith("traymenu")) return;
-            // skip hover-driven tray recalculation in click mode
             popouts.hasCurrent = false;
             return;
         }
 
         const id = ch.id;
-        // top is absolute pos
         let mappedChPos = mapFromItem(ch, 0, 0);
         const top = isHorizontal ? mappedChPos.x : mappedChPos.y;
 
@@ -151,7 +149,6 @@ Item {
 
             let icon = items.childAt(localX, localY);
             if (!icon) {
-                // Find nearest visible child by center distance
                 let bestDist = 1e9;
                 for (let i = 0; i < items.children.length; i++) {
                     const child = items.children[i];
@@ -335,10 +332,6 @@ Item {
         columnSpacing: Tokens.spacing.medium
         rowSpacing: Tokens.spacing.medium
 
-        // Plain ternaries assigning `undefined` to x/y (a real-typed property)
-        // trigger "Unable to assign [undefined] to y/x" warnings even though
-        // the other branch is unreachable at the same time. Bindings with a
-        // `when` guard simply don't apply instead of assigning undefined.
         Binding on x {
             when: isHorizontal
             value: Math.max(middleLayout.minX, Math.min(middleLayout.idealX, middleLayout.maxX))

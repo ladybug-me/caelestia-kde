@@ -17,8 +17,6 @@ namespace caelestia {
 
 using Qt::StringLiterals::operator""_ba;
 
-// ── helpers ───────────────────────────────────────────────────────
-
 static void applyHeaders(QNetworkRequest& request, const QJSValue& headers) {
     if (!headers.isObject()) {
         return;
@@ -41,8 +39,6 @@ static QNetworkRequest buildRequest(const QUrl& url, const QJSValue& headers) {
     return request;
 }
 
-// ── Requests ──────────────────────────────────────────────────────
-
 Requests::Requests(QObject* parent)
     : QObject(parent)
     , m_manager(new QNetworkAccessManager(this)) {}
@@ -50,7 +46,6 @@ Requests::Requests(QObject* parent)
 // ── internal wiring ───────────────────────────────────────────────
 
 int Requests::nextRequestId() {
-    // Wrap-around safety: skip 0 and any ID still in-flight.
     int id = m_nextRequestId;
     for (int attempts = 0; attempts < 100000; ++attempts) {
         if (id == 0) {
@@ -79,7 +74,6 @@ int Requests::registerReply(QNetworkReply* reply, QJSValue callback, QJSValue on
     ar.onComplete = callback;
     ar.onError = onError;
 
-    // ── timeout ───────────────────────────────────────────────
     if (timeoutMs > 0) {
         auto* timer = new QTimer(this);
         timer->setSingleShot(true);
@@ -90,7 +84,6 @@ int Requests::registerReply(QNetworkReply* reply, QJSValue callback, QJSValue on
         timer->start(timeoutMs);
     }
 
-    // ── finished ──────────────────────────────────────────────
     QObject::connect(reply, &QNetworkReply::finished, this, [this, reqId, reply]() {
         auto it = m_activeRequests.find(reqId);
         if (it == m_activeRequests.end()) {
@@ -104,7 +97,6 @@ int Requests::registerReply(QNetworkReply* reply, QJSValue callback, QJSValue on
         const QString error = httpError ? QStringLiteral("HTTP status %1").arg(status) : reply->errorString();
 
         if (isError && !it->isDownload) {
-            // Standard GET/POST error path
             if (it->onError.isCallable()) {
                 it->onError.call({ error, status });
             } else {
@@ -115,13 +107,12 @@ int Requests::registerReply(QNetworkReply* reply, QJSValue callback, QJSValue on
         }
 
         if (it->isDownload) {
-            // Download path — close file and report
             if (it->destFile) {
                 if (it->destFile->isOpen()) {
                     it->destFile->close();
                 }
                 if (isError) {
-                    it->destFile->remove(); // discard partial file on error
+                    it->destFile->remove();
                 }
             }
 
@@ -139,7 +130,6 @@ int Requests::registerReply(QNetworkReply* reply, QJSValue callback, QJSValue on
             return;
         }
 
-        // Success path for GET/POST
         if (it->onComplete.isCallable()) {
             it->onComplete.call({ QString::fromUtf8(reply->readAll()), status });
         }
@@ -210,8 +200,6 @@ void Requests::abortAndFail(int requestId, const QString& errorMessage, bool rem
     }
 }
 
-// ── public API ────────────────────────────────────────────────────
-
 int Requests::get(const QUrl& url, QJSValue callback, QJSValue onError, QJSValue headers, int timeoutMs) {
     if (!callback.isCallable()) {
         qCWarning(lcRequests) << "get: callback is not callable";
@@ -261,7 +249,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         return -1;
     }
 
-    // Open destination file
     auto* file = new QFile(destPath);
     if (!file->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         const QString fileError = file->errorString();
@@ -284,7 +271,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
     ar.onComplete = onComplete;
     ar.onError = onError;
 
-    // ── timeout ───────────────────────────────────────────────
     if (timeoutMs > 0) {
         auto* timer = new QTimer(this);
         timer->setSingleShot(true);
@@ -295,7 +281,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         timer->start(timeoutMs);
     }
 
-    // ── stream data to file ───────────────────────────────────
     QObject::connect(reply, &QNetworkReply::readyRead, this, [this, reqId, reply]() {
         auto it = m_activeRequests.find(reqId);
         if (it == m_activeRequests.end() || !it->destFile) {
@@ -309,7 +294,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         }
     });
 
-    // ── progress ──────────────────────────────────────────────
     QObject::connect(reply, &QNetworkReply::downloadProgress, this, [this, reqId](qint64 received, qint64 total) {
         emit downloadProgress(reqId, received, total);
 
@@ -319,7 +303,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         }
     });
 
-    // ── finished (via registerReply-style wiring duplicated for download) ──
     QObject::connect(reply, &QNetworkReply::finished, this, [this, reqId, reply]() {
         auto it = m_activeRequests.find(reqId);
         if (it == m_activeRequests.end()) {
@@ -332,7 +315,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         bool isError = reply->error() != QNetworkReply::NoError || httpError;
         QString error = httpError ? QStringLiteral("HTTP status %1").arg(status) : reply->errorString();
 
-        // Flush any remaining bytes not yet delivered via readyRead.
         if (it->destFile && it->destFile->isOpen()) {
             const QByteArray data = reply->readAll();
             if (!isError && it->destFile->write(data) != data.size()) {
@@ -362,10 +344,6 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
 }
 
 void Requests::cancel(int requestId) {
-    // Discard the partial file on cancel too — otherwise a truncated download
-    // is left at the requested final path, which callers can mistake for a
-    // completed one. abortAndFail() also fixes the same synchronous-abort
-    // reentrancy hazard described above for the timeout paths.
     if (!m_activeRequests.contains(requestId)) {
         return;
     }
@@ -409,10 +387,6 @@ QString Requests::toJson(const QJSValue& value) const {
     if (!engine) {
         return {};
     }
-    // QJsonDocument::fromVariant() only represents top-level objects/arrays,
-    // so primitives (strings, numbers, booleans) would serialise to an empty
-    // string. Go through the engine's own JSON.stringify instead, which
-    // handles any JS value the same way JavaScript itself would.
     QJSValue json = engine->globalObject().property(QStringLiteral("JSON"));
     QJSValue stringify = json.property(QStringLiteral("stringify"));
     QJSValue result = stringify.callWithInstance(json, { value });

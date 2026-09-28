@@ -5,9 +5,6 @@ import qs.components
 import qs.services
 import qs.utils
 
-// Round connect/disconnect button shared by the bar popouts. Callers declare
-// active/loading/interactive and handle onClicked; the geometry, the busy
-// indicator and the icon states live here, once.
 StyledRect {
     id: root
 

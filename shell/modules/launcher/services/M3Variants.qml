@@ -102,9 +102,6 @@ Searcher {
             if (list) {
                 list.visibilities.launcher = false;
             }
-            // The variant is the user's from here on, so the wallpaper stops picking it. The
-            // command is told that rather than left to read the setting back: the write below is
-            // batched and debounced, and the pipeline keeps no copy of the setting anyway.
             GlobalConfig.services.smartScheme = false;
             Quickshell.execDetached(["caelestia", "scheme", "set", "--no-smart", "-v", variant]);
         }

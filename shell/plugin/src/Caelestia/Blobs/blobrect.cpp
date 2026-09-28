@@ -1,8 +1,9 @@
 #include "blobrect.hpp"
-#include "blobgroup.hpp"
 
 #include <algorithm>
 #include <cmath>
+
+#include "blobgroup.hpp"
 
 BlobRect::BlobRect(QQuickItem* parent)
     : BlobShape(parent) {}
@@ -16,12 +17,10 @@ void BlobRect::updatePolish() {
     BlobShape::updatePolish();
 
     if (m_physicsActive) {
-        // Check if deformation is visually imperceptible
         float totalDelta = std::abs(m_dm00 - 1.0f) + std::abs(m_dm01) + std::abs(m_dm11 - 1.0f);
         float totalVel = std::abs(m_dmVel00) + std::abs(m_dmVel01) + std::abs(m_dmVel11);
 
         if (totalDelta < 0.004f && totalVel < 0.05f) {
-            // Snap to rest, no visible deformation
             m_dm00 = 1.0f;
             m_dm01 = 0.0f;
             m_dm11 = 1.0f;
@@ -54,7 +53,6 @@ void BlobRect::updatePhysics() {
 
     const float dt = static_cast<float>(m_elapsed.restart()) / 1000.0f;
 
-    // Check for teleport (instant jump > 300px) to prevent spring physics explosion
     const float dx = static_cast<float>(scenePos.x() - m_prevScenePos.x());
     const float dy = static_cast<float>(scenePos.y() - m_prevScenePos.y());
     if (std::sqrt(dx * dx + dy * dy) > 300.0f) {
@@ -72,7 +70,6 @@ void BlobRect::updatePhysics() {
 
     if (dt > 0.1f || dt < 0.001f) {
         m_prevScenePos = scenePos;
-        // Still check atRest on skipped frames to avoid getting stuck
         if (m_physicsActive)
             checkAtRest(0.0f);
         return;
@@ -90,8 +87,6 @@ void BlobRect::updatePhysics() {
         m_physicsActive = true;
     }
 
-    // Compute target deformation matrix from velocity
-    // R(θ) * diag(stretch, compress) * R(θ)^T
     const float kStretchFactor = static_cast<float>(m_deformScale);
     constexpr float kMaxStretch = 0.35f;
 
@@ -114,10 +109,6 @@ void BlobRect::updatePhysics() {
         target11 = targetStretch * sin2 + targetCompress * cos2;
     }
 
-    // Underdamped spring on each matrix component. Damping is integrated implicitly
-    // (the friction term uses the new velocity, solved in closed form) so the 1/(1 + c*dt)
-    // factor stays in (0, 1) for any dt; an explicit -c*v*dt term would flip sign and inject
-    // energy once c*dt > 1 (here dt > ~62ms), making the deformation diverge on slow frames.
     const float kStiffness = static_cast<float>(m_stiffness);
     const float kDamping = static_cast<float>(m_damping);
     const float invDamp = 1.0f / (1.0f + kDamping * dt);
@@ -314,7 +305,7 @@ void BlobRect::checkAtRest(float speed) {
         m_dmVel00 = 0.0f;
         m_dmVel01 = 0.0f;
         m_dmVel11 = 0.0f;
-        m_deformMatrix = QMatrix4x4(); // identity
+        m_deformMatrix = QMatrix4x4();
         emit rawDeformMatrixChanged();
         updateCenteredDeformMatrix();
         m_physicsActive = false;

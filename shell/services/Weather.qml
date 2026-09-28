@@ -88,7 +88,7 @@ Singleton {
         locationSearchError = "";
 
         if (locationSearchQuery.length < 2) {
-            locationSearchToken++; // invalidate any in-flight searches
+            locationSearchToken++;
             locationSearchLoading = false;
             locationSearchResults = [];
             locationSearchDebounce.stop();

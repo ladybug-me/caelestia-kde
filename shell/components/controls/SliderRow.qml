@@ -7,11 +7,6 @@ import qs.components
 import qs.components.controls
 import qs.services
 
-// Label + value + slider row, shared by the bar popouts and the Nexus pages.
-// `spacious` selects the roomier Nexus layout; `first`/`last` round the card
-// corners for connected lists. Previously two near-identical modules were
-// kept in sync by hand (this one and modules/nexus/common/SliderRow.qml, now
-// a one-line preset).
 StyledRect {
     id: root
 

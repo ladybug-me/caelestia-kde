@@ -25,6 +25,7 @@ class XDisplay {
 public:
     XDisplay()
         : m_dpy(XOpenDisplay(nullptr)) {}
+
     ~XDisplay() {
         if (m_dpy) {
             XCloseDisplay(m_dpy);
@@ -35,21 +36,21 @@ public:
     XDisplay& operator=(const XDisplay&) = delete;
 
     operator Display*() const { return m_dpy; }
+
     bool isValid() const { return m_dpy != nullptr; }
 
 private:
     Display* m_dpy;
 };
 
-/// Fetch a window property in full, following the multi-read protocol.
 unsigned char* fetchProperty(Display* dpy, Window win, Atom prop, Atom type, unsigned long* count) {
     Atom actualType;
     int actualFormat;
     unsigned long bytesAfter;
     unsigned char* data = nullptr;
 
-    if (XGetWindowProperty(dpy, win, prop, 0, 0, False, type, &actualType, &actualFormat, count, &bytesAfter,
-            &data) != Success) {
+    if (XGetWindowProperty(dpy, win, prop, 0, 0, False, type, &actualType, &actualFormat, count, &bytesAfter, &data) !=
+        Success) {
         return nullptr;
     }
     if (data) {
@@ -60,10 +61,9 @@ unsigned char* fetchProperty(Display* dpy, Window win, Atom prop, Atom type, uns
         return nullptr;
     }
 
-    // bytesAfter is in bytes; XGetWindowProperty wants 32-bit words.
     const long words = static_cast<long>((bytesAfter + 3) / 4);
-    if (XGetWindowProperty(dpy, win, prop, 0, words, False, type, &actualType, &actualFormat, count, &bytesAfter,
-            &data) != Success) {
+    if (XGetWindowProperty(
+            dpy, win, prop, 0, words, False, type, &actualType, &actualFormat, count, &bytesAfter, &data) != Success) {
         return nullptr;
     }
     return data;
@@ -91,7 +91,6 @@ QString windowTitle(Display* dpy, Window win) {
     return QString();
 }
 
-/// The client's _NET_WM_PID, or -1 when the window does not advertise one.
 qint64 windowPid(Display* dpy, Window win) {
     const Atom netWmPid = XInternAtom(dpy, "_NET_WM_PID", True);
     if (netWmPid == None) {
@@ -103,14 +102,13 @@ qint64 windowPid(Display* dpy, Window win) {
     if (!data) {
         return -1;
     }
-    // XGetWindowProperty hands back 32-bit CARDINALs widened to long.
     const auto pid = static_cast<qint64>(*reinterpret_cast<const unsigned long*>(data) & 0xffffffff);
     XFree(data);
     return pid > 0 ? pid : -1;
 }
 
 bool matchesClass(Display* dpy, Window win, const QString& wmClass) {
-    XClassHint hint {};
+    XClassHint hint{};
     if (!XGetClassHint(dpy, win, &hint)) {
         return false;
     }
@@ -136,13 +134,6 @@ bool matchesTitle(Display* dpy, Window win, const QString& wmClass, const QStrin
     return actual == wmClass || (!title.isEmpty() && actual == title);
 }
 
-/**
- * Decode the largest image in a _NET_WM_ICON payload.
- *
- * The property is a sequence of [width, height, w*h ARGB pixels] runs. Each
- * pixel is a 32-bit value stored in a long, which is 64-bit here — so it has to
- * be narrowed rather than memcpy'd.
- */
 QImage decodeLargest(const unsigned long* data, unsigned long count) {
     QImage best;
     unsigned long i = 0;
@@ -157,7 +148,7 @@ QImage decodeLargest(const unsigned long* data, unsigned long count) {
         }
         const unsigned long pixels = static_cast<unsigned long>(w) * static_cast<unsigned long>(h);
         if (pixels > count - i) {
-            break; // truncated payload
+            break;
         }
 
         if (static_cast<qint64>(w) * h > static_cast<qint64>(best.width()) * best.height()) {
@@ -209,10 +200,6 @@ QString WindowIcon::extract(const QString& wmClass, const QString& title, qint64
     }
     const auto* windows = reinterpret_cast<const Window*>(rawWindows);
 
-    // Rank candidates rather than taking the first hit: the pid identifies
-    // exactly one client, while the class can name a dozen unrelated games.
-    // A pid match therefore suppresses the weaker matches outright — falling
-    // back to them is how a game ends up wearing another game's icon.
     QList<Window> candidates;
     bool havePidMatch = false;
     for (unsigned long i = 0; i < windowCount; ++i) {
@@ -248,11 +235,6 @@ QString WindowIcon::extract(const QString& wmClass, const QString& title, qint64
         return QString();
     }
 
-    // Name the file after the icon's own bytes. Keying on the window class was
-    // the other half of the wrong-icon bug: "steam_app_default" hashes to one
-    // path, so whichever game ran first owned that file forever. Content
-    // addressing also collapses the duplicates a class-per-version window
-    // (Minecraft) used to leave behind.
     QByteArray png;
     QBuffer buffer(&png);
     buffer.open(QIODevice::WriteOnly);
@@ -264,8 +246,7 @@ QString WindowIcon::extract(const QString& wmClass, const QString& title, qint64
 
     const auto cacheRoot =
         QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + QStringLiteral("/caelestia/winicons");
-    const auto digest =
-        QString::fromLatin1(QCryptographicHash::hash(png, QCryptographicHash::Sha256).toHex().left(16));
+    const auto digest = QString::fromLatin1(QCryptographicHash::hash(png, QCryptographicHash::Sha256).toHex().left(16));
     const auto path = cacheRoot + QStringLiteral("/") + digest + QStringLiteral(".png");
 
     if (!QFile::exists(path)) {

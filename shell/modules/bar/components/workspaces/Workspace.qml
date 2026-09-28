@@ -12,16 +12,12 @@ import qs.utils
 GridLayout {
     id: root
 
-    /// The desktop this pill stands for. The strip decides which ones exist, so
-    /// a pill never derives its own id from a position in a layout.
     required property int ws
     required property int activeWsId
-    /// Name of the screen this bar is on. Window icons are limited to it: the
-    /// desktop is shared across screens, but the pill is not.
     required property string screenName
     required property var occupied
 
-    readonly property bool isWorkspace: true // Flag for finding workspace children
+    readonly property bool isWorkspace: true
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property real rawScale: !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0
     readonly property real scaleFactor: rawScale < 1.0 ? Math.sqrt(Math.max(0.1, rawScale)) : rawScale
@@ -31,14 +27,9 @@ GridLayout {
     // An inactive, empty workspace keeps its pill only when the user wants the
     // full strip; otherwise it collapses to nothing.
     readonly property bool shouldShow: Config.bar.workspaces.showUnoccupied || isOccupied || isActive
-    // Animated rather than a plain flag so the pills after a collapsed workspace
-    // close the gap instead of jumping. Everything that measures this item
-    // (OccupiedBg, ActiveIndicator) goes through `size`, so that has to shrink
-    // with the animation as well.
     property real reveal: shouldShow ? 1 : 0
     readonly property real revealProgress: Math.max(0, Math.min(1, reveal))
 
-    // Unanimated prop for others to use as reference
     readonly property real size: ((isHorizontal ? implicitWidth : implicitHeight) + (hasWindows ? Tokens.padding.extraSmall : 0)) * revealProgress
 
     readonly property int maxIcons: Config.bar.workspaces.maxWindowIcons
@@ -46,9 +37,6 @@ GridLayout {
     readonly property bool hasWindows: isOccupied && Config.bar.workspaces.showWindows && (Config.bar.workspaces.maxWindowIcons > 0)
     property var kwinWindowList: Kwin.windowList
 
-    // Cache window-icon lists per layout so the Repeater only rebuilds
-    // when the set of window identities actually changes, not on every
-    // geometry update (e.g. during drag).
     property var _cache: ({ colKeys: "", colIcons: [], rowKeys: "", rowIcons: [] })
 
     columns: isHorizontal ? -1 : 1
@@ -114,16 +102,7 @@ GridLayout {
         Item {
             id: iconRoot
 
-            // Track if this position was active (independent of which workspace)
             readonly property bool active: root.activeWsId === root.ws
-            // The shapes the focused workspace morphs into.
-            //
-            // Upstream's pool also carries the organic ones - Cookie4Sided through
-            // Cookie12Sided, Clover4Leaf, Clover8Leaf, SoftBurst and Ghostish. A cookie
-            // is a circle with a bite taken out of it, which reads as a Pac-Man sitting
-            // in the bar rather than as a Material indicator, so this is a deliberate
-            // divergence: re-check the pool when syncing from upstream, or they return
-            // with the next sync.
             readonly property list<int> focusShapes: [MaterialShape.Slanted, MaterialShape.Arch, MaterialShape.Oval, MaterialShape.Pill, MaterialShape.Triangle, MaterialShape.Arrow, MaterialShape.Diamond, MaterialShape.Pentagon, MaterialShape.Gem, MaterialShape.VerySunny, MaterialShape.Sunny]
 
             property int randShape: MaterialShape.Slanted
@@ -132,13 +111,10 @@ GridLayout {
             property int prevActiveWsId: -1
             property bool hasRandomShape: false
 
-            // Track the previous workspace at this position (before current change)
             property int prevWs: -1
 
-            // Watch for workspace ID changes while inactive by using a binding
             property int watchedWs: root.ws
 
-            // Track the last watched ws separately for detecting changes
             property int lastWatchedWs: -1
 
             property int swipeStartWsId: -1
@@ -164,7 +140,6 @@ GridLayout {
 
             property real smoothSwipeWeight: swipeWeight
 
-            // JavaScript functions
             function handleActivation() {
                 const wsChanged = lastKnownWs !== root.ws;
                 if (active && (!wasPositionActive || wsChanged)) {
@@ -189,7 +164,6 @@ GridLayout {
             implicitWidth: barThickness - Tokens.padding.small
             implicitHeight: barThickness - Tokens.padding.small
 
-            // Signal handlers
             onRawSwipeOffsetChanged: {
                 if (rawSwipeOffset !== 0.0) {
                     if (lastRawSwipeOffset === 0.0) {
@@ -243,7 +217,6 @@ GridLayout {
 
             onActiveChanged: handleActivation()
 
-            // Initialize state when component is created
             Component.onCompleted: {
                 if (active) {
                     handleActivation();

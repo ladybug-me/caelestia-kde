@@ -1,9 +1,9 @@
 #pragma once
 
+#include <algorithm>
+
 #include "../Settings/objectnode.hpp"
 #include "common.hpp"
-
-#include <algorithm>
 
 namespace caelestia::config {
 

@@ -5,7 +5,6 @@ import qs.utils
 
 QtObject {
     readonly property list<var> pages: [
-        // Personalization
         {
             label: qsTr("Appearance"),
             key: "appearance",
@@ -82,7 +81,6 @@ QtObject {
                 { label: qsTr("Window Switcher"), keywords: ["tab switcher", "alt+tab", "task switcher", "desktop", "preview", "filter", "windows"], pagePath: "panels/TabSwitcherPanel.qml", subPageIdx: 18 }
             ]
         },
-        // Connectivity
         {
             label: qsTr("Network"),
             key: "network",
@@ -124,7 +122,6 @@ QtObject {
                 { label: qsTr("Muted Notification Apps"), pagePath: "audio/NotificationSilencingPage.qml", subPageIdx: 3, keywords: ["silence", "mute", "notification sound"] }
             ]
         },
-        // Controls
         {
             label: qsTr("Notifications"),
             key: "notifications",
@@ -176,7 +173,6 @@ QtObject {
                 { label: qsTr("Custom Keybinds"), pagePath: "wallandstyle/AddShortcutDialog.qml", keywords: ["scripts", "commands", "actions"] }
             ]
         },
-        // Shell
         {
             label: qsTr("Apps"),
             key: "apps",
@@ -188,9 +184,6 @@ QtObject {
                 { label: qsTr("File Types"), keywords: ["associations", "extensions", "open with"] },
                 { label: qsTr("All Apps"), keywords: ["installed", "list", "uninstall"], subPageIdx: 1 },
                 { label: qsTr("Favorites & Hidden"), keywords: ["pinned", "dock", "launcher", "ignore"], subPageIdx: 1 },
-                // AppInfo is sub-page 2 and opens only from a row in All Apps, so it has
-                // no entry: it is listed in audit_search_coverage.py's CONTEXT_DEPENDENT
-                // with the same reason. Nothing here may carry subPageIdx 2.
             ]
         },
         {
@@ -216,7 +209,6 @@ QtObject {
                 { label: qsTr("Weather Location"), keywords: ["city", "forecast", "units", "celsius", "fahrenheit"] }
             ]
         },
-        // System
         {
             label: qsTr("Updates"),
             key: "updates",

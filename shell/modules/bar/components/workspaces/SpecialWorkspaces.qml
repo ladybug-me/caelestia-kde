@@ -21,7 +21,6 @@ Item {
 
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
 
-    // (Removed root-level 'size' property that was causing the 'label is not defined' error)
 
     layer.enabled: true
     layer.effect: Mask {
@@ -68,7 +67,6 @@ Item {
             anchors.right: isHorizontal ? undefined : parent.right
 
             radius: Tokens.rounding.full
-            // Changed undefined to 0 to fix "Unable to assign [undefined] to double"
             implicitWidth: isHorizontal ? parent.width / 2 : 0
             implicitHeight: isHorizontal ? 0 : parent.height / 2
             opacity: isHorizontal ? (view.contentX > 0 ? 0 : 1) : (view.contentY > 0 ? 0 : 1)
@@ -280,7 +278,6 @@ Item {
             if (Math.abs(currentPos - startPos) > drag.threshold)
                 return;
 
-            // KDE has no special/scratchpad workspace concept.
                             return;
 
             const ws = view.itemAt(event.x, event.y) as SpecialWsDelegate;

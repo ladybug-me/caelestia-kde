@@ -27,12 +27,10 @@ Popup {
         if (!target || !parent)
             return;
 
-        // Wait for tooltipRect to have its size calculated
         Qt.callLater(() => {
             if (!target || !parent || !tooltipRect)
                 return;
 
-            // Get target position in parent's coordinate system
             const targetPos = target.mapToItem(parent, 0, 0);
             const targetCenterX = targetPos.x + target.width / 2;
 
@@ -40,13 +38,10 @@ Popup {
             const tooltipWidth = tooltipRect.width > 0 ? tooltipRect.width : tooltipRect.implicitWidth;
             const tooltipHeight = tooltipRect.height > 0 ? tooltipRect.height : tooltipRect.implicitHeight;
 
-            // Center tooltip horizontally on target
             let newX = targetCenterX - tooltipWidth / 2;
 
-            // Position tooltip above target
             let newY = targetPos.y - tooltipHeight - Tokens.spacing.small;
 
-            // Keep within bounds
             const padding = Tokens.padding.medium;
             if (newX < padding) {
                 newX = padding;
@@ -54,21 +49,17 @@ Popup {
                 newX = parent.width - tooltipWidth - padding;
             }
 
-            // Update popup position
             x = newX;
             y = newY;
         });
     }
 
-    // Popup properties - doesn't affect layout
     parent: {
         let p = target;
         if (!p)
             return null;
-        // Walk up to find the root Item (usually has anchors.fill: parent)
         while (p && p.parent) {
             const parentItem = p.parent;
-            // Check if this looks like a root pane Item
             if (parentItem && parentItem.anchors && parentItem.anchors.fill !== undefined) {
                 return parentItem;
             }
@@ -85,7 +76,6 @@ Popup {
     margins: 0
     background: Item {}
 
-    // Update position when target moves or tooltip becomes visible
     onTooltipVisibleChanged: {
         if (tooltipVisible) {
             Qt.callLater(updatePosition);
@@ -125,7 +115,6 @@ Popup {
         radius: Tokens.rounding.medium
         antialiasing: true
 
-        // Add elevation for depth
         Elevation {
             anchors.fill: parent
             radius: parent.radius
@@ -165,7 +154,6 @@ Popup {
         target: root.target
     }
 
-    // Monitor hover state
     Connections {
         function onHoveredChanged() {
             if (target.hovered) {

@@ -61,7 +61,7 @@ Rectangle {
             radius: 10
             color: root.colBackground
             border.width: 1
-            border.color: Colours.palette.m3outlineVariant  // Caelestia.Config
+            border.color: Colours.palette.m3outlineVariant
             implicitWidth: regionInfoRow.implicitWidth + horizontalPadding * 2
             implicitHeight: regionInfoRow.implicitHeight + verticalPadding * 2
 

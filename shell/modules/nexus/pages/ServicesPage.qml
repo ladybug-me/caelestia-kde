@@ -12,7 +12,6 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    // Lyrics backends, ordered to match LyricsBackend::Backend (Auto, Local, LRCLIB, NetEase)
     readonly property list<MenuItem> lyricsItems: [
         MenuItem {
             text: qsTr("Auto")
@@ -28,7 +27,6 @@ PageBase {
         }
     ]
 
-    // GPU options + the config string each maps to (see Gpu::parseType)
     readonly property list<MenuItem> gpuItems: [
         MenuItem {
             text: qsTr("Auto")
@@ -49,12 +47,12 @@ PageBase {
     function gpuKeyToIndex(key: string): int {
         const u = (key ?? "").trim().toUpperCase();
         if (u === "")
-            return 0; // Auto
+            return 0;
         if (u === "NVIDIA")
             return 1;
         if (u === "GENERIC")
             return 2;
-        return 3; // None
+        return 3;
     }
 
     title: qsTr("Services")
@@ -65,7 +63,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Detected running players, used as default-player options
         Variants {
             id: playerVariants
 
@@ -80,7 +77,6 @@ PageBase {
             }
         }
 
-        // Polling
         SectionHeader {
             first: true
             text: qsTr("Polling")
@@ -118,7 +114,6 @@ PageBase {
             onMoved: v => GlobalConfig.nexus.networkRescanInterval = Math.round(v * 1000)
         }
 
-        // Media & lyrics
         SectionHeader {
             text: qsTr("Media & lyrics")
         }
@@ -143,7 +138,6 @@ PageBase {
             onSelected: item => GlobalConfig.services.defaultPlayer = item.text
         }
 
-        // Input increments
         SectionHeader {
             text: qsTr("Input increments")
         }
@@ -180,14 +174,13 @@ PageBase {
             onMoved: v => GlobalConfig.services.maxVolume = v / 100
         }
 
-        // Service tuning
         SectionHeader {
             text: qsTr("Service tuning")
         }
 
         NavRow {
             first: true
-            icon: "chat" // Using chat since discord icon might not be available in Material icons
+            icon: "chat"
             label: qsTr("Discord Rich Presence")
             status: qsTr("Broadcast your status to Vesktop")
             onClicked: root.nState.openSubPage(1)

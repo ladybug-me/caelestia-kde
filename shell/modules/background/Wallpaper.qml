@@ -154,8 +154,6 @@ Item {
         property string videoPath: ""
         property bool isVideoImage: root.isVideo(root.source)
         property var screen: null
-        // Content is on screen for this element: an image reports it through the
-        // decode status, a video through playback actually starting.
         readonly property bool shown: {
             if (root.source === "")
                 return false;
@@ -182,10 +180,6 @@ Item {
 
         function update(): void {
             this.screen = root.screen;
-            // Ask about the source being switched to, not the isVideoImage binding:
-            // that binding can still hold the previous source's answer when this
-            // runs, which routed a video into the image loader. The image cannot
-            // decode it, so the wallpaper just went white.
             const isVideoImage = root.isVideo(root.source);
             if (isVideoImage) {
                 if (videoPath === root.source)
@@ -218,7 +212,7 @@ Item {
         anchors.fill: parent
         opacity: 1
         scale: 1
-        Component.onCompleted: maskRadius = root.skipTransition ? maxRadius : maxRadius // Wait, original was maxRadius, but wait, onZChanged resets it
+        Component.onCompleted: maskRadius = root.skipTransition ? maxRadius : maxRadius
         z: root.current === img ? 1 : 0
         onZChanged: {
             if (z === 1) {
@@ -294,33 +288,7 @@ Item {
                 fillMode: Config.background.wallpaperFillMode
                 source: img.imagePath || ""
                 playing: true
-                // Decode near the size actually drawn. Left alone, the image is
-                // decoded at whatever resolution it happens to be: an 8K wallpaper
-                // is ~132MB of pixels and a slow decode, paid twice over while the
-                // outgoing and incoming images overlap through the reveal — which
-                // is the hitch on every wallpaper change. Every other wallpaper
-                // view already asks for a size; only the one drawing the biggest
-                // image did not.
-                //
-                // Only the width is given. Setting both dimensions scales the
-                // decode to exactly that box and drops the aspect ratio, which
-                // turns a 16:9 wallpaper into a square — fillMode is configurable
-                // and PreserveAspectCrop then shows that square pillarboxed. With
-                // one dimension the other follows the image's own aspect.
-                //
-                // It asks for half again the long edge so the result still covers
-                // the item under PreserveAspectCrop even for footage much wider
-                // than the screen; Qt never upscales a decode, so nothing is lost
-                // on images that are already smaller. An 8K wallpaper on this
-                // screen still comes down from ~33MP to under 7MP.
-                //
-                // Tiling is left unconstrained: there the decode size is the tile
-                // size, so capping it would change how the wallpaper looks.
                 sourceSize: {
-                    // Nothing to size when this element is not the one drawing:
-                    // for a video the source here is empty, and handing a decode
-                    // size to an AnimatedImage in that state leaves the wallpaper
-                    // blank.
                     if (img.isVideoImage || img.imagePath === "" || img.tiled)
                         return Qt.size(0, 0);
                     const dpr = wallpaperImage.Screen.devicePixelRatio || 1;

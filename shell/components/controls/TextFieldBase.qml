@@ -11,7 +11,7 @@ TextField {
     implicitHeight: contentHeight + topPadding + bottomPadding
 
     color: Colours.palette.m3onSurface
-    placeholderTextColor: Colours.palette.m3onSurfaceVariant // No anim cause placeholder is custom
+    placeholderTextColor: Colours.palette.m3onSurfaceVariant
     selectionColor: Qt.alpha(Colours.palette.m3primary, 0.4)
     selectedTextColor: color
 
@@ -77,7 +77,7 @@ TextField {
 
         Behavior on x {
             Anim {
-                easing.bezierCurve: [0.2, 1, 0.21, 1, 1, 1] // Damped variant of fast spatial curve
+                easing.bezierCurve: [0.2, 1, 0.21, 1, 1, 1]
                 duration: Tokens.anim.durations.expressiveFastEffects
             }
         }

@@ -69,8 +69,6 @@ Item {
     }
 
     IdleMonitor {
-        // A timeout of 0 means the feature is off, and IdleMonitor would treat
-        // it as "idle immediately".
         enabled: root.active && root.idleTimeout > 0
         timeout: root.idleTimeout
         onIsIdleChanged: root.userIdle = isIdle
@@ -152,12 +150,9 @@ Item {
 
     function updatePresence() {
         if (!active || !DiscordIpc.connected) return;
-        if (fetchingSteam) return; // Prevent loop during async fetch
-        // Any of the triggers below can fire while away; none of them should
-        // put the presence back until the user actually returns.
+        if (fetchingSteam) return;
         if (userIdle) return;
 
-        // Priority 0: Manual Override
         if (GlobalConfig.services.arpcManualOverride && (GlobalConfig.services.arpcAppName || GlobalConfig.services.arpcDetails || GlobalConfig.services.arpcState)) {
             root.currentSteamAppId = "";
             root.sendActivity({
@@ -176,10 +171,6 @@ Item {
         let topTargetTitle = "";
         let topTargetMatchIdx = -1;
 
-        // Priority 2 prefers the focused window: a background app that happens
-        // to match the regex shouldn't describe you better than what you're
-        // actually looking at. Seeding the values here means the scan below
-        // only fills them in when nothing focused matched.
         const activeClass = Kwin.activeWindow.class ?? "";
         if (activeClass !== "") {
             const activeIdx = Strings.findMatchingIndex(GlobalConfig.services.arpcTargetWindows, activeClass);
@@ -214,7 +205,6 @@ Item {
             }
         }
 
-        // Priority 1: Steam Games
         if (topSteamClass !== "") {
             let appId = topSteamClass.replace("steam_app_", "");
             if (appId !== root.currentSteamAppId || !root.currentSteamData) {
@@ -236,7 +226,6 @@ Item {
             root.currentSteamAppId = "";
         }
 
-        // Priority 2: Custom Apps (Target Windows)
         if (topTargetClass !== "") {
             let displayDetails = topTargetTitle;
             let labels = GlobalConfig.services.arpcTargetWindowLabels;
@@ -258,7 +247,6 @@ Item {
             return;
         }
 
-        // Priority 3: Caelestia Info
         if (GlobalConfig.services.arpcCaelestiaInfo) {
             let os = SysInfo.osPrettyName || SysInfo.osName || "Linux";
             let kernel = SysInfo.kernel ? SysInfo.kernel : "";

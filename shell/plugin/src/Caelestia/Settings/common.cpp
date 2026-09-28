@@ -117,7 +117,6 @@ Diagnostic Diagnostic::mismatch(const QList<ExpectedType>& expected, const QJson
                 .arg(args[0], args[1], args[2], args[3], args[4]),
         };
     default:
-        // The bounds are checked in macros.hpp `unionTypes<...Ts>`
         Q_UNREACHABLE_RETURN(Diagnostic{});
     }
 }

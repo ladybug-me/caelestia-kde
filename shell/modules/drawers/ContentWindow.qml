@@ -19,8 +19,6 @@ import qs.modules.overview as Overview
 
 StyledWindow {
     id: root
-    // Edit these variables to adjust how far the blur mask is inset from each logical edge.
-    // They are relative to the widget's growth direction from the bar.
 
     property real blurOffsetTop: 0
     property real blurOffsetBottom: 0
@@ -34,11 +32,6 @@ StyledWindow {
     // month its calendar is showing live in it, which is where upstream keeps
     // them, so both survive the dashboard closing and a shell reload.
     readonly property ScreenState screenState: ShellState.forScreen(screen)
-    // NOTE: strictly typed as HyprlandMonitor upstream, but under the KDE
-    // fallback bridge Kwin.monitorFor() returns a plain mock QtObject (not
-    // a real qs::hyprland::ipc::HyprlandMonitor), so keep this loosely
-    // typed to avoid "Unable to assign QObject to HyprlandMonitor" warnings
-    // and the resulting null-monitor cascade.
     readonly property var monitor: Kwin.monitorFor(screen)
     // Reference Kwin.activeWsId so QML re-evaluates this binding whenever the
     // active workspace changes — hasFullscreenOn() filters by workspace, but
@@ -47,12 +40,7 @@ StyledWindow {
     readonly property bool hasOpenOverlay: focusGrabState.active || panels.popouts.isDetached || desktopContextMenu.expanded || visibilities.overview || visibilities.launcher || visibilities.dashboard || visibilities.sidebar || visibilities.session || visibilities.utilities
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
     property real fsTransitionProg: hasFullscreen ? 1 : 0
-    readonly property real sdfBorderOffset: 2 * fsTransitionProg // SDFs joins are not exact, so offset by 2px to ensure nothing shows
-    // Where dynamicBorderThickness lands once the overview is open. It is the
-    // target of a 300ms animation, and anything that lays content out inside the
-    // overview wants this rather than the animating value — laying out against a
-    // moving rect makes the result slide into place from wherever the first frame
-    // happened to put it.
+    readonly property real sdfBorderOffset: 2 * fsTransitionProg
     readonly property real overviewBorderThickness: Math.min(root.width, root.height) * 0.15
     property real dynamicBorderThickness: visibilities.overview ? overviewBorderThickness : Config.border.thickness
     property real overviewVerticalOffset: {
@@ -77,16 +65,8 @@ StyledWindow {
         return Math.max(...thresholds);
     }
 
-    // Whether anything on this surface needs the keyboard. Taking it makes the
-    // surface the active window; KWin does not give focus back to what had it
-    // when we stop asking, it just leaves nothing focused, so that has to be
-    // put right by hand below.
     readonly property bool wantsKeyboard: visibilities.launcher || visibilities.session || visibilities.dashboard || visibilities.sidebar || visibilities.overview || panels.popouts.hasCurrent
 
-    // Remembered on the way in, not read on the way out: as the application
-    // gives up focus KWin passes through a moment with no active window at all,
-    // and the bridge reports that as empty, so by the time the drawer closes
-    // there is often nothing left to read.
     property string focusReturn: ""
     property int workspaceReturn: -1
 
@@ -101,37 +81,6 @@ StyledWindow {
 
     name: "drawers"
 
-    // StyledWindow hardcodes WlrLayershell.namespace to "panel" (or "desktop"
-    // for isDesktopWidget) — name above is a local label with no effect on the
-    // Wayland namespace at all, despite reading like it should be one.
-    //
-    // KWin classifies a layer-shell surface's window type from that namespace
-    // string (LayerShellV1Window::scopeToType() maps "dock" -> WindowType::Dock,
-    // anything not in its fixed list, "panel" included, -> WindowType::Normal).
-    // Effects that need to know "is this a taskbar" — Magic Lamp's minimize
-    // animation among them — key off that type, not off the published icon
-    // geometry alone. With this surface reporting as Normal, Magic Lamp's own
-    // panel lookup (stacking-order search for a window where isDock() is true
-    // and its geometry intersects the published icon rect) never finds a match,
-    // so it falls through to its "no panel found" heuristic: check whether the
-    // icon rect touches a screen edge by exact pixel equality, and default to
-    // Bottom if none do. Our published rects sit a few pixels in from the true
-    // edge (padding), so that check never passes and every orientation silently
-    // got Bottom's animation math — a barely-there warp for a bottom bar, a
-    // visibly wrong one for left/right, and a degenerate, invisible one for
-    // top, since Bottom's math assumes the icon is below the window, the
-    // opposite of where it actually is.
-    //
-    // Reporting as Dock also keeps Alt+F4 off the shell. KWin gates its window
-    // actions behind USABLE_ACTIVE_WINDOW, which is
-    //   m_activeWindow && !(isDesktop() || isDock())
-    // so a dock is skipped before isCloseable() is ever consulted — that returns
-    // an unconditional true for every layer-shell surface, and window rules are
-    // never evaluated for them either, so this type is the only thing standing
-    // between "close window" and the shell losing a surface. The drawers take
-    // keyboard focus while open, which makes this surface the active window, so
-    // without it Alt+F4 over an open dashboard tears one screen's shell down and
-    // leaves the rest of the process running.
     WlrLayershell.namespace: "dock"
     mask: {
         if (hasOpenOverlay) return fullRegion;
@@ -148,15 +97,11 @@ StyledWindow {
 
     onWantsKeyboardChanged: {
         if (wantsKeyboard) {
-            // The bridge ignores the shell taking focus, so this is still the
-            // application that had it.
             focusReturn = Kwin.activeWindow?.address ?? "";
             workspaceReturn = Kwin.activeWsId;
             return;
         }
 
-        // Whatever the user switched to while the drawer was open wins, so this
-        // only falls back to what was remembered.
         const pending = Kwin.pendingFocusAddress ?? "";
         const addr = (Kwin.activeWindow?.address ?? "") || focusReturn;
         const oldWorkspace = workspaceReturn;
@@ -164,16 +109,11 @@ StyledWindow {
         workspaceReturn = -1;
 
         if (pending) {
-            // A focus switch was explicitly requested by the shell (e.g., clicking
-            // a preview), let it happen.
             return;
         }
 
         const currentWorkspace = Kwin.activeWsId;
         if (oldWorkspace !== -1 && currentWorkspace !== oldWorkspace) {
-            // User explicitly navigated to a different workspace while the drawer
-            // was open (e.g., clicking an empty workspace in the overview).
-            // Do not violently pull them back to the original application.
             return;
         }
 
@@ -289,11 +229,6 @@ StyledWindow {
         id: overviewWallpaperLayer
 
         property bool active: visibilities.overview || warming
-        // Paint this layer once, invisibly, shortly after startup. The first
-        // time the shell covers the whole screen the driver has to allocate for
-        // it, and that lands as ~80-100ms of blocked swap on whichever frame
-        // triggers it. Paying it here costs nothing anyone sees; leaving it to
-        // the user's first overview drops most of that transition's frames.
         property bool warming: false
         property real _maxBorder: Math.max(1, Math.min(root.width, root.height) * 0.15)
         property real bgScale: 1.0 + (dynamicBorderThickness / _maxBorder) * 0.1
@@ -301,7 +236,6 @@ StyledWindow {
         anchors.fill: parent
         visible: active || opacity > 0
         layer.enabled: true
-        // Ensure fade-in starts only after the wallpaper has actually loaded
         opacity: warming ? 0.004 : ((visibilities.overview && wallpaperLoader.status === Loader.Ready) ? 1 : 0)
 
         Behavior on opacity { NumberAnimation { duration: overviewWallpaperLayer.warming ? 0 : animConfig.wallpaperDuration; easing.type: animConfig.easingType } }
@@ -396,7 +330,7 @@ StyledWindow {
         }
         BlobInvertedRect {
             anchors.fill: parent
-            anchors.margins: -50 // Make border thicker to smooth out bulge from closed drawers
+            anchors.margins: -50
             group: GlobalConfig.appearance.islands ? null : blobGroup
             visible: !GlobalConfig.appearance.islands
             radius: root.borderRounding
@@ -489,7 +423,6 @@ StyledWindow {
         }
         PanelBg {
             id: popoutBg
-            // Extra width/height to prevent dynamic movement deformation partially detaching panel from bar
 
             property real extraShift: panels.popouts.isDetached ? 0 : 0.2
             property bool connectedToSidebar: (bar.position === "top" || bar.position === "bottom") && panels.popouts.sidebarOpen && panels.popouts.implicitWidth <= Tokens.sizes.sidebar.width + 1 && !panels.popouts.isDockPopout
@@ -705,7 +638,6 @@ StyledWindow {
                     desktopContextMenuAnchor.x = x;
                     desktopContextMenuAnchor.y = y;
                     if (desktopContextMenu.expanded) {
-                        // Close first so the menu repositions on reopen
                         desktopContextMenu.expanded = false;
                         desktopMenuReopen.restart();
                     } else {
@@ -737,8 +669,7 @@ StyledWindow {
 
     Config.screen: screen.name
     BackgroundEffect.blurRegion: Region {
-        Region { x: -10; y: -10; width: 1; height: 1 } // Prevent fallback to full-window blur when empty
-        // Border Blur Masks
+        Region { x: -10; y: -10; width: 1; height: 1 }
         Region {
             x: 0; y: 0
             width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness) : 0
@@ -763,7 +694,6 @@ StyledWindow {
             height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) : 0
             intersection: Intersection.Combine
         }
-        // Corner squares for inverted corners
         Region {
             x: Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness)
             y: Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness)

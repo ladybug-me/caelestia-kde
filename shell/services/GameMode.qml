@@ -13,21 +13,10 @@ Singleton {
 
     property alias enabled: props.enabled
 
-    // Hyprland is not always the compositor this runs under. Everything below
-    // branches on that rather than assuming it.
-    // Quickshell.env returns undefined for an unset variable, not "", so compare
-    // truthiness — !== "" was true everywhere and sent KDE down the Hyprland path.
     readonly property bool onHyprland: !!Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
 
-    // Video wallpapers keep a decoder and a GPU upload running for as long as
-    // they play, which is exactly what game mode is trying to free up.
     property bool restoreVideoWallpaper: false
 
-    // ---- Auto-enable rules ----
-    // The rules were editable in settings but nothing ever evaluated them, so
-    // launching a listed game did nothing. Watch the open windows and match them.
-    // Only a run that switched itself on switches itself back off, so a manual
-    // toggle is never undone by a game closing.
     property bool autoEnabled: false
 
     readonly property var _windows: Kwin.windowList
@@ -43,13 +32,11 @@ Singleton {
                 continue;
             for (let f = 0; f < fields.length; f++) {
                 if (fields[f] === rule)
-                    return true;          // plain name, the common case
+                    return true;
                 try {
                     if (new RegExp(rule).test(fields[f]))
                         return true;
                 } catch (e) {
-                    // A rule like "Minecraft* 1.21.11" is a window title, not a
-                    // valid regex — the exact match above already covers it.
                 }
             }
         }
@@ -84,47 +71,6 @@ Singleton {
         });
     }
 
-    // KWin's equivalents of the Hyprland options above: window animations and the
-    // blur effect. Both are read back before being changed so a user who already
-    // had them off does not get them switched on when game mode ends.
-    //
-    // The read-back has to happen at most once per game mode session, not once
-    // per call — otherwise a second run reads back game mode's *own*
-    // already-applied values (blur off, animations off) and overwrites
-    // gamemode-state with those, permanently losing the user's real settings.
-    // A QML-side guard isn't enough: PersistentProperties does not survive a
-    // real process restart or crash (only an in-process hot reload, and not
-    // reliably even then — confirmed by testing), so a guard flag living in QML
-    // state resets right along with everything else and misses exactly the case
-    // that matters. gamemode-state's own existence on disk is the guard instead:
-    // it is real, persists across anything, and is the one thing that has to
-    // stay in sync with "is there a previous state saved right now" by
-    // construction, since it *is* that state. The save step only runs if the
-    // file doesn't already exist; the restore step deletes it once done, so the
-    // next session starts clean.
-    //
-    // The general shape — toggle something, remember what it was before, put it
-    // back later — recurs for any feature that temporarily overrides a KDE/
-    // Hyprland setting. Guard the save step the same way: the presence of the
-    // saved-state file itself, not an in-memory or PersistentProperties flag.
-    //
-    // AnimationDurationFactor lives in kdeglobals, a generic Qt/Plasma setting
-    // rather than a KWin-specific one, and writing it with plain kwriteconfig6
-    // only updates the file — nothing tells already-running apps (KWin's own
-    // compositor included) to re-read it, so the config value changes but the
-    // live animation speed doesn't, until something else touches the file and
-    // happens to trigger a reload. Confirmed with dbus-monitor: changing it
-    // through System Settings broadcasts org.kde.kconfig.notify's
-    // ConfigChanged on /kdeglobals; kwriteconfig6's --notify flag emits the
-    // identical signal, which is what actually makes it take effect live.
-    // blurEnabled is a KWin effect setting in kwinrc, not a generic one, and
-    // reconfigure() below already covers it — no separate live-apply gap there.
-    //
-    // The state file's path is built from Paths.cache rather than hardcoding
-    // $HOME/.cache — that's the one place XDG_CACHE_HOME is already resolved
-    // correctly (falls back to $HOME/.cache only if it's unset), so re-deriving
-    // it in the shell script would just be a second, divergent copy of the same
-    // fallback logic.
     function applyKwin(enable: bool): void {
         const stateFile = `${Paths.cache}/gamemode-state`;
         if (enable) {
@@ -154,8 +100,6 @@ Singleton {
             root.autoEnabled = false;
 
         if (enabled) {
-            // Pause a playing video wallpaper, remembering whether it was paused
-            // already so ending game mode does not start one the user had stopped.
             root.restoreVideoWallpaper = !GlobalConfig.background.videoWallpaperPaused;
             if (root.restoreVideoWallpaper)
                 GlobalConfig.background.videoWallpaperPaused = true;
@@ -189,34 +133,21 @@ Singleton {
     PersistentProperties {
         id: props
 
-        // Plain state, not a binding. It used to read back from
-        // Kwin.options["animations:enabled"], which off Hyprland evaluates
-        // undefined === 0 — false — so game mode could never stay switched on
-        // there. onConfigReloaded below re-applies the options on Hyprland, so
-        // nothing needed the binding anyway.
         property bool enabled: false
 
         reloadableId: "gameMode"
     }
 
-    // If `gamemode-state` exists, recover by **restoring**, not re-enabling.
-    // KDE: call `applyKwin(false)` to restore settings and remove the stale file.
-    // Don’t set `props.enabled = true`; it would re-enter game mode.
-    // Hyprland: no recovery needed; just remove the stale file.
 
     FileView {
         path: `${Paths.cache}/gamemode-state`
         printErrors: false
         onLoaded: {
             if (props.enabled)
-                return; // already active, nothing to recover
+                return;
             if (root.onHyprland) {
-                // Hyprland resets compositor state on shell exit; the file is
-                // leftover bookkeeping. Remove it so the next session starts clean.
                 Quickshell.execDetached(["rm", "-f", `${Paths.cache}/gamemode-state`]);
             } else {
-                // KDE: restore blur/animations from the saved state and delete
-                // the stale file. Do not re-enable game mode.
                 root.applyKwin(false);
             }
         }

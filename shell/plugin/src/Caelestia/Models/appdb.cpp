@@ -228,7 +228,6 @@ void AppDb::incrementFrequency(const QString& id) {
 QList<AppEntry*>& AppDb::getSortedApps() const {
     m_sortedApps = m_apps.values();
 
-    // Pre-compute favourite status to avoid repeated regex matching during sort
     QSet<QString> favSet;
     favSet.reserve(m_sortedApps.size());
     for (const auto* app : std::as_const(m_sortedApps)) {

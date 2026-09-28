@@ -273,7 +273,6 @@ EOF
         08-build-shell.sh
         09-system-tweaks.sh
         10-autostart.sh
-        12-fetch-assets.sh
     )
 
     echo "Deploying the user's half of a packaged Caelestia install"

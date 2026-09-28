@@ -36,9 +36,6 @@ Item {
         color: Colours.palette.m3onSurfaceVariant
         fontStyle: Tokens.font.icon.builders.small.weight(Font.Bold).build()
 
-        // Derived from KWin so the arrow stays in sync with the real "show
-        // desktop" state: toggling it any other way still flips the arrow, and
-        // a failed invocation never leaves it pointing the wrong way.
         rotation: (Kwin.showingDesktop) ? 180 : 0
 
         Behavior on rotation {

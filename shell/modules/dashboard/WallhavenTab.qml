@@ -22,7 +22,7 @@ Item {
     property bool isDownloading: false
     property real downloadProgressValue: 0
     property string downloadingWallpaperId: ""
-    property string downloadState: "idle" // idle | progress | success | error
+    property string downloadState: "idle"
     property string downloadMessage: ""
     property var selectedWallpaper: null
     property bool detailPanelOpen: false
@@ -147,7 +147,6 @@ Item {
                     }
                 }
 
-                // Search bar
                 RowLayout {
                     Layout.fillWidth: true
                     spacing: Tokens.spacing.small
@@ -192,7 +191,6 @@ Item {
                     }
                 }
 
-                // Results header with pagination
                 RowLayout {
                     StyledText {
                         text: root.currentResults.length > 0 ? qsTr("Found %1 wallpapers (page %2 of %3)").arg(root.currentResults.length).arg(WallhavenSearcher.currentPage).arg(WallhavenSearcher.lastPage) : qsTr("No results")
@@ -214,7 +212,6 @@ Item {
                     }
                 }
 
-                // Results grid
                 GridView {
                     id: resultsGrid
 
@@ -306,7 +303,6 @@ Item {
         }
     }
 
-    // Wallpaper detail panel with animation
     StyledRect {
         id: detailPanel
 
@@ -445,7 +441,6 @@ Item {
         }
     }
 
-    // Timer to clear selectedWallpaper after close animation
     Timer {
         id: clearWallpaperTimer
 

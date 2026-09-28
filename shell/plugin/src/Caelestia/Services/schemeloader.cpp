@@ -19,14 +19,9 @@ namespace caelestia::services {
 SchemeLoader::SchemeLoader(QObject* parent)
     : QObject(parent)
     , m_watcher(new QFileSystemWatcher(this)) {
-    // scheme.json state path: $XDG_STATE_HOME/caelestia/scheme.json
     const auto stateDir = qEnvironmentVariable("XDG_STATE_HOME", QDir::homePath() + QStringLiteral("/.local/state"));
     m_schemeStatePath = stateDir + QStringLiteral("/caelestia/scheme.json");
 
-    // Watch for changes to scheme.json. On a fresh install the file does not
-    // exist yet, so also watch its directory and pick the file up once it
-    // appears — otherwise the first `caelestia scheme set` would need a full
-    // shell restart to take effect.
     const auto schemeDir = QFileInfo(m_schemeStatePath).absolutePath();
     QDir().mkpath(schemeDir);
     m_watcher->addPath(schemeDir);
@@ -38,7 +33,6 @@ SchemeLoader::SchemeLoader(QObject* parent)
         watchSchemeState();
     });
     connect(m_watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString&) {
-        // The file may have just been created (or recreated) in the directory.
         if (watchSchemeState()) {
             loadCurrentScheme();
         }

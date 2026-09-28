@@ -2,12 +2,13 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include <QObject>
-#include <QQmlEngine>
-#include <QVariant>
 #include <QHash>
 #include <QList>
+#include <QObject>
+#include <QQmlEngine>
 #include <QTimer>
+#include <QVariant>
+
 #include "globalshortcut.hpp"
 
 namespace caelestia::services {

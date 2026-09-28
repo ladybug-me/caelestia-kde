@@ -37,8 +37,6 @@ QStringList gpuBusyFiles() {
     return files;
 }
 
-// Intel iGPUs expose no busy-percent node, so their frequency nodes are what tells
-// them apart from a machine with no GPU at all
 bool hasIntelGpu() {
     static const QRegularExpression cardRe(QStringLiteral("^card\\d+$"));
 
@@ -115,8 +113,6 @@ QString parseLspciName(const QByteArray& out) {
         return cleanName(bracket.captured(1));
     }
 
-    // Split on a colon followed by whitespace so the PCI slot ("00:02.0") is not
-    // mistaken for the class/name separator ("controller: Device").
     static const QRegularExpression colonRe(QStringLiteral(":\\s+(.+)"));
     const auto colon = colonRe.match(match);
     if (colon.hasMatch()) {
@@ -132,8 +128,6 @@ struct NameSource {
     QString (*parse)(const QByteArray&);
 };
 
-// Name probes in priority order; the first non-empty result wins. The NVIDIA
-// probe is first and doubles as the type probe (see finishNameSource).
 const std::array<NameSource, 3>& nameSources() {
     static const std::array<NameSource, 3> sources = { {
         { QStringLiteral("nvidia-smi"), { QStringLiteral("--query-gpu=name"), QStringLiteral("--format=csv,noheader") },
@@ -144,7 +138,6 @@ const std::array<NameSource, 3>& nameSources() {
     return sources;
 }
 
-// Index of the NVIDIA source within nameSources(); its result also drives type.
 constexpr int kNvidiaSource = 0;
 
 } // namespace
@@ -159,11 +152,6 @@ Gpu::Gpu(QObject* parent)
         setUserType(parseType(svc->gpuType()));
     });
 
-    // Defer the initial GPU detection by 5 seconds to prevent waking up a runtime-suspended
-    // discrete GPU (e.g., Nvidia) during Qt Wayland's initial screen enumeration.
-    // If the dGPU wakes up while Qt is picking the primary screen for its animation
-    // loop, Qt may lock the refresh rate to the dGPU's monitor rather than the iGPU's,
-    // causing an animation refresh-rate mismatch on multi-monitor setups (Issue #169, #314).
     QTimer::singleShot(5000, this, [this] {
         detectGpu();
     });
@@ -204,7 +192,6 @@ void Gpu::setUserType(Type value) {
         Q_EMIT typeChanged();
     }
 
-    // Probe again when switching back to auto
     if (value == Auto) {
         detectGpu();
     }
@@ -255,7 +242,6 @@ void Gpu::detectGpu() {
     }
     m_detecting = true;
 
-    // Probe in priority order, stopping at the first result
     tryNameSource(0);
 }
 
@@ -267,10 +253,6 @@ void Gpu::tryNameSource(int index) {
 }
 
 void Gpu::finishNameSource(int index, QString name) {
-    // The NVIDIA name probe doubles as the type probe: a non-empty result means an
-    // NVIDIA GPU is present and queryable. Derive autoType unconditionally (even when
-    // the user pins a type) so a later switch to Auto reads a correct value without
-    // depending on its own re-probe, which is skipped while a probe is in flight.
     if (index == kNvidiaSource) {
         setAutoType(!name.isEmpty() ? Nvidia : (m_busyFiles.isEmpty() && !hasIntelGpu() ? None : Generic));
     }
@@ -319,7 +301,6 @@ void Gpu::readGenericUsage() {
 
     qreal maxPerc = -1.0;
 
-    // Pass 1: amdgpu (and some newer Xe) cards expose a direct busy percent.
     for (const QString& card : cards) {
         QFile f(QStringLiteral("/sys/class/drm/%1/device/gpu_busy_percent").arg(card));
         if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -333,8 +314,6 @@ void Gpu::readGenericUsage() {
         }
     }
 
-    // Pass 2: Intel iGPUs have no busy-percent node; approximate usage as the
-    // ratio of the current GPU frequency to its maximum.
     for (const QString& card : cards) {
         if (QFile::exists(QStringLiteral("/sys/class/drm/%1/device/gpu_busy_percent").arg(card)))
             continue;

@@ -22,12 +22,8 @@ Singleton {
     property list<PwNode> sources: []
     property list<PwNode> streams: []
 
-    // One representative stream per application, so no app ever appears twice
-    // in the "Now playing" lists even when it opens multiple PipeWire streams.
     property list<PwNode> appStreams: []
 
-    // The shell's own audio is already represented by the system volume, so it
-    // must never show up as a separate app in the "Now playing" lists.
     readonly property string selfAppName: "caelestia-shell"
 
     readonly property PwNode sink: Pipewire.defaultAudioSink
@@ -39,9 +35,6 @@ Singleton {
     readonly property bool sourceMuted: !!source?.audio?.muted
     readonly property real sourceVolume: source?.audio?.volume ?? 0
 
-    // CavaProvider is only registered when the plugin was built with libcava
-    // available (see shell/plugin/CMakeLists.txt). Create it dynamically so a
-    // build without Cava doesn't fail this whole singleton's component load.
     property var cava: null
     readonly property alias beatTracker: beatTracker
 
@@ -122,7 +115,6 @@ Singleton {
     function getStreamName(stream: PwNode): string {
         if (!stream)
             return qsTr("Unknown");
-        // Try application name first, then description, then name
         return stream.properties["application.name"] || stream.description || stream.name || qsTr("Unknown Application");
     }
 
@@ -279,8 +271,6 @@ Singleton {
             }
         }
 
-        // Assign appStreams before streams so listeners of streamsChanged already
-        // observe the deduplicated app list.
         root.appStreams = newAppStreams;
         root.sinks = [...seenSinks.values()];
         root.sources = [...seenSources.values()];
@@ -316,17 +306,12 @@ Singleton {
         previousSourceName = newSourceName;
     }
 
-    // Populate immediately: Pipewire.nodes may already be filled by the time this
-    // lazily-loaded singleton is created, so onValuesChanged would never fire.
     Component.onCompleted: {
         AudioBackend.showInactiveDevices = root.showInactiveDevices;
         refreshNodes();
         previousSinkName = root.getNodeDisplayName(sink);
         previousSourceName = root.getNodeDisplayName(source);
 
-        // CavaProvider is only registered when the plugin was built with
-        // libcava available (see shell/plugin/CMakeLists.txt); create it
-        // dynamically so a build without Cava doesn't fail this singleton's load.
         try {
             root.cava = Qt.createQmlObject(
                 'import Caelestia.Config\nimport Caelestia.Services\nCavaProvider { bars: GlobalConfig.services.visualiserBars }',
@@ -352,8 +337,6 @@ Singleton {
         target: AudioBackend
     }
 
-    // Always track the current defaults so volume/mute bind even if the lists
-    // momentarily lag behind the default node.
     PwObjectTracker {
         objects: [root.sink, root.source, ...root.sinks, ...root.sources, ...root.streams].filter(n => n)
     }

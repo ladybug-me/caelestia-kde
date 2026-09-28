@@ -1,11 +1,12 @@
 #include "translations.hpp"
 
 #include <QtQml/qqmlengine.h>
-#include <algorithm>
 #include <qcoreapplication.h>
 #include <qdir.h>
 #include <qlocale.h>
 #include <qlogging.h>
+
+#include <algorithm>
 #include <utility>
 
 namespace caelestia {
@@ -134,7 +135,6 @@ QStringList Translations::candidates() const {
         codes << m_language;
     }
 
-    // Fall back from region specific codes (tr_TR) to the bare language (tr).
     QStringList expanded;
     for (const QString& code : std::as_const(codes)) {
         expanded << code;
@@ -215,12 +215,6 @@ void Translations::refreshAvailable() {
 
         for (const QString& file : dir.entryList({ catalogPrefix() + u"*.qm"_s }, QDir::Files)) {
             const QString code = file.mid(catalogPrefix().size(), file.size() - catalogPrefix().size() - 3);
-            // Source-language catalogues are skipped rather than listed. reload()
-            // stops at the first source-language candidate and never loads one, so
-            // offering e.g. en_GB here would put a language in the picker that
-            // selecting could only ever leave on the untranslated source strings.
-            // The single "en" entry seeded above is that choice, and it is honest
-            // about being the source.
             if (!code.isEmpty() && !isSourceLanguage(code) && !codes.contains(code)) {
                 codes << code;
             }

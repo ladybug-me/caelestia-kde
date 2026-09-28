@@ -69,14 +69,14 @@ Singleton {
     Variants {
         id: variants
 
-        model: Quickshell.screens // Don't respect excluded screens cause ipc
+        model: Quickshell.screens
 
         Monitor {}
     }
 
     Process {
         running: true
-        command: ["sh", "-c", "asdbctl get"] // To avoid warnings if asdbctl is not installed
+        command: ["sh", "-c", "asdbctl get"]
         stdout: StdioCollector {
             onStreamFinished: root.appleDisplayPresent = text.trim().length > 0
         }
@@ -89,7 +89,7 @@ Singleton {
         stdout: StdioCollector {
             onStreamFinished: root.ddcMonitors = text.trim().split("\n\n").filter(d => d.startsWith("Display ")).map(d => ({
                         busNum: d.match(/I2C bus:[ ]*\/dev\/i2c-([0-9]+)/)[1],
-                        connector: d.match(/DRM connector:\s+(.*)/)[1].replace(/^card\d+-/, "") // strip "card1-"
+                        connector: d.match(/DRM connector:\s+(.*)/)[1].replace(/^card\d+-/, "")
                     }))
         }
     }
@@ -127,7 +127,6 @@ Singleton {
             return getFor("active");
         }
 
-        // Allows searching by active/model/serial/id/name
         function getFor(query: string): real {
             return root.getMonitor(query)?.brightness ?? -1;
         }

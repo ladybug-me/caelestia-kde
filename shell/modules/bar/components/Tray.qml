@@ -66,7 +66,6 @@ StyledRect {
 
         opacity: root.expanded || !Config.bar.tray.compact ? 1 : 0
         enabled: root.expanded || !Config.bar.tray.compact
-        // Disable hit area when collapsed to prevent phantom clicks
 
         add: Transition {
             Anim {

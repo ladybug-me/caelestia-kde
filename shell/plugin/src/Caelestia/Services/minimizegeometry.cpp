@@ -1,19 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #include "minimizegeometry.hpp"
 
-#include "plasmawindows.hpp"
+#include <qpa/qplatformnativeinterface.h>
 
 #include <QGuiApplication>
 #include <QQuickWindow>
 #include <QWindow>
 
-#include <qpa/qplatformnativeinterface.h>
+#include "plasmawindows.hpp"
 
 namespace caelestia::services {
 
 namespace {
 
-/// The wl_surface backing a QWindow, or nullptr before it has been shown.
 wl_surface* surfaceFor(QWindow* window) {
     if (!window || !window->handle()) {
         return nullptr;
@@ -30,10 +29,9 @@ wl_surface* surfaceFor(QWindow* window) {
 
 MinimizeGeometry::MinimizeGeometry(QObject* parent)
     : QObject(parent) {
-    // A handle that goes away takes the published rect with it, so the next
-    // call has to send afresh rather than dedupe against a stale value.
-    connect(PlasmaWindows::instance(), &PlasmaWindows::handleLost, this,
-        [this](const QString& uuid) { m_published.remove(uuid); });
+    connect(PlasmaWindows::instance(), &PlasmaWindows::handleLost, this, [this](const QString& uuid) {
+        m_published.remove(uuid);
+    });
 }
 
 void MinimizeGeometry::setGeometry(QQuickItem* anchor, const QString& uuid, int x, int y, int width, int height) {
@@ -46,8 +44,6 @@ void MinimizeGeometry::setGeometry(QQuickItem* anchor, const QString& uuid, int 
         return;
     }
 
-    // Scene coordinates are surface coordinates: the anchor's window is the
-    // surface the rect is declared against.
     const auto key = PlasmaWindows::normaliseUuid(uuid);
     const QRect rect(x, y, width, height);
     // Key by surface too: two monitors with mirrored docks can compute the
@@ -63,8 +59,6 @@ void MinimizeGeometry::setGeometry(QQuickItem* anchor, const QString& uuid, int 
         return;
     }
 
-    // The protocol takes unsigned coordinates, so a tile scrolled or animated
-    // off the surface's top/left would wrap into a huge positive number.
     handle->set_minimized_geometry(surface, static_cast<uint32_t>(std::max(0, rect.x())),
         static_cast<uint32_t>(std::max(0, rect.y())), static_cast<uint32_t>(rect.width()),
         static_cast<uint32_t>(rect.height()));

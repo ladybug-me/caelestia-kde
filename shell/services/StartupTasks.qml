@@ -6,10 +6,6 @@ import qs.utils
 Item {
     id: root
 
-    // The task scripts sit beside this file in the shell tree, which is
-    // ~/.config/quickshell/caelestia for a checkout and /etc/xdg/quickshell/caelestia
-    // for a package. shellPath resolves both, so the path is passed in rather than
-    // assumed - a hardcoded ~/.config path silently skipped every task on a package.
     readonly property string tasksDir: Quickshell.shellPath("services/startuptasks")
 
     Component.onCompleted: {

@@ -8,9 +8,6 @@ import qs.utils
 QtObject {
     id: root
 
-    /// Categories shown in the app browser sidebar, in KDE/XDG order. Only
-    /// categories that actually contain an app are shown (see visibleCategories).
-    /// `xdg` lists the desktop-entry Categories= values mapped to that group.
     readonly property var definitions: [
         { id: "favorites", name: qsTr("Favorites"), icon: "favorite" },
         { id: "all", name: qsTr("All Applications"), icon: "apps" },
@@ -38,7 +35,6 @@ QtObject {
             if (typeof raw === "string") {
                 cats = raw.split(";").map(c => c.trim()).filter(c => c.length > 0);
             } else {
-                // DesktopEntry.categories is a list (QStringList), not a semicolon string.
                 for (let i = 0; i < raw.length; i++) {
                     const c = String(raw[i]).trim();
                     if (c.length > 0) cats.push(c);
@@ -53,8 +49,6 @@ QtObject {
         return "other";
     }
 
-    /// Only the categories that currently contain at least one app
-    /// (Favorites and All Applications are always shown, like KDE Kickoff).
     function visibleCategories(all: list<var>): list<var> {
         const res = [];
         for (const def of root.definitions) {
@@ -67,7 +61,6 @@ QtObject {
         return res;
     }
 
-    /// Visible apps for a category, kept in the caller-provided order.
     function appsFor(categoryId: string, all: list<var>): list<var> {
         if (categoryId === "all")
             return all;

@@ -27,16 +27,16 @@ Item {
         if (shouldBeActive) {
             implicitHeight = Qt.binding(() => content.implicitHeight);
         } else
-            implicitHeight = implicitHeight; // Break binding during close anim
+            implicitHeight = implicitHeight;
     }
     clip: Config.bar.position === "bottom"
     visible: offsetScale < 1
     anchors.bottomMargin: (Config.bar.position === "bottom" ? 0 : -implicitHeight - 5) * offsetScale
     height: Config.bar.position === "bottom" ? implicitHeight * (1 - offsetScale) : implicitHeight
     implicitHeight: content.implicitHeight
-    implicitWidth: content.implicitWidth || 630 // Hard coded fallback for first open
+    implicitWidth: content.implicitWidth || 630
     opacity: 1 - offsetScale
-    Component.onCompleted: Qt.callLater(() => Apps) // Load apps on init
+    Component.onCompleted: Qt.callLater(() => Apps)
 
     Behavior on offsetScale {
         enabled: !visibilities.skipLauncherAnim

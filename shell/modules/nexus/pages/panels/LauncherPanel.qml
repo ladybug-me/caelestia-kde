@@ -21,7 +21,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // General
         SectionHeader {
             first: true
             text: qsTr("General")
@@ -116,7 +115,6 @@ PageBase {
             onToggled: GlobalConfig.launcher.showOnHover = checked
         }
 
-        // Display
         SectionHeader {
             text: qsTr("Display")
         }
@@ -185,7 +183,6 @@ PageBase {
             onMoved: v => GlobalConfig.launcher.dragThreshold = v
         }
 
-        // Clipboard
         SectionHeader {
             text: qsTr("Clipboard")
         }
@@ -209,7 +206,6 @@ PageBase {
             onToggled: GlobalConfig.launcher.confirmClearClipboard = checked
         }
 
-        // Behaviour
         SectionHeader {
             text: qsTr("Behavior")
         }
@@ -230,7 +226,6 @@ PageBase {
             onToggled: GlobalConfig.launcher.enableDangerousActions = checked
         }
 
-        // Fuzzy search
         SectionHeader {
             text: qsTr("Fuzzy search")
         }

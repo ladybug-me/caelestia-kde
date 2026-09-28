@@ -168,14 +168,6 @@ Item {
         }
     }
 
-    // Each list owns its own `active`, derived from the state it belongs to.
-    // It used to be set from two places at once — `PropertyChanges` in the states
-    // and an imperative onStateChanged handler — which broke state restoration:
-    // entering a state captured the value the imperative write had just set, so
-    // leaving it "restored" active back to true and the old list stayed loaded,
-    // drawing on top of the new one. Binding to root.state (rather than the
-    // show* flags) keeps the existing cross-fade timing, since the state change
-    // itself is deferred by the Behavior below.
     Loader {
         id: appList
 
@@ -441,8 +433,6 @@ Item {
     Row {
         id: empty
 
-        /// The clipboard list is a mode of the app list rather than a state of
-        /// its own, so ask the list itself.
         readonly property bool cliphistMissing: root.currentList?.state === "clipboard" && !Clipboard.available
 
         opacity: (!root.showAppsBrowser && root.currentList?.count === 0) ? 1 : 0

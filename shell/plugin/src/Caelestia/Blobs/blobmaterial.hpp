@@ -8,11 +8,8 @@ struct BlobRectData {
     float cx = 0, cy = 0, hw = 0, hh = 0;
     float offsetX = 0, offsetY = 0;
     float minEig = 1.0f;
-    // Inverse of 2x2 deformation matrix, column-major for GLSL
     float invDeform[4] = { 1, 0, 0, 1 };
-    // Screen-space AABB half-extents of the deformed rect
     float screenHalfX = 0, screenHalfY = 0;
-    // Effective per-corner radii (tr, br, bl, tl), pre-computed on CPU
     float radius[4] = { 0, 0, 0, 0 };
     // Bitmask of indices in this rect's m_cachedRects that mutually exclude (or are excluded by) this rect.
     // Used by the shader to skip smin between excluded pairs.

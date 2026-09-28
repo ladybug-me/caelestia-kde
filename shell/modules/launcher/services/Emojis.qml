@@ -9,19 +9,16 @@ QtObject {
     id: root
 
     readonly property bool _loaded: EmojiDb.loaded
-    // Kept for API compatibility — items now live in C++ heap
     readonly property int itemCount: EmojiDb.count
 
     property Connections favConnections: Connections {
         target: GlobalConfig.launcher
 
         function onFavouriteEmojisChanged(): void {
-            // No-op: getSortedItems() always reads fresh from C++
         }
     }
 
     function reload(): void {
-        // EmojiDb loads at startup; nothing to do unless it somehow wasn't loaded
         if (!EmojiDb.loaded) {
             console.warn("EmojiDb not loaded yet");
         }

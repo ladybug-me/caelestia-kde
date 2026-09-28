@@ -24,7 +24,6 @@ HyprlandState::HyprlandState(QObject* parent)
         auto* pw = PlasmaWindows::instance();
         connect(pw, &PlasmaWindows::windowAdded, this, &HyprlandState::onKWinWindowListChanged);
         connect(pw, &PlasmaWindows::handleLost, this, &HyprlandState::onKWinWindowListChanged);
-        // Push the initial state that PlasmaWindows already has
         onKWinWindowListChanged();
         onKWinActiveWindowChanged();
         return;
@@ -51,7 +50,6 @@ HyprlandState::HyprlandState(QObject* parent)
 
     m_socket->connectToServer(m_eventSocket, QLocalSocket::ReadOnly);
 
-    // Initial fetch
     updateAll();
 }
 
@@ -144,7 +142,6 @@ void HyprlandState::onKWinWindowListChanged() {
     m_windowByAddress = newByAddress;
     m_addresses = newAddresses;
     emit windowListChanged();
-    // Also update active window from the same pass
     if (m_activeWindow != newActiveWindow) {
         m_activeWindow = newActiveWindow;
         emit activeWindowChanged();
@@ -307,14 +304,13 @@ void HyprlandState::readEvent() {
         if (rawEvent.isEmpty()) {
             break;
         }
-        rawEvent.truncate(rawEvent.length() - 1); // Remove trailing \n
+        rawEvent.truncate(rawEvent.length() - 1);
         const auto event = QByteArrayView(rawEvent.data(), rawEvent.indexOf(">>"));
         handleEvent(QString::fromUtf8(event));
     }
 }
 
 void HyprlandState::handleEvent(const QString& event) {
-    // We only care about events that affect our state
     if (event == QStringLiteral("openlayer") || event == QStringLiteral("closelayer") ||
         event == QStringLiteral("screencast")) {
         return;
@@ -331,13 +327,10 @@ void HyprlandState::handleEvent(const QString& event) {
     } else if (event == QStringLiteral("monitoradded") || event == QStringLiteral("monitorremoved") ||
                event == QStringLiteral("focusedmon")) {
         updateMonitors();
-        updateWorkspaces(); // active workspace on monitor changes
+        updateWorkspaces();
         updateActiveWorkspace();
     } else if (event == QStringLiteral("activelayout")) {
-        // Just in case keyboard layout changes affect anything, but typically they don't affect this state.
     } else {
-        // For other events, we can safely update everything to be sure, or just ignore.
-        // It's safer to update all for unknown events since there might be overlapping data.
         updateAll();
     }
 }
@@ -352,11 +345,6 @@ HyprlandState::SocketPtr HyprlandState::makeRequestJson(
 HyprlandState::SocketPtr HyprlandState::makeRequest(
     const QString& request, const std::function<void(bool, QByteArray)>& callback) {
     if (m_requestSocket.isEmpty()) {
-        // Hyprland-only data was asked for and there is no socket to answer it:
-        // either the KDE bridge is in use, or Hyprland was detected but its
-        // socket directory was missing. Say so once - the properties these
-        // requests fill stay empty, and a caller that assumed otherwise would
-        // read an empty list as "nothing is open".
         if (!m_warnedNoRequestSocket) {
             m_warnedNoRequestSocket = true;
             if (m_kdeFallback) {

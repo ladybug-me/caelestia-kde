@@ -95,10 +95,6 @@ Item {
                         }
                     }
                 }
-                // A window that exists but has no stream -- minimised, or KWin
-                // refusing another one -- still shows its icon. The empty state
-                // above is not the right answer there: it says there is no client
-                // at all, which is a different thing.
                 WindowPreview {
                     anchors.fill: parent
                     address: root.client?.address ?? ""

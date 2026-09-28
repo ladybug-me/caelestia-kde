@@ -2,19 +2,18 @@
 #include "brightnesswatcher.hpp"
 
 #include <qloggingcategory.h>
-#include <QGuiApplication>
 #include <qpa/qplatformnativeinterface.h>
+
+#include <QGuiApplication>
 
 Q_LOGGING_CATEGORY(lcBrightnessWatcher, "caelestia.services.brightnesswatcher", QtInfoMsg)
 
 namespace caelestia::services {
 
 KdeOutputDevice::KdeOutputDevice(struct ::kde_output_device_v2* object)
-    : QtWayland::kde_output_device_v2(object) {
-}
+    : QtWayland::kde_output_device_v2(object) {}
 
-KdeOutputDevice::~KdeOutputDevice() {
-}
+KdeOutputDevice::~KdeOutputDevice() {}
 
 void KdeOutputDevice::kde_output_device_v2_name(const QString& name) {
     if (m_name != name) {
@@ -41,29 +40,24 @@ void KdeOutputDevice::kde_output_device_v2_removed() {
     emit removed();
 }
 
-
 KdeOutputDeviceRegistry::KdeOutputDeviceRegistry(QObject* parent)
-    : QWaylandClientExtensionTemplate<KdeOutputDeviceRegistry>(23) {
-}
+    : QWaylandClientExtensionTemplate<KdeOutputDeviceRegistry>(23) {}
 
 void KdeOutputDeviceRegistry::kde_output_device_registry_v2_output(struct ::kde_output_device_v2* output) {
     auto* dev = new KdeOutputDevice(output);
     emit deviceAdded(dev);
 }
 
-
 KdeOutputManagement::KdeOutputManagement(QObject* parent)
-    : QWaylandClientExtensionTemplate<KdeOutputManagement>(21) {
-}
-
+    : QWaylandClientExtensionTemplate<KdeOutputManagement>(21) {}
 
 BrightnessWatcher::BrightnessWatcher(QObject* parent)
     : QObject(parent) {
     m_registry = new KdeOutputDeviceRegistry(this);
     connect(m_registry, &KdeOutputDeviceRegistry::deviceAdded, this, &BrightnessWatcher::onDeviceAdded);
-    
+
     m_management = new KdeOutputManagement(this);
-    
+
     // QtWayland requires us to explicitly check if the extension was successfully bound.
     // However, it binds asynchronously. If QGuiApplication is already running, it binds immediately.
 }
@@ -91,35 +85,29 @@ void BrightnessWatcher::setBrightness(const QString& outputName, qreal value) {
 
     auto* dev = m_devices[outputName];
     if (!dev->hasBrightness()) {
-        qCWarning(lcBrightnessWatcher) << "Cannot set brightness: output" << outputName << "does not support brightness";
+        qCWarning(lcBrightnessWatcher) << "Cannot set brightness: output" << outputName
+                                       << "does not support brightness";
         return;
     }
 
-    // Clamp value between 0.0 and 1.0
     value = qBound(0.0, value, 1.0);
     uint32_t brightValue = qRound(value * 10000.0);
 
     auto* config = m_management->create_configuration();
-    if (!config) return;
+    if (!config)
+        return;
 
     QtWayland::kde_output_configuration_v2 cfg(config);
     cfg.set_brightness(dev->object(), brightValue);
     cfg.apply();
-    // Destroying the config object when it goes out of scope?
-    // According to protocol, the server cleans up the config after apply or destroy.
-    // Actually, we must call destroy() on the wrapper to free client-side memory, 
-    // or let it leak? QtWayland wrappers don't automatically destroy the Wayland object on C++ destruction unless told.
-    // Let's call destroy() after apply(), but wait - apply is asynchronous. 
-    // Usually destroying the object right after apply is safe in Wayland.
     cfg.destroy();
 }
 
 void BrightnessWatcher::onDeviceAdded(KdeOutputDevice* device) {
-    // Wait until we have the name
     connect(device, &KdeOutputDevice::nameChanged, this, [this, device]() {
         if (!device->name().isEmpty()) {
             m_devices[device->name()] = device;
-            
+
             connect(device, &KdeOutputDevice::brightnessChanged, this, [this, device]() {
                 emit brightnessChanged(device->name(), device->brightness() / 10000.0);
             });

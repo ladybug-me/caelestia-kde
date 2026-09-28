@@ -21,9 +21,9 @@ public:
     DiskInfo(QString mount, quint64 usedBytes, quint64 totalBytes, bool hasRoot, QObject* parent = nullptr);
 
     [[nodiscard]] QString mount() const;
-    [[nodiscard]] qreal used() const;  // KiB
-    [[nodiscard]] qreal total() const; // KiB
-    [[nodiscard]] qreal free() const;  // KiB
+    [[nodiscard]] qreal used() const;
+    [[nodiscard]] qreal total() const;
+    [[nodiscard]] qreal free() const;
     [[nodiscard]] qreal perc() const;
     [[nodiscard]] bool hasRoot() const;
 

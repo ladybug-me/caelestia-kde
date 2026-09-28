@@ -11,8 +11,8 @@ class AnimDurations;
 
 class AnimTokens : public QObject {
     Q_OBJECT
-    Q_MOC_INCLUDE("tokens.hpp")           // AnimCurves
-    Q_MOC_INCLUDE("appearanceconfig.hpp") // AnimDurations
+    Q_MOC_INCLUDE("tokens.hpp")
+    Q_MOC_INCLUDE("appearanceconfig.hpp")
     QML_ANONYMOUS
 
     Q_PROPERTY(QEasingCurve emphasized READ emphasized NOTIFY curvesChanged)

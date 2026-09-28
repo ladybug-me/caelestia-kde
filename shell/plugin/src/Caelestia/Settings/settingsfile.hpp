@@ -26,7 +26,7 @@ public:
     LoadResult load(bool emitErrors = true);
 
 signals:
-    void changed(); // Data changed, not file watcher event
+    void changed();
     void readFailed(const QString& error);
     void writeFailed(const QString& error);
 

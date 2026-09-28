@@ -21,10 +21,8 @@ Item {
     property int cellWidth: 100
     property int cellHeight: 120
 
-    // How many columns fit given the grid width
     function getIconCols() { return Math.max(1, Math.floor(gridItem.width / root.cellWidth)); }
         
-    // How many rows are occupied
     function getIconRows() { return Math.max(1, Math.floor(gridItem.height / root.cellHeight)); }
 
     anchors.fill: parent
@@ -50,7 +48,6 @@ Item {
                     root.savedOrder = [];
                 }
                 root.layoutLoaded = true;
-                // Reposition existing items if they were loaded before layout
                 for (var i = 0; i < instantiator.count; i++) {
                     var item = instantiator.objectAt(i);
                     if (item) item.initPosition();
@@ -159,7 +156,7 @@ Item {
                 z: dragHandler.active ? 10 : 1
 
                 function initPosition() {
-                    if (col !== -1 && row !== -1) return; // already init
+                    if (col !== -1 && row !== -1) return;
                     
                     let targetCol = -1;
                     let targetRow = -1;
@@ -247,7 +244,6 @@ Item {
                     return "text-x-generic";
                 }
 
-                // Returns the search directories within the icon set, ordered by priority
                 readonly property string iconSetBase: Qt.resolvedUrl(Quickshell.shellDir + "/assets/icons/yet-another-monochrome-icon-set")
 
                 readonly property var iconSetDirs: ["apps/scalable", "mimetypes/scalable", "places/scalable", "actions/scalable", "devices/scalable", "status/scalable"]
@@ -256,14 +252,12 @@ Item {
                     if (!iconName) return "";
                     for (let i = 0; i < iconSetDirs.length; i++) {
                         let url = iconSetBase + "/" + iconSetDirs[i] + "/" + iconName + ".svg";
-                        // Qt.resolvedUrl normalises it; we return it for use as Image.source
-                        return url; // try first candidate; Image will report Error and we fallback
+                        return url;
                     }
                     return "";
                 }
 
                 function getMaterialYouIconUrlByPriority(iconName) {
-                    // Build ordered candidate list: apps first (for .desktop icons), then mimetypes, then places
                     if (!iconName) return "";
                     let candidates = [];
                     for (let i = 0; i < iconSetDirs.length; i++) {
@@ -286,7 +280,6 @@ Item {
                     }
                     const iconName = getIconName(isDir, filename, suffix);
                     if (useMaterialYouIcons) {
-                        // For generic types, mimetypes dir has them; for folder, places dir
                         if (isDir) return iconSetBase + "/places/scalable/folder.svg";
                         return iconSetBase + "/mimetypes/scalable/" + iconName + ".svg";
                     }
@@ -325,7 +318,6 @@ Item {
                             width: 64; height: 64
                             source: getIconSource(fileIsDir, fileName, fileSuffix)
                             fillMode: Image.PreserveAspectFit
-                            // Tint with the shell's primary accent when Material You icons are active
                             layer.enabled: useMaterialYouIcons
                             layer.effect: Colouriser {
                                 sourceColor: "black"
@@ -337,7 +329,6 @@ Item {
                                     return c;
                                 }
                             }
-                            // If the Material You SVG is missing, fall back to KDE icon
                             onStatusChanged: {
                                 if (status === Image.Error && useMaterialYouIcons) {
                                     layer.enabled = false;
@@ -378,7 +369,6 @@ Item {
                     
                     onActiveChanged: {
                         if (!active) {
-                            // Snap to nearest grid cell
                             let dropX = col * root.cellWidth + lastTranslationX + delegateItem.width / 2;
                             let dropY = row * root.cellHeight + lastTranslationY + delegateItem.height / 2;
                             let newCol = Math.floor(dropX / root.cellWidth);

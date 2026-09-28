@@ -42,7 +42,7 @@ Variants {
 
         color: "transparent"
 
-        mask: Region {} // Capture all clicks outside
+        mask: Region {}
 
         anchors {
             top: true

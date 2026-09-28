@@ -2,8 +2,8 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include <QtDBus/QDBusConnection>
 #include <QVariantMap>
+#include <QtDBus/QDBusConnection>
 
 namespace caelestia::services {
 
@@ -19,7 +19,7 @@ class NightColorBridge : public QObject {
     QML_SINGLETON
 
 public:
-    explicit NightColorBridge(QObject *parent = nullptr);
+    explicit NightColorBridge(QObject* parent = nullptr);
     ~NightColorBridge() override;
 
     bool active() const;
@@ -44,12 +44,13 @@ signals:
     void autoModeChanged();
 
 private slots:
-    void onPropertiesChanged(const QString &interface, const QVariantMap &changedProps, const QStringList &invalidatedProps);
+    void onPropertiesChanged(
+        const QString& interface, const QVariantMap& changedProps, const QStringList& invalidatedProps);
 
 private:
     void fetchInitialState();
-    void updateState(const QVariantMap &config);
-    void writeConfig(const QStringList &args);
+    void updateState(const QVariantMap& config);
+    void writeConfig(const QStringList& args);
 
     bool m_active = false;
     int m_currentTemperature = 0;

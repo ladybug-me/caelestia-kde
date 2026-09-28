@@ -45,10 +45,6 @@ Item {
         anchors.leftMargin: Tokens.padding.large
         anchors.margins: CUtils.clamp(anchors.leftMargin - Config.border.thickness, 0, anchors.leftMargin)
         anchors.bottomMargin: 0
-        // Closing the sidebar used to destroy the assistant along with any request
-        // it had in flight, losing the answer. Stay loaded until it has finished.
-        // root.aiBusy is assigned rather than bound: reading content.item from this
-        // binding would make the loader's own contents decide whether it loads.
         active: root.shouldBeActive || root.visible || root.aiBusy
         sourceComponent: Content {
             implicitWidth: Tokens.sizes.sidebar.width - content.anchors.leftMargin - content.anchors.margins

@@ -151,9 +151,6 @@ PageBase {
             }
         }
 
-        // ==========================================
-        // TIME OF DAY SECTION
-        // ==========================================
         SectionHeader {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             text: qsTr("Time of Day Periods & Media")
@@ -164,7 +161,7 @@ PageBase {
             first: true
             icon: "wb_twilight"
             label: qsTr("Morning Media")
-            status: (Config.bar.greeter?.morningGif || "").split("/").pop()
+            status: Config.bar.greeter?.morningGif ? Config.bar.greeter.morningGif.split("/").pop() : qsTr("Not set")
             onClicked: morningDialog.open()
 
             FileDialog {
@@ -209,7 +206,7 @@ PageBase {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             icon: "light_mode"
             label: qsTr("Afternoon Media")
-            status: (Config.bar.greeter?.afternoonGif || "").split("/").pop()
+            status: Config.bar.greeter?.afternoonGif ? Config.bar.greeter.afternoonGif.split("/").pop() : qsTr("Not set")
             onClicked: afternoonDialog.open()
 
             FileDialog {
@@ -254,7 +251,7 @@ PageBase {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             icon: "wb_twilight"
             label: qsTr("Evening Media")
-            status: (Config.bar.greeter?.eveningGif || "").split("/").pop()
+            status: Config.bar.greeter?.eveningGif ? Config.bar.greeter.eveningGif.split("/").pop() : qsTr("Not set")
             onClicked: eveningDialog.open()
 
             FileDialog {
@@ -299,7 +296,7 @@ PageBase {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             icon: "bedtime"
             label: qsTr("Night Media")
-            status: (Config.bar.greeter?.nightGif || "").split("/").pop()
+            status: Config.bar.greeter?.nightGif ? Config.bar.greeter.nightGif.split("/").pop() : qsTr("Not set")
             onClicked: nightDialog.open()
 
             FileDialog {
@@ -341,9 +338,6 @@ PageBase {
             }
         }
 
-        // ==========================================
-        // SLIDESHOW SECTION
-        // ==========================================
         SectionHeader {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") === "slideshow"
             text: qsTr("Slideshow Timing & Order")

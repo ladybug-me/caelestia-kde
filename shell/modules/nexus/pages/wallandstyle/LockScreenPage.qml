@@ -138,7 +138,6 @@ PageBase {
             }
         }
 
-        // Wallpaper
         SectionHeader {
             first: true
             text: qsTr("Wallpaper")
@@ -193,7 +192,6 @@ PageBase {
             }
         }
 
-        // Authentication
         SectionHeader {
             text: qsTr("Authentication")
         }
@@ -229,7 +227,6 @@ PageBase {
             }
         }
 
-        // General
         SectionHeader {
             text: qsTr("General")
         }
@@ -300,7 +297,6 @@ PageBase {
             }
         }
 
-        // Session icons
         SectionHeader {
             text: qsTr("Session icons")
         }

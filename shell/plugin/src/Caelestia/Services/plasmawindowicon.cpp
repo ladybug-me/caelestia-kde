@@ -22,8 +22,6 @@ namespace {
 
 Q_LOGGING_CATEGORY(logPlasmaWindowIcon, "caelestia.services.plasmawindowicon");
 
-/// Largest pixmap the icon can give us, so the dock has something to scale down
-/// from rather than up.
 QImage largestPixmap(const QIcon& icon) {
     const auto sizes = icon.availableSizes();
 
@@ -40,8 +38,6 @@ QImage largestPixmap(const QIcon& icon) {
         }
     }
 
-    // An icon with no advertised sizes can still be scalable, so ask for
-    // something reasonable rather than giving up.
     if (!best.isValid()) {
         best = QSize(256, 256);
     }
@@ -55,7 +51,6 @@ PlasmaWindowIcon::PlasmaWindowIcon(QObject* parent)
     connect(PlasmaWindows::instance(), &PlasmaWindows::handleLost, this, [this](const QString& uuid) {
         m_resolved.remove(uuid);
         m_inFlight.remove(uuid);
-        // The window closed before its icon arrived, so no answer is coming.
         emit failed(uuid);
     });
 }
@@ -91,8 +86,6 @@ void PlasmaWindowIcon::request(const QString& uuid) {
     }
 
     handle->get_icon(fds[1]);
-    // Ours to close: the request duplicates what it needs. Leaving it open
-    // would mean never seeing EOF.
     ::close(fds[1]);
 
     m_inFlight.insert(key);
@@ -110,19 +103,13 @@ void PlasmaWindowIcon::request(const QString& uuid) {
                 continue;
             }
             if (got < 0 && (errno == EAGAIN || errno == EWOULDBLOCK)) {
-                return; // more to come
+                return;
             }
 
-            // 0 is EOF, anything else is a broken pipe; either way we are done.
             notifier->setEnabled(false);
             notifier->deleteLater();
             ::close(readFd);
 
-            // handleLost() settles the ask when the window goes away, and its pipe still
-            // drains afterwards. Dropping the second settle here is what makes the
-            // header's "exactly once" true: without it a window that closed mid-read got
-            // failed() and then resolved(), and the late resolved() registered an icon
-            // for a window that was already gone.
             const bool stillWaiting = m_inFlight.remove(key);
 
             const QByteArray data = *payload;
@@ -166,9 +153,6 @@ void PlasmaWindowIcon::deliver(const QString& uuid, const QByteArray& payload) {
     }
     buffer.close();
 
-    // Same content-addressed cache the X extractor writes to: naming files
-    // after the icon's own bytes means two windows sharing an icon share the
-    // file, and no window can ever pick up one belonging to something else.
     const auto cacheRoot =
         QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + QStringLiteral("/caelestia/winicons");
     const auto digest = QString::fromLatin1(QCryptographicHash::hash(png, QCryptographicHash::Sha256).toHex().left(16));

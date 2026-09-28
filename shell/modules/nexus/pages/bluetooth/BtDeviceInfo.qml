@@ -27,7 +27,6 @@ PageBase {
     }
 
     onDeviceChanged: {
-        // Auto close when device lost
         if (!device)
             nState.closeSubPage();
     }
@@ -41,7 +40,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Big buttons
         ButtonRow {
             Layout.bottomMargin: Tokens.spacing.large - parent.spacing
             Layout.alignment: Qt.AlignHCenter
@@ -145,7 +143,6 @@ PageBase {
             }
         }
 
-        // Connection group
         ToggleRow {
             verticalPadding: Tokens.padding.large
             first: true
@@ -206,7 +203,6 @@ PageBase {
             }
         }
 
-        // Information
         ConnectedRect {
             Layout.topMargin: Tokens.spacing.large - parent.spacing
             Layout.fillWidth: true

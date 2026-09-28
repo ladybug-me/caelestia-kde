@@ -69,7 +69,7 @@ MaterialShape {
                 root.springSettled = true;
             } else {
                 const [pos, vel] = root.spring(t);
-                root.morphProgress = Math.min(1, pos); // Overshooting the morph looks weird
+                root.morphProgress = Math.min(1, pos);
                 root.thisLRotation = pos * root.morphAnimRotation;
                 root.scale = 1 + vel * root.morphScale / root.springMaxVelocity;
             }

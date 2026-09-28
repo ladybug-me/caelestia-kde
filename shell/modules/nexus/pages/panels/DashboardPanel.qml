@@ -85,7 +85,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // General
         SectionHeader {
             first: true
             text: qsTr("General")
@@ -133,7 +132,6 @@ PageBase {
             checked: Config.dashboard.showClockSeconds
             onToggled: GlobalConfig.dashboard.showClockSeconds = checked
         }
-        // Tabs
         SectionHeader {
             text: qsTr("Tabs")
         }
@@ -197,7 +195,6 @@ PageBase {
             onToggled: GlobalConfig.dashboard.showHyprlandSplash = checked
         }
 
-        // Performance widgets
         SectionHeader {
             text: qsTr("Performance widgets")
         }
@@ -240,7 +237,6 @@ PageBase {
             onToggled: GlobalConfig.dashboard.performance.showNetwork = checked
         }
 
-        // Behaviour
         SectionHeader {
             text: qsTr("Behavior")
         }

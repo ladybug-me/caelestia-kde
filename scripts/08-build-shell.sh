@@ -145,6 +145,49 @@ cleanup_legacy_lockscreen() {
     fi
 }
 
+# The shell used to load every font under `assets/fonts`, so an install can hold two copies
+# of them: the tree's own, which the CMake install puts in the config directory and never
+# deletes files from, and the copy the 12-fetch-assets.sh step (since removed) downloaded
+# into the user's asset directory. Nothing reads either directory now, and the two together
+# are about 600 MiB on a machine that has both. Only what those two mechanisms could have
+# put there is removed; anything the user added themselves stays.
+#
+# A package's tree lives under /etc and belongs to pacman, which drops the fonts with the
+# upgrade that removes them from the package, so install_shell_config() resolves to the
+# package's path there and the packaged half returns before this runs anyway.
+cleanup_legacy_fonts() {
+    local -a roots=(
+        "$(dirname -- "$(install_shell_config)")/assets/fonts"
+        "${XDG_DATA_HOME:-$HOME/.local/share}/caelestia/assets/fonts"
+    )
+    local -a removed
+    local root entry
+
+    for root in "${roots[@]}"; do
+        [[ -d "$root" ]] || continue
+
+        removed=()
+        for entry in SF-Pro SF-Mono google-sans-flex; do
+            if [[ -e "$root/$entry" ]]; then
+                rm -rf "${root:?}/$entry"
+                removed+=("$entry")
+            fi
+        done
+
+        # The download copied the tree's own three-line README along with the fonts, and it
+        # describes a directory nothing reads now. Only that exact text is removed.
+        if [[ "$(head -n 1 "$root/README.md" 2>/dev/null || true)" == "# Fonts" ]]; then
+            rm -f "$root/README.md"
+        fi
+
+        rmdir "$root" 2>/dev/null || true
+
+        if [[ ${#removed[@]} -gt 0 ]]; then
+            ok "Reclaimed the fonts an older install left in $root (${removed[*]}); the shell no longer loads them."
+        fi
+    done
+}
+
 install_lockscreen_greeter() {
     local src="$BUNDLE_DIR/src/kde/shells/caelestia.desktop"
     local dest="$HOME/.local/share/plasma/shells/caelestia.desktop"
@@ -594,6 +637,10 @@ else
 fi
 
 record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia" || true
+
+# Outside the deploy guard on purpose: CAELESTIA_SKIP_DEPLOY is about the config files this
+# step deploys, and this is the assets an older install left behind.
+cleanup_legacy_fonts
 
 if [[ "${CAELESTIA_SKIP_DEPLOY:-0}" == "0" && "${APPLY_LOCKSCREEN:-true}" != "false" ]]; then
     cleanup_legacy_lockscreen

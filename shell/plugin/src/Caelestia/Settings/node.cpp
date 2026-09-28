@@ -76,7 +76,6 @@ QVariant Node::value(const QString& key) const {
         return QVariant();
     }
 
-    // Generated getters warn on global reads, this silences them as the warning is only for QML reads
     const InternalRead guard(m_rootNode);
     return metaObject()->property(desc->metaIndex).read(this);
 }
@@ -93,10 +92,6 @@ bool Node::setValue(const QString& key, const QVariant& value) {
         return false;
     }
 
-    // Type mismatch, conversion should happen before this function is called.
-    // An option that accepts several types is also written from QML, which hands a
-    // list over as a QVariantList whatever the option asks for, so convert to an
-    // allowed type rather than dropping a write the user meant.
     auto coerced = value;
     if (!desc->accepts(coerced.metaType())) {
         const auto target = desc->coercionTarget(coerced.metaType());
@@ -111,17 +106,15 @@ bool Node::setValue(const QString& key, const QVariant& value) {
 }
 
 void Node::resetToDefaults() {
-    // Don't reset global only nodes on overlays, the whole subtree belongs to the global layer
     if (m_globalOnly && m_fallbackNode)
         return;
 
-    m_quarantine.reset(); // Reset quarantine as well
+    m_quarantine.reset();
 
-    // No write scope, callers should create the scope
     for (const auto& desc : schema().descriptors()) {
         if (desc.isNode)
             value(desc.key).value<Node*>()->resetToDefaults();
-        else if (!desc.globalOnly() || !m_fallbackNode) // Skip resetting global options on overlays
+        else if (!desc.globalOnly() || !m_fallbackNode)
             setValue(desc.key, m_fallbackNode ? m_fallbackNode->value(desc.key) : desc.defaultValue());
     }
 }
@@ -210,11 +203,9 @@ bool Node::recordWrite(const QString& key, bool changed) {
     bool dirty = changed;
     bool overrideSetChanged = false;
     switch (origin) {
-    // Init does not notify or write to file
     case WriteOrigin::Init:
         return false;
 
-    // File and qml both count as overrides
     case WriteOrigin::File:
     case WriteOrigin::Qml:
         overrideSetChanged = !m_overrides.contains(key);
@@ -222,11 +213,9 @@ bool Node::recordWrite(const QString& key, bool changed) {
         dirty |= overrideSetChanged;
         break;
 
-    // Layer is not an override, it is a sync with the fallback value
     case WriteOrigin::Layer:
         break;
 
-    // Both resets clear the override
     case WriteOrigin::FileReset:
     case WriteOrigin::QmlReset:
         overrideSetChanged = m_overrides.remove(key);
@@ -234,11 +223,9 @@ bool Node::recordWrite(const QString& key, bool changed) {
         break;
     }
 
-    // User writes/reset override quarantine
     if (fromUser)
         dirty |= removeQuarantined(key);
 
-    // Both qml and reset write to the file (only write if dirty)
     if (fromUser && dirty)
         m_rootNode->m_batcher->dirty();
 
@@ -279,7 +266,6 @@ void Node::onFallbackNotify(const QString& key) {
     if (m_overrides.contains(key))
         return;
 
-    // Don't mirror global options onto overlays
     const auto* desc = schema().get(key);
     if (desc && desc->globalOnly())
         return;

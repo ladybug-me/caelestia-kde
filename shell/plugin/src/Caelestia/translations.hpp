@@ -16,17 +16,10 @@ class Translations : public QObject {
     QML_ELEMENT
     QML_SINGLETON
 
-    // Requested language: a locale code ("tr", "en_GB", ...) or "system" to
-    // follow the system locale.
     Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged)
-    // The catalogue actually in use, or "en" when running untranslated.
     Q_PROPERTY(QString activeLanguage READ activeLanguage NOTIFY activeLanguageChanged)
-    // Extra directories to look for catalogues in, searched before the
-    // install prefix. Accepts local paths or file: urls.
-    Q_PROPERTY(QStringList extraSearchPaths READ extraSearchPaths WRITE setExtraSearchPaths NOTIFY
-            extraSearchPathsChanged)
-    // Languages with a catalogue on disk, as [{ code, name, nativeName }].
-    // Always contains English, which needs no catalogue.
+    Q_PROPERTY(
+        QStringList extraSearchPaths READ extraSearchPaths WRITE setExtraSearchPaths NOTIFY extraSearchPathsChanged)
     Q_PROPERTY(QVariantList available READ available NOTIFY availableChanged)
 
 public:
@@ -42,7 +35,6 @@ public:
 
     [[nodiscard]] QVariantList available() const;
 
-    // Human readable name for a locale code, e.g. "tr" -> "Türkçe".
     Q_INVOKABLE static QString nativeNameFor(const QString& code);
     Q_INVOKABLE static QString nameFor(const QString& code);
 
@@ -54,7 +46,6 @@ signals:
 
 private:
     [[nodiscard]] QStringList searchPaths() const;
-    // Locale codes to try, most specific first, for the requested language.
     [[nodiscard]] QStringList candidates() const;
     void reload();
     void setActiveLanguage(const QString& code);

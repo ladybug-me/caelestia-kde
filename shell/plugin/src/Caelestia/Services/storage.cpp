@@ -251,12 +251,6 @@ Storage::AccumHash Storage::foldToDisks(const QHash<QByteArray, DeviceEntry>& by
         const DeviceEntry& e = it.value();
         const QStringList disks = resolveToPhysicalDisks(QString::fromLocal8Bit(e.device));
         if (disks.isEmpty()) {
-            // ZFS has no /dev block device to resolve — its "device" is a
-            // "pool/dataset" name (e.g. rpool/root), so resolveToPhysicalDisks
-            // returns nothing and the whole pool would be dropped. Fall back to
-            // keying by the pool name. Datasets in a pool share the pool's free
-            // space, so keep a single representative entry per pool (preferring
-            // the root dataset, else the largest) rather than summing them.
             if (e.fsType == "zfs") {
                 const qsizetype slash = e.device.indexOf('/');
                 const QString pool = QString::fromLocal8Bit(slash > 0 ? e.device.left(slash) : e.device);

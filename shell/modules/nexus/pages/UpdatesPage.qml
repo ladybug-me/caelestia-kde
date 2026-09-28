@@ -19,7 +19,6 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    // ── Branch menu items ──────────────────────────────────────────────────
     readonly property list<MenuItem> branchItems: branchVariants.instances
 
     readonly property var activeBranchItem: {
@@ -27,11 +26,6 @@ PageBase {
         return found || (branchItems.length > 0 ? branchItems[0] : null);
     }
 
-    // ── Update process state ───────────────────────────────────────────────
-    // Backed by the UpdateChecker singleton (not local properties) so the
-    // running update, its progress and logs survive navigating away from
-    // this page and back — see Pages.qml, which destroys/recreates the page
-    // Item on every top-level page switch.
     readonly property bool updateRunning: UpdateChecker.updateRunning
 
     readonly property real updateProgress: UpdateChecker.updateProgress
@@ -40,12 +34,9 @@ PageBase {
 
     readonly property string updateLogs: UpdateChecker.updateLogs
 
-    // ── Timeline selection state ───────────────────────────────────────────
     property string selectedVersionId: ""
 
     property string pendingBranch: ""
-    // Customize Installation is collapsed by default (see section 4 below)
-    // so the commit/version timeline stays the visual focus of the page.
 
     property bool installOptionsExpanded: false
 
@@ -75,9 +66,6 @@ PageBase {
 
     readonly property bool selectionIsReinstall: root.timelineSelectionEnabled && root.selectedVersionState === "current"
 
-    // Drives both the primary button's visibility and the secondary button's
-    // width (it takes over as the sole, full-width action when the primary
-    // one isn't shown) — see the action row below.
     readonly property bool primaryActionVisible: {
         if (root.updateRunning) return false;
         if (root.updateProgress === 1.0) return true;
@@ -87,10 +75,8 @@ PageBase {
         return UpdateChecker.hasUpdate;
     }
 
-    // ── Timeline data ──────────────────────────────────────────────────────
     readonly property var timelineEntries: {
         if (UpdateChecker.versionSummaryMode && UpdateChecker.availableVersions.length > 0) {
-            // Version mode: full timeline with available + current + past
             const versions = UpdateChecker.availableVersions;
             const current = UpdateChecker.currentVersion;
             const currentIdx = current === "unknown"
@@ -100,8 +86,6 @@ PageBase {
             for (let i = 0; i < versions.length; i++) {
                 let state;
                 if (currentIdx === -2) {
-                    // Unknown install: no release may be presented as the
-                    // installed one, and none counts as an available update.
                     state = "past";
                 } else if (currentIdx === -1) {
                     state = i === 0 ? "current" : "past";
@@ -116,10 +100,6 @@ PageBase {
             }
             return result;
         } else {
-            // Commit mode (dev branch): full git-log-style history (newest first).
-            // Commits ahead of the installed one are "available", the installed
-            // commit itself is "current", and older commits are "past" — mirroring
-            // how the version timeline treats releases.
             const commits = UpdateChecker.commits;
             const localHash = UpdateChecker.installedCommitHash;
             const localIdx = localHash !== "" ? commits.findIndex(c => c.fullHash === localHash || c.hash === localHash) : -1;
@@ -128,11 +108,8 @@ PageBase {
                 const c = commits[i];
                 let state;
                 if (localHash === "") {
-                    // No installed commit on record: only mark the newest as current.
                     state = i === 0 ? "current" : "past";
                 } else if (localIdx === -1) {
-                    // Installed commit is older than the displayed window — every
-                    // commit shown is ahead of it.
                     state = "available";
                 } else if (i < localIdx) {
                     state = "available";
@@ -152,9 +129,6 @@ PageBase {
                     date: c.date || ""
                 });
             }
-            // Merges carry no user-facing change of their own and made up half the
-            // list. Drop them, except when the running shell is sitting on one:
-            // the timeline has to keep marking the commit it is installed at.
             return result.filter(e => !e.isMerge || e.state === "current");
         }
     }
@@ -208,14 +182,12 @@ PageBase {
         }
     }
 
-    // ── UI ─────────────────────────────────────────────────────────────────
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // 1 ── STATUS BANNER ───────────────────────────────────────────────
         ConnectedRect {
             visible: !root.branchDataLoading
             first: true
@@ -297,15 +269,11 @@ PageBase {
                     indeterminate: root.updateProgress === 0.0 && root.updateRunning
                 }
 
-                // Actions — the primary CTA always fills the remaining row
-                // width (and the whole row, when it's the only action shown)
-                // so it stays prominent and never overflows narrower windows.
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.topMargin: Tokens.spacing.small
                     spacing: Tokens.spacing.small
 
-                    // Primary action button
                     IconTextButton {
                         Layout.fillWidth: true
                         visible: root.primaryActionVisible
@@ -346,10 +314,6 @@ PageBase {
                         }
                     }
 
-                    // Secondary: Stop / Check for updates / Cancel selection.
-                    // Takes over the full row width itself whenever the
-                    // primary action is hidden (e.g. while an update runs),
-                    // so there's always exactly one clear, prominent action.
                     IconTextButton {
                         id: secondaryActionButton
 
@@ -379,9 +343,6 @@ PageBase {
                             }
                         }
 
-                        // Spin the refresh icon while a check is in flight so
-                        // the button visibly reflects that something is
-                        // happening — previously it gave no feedback at all.
                         RotationAnimation {
                             target: secondaryActionButton.iconLabel
                             property: "rotation"
@@ -396,7 +357,6 @@ PageBase {
             }
         }
 
-        // 2 ── CHANNEL SELECTOR ────────────────────────────────────────────
         SectionHeader { text: qsTr("General") }
 
         SelectRow {
@@ -456,10 +416,6 @@ PageBase {
             }
         }
 
-        // 4 ── INSTALLATION SETTINGS ───────────────────────────────────────
-        // Collapsed by default and tucked below the timeline so these
-        // rarely-changed options don't compete with the commit/version
-        // history for space or attention.
         ConnectedRect {
             visible: !root.branchDataLoading
             last: !root.installOptionsExpanded
@@ -559,7 +515,6 @@ PageBase {
             }
         }
 
-        // 3 ── VERSION TIMELINE (focus of the page) ────────────────────────
         SectionHeader {
             visible: !root.branchDataLoading
             text: UpdateChecker.versionSummaryMode ? qsTr("Version History") : qsTr("Commit History")
@@ -568,11 +523,6 @@ PageBase {
         ConnectedRect {
             id: timelineCard
 
-            // Dev branch can list up to 10 commits — cap the card height and
-            // let it scroll internally instead of pushing the log/actions
-            // below it far down the page. Commit rows are taller than plain
-            // release rows, so scale the cap with the timeline's own row
-            // height instead of a hard-coded constant.
             readonly property real maxListHeight: 6 * timeline.rowHeight
 
             visible: !root.branchDataLoading
@@ -609,7 +559,6 @@ PageBase {
                     selectedId: root.timelineSelectionEnabled ? root.selectedVersionId : ""
                     onEntryClicked: function(entryId, entryState) {
                         if (root.updateRunning || !root.timelineSelectionEnabled) return;
-                        // Toggle: click same dot to deselect
                         root.selectedVersionId = (root.selectedVersionId === entryId) ? "" : entryId;
                         UpdateChecker.targetVersion = "";
                     }
@@ -617,8 +566,6 @@ PageBase {
             }
         }
 
-        // "Load more" pagination for the dev commit timeline — keeps the
-        // initial fetch light (10 commits) and pulls the next page on demand.
         TextButton {
             Layout.alignment: Qt.AlignHCenter
             visible: !root.branchDataLoading
@@ -633,7 +580,6 @@ PageBase {
             onClicked: UpdateChecker.loadMoreCommits()
         }
 
-        // 5 ── UPDATE LOG (appears after update runs) ──────────────────────
         SectionHeader {
             visible: !root.branchDataLoading && (root.updateRunning || root.updateLogs !== "")
             text: qsTr("Update Log")
@@ -711,11 +657,6 @@ PageBase {
             }
         }
 
-        // ── PROCESSES ─────────────────────────────────────────────────────
-        // Note: the actual update Process now lives on the UpdateChecker
-        // singleton so it (and its progress/logs) survives this page being
-        // destroyed/recreated on navigation. Only the one-off logout process
-        // stays local since it doesn't need to persist.
         Process {
             id: logoutProcess
 
@@ -724,7 +665,6 @@ PageBase {
 
         Process {
             id: backupFolderProcess
-            // Create the backups dir if missing so the file manager opens cleanly.
 
             command: ["sh", "-c",
                 'dir="$1"; shift; mkdir -p "$dir" && exec "$@" "$dir"',

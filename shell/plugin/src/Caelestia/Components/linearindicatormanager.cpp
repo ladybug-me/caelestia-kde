@@ -4,8 +4,6 @@
 
 namespace {
 
-// See
-// https://github.com/material-components/material-components-android/blob/master/lib/java/com/google/android/material/progressindicator/LinearIndeterminateDisjointAnimatorDelegate.java#L44-L46
 constexpr int TOTAL_DURATION_IN_MS = 1800;
 constexpr std::array DURATION_TO_MOVE_SEGMENT_ENDS = { 533, 567, 850, 750 };
 constexpr std::array DELAY_TO_MOVE_SEGMENT_ENDS = { 1267, 1000, 333, 0 };

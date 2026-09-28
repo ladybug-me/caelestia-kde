@@ -450,7 +450,6 @@ PageBase {
         ListModel { id: rightModel }
         ListModel { id: libraryModel }
 
-        // Left Side: Active Components Zones
         ColumnLayout {
             Layout.fillWidth: true
             Layout.preferredWidth: 1
@@ -469,7 +468,6 @@ PageBase {
                 color: Colours.palette.m3onSurfaceVariant
             }
 
-            // Left Zone
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: Math.max(root.emptyZoneHeight, leftList.contentHeight + root.zonePadding * 2)
@@ -525,7 +523,6 @@ PageBase {
                 }
             }
 
-            // Middle Zone
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: Math.max(root.emptyZoneHeight, middleList.contentHeight + root.zonePadding * 2)
@@ -581,7 +578,6 @@ PageBase {
                 }
             }
 
-            // Right Zone
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: Math.max(root.emptyZoneHeight, rightList.contentHeight + root.zonePadding * 2)
@@ -638,7 +634,6 @@ PageBase {
             }
         }
 
-        // Right Side: Library
         ColumnLayout {
             Layout.fillWidth: true
             Layout.preferredWidth: 1

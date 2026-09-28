@@ -8,9 +8,9 @@ import QtMultimedia
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Io
-import Caelestia // Required for CUtils
+import Caelestia
 import Caelestia.Config
-import Caelestia.Blobs // Required for BlobGroup and BlobInvertedRect
+import Caelestia.Blobs
 import qs.components
 import qs.components.controls
 import qs.components.misc
@@ -18,11 +18,6 @@ import qs.services
 import qs.utils
 import qs.modules.nexus.common
 
-// The release notes window. It opens by itself at startup while there is
-// anything the user has not acknowledged, and opens again on demand from the
-// whatsnew shortcut or the launcher. Acknowledgement is recorded per entry,
-// against the entry's revision, in the shell's state directory; opening an
-// entry acknowledges it, closing the window does not.
 FloatingWindow {
     id: root
 
@@ -113,19 +108,18 @@ FloatingWindow {
     surfaceFormat.opaque: false
     title: qsTr("What's New in Caelestia")
 
-    implicitWidth: 680 // Not to be changed
-    implicitHeight: 480 // Text and image proportions were set according to these numbers
+    implicitWidth: 680
+    implicitHeight: 480
     minimumSize.width: 680
     minimumSize.height: 480
 
     onVisibleChanged: {
-        // A window-manager close is a dismissal, not an acknowledgement.
         if (!root.visible && root.shown)
             root.shown = false;
     }
 
     BackgroundEffect.blurRegion: Region {
-        Region { x: -10; y: -10; width: 1; height: 1 } // Prevent full-window blur fallback when disabled
+        Region { x: -10; y: -10; width: 1; height: 1 }
         Region { item: (GlobalConfig.appearance.transparency.enabled && GlobalConfig.appearance.blur) ? container : null }
     }
 
@@ -209,7 +203,6 @@ FloatingWindow {
             anchors.margins: Tokens.padding.large
             initialItem: homePage
 
-            // Add a clip so pushing/popping doesn't overflow rounded corners
             clip: true
         }
 
@@ -219,7 +212,6 @@ FloatingWindow {
             Item {
                 id: homeRoot
 
-                // Calculate centered block bounds
                 readonly property real startupBlockHeight: 90.38 + Tokens.spacing.large + titleText.implicitHeight
                 readonly property real startupBlockY: (homeRoot.height - startupBlockHeight) / 2 - 40
 
@@ -281,8 +273,6 @@ FloatingWindow {
                     opacity: homeRoot.state === "startup" ? 1 : 0
                 }
 
-                // Every entry ever shipped, newest first, with the ones the user
-                // has not opened marked as unread.
                 ListView {
                     id: featuresList
 
@@ -357,12 +347,10 @@ FloatingWindow {
                             anchors.margins: Tokens.padding.large
                             spacing: Tokens.spacing.large
 
-                            // Header Row (Icon + Text + Chevron)
                             RowLayout {
                                 Layout.fillWidth: true
                                 spacing: Tokens.spacing.medium
 
-                                // Circular Icon
                                 StyledRect {
                                     Layout.preferredHeight: 48
                                     Layout.preferredWidth: 48
@@ -378,7 +366,6 @@ FloatingWindow {
                                         fill: 1
                                     }
 
-                                    // Unread marker
                                     StyledRect {
                                         anchors.top: parent.top
                                         anchors.right: parent.right
@@ -390,7 +377,6 @@ FloatingWindow {
                                     }
                                 }
 
-                                // Title & Description
                                 ColumnLayout {
                                     Layout.fillWidth: true
                                     spacing: 2
@@ -414,7 +400,6 @@ FloatingWindow {
                                     }
                                 }
 
-                                // Chevron right for drill down
                                 MaterialIcon {
                                     text: "chevron_right"
                                     color: Colours.palette.m3onSurfaceVariant
@@ -482,7 +467,6 @@ FloatingWindow {
                     anchors.fill: parent
                     spacing: Tokens.spacing.large
 
-                    // Header with Back Button
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: Tokens.spacing.medium
@@ -503,14 +487,12 @@ FloatingWindow {
                             elide: Text.ElideRight
                         }
 
-                        // Keeps the title centred against the back button
                         Item {
                             Layout.preferredWidth: 48
                             Layout.preferredHeight: 48
                         }
                     }
 
-                    // Expanded Content
                     ScrollView {
                         id: expandedScrollView
 
@@ -524,7 +506,6 @@ FloatingWindow {
                             width: expandedScrollView.availableWidth
                             spacing: Tokens.spacing.large
 
-                            // Media Container
                             Item {
                                 Layout.fillWidth: true
                                 Layout.preferredHeight: 280
@@ -584,7 +565,6 @@ FloatingWindow {
                                 }
                             }
 
-                            // Description Full
                             StyledText {
                                 Layout.fillWidth: true
                                 text: featureData ? featureData.description : ""

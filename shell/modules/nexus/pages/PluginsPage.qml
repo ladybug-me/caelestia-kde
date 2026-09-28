@@ -16,7 +16,6 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    // Count helpers since Repeater.count counts all items regardless of visibility
     readonly property int bundledCount: {
         let n = 0;
         for (let i = 0; i < CaelestiaApi.plugins.available.count; i++) {
@@ -153,7 +152,6 @@ PageBase {
             }
         }
 
-        // --- INSTALLED TAB ---
         ColumnLayout {
             Layout.fillWidth: true
             visible: root.currentTab === 0
@@ -338,7 +336,6 @@ PageBase {
             }
         }
 
-        // --- STORE TAB ---
         ColumnLayout {
             Layout.fillWidth: true
             visible: root.currentTab === 1

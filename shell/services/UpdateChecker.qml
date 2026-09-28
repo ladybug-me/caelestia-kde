@@ -29,27 +29,15 @@ Singleton {
     property bool loaded: false
     property bool checkingUpdates: false
 
-    // Periodic auto-check heartbeat (drives the tray indicator popout's
-    // "last check X ago / next check in Y" readout, CachyOS-updater style).
-    // A single-shot timer is restarted every time a check completes so the
-    // next auto-check always lands one interval after the most recent one,
-    // manual or otherwise.
     property double lastCheckMs: 0
 
-    property int checkIntervalMs: 1800000 // 30 minutes
+    property int checkIntervalMs: 1800000
 
-    // Dev-branch commit pagination: the update checker only fetches the
-    // first page (devCommitLimit commits) and exposes a "load more" affordance
-    // for the rest, so we never pull the whole dev history up front.
     property int devCommitLimit: 10
     property int devCommitOffset: 0
     property bool hasMoreCommits: false
     property bool loadingMoreCommits: false
 
-    // ── Update process state ────────────────────────────────────────────
-    // Lives on the singleton (rather than UpdatesPage) so it survives the
-    // page being destroyed/recreated when the user navigates to a different
-    // top-level Nexus page and back (see Pages.qml `loadPage`).
     property string updateLogs: ""
     property bool updateRunning: false
     property bool updateCancelled: false
@@ -441,7 +429,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
         root.updateLogs += "\n[Canceled by user]";
     }
 
-    // Process to read local commit and saved branch
     Process {
         id: localCommitProcess
 
@@ -502,7 +489,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
                             parsedVersionSummaryMode = true;
                             parsedPendingCount = isNaN(count) ? 1 : Math.max(1, count);
                             parsedHasUpdate = parsedPendingCount > 0;
-                            // Show only version entries in main mode; no commit-level rows.
                             continue;
                         }
                         if (line.startsWith("META|")) {
@@ -532,7 +518,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
                                 });
                                 parsedVersions.push(tag);
                             } catch (_ignored) {
-                                // Ignore malformed release lines and keep parsing.
                             }
                             continue;
                         }
@@ -556,7 +541,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
                             continue;
                         }
                         if (line.startsWith("COMMIT\u001f")) {
-                            // COMMIT<US>fullHash<US>shortHash<US>subject<US>author<US>date<US>parents
                             const parts = line.split("\u001f");
                             parsedVersionSummaryMode = false;
                             const parentsField = (parts[6] || "").trim();
@@ -600,7 +584,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
                     }
 
                     if (!parsedVersionSummaryMode && parsedLocalCommitFull === "") {
-                        // No installed commit on record yet: can't say what's pending.
                         parsedPendingCount = 0;
                         parsedHasUpdate = false;
                     }
@@ -638,10 +621,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
                         if (!root.availableVersions.includes(root.targetVersion)) {
                             root.targetVersion = root.availableVersions.length > 0 ? root.availableVersions[0] : "";
                         }
-                        // Leave currentVersion as "unknown" when the installed
-                        // version could not be resolved — pretending the newest
-                        // release is installed hides the real state and invites
-                        // wrong upgrade/downgrade offers.
                         if (root.previousVersion === "unknown" && root.availableVersions.length > 1) {
                             root.previousVersion = root.availableVersions[1];
                         }
@@ -656,9 +635,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
         }
     }
 
-    // Fetch the next page of dev-branch commits. Unlike checkUpdates() this
-    // does not re-clone/re-fetch or re-resolve branches — the bare repo
-    // already exists, so it's just a git log with a --skip offset.
     Process {
         id: moreCommitsProcess
 
@@ -730,12 +706,9 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
 
     property alias buildShell: updaterSettings.buildShell
 
-    // ---- Claude Code (the `claude` CLI backing the AI assistant) ----
-    // Checked alongside the shell's own updates so the AI settings page can offer
-    // "Update" or "Check for updates" without having to poll on its own.
-    property string claudeCodeVersion: ""       // installed, "" when not installed
+    property string claudeCodeVersion: ""
 
-    property string claudeCodeLatestVersion: "" // newest published, "" when unknown
+    property string claudeCodeLatestVersion: ""
 
     property bool claudeCodeChecking: false
 
@@ -756,9 +729,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
     Process {
         id: claudeCodeProcess
 
-        // Prints "<installed>|<latest>". The published version comes from the same
-        // endpoint claude.ai/install.sh reads, which is what the settings page's
-        // install/update button runs, so the two can't disagree about what "latest" is.
         command: ["sh", "-c", `
 BIN="$HOME/.local/bin/claude"
 INSTALLED=""

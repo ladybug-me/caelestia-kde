@@ -1,8 +1,9 @@
 #pragma once
 
+#include <qqmlintegration.h>
+
 #include <QObject>
 #include <QString>
-#include <qqmlintegration.h>
 
 namespace caelestia::services {
 

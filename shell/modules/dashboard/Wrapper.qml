@@ -36,7 +36,7 @@ Item {
     anchors.topMargin: (Config.bar.position === "top" ? 0 : -implicitHeight - 5) * offsetScale
     height: Config.bar.position === "top" ? implicitHeight * (1 - offsetScale) : implicitHeight
     implicitHeight: content.implicitHeight
-    implicitWidth: content.implicitWidth || 854 // Hard coded fallback for first open
+    implicitWidth: content.implicitWidth || 854
     opacity: 1 - offsetScale
 
     Behavior on offsetScale {

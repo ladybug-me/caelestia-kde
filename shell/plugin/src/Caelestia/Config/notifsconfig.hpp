@@ -1,9 +1,9 @@
 #pragma once
 
+#include <qstring.h>
+
 #include "../Settings/objectnode.hpp"
 #include "common.hpp"
-
-#include <qstring.h>
 
 namespace caelestia::config {
 

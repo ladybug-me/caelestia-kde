@@ -26,13 +26,12 @@ ItemList {
     showList: Nmcli.wifiEnabled
     placeholderIcon: Nmcli.wifiEnabled ? "wifi_find" : "signal_wifi_off"
     placeholderText: Nmcli.wifiEnabled ? qsTr("No networks found") : qsTr("Wi-Fi disabled")
-    extraHeight: Nmcli.scanning ? Tokens.rounding.extraSmall : 0 // Inline so it isn't affected by anim
+    extraHeight: Nmcli.scanning ? Tokens.rounding.extraSmall : 0
     list.anchors.top: scanningIndicator.bottom
 
     model: ScriptModel {
         values: {
             const connecting = Nmcli.connectingSsid;
-            // Lower rank sorts higher in the list
             const rank = n => n.active ? 0 : n.ssid === connecting ? 1 : Nmcli.hasSavedProfile(n.ssid) ? 2 : 3;
             const sorted = [...Nmcli.networks].sort((a, b) => rank(a) - rank(b) || b.strength - a.strength);
             if (root.limit > 0 && sorted.length > root.limit)
@@ -62,17 +61,12 @@ ItemList {
         onClicked: {
             if (!modelData.active) {
                 NetworkConnection.handleConnect(modelData, null, ap => {
-                    // Password required for unsaved encrypted network — open Add Network
-                    // page pre-filled with the SSID so only the password field shows.
                     root.nState.pendingNetworkSsid = ap.ssid;
                     root.nState.openSubPage(2);
                 });
                 currentSelected = true;
                 root.networkSelected(modelData);
             } else {
-                // Active network: open its detail/settings sub-page on the
-                // profile that is up, so its actions address that profile
-                // instead of re-deriving one from the SSID.
                 const activeProfile = Nmcli.savedConnectionProfiles.find(p => p.active && p.ssid === modelData.ssid);
                 root.nState.openNetworkDetail(modelData.ssid, activeProfile?.uuid ?? "", false);
             }
@@ -102,8 +96,6 @@ ItemList {
             target: root
         }
 
-        // Reset currentSelected when the password dialog closes (SSID cleared)
-        // so the row is interactive again after Cancel or failed connection.
         Connections {
             function onPendingNetworkSsidChanged(): void {
                 if (root.nState.pendingNetworkSsid === "")

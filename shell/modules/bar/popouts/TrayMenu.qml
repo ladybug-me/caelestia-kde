@@ -15,14 +15,10 @@ StackView {
     required property PopoutState popouts
     required property QsMenuHandle trayItem
 
-    // Injected by Content.qml's Popout; forwarded to SubMenu.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    // A submenu holding nothing but separators has no height of its own. Report the
-    // popout padding negated so the surrounding box collapses with it, instead of
-    // leaving an empty frame where a menu should be.
     implicitWidth: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitWidth : -Tokens.padding.extraLargeIncreased * root.scaleOffset
     implicitHeight: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitHeight : -Tokens.padding.extraLargeIncreased * root.scaleOffset
 
@@ -152,7 +148,6 @@ StackView {
             onObjectAdded: menu.queueUpdateGroups()
 
             onObjectRemoved: menu.queueUpdateGroups()
-            // In case the model itself changes completely
 
             onModelChanged: menu.queueUpdateGroups()
         }

@@ -73,12 +73,18 @@ Singleton {
         }
 
         if (files.length === 0) {
-            files = [
-                resolvePath(Config.bar.greeter.morningGif),
-                resolvePath(Config.bar.greeter.afternoonGif),
-                resolvePath(Config.bar.greeter.eveningGif),
-                resolvePath(Config.bar.greeter.nightGif)
+            const timeGifs = [
+                Config.bar.greeter.morningGif,
+                Config.bar.greeter.afternoonGif,
+                Config.bar.greeter.eveningGif,
+                Config.bar.greeter.nightGif
             ];
+            for (let i = 0; i < timeGifs.length; i++) {
+                const resolved = resolvePath(timeGifs[i]);
+                if (resolved) {
+                    files.push(resolved);
+                }
+            }
         }
 
         allSlideshowMedia = files;

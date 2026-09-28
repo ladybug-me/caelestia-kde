@@ -15,15 +15,9 @@ Singleton {
     id: root
 
     property list<NotifData> list: []
-    // Incremental counters — updated by each NotifData's change handlers below.
-    // This avoids the full-list filter() that fires on every state change.
     property int openCount: 0
     property int popupCount: 0
 
-    // The configured cap, floored at one. A list that cannot hold the
-    // notification it was just handed is not a smaller list but a broken one:
-    // the newest item would be evicted by the cap itself in the same breath it
-    // was created, after its counters had already been counted.
     readonly property int notifCap: Math.max(1, GlobalConfig.notifs.maxNotifs)
 
     property alias dnd: props.dnd
@@ -103,17 +97,6 @@ Singleton {
     }
 
     function clear(): void {
-        // Detach everything in one assignment before closing any of it.
-        //
-        // Closing a notification rebuilds this list (filter + reassign), and the
-        // reassignment re-runs every derived binding: the unread counters in the
-        // bar and the per-app filters in both notification docks — each of them a
-        // full pass over the list. Closing one at a time therefore costs O(n) work
-        // per notification plus a full view rebuild, so with a couple of thousand
-        // stored it hangs the shell outright.
-        //
-        // Emptying the list first drops those dependencies, so the views update
-        // once and each close() below is just a dismiss and a destroy.
         const toClose = root.list;
         root.list = [];
         root.openCount = 0;
@@ -126,7 +109,7 @@ Singleton {
     }
 
     function serializeState(): string {
-        return JSON.stringify(root.notClosed().map(n => ({  // notClosed() called once, not a binding
+        return JSON.stringify(root.notClosed().map(n => ({
                         time: n.time,
                         id: n.id,
                         summary: n.summary,
@@ -160,8 +143,6 @@ Singleton {
     Timer {
         id: saveTimer
 
-        // Back off when the list is large to reduce serialisation pressure.
-        // At 500 items this is ~8 s; at 0 it is 3 s.
         interval: Math.min(10000, 3000 + root.list.length * 10)
         onTriggered: {
             const serialized = root.serializeState();
@@ -202,9 +183,6 @@ Singleton {
                 notification: notif
             });
 
-            // onClosedChanged / onPopupChanged only fire on *transitions*, not on
-            // initial construction. A fresh notification always starts closed=false,
-            // so we must increment the counters explicitly here.
             root.openCount++;
             if (showPopup)
                 root.popupCount++;
@@ -212,7 +190,6 @@ Singleton {
             const next = [comp, ...root.list];
             const cap = root.notifCap;
             if (next.length > cap) {
-                // Evict oldest items (tail) before assigning — one list update total.
                 const evicted = next.splice(cap);
                 for (const old of evicted) old.close();
             }
@@ -285,7 +262,6 @@ Singleton {
 
         NotifData {
             onClosedChanged: {
-                // Maintain openCount incrementally instead of re-filtering the list.
                 root.openCount = closed ? Math.max(0, root.openCount - 1) : root.openCount + 1;
             }
             onPopupChanged: {

@@ -6,24 +6,14 @@ import Quickshell
 import Caelestia.Config
 import qs.services
 
-/// Switches the colour scheme between light and dark on a schedule, either at
-/// fixed times or at local sunrise and sunset.
-///
-/// The check is driven by the ticking clock rather than a one-shot timer armed
-/// for the next boundary, because a timer set eight hours ahead does not
-/// survive a suspend/resume or a system clock change.
 Singleton {
     id: root
 
     readonly property bool enabled: GlobalConfig.services.autoSchemeEnabled
     readonly property bool solar: GlobalConfig.services.autoSchemeMode === "solar"
 
-    /// Reuses the coordinates already configured or auto-detected for the
-    /// weather service, so this needs no location setting of its own.
     readonly property var coords: Solar.parseCoords(GlobalConfig.services.weatherLocation || Weather.loc)
 
-    /// The last mode this service applied, so a manual switch is not undone on
-    /// the next tick — it stands until the next real boundary.
     property string lastApplied: ""
 
     /// The two boundaries for the given moment, as minutes since local
@@ -50,8 +40,6 @@ Singleton {
         };
     }
 
-    /// `force` applies the mode even when this service did not choose the
-    /// current one, which is what startup and the enable toggle want.
     function apply(force: bool): void {
         if (!root.enabled)
             return;
@@ -64,8 +52,6 @@ Singleton {
         const minutes = now.getHours() * 60 + now.getMinutes();
         const target = Solar.isLightAt(minutes, bounds.light, bounds.dark) ? "light" : "dark";
 
-        // Only act on a boundary crossing. Between boundaries a manual switch
-        // is left alone rather than being reverted a minute later.
         if (!force && target === root.lastApplied)
             return;
 
@@ -85,7 +71,6 @@ Singleton {
     Component.onCompleted: root.apply(true)
 
     Connections {
-        // Minute precision is plenty, and keeps this off the per-second tick.
         function onMinutesChanged(): void {
             root.apply(false);
         }

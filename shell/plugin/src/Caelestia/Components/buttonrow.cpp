@@ -89,7 +89,7 @@ void ButtonRow::relayout() {
     }
 
     if (fillWidthCount == 0)
-        fillWidthCount = 1; // Avoid divide by 0
+        fillWidthCount = 1;
 
     const auto widthPerItem = (width() - totalSpacing - reservedWidth) / static_cast<qreal>(fillWidthCount);
 
@@ -107,7 +107,6 @@ void ButtonRow::relayout() {
         auto nextExtraWidth = i < nChildren - 1 ? getMorphExpansion(validChildren[i + 1]) : 0.0;
         // clang-format on
 
-        // Items at edges push by full amount, items in middle push by half
         if (i > 1)
             prevExtraWidth /= 2;
         if (i < nChildren - 2)

@@ -25,7 +25,6 @@ PathView {
         if (!screen)
             return 0;
 
-        // Screen width - 4x outer rounding - 2x max side thickness (cause centered)
         const isBarHorizontal = Config.bar.position === "top" || Config.bar.position === "bottom";
         const barThickness = isBarHorizontal ? panels.bar.implicitHeight : panels.bar.implicitWidth;
         const barMargins = Math.max(Config.border.thickness, barThickness);

@@ -11,16 +11,13 @@ import Quickshell.Wayland
 import qs.services
 import qs.utils
 
-// Options toolbar
 Toolbar {
     id: root
 
-    // Use a synchronizer on these
     property var action
     property var selectionMode
     property bool showWindowOutlines: false
 
-    // Signals
     signal dismiss()
 
     IconButton {

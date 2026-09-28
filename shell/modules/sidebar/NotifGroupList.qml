@@ -31,7 +31,7 @@ LazyListView {
 
     useCustomViewport: true
     viewport: {
-        tWatcher.transform; // mapToItem is not reactive so use this to trigger updates
+        tWatcher.transform;
         return Qt.rect(0, container.contentY - mapToItem(container.contentItem, 0, 0).y, width, container.height);
     }
 

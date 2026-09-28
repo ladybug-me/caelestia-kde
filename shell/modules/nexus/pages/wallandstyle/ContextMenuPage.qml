@@ -91,7 +91,7 @@ PageBase {
         const saveStartedAt = root.perfSaveStartedAt > 0 ? root.perfSaveStartedAt : Date.now();
         const payload = root.pendingSaveEntries.length > 0 ? root.pendingSaveEntries : collectEntries();
         ContextMenuStore.save(payload);
-        root.componentMeta = root.componentMeta; // force update
+        root.componentMeta = root.componentMeta;
 
         const saveMs = Date.now() - saveStartedAt;
         console.log("[perf][ContextMenuPage] save queued ms=" + saveMs + " entries=" + payload.length);

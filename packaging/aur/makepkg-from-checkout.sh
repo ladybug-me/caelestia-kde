@@ -30,8 +30,6 @@ echo "==> staging the tree at $(git -C "$repo" rev-parse --short HEAD)"
 rm -rf "$tree"
 git clone --quiet --depth 1 --recurse-submodules --shallow-submodules "file://$repo" "$tree"
 
-rm -rf "$tree/shell/assets/fonts"
-
 git -C "$tree" rev-parse HEAD > "$tree/REVISION"
 
 rm -rf "$tree/.git" "$tree/.gitmodules"

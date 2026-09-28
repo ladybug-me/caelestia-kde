@@ -78,7 +78,6 @@ PageBase {
             }
         }
 
-        // All networks button, only when > max networks
         ConnectedRect {
             Layout.fillWidth: true
             Layout.preferredHeight: Nmcli.wifiEnabled && Nmcli.networks.length > GlobalConfig.nexus.maxNetworksShown ? showAllLayout.implicitHeight + Tokens.padding.medium * 2 : 0
@@ -91,7 +90,7 @@ PageBase {
             }
 
             StateLayer {
-                onClicked: root.nState.openSubPage(5) // All networks sub-page
+                onClicked: root.nState.openSubPage(5)
             }
 
             RowLayout {
@@ -123,13 +122,12 @@ PageBase {
             }
         }
 
-        // Saved networks button
         ConnectedRect {
             Layout.fillWidth: true
             implicitHeight: savedNetworksLayout.implicitHeight + savedNetworksLayout.anchors.margins * 2
 
             StateLayer {
-                onClicked: root.nState.openSubPage(6) // Saved networks sub-page
+                onClicked: root.nState.openSubPage(6)
             }
 
             RowLayout {
@@ -169,7 +167,7 @@ PageBase {
             last: true
 
             StateLayer {
-                onClicked: root.nState.openSubPage(2) // Add network sub-page
+                onClicked: root.nState.openSubPage(2)
             }
 
             RowLayout {
@@ -325,7 +323,6 @@ PageBase {
             }
         }
 
-        // VPN providers (WireGuard, WARP, NetBird, Tailscale)
         ToggleRow {
             Layout.topMargin: Tokens.spacing.large
             first: true
@@ -544,7 +541,7 @@ PageBase {
                         icon: "edit"
                         onClicked: {
                             root.nState.editingVpnIndex = provider.index;
-                            root.nState.openSubPage(4); // Add/edit provider sub-page
+                            root.nState.openSubPage(4);
                         }
                     }
                 }
@@ -557,7 +554,7 @@ PageBase {
             text: qsTr("Add provider")
             onClicked: {
                 root.nState.editingVpnIndex = -1;
-                root.nState.openSubPage(4); // Add/edit provider sub-page
+                root.nState.openSubPage(4);
             }
         }
     }

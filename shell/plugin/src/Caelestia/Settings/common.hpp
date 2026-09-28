@@ -23,12 +23,12 @@ enum class ExpectedType {
 };
 
 enum class WriteOrigin {
-    Init,      // On init
-    File,      // From the JSON file
-    FileReset, // When option not present in file
-    Layer,     // From the fallback layer
-    Qml,       // From QML
-    QmlReset,  // On option reset
+    Init,
+    File,
+    FileReset,
+    Layer,
+    Qml,
+    QmlReset,
 };
 
 class WriteScope {
@@ -43,8 +43,6 @@ private:
     Q_DISABLE_COPY_MOVE(WriteScope)
 };
 
-// Marks reads that come from inside the settings layer rather than from QML, so the
-// generated getters do not warn about reading a global option through an overlay.
 class InternalRead {
 public:
     explicit InternalRead(Node* node);
@@ -88,7 +86,6 @@ public:
     QString message;
 
     static Diagnostic mismatch(ExpectedType expected, const QJsonValue& value, const QString& option = {});
-    // For options that accept more than one JSON shape, so every alternative is listed
     static Diagnostic mismatch(
         const QList<ExpectedType>& expected, const QJsonValue& value, const QString& option = {});
 

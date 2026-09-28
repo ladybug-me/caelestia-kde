@@ -28,7 +28,6 @@ StyledRect {
 
 
 
-    // Helper for video
     function isVideo(url) {
         if (!url) return false;
         let lower = url.toString().toLowerCase();
@@ -47,7 +46,6 @@ StyledRect {
     radius: Tokens.rounding.large
     color: Colours.layer(Colours.palette.m3surfaceContainerHigh, root.isExpanded ? 3 : 1)
 
-    // Automatically play/pause media when expanded
     onIsExpandedChanged: {
         if (isExpanded && isVideo(mediaUrl)) {
             mediaPlay.play()
@@ -79,12 +77,10 @@ StyledRect {
         anchors.margins: Tokens.padding.large
         spacing: Tokens.spacing.large
 
-        // --- Header Row ---
         RowLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.medium
 
-            // Circular Icon
             StyledClippingRect {
                 Layout.preferredHeight: 48
                 Layout.preferredWidth: 48
@@ -116,7 +112,6 @@ StyledRect {
                 }
             }
 
-            // Title & Version row + description
             ColumnLayout {
                 Layout.fillWidth: true
                 spacing: 2
@@ -149,7 +144,7 @@ StyledRect {
                         }
                     }
 
-                    Item { Layout.fillWidth: true } // spacer
+                    Item { Layout.fillWidth: true }
                 }
 
                 StyledText {
@@ -164,7 +159,6 @@ StyledRect {
                 }
             }
 
-            // Action Item Loader
             Loader {
                 active: !!root.actionComponent
                 sourceComponent: root.actionComponent
@@ -179,7 +173,6 @@ StyledRect {
             }
         }
 
-        // --- Expanded Content Row ---
         ColumnLayout {
             id: expandedContent
             Layout.fillWidth: true

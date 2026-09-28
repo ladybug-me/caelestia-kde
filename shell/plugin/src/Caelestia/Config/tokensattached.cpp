@@ -1,11 +1,12 @@
 #include "tokensattached.hpp"
-#include "anim.hpp"
-#include "appearanceconfig.hpp"
-#include "rootnodes.hpp"
-#include "font.hpp"
-#include "tokens.hpp"
 
 #include <qquickitem.h>
+
+#include "anim.hpp"
+#include "appearanceconfig.hpp"
+#include "font.hpp"
+#include "rootnodes.hpp"
+#include "tokens.hpp"
 
 namespace caelestia::config {
 
@@ -101,7 +102,7 @@ TOKENS_ATTACHED_GETTER(AppearancePadding, padding)
 #undef TOKENS_ATTACHED_GETTER
 
 const AppearanceTransparency* Tokens::transparency() const {
-    return ConfigSingleton::instance()->appearance()->transparency(); // Transparency is always global
+    return ConfigSingleton::instance()->appearance()->transparency();
 }
 
 const SizeTokens* Tokens::sizes() const {

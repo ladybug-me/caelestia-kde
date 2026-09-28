@@ -18,7 +18,7 @@ public:
 
     [[nodiscard]] QString pathFor(const QString& name) const;
     [[nodiscard]] QString nameFor(T* layer) const;
-    [[nodiscard]] T* get(const QString& name, T* fallback, bool* created = nullptr); // Created on demand
+    [[nodiscard]] T* get(const QString& name, T* fallback, bool* created = nullptr);
 
 private:
     const QString m_prefix;

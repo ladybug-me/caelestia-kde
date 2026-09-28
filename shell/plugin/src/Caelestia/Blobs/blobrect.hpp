@@ -1,11 +1,11 @@
 #pragma once
 
-#include "blobshape.hpp"
-
 #include <qelapsedtimer.h>
 #include <qpointer.h>
 #include <qqmlengine.h>
 #include <qqmllist.h>
+
+#include "blobshape.hpp"
 
 class BlobRect : public BlobShape {
     Q_OBJECT
@@ -93,19 +93,15 @@ protected:
 private:
     void checkAtRest(float speed);
 
-    // Physics state
     QPointF m_prevScenePos;
     QElapsedTimer m_elapsed;
     bool m_physicsActive = false;
     bool m_hasPrevPos = false;
 
-    // Symmetric 2x2 deformation matrix components (3 independent: m00, m01,
-    // m11) Rest state is identity: m00=1, m01=0, m11=1
     float m_dm00 = 1.0f;
     float m_dm01 = 0.0f;
     float m_dm11 = 1.0f;
 
-    // Spring velocities for each component
     float m_dmVel00 = 0.0f;
     float m_dmVel01 = 0.0f;
     float m_dmVel11 = 0.0f;

@@ -76,8 +76,8 @@ std::optional<double> cpuPackageTemp() {
         return std::nullopt;
     }
 
-    std::optional<double> primary;  // Package id N / Tdie
-    std::optional<double> fallback; // Tctl
+    std::optional<double> primary;
+    std::optional<double> fallback;
 
     int chipNr = 0;
     while (const sensors_chip_name* chip = sensors_get_detected_chips(nullptr, &chipNr)) {

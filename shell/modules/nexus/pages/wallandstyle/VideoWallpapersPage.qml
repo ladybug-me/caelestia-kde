@@ -16,7 +16,6 @@ PageBase {
     isSubPage: true
     title: qsTr("Video Wallpapers")
 
-    // HYPRLAND_INSTANCE_SIGNATURE is the canonical compositor-detection env var.
     readonly property bool isHyprland: !!Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
 
     ColumnLayout {

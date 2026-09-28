@@ -22,12 +22,10 @@ namespace caelestia::services {
 KeybindsModel::KeybindsModel(QObject* parent)
     : QAbstractListModel(parent) {
 
-    // Load keybinds JSON or populate defaults
     QString path = keybindsPath();
     QFile file(path);
     bool shouldSave = false;
 
-    // Start with defaults
     QJsonObject defaults = caelestia::config::defaultKeybinds();
     bool krohnkiteEnabled = caelestia::config::ConfigSingleton::instance()->general()->krohnkiteEnabled();
 
@@ -35,7 +33,6 @@ KeybindsModel::KeybindsModel(QObject* parent)
         if (it.key().startsWith(QStringLiteral("krohnkite")) && !krohnkiteEnabled) {
             continue;
         }
-        // Don't inject empty defaults into m_keybinds to allow QML to set the initial key
         if (!it.value().toString().isEmpty()) {
             m_keybinds.insert(it.key(), it.value().toString());
         }
@@ -45,7 +42,6 @@ KeybindsModel::KeybindsModel(QObject* parent)
         QJsonDocument doc = QJsonDocument::fromJson(file.readAll());
         if (doc.isObject()) {
             QJsonObject obj = doc.object();
-            // Merge user JSON over defaults
             for (auto it = obj.begin(); it != obj.end(); ++it) {
                 if (it.key().startsWith(QStringLiteral("krohnkite")) && !krohnkiteEnabled) {
                     continue;
@@ -56,14 +52,13 @@ KeybindsModel::KeybindsModel(QObject* parent)
             }
         }
     } else {
-        shouldSave = true; // file didn't exist, save the generated defaults
+        shouldSave = true;
     }
 
     connect(GlobalShortcutDispatcher::instance(), &GlobalShortcutDispatcher::shortcutRegistered, this,
         &KeybindsModel::onShortcutRegistered);
     connect(GlobalShortcutDispatcher::instance(), &GlobalShortcutDispatcher::shortcutUnregistered, this,
         &KeybindsModel::onShortcutUnregistered);
-    // Re-evaluate blinker state whenever the collision index is rebuilt
     connect(GlobalShortcutDispatcher::instance(), &GlobalShortcutDispatcher::collisionIndexChanged, this,
         &KeybindsModel::keybindsChanged);
 
@@ -94,11 +89,11 @@ QVariantList KeybindsModel::keybinds() const {
 }
 
 bool KeybindsModel::initialized() const {
-    return true; // We are initialized synchronously
+    return true;
 }
 
 void KeybindsModel::load() {
-    emit loaded(); // Signal that we are loaded so QML can proceed
+    emit loaded();
 }
 
 int KeybindsModel::rowCount(const QModelIndex& parent) const {
@@ -190,7 +185,6 @@ void KeybindsModel::onShortcutRegistered(GlobalShortcut* sc) {
     if (m_rows.contains(sc))
         return;
 
-    // Directly assign the key from our single source of truth
     if (m_keybinds.contains(sc->name())) {
         sc->setKey(m_keybinds.value(sc->name()));
     }
@@ -237,8 +231,6 @@ QString KeybindsModel::getKeyCollisionForPart(const QString& actionName, const Q
     if (actionName.isEmpty() || keyPart.isEmpty())
         return QString();
 
-    // Query the central collision index which is backed by stolen-shortcuts.json.
-    // Using a portable key string as the lookup key matches what the dispatcher stores.
     QKeySequence seq(keyPart.trimmed());
     if (seq.isEmpty())
         return QString();

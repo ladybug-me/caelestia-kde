@@ -154,7 +154,7 @@ void DiscordIpc::onReadyRead() {
         int32_t length;
         stream >> opcode >> length;
 
-        if (length < 0 || length > 1024 * 1024) { // 1MB clamp to prevent hangs
+        if (length < 0 || length > 1024 * 1024) {
             qWarning() << "DiscordIPC: Malformed frame length received:" << length << "- aborting connection.";
             m_socket->abort();
             m_buffer.clear();
@@ -162,7 +162,7 @@ void DiscordIpc::onReadyRead() {
         }
 
         if (m_buffer.size() < 8 + length) {
-            break; // Wait for more data
+            break;
         }
 
         QByteArray payloadData = m_buffer.mid(8, length);

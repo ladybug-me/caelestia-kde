@@ -6,8 +6,6 @@ import Caelestia.Config
 import qs.services
 
 Singleton {
-    // Seconds cost a 1 Hz timer for the whole shell, so the clock only runs at
-    // minute precision until something on screen asks for seconds.
     readonly property bool secondsWanted: GlobalConfig.bar.clock.showSeconds || GlobalConfig.dashboard.showClockSeconds
 
     property alias enabled: clock.enabled

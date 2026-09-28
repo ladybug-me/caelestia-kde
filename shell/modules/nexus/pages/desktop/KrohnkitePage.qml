@@ -71,7 +71,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Main Toggle
         ToggleRow {
             Layout.fillWidth: true
             first: true
@@ -149,7 +148,7 @@ PageBase {
                 Layout.fillWidth: true
                 Layout.topMargin: 0
                 text: qsTr("Gaps")
-                first: true // avoid double top margin
+                first: true
             }
 
             IconButton {

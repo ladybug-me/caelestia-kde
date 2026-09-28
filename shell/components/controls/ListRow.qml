@@ -6,9 +6,6 @@ import Caelestia.Config
 import qs.components
 import qs.utils
 
-// Reveal-animated list row shared by the bar popouts (network, bluetooth).
-// Each popout used to copy this preamble into every row and drift in small
-// ways; now the reveal lives in one place and rows declare content only.
 RowLayout {
     id: root
 

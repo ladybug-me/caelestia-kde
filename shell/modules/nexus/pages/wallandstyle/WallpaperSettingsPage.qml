@@ -28,7 +28,7 @@ PageBase {
     function scaleKeyToIndex(key: int): int {
         if (key === Image.PreserveAspectFit) return 1;
         if (key === Image.Stretch) return 2;
-        return 0; // Default to Crop
+        return 0;
     }
 
     ColumnLayout {

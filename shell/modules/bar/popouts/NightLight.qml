@@ -14,7 +14,6 @@ ColumnLayout {
 
     property bool _isSidebarOpen: false
 
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
 
@@ -43,7 +42,6 @@ ColumnLayout {
         }
     }
 
-    // Daylight Temperature Slider (only visible in Auto mode)
     StyledText {
         visible: HyprSunset.autoMode
         Layout.topMargin: Tokens.spacing.medium * root.scaleOffset
@@ -82,7 +80,6 @@ ColumnLayout {
         }
     }
 
-    // Nightlight Temperature Slider
     StyledText {
         Layout.topMargin: Tokens.spacing.medium * root.scaleOffset
         Layout.leftMargin: Tokens.padding.small * root.scaleOffset

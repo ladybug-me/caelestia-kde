@@ -9,7 +9,6 @@ import qs.components.controls
 import qs.services
 import qs.modules.nexus.common
 
-// Add or edit a VPN provider. editingVpnIndex (-1 = add) is read from NexusState.
 PageBase {
     id: root
 

@@ -129,9 +129,6 @@ void WorkspaceTrackerEffect::sendPayload(int desktop, float x, float y, KWin::Lo
     payload.x = x;
     payload.y = y;
 
-    // An unnamed output means "whichever screen is active", which is what the
-    // signals report when per-output desktops are switched off. The shell
-    // applies those to every screen.
     const QByteArray name = output ? output->name().toUtf8() : QByteArray();
     const int copied = qMin(name.size(), static_cast<qsizetype>(sizeof(payload.output) - 1));
     std::memcpy(payload.output, name.constData(), copied);
@@ -177,7 +174,7 @@ void WorkspaceTrackerEffect::onDesktopChanged(
     }
 }
 
-} // namespace caelestia
+}
 
 KWIN_EFFECT_FACTORY(caelestia::WorkspaceTrackerEffect, "kwin_workspace_tracker.json")
 

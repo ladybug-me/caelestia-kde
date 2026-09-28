@@ -51,7 +51,6 @@ private:
         const bool needsW = size.width() <= 0;
         const bool needsH = size.height() <= 0;
 
-        // If both dimensions are missing, return the original directly
         if (needsW && needsH) {
             qCDebug(lcCProv).noquote() << "Given source size is invalid, returning original:" << path;
             m_image = QImage(path);
@@ -62,7 +61,6 @@ private:
             return;
         }
 
-        // If one dimension is missing, derive it from the source aspect ratio
         if (needsW || needsH) {
             const QImageReader sourceReader(path);
             const QSize sourceSize = sourceReader.size();
@@ -78,7 +76,6 @@ private:
                 size.setHeight(qRound(size.width() * sourceSize.height() / static_cast<qreal>(sourceSize.width())));
         }
 
-        // Try to use cached image
         const auto cachePath = ImageCacher::cachePathFor(path, size, m_fillMode);
         if (!cachePath.isEmpty()) {
             QImageReader cacheReader(cachePath);
@@ -88,11 +85,6 @@ private:
                     return;
             }
 
-            // Cold cache. Build the file here, in this request's own thread, rather
-            // than scheduling it and handing back something else: scheduling meant
-            // every tile of a folder nobody had looked at yet was decoded twice, once
-            // for this request and once by the pooled job, which is the spike that
-            // comes with opening a folder of wallpapers.
             ImageCacher::runJob(path, cachePath, size, m_fillMode);
 
             QImageReader built(cachePath);
@@ -103,9 +95,6 @@ private:
             }
         }
 
-        // No cache to read or write (it is disabled, or the source is not a file):
-        // decode at the size that was asked for. QImageReader scales as it decodes,
-        // so this costs the tile rather than the wallpaper.
         QImageReader coldReader(path);
         coldReader.setAutoTransform(true);
         if (m_fillMode == ImageCacher::FillMode::Stretch) {
@@ -121,7 +110,7 @@ private:
 
         m_image = coldReader.read();
         if (m_image.isNull())
-            m_image = QImage(path); // Whatever the reader would not do, this will.
+            m_image = QImage(path);
         if (m_image.isNull()) {
             m_error = QStringLiteral("Failed to decode source: ") + path;
             qCWarning(lcCProv).noquote() << m_error;

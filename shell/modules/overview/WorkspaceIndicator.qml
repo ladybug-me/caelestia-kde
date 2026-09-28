@@ -30,9 +30,6 @@ Item {
         if (kwinList) {
             for (let i = 0; i < kwinList.length; ++i) {
                 const w = kwinList[i];
-                // Each window lives on one output; this strip describes one
-                // screen. Counting the other monitor's windows makes a desktop
-                // that is empty here look busy.
                 if (w.output !== root.screenName)
                     continue;
                 if (w.workspace) {
@@ -44,7 +41,6 @@ Item {
         }
         return occ;
     }
-    // Force QML dependency tracker to bind to windowList correctly
     property var kwinWindowList: Kwin.windowList
 
     signal workspaceSelected(int index)

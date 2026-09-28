@@ -14,10 +14,6 @@ Item {
     readonly property Popout currentPopout: content.children.find(c => c.shouldBeActive) ?? null
     readonly property Item current: currentPopout?.item ?? null
 
-    // Tray menu popouts are looked up by name, and the list that opens them
-    // (Tray.qml) is filtered differently from the list that publishes them here
-    // (only items with a menu), so a positional index would drift: name them by
-    // item id via the index in the bar's own filtered list.
     readonly property var trayItemsToIndices: SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id)).reduce((acc, item, i) => {
         acc[item.id] = i;
         return acc;
@@ -160,8 +156,6 @@ Item {
 
         Popout {
             name: "audio"
-            // Audio controls need a readable minimum size even when bar
-            // preview scaling is configured for compact indicators.
             minScale: 0.9
             sourceComponent: Audio {
                 popouts: root.popouts
@@ -255,12 +249,7 @@ Item {
         id: popout
 
         required property string name
-        // Key into GlobalConfig.bar.previewScales/previewFontScales. Defaults to
-        // the popout name; a missing key degrades to 0.0, matching the old
-        // hardcoded per-popout preambles.
         property string previewKey: name
-        // Per-popout minimum scale clamp. Audio needs a readable minimum even
-        // when bar preview scaling is configured for compact indicators.
         property real minScale: 0.1
         readonly property bool shouldBeActive: root.popouts.currentName === name
 

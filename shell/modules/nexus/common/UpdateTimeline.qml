@@ -10,14 +10,9 @@ import qs.services
 Item {
     id: root
 
-    // Array of { id: string, label: string, state: "available"|"current"|"past", subject: string,
-    //            author?: string, date?: string, isMerge?: bool, isRelease?: bool }
     required property var entries
     property string selectedId: ""
 
-    // Commit rows (dev branch) carry a subject plus an identifier line and need
-    // room for both; plain release rows (main branch) stay compact so the two
-    // channels remain visually distinct at a glance.
     readonly property bool richMode: root.entries.some(e => !e.isRelease && (!!e.author || !!e.subject))
 
     readonly property int rowHeight: root.richMode ? 56 : 44
@@ -28,9 +23,6 @@ Item {
 
     readonly property real currentDotRadius: 10
 
-    // Conventional-commit prefix → { label, colour } lookup. Gives the dev
-    // timeline a colourful, git-log-style look while keeping the mapping
-    // grounded in the current Material palette (so it follows theming).
     readonly property var commitTypes: ({
         feat: { label: qsTr("feat"), color: Colours.palette.m3primary },
         fix: { label: qsTr("fix"), color: Colours.palette.m3error },
@@ -61,8 +53,6 @@ Item {
         return stripped === "" ? (subject || "") : stripped;
     }
 
-    // "Merge pull request #697 from Alkxcx/fix/gif-and-drag-v2" -> "#697 · fix/gif-and-drag-v2".
-    // Which fork it came from is of no interest to the reader; what landed is.
     function mergedSubject(subject) {
         const match = /^Merge pull request #(\d+) from [^/]+\/(.+)$/.exec(subject || "");
         if (!match)
@@ -73,7 +63,6 @@ Item {
     implicitWidth: 200
     implicitHeight: root.entries.length * root.rowHeight
 
-    // Vertical connector line behind all dots
     Rectangle {
         visible: root.entries.length > 1
         x: root.gutterWidth / 2 - 1
@@ -109,8 +98,6 @@ Item {
                     return "";
                 return isMerge ? root.mergedSubject(modelData.subject) : root.typeStrippedSubject(modelData.subject);
             }
-            // "288b2c1d · Solanaceae · 9/10/26 12:52 PM". Releases only need their
-            // author and date: the version is already the row's title.
             readonly property string metaLine: {
                 const parts = [];
                 if (!isRelease && modelData.label !== "")
@@ -139,7 +126,6 @@ Item {
             width: root.width
             height: root.rowHeight
 
-            // Hover highlight
             Rectangle {
                 anchors.fill: parent
                 radius: Tokens.rounding.extraSmall
@@ -153,7 +139,6 @@ Item {
                 }
             }
 
-            // Glow for current version dot
             Rectangle {
                 visible: entry.isCurrent
                 x: root.gutterWidth / 2 - width / 2
@@ -165,7 +150,6 @@ Item {
                 opacity: 0.15
             }
 
-            // Selection ring
             Rectangle {
                 visible: entry.isSelected
                 x: root.gutterWidth / 2 - width / 2
@@ -177,7 +161,6 @@ Item {
                 opacity: 0.22
             }
 
-            // Dot
             Rectangle {
                 id: dot
 
@@ -187,20 +170,11 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 width: r * 2
                 height: r * 2
-                // Merge commits are rendered as a diamond to stand out from
-                // regular commits/versions in the same vertical timeline.
                 radius: entry.isMerge ? 2 : r
                 rotation: entry.isMerge ? 45 : 0
 
-                // Fill colour stays a fixed, opaque hue per state/type; the
-                // "hollow" look for available dots is done via opacity
-                // (not by switching the color to "transparent") to avoid
-                // animating through a black-looking transient frame.
                 color: {
                     if (entry.isCurrent || entry.isSelected) return Colours.palette.m3primary;
-                    // Past commits stay tinted by their commit type so the dev
-                    // timeline reads as a colourful git log; plain releases
-                    // (main branch) keep the original neutral tone.
                     return entry.isRelease ? Colours.palette.m3outlineVariant : entry.typeColor;
                 }
                 opacity: (entry.isAvailable && !entry.isSelected) ? 0 : (entry.isPast && !entry.isRelease ? 0.85 : 1)
@@ -223,9 +197,6 @@ Item {
                 }
             }
 
-            // Subject first, then the identifiers. A reader scanning the dev
-            // timeline is looking for what changed; the hash only tells them
-            // which commit it was, which is reference material.
             Column {
                 anchors {
                     left: parent.left
@@ -240,8 +211,6 @@ Item {
                     width: parent.width
                     spacing: Tokens.spacing.extraSmall
 
-                    // Tag icon marks release rows so the main-branch timeline
-                    // reads distinctly from the dev commit log.
                     MaterialIcon {
                         visible: entry.isRelease
                         fontStyle: Tokens.font.icon.small
@@ -251,14 +220,11 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        // A release is named by its version, a commit by what changed.
                         text: entry.isRelease ? entry.modelData.label : entry.displaySubject
                         font: entry.isCurrent ? Tokens.font.body.medium : Tokens.font.body.small
                         color: {
                             if (entry.isCurrent || entry.isSelected) return Colours.palette.m3primary;
                             if (entry.isRelease) return entry.isAvailable ? Colours.palette.m3onSurface : Colours.palette.m3outline;
-                            // A merge is structure rather than a change, so it stays
-                            // behind the commits it brought in.
                             return entry.isMerge ? Colours.palette.m3onSurfaceVariant : Colours.palette.m3onSurface;
                         }
                         elide: Text.ElideRight
@@ -268,8 +234,6 @@ Item {
                         }
                     }
 
-                    // Conventional-commit type chip (feat/fix/chore/…) — quick
-                    // visual classification without reading the full subject.
                     StyledRect {
                         visible: entry.typeInfo !== null
                         Layout.alignment: Qt.AlignVCenter
@@ -288,8 +252,6 @@ Item {
                         }
                     }
 
-                    // Merge badge — merges don't carry a conventional-commit
-                    // prefix of their own, so they get a dedicated chip.
                     StyledRect {
                         visible: entry.isMerge
                         Layout.alignment: Qt.AlignVCenter
@@ -309,8 +271,6 @@ Item {
                     }
                 }
 
-                // Hash, author and date on one quiet line: enough to identify the
-                // commit without competing with the subject above it.
                 StyledText {
                     width: parent.width
                     visible: entry.metaLine !== ""
@@ -321,7 +281,6 @@ Item {
                 }
             }
 
-            // Interaction layer
             MouseArea {
                 anchors.fill: parent
                 hoverEnabled: true
@@ -335,7 +294,6 @@ Item {
                 }
             }
 
-            // Author/date tooltip - positioned absolutely, doesn't affect layout
             Loader {
                 asynchronous: true
                 active: entry.tooltipText !== ""

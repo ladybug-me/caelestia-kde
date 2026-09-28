@@ -6,26 +6,14 @@ import Quickshell.Widgets
 import Caelestia.Config
 import Caelestia.Services
 
-// A window's live preview, with the application icon standing in until there is
-// a stream to show -- or permanently, if KWin will not give one out.
-//
-// The four surfaces that want this had grown four copies of the same twenty
-// lines: request a stream, letterbox a PipeWireSourceItem inside the available
-// space, and swap in an icon when nothing arrives. They differed in small ways
-// that were bugs rather than intent, so it lives here now.
 Item {
     id: root
 
     required property string address
-    /// Whether this preview currently wants pixels. Streams are finite; see
-    /// WindowStream::active.
     property bool active: true
     /// Shown until the first frame arrives, and whenever there is no stream.
     property url fallbackIcon: ""
     property real fallbackScale: 0.5
-    /// Width over height of the window being shown, used to letterbox the feed.
-    /// PipeWireSourceItem fills whatever it is given, so without this a 16:9
-    /// window in a square card comes out stretched.
     property real sourceAspect: 16 / 9
 
     readonly property bool hasStream: stream.available
@@ -33,12 +21,6 @@ Item {
     WindowStream {
         id: stream
 
-        // bar.livePreviews is the user's switch for this whole feature -- it
-        // exists because KWin's screencast protocol cannot always be shared, and
-        // on some setups the shell holding streams breaks another application's
-        // screen share or camera. ScreencastManager used to gate on it; when it
-        // was replaced the gate was not carried over, leaving the setting
-        // writable and read by nothing.
         active: root.active && GlobalConfig.bar.livePreviews
         address: root.address
     }

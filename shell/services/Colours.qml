@@ -18,20 +18,12 @@ Singleton {
     property string scheme: "dynamic"
     property string flavour: "default"
     property string variant: "default"
-    // How saturated the palette is, carried by the scheme itself: 1 is what the color engine
-    // produced, 0 is a grey palette at the same tones, and 2 is the most the accents take.
-    // That range is what `caelestia scheme set -i` takes, and it is the only place the shell
-    // states it - the page below works in it rather than in its own copy of a slider's range.
     property real intensity: 1.0
     readonly property real maxIntensity: 2.0
-    // The same value as a position on a 0 to 1 slider, which is what a slider is.
     readonly property real intensityFraction: intensity / maxIntensity
     property string previewScheme: ""
     property string previewFlavour: ""
     property string previewVariant: ""
-    // Whether the wallpaper may pick the mode and the variant. The shell states this on every
-    // command that can derive a scheme, so the pipeline keeps no copy of the setting; a shell
-    // that omits it is asking for the wallpaper's choice, which is what it would get anyway.
     readonly property list<string> smartArg: GlobalConfig.services.smartScheme ? [] : ["--no-smart"]
     readonly property bool light: showPreview ? previewLight : currentLight
     property bool currentLight
@@ -44,7 +36,6 @@ Singleton {
     readonly property alias wallLuminance: analyser.luminance
 
     function updatePaletteManager(): void {
-        // Collect all palette colors into a map for C++ processing
         const p = root.palette;
         PaletteManager.update(
             {
@@ -214,10 +205,6 @@ Singleton {
             root.variant = (scheme.variant || "").trim();
             root.currentLight = scheme.mode === "light";
 
-            // The palette that was in effect has arrived, so a preview that was standing in for
-            // it has done its job and gives way. The launcher clears its own preview when it
-            // leaves the scheme list, so this is what ends one on the Colors page, where the
-            // write is the only thing that could.
             root.showPreview = false;
 
             // Absent, null, and a value the range does not take all mean the same thing here:
@@ -259,28 +246,17 @@ Singleton {
         }
     }
 
-    // Repaint the shell from a palette we already hold, before the pipeline that writes it runs.
-    // Switching colors goes through `caelestia scheme set`, which renders the palette, fans it
-    // out to every target and only then replaces scheme.json - the file this singleton watches.
-    // So the shell, whose colors are the ones the user is looking at while it happens, was the
-    // last thing to change, which is what made the switch feel slow. The Colors page has every
-    // role of a named scheme in hand already, so it can show the result now and let the write
-    // catch up. This is the preview the launcher already uses for a highlighted variant, so a
-    // palette shown this way is replaced by the one the file brings, which clears the preview.
     function previewNamed(name: string, flavour: string, colours: var, light: bool): void {
         if (!colours)
             return;
         root.previewScheme = name;
         root.previewFlavour = flavour;
-        // A named scheme keeps the variant and the mode in effect; only its colors change.
         root.previewVariant = root.variant;
         root.previewLight = light;
         applyColours(root.preview, colours);
         root.showPreview = true;
     }
 
-    /// End a preview the file never replaced. A command that fails writes no scheme, so this is
-    /// what stops the shell showing colors that nothing is going to confirm.
     function clearPreview(): void {
         root.showPreview = false;
     }
@@ -289,18 +265,10 @@ Singleton {
         Quickshell.execDetached(["caelestia", "scheme", "set", "--notify", "-m", mode, ...root.smartArg]);
     }
 
-    // Renders the palette at an intensity, given as the slider position rather than as the
-    // multiplier itself. The command writes the value into the scheme, which is what the
-    // palette and this singleton then read it back out of.
     function setIntensity(fraction: real): void {
         Quickshell.execDetached(["caelestia", "scheme", "set", "-i", (fraction * maxIntensity).toFixed(2), ...root.smartArg]);
     }
 
-    // caelestia derives dynamic colours from the wallpaper it was last told
-    // about, and a scheme it cannot derive leaves the palette on the built-in
-    // default, which keeps the whole desktop on it. Re-derive from the
-    // wallpaper on screen once per start. Delivery is the scheme.json write the
-    // loader already watches, so nothing here waits for the result.
     function reseedScheme(): void {
         Quickshell.execDetached(["bash", Quickshell.shellPath("scripts/reseed-scheme.sh"), ...root.smartArg]);
     }
@@ -356,10 +324,6 @@ Singleton {
         onLoaded: root.load(text(), false)
     }
 
-    // scheme.json is rewritten atomically (the command replaces it, it does not
-    // truncate it), which the FileView's watcher can miss after the first
-    // replacement. The C++ SchemeLoader re-arms its own watcher for exactly this
-    // case, so reload the palette from its signal as the authoritative trigger.
     Connections {
         target: SchemeLoader
 
@@ -368,8 +332,6 @@ Singleton {
         }
     }
 
-    // Slightly after start, so the wallpaper this session restored is on disk
-    // and can be handed to the CLI.
     Timer {
         id: reseedTimer
 
@@ -421,7 +383,6 @@ Singleton {
         onLuminanceChanged: Qt.callLater(root.updatePaletteManager)
     }
 
-    // Trigger PaletteManager update when palette, light mode, or transparency changes
     Connections {
         target: root.palette
 
@@ -477,8 +438,6 @@ Singleton {
     }
 
     component M3TPalette: QtObject {
-        // Reads from C++ PaletteManager.tPalette (QVariantMap) — one C++ update() per theme change
-        // instead of 44 individual JS property binding re-evaluations.
         readonly property color m3primary_paletteKeyColor:         PaletteManager.tPalette["m3primary_paletteKeyColor"] ?? root.palette.m3primary_paletteKeyColor
         readonly property color m3secondary_paletteKeyColor:       PaletteManager.tPalette["m3secondary_paletteKeyColor"] ?? root.palette.m3secondary_paletteKeyColor
         readonly property color m3tertiary_paletteKeyColor:        PaletteManager.tPalette["m3tertiary_paletteKeyColor"] ?? root.palette.m3tertiary_paletteKeyColor

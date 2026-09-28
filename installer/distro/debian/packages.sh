@@ -75,6 +75,7 @@ CORE_PACKAGES=(
 
 SHELL_PACKAGES=(
     foot eza fastfetch btop bash
+    pciutils
 )
 
 THEME_PACKAGES=(

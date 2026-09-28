@@ -52,6 +52,7 @@ CORE_PACKAGES=(
 SHELL_PACKAGES=(
     quickshell matugen python
     foot eza fastfetch starship btop bash
+    pciutils
 )
 
 THEME_PACKAGES=(

@@ -117,7 +117,6 @@ Singleton {
         reloadableId: "gameMode"
     }
 
-
     FileView {
         path: `${Paths.cache}/gamemode-state`
         printErrors: false

@@ -106,7 +106,6 @@ Singleton {
         );
     }
 
-
     property bool schemeLoaded: false
 
     property int schemeRetryCount: 0
@@ -356,7 +355,6 @@ Singleton {
     onLightChanged: Qt.callLater(updatePaletteManager)
 
     onShowPreviewChanged: Qt.callLater(updatePaletteManager)
-
 
     component Transparency: QtObject {
         readonly property bool enabled: Tokens.transparency.enabled && !(GameMode.enabled && GlobalConfig.utilities.gameMode.disableShellTransparency)

@@ -18,7 +18,6 @@ namespace caelestia::services {
 
 namespace {
 
-// A card with a busy-percent node is a GPU we can read usage from without a vendor tool
 QStringList gpuBusyFiles() {
     static const QRegularExpression cardRe(QStringLiteral("^card\\d+$"));
 
@@ -53,10 +52,7 @@ bool hasIntelGpu() {
     return false;
 }
 
-// Runtime power management state of a PCI device, straight from sysfs. The
-// whole point of reading it: these nodes are plain device metadata, so the
-// read never wakes a suspended card - unlike any vendor query tool, which
-// initializes the driver and pulls the card out of sleep to ask it a question.
+// Reading these sysfs nodes never wakes a suspended card; vendor tools do.
 enum class PciPower {
     Active,
     Suspended,
@@ -68,7 +64,6 @@ PciPower pciPowerState(const QString& pciPath) {
         return PciPower::Unknown;
     }
 
-    // runtime_status: active/suspended/unknown/error, managed by runtime PM.
     QFile runtime(pciPath + QStringLiteral("/power/runtime_status"));
     if (runtime.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString s = QString::fromUtf8(runtime.readAll()).trimmed().toLower();
@@ -82,8 +77,7 @@ PciPower pciPowerState(const QString& pciPath) {
         return PciPower::Unknown;
     }
 
-    // power_state as a fallback on older kernels: d0 is on, anything deeper
-    // is a sleeping device.
+    // Older kernels: d0 is on, anything deeper is asleep.
     QFile power(pciPath + QStringLiteral("/power_state"));
     if (power.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString s = QString::fromUtf8(power.readAll()).trimmed().toLower();
@@ -136,10 +130,6 @@ QString parseGlxinfoName(const QByteArray& out) {
     return QString();
 }
 
-// A display-controller line from lspci: the bracketed card name, or the text
-// after the class colon when the bracket form is missing. With -nn the line
-// also carries id-shaped brackets - the class code ([0300]) and the vendor
-// device id ([10de:2484]) - which are not names, so they are skipped.
 QString parseLspciName(const QByteArray& out) {
     const QString line = QString::fromUtf8(out).trimmed();
 
@@ -159,7 +149,6 @@ QString parseLspciName(const QByteArray& out) {
     static const QRegularExpression colonRe(QStringLiteral(":\\s+(.+)"));
     const auto colon = colonRe.match(line);
     if (colon.hasMatch()) {
-        // Drop a trailing vendor id and/or revision that the colon form can carry.
         static const QRegularExpression tailRe(
             QStringLiteral("\\s*\\[[0-9a-fA-F]{4}(:[0-9a-fA-F]{4})?\\](\\s*\\(rev[^)]*\\))?\\s*$"));
         return cleanName(colon.captured(1).replace(tailRe, QString()));
@@ -169,13 +158,12 @@ QString parseLspciName(const QByteArray& out) {
 }
 
 struct DisplayController {
-    QString slot; // PCI slot as lspci -D prints it, e.g. "0000:01:00.0"
+    QString slot;
     QString name;
     bool nvidia = false;
 };
 
 QList<DisplayController> parseDisplayControllers(const QByteArray& out) {
-    // -D always prefixes the domain, so the slot is the exact sysfs directory name.
     static const QRegularExpression slotRe(
         QStringLiteral("^([0-9a-fA-F]{4}:[0-9a-fA-F]{2}:[0-9a-fA-F]{2}\\.[0-9a-fA-F])\\s"));
     static const QRegularExpression classRe(
@@ -190,8 +178,6 @@ QList<DisplayController> parseDisplayControllers(const QByteArray& out) {
         }
         DisplayController controller;
         controller.slot = slot.captured(1);
-        // -nn prints vendor:device ids in brackets, so 10de is the reliable NVIDIA
-        // signal; the name match only covers lspci builds that ignore -nn.
         controller.nvidia =
             line.contains(QStringLiteral("[10de:")) || line.contains(QStringLiteral("nvidia"), Qt::CaseInsensitive);
         controller.name = parseLspciName(line.toUtf8());
@@ -200,9 +186,6 @@ QList<DisplayController> parseDisplayControllers(const QByteArray& out) {
     return controllers;
 }
 
-// Maps an lspci -D slot to its sysfs device directory. With -D the slot is the
-// full domain:bus:device.function name sysfs uses, so this is a direct lookup;
-// the suffix scan only serves slots printed without a domain.
 QString pciDevicePath(const QString& slot) {
     if (slot.isEmpty()) {
         return QString();
@@ -227,8 +210,6 @@ struct NameSource {
     QString (*parse)(const QByteArray&);
 };
 
-// Fallback name probes, used when lspci itself is unavailable. The NVIDIA
-// probe stays first: its result doubles as the type probe (see finishNameSource).
 const std::array<NameSource, 2>& nameSources() {
     static const std::array<NameSource, 2> sources = { {
         { QStringLiteral("nvidia-smi"), { QStringLiteral("--query-gpu=name"), QStringLiteral("--format=csv,noheader") },
@@ -323,11 +304,7 @@ void Gpu::tick() {
         readGenericUsage();
         readGpuTemperature();
     } else if (t == Nvidia) {
-        // Asking a sleeping card for its usage is what keeps it awake: every
-        // nvidia-smi run initializes the driver and pulls the device to P0.
-        // Reading the runtime power state from sysfs does not touch the card,
-        // so a suspended dGPU stays suspended and reports zero, and the query
-        // only runs when something else already woke the card (#588, #595).
+        // nvidia-smi would wake a suspended card; the sysfs check does not (#588, #595).
         if (pciPowerState(m_nvidiaPciPath) == PciPower::Active) {
             startNvidiaUsage();
         } else {
@@ -355,11 +332,6 @@ void Gpu::detectGpu() {
     }
     m_detecting = true;
 
-    // lspci reads PCI metadata from sysfs, so unlike the old probe chain it
-    // never wakes a runtime-suspended dGPU just to learn what is installed.
-    // -D keeps the PCI domain in the slot (exact sysfs names), -nn adds the
-    // vendor:device ids (exact vendor match). The nvidia-smi probe runs later,
-    // and only when the card is awake.
     runProcess(QStringLiteral("lspci"), { QStringLiteral("-Dnn") }, [this](const QByteArray& out) {
         finishLspciProbe(out);
     });
@@ -367,8 +339,6 @@ void Gpu::detectGpu() {
 
 void Gpu::finishLspciProbe(const QByteArray& out) {
     if (out.trimmed().isEmpty()) {
-        // lspci missing or failed: fall back to the old probe chain, which
-        // derives type from nvidia-smi and the name from glxinfo.
         tryNameSource(0);
         return;
     }
@@ -385,8 +355,6 @@ void Gpu::finishLspciProbe(const QByteArray& out) {
     }
 
     if (!nvidia) {
-        // No NVIDIA hardware, so the machines that the old chain probed with
-        // nvidia-smi first never run that probe at all now.
         m_nvidiaPciPath.clear();
         setAutoType(!m_busyFiles.isEmpty() || hasIntelGpu() ? Generic : None);
         if (other && !other->name.isEmpty()) {
@@ -401,10 +369,6 @@ void Gpu::finishLspciProbe(const QByteArray& out) {
         setName(nvidia->name);
     }
 
-    // A suspended NVIDIA device is being power-managed by a bound driver;
-    // its name came from lspci, so there is nothing left that justifies
-    // waking the card here. nvidia-smi first runs from a tick that finds
-    // the card awake, or immediately below when it already is.
     if (pciPowerState(m_nvidiaPciPath) == PciPower::Suspended) {
         setAutoType(Nvidia);
         m_detecting = false;
@@ -414,9 +378,6 @@ void Gpu::finishLspciProbe(const QByteArray& out) {
     probeNvidiaCapability();
 }
 
-// Asks nvidia-smi once whether the proprietary driver answers. On the old
-// chain this was the first probe every machine ran; now only machines with
-// NVIDIA hardware that is already awake get here.
 void Gpu::probeNvidiaCapability() {
     runProcess(QStringLiteral("nvidia-smi"),
         { QStringLiteral("--query-gpu=name"), QStringLiteral("--format=csv,noheader") }, [this](const QByteArray& out) {
@@ -458,9 +419,6 @@ void Gpu::runProcess(const QString& program, const QStringList& args, std::funct
     auto* proc = new QProcess(this);
     proc->setStandardErrorFile(QProcess::nullDevice());
 
-    // Deliver the result exactly once, then tear the process down. A crash or a
-    // missing binary yields empty output so the caller can fall through gracefully:
-    // only FailedToStart skips finished(), and a crash reports CrashExit there.
     const auto finish = [proc, callback = std::move(callback)](const QByteArray& out) {
         callback(out);
         proc->deleteLater();
@@ -498,11 +456,7 @@ void Gpu::readGenericUsage() {
         }
     }
 
-    // Pass 2: Intel iGPUs have no busy-percent node. The i915 engines report
-    // real per-engine busy percentages, which is what usage should mean; only
-    // cards without an engines directory fall back to the clock ratio, which
-    // reads far too high on an idle iGPU because an idle card does not
-    // necessarily drop out of its high clock range (#588).
+    // Cards without a busy-percent node: i915 engines first, clock ratio as fallback (#588).
     for (const QString& card : cards) {
         if (QFile::exists(QStringLiteral("/sys/class/drm/%1/device/gpu_busy_percent").arg(card)))
             continue;
@@ -576,11 +530,6 @@ void Gpu::startNvidiaUsage() {
 
             const QList<QByteArray> parts = out.trimmed().split(',');
             if (parts.size() < 2) {
-                // The card was awake when the query started, so a dead query
-                // points at an unusable driver rather than a sleeping card.
-                // Two in a row demote an auto-detected Nvidia to the generic
-                // readers, the way the old detection chain fell back; a user
-                // pinned type is respected and keeps retrying.
                 if (m_userType == Auto && ++m_nvidiaFailures >= 2) {
                     m_nvidiaFailures = 0;
                     setAutoType(!m_busyFiles.isEmpty() || hasIntelGpu() ? Generic : None);

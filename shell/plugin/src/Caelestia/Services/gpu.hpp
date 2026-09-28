@@ -14,10 +14,10 @@ class Gpu : public TickingService {
 
 public:
     enum Type {
-        Auto,    // user override is empty (config "") — defer to detected autoType
-        None,    // no usable GPU
-        Nvidia,  // queried via nvidia-smi, gated on the card's runtime power state
-        Generic, // queried via /sys/class/drm/card*/device/gpu_busy_percent
+        Auto,
+        None,
+        Nvidia,
+        Generic,
     };
     Q_ENUM(Type)
 
@@ -61,8 +61,6 @@ private:
     void readGpuTemperature();
     void resetReadings();
 
-    // Runs a one-shot process, delivering its stdout to callback exactly once
-    // (empty output if it crashes or never starts), then tears the process down.
     void runProcess(const QString& program, const QStringList& args, std::function<void(const QByteArray&)> callback);
 
     void setUserType(Type value);
@@ -79,15 +77,8 @@ private:
 
     QStringList m_busyFiles;
 
-    // sysfs path of the NVIDIA PCI device, resolved from lspci output during
-    // detection. Its runtime power state decides whether a tick may spawn
-    // nvidia-smi: reading the state never wakes the card, spawning the tool
-    // does. Empty when unknown, which keeps the old always-query behaviour.
     QString m_nvidiaPciPath;
 
-    // Consecutive nvidia-smi queries that returned nothing. Two in a row
-    // demote an auto-detected Nvidia back to the generic readers, matching
-    // what the old detection chain concluded when the probe failed.
     int m_nvidiaFailures = 0;
 
     bool m_detecting = false;

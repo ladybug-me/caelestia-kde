@@ -13,8 +13,6 @@ import qs.services
 Controls.Menu {
     id: root
 
-    z: 9999
-
     property Item target: null
 
     property real menuExtent: 260
@@ -54,6 +52,8 @@ Controls.Menu {
     }
 
     attachTo: target
+
+    z: 9999
 
     // The menu's own corner is positioned purely through marginX/marginY in
     // openFor(); anchoring to the delegate's top-left keeps that math honest.

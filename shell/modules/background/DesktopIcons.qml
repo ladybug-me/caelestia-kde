@@ -6,6 +6,7 @@ import Qt.labs.folderlistmodel
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Caelestia
 import Caelestia.Config
 import qs.components
 import qs.components.containers
@@ -100,21 +101,27 @@ Item {
 
     // True while an icon's inline rename editor is open; the background window
     // raises its layer-shell keyboard focus on this so the editor can type.
-    property bool renameActive: false
+    property Item renamingDelegate: null
 
-    // Trash and rename go through kioclient so both run through KIO: the move
-    // lands in real trash metadata and the folder watchers refresh the model.
+    readonly property bool renameActive: renamingDelegate !== null
+
     Process {
         id: fileOpProc
 
         property var commandLine: []
 
+        property string errorText: ""
+
         command: commandLine
         stderr: StdioCollector {
-            onStreamFinished: {
-                if (text.trim().length > 0)
-                    console.warn("[DesktopIcons] kioclient:", text.trim());
-            }
+            onStreamFinished: fileOpProc.errorText = text.trim()
+        }
+        onExited: {
+            if (exitCode !== 0)
+                Toaster.toast(qsTr("File operation failed"),
+                    fileOpProc.errorText.length > 0 ? fileOpProc.errorText : qsTr("kioclient could not complete the request"),
+                    "error");
+            fileOpProc.errorText = "";
         }
     }
 
@@ -133,11 +140,25 @@ Item {
         const idx = Math.max(oldPath.lastIndexOf("/"), 0);
         const dir = oldPath.substring(0, idx);
         const trimmed = newName.trim();
-        // An empty name or an unchanged name means nothing to do; kioclient
-        // reports collisions itself and the model refreshes either way.
         if (trimmed.length === 0 || trimmed === oldPath.substring(idx + 1))
             return;
+        // Stay inside the desktop folder: no separators, no relative walks.
+        if (trimmed === "." || trimmed === ".." || trimmed.includes("/"))
+            return;
         runFileOp(["kioclient", "move", oldPath, dir + "/" + trimmed]);
+    }
+
+    function iconAt(x, y) {
+        if (!visible)
+            return false;
+        const c = Math.floor((x - gridItem.x) / root.cellWidth);
+        const r = Math.floor((y - gridItem.y) / root.cellHeight);
+        for (let i = 0; i < instantiator.count; i++) {
+            const item = instantiator.objectAt(i);
+            if (item && item.col === c && item.row === r)
+                return true;
+        }
+        return false;
     }
 
     Item {
@@ -196,8 +217,10 @@ Item {
                 property bool renaming: false
 
                 function startRename() {
+                    if (root.renamingDelegate && root.renamingDelegate !== delegateItem)
+                        root.renamingDelegate.cancelRename();
+                    root.renamingDelegate = delegateItem;
                     renaming = true;
-                    root.renameActive = true;
                     renameField.text = fileName;
                     renameField.forceActiveFocus();
                 }
@@ -206,13 +229,20 @@ Item {
                     if (!renaming)
                         return;
                     renaming = false;
-                    root.renameActive = false;
+                    if (root.renamingDelegate === delegateItem)
+                        root.renamingDelegate = null;
                     root.renameIcon(path, renameField.text);
                 }
 
                 function cancelRename() {
                     renaming = false;
-                    root.renameActive = false;
+                    if (root.renamingDelegate === delegateItem)
+                        root.renamingDelegate = null;
+                }
+
+                Component.onDestruction: {
+                    if (root.renamingDelegate === delegateItem)
+                        root.renamingDelegate = null;
                 }
 
                 x: col * root.cellWidth + (dragHandler.active ? dragHandler.translation.x : 0)
@@ -469,15 +499,20 @@ Item {
                     acceptedButtons: Qt.LeftButton | Qt.RightButton
                     onClicked: (mouse) => {
                         if (mouse.button === Qt.RightButton) {
-                            // Suppress the popup when a rename is in progress - the
-                            // click that dismisses the editor should not immediately
-                            // open a new menu on the same icon.
+                            // The click that dismisses the editor should not
+                            // immediately open a new menu on the same icon.
                             if (!delegateItem.renaming)
                                 iconMenu.openFor(delegateItem, mouse.x, mouse.y);
                             return;
                         }
                         if (delegateItem.renaming) {
                             renameField.forceActiveFocus();
+                            return;
+                        }
+                        if (root.renameActive) {
+                            // Another icon's editor is open: click outside it
+                            // cancels the rename instead of opening the file.
+                            root.renamingDelegate.cancelRename();
                             return;
                         }
                         if (fileName.toLowerCase().endsWith(".desktop")) {

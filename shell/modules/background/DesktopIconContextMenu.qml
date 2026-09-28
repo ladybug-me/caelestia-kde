@@ -13,11 +13,10 @@ import qs.services
 Controls.Menu {
     id: root
 
-    // The icon delegate the menu acts on; set by openFor() before expanding.
+    z: 9999
+
     property Item target: null
 
-    // Approximate menu extent, used to keep the popup on screen. The real
-    // background width is consulted once the menu has been laid out.
     property real menuExtent: 260
 
     signal renameRequested(Item delegateTarget)
@@ -51,7 +50,7 @@ Controls.Menu {
         if (!target)
             return;
         const idx = Math.max(target.path.lastIndexOf("/"), 0);
-        Launch.exec(["xdg-open", "file://" + target.path.substring(0, idx)]);
+        Launch.exec(["xdg-open", target.path.substring(0, idx)]);
     }
 
     attachTo: target

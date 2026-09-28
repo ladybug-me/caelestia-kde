@@ -48,7 +48,9 @@ Variants {
         TapHandler {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onTapped: (eventPoint, button) => {
-                if (button === Qt.RightButton && Config.background.wallpaperEnabled) {
+                // A right press over a desktop icon is that icon's menu, not
+                // the wallpaper menu.
+                if (button === Qt.RightButton && Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y)) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.LeftButton) {
                     if (true) {

@@ -24,6 +24,7 @@ QtObject {
             "revision": 21,
             "icon": "space_dashboard",
             "title": qsTr("Status Icons You Can Arrange"),
+            "settingsPage": "panels",
             "description": qsTr("The bar's status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -> Panels -> Taskbar -> Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.")
         },
         {
@@ -31,6 +32,7 @@ QtObject {
             "revision": 22,
             "icon": "gamepad",
             "title": qsTr("Game Mode at a Tap"),
+            "settingsPage": "services",
             "description": qsTr("The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -> Services -> Game mode.")
         },
         {
@@ -38,6 +40,7 @@ QtObject {
             "revision": 23,
             "icon": "tune",
             "title": qsTr("Color Intensity"),
+            "settingsPage": "appearance",
             "description": qsTr("Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and 'caelestia scheme set -i' sets it from the command line.")
         },
         {
@@ -45,6 +48,7 @@ QtObject {
             "revision": 24,
             "icon": "badge",
             "title": qsTr("Dock App Badges"),
+            "settingsPage": "panels",
             "description": qsTr("Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -> Panels -> Taskbar -> Dock.")
         },
         {
@@ -52,6 +56,7 @@ QtObject {
             "revision": 25,
             "icon": "flare",
             "title": qsTr("Ambient Glow"),
+            "settingsPage": "appearance",
             "description": qsTr("Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -> Appearance.")
         },
         {

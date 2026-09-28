@@ -16,6 +16,7 @@ import qs.components.controls
 import qs.components.misc
 import qs.services
 import qs.utils
+import qs.modules.nexus
 import qs.modules.nexus.common
 
 FloatingWindow {
@@ -572,6 +573,20 @@ FloatingWindow {
                                 color: Colours.palette.m3onSurfaceVariant
                                 wrapMode: Text.WordWrap
                                 horizontalAlignment: Text.AlignHCenter
+                            }
+
+                            IconTextButton {
+                                Layout.alignment: Qt.AlignHCenter
+                                visible: featureData && featureData.settingsPage !== undefined
+                                icon: "settings"
+                                text: qsTr("Open in Settings")
+                                onClicked: {
+                                    const pageIdx = PageRegistry.indexForKey(featureData.settingsPage);
+                                    if (pageIdx >= 0) {
+                                        WindowFactory.create(null, { initialPageIdx: pageIdx });
+                                        root.dismiss();
+                                    }
+                                }
                             }
                         }
                     }

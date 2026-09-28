@@ -15,7 +15,6 @@ ColumnLayout {
 
     property bool _isSidebarOpen: false
 
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
 

@@ -13,10 +13,8 @@ Singleton {
 
     readonly property string apiBase: "https://wallhaven.cc/api/v1"
 
-    // User-configurable API key (NSFW content requires this)
     property string apiKey: GlobalConfig.services.wallhavenApiKey ?? ""
 
-    // Search state
     property bool loading: false
     property string lastQuery: ""
     property int currentPage: 1
@@ -28,7 +26,6 @@ Singleton {
     property real activeDownloadProgress: 0
     property bool activeDownloadRunning: false
 
-    // Filters
     property var filters: {
         "categories": "111",
         "purity": "100",
@@ -282,11 +279,9 @@ Singleton {
             return;
         }
 
-        // Extract extension from file path or URL, default to jpg
         const fullPath = wallpaper.path || wallpaper.url || "";
         const urlMatch = fullPath.match(/\.([a-zA-Z]{3,4})(?:\?|$)/);
         let ext = urlMatch ? urlMatch[1] : "";
-        // Normalize to lowercase and handle jpeg -> jpg
         if (ext) {
             ext = ext.toLowerCase();
             if (ext === "jpeg")

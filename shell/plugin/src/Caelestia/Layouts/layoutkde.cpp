@@ -252,7 +252,6 @@ QVariantMap LayoutKde::calculateLayout(
 
         addresses.append(addr);
 
-        // Apply margins directly to the logical size of the window as KDE does
         QRectF rect(0, 0, ww, wh);
         rect = rect.marginsAdded(margins);
         windowSizes.append(rect);
@@ -261,7 +260,6 @@ QVariantMap LayoutKde::calculateLayout(
 
     QRectF area(0, 0, areaWidth, areaHeight);
 
-    // Hardcoded KDE Expo defaults
     qreal idealWidthRatio = 0.5;
     qreal tol = 0.05;
     qreal maxScale = 1.0;

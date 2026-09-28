@@ -22,7 +22,6 @@ Region {
     function getYo(i) { return getM(i) / steps; }
     function getXVal(i) { return Math.sqrt(1 - Math.pow(getYo(i), 2)); }
 
-    // Outer corner radii (only non-zero if both adjacent edges are rounded)
     property real rTL: Math.min(rTop, rLeft)
 
     property real rTR: Math.min(rTop, rRight)
@@ -32,20 +31,16 @@ Region {
     property real rBR: Math.min(rBottom, rRight)
 
 
-    // Offsets for each corner (x, y, width, height)
 
-    // ( + is relative right/down, - is relative left/up )
 
-    // Top-left   
-    property real tlX: 0 // Shift the whole corner mask horizontally 
+    property real tlX: 0
 
-    property real tlY: 0 // Shift the whole corner mask vertically
+    property real tlY: 0
 
-    property real tlW: 1 // Change the width towards right
+    property real tlW: 1
 
-    property real tlH: 0 // Change the height towards down
+    property real tlH: 0
 
-    // Top-right
     property real trX: -1
 
     property real trY: 0
@@ -54,7 +49,6 @@ Region {
 
     property real trH: 0
 
-    // Bottom-left
     property real blX: 0
 
     property real blY: -1
@@ -63,7 +57,6 @@ Region {
 
     property real blH: 1
 
-    // Bottom-right
     property real brX: -2
 
     property real brY: -2
@@ -72,7 +65,6 @@ Region {
 
     property real brH: 2
 
-    // Top-Left Outer Corner
     Region { x: isActive(1) ? inLeft - rTL * getXVal(1) + tlX : 0; y: isActive(1) ? inTop - rTL * getYo(1) + tlY : 0; width: isActive(1) ? rTL * getXVal(1) + tlW : 0; height: isActive(1) ? rTL * getYo(1) + tlH : 0 }
     Region { x: isActive(2) ? inLeft - rTL * getXVal(2) + tlX : 0; y: isActive(2) ? inTop - rTL * getYo(2) + tlY : 0; width: isActive(2) ? rTL * getXVal(2) + tlW : 0; height: isActive(2) ? rTL * getYo(2) + tlH : 0 }
     Region { x: isActive(3) ? inLeft - rTL * getXVal(3) + tlX : 0; y: isActive(3) ? inTop - rTL * getYo(3) + tlY : 0; width: isActive(3) ? rTL * getXVal(3) + tlW : 0; height: isActive(3) ? rTL * getYo(3) + tlH : 0 }
@@ -173,7 +165,6 @@ Region {
     Region { x: isActive(99) ? inLeft - rTL * getXVal(99) + tlX : 0; y: isActive(99) ? inTop - rTL * getYo(99) + tlY : 0; width: isActive(99) ? rTL * getXVal(99) + tlW : 0; height: isActive(99) ? rTL * getYo(99) + tlH : 0 }
     Region { x: isActive(100) ? inLeft - rTL * getXVal(100) + tlX : 0; y: isActive(100) ? inTop - rTL * getYo(100) + tlY : 0; width: isActive(100) ? rTL * getXVal(100) + tlW : 0; height: isActive(100) ? rTL * getYo(100) + tlH : 0 }
 
-    // Top-Right Outer Corner
     Region { x: isActive(1) ? inRight + trX : 0; y: isActive(1) ? inTop - rTR * getYo(1) + trY : 0; width: isActive(1) ? rTR * getXVal(1) + trW : 0; height: isActive(1) ? rTR * getYo(1) + trH : 0 }
     Region { x: isActive(2) ? inRight + trX : 0; y: isActive(2) ? inTop - rTR * getYo(2) + trY : 0; width: isActive(2) ? rTR * getXVal(2) + trW : 0; height: isActive(2) ? rTR * getYo(2) + trH : 0 }
     Region { x: isActive(3) ? inRight + trX : 0; y: isActive(3) ? inTop - rTR * getYo(3) + trY : 0; width: isActive(3) ? rTR * getXVal(3) + trW : 0; height: isActive(3) ? rTR * getYo(3) + trH : 0 }
@@ -275,7 +266,6 @@ Region {
     Region { x: isActive(99) ? inRight + trX : 0; y: isActive(99) ? inTop - rTR * getYo(99) + trY : 0; width: isActive(99) ? rTR * getXVal(99) + trW : 0; height: isActive(99) ? rTR * getYo(99) + trH : 0 }
     Region { x: isActive(100) ? inRight + trX : 0; y: isActive(100) ? inTop - rTR * getYo(100) + trY : 0; width: isActive(100) ? rTR * getXVal(100) + trW : 0; height: isActive(100) ? rTR * getYo(100) + trH : 0 }
 
-    // Bottom-Left Outer Corner
     Region { x: isActive(1) ? inLeft - rBL * getXVal(1) + 1 + blX : 0; y: isActive(1) ? inBottom + blY : 0; width: isActive(1) ? rBL * getXVal(1) + blW : 0; height: isActive(1) ? rBL * getYo(1) + blH : 0 }
     Region { x: isActive(2) ? inLeft - rBL * getXVal(2) + 1 + blX : 0; y: isActive(2) ? inBottom + blY : 0; width: isActive(2) ? rBL * getXVal(2) + blW : 0; height: isActive(2) ? rBL * getYo(2) + blH : 0 }
     Region { x: isActive(3) ? inLeft - rBL * getXVal(3) + 1 + blX : 0; y: isActive(3) ? inBottom + blY : 0; width: isActive(3) ? rBL * getXVal(3) + blW : 0; height: isActive(3) ? rBL * getYo(3) + blH : 0 }
@@ -377,7 +367,6 @@ Region {
     Region { x: isActive(99) ? inLeft - rBL * getXVal(99) + 1 + blX : 0; y: isActive(99) ? inBottom + blY : 0; width: isActive(99) ? rBL * getXVal(99) + blW : 0; height: isActive(99) ? rBL * getYo(99) + blH : 0 }
     Region { x: isActive(100) ? inLeft - rBL * getXVal(100) + 1 + blX : 0; y: isActive(100) ? inBottom + blY : 0; width: isActive(100) ? rBL * getXVal(100) + blW : 0; height: isActive(100) ? rBL * getYo(100) + blH : 0 }
 
-    // Bottom-Right Outer Corner
     Region { x: isActive(1) ? inRight + brX : 0; y: isActive(1) ? inBottom + brY : 0; width: isActive(1) ? rBR * getXVal(1) + brW : 0; height: isActive(1) ? rBR * getYo(1) + brH : 0 }
     Region { x: isActive(2) ? inRight + brX : 0; y: isActive(2) ? inBottom + brY : 0; width: isActive(2) ? rBR * getXVal(2) + brW : 0; height: isActive(2) ? rBR * getYo(2) + brH : 0 }
     Region { x: isActive(3) ? inRight + brX : 0; y: isActive(3) ? inBottom + brY : 0; width: isActive(3) ? rBR * getXVal(3) + brW : 0; height: isActive(3) ? rBR * getYo(3) + brH : 0 }

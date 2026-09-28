@@ -15,7 +15,7 @@ namespace caelestia::settings {
 struct DecodeResult {
     QVariant value;
     std::optional<Diagnostic> error;
-    QList<qsizetype> indexPath; // Index path of the failing element, outermost list first
+    QList<qsizetype> indexPath;
 };
 
 class ValueCodec {
@@ -23,14 +23,12 @@ public:
     explicit ValueCodec(const QMetaType& type, ExpectedType expected);
     virtual ~ValueCodec() = default;
 
-    // Returns the shared codec for a type, or nullptr if the type is unsupported
     static ValueCodec* codecFor(const QMetaType& type);
 
-    // Returns the shared codec for a union of types, or nullptr if any of them is unsupported
     static ValueCodec* unionFor(const QList<QMetaType>& types);
 
     [[nodiscard]] QMetaType type() const;
-    [[nodiscard]] ExpectedType expected() const; // The JSON type this decodes from
+    [[nodiscard]] ExpectedType expected() const;
 
     [[nodiscard]] virtual QJsonValue encode(const QVariant& value) const = 0;
     [[nodiscard]] virtual DecodeResult decode(const QJsonValue& value) const = 0;
@@ -94,9 +92,9 @@ public:
     [[nodiscard]] DecodeResult decode(const QJsonValue& value) const override;
 
 private:
-    const QList<const ValueCodec*> m_alternatives; // Tried in order, so the first to accept a value wins
-    const QList<ExpectedType> m_expectedTypes;     // Types of the alternatives, for diagnostics
-    QHash<int, const ValueCodec*> m_byType;        // Type id to alternative, for encoding
+    const QList<const ValueCodec*> m_alternatives;
+    const QList<ExpectedType> m_expectedTypes;
+    QHash<int, const ValueCodec*> m_byType;
 };
 
 } // namespace caelestia::settings

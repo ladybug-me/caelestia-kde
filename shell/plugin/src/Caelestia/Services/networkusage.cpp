@@ -50,7 +50,6 @@ void NetworkUsage::tick() {
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
         return;
     }
-    // skip headers
     f.readLine();
     f.readLine();
 
@@ -65,7 +64,7 @@ void NetworkUsage::tick() {
         }
         const QByteArray iface = line.left(splitIdx).trimmed();
         if (iface == QByteArrayLiteral("lo")) {
-            continue; // skip loopback interface
+            continue;
         }
 
         std::array<unsigned long long, 9> fields{};
@@ -97,7 +96,6 @@ void NetworkUsage::tick() {
     m_uploadTotal += static_cast<qreal>(txDelta);
 
     if (elapsed > 0.0) {
-        // Calculate speeds
         m_downloadSpeed = static_cast<qreal>(rxDelta) / elapsed;
         m_uploadSpeed = static_cast<qreal>(txDelta) / elapsed;
 

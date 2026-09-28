@@ -1,11 +1,12 @@
 #include "visualiserbars.hpp"
 
-#include <algorithm>
-#include <cmath>
 #include <qbrush.h>
 #include <qpainter.h>
 #include <qpainterpath.h>
 #include <qpen.h>
+
+#include <algorithm>
+#include <cmath>
 
 namespace caelestia::components {
 
@@ -18,7 +19,6 @@ void VisualiserBars::advance(qreal dt) {
     if (m_displayValues.isEmpty() || m_settled)
         return;
 
-    // dt is in seconds (from FrameAnimation.frameTime), convert to ms
     const qreal dtMs = dt * 1000.0;
     const qreal tau = m_animationDuration / 3.0;
     const qreal alpha = 1.0 - std::exp(-dtMs / tau);
@@ -125,11 +125,6 @@ void VisualiserBars::setValues(const QVector<double>& values) {
     }
 
     if (values.isEmpty()) {
-        // Nothing to animate, so there is nothing to settle and the frame loop in
-        // Visualiser.qml has no work to do. Report settled so that loop stops:
-        // advance() returns early for an empty list, so nothing else would ever set
-        // this, and the loop would repaint the whole desktop, blurred wallpaper
-        // included, every frame for as long as the shell runs.
         if (!m_settled) {
             m_settled = true;
             emit settledChanged();

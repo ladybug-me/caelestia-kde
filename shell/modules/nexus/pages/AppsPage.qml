@@ -24,7 +24,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Default applications
         SectionHeader {
             first: true
             text: qsTr("Default applications")
@@ -88,7 +87,6 @@ PageBase {
             onSelected: app => GlobalConfig.general.apps.explorer = app.command
         }
 
-        // Library
         SectionHeader {
             text: qsTr("Library")
         }

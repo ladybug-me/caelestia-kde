@@ -12,12 +12,6 @@ namespace caelestia::services {
 /// kwinrc group the Krohnkite KWin script keeps its settings in.
 static const QString KROHNKITE_GROUP = QStringLiteral("Script-krohnkite");
 
-/// Class list Krohnkite assumes when kwinrc has no ignoreClass key yet.
-///
-/// Kept identical to IGNORE_CLASSES in shell/services/startuptasks/02-krohnkite-setup.sh:
-/// this is only the fallback for a system the startup task has not touched, but Nexus
-/// shows it and writes it back on the first edit, so a short list here silently drops the
-/// dialog classes for the rest of the session. test_repo_integrity.py guards the parity.
 static const QString DEFAULT_IGNORE_CLASS =
     QStringLiteral("krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,"
                    "org.kde.polkit-kde-authentication-agent-1,quickshell,org.quickshell,org.pulseaudio.pavucontrol,"
@@ -57,8 +51,6 @@ struct LayoutDefault {
 };
 
 static const std::initializer_list<LayoutDefault>& allLayoutDefaults() {
-    // Default order when kwinrc has never been written.
-    // Only enabled-by-default entries get a positive order; disabled get -1.
     static const std::initializer_list<LayoutDefault> table = {
         { "binaryTreeLayoutOrder", 1 },
         { "floatingLayoutOrder", 2 },
@@ -69,7 +61,6 @@ static const std::initializer_list<LayoutDefault>& allLayoutDefaults() {
         { "spreadLayoutOrder", 7 },
         { "stackedLayoutOrder", 8 },
         { "stairLayoutOrder", 9 },
-        // Disabled by default:
         { "spiralLayoutOrder", -1 },
         { "columnsLayoutOrder", -1 },
         { "cascadeLayoutOrder", -1 },
@@ -77,7 +68,6 @@ static const std::initializer_list<LayoutDefault>& allLayoutDefaults() {
     return table;
 }
 
-/// Everything the tiling page shows, read out of kwinrc in a single pass.
 struct KrohnkiteSettings {
     int screenGapBetween = 10;
     int screenGapBottom = 4;
@@ -90,7 +80,6 @@ struct KrohnkiteSettings {
 
 static KrohnkiteSettings readSettings() {
     auto config = KSharedConfig::openConfig(QStringLiteral("kwinrc"), KConfig::NoGlobals);
-    // Pick up edits made outside Nexus - KWin writes kwinrc too.
     config->reparseConfiguration();
     KConfigGroup group = config->group(KROHNKITE_GROUP);
 
@@ -104,7 +93,6 @@ static KrohnkiteSettings readSettings() {
 
     for (const auto& entry : allLayoutDefaults()) {
         const QString key = QString::fromLatin1(entry.key);
-        // -1 means disabled, a positive value is the layout's position.
         const int order = group.readEntry(key, entry.defaultOrder);
         settings.layoutOrders.insert(key, order >= 1 ? order : -1);
     }
@@ -112,13 +100,11 @@ static KrohnkiteSettings readSettings() {
 }
 
 void KrohnkiteConfig::setLayoutEnabled(const QString& key, bool enabled) {
-    // Read current order values for all layouts, seeding from defaults where missing.
     QMap<QString, int> orders = readSettings().layoutOrders;
 
     if (enabled) {
         if (orders[key] >= 1)
-            return; // already enabled, nothing to do
-        // Shift every currently-enabled layout's order up by 1 to make room at position 1.
+            return;
         for (auto it = orders.begin(); it != orders.end(); ++it) {
             if (it.value() >= 1) {
                 it.value() += 1;
@@ -128,9 +114,8 @@ void KrohnkiteConfig::setLayoutEnabled(const QString& key, bool enabled) {
     } else {
         int removedOrder = orders[key];
         if (removedOrder < 1)
-            return; // already disabled, nothing to do
+            return;
         orders[key] = -1;
-        // Compact: shift down any layout that was positioned after the removed one.
         for (auto it = orders.begin(); it != orders.end(); ++it) {
             if (it.value() > removedOrder) {
                 it.value() -= 1;
@@ -138,7 +123,6 @@ void KrohnkiteConfig::setLayoutEnabled(const QString& key, bool enabled) {
         }
     }
 
-    // One kwinrc write for all twelve orders, not one child process per key.
     QMap<QString, QString> values;
     for (auto it = orders.cbegin(); it != orders.cend(); ++it) {
         values.insert(it.key(), QString::number(it.value()));
@@ -180,7 +164,6 @@ void KrohnkiteConfig::refresh() {
 }
 
 void KrohnkiteConfig::apply() {
-    // Notify KWin to reconfigure
     QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"),
         QStringLiteral("org.kde.KWin"), QStringLiteral("reconfigure"));
     QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);

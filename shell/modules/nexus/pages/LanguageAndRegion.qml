@@ -39,7 +39,6 @@ PageBase {
 
     Component.onCompleted: Weather.reload()
 
-    // Temperature units (there must be one for each value of the TemperatureUnit enum)
     readonly property list<MenuItem> tempItems: [
         MenuItem {
             text: qsTr("Auto")
@@ -59,7 +58,6 @@ PageBase {
         }
     ]
 
-    // Data size units (there must be one for each value of the DataUnit enum)
     readonly property list<MenuItem> dataItems: [
         MenuItem {
             text: qsTr("Binary (KiB, MiB)")
@@ -71,7 +69,6 @@ PageBase {
         }
     ]
 
-    // "system" plus every language with an installed catalogue (see shell/translations)
     readonly property var languageOptions: [
         {
             code: "system",
@@ -83,7 +80,6 @@ PageBase {
                 }))
     ]
 
-    // Clock formats (there must be one for each value of the ClockFormat enum)
     readonly property list<MenuItem> clockItems: [
         MenuItem {
             text: qsTr("Auto")
@@ -107,7 +103,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Language
         SectionHeader {
             first: true
             text: qsTr("Language")
@@ -141,7 +136,6 @@ PageBase {
             onSelected: item => GlobalConfig.general.language = item.code
         }
 
-        // Weather
         SectionHeader {
             text: qsTr("Weather")
         }
@@ -380,7 +374,6 @@ PageBase {
             visible: root.compactWeatherPicker
         }
 
-        // Units
         SectionHeader {
             text: qsTr("Units")
         }
@@ -411,7 +404,6 @@ PageBase {
             onSelected: item => GlobalConfig.services.dataUnits = item.value
         }
 
-        // Time & date
         SectionHeader {
             text: qsTr("Time & date")
         }
@@ -421,7 +413,6 @@ PageBase {
             last: true
             label: qsTr("Clock format")
             subtext: qsTr("How times are shown across the shell")
-            // Last row on the page, so the list has to open upwards or it clips.
             menuOnTop: true
             menuItems: root.clockItems
             active: root.clockItems.find(i => i.value === GlobalConfig.services.clockFormat)

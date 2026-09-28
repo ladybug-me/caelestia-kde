@@ -113,7 +113,7 @@ else
     WALLS_DIR="$HOME/Pictures/Wallpapers"
 fi
 PACK_DEFAULT="$WALLS_DIR/dharmx-digital/a_couple_of_people_standing_on_a_mountain.png"
-FALLBACK_PATH="$BUNDLE_DIR/shell/assets/wallpapers/Minimal-Paper.png"
+FALLBACK_PATH="$BUNDLE_DIR/shell/assets/wallpaper.webp"
 
 if [[ -f "$PACK_DEFAULT" ]]; then
     WALLPAPER_PATH="$PACK_DEFAULT"

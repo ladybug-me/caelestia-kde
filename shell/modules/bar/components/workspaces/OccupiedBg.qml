@@ -10,9 +10,7 @@ import qs.services
 Item {
     id: root
 
-    /// The strip's live pills, in strip order.
     required property var workspaces
-    /// Gap the strip leaves between pills.
     required property int wsSpacing
     required property bool isHorizontal
 
@@ -30,7 +28,7 @@ Item {
         anchors.margins: -1
 
         opacity: root.colourAnimated.a
-        layer.enabled: opacity < 1 // Forces opacity to apply to children as a single layer
+        layer.enabled: opacity < 1
 
         Item {
             anchors.fill: parent
@@ -54,11 +52,6 @@ Item {
         required property int index
         required property Workspace modelData
 
-        /// One rect per occupied pill, so each can animate on its own. A run of
-        /// them still reads as one shape: only its outer ends are rounded, and
-        /// both sides grow into the gap between them. Both wait for an insert or
-        /// a removal to land, so a pill entering the middle of a run cannot
-        /// briefly split it in two.
         readonly property real pillRadius: modelData ? (root.isHorizontal ? modelData.height : modelData.width) / 2 : 0
         property real leadRadius: ifAdjacent(0, -1, 0, pillRadius)
         property real trailRadius: ifAdjacent(root.workspaces.length - 1, 1, 0, pillRadius)

@@ -55,7 +55,6 @@ Item {
 
         property int borderWidth: 1
 
-        // Breathing
         opacity: 0.9
 
         SequentialAnimation on opacity {
@@ -79,8 +78,7 @@ Item {
         text: `${Math.round(root.regionWidth)} x ${Math.round(root.regionHeight)}`
     }
 
-    // Coord lines
-    Rectangle { // Vertical
+    Rectangle {
         visible: root.showAimLines && !root.breathingBorderOnly
         opacity: 0.2
         z: 2
@@ -92,7 +90,7 @@ Item {
         width: 1
         color: root.color
     }
-    Rectangle { // Horizontal
+    Rectangle {
         visible: root.showAimLines && !root.breathingBorderOnly
         opacity: 0.2
         z: 2

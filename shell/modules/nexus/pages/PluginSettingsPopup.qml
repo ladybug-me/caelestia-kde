@@ -74,7 +74,6 @@ Popup {
                                 required property string modelData
 
                                 text: modelData
-                                // Force re-evaluating the value by binding to root's visible state
 
                                 property string currentVal: root.visible ? pSettings.value(delegateRow.modelData.id, delegateRow.modelData.default) : ""
                                 enabled: currentVal !== modelData

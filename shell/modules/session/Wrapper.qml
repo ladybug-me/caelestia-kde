@@ -18,7 +18,7 @@ Item {
     anchors.leftMargin: Config.bar.position === "right" ? (-implicitWidth - 5 - sidebarOffset) * offsetScale : 0
     anchors.rightMargin: Config.bar.position !== "right" ? (-implicitWidth - 5 - sidebarOffset) * offsetScale : 0
     implicitWidth: content.implicitWidth
-    implicitHeight: content.implicitHeight || 510 // Hard coded fallback for first open
+    implicitHeight: content.implicitHeight || 510
     opacity: 1 - offsetScale
 
     Behavior on offsetScale {

@@ -28,7 +28,6 @@ Item {
     readonly property int tileCellWidth: Tokens.sizes.launcher.browseTileWidth + Tokens.spacing.medium
     readonly property int tileCellHeight: Tokens.sizes.launcher.browseTileHeight + Tokens.spacing.medium
 
-    // Size the browser to its content so the drawer doesn't leave big empty areas.
     readonly property int columns: Math.max(1, Math.floor((root.implicitWidth - root.sidebarWidth - root.padding * 2 - Tokens.spacing.medium) / root.tileCellWidth))
     readonly property int rows: Math.ceil(root.count / root.columns)
 
@@ -57,14 +56,14 @@ Item {
     }
 
     // Keyboard entry points, invoked from the search field's Keys handlers.
-    function incrementCurrentIndex(): void { // Down
+    function incrementCurrentIndex(): void {
         if (root.sidebarFocused)
             sidebar.incrementCurrentIndex();
         else
             grid.moveCurrentIndexDown();
     }
 
-    function decrementCurrentIndex(): void { // Up
+    function decrementCurrentIndex(): void {
         if (root.sidebarFocused)
             sidebar.decrementCurrentIndex();
         else
@@ -146,7 +145,6 @@ Item {
         anchors.margins: root.padding
         spacing: Tokens.spacing.medium
 
-        // Sidebar
         Item {
             Layout.preferredWidth: root.sidebarWidth
             Layout.fillHeight: true
@@ -172,7 +170,6 @@ Item {
             }
         }
 
-        // Grid
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -207,7 +204,6 @@ Item {
                 }
             }
 
-            // Empty category state
             Column {
                 anchors.centerIn: parent
                 spacing: Tokens.spacing.medium

@@ -18,7 +18,6 @@ Scope {
     readonly property bool hasFullscreen: false
 
     Component.onCompleted: {
-        // Force KeybindsModel to instantiate and load shortcuts from disk
         let _ = KeybindsModel;
     }
     // qmllint disable unresolved-type
@@ -238,7 +237,6 @@ Scope {
         enabled: Config.tabSwitch.enabled
         onPressed: {
             const visibilities = Visibilities.getForActive();
-            // Check if launcher is already open and in windows mode
             if (visibilities.launcher && root.lastAction === "windows") {
                 Windows.triggerCycleNext();
             } else {
@@ -401,7 +399,6 @@ Scope {
                 if (root.hasFullscreen && ["launcher", "session", "dashboard"].includes(drawer))
                     return;
                 const visibilities = Visibilities.getForActive();
-                // The overview spans every screen; see Visibilities.setOverview.
                 if (drawer === "overview")
                     Visibilities.setOverview(!visibilities.overview);
                 else

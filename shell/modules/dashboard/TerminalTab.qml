@@ -95,7 +95,6 @@ Item {
             for (let i = 0; i < rawCodes.length; i++) {
                 const code = rawCodes[i];
                 if (code === 0) {
-                    // Reset handled above
                 } else if (code === 1) {
                     styles.push("font-weight: bold;");
                 } else if (code === 2) {
@@ -150,7 +149,6 @@ Item {
             activeSpans--;
         }
 
-        // Wrap inside a <pre> tag with explicit monospace font-family styling to prevent spaces from collapsing in QML RichText
         return "<pre style=\"font-family: 'JetBrains Mono', Consolas, monospace; margin: 0;\">" + result.replace(/\n/g, "<br>") + "</pre>";
     }
 
@@ -193,7 +191,6 @@ Item {
         if (trimmed === "")
             return;
 
-        // Print folder path and command to the screen exactly like the shell
         appendOutput((outputBuffer === "" ? "" : "\n") + "\x1b[36m" + prompt + "\x1b[0m\n\x1b[32m❯\x1b[0m " + trimmed, false);
 
         if (trimmed === "clear") {
@@ -202,7 +199,6 @@ Item {
         }
 
         if (activeShellProcess !== null && activeShellProcess.running) {
-            // Write to stdin of the active process
             activeShellProcess.write(trimmed + "\n");
             return;
         }
@@ -216,7 +212,6 @@ Item {
             return;
         }
 
-        // Spawn command dynamically under fish shell - no pipe buffering issue!
         activeShellProcess = shellProcessComp.createObject(root, {
             command: ["fish", "-c", trimmed],
             workingDirectory: currentDirectory,
@@ -336,7 +331,6 @@ Item {
                 onStreamFinished: {
                     let suggestions = this.text.split("\n").map(s => s.trim()).filter(s => s !== "");
                     if (suggestions.length > 0) {
-                        // Extract first suggestion before any tab description
                         let suggestion = suggestions[0].split("\t")[0];
                         let words = commandInput.text.split(" ");
                         words[words.length - 1] = suggestion;
@@ -382,7 +376,6 @@ Item {
             anchors.margins: Tokens.padding.medium
             spacing: Tokens.spacing.medium
 
-            // Terminal output area
             StyledFlickable {
                 id: outputFlickable
 
@@ -416,7 +409,6 @@ Item {
                 }
             }
 
-            // Input area
             Rectangle {
                 id: inputBoxRect
 
@@ -475,7 +467,6 @@ Item {
                                 }
                             }
 
-                            // Traverse history up with arrow key
                             Keys.onUpPressed: event => {
                                 if (commandHistory.length === 0)
                                     return;
@@ -490,7 +481,6 @@ Item {
                                 event.accepted = true;
                             }
 
-                            // Traverse history down with arrow key
                             Keys.onDownPressed: event => {
                                 if (historyIndex === -1)
                                     return;
@@ -505,7 +495,6 @@ Item {
                                 event.accepted = true;
                             }
 
-                            // Trigger native fish autocompletion on Tab key press
                             Keys.onTabPressed: event => {
                                 let typed = text;
                                 if (typed.trim() === "")
@@ -525,7 +514,7 @@ Item {
                                 if (cmd.trim() !== "") {
                                     if (commandHistory.length === 0 || commandHistory[commandHistory.length - 1] !== cmd) {
                                         commandHistory.push(cmd);
-                                        commandHistory = commandHistory; // Notify QML bindings
+                                        commandHistory = commandHistory;
                                     }
                                 }
                                 historyIndex = -1;

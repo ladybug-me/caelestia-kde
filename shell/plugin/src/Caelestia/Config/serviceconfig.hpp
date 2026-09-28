@@ -26,31 +26,17 @@ class ServiceConfig : public settings::ObjectNode {
     CONFIG_NODE(ServiceConfig, settings::ObjectNode)
 
     CONFIG_GLOBAL_PROPERTY(QString, weatherLocation, QString())
-    // Auto guesses based on the locale, see weatherUnit below for the resolved value
     CONFIG_GLOBAL_ENUM_PROPERTY(TemperatureUnit, weatherUnits, TemperatureUnit::Auto)
-    // Always Celsius by default cause apparently even imperial system users don't use it for sensor temps?
     CONFIG_GLOBAL_ENUM_PROPERTY(TemperatureUnit, sensorUnits, TemperatureUnit::Celsius)
-    // Binary (KiB/MiB/GiB) or decimal (KB/MB/GB) data sizes
     CONFIG_GLOBAL_ENUM_PROPERTY(DataUnit, dataUnits, DataUnit::Binary)
-    // Superseded by weatherUnits/sensorUnits. Kept for one release so an existing
-    // shell.json can be migrated - see services/ConfigMigrations.qml.
     CONFIG_GLOBAL_PROPERTY(bool, useFahrenheit,
         QLocale().measurementSystem() == QLocale::ImperialUSSystem ||
             QLocale().measurementSystem() == QLocale::ImperialUKSystem)
     CONFIG_GLOBAL_PROPERTY(bool, useFahrenheitPerformance, false)
-    // Superseded by clockFormat. Kept for one release so an existing shell.json can be
-    // migrated - see services/ConfigMigrations.qml. The default no longer means anything:
-    // only a value the user wrote is read, and it is read once.
     CONFIG_GLOBAL_PROPERTY(bool, useTwelveHourClock, false)
-    // Auto follows the locale, see twelveHourClock below for the resolved value
     CONFIG_GLOBAL_ENUM_PROPERTY(ClockFormat, clockFormat, ClockFormat::Auto)
 
 public:
-    // The clock format and the temperature units with Auto already resolved. Read only,
-    // and outside the schema: they are what every reader of the settings above wants,
-    // and Auto only means anything to whoever resolves it. Resolving here rather than
-    // per reader keeps the C++ services and the QML helpers from disagreeing about what
-    // Auto means, and keeps a locale change from needing a written value to take effect.
     Q_PROPERTY(bool twelveHourClock READ twelveHourClock NOTIFY clockFormatChanged)
     Q_PROPERTY(caelestia::config::TemperatureUnit::Enum weatherUnit READ weatherUnit NOTIFY weatherUnitsChanged)
     Q_PROPERTY(caelestia::config::TemperatureUnit::Enum sensorUnit READ sensorUnit NOTIFY sensorUnitsChanged)
@@ -67,18 +53,10 @@ private:
     CONFIG_GLOBAL_PROPERTY(qreal, maxVolume, 1.0)
     CONFIG_GLOBAL_PROPERTY(bool, smartScheme, true)
 
-    // Put launched applications in their own systemd unit via app2unit,
-    // instead of leaving them as children of the shell. Off by default: it
-    // changes how an application is supervised, which desktop launchers are
-    // sensitive to. Their stdio is redirected either way - see
-    // utils/Launch.qml.
     CONFIG_GLOBAL_PROPERTY(bool, useSystemd, false)
-    // Optional Wallhaven API key (NSFW searches require one).
     CONFIG_GLOBAL_PROPERTY(QString, wallhavenApiKey, QString())
 
-    // Automatic light/dark switching.
     CONFIG_GLOBAL_PROPERTY(bool, autoSchemeEnabled, false)
-    // "solar" derives the times from weatherLocation; "fixed" uses the two below.
     CONFIG_GLOBAL_PROPERTY(QString, autoSchemeMode, u"solar"_s)
     // "HH:MM", local time. Also used as the fallback when solar times cannot be
     // computed (no location set, or polar day/night).
@@ -90,7 +68,6 @@ private:
     CONFIG_GLOBAL_PROPERTY(QString, lyricsBackend, u"Auto"_s)
     CONFIG_GLOBAL_PROPERTY(QStringList, bluetoothAutoReconnectDevices, QStringList())
 
-    // Discord ARPC Settings
     CONFIG_GLOBAL_PROPERTY(bool, arpcEnabled, false)
     CONFIG_GLOBAL_PROPERTY(QString, arpcClientId, u"1126685412586733678"_s)
     CONFIG_GLOBAL_PROPERTY(QString, arpcAppName, u"Caelestia Shell"_s)
@@ -104,8 +81,6 @@ private:
     CONFIG_GLOBAL_PROPERTY(QStringList, arpcTargetWindowLabels, QStringList())
     CONFIG_GLOBAL_PROPERTY(bool, arpcCaelestiaInfo, false)
     CONFIG_GLOBAL_PROPERTY(bool, arpcManualOverride, false)
-    // Seconds of inactivity after which the presence is cleared. 0 disables it,
-    // which keeps the existing always-on behaviour for anyone already using ARPC.
     CONFIG_GLOBAL_PROPERTY(int, arpcIdleTimeout, 0)
 };
 

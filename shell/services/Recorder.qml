@@ -13,10 +13,6 @@ Singleton {
     readonly property alias running: props.running
     readonly property alias paused: props.paused
     readonly property alias elapsed: props.elapsed
-    // Whether a probe is worth doing often. The answer only changes while a
-    // recording is running or a control action is in flight; otherwise the shell
-    // is waiting to notice a recording started outside it, where a few seconds of
-    // latency costs nothing.
     readonly property bool probing: running || needsStart || needsStop || needsPause
     property bool needsStart
     property list<string> startArgs
@@ -59,7 +55,7 @@ Singleton {
 
         property bool running: false
         property bool paused: false
-        property real elapsed: 0 // Might get too large for int
+        property real elapsed: 0
 
         reloadableId: "recorder"
     }
@@ -99,11 +95,6 @@ Singleton {
     }
 
     Timer {
-        // gpu-screen-recorder is an optional dependency and the probe costs two
-        // process spawns (a shell and pidof), so an unconditional 500 ms interval
-        // ran that pair twice a second on every machine, most of which do not have
-        // the recorder installed at all. Poll often only while the answer can
-        // change; a recording started outside the shell is still picked up.
         interval: root.probing ? 500 : 2500
         repeat: true
         running: true

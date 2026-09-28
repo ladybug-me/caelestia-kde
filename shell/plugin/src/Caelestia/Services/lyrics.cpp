@@ -156,7 +156,6 @@ void Lyrics::setSelectedCandidate(const LyricCandidate& value) {
     } else if (b == LyricsBackend::NetEase) {
         fetchNetEaseLyricsById(value.id(), reqId);
     } else if (b == LyricsBackend::Local) {
-        // For local, the id is the file path. Read directly.
         QFile f(value.id());
         if (f.open(QIODevice::ReadOnly)) {
             const QString text = QString::fromUtf8(f.readAll());
@@ -308,7 +307,6 @@ void Lyrics::clearLines() {
         return;
     }
 
-    // Doesn't actually clear lines, set a flag instead so anims can run
     m_hasLyrics = false;
     emit hasLyricsChanged();
 }
@@ -379,7 +377,6 @@ void Lyrics::doLoad() {
     clearLines();
     clearCandidates();
 
-    // Restore per-track prefs (offset, last-selected backend/id)
     m_settingFromPrefs = true;
     const QJsonObject saved = m_lyricsMap.value(trackKey()).toObject();
     setOffset(saved.value(u"offset"_s).toDouble(0.0));
@@ -391,19 +388,16 @@ void Lyrics::doLoad() {
     }
     m_settingFromPrefs = false;
 
-    // Always populate online candidates for the picker, regardless of preferred backend
     searchLrclibCandidates(reqId);
     searchNetEaseCandidates(reqId);
 
     if (restored.isValid()) {
-        // Honor saved selection for this track
         m_settingFromPrefs = true;
         setSelectedCandidate(restored);
         m_settingFromPrefs = false;
         return;
     }
 
-    // Primary attempt by preferred backend
     switch (m_preferredBackend) {
     case LyricsBackend::Local:
         tryLocal(reqId);
@@ -423,7 +417,6 @@ void Lyrics::doLoad() {
 
 void Lyrics::chainNext(LyricsBackend::Backend just_failed, int reqId) {
     if (m_preferredBackend != LyricsBackend::Auto) {
-        // Non-auto modes don't chain
         setLoading(false);
         return;
     }
@@ -571,7 +564,6 @@ void Lyrics::tryNetEase(int reqId) {
 
     setBackend(LyricsBackend::NetEase);
 
-    // Reset cookies (LyricsBackend::NetEase rejects requests with stale cookies sometimes)
     m_nam->setCookieJar(new QNetworkCookieJar(m_nam));
 
     QUrl url(u"https://music.163.com/api/search/get"_s);
@@ -598,7 +590,6 @@ void Lyrics::tryNetEase(int reqId) {
         const QJsonDocument doc = QJsonDocument::fromJson(reply->readAll());
         const QJsonArray songs = doc.object().value(u"result"_s).toObject().value(u"songs"_s).toArray();
 
-        // Find best match by artist substring
         qint64 bestId = -1;
         for (const auto& v : songs) {
             const QJsonObject s = v.toObject();

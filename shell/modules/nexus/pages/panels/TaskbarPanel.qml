@@ -70,7 +70,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // Behaviour
         SectionHeader {
             first: true
             text: qsTr("Behavior")
@@ -218,7 +217,6 @@ PageBase {
             onClicked: root.nState.openSubPage(14)
         }
 
-        // Components
         SectionHeader {
             text: qsTr("Components")
         }
@@ -239,7 +237,6 @@ PageBase {
             onClicked: root.nState.openSubPage(15)
         }
 
-        // Scroll actions
         SectionHeader {
             text: qsTr("Scroll actions")
         }

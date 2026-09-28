@@ -43,7 +43,6 @@ MouseArea {
         const wsId = special.name ? special.id : mon.activeWorkspace.id;
 
         return Kwin.toplevels.values.filter(c => c.workspace?.id === wsId).sort((a, b) => {
-            // Pinned first, then fullscreen, then floating, then any other
             const ac = a.lastIpcObject;
             const bc = b.lastIpcObject;
             return (bc.pinned - ac.pinned) || ((bc.fullscreen !== 0) - (ac.fullscreen !== 0)) || (bc.floating - ac.floating);
@@ -101,7 +100,6 @@ MouseArea {
     Component.onCompleted: {
         Kwin.extras.refreshOptions();
 
-        // Break binding if frozen
         if (loader.freeze)
             clients = clients;
 
@@ -199,7 +197,6 @@ MouseArea {
     }
 
     Process {
-        // hyprctl cursorpos is Hyprland-only; skip on KDE.
         running: false
         command: ["hyprctl", "cursorpos", "-j"]
         stdout: StdioCollector {

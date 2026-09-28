@@ -24,7 +24,6 @@ Item {
     implicitWidth: Tokens.sizes.launcher.browseTileWidth
     implicitHeight: Tokens.sizes.launcher.browseTileHeight
 
-    // Selected highlight
     StyledRect {
         anchors.fill: parent
         anchors.margins: Tokens.spacing.extraSmall
@@ -39,7 +38,6 @@ Item {
         }
     }
 
-    // Hover ripple + click to launch / right click for context menu
     StateLayer {
         anchors.fill: parent
         radius: Tokens.rounding.large
@@ -57,7 +55,6 @@ Item {
         }
     }
 
-    // Icon + label
     Column {
         id: content
 
@@ -87,7 +84,6 @@ Item {
         }
     }
 
-    // Favourite toggle (shown on hover, or persistently when favourited)
     MaterialIcon {
         id: favIcon
 

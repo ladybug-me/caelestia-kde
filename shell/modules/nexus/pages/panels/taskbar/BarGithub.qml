@@ -17,8 +17,6 @@ PageBase {
     title: qsTr("GitHub")
     isSubPage: true
 
-    // Report what the widget currently knows, so a missing or rejected token is
-    // visible here - the page that fixes it - instead of only in the shell log.
     readonly property bool githubProblem: BarComponents.GithubStore.tokenMissing || BarComponents.GithubStore.lastError !== ""
 
     readonly property string githubStatusLabel: {
@@ -47,9 +45,6 @@ PageBase {
     readonly property color githubStatusColour: githubProblem ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
 
     function saveToken(token: string): void {
-        // The token goes to the child's environment, not its command line: /proc shows a
-        // command line to every user on the machine, and an environment is only readable
-        // by the process's own user.
         saveProc.environment = ({ CAELESTIA_GITHUB_TOKEN: token });
         if (!token) {
             saveProc.command = ["secret-tool", "clear", "service", "caelestia-shell", "account", "github"];

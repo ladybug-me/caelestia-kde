@@ -6,9 +6,6 @@ import Caelestia.Config
 QtObject {
     id: root
 
-    // Whether the shell shows a 12-hour clock. The configured ClockFormat is resolved in
-    // the config itself, so an Auto setting follows the locale without the shell having to
-    // guess here - see ServiceConfig in the plugin.
     readonly property bool twelveHourClock: GlobalConfig.services.twelveHourClock
 
     // Converts a temperature in Celsius to the given TemperatureUnit
@@ -20,7 +17,6 @@ QtObject {
         return celsius;
     }
 
-    // Formats an already converted temperature with the given TemperatureUnit's suffix
     function formatTemp(value: var, unit: int, compact = false): string {
         if (compact)
             return Number(unit) === TemperatureUnit.Kelvin ? String(value) : qsTr("%1°", "temperature").arg(value);
@@ -32,13 +28,11 @@ QtObject {
         return qsTr("%1°C", "temperature").arg(value);
     }
 
-    // Converts and formats a sensor temperature in Celsius using the configured sensor units
     function formatSensorTemp(celsius: real): string {
         const unit = GlobalConfig.services.sensorUnit;
         return root.formatTemp(Math.round(root.toTemperature(celsius, unit)), unit);
     }
 
-    // Formats an already scaled value with the given data unit suffix
     function withDataUnit(value: var, unit: string): string {
         const formats = {
             "B": qsTr("%1 B", "data unit"),
@@ -83,13 +77,11 @@ QtObject {
         };
     }
 
-    // Scales and formats a raw byte count
     function formatBytes(bytes: real, rate = false): string {
         const s = root._scaleBytes(bytes, bytes);
         return root.withDataUnit(s.value.toFixed(s.value < 10 && s.unit !== "B" ? 1 : 0), s.unit + (rate ? "/s" : ""));
     }
 
-    // Formats a used/total pair given in KiB, both scaled to the total's magnitude
     function formatKibUsage(usedKib: real, totalKib: real): string {
         const refBytes = totalKib * 1024;
         const used = root._scaleBytes(usedKib * 1024, refBytes);
@@ -99,7 +91,6 @@ QtObject {
         return qsTr("%1 / %2", "used / total amount").arg(usedText).arg(totalText);
     }
 
-    // Formats a duration in seconds into H:MM:SS or M:SS
     function formatDuration(seconds: int, alwaysHours = false): string {
         if (seconds < 0)
             return "-1:-1";
@@ -113,12 +104,10 @@ QtObject {
         return `${mins}:${secs}`;
     }
 
-    // Formats a unit fraction (e.g. 0.75) into a percentage string (e.g. "75%")
     function formatPercent(value: real): string {
         return `${Math.round(value * 100)}%`;
     }
 
-    // Formats a duration in seconds into short human-readable units (e.g. "2d 4h 15m", "4h 15m", "15m")
     function formatDurationShort(seconds: int, fallback = ""): string {
         if (seconds <= 0)
             return fallback;
@@ -135,7 +124,6 @@ QtObject {
         return comps.join(" ") || fallback;
     }
 
-    // Formats system uptime in seconds into a natural language string (e.g. "2 days, 4 hours, 15 minutes")
     function formatUptime(seconds: int): string {
         const days = Math.floor(seconds / 86400);
         const hours = Math.floor((seconds % 86400) / 3600);

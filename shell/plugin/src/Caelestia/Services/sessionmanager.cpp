@@ -73,13 +73,11 @@ bool SessionManager::exec(const QStringList& command) {
     };
 
     auto cmd = command.first();
-    // Alias systemctl and loginctl to raw dbus calls (only match exact command)
     if ((cmd == u"systemctl"_s || cmd == u"loginctl"_s) && command.size() == 2)
         cmd = command.at(1);
     if (cmd == u"loginctl"_s && command.size() == 3 && command.at(1) == u"terminate-user"_s && command.at(2).isEmpty())
-        cmd = u"logout"_s; // Manual alias `loginctl terminate-user ''` -> logout
+        cmd = u"logout"_s;
 
-    // Normalise command
     cmd = cmd.remove(QStringLiteral("-")).remove(QStringLiteral("_")).toLower();
 
     const auto methodPtr = cmds.value(cmd, nullptr);
@@ -103,7 +101,6 @@ void SessionManager::suspendThenHibernate() {
     if (queryHibernateAvailable()) {
         callManager(QStringLiteral("SuspendThenHibernate"));
     } else {
-        // Fall back to suspend when no hibernate
         qCInfo(lcSessionManager) << "SuspendThenHibernate unavailable, falling back to suspend";
         callManager(QStringLiteral("Suspend"));
     }

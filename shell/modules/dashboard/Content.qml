@@ -53,10 +53,6 @@ Item {
         return allTabs.filter(tab => tab.enabled);
     }
 
-    // Clamp currentTab to valid range only when the set of available tabs changes
-    // (e.g. disabling a tab in settings). NOT on every currentTab switch, to avoid
-    // creating a new array reference that resets the ScriptModel and destroys all
-    // tab delegates.
     onDashboardTabsChanged: {
         if (dashboardTabs.length > 0 && screenState.dashboardTab >= dashboardTabs.length) {
             screenState.dashboardTab = dashboardTabs.length - 1;
@@ -101,7 +97,7 @@ Item {
 
             readonly property int currentIndex: root.screenState.dashboardTab
             readonly property Item currentItem: {
-                repeater.count; // Trigger update on count change
+                repeater.count;
                 return repeater.itemAt(currentIndex);
             }
 

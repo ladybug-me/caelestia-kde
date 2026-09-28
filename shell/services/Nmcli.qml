@@ -14,9 +14,6 @@ import qs.components.misc
 Singleton {
     id: root
 
-    // =========================================================================
-    //  Delegated properties - sourced from NmQt (C++ backend)
-    // =========================================================================
 
     readonly property bool isConnected: NmQt.isConnected
     property bool wifiEnabled: NmQt.wifiEnabled
@@ -26,8 +23,6 @@ Singleton {
     readonly property var wirelessDeviceDetails: NmQt.wirelessDeviceDetails
     readonly property var ethernetDeviceDetails: NmQt.ethernetDeviceDetails
 
-    // Ethernet devices are rebuilt as typed EthernetDevice objects so both the
-    // legacy bar popout (`.interface`) and the Nexus pages (`.iface`) resolve.
     property list<EthernetDevice> __ethernetDevices: []
     readonly property list<EthernetDevice> ethernetDevices: __ethernetDevices
     readonly property EthernetDevice activeEthernet: __ethernetDevices.find(d => d.connected) ?? null
@@ -41,16 +36,11 @@ Singleton {
 
     property list<string> savedConnections: NmQt.savedConnections
     property list<string> savedConnectionSsids: NmQt.savedConnectionSsids
-    // One entry per saved wireless profile (ssid, id, uuid, path, security,
-    // active) — profiles sharing an SSID stay distinguishable.
     property list<SavedProfile> __savedConnectionProfiles: []
     readonly property list<SavedProfile> savedConnectionProfiles: __savedConnectionProfiles
 
     readonly property var activeProcesses: []
 
-    // =========================================================================
-    //  AccessPoint list - built reactively from NmQt QVariantList
-    // =========================================================================
 
     readonly property list<AccessPoint> networks: __networks
     property list<AccessPoint> __networks: []
@@ -94,9 +84,6 @@ Singleton {
     readonly property alias connectionCheckTimer: connectionCheckTimer
     readonly property alias immediateCheckTimer: immediateCheckTimer
 
-    // Guards against spurious notifications at shell startup.
-    // Becomes true ~3 s after the shell is ready so we don't toast
-    // "Wi-Fi connected" for the network that was already active.
 
 
     signal connectionSuccessful(string ssid)
@@ -161,9 +148,6 @@ Singleton {
         root.__networks = newList;
     }
 
-    // =========================================================================
-    //  Delegated methods
-    // =========================================================================
 
     function detectPasswordRequired(error: string): bool {
         if (!error || error.length === 0) return false;
@@ -274,8 +258,6 @@ Singleton {
                 immediateCheckTimer.checkCount = 0;
                 if (callback && typeof callback === "function") callback(result);
             }
-            // If success is true and needsPassword is false, do not stop timers.
-            // Wait for active connection state to update.
         };
         NmQt.connectToNetworkWithPasswordCheck(ssid, isSecure, wrappedCallback, bssid);
         if (!immediateResult) {
@@ -298,8 +280,6 @@ Singleton {
                 root.connectionFailed(ssid);
                 if (callback && typeof callback === "function") callback(result);
             }
-            // If success is true, do not stop timers.
-            // Wait for active connection state to update.
         };
         NmQt.connectToNetwork(ssid, password, bssid, wrappedCallback);
         if (!immediateResult) {
@@ -393,10 +373,10 @@ Singleton {
     function getWirelessSSIDs(interfaceName: string, callback: var): void { NmQt.getNetworks(callback); }
 
     function handlePasswordRequired(proc: var, error: string, output: string, exitCode: int): bool {
-        return false; // NmQt handles password detection internally
+        return false;
     }
 
-    function checkPendingConnection(): void { } // timer handles this
+    function checkPendingConnection(): void { }
 
     function cidrToSubnetMask(cidr: string): string {
         const cidrNum = parseInt(cidr, 10);
@@ -417,9 +397,6 @@ Singleton {
         emit: monitorEvent();
     }
 
-    // =========================================================================
-    //  Upstream-sync parity surface (network page rewrite)
-    // =========================================================================
 
     function findNetwork(ssid: string): var {
         return networks.find(n => n.ssid === ssid) ?? null;
@@ -529,9 +506,6 @@ Singleton {
         root.__savedConnectionProfiles = newList;
     }
 
-    // NmQt populates its own network cache in its C++ constructor, before this
-    // Connections block exists to observe networksChanged — without this, the
-    // adapter's list stays empty until NetworkManager emits another change.
     Component.onCompleted: {
         rebuildNetworkList();
         rebuildEthernetDevices();
@@ -647,9 +621,6 @@ Singleton {
         }
     }
 
-    // =========================================================================
-    //  Components
-    // =========================================================================
 
     Component {
         id: commandProc
@@ -690,8 +661,6 @@ Singleton {
     component SavedProfile: QtObject {
         required property var lastIpcObject
 
-        // More than one saved profile can carry the same SSID; the pages use
-        // this instead of counting the SSIDs over again.
         property bool duplicate: false
 
         readonly property string ssid: lastIpcObject.ssid ?? ""
@@ -701,7 +670,6 @@ Singleton {
         readonly property string security: lastIpcObject.security ?? ""
         readonly property bool active: lastIpcObject.active ?? false
 
-        // The connection name when it differs from the SSID, else the UUID tail.
         readonly property string disambiguator: id && id !== ssid ? id : uuid.slice(-4).toUpperCase()
     }
 

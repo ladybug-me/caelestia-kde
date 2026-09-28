@@ -45,7 +45,7 @@ Item {
             readonly property real angle: modelData * 2 * Math.PI / GlobalConfig.services.visualiserBars
             readonly property real dist: shapeEdgeDist + value * root.maxMagnitude
             readonly property real shapeEdgeDist: {
-                cover.shape.rotation; // Update when shape rotation changes
+                cover.shape.rotation;
                 const sDist = cover.shape.distanceAtAngle(modelData * 360 / GlobalConfig.services.visualiserBars + 90);
                 return sDist + root.spacing + strokeWidth / 2;
             }

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "blobmaterial.hpp"
-
 #include <qmatrix4x4.h>
 #include <qquickitem.h>
 #include <qvector.h>
+
+#include "blobmaterial.hpp"
 
 class BlobGroup;
 
@@ -61,10 +61,9 @@ protected:
 
     BlobGroup* m_group = nullptr;
     qreal m_radius = 0;
-    QMatrix4x4 m_deformMatrix; // identity by default
+    QMatrix4x4 m_deformMatrix;
     QMatrix4x4 m_centeredDeformMatrix;
 
-    // Cached data from updatePolish
     float m_cachedPaddedX = 0;
     float m_cachedPaddedY = 0;
     float m_cachedPaddedW = 0;

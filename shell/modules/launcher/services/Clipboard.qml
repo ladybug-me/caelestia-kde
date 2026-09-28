@@ -11,15 +11,10 @@ QtObject {
 
     readonly property var items: ClipboardManager.items
 
-    /// False when the cliphist binary could not be started, so the launcher can
-    /// explain the empty list instead of looking broken.
     readonly property bool available: ClipboardManager.available
 
-    /// Entries kept outside cliphist's rotation, so they survive both the
-    /// history filling up and a Clear History.
     readonly property var pinnedItems: ClipboardManager.pinnedItems
 
-    /// Forwarded from C++ so QML items can connect to a single source of truth.
     signal imageReady(int id, string path)
     signal clearHistoryFinished(bool success)
     signal pinFailed(int id)
@@ -62,9 +57,6 @@ QtObject {
     function getSortedItems(): var {
         const pinned = (pinnedItems || []).map(p => root.toPinnedEntry(p));
 
-        // A pinned entry usually also sits in the live list until it rotates
-        // out; show it once, as the pinned copy. Previews are what the user
-        // sees, so matching on them is the right granularity here.
         const pinnedPreviews = new Set(pinned.map(p => p.preview));
         const rest = (items || []).filter(item => !pinnedPreviews.has(item.preview));
 
@@ -79,10 +71,6 @@ QtObject {
         return ClipboardManager.isImageCached(clipId);
     }
 
-    /// favouriteClips stored cliphist ids, which do not survive rotation or a
-    /// Clear History — the star silently became a dangling reference and the
-    /// dead ids piled up in the config. Convert whatever is still resolvable
-    /// into real pins, once, then stop tracking it.
     function migrateFavourites(): void {
         const favs = GlobalConfig.launcher.favouriteClips || [];
         if (!favs.length || !items.length)
@@ -96,7 +84,6 @@ QtObject {
         GlobalConfig.launcher.favouriteClips = [];
     }
 
-    /// Connections block to forward the C++ imageReady signal to the QML world.
     property var _conn: Connections {
         target: ClipboardManager
 

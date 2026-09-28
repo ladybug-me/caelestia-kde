@@ -34,9 +34,6 @@ PageBase {
             placeholderText: qsTr("No saved networks")
 
             model: ScriptModel {
-                // One entry per saved profile, not per SSID, so duplicates of
-                // the same SSID stay distinguishable and actionable. The
-                // duplicates are already flagged by the profile itself.
                 values: [...Nmcli.savedConnectionProfiles].sort((a, b) => a.ssid.localeCompare(b.ssid) || a.id.localeCompare(b.id))
             }
 
@@ -59,8 +56,6 @@ PageBase {
                 bottomRightRadius: index === savedList?.list.count - 1 ? Tokens.rounding.extraLarge : radius
                 anchors.fill: undefined
 
-                // The shared detail/edit sub-page, opened on this exact profile
-                // rather than on its SSID.
                 onClicked: root.nState.openNetworkDetail(saved.profile.ssid, saved.profile.uuid, true)
 
                 RowLayout {
@@ -107,7 +102,6 @@ PageBase {
                         }
                     }
 
-                    // Forgets this one profile; the duplicates of its SSID stay.
                     IconButton {
                         type: IconButton.Text
                         icon: "delete"

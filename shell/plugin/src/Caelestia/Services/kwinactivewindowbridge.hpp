@@ -32,11 +32,6 @@ public:
     QString pendingFocusAddress() const;
     QString highlightedAddress() const;
 
-    // Windows on one workspace (1-based desktop id, or desktop UUID), matching
-    // the workspace field's only real shape: {id: number, uuid: string}, with
-    // -1/"" meaning "on all workspaces". Empty/invalid target selects every
-    // window. `includeOnAllWorkspaces` folds all-workspace windows into the
-    // result the way the region selector wants; the overview grid passes false.
     Q_INVOKABLE QVariantList windowsForWorkspace(const QVariant& workspace, bool includeOnAllWorkspaces = true) const;
 
     Q_INVOKABLE QString cursorOutputName() const;
@@ -47,20 +42,12 @@ public:
     Q_INVOKABLE void raiseWindow(const QString& address);
     Q_INVOKABLE void setWindowProperty(const QString& address, const QString& property, bool enable);
     Q_INVOKABLE void setWindowDesktop(const QString& address, int desktopId);
-    /**
-     * Moves a window to another screen.
-     *
-     * Routed through the workspace-tracker effect: plasma-window-management can
-     * move a window between desktops but not between outputs, and there is no
-     * D-Bus surface for it either. Inside the compositor it is one call.
-     */
     Q_INVOKABLE void sendToOutput(const QString& address, const QString& outputName);
     Q_INVOKABLE void setFullscreen(const QString& address, bool fullscreen);
     Q_INVOKABLE void setMaximized(const QString& address, bool maximized);
     Q_INVOKABLE void highlightWindow(const QString& address);
     Q_INVOKABLE void clearHighlight();
 
-    // Kept for backward compatibility, though no longer backed by JS
     Q_INVOKABLE void refreshWindows();
 
 signals:

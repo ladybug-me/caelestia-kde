@@ -211,9 +211,12 @@ echo ".gitmodules" >> .git/info/sparse-checkout
 
 # Safer fetch and reset instead of pull
 if [ -n "$TARGET_REF" ] && [ "${TARGET_KIND:-}" = "commit" ]; then
-    # The clone is normally depth 1; fetch enough history for the timeline the UI shows
-    # (UpdateChecker: up to 150 commits) rather than unshallowing.
-    git fetch -q --depth=200 origin "$BRANCH" || die "Failed to fetch repository"
+    # The clone is normally depth 1, and the target can be a commit behind the tip, so fetch
+    # a window of history rather than unshallowing; the window is also what bounds how far
+    # back a pinned commit stays reachable. The filter keeps the fetch to commits and trees:
+    # nothing here reads those revisions' blobs, and they include revisions that still
+    # carried the shell's font files, which a plain fetch pulls down again - about 300 MiB.
+    git fetch -q --depth=50 --filter=blob:none origin "$BRANCH" || die "Failed to fetch repository"
     if git cat-file -e "$TARGET_REF^{commit}" 2>/dev/null; then
         git reset --hard -q "$TARGET_REF" || die "Failed to apply commit $TARGET_REF"
     else

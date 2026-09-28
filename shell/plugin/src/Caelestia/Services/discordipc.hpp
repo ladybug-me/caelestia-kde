@@ -1,11 +1,11 @@
 #pragma once
 
-#include <QObject>
-#include <QLocalSocket>
-#include <QQmlEngine>
-#include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLocalSocket>
+#include <QObject>
+#include <QQmlEngine>
+#include <QTimer>
 
 namespace caelestia {
 

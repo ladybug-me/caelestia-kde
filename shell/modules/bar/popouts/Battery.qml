@@ -11,7 +11,6 @@ ColumnLayout {
     id: root
 
     required property PopoutState popouts
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
@@ -105,7 +104,6 @@ ColumnLayout {
                                 NumberAnimation { duration: 300; easing.type: Easing.OutCubic }
                             }
 
-                            // The perfectly rounded solid block
                             Rectangle {
                                 anchors.top: parent.top
                                 anchors.topMargin: waveLayer.opacity * Math.min(24, parent.height)
@@ -121,7 +119,6 @@ ColumnLayout {
                                 topRightRadius: height >= batteryBody.height - 3 ? Tokens.rounding.medium - 3 : 0
                             }
 
-                            // The safely clipped subtle wave
                             Item {
                                 id: waveLayer
 
@@ -158,7 +155,6 @@ ColumnLayout {
                             }
                         }
 
-                        // The Battery Border
                         Rectangle {
                             anchors.fill: parent
                             color: "transparent"

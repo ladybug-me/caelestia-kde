@@ -31,17 +31,13 @@ StyledRect {
     readonly property int iconSize: Math.round(effectiveThickness * 0.42)
 
     property real hoverPos: -1
-    property real hoverSpacing: Tokens.spacing.small // px amount added to each gap when hovered
+    property real hoverSpacing: Tokens.spacing.small
 
     readonly property bool isHovering: hoverPos !== -1
     property real currentHoverSpacing: isHovering ? hoverSpacing : 0
 
     readonly property var activeEntries: Config.bar.statusIcons.values.filter(entry => entry.enabled && root.entryActive(entry.id))
 
-    // The popout an icon opens is not always its own id: the two that name a
-    // keyboard key are spelled the settings way, and the popouts keep the names
-    // the bar has always used, while the microphone glyph has no popout of its own
-    // - its volume and its input device list live in the audio one.
     readonly property var popoutNames: ({
             lockStatus: "lockstatus",
             kbLayout: "kblayout",
@@ -79,9 +75,6 @@ StyledRect {
         }
     }
 
-    // Hand a drag back to the list. Both ends are found by id rather than by index:
-    // the icons here are only the enabled ones that have something to say, so an
-    // index in this widget is not an index in the list.
     function moveEntry(fromId: string, toId: string): void {
         const entries = GlobalConfig.bar.statusIcons.values;
         const from = entries.findIndex(entry => entry.id === fromId);

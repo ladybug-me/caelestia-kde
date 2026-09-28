@@ -96,7 +96,7 @@ Popup {
                 onClicked: root.close()
             }
 
-            Item { Layout.fillWidth: true } // Spacer
+            Item { Layout.fillWidth: true }
 
             Controls.TextButton {
                 text: qsTr("Save")

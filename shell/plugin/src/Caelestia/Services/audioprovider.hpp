@@ -26,9 +26,6 @@ public slots:
 protected:
     virtual void process() = 0;
 
-    // A captured chunk is digital silence whenever nothing is playing, which is most of a
-    // desktop's life, and every analysis here is a no-op on silence. Knowing this is what lets a
-    // processor skip its work without changing what it reports.
     template <typename Sample> [[nodiscard]] static bool isSilent(const Sample* samples, std::size_t count) {
         return count == 0 || std::all_of(samples, samples + count, [](Sample sample) {
             return sample == Sample(0);

@@ -15,11 +15,6 @@ Q_LOGGING_CATEGORY(logPlasmaWindows, "caelestia.services.plasmawindows");
 // KWin's entire window list. get_icon needs 7, so 12 covers both.
 constexpr int kRequiredVersion = 20;
 
-// Set once the Wayland connection is on its way out. Releasing a proxy is
-// itself a request, so doing it afterwards marshals onto freed memory and takes
-// the shell down with a SIGSEGV. Everything is released up front from
-// aboutToQuit, while the connection is still live; anything that survives past
-// that point must let its proxy leak rather than touch it.
 bool s_connectionGone = false;
 
 } // namespace
@@ -62,15 +57,33 @@ void PlasmaWindowHandle::org_kde_plasma_window_state_changed(uint32_t flags) {
     bool fullscreen = (flags & QtWayland::org_kde_plasma_window_management::state_fullscreen);
     bool demandsAttention = (flags & QtWayland::org_kde_plasma_window_management::state_demands_attention);
     bool skipTaskbar = (flags & QtWayland::org_kde_plasma_window_management::state_skiptaskbar);
-    
+
     bool changed = false;
-    if (m_isActive != active) { m_isActive = active; changed = true; }
-    if (m_isMinimized != minimized) { m_isMinimized = minimized; changed = true; }
-    if (m_isMaximized != maximized) { m_isMaximized = maximized; changed = true; }
-    if (m_isFullscreen != fullscreen) { m_isFullscreen = fullscreen; changed = true; }
-    if (m_demandsAttention != demandsAttention) { m_demandsAttention = demandsAttention; changed = true; }
-    if (m_skipTaskbar != skipTaskbar) { m_skipTaskbar = skipTaskbar; changed = true; }
-    
+    if (m_isActive != active) {
+        m_isActive = active;
+        changed = true;
+    }
+    if (m_isMinimized != minimized) {
+        m_isMinimized = minimized;
+        changed = true;
+    }
+    if (m_isMaximized != maximized) {
+        m_isMaximized = maximized;
+        changed = true;
+    }
+    if (m_isFullscreen != fullscreen) {
+        m_isFullscreen = fullscreen;
+        changed = true;
+    }
+    if (m_demandsAttention != demandsAttention) {
+        m_demandsAttention = demandsAttention;
+        changed = true;
+    }
+    if (m_skipTaskbar != skipTaskbar) {
+        m_skipTaskbar = skipTaskbar;
+        changed = true;
+    }
+
     if (changed) {
         emit stateChanged();
     }
@@ -112,29 +125,25 @@ void PlasmaWindowHandle::org_kde_plasma_window_unmapped() {
 
 PlasmaWindowManagement::PlasmaWindowManagement(QObject* parent)
     : QWaylandClientExtensionTemplate<PlasmaWindowManagement>(kRequiredVersion) {
-// qDebug() << "PlasmaWindowManagement created! Requesting version:" << kRequiredVersion;
     connect(this, &QWaylandClientExtension::activeChanged, this, [this]() {
-// qDebug() << "PlasmaWindowManagement activeChanged. isActive:" << isActive() << "version:" << this->QWaylandClientExtension::version();
+        // qDebug() << "PlasmaWindowManagement activeChanged. isActive:" << isActive() << "version:" <<
+        // this->QWaylandClientExtension::version();
     });
     setParent(parent);
     initialize();
     if (!isInitialized() || !isActive()) {
-        qCWarning(logPlasmaWindows)
-            << "org_kde_plasma_window_management is not available (isInitialized:" << isInitialized()
-            << ", isActive:" << isActive() << ")."
-            << "The compositor may not support it at version" << kRequiredVersion
-            << "or this app is missing org_kde_plasma_window_management from"
-               " X-KDE-Wayland-Interfaces in its desktop file.";
+        qCWarning(logPlasmaWindows) << "org_kde_plasma_window_management is not available (isInitialized:"
+                                    << isInitialized() << ", isActive:" << isActive() << ")."
+                                    << "The compositor may not support it at version" << kRequiredVersion
+                                    << "or this app is missing org_kde_plasma_window_management from"
+                                       " X-KDE-Wayland-Interfaces in its desktop file.";
     } else {
-// qDebug() << "org_kde_plasma_window_management is successfully bound at version:" << this->QWaylandClientExtension::version();
-        
+
         if (this->QWaylandClientExtension::version() >= 17) {
-// qDebug() << "Version >= 17, manually fetching stacking order on startup...";
             auto* stacking_order_obj = get_stacking_order();
             if (stacking_order_obj) {
                 auto* wrapper = new PlasmaStackingOrder(stacking_order_obj, this);
                 connect(wrapper, &PlasmaStackingOrder::window, this, [this](const QString& uuid) {
-// qDebug() << "BINGO! Emitting windowWithUuid from stacking order:" << uuid;
                     emit windowWithUuid(0, uuid);
                 });
                 connect(wrapper, &PlasmaStackingOrder::done, wrapper, &QObject::deleteLater);
@@ -143,29 +152,19 @@ PlasmaWindowManagement::PlasmaWindowManagement(QObject* parent)
     }
 }
 
-// org_kde_plasma_window_management has no destructor request, so there is
-// nothing to release here beyond the base class teardown.
 PlasmaWindowManagement::~PlasmaWindowManagement() = default;
 
 void PlasmaWindowManagement::org_kde_plasma_window_management_window_with_uuid(uint32_t id, const QString& uuid) {
-// qDebug() << "BINGO! Received window_with_uuid:" << id << uuid;
     emit windowWithUuid(id, uuid);
 }
 
-void PlasmaWindowManagement::org_kde_plasma_window_management_window(uint32_t id) {
-// qDebug() << "Received window (legacy):" << id;
-}
+void PlasmaWindowManagement::org_kde_plasma_window_management_window(uint32_t id) {}
 
-void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_uuid_changed(const QString& uuids) {
-// qDebug() << "Received stacking_order_uuid_changed:" << uuids;
-}
+void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_uuid_changed(const QString& uuids) {}
 
-void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_changed(wl_array* ids) {
-// qDebug() << "Received stacking_order_changed!";
-}
+void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_changed(wl_array* ids) {}
 
 void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_changed_2() {
-// qDebug() << "Received stacking_order_changed_2, fetching stacking order";
     auto* stacking_order_obj = get_stacking_order();
     if (stacking_order_obj) {
         auto* wrapper = new PlasmaStackingOrder(stacking_order_obj, this);
@@ -177,13 +176,12 @@ void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_cha
 }
 
 PlasmaStackingOrder::PlasmaStackingOrder(struct ::org_kde_plasma_stacking_order* object, QObject* parent)
-    : QObject(parent), QtWayland::org_kde_plasma_stacking_order(object) {
-}
+    : QObject(parent)
+    , QtWayland::org_kde_plasma_stacking_order(object) {}
 
 PlasmaStackingOrder::~PlasmaStackingOrder() = default;
 
-void PlasmaStackingOrder::org_kde_plasma_stacking_order_window(const QString &uuid) {
-// qDebug() << "PlasmaStackingOrder received window UUID:" << uuid;
+void PlasmaStackingOrder::org_kde_plasma_stacking_order_window(const QString& uuid) {
     emit window(uuid);
 }
 
@@ -196,10 +194,7 @@ PlasmaWindows::PlasmaWindows(QObject* parent)
     if (auto* app = QCoreApplication::instance()) {
         connect(app, &QCoreApplication::aboutToQuit, this, &PlasmaWindows::shutdown);
     }
-    
-    // Eagerly initialize the Wayland management interface so we receive the 
-    // initial burst of windowWithUuid events from the compositor.
-// qDebug() << "PlasmaWindows::PlasmaWindows initialized, calling available().";
+
     available();
 }
 
@@ -209,53 +204,43 @@ PlasmaWindows* PlasmaWindows::instance() {
 }
 
 QString PlasmaWindows::normaliseUuid(const QString& uuid) {
-    // If we're handed a bare uuid, e.g. from the plasmawindows service, we
-    // parse and reformat it so it matches kwin's internal brace-wrapping. If
-    // it was already formatted as expected, QUuid just reparses it and we're
-    // doing nothing.
     const auto parsed = QUuid::fromString(uuid);
     return parsed.isNull() ? uuid : parsed.toString(QUuid::WithBraces);
 }
 
 bool PlasmaWindows::available() {
     if (s_connectionGone) {
-// qDebug() << "PlasmaWindows::available() failed: s_connectionGone is true.";
         return false;
     }
     if (!m_management) {
-// qDebug() << "PlasmaWindows::available() creating PlasmaWindowManagement.";
         m_management = new PlasmaWindowManagement(this);
         connect(m_management, &PlasmaWindowManagement::windowWithUuid, this, &PlasmaWindows::onWindowWithUuid);
         connect(m_management, &PlasmaWindowManagement::windowMapped, this, &PlasmaWindows::onWindowMapped);
     }
     bool active = m_management->isActive();
-// qDebug() << "PlasmaWindows::available() returning" << active;
     return active;
 }
 
 void PlasmaWindows::onWindowWithUuid(uint32_t id, const QString& raw_uuid) {
     const auto key = normaliseUuid(raw_uuid);
-    
+
     if (m_handles.contains(key)) {
-        return; // We already know about this one.
+        return;
     }
-    
-    // We MUST request the window object using the uuid because get_window(id) is
-    // deprecated and actively crashes Plasma 6!
+
     auto* window = m_management->get_window_by_uuid(raw_uuid);
     auto* handle = new PlasmaWindowHandle(window);
     handle->setUuid(key);
     handle->setParent(this);
-    connect(handle, &PlasmaWindowHandle::unmapped, this, [this, key]() { forget(key); });
-    
+    connect(handle, &PlasmaWindowHandle::unmapped, this, [this, key]() {
+        forget(key);
+    });
+
     m_handles.insert(key, handle);
     emit windowAdded(key);
 }
 
-void PlasmaWindows::onWindowMapped(uint32_t id) {
-    // Deprecated legacy handler.
-    // We cannot call m_management->get_window(id) as it crashes the compositor.
-}
+void PlasmaWindows::onWindowMapped(uint32_t id) {}
 
 PlasmaWindowHandle* PlasmaWindows::handleFor(const QString& uuid) {
     if (uuid.isEmpty() || !available()) {
@@ -270,10 +255,9 @@ PlasmaWindowHandle* PlasmaWindows::handleFor(const QString& uuid) {
     auto* handle = new PlasmaWindowHandle(m_management->get_window_by_uuid(key));
     handle->setUuid(key);
     handle->setParent(this);
-    // The compositor answers an unknown uuid with an immediately unmapped
-    // window rather than an error, so this doubles as the "no such window"
-    // path: drop it and let the next call ask again.
-    connect(handle, &PlasmaWindowHandle::unmapped, this, [this, key]() { forget(key); });
+    connect(handle, &PlasmaWindowHandle::unmapped, this, [this, key]() {
+        forget(key);
+    });
     m_handles.insert(key, handle);
     return handle;
 }

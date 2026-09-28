@@ -41,8 +41,8 @@ Loader {
 
             StyledRect {
                 anchors.fill: parent
-                anchors.rightMargin: -parent.width * (1 - root.deformMatrix.m11) / 2 // Additional bit to account for deform
-                anchors.bottomMargin: -parent.height * 0.1 // Additional bit to account for overshoot
+                anchors.rightMargin: -parent.width * (1 - root.deformMatrix.m11) / 2
+                anchors.bottomMargin: -parent.height * 0.1
                 topLeftRadius: Tokens.rounding.extraLarge
                 color: Colours.palette.m3scrim
             }
@@ -54,7 +54,6 @@ Loader {
                 preferredRendererType: Shape.CurveRenderer
                 asynchronous: true
 
-                // Bottom left
                 ShapePath {
                     startX: -root.Config.border.smoothing * 2
                     startY: shape.height - root.Config.border.thickness
@@ -95,7 +94,6 @@ Loader {
                     }
                 }
 
-                // Top right curve
                 ShapePath {
                     startX: shape.width - root.Config.border.smoothing - root.Config.border.thickness + (1 - root.deformMatrix.m11) * shape.width / 2
                     strokeWidth: 0

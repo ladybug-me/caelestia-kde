@@ -9,15 +9,7 @@ BUILD_SHELL="$REPO_ROOT/scripts/08-build-shell.sh"
 
 # The guard decides from the checkout's own git state, so the test drives the
 # real functions against throwaway repositories rather than stubbing git.
-extract_function() {
-    awk -v name="$1" '
-        $0 ~ "^" name "\\(\\) \\{" { capture = 1 }
-        capture { print }
-        capture && $0 == "}" { exit }
-    ' "$BUILD_SHELL"
-}
-
-GUARD_SOURCE="$(extract_function shell_release_tag; extract_function checkout_may_use_prebuilt)"
+GUARD_SOURCE="$(extract_function "$BUILD_SHELL" shell_release_tag; extract_function "$BUILD_SHELL" checkout_may_use_prebuilt)"
 
 if [[ -z "$GUARD_SOURCE" ]]; then
     fail "could not find shell_release_tag/checkout_may_use_prebuilt in scripts/08-build-shell.sh"

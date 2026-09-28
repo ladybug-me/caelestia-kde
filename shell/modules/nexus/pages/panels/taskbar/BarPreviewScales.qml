@@ -38,7 +38,6 @@ PageBase {
             visible: GlobalConfig.bar.perElementPreviewScale || GlobalConfig.bar.perElementFontScale
             spacing: Tokens.spacing.extraSmall / 2
 
-            // Table Header
             RowLayout {
                 Layout.fillWidth: true
                 Layout.topMargin: Tokens.padding.medium
@@ -61,19 +60,19 @@ PageBase {
                     }
                 }
 
-                Item { Layout.fillWidth: true } // Spacer to push headers to the right
+                Item { Layout.fillWidth: true }
 
                 StyledText {
                     text: qsTr("Scale")
                     font: Tokens.font.label.large
-                    Layout.preferredWidth: 156 // Matches CustomSpinBox width
+                    Layout.preferredWidth: 156
                     horizontalAlignment: Text.AlignHCenter
                 }
 
                 StyledText {
                     text: qsTr("Font")
                     font: Tokens.font.label.large
-                    Layout.preferredWidth: 156 // Matches CustomSpinBox width
+                    Layout.preferredWidth: 156
                     horizontalAlignment: Text.AlignHCenter
                 }
             }

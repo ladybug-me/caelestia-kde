@@ -150,7 +150,7 @@ PageBase {
 
                                     onClicked: {
                                         root.nState.selectedBtDevice = device.modelData;
-                                        root.nState.openSubPage(1); // Per device info page
+                                        root.nState.openSubPage(1);
                                     }
                                 }
                             }

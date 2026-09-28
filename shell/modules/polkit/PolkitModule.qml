@@ -11,7 +11,6 @@ Scope {
 
     PolkitAgent {
         id: agent
-        // PolkitAgent handles dbus registration automatically.
     }
 
     PolkitDialog {

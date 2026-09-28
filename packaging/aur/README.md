@@ -45,14 +45,14 @@ It declares `provides=('caelestia-shell')` and
 interface and the config directory are the same, and the community packages that
 require `caelestia-shell` do so optionally, so nothing breaks.
 
-It ships no fonts. The tree's `shell/assets/fonts` is 309 MiB of the 401 MiB the payload
-would otherwise be: 47 SF Pro files, of which the shell names two families. Upstream's
-package carries no fonts either (it takes four font packages as dependencies), so the
-fonts are the one family no repository has and the one `caelestia install` fetches, into
-`~/.local/share/caelestia/assets/fonts` rather than the shell's own tree - a package owns
-that tree, so a download there would outlive `pacman -R`. `shell/modules/Fonts.qml` reads
-both directories, and a machine that cannot reach the repository keeps a working shell on
-a system font with a warning from the step. `CAELESTIA_SKIP_ASSETS=1` skips it outright.
+It ships one font, the shell's own: `shell/assets/google-sans-flex`, which
+`GSFLoader.qml` loads for the default family. Every other family comes from the system,
+and the ones the defaults name are in the optdepends (`ttf-rubik-vf` for the clock and
+the workspace label, `ttf-cascadia-code-nerd` for the mono style). That is upstream's
+arrangement, and it is why nothing downloads a font any more: the step that fetched the
+Apple families into `~/.local/share/caelestia/assets/fonts` is gone, and
+`08-build-shell.sh` reclaims what an older install left in that directory and in the
+shell tree, about 300 MiB in each.
 
 It no longer depends on `caelestia-cli`. The color pipeline belongs to this
 project now - `caelestia-color` generates the palette with matugen, applies it and
@@ -130,12 +130,10 @@ directory does, and a checkout's `uninstall.sh` does both for a source install.
 
 What stays is the user's own state, which the package never owned: `~/.config/caelestia`,
 the session environment at `~/.config/environment.d/caelestia.conf`, the autostart state
-under `~/.local`, the downloaded fonts under `~/.local/share/caelestia`, and the sudoers
-drop-in at `/etc/sudoers.d/caelestia-sddm-sync` that lets the login screen follow the
-wallpaper. Deleting those is what removes the last trace of the install. There is no
-uninstall command, and upstream has none either: removal belongs to whoever installed
-the files, which for a package is pacman, and for the fonts is the install that
-downloaded them.
+under `~/.local`, and the sudoers drop-in at `/etc/sudoers.d/caelestia-sddm-sync` that
+lets the login screen follow the wallpaper. Deleting those is what removes the last trace
+of the install. There is no uninstall command, and upstream has none either: removal
+belongs to whoever installed the files, which for a package is pacman.
 
 
 ## Publishing
@@ -168,7 +166,7 @@ Updating for a release:
    `src/matugen/`, `src/schemes/`, `src/kde/shells/caelestia.desktop`,
    `shell/kwin-effects/workspace-tracker`, and for the user's half `scripts/`,
    `src/dots/`, `src/dots-extra/`, `src/yet-another-monochrome-icon-set/`,
-   `shell/assets/wallpapers/` and `assets/org.quickshell.desktop`. A missing path
+   `shell/assets/wallpaper.webp` and `assets/org.quickshell.desktop`. A missing path
    fails the build rather than shipping a package with a silent hole in it, which
    is why they are named. No version file is among them: the version the shell and
    the command report is compiled into `/usr/lib/caelestia/version` from the same
@@ -176,12 +174,12 @@ Updating for a release:
 5. regenerate `.SRCINFO` before pushing.
 
 The source is the tarball the release job attaches, not a clone of the tag. The tree
-carries two submodules and 308 MiB of fonts in its history, so a clone makes every
-build download 645 MiB; the tarball is about 40, with the submodules inlined at the
-commits the tag pins, the fonts left out (`12-fetch-assets.sh` downloads those into
-the user's own asset directory when the shell is installed) and `REVISION` written,
-which is what the compiled helper reports from a tree with no `.git` to ask. Upstream
-does the same thing for the same reason.
+carries two submodules, so a clone makes every build download them as well; the tarball
+is about 40 MiB, with the submodules inlined at the commits the tag pins and `REVISION`
+written, which is what the compiled helper reports from a tree with no `.git` to ask.
+The Apple fonts the tree used to ship are still reachable in the repository's history,
+so a fresh clone of the repository carries them whatever the tree holds.
+Upstream does the same thing for the same reason.
 
 To build before a tag exists, use `packaging/aur/makepkg-from-checkout.sh`. It builds
 the same tarball from the checkout - same exclusions, same submodules, same `REVISION`

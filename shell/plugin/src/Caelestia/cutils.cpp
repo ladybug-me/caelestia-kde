@@ -282,7 +282,6 @@ bool CUtils::isShortcutModifierPressed(const QString& shortcutKey) const {
                          upper.contains(QLatin1String("WIN"));
     const bool hasCtrl = upper.contains(QLatin1String("CTRL")) || upper.contains(QLatin1String("CONTROL"));
 
-    // Check primary holding modifiers
     if (hasAlt && isAltPressed())
         return true;
     if (hasMeta && isMetaPressed())
@@ -290,7 +289,6 @@ bool CUtils::isShortcutModifierPressed(const QString& shortcutKey) const {
     if (hasCtrl && isCtrlPressed())
         return true;
 
-    // If none of the standard primary holding modifiers are in the shortcut, check shift if specified
     if (!hasAlt && !hasMeta && !hasCtrl) {
         if (upper.contains(QLatin1String("SHIFT"))) {
             return isShiftPressed();
@@ -298,14 +296,11 @@ bool CUtils::isShortcutModifierPressed(const QString& shortcutKey) const {
         return isAltPressed();
     }
 
-    // A primary modifier is defined in the shortcut, but is not currently pressed
     return false;
 }
 
 namespace {
 
-// Unlike QObject::findChild, this walks parentItem/childItems relationships so
-// it traverses the QML visual hierarchy.
 template <typename Predicate> QQuickItem* findChildDfs(QQuickItem* root, Predicate&& match) {
     const auto children = root->childItems();
     for (QQuickItem* const child : children) {
@@ -319,8 +314,6 @@ template <typename Predicate> QQuickItem* findChildDfs(QQuickItem* root, Predica
     return nullptr;
 }
 
-// DFS over the visual item tree, appending every descendant matching the
-// predicate to out.
 template <typename Predicate> void findChildrenDfs(QQuickItem* root, Predicate&& match, QList<QQuickItem*>& out) {
     const auto children = root->childItems();
     for (QQuickItem* const child : children) {

@@ -32,7 +32,6 @@ ProgressBar {
         startFrac = CUtils.clamp(startFrac, 0, 1);
         endFrac = CUtils.clamp(endFrac, 0, 1);
 
-        // Ramp down gap size
         const GAP_RAMP_DOWN_THRESHOLD = 0.01;
         gapSize += height / 2;
         const startGapSize = (gapSize * CUtils.clamp(startFrac, 0, GAP_RAMP_DOWN_THRESHOLD) / GAP_RAMP_DOWN_THRESHOLD);

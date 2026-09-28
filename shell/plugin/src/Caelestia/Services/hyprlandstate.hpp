@@ -1,14 +1,13 @@
 #pragma once
 
+#include <qjsonarray.h>
+#include <qjsondocument.h>
+#include <qjsonobject.h>
 #include <qlocalsocket.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
 #include <qsharedpointer.h>
 #include <qvariant.h>
-#include <qjsonobject.h>
-#include <qjsonarray.h>
-#include <qjsondocument.h>
-
 
 namespace caelestia::services {
 

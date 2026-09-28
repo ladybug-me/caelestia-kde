@@ -21,7 +21,6 @@ VerticalFadeFlickable {
     bottomMargin: Tokens.padding.large
     contentHeight: content.implicitHeight
 
-    // So it can receive focus
     focus: true
 
     onNormalizedQueryChanged: selectedIndex = 0

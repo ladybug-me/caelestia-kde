@@ -10,8 +10,6 @@ namespace caelestia::components {
 
 using Qt::StringLiterals::operator""_s;
 
-// --- AnimatedRepeaterAttached ---
-
 AnimatedRepeaterAttached::AnimatedRepeaterAttached(QObject* parent)
     : QObject(parent) {}
 
@@ -37,12 +35,9 @@ void AnimatedRepeaterAttached::setRemoving(bool removing) {
     emit removingChanged();
 }
 
-// --- AnimatedRepeater ---
-
 AnimatedRepeater::AnimatedRepeater(QQuickItem* parent)
     : QQuickItem(parent) {
     setFlag(ItemHasContents, false);
-    // Invisible so positioners and layouts skip the repeater itself
     setVisible(false);
 }
 
@@ -60,8 +55,6 @@ AnimatedRepeaterAttached* AnimatedRepeater::qmlAttachedProperties(QObject* objec
 AnimatedRepeaterAttached* AnimatedRepeater::attachedFor(QQuickItem* item, bool create) {
     return qobject_cast<AnimatedRepeaterAttached*>(qmlAttachedPropertiesObject<AnimatedRepeater>(item, create));
 }
-
-// --- Properties ---
 
 QVariant AnimatedRepeater::model() const {
     return m_model;
@@ -92,7 +85,6 @@ void AnimatedRepeater::setModel(const QVariant& model) {
             m_itemModel = itemModel;
             connectModel();
         } else {
-            // Single object instance acts as a one item model
             m_mode = Mode::List;
             m_listData = { m };
         }
@@ -105,7 +97,6 @@ void AnimatedRepeater::setModel(const QVariant& model) {
         m_listData = m.toList();
     }
 
-    // Numeric to numeric changes diff instead of rebuilding, so they animate
     if (m_componentComplete && oldMode == Mode::Count && m_mode == Mode::Count) {
         if (m_modelCount > oldCount)
             insertItems(oldCount, m_modelCount - 1, true);
@@ -174,8 +165,6 @@ void AnimatedRepeater::itemChange(ItemChange change, const ItemChangeData& data)
     restack();
 }
 
-// --- Model Access ---
-
 int AnimatedRepeater::modelCount() const {
     switch (m_mode) {
     case Mode::Count:
@@ -233,9 +222,6 @@ void AnimatedRepeater::updateItemData(int index) {
         item->setProperty(name.toUtf8().constData(), value);
 }
 
-// --- Item Lifecycle ---
-
-// Full rebuild with no animations, used when the model identity or delegate changes
 void AnimatedRepeater::regenerate() {
     clearItems(false);
 
@@ -275,7 +261,6 @@ QQuickItem* AnimatedRepeater::createItem(int index, bool adding) {
         initialProps.insert(name, value);
     m_delegate->setInitialProperties(item, initialProps);
 
-    // Cleared on the next event loop pass so enter animations trigger
     if (adding) {
         attachedFor(item, true)->setAdding(true);
         m_pendingAdds.append(item);
@@ -290,7 +275,6 @@ QQuickItem* AnimatedRepeater::createItem(int index, bool adding) {
 
 void AnimatedRepeater::insertItems(int first, int last, bool adding) {
     for (int i = first; i <= last; ++i) {
-        // Keep nullptr placeholders so indices stay aligned with the model
         auto* item = createItem(i, adding);
         m_items.insert(i, item);
     }
@@ -321,7 +305,6 @@ void AnimatedRepeater::removeItems(int first, int last, bool animate) {
             attachedFor(item, true)->setRemoving(true);
             m_dyingItems.append(item);
 
-            // Schedule destruction after the remove animation duration
             QTimer::singleShot(m_removeDuration, this, [this, item] {
                 if (m_dyingItems.removeOne(item))
                     destroyItem(item);
@@ -355,8 +338,6 @@ void AnimatedRepeater::updateIndices(int from) {
     }
 }
 
-// Keeps delegates in model order within the parent's stacking list,
-// ending just before the repeater like a real Repeater.
 void AnimatedRepeater::restack() {
     if (!parentItem())
         return;
@@ -389,8 +370,6 @@ void AnimatedRepeater::flushPendingAdds() {
     }
     m_pendingAdds.clear();
 }
-
-// --- Model Connection ---
 
 void AnimatedRepeater::connectModel() {
     if (!m_itemModel)

@@ -1,31 +1,30 @@
 #include <QtQml/qqmlregistration.h>
 #pragma once
 
-#include <QObject>
 #include <QAction>
-#include <QString>
-#include <QList>
-#include <QKeySequence>
-#include <QHash>
-#include <memory>
 #include <QAtomicInt>
+#include <QHash>
+#include <QKeySequence>
+#include <QList>
+#include <QObject>
+#include <QString>
+#include <memory>
 
 class GlobalShortcut;
 
 class GlobalShortcutDispatcher : public QObject {
     Q_OBJECT
+
 public:
     static GlobalShortcutDispatcher* instance();
 
-    // Returns the friendly label (e.g. "Spectacle - Launch Spectacle") for a
-    // stolen key sequence, or an empty string if the key is not in the index.
     Q_INVOKABLE QString collisionForKey(const QString& portableKeyString) const;
 
     // Rebuilds the dispatcher's collision index from all current in-memory
     // stolen shortcuts. Called by GlobalShortcut::persistStolenShortcuts().
     void rebuildCollisionIndex();
 
-    QHash<QString, QString> m_collisionIndex; // portable key → friendly label
+    QHash<QString, QString> m_collisionIndex;
 
 signals:
     void shortcutRegistered(GlobalShortcut* sc);
@@ -33,9 +32,7 @@ signals:
     void collisionIndexChanged();
 };
 
-
-class GlobalShortcut : public QObject
-{
+class GlobalShortcut : public QObject {
     Q_OBJECT
     QML_ELEMENT
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
@@ -43,24 +40,23 @@ class GlobalShortcut : public QObject
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
 
 public:
-    explicit GlobalShortcut(QObject *parent = nullptr);
+    explicit GlobalShortcut(QObject* parent = nullptr);
     ~GlobalShortcut() override;
 
     QString name() const;
-    void setName(const QString &name);
+    void setName(const QString& name);
 
     QString key() const;
-    void setKey(const QString &key);
+    void setKey(const QString& key);
 
     QString description() const;
-    void setDescription(const QString &description);
+    void setDescription(const QString& description);
 
     QString getCollisionName() const;
     QString getCollisionNameForKey(const QString& keyPart) const;
+
     int stolenCount() const { return m_stolenShortcuts.size(); }
 
-    // Human-readable label for this shortcut, used when naming it as one of the
-    // parties in a collision between two Caelestia shortcuts.
     QString displayLabel() const;
 
 signals:
@@ -72,8 +68,6 @@ signals:
 public:
     static GlobalShortcut* findByName(const QString& name);
     static QList<GlobalShortcut*> allShortcuts();
-    // Rebuilds the dispatcher's collision index by scanning all instances.
-    // Declared here so it can access the private m_stolenShortcuts member.
     static void rebuildCollisionIndex();
 
 private:
@@ -83,7 +77,7 @@ private:
     QString m_name;
     QString m_key;
     QString m_description;
-    QAction *m_action;
+    QAction* m_action;
 
     int m_registerGeneration = 0;
 
@@ -92,11 +86,12 @@ private:
     struct StolenShortcut {
         QString component;
         QString action;
-        QList<QKeySequence> keys;          // KDE app's original keys (for restoration)
+        QList<QKeySequence> keys;
         QString componentFriendlyName;
         QString actionFriendlyName;
-        QKeySequence triggerKey;           // which of our seqs caused this steal
+        QKeySequence triggerKey;
     };
+
     QList<StolenShortcut> m_stolenShortcuts;
-    QList<QKeySequence> m_activeKeys;      // key sequences currently bound by this shortcut
+    QList<QKeySequence> m_activeKeys;
 };

@@ -12,7 +12,6 @@ ColumnLayout {
 
     required property PopoutState popouts
 
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
@@ -150,7 +149,6 @@ ColumnLayout {
         }
     }
 
-    // Actions card, mirroring the CachyOS updater menu.
     StyledRect {
         Layout.fillWidth: true
         implicitHeight: actionsLayout.implicitHeight + Tokens.padding.medium * 2 * root.scaleOffset
@@ -167,7 +165,6 @@ ColumnLayout {
             anchors.margins: Tokens.padding.medium * root.scaleOffset
             spacing: Tokens.spacing.small * root.scaleOffset
 
-            // Check for updates
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: checkRow.implicitHeight
@@ -206,7 +203,6 @@ ColumnLayout {
                 }
             }
 
-            // Open the updates page
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: openRow.implicitHeight
@@ -247,7 +243,6 @@ ColumnLayout {
                 }
             }
 
-            // CachyOS "Exit" equivalent: hide the indicator from the bar
             StyledRect {
                 Layout.fillWidth: true
                 implicitHeight: hideRow.implicitHeight

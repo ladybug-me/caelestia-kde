@@ -1,10 +1,11 @@
 #pragma once
 
+#include <qqmlintegration.h>
+
 #include <QObject>
 #include <QQmlEngine>
 #include <QVariantList>
 #include <QVariantMap>
-#include <qqmlintegration.h>
 
 namespace caelestia::layouts {
 
@@ -16,7 +17,8 @@ class LayoutGnome : public QObject {
 public:
     explicit LayoutGnome(QObject* parent = nullptr);
 
-    Q_INVOKABLE QVariantMap calculateLayout(const QVariantList& windows, double areaWidth, double areaHeight, double columnSpacing, double rowSpacing);
+    Q_INVOKABLE QVariantMap calculateLayout(
+        const QVariantList& windows, double areaWidth, double areaHeight, double columnSpacing, double rowSpacing);
 
 private:
     struct WindowInfo {

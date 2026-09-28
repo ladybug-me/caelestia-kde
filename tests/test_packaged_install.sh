@@ -7,7 +7,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLI="$REPO_ROOT/src/bin/caelestia"
 
-EXPECTED_STEPS=(03-deploy-configs.sh 03a-wallpapers.sh 04-deploy-kde.sh 04a-window-rules.sh 05-sddm-theme.sh 06-services.sh 08-build-shell.sh 09-system-tweaks.sh 10-autostart.sh 12-fetch-assets.sh)
+EXPECTED_STEPS=(03-deploy-configs.sh 03a-wallpapers.sh 04-deploy-kde.sh 04a-window-rules.sh 05-sddm-theme.sh 06-services.sh 08-build-shell.sh 09-system-tweaks.sh 10-autostart.sh)
 
 DIR=""
 CALLS=""
@@ -164,14 +164,6 @@ test_the_package_sources_and_their_hashes_stay_in_step() {
         assert_eq "$hash" "$actual" "the hash of $path should match the file beside the PKGBUILD"
     done
 }
-test_the_package_leaves_the_fonts_to_the_install() {
-    local pkgbuild
-    pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
-
-    assert_contains "$pkgbuild" 'rm -rf "$pkgdir/etc/xdg/quickshell/caelestia/assets/fonts"' "the package should drop the fonts from its payload"
-    assert_contains "$pkgbuild" 'the fonts are in the package again' "and fail the build if they come back"
-}
-
 test_the_release_tarball_is_the_thing_the_package_sources() {
     local workflow pkgbuild
     workflow="$(cat "$REPO_ROOT/.github/workflows/version-release.yml")"
@@ -198,7 +190,6 @@ test_the_release_tarball_is_the_thing_the_package_sources() {
     assert_contains "$workflow" 'is empty; the PKGBUILD refuses a tarball without it' "failing instead of shipping a tarball prepare() rejects"
 
     assert_contains "$workflow" "--exclude '/dist'" "the staging directory must stay out of itself"
-    assert_contains "$workflow" "--exclude 'shell/assets/fonts'" "and leave the fonts out"
     assert_contains "$workflow" 'git rev-parse HEAD > "dist/$ROOT/REVISION"' "and write the revision"
 
     assert_contains "$workflow" 'sha256sum "$ARTIFACT" | tee "$ARTIFACT.sha256"' "the job should publish the hash the PKGBUILD needs"
@@ -218,7 +209,6 @@ test_the_checkout_build_script_builds_the_same_tarball() {
     script="$(cat "$REPO_ROOT/packaging/aur/makepkg-from-checkout.sh")"
 
     assert_contains "$script" 'git clone --quiet --depth 1 --recurse-submodules --shallow-submodules "file://$repo" "$tree"' "it should stage a fresh clone, so build output cannot leak in and the submodules are materialized"
-    assert_contains "$script" 'rm -rf "$tree/shell/assets/fonts"' "and drop the fonts, as the job does"
     assert_contains "$script" 'git -C "$tree" rev-parse HEAD > "$tree/REVISION"' "and write the revision"
     assert_contains "$script" '_source_url=' "and point the staged PKGBUILD at the local tarball"
     assert_contains "$script" '_source_sum=' "with its hash, rather than a SKIP"
@@ -236,25 +226,6 @@ test_the_payload_carries_no_version_control_metadata() {
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
 
     assert_contains "$pkgbuild" "-name '.git' -o -name '.github' -o -name '.gitignore'" "the package should strip version control metadata"
-}
-
-test_the_font_step_looks_before_it_downloads() {
-    local step
-    step="$(cat "$REPO_ROOT/scripts/12-fetch-assets.sh")"
-
-    assert_contains "$step" "Fonts are part of this install's tree." "a checkout already has them, and that is the common case for this step"
-    assert_contains "$step" 'Fonts already downloaded' "a second install should not download them again"
-    assert_contains "$step" 'CAELESTIA_SKIP_ASSETS' "and a machine that does not want 150 MiB should be able to say so"
-    assert_contains "$step" 'sparse-checkout set shell/assets/fonts' "the download should be the font directory, not the repository"
-    assert_not_contains "$step" 'set -e' "a failed download must warn and let the install finish"
-}
-
-test_the_shell_reads_fonts_from_the_user_directory_too() {
-    local fonts
-    fonts="$(cat "$REPO_ROOT/shell/modules/Fonts.qml")"
-
-    assert_contains "$fonts" 'Quickshell.shellPath("assets/fonts")' "the tree's fonts should still be read"
-    assert_contains "$fonts" '${Paths.data}/assets/fonts' "and the downloaded ones with them"
 }
 
 test_the_install_says_how_to_start_the_shell_now() {

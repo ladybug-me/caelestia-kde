@@ -19,8 +19,6 @@ ColumnLayout {
         root.nState.searchQuery = searchField.text;
     }
 
-    // Clearing is not a search: the locations list has to come back at once
-    // rather than after the debounce window.
     function clearQuery(): void {
         searchDebounce.stop();
         root.nState.searchQuery = "";
@@ -53,7 +51,6 @@ ColumnLayout {
 
         Keys.onReturnPressed: {
             if (root.nState.searchOpen) {
-                // Enter before the pause still has to act on what is typed.
                 root.publishQuery();
                 searchResults.executeSelected();
             }
@@ -91,12 +88,6 @@ ColumnLayout {
             target: root.nState
         }
 
-        // Publishes the query once typing pauses. Both result panes search the
-        // index and build a delegate per hit, so running that per keystroke is
-        // what made typing feel laggy. The window has to outlast the gap
-        // between two keystrokes or it fires mid-word, which is why it is
-        // longer than the 180ms that saving a config value uses. Enter and
-        // clearing the field still take effect at once.
         Timer {
             id: searchDebounce
 

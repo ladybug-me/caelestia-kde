@@ -5,8 +5,8 @@
 
 #include "../Settings/layerregistry.hpp"
 #include "../Settings/rootnode.hpp"
-#include "appearanceconfig.hpp"
 #include "aiconfig.hpp"
+#include "appearanceconfig.hpp"
 #include "audioconfig.hpp"
 #include "backgroundconfig.hpp"
 #include "barconfig.hpp"
@@ -23,11 +23,11 @@
 #include "serviceconfig.hpp"
 #include "sessionconfig.hpp"
 #include "sidebarconfig.hpp"
+#include "tabswitchconfig.hpp"
 #include "tokens.hpp"
 #include "userpaths.hpp"
 #include "utilitiesconfig.hpp"
 #include "winfoconfig.hpp"
-#include "tabswitchconfig.hpp"
 
 namespace caelestia::config {
 
@@ -64,7 +64,6 @@ public:
 private:
     // Binds the computed appearance values to the global token base values
     void bindTokens();
-    void bindFont();
 };
 
 class TokensRoot : public settings::RootNode {

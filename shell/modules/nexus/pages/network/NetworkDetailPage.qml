@@ -10,25 +10,15 @@ import qs.services
 import qs.utils
 import qs.modules.nexus.common
 
-// Detail / settings sub-page for one saved network profile. Reached from the
-// live network list (the profile that is up) and from the saved networks list
-// (the profile the user picked), so it always acts on a profile UUID.
 PageBase {
     id: root
 
     readonly property string ssid: nState.selectedNetworkSsid
-    // The saved profile this page acts on, addressed by the UUID the opener
-    // selected; null while no profile carries that UUID.
     readonly property string uuid: nState.selectedNetworkUuid
     readonly property Nmcli.SavedProfile profile: Nmcli.savedConnectionProfiles.find(p => p.uuid === root.uuid) ?? null
     readonly property var ap: Nmcli.findNetwork(root.ssid)
     readonly property var details: Nmcli.wirelessDeviceDetails
-    // A saved profile reports its own active state, so two profiles of one SSID
-    // are not both shown as connected. Without one, the active network's SSID
-    // is all there is to compare against.
     readonly property bool isActive: root.profile ? root.profile.active : (!!Nmcli.active && Nmcli.active.ssid === root.ssid)
-    // Connect activates a saved profile, so it needs one that is in range and
-    // not already up. The live network list has its own connect path.
     readonly property bool canConnect: !!root.profile && !root.isActive && !!root.ap
 
     property bool autoconnect: true
@@ -42,8 +32,6 @@ PageBase {
         });
     }
 
-    // Close if the network is no longer active (e.g. disconnected elsewhere).
-    // ...But not when the page was opened from saved networks
     onApChanged: {
         if (!nState.networkDetailsFromSaved && !root.ap)
             nState.closeSubPage();
@@ -63,7 +51,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // ---- Action buttons --------------------------------------------------
         ButtonRow {
             Layout.bottomMargin: Tokens.spacing.large - parent.spacing
             Layout.alignment: Qt.AlignHCenter
@@ -75,8 +62,6 @@ PageBase {
                 label: qsTr("Forget")
                 error: true
                 shapeMorph: root.isActive
-                // Only this profile: several can share the SSID, and forgetting
-                // by SSID would take all of them.
                 visible: !!root.profile
                 onClicked: {
                     Nmcli.forgetNetworkByUuid(root.uuid);
@@ -89,10 +74,6 @@ PageBase {
                 label: qsTr("Connect")
                 visible: root.canConnect
                 onClicked: {
-                    // Through NetworkConnection, which takes the current
-                    // connection down first: two profiles of one SSID are
-                    // exactly the case where the device is already busy with
-                    // the other one.
                     NetworkConnection.connectToSavedProfile(root.uuid);
                     root.nState.closeSubPage();
                 }
@@ -109,7 +90,6 @@ PageBase {
             }
         }
 
-        // ---- Connection info (only shows when active) ---------------------------------
         SectionHeader {
             first: true
             text: qsTr("Connection")
@@ -160,7 +140,6 @@ PageBase {
             visible: root.isActive
         }
 
-        // ---- Behaviour -------------------------------------------------------
         SectionHeader {
             first: !root.isActive
             text: qsTr("Behaviour")
@@ -185,8 +164,6 @@ PageBase {
         }
     }
 
-    // One action button in the row above: an icon over its label, in the colour
-    // of the action it performs.
     component NetworkActionButton: ButtonBase {
         id: action
 

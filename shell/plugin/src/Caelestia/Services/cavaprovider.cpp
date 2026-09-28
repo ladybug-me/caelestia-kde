@@ -39,10 +39,6 @@ void CavaProcessor::process() {
 
     const int count = static_cast<int>(AudioCollector::instance().readChunk(m_in));
 
-    // Silence is a full FFT for a row of zeros, and an idle desktop captures nothing else, so the
-    // visualiser used to run cava for the life of the session to draw the same flat line. Settle
-    // the bars to zero once and skip the analysis until there is something to analyse; cava keeps
-    // the sensitivity it had, which is what the first audible frame wants.
     if (isSilent(m_in, static_cast<std::size_t>(count))) {
         if (std::any_of(m_values.cbegin(), m_values.cend(), [](double value) {
                 return value != 0.0;
@@ -54,11 +50,8 @@ void CavaProcessor::process() {
         return;
     }
 
-    // Process in data via cava
     cava_execute(m_in, count, m_out, m_plan);
 
-    // Apply monstercat filter
-    // Left to right pass
     const double inv = 1.0 / 1.5;
     double carry = 0.0;
     for (int i = 0; i < m_bars; ++i) {
@@ -66,14 +59,12 @@ void CavaProcessor::process() {
         m_frameValues[i] = carry;
     }
 
-    // Right to left pass and combine
     carry = 0.0;
     for (int i = m_bars - 1; i >= 0; --i) {
         carry = std::max(m_out[i], carry * inv);
         m_frameValues[i] = std::max(m_frameValues[i], carry);
     }
 
-    // Update values
     bool changed = m_values.size() != m_frameValues.size();
     if (!changed) {
         constexpr double epsilon = 0.0005;

@@ -9,7 +9,6 @@ import Quickshell.Io
 Item {
     id: pluginLoader
 
-    // Map of plugin id -> live QML object instance
     property var pluginInstances: ({})
     property int loadedCount: 0
     property int enabledCount: 0
@@ -42,7 +41,7 @@ Item {
 
     function loadPlugin(meta) {
         let id = meta.id || meta.name;
-        if (pluginInstances[id]) return; // already loaded
+        if (pluginInstances[id]) return;
         // Quickshell plugins load main.qml; other types (a kwineffect that ships
         // a settings front-end) opt in through the manifest's `ui` field.
         let ui = meta.ui || (meta.type === "quickshell" ? "main.qml" : "");
@@ -77,7 +76,7 @@ Item {
         if (pluginInstances[id]) {
             pluginInstances[id].destroy();
             delete pluginInstances[id];
-            pluginInstances = pluginInstances; // force notify
+            pluginInstances = pluginInstances;
             loadedCount = Object.keys(pluginInstances).length;
             console.log("Plugin unloaded: " + id);
         }
@@ -129,7 +128,6 @@ Item {
         finalized = true;
         CaelestiaApi.plugins.available.clear();
 
-        // Destroy all currently running plugin instances
         for (let key in pluginInstances) {
             if (pluginInstances[key]) pluginInstances[key].destroy();
         }
@@ -173,7 +171,6 @@ Item {
                             meta.mediaurl = meta.mediaurl || "";
                             meta.restart = (meta.restart === "true" || meta.restart === true);
 
-                            // Extract author information
                             meta.authorName = meta.author ? (meta.author.name || "") : "";
                             let aUrl = meta.author ? (meta.author.url || "") : "";
                             meta.icon = meta.icon || "extension";
@@ -198,11 +195,7 @@ Item {
         finalized = false;
         pendingMeta = 0;
 
-        // The plugin helper ships with the shell, so it is found wherever the
-        // shell is installed instead of only under ~/.config.
         let script = Quickshell.shellPath("scripts/list-plugins.sh");
-        // The bundled plugins live in the same tree, whose location the helper
-        // cannot guess (it defaults to the checkout path), so it is passed in.
         let bundledPlugins = Quickshell.shellPath("modules/plugins");
 
         let proc = Qt.createQmlObject(`
@@ -261,7 +254,6 @@ Item {
         meta.mediaurl = meta.mediaurl || "";
         meta.restart = (meta.restart === "true" || meta.restart === true);
 
-        // Extract author information
         meta.authorName = meta.author ? (meta.author.name || "") : "";
         let aUrl = meta.author ? (meta.author.url || "") : "";
         meta.icon = meta.icon || "extension";
@@ -306,7 +298,6 @@ Item {
                     meta.icon = meta.icon || "extension";
                     meta.restart = (meta.restart === "true" || meta.restart === true);
 
-                    // Extract author information
                     meta.authorName = meta.author ? (meta.author.name || "") : "";
                     let aUrl = meta.author ? (meta.author.url || "") : "";
                     meta.authorAvatar = "";

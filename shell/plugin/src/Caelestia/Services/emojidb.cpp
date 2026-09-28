@@ -20,7 +20,6 @@ namespace caelestia::services {
 
 EmojiDb::EmojiDb(QObject* parent)
     : QObject(parent) {
-    // Frequency file: $XDG_CONFIG_HOME/caelestia/emoji-frequencies.json
     const auto configDir = qEnvironmentVariable("XDG_CONFIG_HOME", QDir::homePath() + QStringLiteral("/.config"));
     m_freqPath = configDir + QStringLiteral("/caelestia/emoji-frequencies.json");
 
@@ -124,7 +123,6 @@ bool EmojiDb::loadTextFile(const QString& path) {
 void EmojiDb::loadEmojis() {
     m_emojis.clear();
 
-    // 1. Load KDE Plasma native dictionaries (/usr/share/plasma/emoji/*.dict)
     const QString kdeDir = QStringLiteral("/usr/share/plasma/emoji");
     if (QDir(kdeDir).exists()) {
         const QString localeName = QLocale::system().name();
@@ -206,7 +204,6 @@ void EmojiDb::saveFrequencies() {
     }
 
     const auto path = m_freqPath;
-    // Ensure parent dir exists
     QDir dir(QFileInfo(path).absolutePath());
     if (!dir.exists())
         dir.mkpath(QStringLiteral("."));
@@ -234,7 +231,6 @@ QVariantList EmojiDb::getSortedItems(const QStringList& favourites, int limit) c
 
     const QSet<QString> favSet(favourites.begin(), favourites.end());
 
-    // Build index array for sorting (avoid copying entries)
     QVector<int> indices(m_emojis.size());
     std::iota(indices.begin(), indices.end(), 0);
 

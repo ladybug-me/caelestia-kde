@@ -23,7 +23,6 @@ ScrollBar {
             shouldBeActive = flickable.moving;
     }
 
-    // Sync nonAnimPosition with Qt's automatic position binding
     onPositionChanged: {
         if (_updatingFromUser) {
             _updatingFromUser = false;
@@ -88,7 +87,6 @@ ScrollBar {
         }
     }
 
-    // Sync nonAnimPosition with flickable when not animating
     Connections {
         function onContentYChanged() { if (root.isVertical) updatePos(); }
         function onContentXChanged() { if (!root.isVertical) updatePos(); }

@@ -195,7 +195,7 @@ Item {
 
                     anchors.centerIn: parent
                     implicitSize: Math.round(Tokens.sizes.dashboard.mediaSectionWidth / 5)
-                    containsIcon: true // This removes the pentagon, which is not centered
+                    containsIcon: true
                 }
             }
 
@@ -252,7 +252,7 @@ Item {
         model: root.lyricList
         Component.onCompleted: {
             currentIndex = Qt.binding(() => {
-                model; // Force update when lyrics change
+                model;
                 return Lyrics.indexForTime(Players.active?.position ?? 0);
             });
             positionViewAtIndex(currentIndex, ListView.Center);

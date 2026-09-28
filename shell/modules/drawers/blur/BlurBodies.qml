@@ -11,17 +11,14 @@ Region {
     required property real inRight
     required property real inTop
     required property real inBottom
-    // These are big rectangles bluring most of the body
 
     Region {
-        // Horizontal
         x: bX
         y: inTop
         width: Math.max(0, bW)
         height: Math.max(0, inBottom - inTop)
     }
     Region {
-        // Vertical
         x: inLeft
         y: bY
         width: Math.max(0, inRight - inLeft)

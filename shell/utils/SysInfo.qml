@@ -30,7 +30,6 @@ Singleton {
     property string hostname
     property string firmware
 
-    // DMI vendor/model, combined into a single human-readable device name
     property string boardVendor
     property string boardName
     readonly property string device: {

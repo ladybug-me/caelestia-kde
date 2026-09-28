@@ -90,10 +90,6 @@ Item {
         nState: nState
     }
 
-    // ── Update-in-progress close confirmation ───────────────────────────────
-    // Guards against closing (via native window close through WindowFactory,
-    // or programmatic close) while an update is in progress so it isn't
-    // silently abandoned.
     Item {
         id: closeConfirmDialog
 
@@ -102,8 +98,6 @@ Item {
         z: 1000
 
         Connections {
-            // If the update finishes/is cancelled elsewhere while this dialog
-            // is open, don't leave a stale confirmation on screen.
             target: UpdateChecker
 
             function onUpdateRunningChanged(): void {
@@ -113,7 +107,6 @@ Item {
         }
 
         MouseArea {
-            // Click outside the card dismisses the dialog without closing.
             anchors.fill: parent
             onClicked: closeConfirmDialog.visible = false
         }
@@ -140,7 +133,6 @@ Item {
             color: Colours.palette.m3surfaceContainerHigh
 
             MouseArea {
-                // Swallow clicks so they don't fall through to the scrim behind.
                 anchors.fill: parent
             }
 

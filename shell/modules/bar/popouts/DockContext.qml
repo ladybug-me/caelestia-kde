@@ -28,7 +28,6 @@ ColumnLayout {
         return false;
     }
 
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
@@ -54,7 +53,6 @@ ColumnLayout {
             anchors.margins: Tokens.padding.medium * root.scaleOffset
             spacing: Tokens.spacing.small * root.scaleOffset
 
-            // Pin/Unpin action
             StyledRect {
                 id: pinItem
 
@@ -102,7 +100,6 @@ ColumnLayout {
                 }
             }
 
-            // New window action
             StyledRect {
                 id: newWinItem
 
@@ -147,7 +144,6 @@ ColumnLayout {
         icon: "close"
         visible: {
             if (!model || !model.toplevels || model.toplevels.length === 0) return false;
-            // Hide for Nexus since it's an internal shell window managed differently
             return !model.toplevels.some(t => t.title && String(t.title).startsWith("Nexus"));
         }
 

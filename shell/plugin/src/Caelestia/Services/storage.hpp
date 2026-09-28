@@ -51,7 +51,6 @@ private:
         bool hasRoot = false;
     };
 
-    // Mounts sharing a backing filesystem report identical usage, so they are deduped by source device first
     struct DeviceEntry {
         quint64 totalBytes = 0;
         quint64 usedBytes = 0;
@@ -62,9 +61,6 @@ private:
 
     using AccumHash = QHash<QString, Accum>;
 
-    // QStorageInfo::mountedVolumes() blocks on network filesystems that are not
-    // reachable, so collection runs off the GUI thread and only the result is
-    // applied on it.
     [[nodiscard]] static QHash<QByteArray, DeviceEntry> collectDevices();
     [[nodiscard]] static AccumHash foldToDisks(const QHash<QByteArray, DeviceEntry>& byDevice);
 

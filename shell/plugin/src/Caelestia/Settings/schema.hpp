@@ -15,16 +15,15 @@ class ValueCodec;
 struct Annotation {
     QVariant defaultValue;
     bool globalOnly = false;
-    QList<QMetaType> allowedTypes = {}; // For QVariant properties, the shapes the option accepts
+    QList<QMetaType> allowedTypes = {};
 };
 
 namespace detail {
 
-// Return trivially copyable types (e.g. bool) by value and others (e.g. QVariant) by const ref
 template <typename T>
 using AnnotationReturn = std::conditional_t<std::is_trivially_copyable_v<T> && sizeof(T) <= sizeof(void*), T, const T&>;
 
-} // namespace detail
+}
 
 #define ANNOTATION(Type, name)                                                                                         \
     Q_PROPERTY(Type name READ name)                                                                                    \
@@ -54,12 +53,10 @@ public:
     int metaIndex;
     bool isNode;
     Annotation annotation;
-    const ValueCodec* codec = nullptr; // Null for nodes and unsupported types
+    const ValueCodec* codec = nullptr;
 
     [[nodiscard]] QString typeString() const;
     [[nodiscard]] bool accepts(const QMetaType& valueType) const;
-    // The allowed type a value of this type can be converted to, or an invalid type when
-    // none fits. QML hands a JS array over as a QVariantList whatever an option asks for.
     [[nodiscard]] QMetaType coercionTarget(const QMetaType& valueType) const;
 };
 

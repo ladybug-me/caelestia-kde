@@ -20,7 +20,6 @@ Scope {
 
     property var selectionMode: RegionSelection.SelectionMode.RectCorners
 
-    // Persisted across screenshot sessions — written to disk via Settings below
     property bool showWindowOutlines: false
 
     Settings {
@@ -57,8 +56,6 @@ Scope {
 
     function search() {
         root.action = ScreenshotAction.SnipAction.Search
-        // Circle selection stays dormant: no UI path selects it yet, so
-        // rect-corners is the only entry point.
         root.selectionMode = RegionSelection.SelectionMode.RectCorners
         root.screenshotActive = true
     }
@@ -72,7 +69,6 @@ Scope {
     function record() {
         root.action = ScreenshotAction.SnipAction.Record
         root.selectionMode = RegionSelection.SelectionMode.RectCorners
-        // If already open then re-trigger to stop recording
         if (root.screenshotActive) root.screenshotActive = false
         root.screenshotActive = true
     }
@@ -80,7 +76,6 @@ Scope {
     function recordWithSound() {
         root.action = ScreenshotAction.SnipAction.RecordWithSound
         root.selectionMode = RegionSelection.SelectionMode.RectCorners
-        // If already open then re-trigger to stop recording
         if (root.screenshotActive) root.screenshotActive = false
         root.screenshotActive = true
     }

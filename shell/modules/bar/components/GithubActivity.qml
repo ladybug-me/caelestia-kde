@@ -76,8 +76,6 @@ StyledRect {
         BarComponents.GithubStore.tokenMissing = true;
         BarComponents.GithubStore.available = false;
 
-        // The flag lives on the singleton: one notice per shell session, not one
-        // per screen's bar.
         if (BarComponents.GithubStore.tokenNoticeShown)
             return;
         BarComponents.GithubStore.tokenNoticeShown = true;
@@ -138,8 +136,6 @@ StyledRect {
         */
     }
 
-    // Could do something with this in the future, nothing currently though to keep things decluttered
-    // var counts root.lastError !== "" ? ("GitHub: " + root.lastError) : root.weekDays.map(d => `${d.date}: ${d.count}`).join("\n")
 
     Process {
         id: proc
@@ -233,11 +229,6 @@ PY
                     return;
                 }
 
-                // Every level here can be absent. `errors` is not the only
-                // failure shape a GraphQL reply has: an empty payload for a
-                // missing scope comes back as data: null, and reading through
-                // it would land in the catch below, which reports the whole
-                // fetch as failed and hides which part was missing.
                 const user = obj.data && obj.data.user;
                 if (!user) {
                     root.setUnavailable("no contribution data in the response");

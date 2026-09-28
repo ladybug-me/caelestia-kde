@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import Caelestia.Config
 import qs.components
-import qs.modules.bar.popouts // Need to import this module so the Wrapper type is the same as others
+import qs.modules.bar.popouts
 
 Item {
     id: root
@@ -87,7 +87,6 @@ Item {
         offsetScale: root.offsetScale
         visibilities: root.visibilities
 
-        // Apply slide animation margins based on edge
         anchors.leftMargin: bar.position === "left" ? (-implicitWidth - 5) * root.offsetScale : 0
         anchors.rightMargin: bar.position === "right" ? (-implicitWidth - 5) * root.offsetScale : 0
         anchors.topMargin: bar.position === "top" ? (-implicitHeight - 5) * root.offsetScale : 0

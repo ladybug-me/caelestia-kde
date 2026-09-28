@@ -7,10 +7,8 @@ import qs.utils
 Scope {
     id: root
 
-    // Keep track of addresses we have already attempted to reconnect in this session
     property var attemptedDevices: ({})
 
-    // Monitor the adapter status, devices list, and config list
     readonly property bool adapterEnabled: Bluetooth.defaultAdapter ? Bluetooth.defaultAdapter.enabled : false
     readonly property var devicesList: Bluetooth.devices.values
     readonly property var autoReconnectList: GlobalConfig.services.bluetoothAutoReconnectDevices
@@ -30,7 +28,6 @@ Scope {
 
             if (list.indexOf(device.address) !== -1) {
                 if (!attemptedDevices[device.address]) {
-                    // Mark as attempted before calling connect to prevent multiple calls
                     attemptedDevices[device.address] = true;
 
                     if (device.state === BluetoothDeviceState.Disconnected) { // qmllint disable unresolved-type

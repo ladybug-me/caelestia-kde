@@ -26,7 +26,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // e.g. "Quickshell 0.3.0 (revision ...)"
         Process {
             running: true
             command: ["quickshell", "--version"]
@@ -35,8 +34,6 @@ PageBase {
             }
         }
 
-        // The `caelestia` command this shell ships, which also owns the color
-        // pipeline. The sh wrapper avoids a warning when it is not on PATH yet
         Process {
             running: true
             command: ["sh", "-c", "caelestia --version 2>/dev/null"]
@@ -55,7 +52,6 @@ PageBase {
             }
         }
 
-        // Hero
         ConnectedRect {
             Layout.fillWidth: true
             first: true
@@ -91,7 +87,6 @@ PageBase {
             }
         }
 
-        // System
         SectionHeader {
             text: qsTr("System")
         }
@@ -123,7 +118,6 @@ PageBase {
             value: SysInfo.firmware
         }
 
-        // Software
         SectionHeader {
             text: qsTr("Software")
         }
@@ -150,7 +144,6 @@ PageBase {
             value: CUtils.qtVersion || "…"
         }
 
-        // Plugins
         SectionHeader {
             text: qsTr("Plugins")
         }
@@ -173,7 +166,6 @@ PageBase {
             }
         }
 
-        // Advanced
         SectionHeader {
             text: qsTr("Advanced")
         }

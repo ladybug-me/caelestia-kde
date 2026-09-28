@@ -32,10 +32,6 @@ void BeatProcessor::process() {
 
     const quint32 count = AudioCollector::instance().readChunk(m_in->data);
 
-    // aubio runs an onset detector over a spectral flux for every chunk, and an idle desktop has
-    // nothing but silence to feed it. It reports no beat on silence either way, so the analysis is
-    // skipped until the input carries signal; the tracker is otherwise held open for the life of
-    // the session by the desktop media shapes.
     if (isSilent(m_in->data, static_cast<std::size_t>(count))) {
         return;
     }

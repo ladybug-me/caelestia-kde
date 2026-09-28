@@ -28,9 +28,6 @@ class Lyrics : public QObject {
     Q_PROPERTY(caelestia::services::LyricCandidate selectedCandidate READ selectedCandidate WRITE setSelectedCandidate
             NOTIFY selectedCandidateChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
-    // Has to be the dedicated signal: setLines() emits lyricsChanged before it updates
-    // m_hasLyrics, and clearLines() emits only hasLyricsChanged, so wiring this to
-    // lyricsChanged leaves QML reading a stale value.
     Q_PROPERTY(bool hasLyrics READ hasLyrics NOTIFY hasLyricsChanged)
     Q_PROPERTY(qreal offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(QString trackArtist READ trackArtist NOTIFY trackChanged)

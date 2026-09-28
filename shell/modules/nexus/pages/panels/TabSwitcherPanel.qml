@@ -63,7 +63,6 @@ PageBase {
             }
         }
 
-        // General Section
         SectionHeader {
             first: true
             text: qsTr("General")
@@ -106,7 +105,6 @@ PageBase {
             onResetClicked: KeybindsModel.resetKey("windowSwitcherReverse")
         }
 
-        // Behavior Section
         SectionHeader {
             text: qsTr("Behavior")
         }
@@ -141,7 +139,6 @@ PageBase {
             }
         }
 
-        // Display Section
         SectionHeader {
             text: qsTr("Display")
         }

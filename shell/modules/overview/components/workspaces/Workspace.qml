@@ -15,7 +15,6 @@ StyledRect {
 
     required property int index
     required property int activeWsId
-    /// Screen this overview belongs to; window icons are limited to it.
     required property string screenName
     required property var occupied
     required property int groupOffset
@@ -111,7 +110,6 @@ StyledRect {
         onClicked: {
             if (active) {
                 reselected();
-                // Close overview if reselected
                 let p = parent;
                 while (p) {
                     if (p.requestClose) {
@@ -187,19 +185,11 @@ StyledRect {
         onEntered: drag => {
             if (!drag.source || drag.source.clientAddress === undefined)
                 return;
-            // An icon dragged out of a thumbnail is a source too, and has no
-            // preview to collapse -- it decides for itself, from how far it has
-            // been lifted.
             if (!("dropTargetScale" in drag.source))
                 return;
-            // Nothing to preview when it is already here: a card hovering its
-            // own workspace would shrink to say it is about to go somewhere it
-            // already is.
             if (drag.source.wsId === root.ws)
                 return;
             windowDropArea.hovering = drag.source;
-            // Fit inside the thumbnail with a little room, so it reads as
-            // landing in the slot rather than filling it exactly.
             drag.source.dropTargetScale = Math.min(width / Math.max(1, drag.source.width), height / Math.max(1, drag.source.height)) * 0.85;
         }
         onExited: windowDropArea.clearHover()
@@ -235,8 +225,6 @@ StyledRect {
                     const wins = Kwin.windowsForWorkspace(wsId, false);
                     for (let i = 0; i < wins.length; ++i) {
                         const w = wins[i];
-                        // windowsForWorkspace already filtered by workspace;
-                        // this strip only shows its own screen.
                         if (w.output !== root.screenName)
                             continue;
                         if (!Kwin.isIgnoredWindow(w)) {
@@ -255,15 +243,6 @@ StyledRect {
                 required property int index
                 readonly property string clientAddress: modelData.address || ""
                 readonly property int wsId: root.ws
-                /// Whether this icon has been pulled far enough up out of the
-                /// strip to open into the window it stands for.
-                ///
-                /// Measured against where the drag started and switched on two
-                /// thresholds rather than one. Driving it from the slots the drag
-                /// passes over meant it flipped every time one was crossed, and
-                /// each flip tore down and rebuilt the screencast -- the icon
-                /// flickering between itself and the live view. A single
-                /// threshold would do the same to anyone holding near it.
                 property bool expanded: false
                 readonly property real liftedBy: dragHandler.active ? iconDelegate.dragStartY - iconDelegate.y : 0
                 readonly property real windowAspect: {
@@ -313,9 +292,6 @@ StyledRect {
                         }
                         PropertyChanges {
                             target: iconDelegate
-                            // Bound rather than set by ParentChange, so growing
-                            // and shrinking follow the drag instead of being
-                            // fixed once when it starts.
                             height: iconDelegate.expanded ? Math.round(360 / Math.max(0.2, iconDelegate.windowAspect)) : iconDelegate.dragStartHeight
                             opacity: 0.8
                             width: iconDelegate.expanded ? 360 : iconDelegate.dragStartWidth
@@ -332,8 +308,6 @@ StyledRect {
                     else if (iconDelegate.expanded && iconDelegate.liftedBy < 100)
                         iconDelegate.expanded = false;
                 }
-                // Claimed while open so the card in the grid gives the stream
-                // up; a node feeds one consumer.
                 onExpandedChanged: Visibilities.streamClaim = iconDelegate.expanded ? iconDelegate.clientAddress : ""
                 Component.onDestruction: {
                     if (iconDelegate.expanded)
@@ -368,11 +342,6 @@ StyledRect {
                     }
                 }
                 WindowPreview {
-                    // Collapsed it is just the icon; lifted out of the strip it
-                    // opens into the window, which is what WindowPreview shows
-                    // once a stream arrives. The icon it falls back to is the
-                    // one the rest of the overview resolves, so a window with no
-                    // desktop entry still shows its own.
                     active: iconDelegate.expanded
                     address: iconDelegate.clientAddress
                     anchors.fill: parent
@@ -388,7 +357,6 @@ StyledRect {
                             if (modelData.address) {
                                 Kwin.focusWindow(modelData.address);
                                 
-                                // Try to close overview by finding WindowGrid root
                                 let p = parent;
                                 while (p) {
                                     if (p.requestClose) {

@@ -30,7 +30,6 @@ void loaded(ConfigKind kind, settings::RootNode* layer, const QString& screen) {
         return;
 
     const auto issues = config->diagnostics().count();
-    // TODO: tr when translations added
     const auto message = issues > 0
                              ? u"Config loaded with %1 issue%2."_s.arg(issues).arg(issues > 1 ? u"s"_s : QString())
                              : u"Config loaded successfully!"_s;
@@ -39,7 +38,6 @@ void loaded(ConfigKind kind, settings::RootNode* layer, const QString& screen) {
 }
 
 void loadFailed(ConfigKind kind, const QString& error, const QString& screen) {
-    // TODO: tr when translations added
     const auto title =
         kind == ConfigKind::Tokens
             ? forScreen(u"Failed to parse token config"_s, u"Failed to parse token config for %1"_s, screen)
@@ -51,7 +49,6 @@ void saveFailed(ConfigKind kind, const QString& error, const QString& screen) {
     if (kind != ConfigKind::Shell)
         return;
 
-    // TODO: tr when translations added
     const auto title = forScreen(u"Failed to save config"_s, u"Failed to save config for %1"_s, screen);
     Toaster::instance()->toast(title, error, u"settings_alert"_s, Toast::Type::Error);
 }
@@ -61,7 +58,6 @@ void saveFailed(ConfigKind kind, const QString& error, const QString& screen) {
 ConfigRoot::ConfigRoot(const QString& path, ConfigRoot* fallback, QObject* parent)
     : RootNode(path, fallback, parent) {
     bindTokens();
-    bindFont();
     qCDebug(lcConfig) << "Created config root for" << nameFor(key());
 }
 
@@ -73,10 +69,6 @@ void ConfigRoot::bindTokens() {
     m_appearance->spacing()->bindTokens(tokens->spacing());
     m_appearance->padding()->bindTokens(tokens->padding());
     m_appearance->anim()->durations()->bindTokens(tokens->animDurations());
-}
-
-void ConfigRoot::bindFont() {
-    m_appearance->font()->bindFont();
 }
 
 TokensRoot::TokensRoot(const QString& path, TokensRoot* fallback, QObject* parent)

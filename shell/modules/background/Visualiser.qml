@@ -90,9 +90,6 @@ Item {
                     }
                 }
                 FrameAnimation {
-                    // Nothing to advance while the audio service reports no values,
-                    // and spinning here is not free: this surface is the whole
-                    // desktop, so every frame repaints the wallpaper and its blur.
                     running: root.opacity > 0 && !bars.settled && (Audio.cava?.values?.length ?? 0) > 0
                     onTriggered: bars.advance(frameTime)
                 }

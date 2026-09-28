@@ -33,7 +33,6 @@ QString stolenShortcutsPath() {
     return QDir::homePath() + QStringLiteral("/.config/caelestia/stolen-shortcuts.json");
 }
 
-// Build gdbus args to restore a single stolen shortcut
 QStringList buildRestoreArgs(const QString& component, const QString& action, const QList<QKeySequence>& keys) {
     QStringList seqStrings;
     for (const QKeySequence& seq : keys) {
@@ -105,7 +104,6 @@ GlobalShortcutDispatcher* GlobalShortcutDispatcher::instance() {
             QFile::remove(path);
         }
 
-        // Register clean exit handler to delete the recovery file
         if (QCoreApplication::instance()) {
             QObject::connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, [] {
                 QFile::remove(stolenShortcutsPath());
@@ -125,7 +123,6 @@ void GlobalShortcutDispatcher::rebuildCollisionIndex() {
     GlobalShortcut::rebuildCollisionIndex();
 }
 
-// Implemented on GlobalShortcut so it can access the private m_stolenShortcuts member.
 void GlobalShortcut::rebuildCollisionIndex() {
     auto* dispatcher = GlobalShortcutDispatcher::instance();
     dispatcher->m_collisionIndex.clear();
@@ -141,11 +138,6 @@ void GlobalShortcut::rebuildCollisionIndex() {
         }
     }
 
-    // Two Caelestia shortcuts bound to the same key. KGlobalAccel resolves this
-    // last-write-wins, so one of them silently stops working. The steal scan in
-    // updateShortcut() skips our own component names by design, which means a
-    // Caelestia-vs-Caelestia clash never reached the index and nothing in the
-    // shortcut manager flagged it (#569).
     QHash<QString, QList<const GlobalShortcut*>> owners;
     for (const GlobalShortcut* sc : s_registry) {
         for (const QKeySequence& seq : sc->m_activeKeys) {
@@ -157,23 +149,18 @@ void GlobalShortcut::rebuildCollisionIndex() {
         if (it.value().size() < 2)
             continue;
 
-        // A key already in the index was taken from a third-party shortcut, and
-        // that row is flagged already. Leave the label naming the app whose
-        // binding was overridden rather than replacing it.
         if (dispatcher->m_collisionIndex.contains(it.key()))
             continue;
 
         QStringList names;
         QList<const GlobalShortcut*> counted;
         for (const GlobalShortcut* sc : it.value()) {
-            // De-duplicate by instance, not by label: two different actions can
-            // carry the same description and both are parties to the collision.
             if (counted.contains(sc))
                 continue;
             counted.append(sc);
             names.append(sc->displayLabel());
         }
-        names.sort(); // QHash iteration order is unspecified; keep the label stable.
+        names.sort();
 
         dispatcher->m_collisionIndex.insert(
             it.key(), QStringLiteral("Caelestia - ") + names.join(QStringLiteral(", ")));
@@ -204,23 +191,16 @@ GlobalShortcut::~GlobalShortcut() {
         emit GlobalShortcutDispatcher::instance() -> shortcutUnregistered(this);
     }
 
-    // Restore any KDE shortcuts we stole on startup
     for (const auto& stolen : m_stolenShortcuts) {
         QProcess::startDetached(
             QStringLiteral("gdbus"), buildRestoreArgs(stolen.component, stolen.action, stolen.keys));
     }
 
-    // Re-persist so the recovery file and collision index reflect the restored
-    // shortcuts. Every mutation in updateShortcut() calls persistStolenShortcuts();
-    // the destructor must do the same, or a hot-reload leaves stale entries on disk
-    // and phantom collisions in the Nexus Shortcut Manager blinker.
     if (!m_stolenShortcuts.isEmpty())
         persistStolenShortcuts();
 }
 
 void GlobalShortcut::persistStolenShortcuts() const {
-    // Collect stolen entries from ALL registered shortcuts so the recovery file
-    // is always a complete, up-to-date picture of what we have taken from KDE.
     QJsonArray entries;
     for (const GlobalShortcut* sc : s_registry) {
         for (const auto& stolen : sc->m_stolenShortcuts) {
@@ -245,7 +225,6 @@ void GlobalShortcut::persistStolenShortcuts() const {
         file.write(QJsonDocument(entries).toJson());
     }
 
-    // Keep the live collision index in sync with the file
     GlobalShortcutDispatcher::instance()->rebuildCollisionIndex();
 }
 
@@ -340,13 +319,10 @@ void GlobalShortcut::updateShortcut() {
         return;
     }
 
-    // Increment generation immediately so any pending async dbus bindings from a
-    // previous call are aborted before they can race-bind a stale shortcut.
     const int myGeneration = ++m_registerGeneration;
 
     m_action->setText(m_description.isEmpty() ? QStringLiteral("Caelestia Action") : m_description);
 
-    // Parse the new desired key sequences
     QList<QKeySequence> newSeqs;
     if (!m_key.isEmpty()) {
         const QStringList parts = m_key.split(QStringLiteral(";"));
@@ -358,7 +334,6 @@ void GlobalShortcut::updateShortcut() {
         }
     }
 
-    // Diff: which sequences were added vs removed compared to what we currently hold
     QList<QKeySequence> removedSeqs;
     for (const QKeySequence& old : m_activeKeys) {
         if (!newSeqs.contains(old)) {
@@ -372,8 +347,6 @@ void GlobalShortcut::updateShortcut() {
         }
     }
 
-    // Immediately restore stolen shortcuts whose trigger key was removed.
-    // This covers: key cleared, key changed, or one part of a multi-key removed.
     if (!removedSeqs.isEmpty()) {
         QList<StolenShortcut> toKeep;
         for (const auto& stolen : m_stolenShortcuts) {
@@ -392,21 +365,17 @@ void GlobalShortcut::updateShortcut() {
     m_activeKeys = newSeqs;
 
     if (newSeqs.isEmpty()) {
-        // All keys cleared — no binding needed; stolen set is already cleaned above
         persistStolenShortcuts();
         KGlobalAccel::self()->removeAllShortcuts(m_action);
         return;
     }
 
     if (addedSeqs.isEmpty()) {
-        // No new keys — only description changed or keys were removed.
-        // Just rebind with the surviving sequences.
         persistStolenShortcuts();
         KGlobalAccel::self()->setShortcut(m_action, newSeqs, KGlobalAccel::NoAutoloading);
         return;
     }
 
-    // Steal conflicts for newly-added key sequences only
     QList<QStringList> stealCmds;
 
     for (const QKeySequence& seq : addedSeqs) {
@@ -418,7 +387,6 @@ void GlobalShortcut::updateShortcut() {
                 continue;
             }
 
-            // Deduplicate: don't steal the same component/action twice
             bool alreadyStolen = false;
             for (const auto& existing : m_stolenShortcuts) {
                 if (existing.component == info.componentUniqueName() && existing.action == info.uniqueName()) {
@@ -442,7 +410,6 @@ void GlobalShortcut::updateShortcut() {
         }
     }
 
-    // Persist after all steals for this round are computed
     persistStolenShortcuts();
 
     if (stealCmds.isEmpty()) {
@@ -450,13 +417,6 @@ void GlobalShortcut::updateShortcut() {
         return;
     }
 
-    // Run all steal commands concurrently and bind only after the last one has
-    // settled. finished() is not emitted for a process that never started, so
-    // FailedToStart has to be counted through errorOccurred as well: without
-    // that, a gdbus that cannot be spawned leaves the count above zero forever,
-    // the new sequence is never bound, and the shortcut the user just set is
-    // silently lost -- with the KDE binding it replaced already stolen and
-    // cleared above.
     auto pending = std::make_shared<QAtomicInt>(stealCmds.size());
     const auto settle = [this, pending, newSeqs, myGeneration]() {
         if (pending->fetchAndSubRelaxed(1) == 1 && m_registerGeneration == myGeneration) {
@@ -465,15 +425,11 @@ void GlobalShortcut::updateShortcut() {
     };
 
     for (const QStringList& args : stealCmds) {
-        // Parented, so a command that never reaches either handler is still
-        // cleaned up with the dispatcher rather than leaked for the session.
         auto* proc = new QProcess(this);
         connect(proc, &QProcess::finished, proc, [proc, settle](int, QProcess::ExitStatus) {
             proc->deleteLater();
             settle();
         });
-        // Only FailedToStart is handled here: every other error is followed by
-        // finished(), and counting both would settle a single command twice.
         connect(proc, &QProcess::errorOccurred, proc, [proc, settle, args](QProcess::ProcessError err) {
             if (err != QProcess::FailedToStart) {
                 return;

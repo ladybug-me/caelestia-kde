@@ -30,24 +30,19 @@ Item {
     property real sRight: (hAnchor === "left" ? blurOffsetLeft : blurOffsetRight) * animScale
     property real tX: {
         if (!target) return 0;
-        let _ = target.x + target.width; // Dependency tracking
+        let _ = target.x + target.width;
         return target.parent ? target.parent.mapToItem(contentItem, target.x, target.y).x : 0;
     }
     property real tY: {
         if (!target) return 0;
-        let _ = target.y + target.height; // Dependency tracking
+        let _ = target.y + target.height;
         return target.parent ? target.parent.mapToItem(contentItem, target.x, target.y).y : 0;
     }
-    // Raw layout dimensions of the target
     property real tW: target ? target.width : 0
     property real tH: target ? target.height : 0
-    // Deform scale factors from the jelly matrix (m11=horizontal, m22=vertical).
-    // The centered deform matrix layout is: translate(cx,cy) * scale * translate(-cx,-cy),
-    // so the translation components encode the offset to center; we read scale directly.
     property bool useMasks: GlobalConfig.appearance.blurMask
     property real dm11: (useMasks && deformMatrix.m11 > 0) ? deformMatrix.m11 : 1
     property real dm22: (useMasks && deformMatrix.m22 > 0) ? deformMatrix.m22 : 1
-    // The translate-back component moves the origin, so the visual top-left shifts by (cx*(1-dm11), cy*(1-dm22))
     property real deformOffsetX: useMasks ? (tW / 2) * (1 - dm11) : 0
     property real deformOffsetY: useMasks ? (tH / 2) * (1 - dm22) : 0
     property real bX: useMasks ? tX + deformOffsetX + sLeft * dm11 : 0

@@ -35,8 +35,6 @@ QString FileSystemEntry::parentDir() const {
 };
 
 QString FileSystemEntry::suffix() const {
-    // Last suffix only, so "a.tar.gz" reports "gz": the file dialog matches this
-    // against its filter list, and completeSuffix() would never match one.
     return m_fileInfo.suffix();
 };
 
@@ -236,7 +234,6 @@ void FileSystemModel::watchDirIfRecursive(const QString& path) {
         });
         future.then(this, [currentDir, showHidden, this](const QStringList& paths) {
             if (currentDir == m_dir && showHidden == m_showHidden && !paths.isEmpty()) {
-                // Ignore if dir or showHidden has changed
                 m_watcher.addPaths(paths);
             }
         });
@@ -400,7 +397,6 @@ void FileSystemModel::applyChanges(const QSet<QString>& removedPaths, const QSet
     }
     std::sort(removedIndices.begin(), removedIndices.end(), std::greater<int>());
 
-    // Batch remove old entries
     int start = -1;
     int end = -1;
     for (int idx : std::as_const(removedIndices)) {
@@ -428,7 +424,6 @@ void FileSystemModel::applyChanges(const QSet<QString>& removedPaths, const QSet
         endRemoveRows();
     }
 
-    // Create new entries
     QList<FileSystemEntry*> newEntries;
     for (const auto& path : addedPaths) {
         newEntries << new FileSystemEntry(path, m_dir.relativeFilePath(path), this);
@@ -437,7 +432,6 @@ void FileSystemModel::applyChanges(const QSet<QString>& removedPaths, const QSet
         return compareEntries(a, b);
     });
 
-    // Pre-calculate insertion rows for all new entries before any mutations
     QList<int> insertRows;
     insertRows.reserve(newEntries.size());
     for (const auto& entry : std::as_const(newEntries)) {
@@ -448,7 +442,6 @@ void FileSystemModel::applyChanges(const QSet<QString>& removedPaths, const QSet
         insertRows << static_cast<int>(it - m_entries.begin());
     }
 
-    // Batch insert new entries
     int offset = 0;
     int currentOriginalRow = -1;
     QList<FileSystemEntry*> batchItems;

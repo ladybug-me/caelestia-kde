@@ -66,7 +66,6 @@ Singleton {
         
         let currentItems = root.items.slice();
         
-        // 1. Remove closed windows
         currentItems = currentItems.filter(item => {
             for (let i = 0; i < winList.length; i++) {
                 if (winList[i].address === item.address) return true;
@@ -74,7 +73,6 @@ Singleton {
             return false;
         });
         
-        // Helper to format
         const formatClient = (client) => {
             return {
                 address: client.address,
@@ -94,13 +92,12 @@ Singleton {
             };
         };
 
-        // 2. Add new windows & update existing
         for (let i = 0; i < winList.length; ++i) {
             const client = winList[i];
             let found = false;
             for (let j = 0; j < currentItems.length; ++j) {
                 if (currentItems[j].address === client.address) {
-                    currentItems[j] = formatClient(client); // Update properties
+                    currentItems[j] = formatClient(client);
                     found = true;
                     break;
                 }
@@ -110,7 +107,6 @@ Singleton {
             }
         }
         
-        // 3. Move active window to index 0 (MRU ordering)
         if (activeAddress) {
             for (let i = 0; i < currentItems.length; i++) {
                 if (currentItems[i].address === activeAddress) {
@@ -121,12 +117,10 @@ Singleton {
             }
         }
 
-        // 4. Filter by current desktop if GlobalConfig.tabSwitch.currentDesktopOnly is active (KDE DesktopMode = 0)
         if (GlobalConfig.tabSwitch?.currentDesktopOnly) {
             currentItems = Kwin.filterWindows(currentItems, Kwin.activeWsId, "", true);
         }
 
-        // 5. Filter by current screen if GlobalConfig.tabSwitch.allScreens is false (KDE MultiScreenMode = 1)
         if (GlobalConfig.tabSwitch && !GlobalConfig.tabSwitch.allScreens) {
             const activeOut = Kwin.activeOutputName || Kwin.cursorOutputName();
             if (activeOut) {
@@ -134,16 +128,12 @@ Singleton {
             }
         }
 
-        // 6. Filter minimized windows if GlobalConfig.tabSwitch.showMinimized is false (KDE MinMode = 1)
         if (GlobalConfig.tabSwitch && !GlobalConfig.tabSwitch.showMinimized) {
             currentItems = currentItems.filter(item => !item.minimized);
         }
         
         items = currentItems;
 
-        // A window closing (e.g. from the switcher's own close button) can leave
-        // selectedIndex pointing past the end of the shrunk array — clamp it back
-        // onto the last item rather than leaving ListView.currentIndex invalid.
         if (root.selectedIndex >= currentItems.length)
             root.selectedIndex = Math.max(0, currentItems.length - 1);
     }

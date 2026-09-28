@@ -14,7 +14,7 @@ Searcher {
     id: root
 
     readonly property string currentNamePath: `${Paths.state}/wallpaper/path.txt`
-    readonly property string fallback: Quickshell.shellPath("assets/wallpapers/Minimal-Paper.png")
+    readonly property string fallback: Quickshell.shellPath("assets/wallpaper.webp")
 
     property bool showPreview: false
     readonly property string current: showPreview ? previewPath : actualCurrent
@@ -81,9 +81,6 @@ Searcher {
     }
 
     function setRandom(): void {
-        // `caelestia wallpaper` takes a still image, so a live or video
-        // wallpaper is put in place through the same path as any other
-        // (setWallpaper); pick the random one here rather than passing -r.
         if (!root.list || root.list.length === 0) return;
         let idx = Math.floor(Math.random() * root.list.length);
         if (root.list.length > 1 && root.list[idx].path === actualCurrent)
@@ -122,7 +119,6 @@ Searcher {
                 syncPlasmaWallpaper(thumb);
             } else {
                 Quickshell.execDetached(["sh", "-c", 'printf "%s" > "$1"', "--", path, root.currentNamePath]);
-                // Still frame not ready yet — onVideoThumb() syncs Plasma once it is.
             }
         } else {
             Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...Colours.smartArg]);
@@ -145,10 +141,6 @@ Searcher {
             '}';
         Quickshell.execDetached(["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", script]);
 
-        // Keep KDE's own lock screen wallpaper on the same image unless the user
-        // opted out of syncing the two. Read the global singleton directly: the
-        // attached `Config` is per-screen aware and is not meant to be used from
-        // a singleton service like this one.
         if (GlobalConfig.lock.syncWallpaper)
             Quickshell.execDetached(["kwriteconfig6", "--file", "kscreenlockerrc", "--group", "Greeter", "--group", "Wallpaper", "--group", "org.kde.image", "--group", "General", "--key", "Image", "file://" + imagePath]);
     }
@@ -216,7 +208,7 @@ Searcher {
         if (out !== "") {
             const m = root.videoThumbs;
             m[path] = out;
-            root.videoThumbs = Object.assign({}, m);   // a copy, so bindings re-run
+            root.videoThumbs = Object.assign({}, m);
             if (path === root.actualCurrent) {
                 const script = 'caelestia wallpaper -f "$1" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
                 Quickshell.execDetached(["sh", "-c", script, "--", out, path, root.currentNamePath]);
@@ -274,10 +266,6 @@ Searcher {
             }
             root.actualCurrent = wall;
             root.previewColourLock = false;
-            // Bring the KDE lock screen in line with the shell whenever the
-            // persisted wallpaper is (re)loaded, e.g. on startup. Videos are
-            // skipped: the lock screen falls back to an image, and the video
-            // path has no still to show until onVideoThumb() provides one.
             if (!Images.isVideo(wall))
                 syncPlasmaWallpaper(wall);
         }

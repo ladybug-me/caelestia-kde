@@ -104,8 +104,6 @@ Item {
             sourceAspect: previewBox.windowAspect
         }
 
-        // Close button — only revealed while hovering this tile, same convention as
-        // the taskbar's own preview popup (DockHover.qml).
         StyledRect {
             anchors.top: parent.top
             anchors.right: parent.right

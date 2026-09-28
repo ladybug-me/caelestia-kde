@@ -15,10 +15,9 @@ Q_LOGGING_CATEGORY(lcSettingsFile, "caelestia.settings.file", QtInfoMsg)
 
 namespace {
 
-// Max retries for loads which fail due to malformed JSON, e.g. partial writes
 constexpr int kMaxLoadRetries = 3;
 
-} // namespace
+}
 
 SettingsFile::SettingsFile(const QString& path, QObject* parent)
     : QObject(parent)
@@ -28,10 +27,10 @@ SettingsFile::SettingsFile(const QString& path, QObject* parent)
     , m_loadDebounce(new QTimer(this))
     , m_loadRetries(0) {
     m_saveDebounce->setSingleShot(true);
-    m_saveDebounce->setInterval(500); // Save at most once every 500ms
+    m_saveDebounce->setInterval(500);
 
     m_loadDebounce->setSingleShot(true);
-    m_loadDebounce->setInterval(50); // Coalesce watcher events within 50ms
+    m_loadDebounce->setInterval(50);
     QObject::connect(m_loadDebounce, &QTimer::timeout, this, &SettingsFile::onLoadDebounced);
 
     QObject::connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &SettingsFile::onFileChanged);
@@ -50,12 +49,11 @@ void SettingsFile::write(const QJsonValue& json) {
 }
 
 void SettingsFile::onFileChanged() {
-    initWatcher(); // Re-add path in case the file was replaced
+    initWatcher();
     scheduleLoad();
 }
 
 void SettingsFile::onDirChanged() {
-    // Ignore if the file is already watched
     if (m_watcher->files().contains(m_path))
         return;
 
@@ -77,7 +75,6 @@ void SettingsFile::initWatcher() {
 }
 
 void SettingsFile::scheduleLoad() {
-    // Ignore if a load is already pending
     if (m_loadDebounce->isActive())
         return;
 
@@ -89,7 +86,6 @@ void SettingsFile::onLoadDebounced() {
     const auto isFinalTry = m_loadRetries >= kMaxLoadRetries;
 
     if (load(isFinalTry) == LoadResult::ParseError && !isFinalTry) {
-        // Likely a partial write, retry after another debounce
         ++m_loadRetries;
         qCDebug(lcSettingsFile, "Retrying load of %s (%d/%d)", qUtf8Printable(m_path), m_loadRetries, kMaxLoadRetries);
         m_loadDebounce->start();
@@ -138,7 +134,6 @@ SettingsFile::LoadResult SettingsFile::load(bool reportErrors) {
     if (json == m_lastData)
         return LoadResult::Unchanged;
 
-    // Clear pending write, stuff loaded from file should take precedence
     m_pendingWrite = std::nullopt;
 
     m_lastData = json;
@@ -155,13 +150,11 @@ void SettingsFile::save() {
         return;
 
     if (m_saveDebounce->isActive()) {
-        // Queue save for debounce end
         QObject::connect(m_saveDebounce, &QTimer::timeout, this, &SettingsFile::save,
             static_cast<Qt::ConnectionType>(Qt::UniqueConnection | Qt::SingleShotConnection));
         return;
     }
 
-    // Debounce regardless of whether the save actually succeeded
     m_saveDebounce->start();
 
     const auto json = m_pendingWrite.value();
@@ -176,7 +169,6 @@ void SettingsFile::save() {
         return;
     }
 
-    // Write atomically
     QSaveFile file(m_path);
 
     if (!file.open(QIODevice::WriteOnly)) {
@@ -197,7 +189,7 @@ void SettingsFile::save() {
     m_lastData = json;
     qCDebug(lcSettingsFile) << "Saved" << m_path;
 
-    initWatcher(); // The file may have just been created, or replaced by the rename
+    initWatcher();
 }
 
 } // namespace caelestia::settings

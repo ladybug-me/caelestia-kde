@@ -9,14 +9,6 @@ class QFileSystemWatcher;
 
 namespace caelestia::services {
 
-/**
- * Replaces `caelestia scheme list` and `caelestia scheme get` subprocess calls
- * in Schemes.qml with native QFile + QJsonDocument reads.
- *
- * Scheme data:  the directory `caelestia scheme list` reads, which
- *               src/bin/caelestia-color resolves from the installed data.
- * Current scheme state:  $XDG_STATE_HOME/caelestia/scheme.json
- */
 class SchemeLoader : public QObject {
     Q_OBJECT
     QML_ELEMENT

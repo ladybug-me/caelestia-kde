@@ -96,7 +96,7 @@ MouseArea {
         property real animScale: root.expanded ? 1 : 0.0
 
         x: {
-            watcher.transform; // mapToItem is not reactive so this forces updates
+            watcher.transform;
             const item = root.attachTo;
             if (!item || !root.parent)
                 return 0;
@@ -107,7 +107,7 @@ MouseArea {
             return (pt ? pt.x : 0) + root.marginX;
         }
         y: {
-            watcher.transform; // mapToItem is not reactive so this forces updates
+            watcher.transform;
             const item = root.attachTo;
             if (!item || !root.parent)
                 return 0;
@@ -147,9 +147,6 @@ MouseArea {
             }
             
             radius: parent.radius
-            // Fade alpha to 0 instead of the literal "transparent" string, which
-            // would animate RGB through black via StyledRect's inherited
-            // Behavior on color.
             color: root.transparentBackground
                 ? Qt.alpha(Colours.palette.m3surfaceContainerLow, 0)
                 : (GlobalConfig.appearance.pitchBlack

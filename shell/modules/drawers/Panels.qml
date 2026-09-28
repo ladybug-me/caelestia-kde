@@ -43,11 +43,7 @@ Item {
     readonly property real rightMargin: anchors.rightMargin
     readonly property real topMargin: anchors.topMargin
     readonly property real bottomMargin: anchors.bottomMargin
-    // Screen-relative cursor position, updated by ContentWindow from interactions.mouseX/Y
     property point cursorPos
-    // Resolved position string: auto → bar-derived, manual → as-is.
-    // When auto + cursor is in the default corner (no popups showing), flip to opposite corner.
-    // Resets to bar-derived corner on next notification arrival.
     readonly property string notifAutoPosition: {
         const barPos = bar.position;
         const v = barPos === "bottom" ? "bottom" : "top";
@@ -69,7 +65,6 @@ Item {
     }
     readonly property bool notifAtTop: notifPosition.startsWith("top")
     readonly property bool notifAtBottom: notifPosition.startsWith("bottom")
-    // Height of the notification region, for other items to reference
     readonly property real notifReservedHeight: notifications.implicitHeight > 0 ? notifications.implicitHeight + Tokens.spacing.extraLarge : 0
 
     readonly property bool popoutIntersectsRight: {
@@ -216,7 +211,6 @@ Item {
         property string hAnchor: _notifH
         property bool shouldPush: root.popoutIntersectsRight && !popoutsWrapper.content.isDockPopout && !sidebar.visible
 
-        // Push offset when a bar popout would overlap this position
         readonly property real _pushOffset: shouldPush ? (popoutsWrapper.implicitHeight + Tokens.spacing.extraLarge) : 0
 
         visibilities: root.visibilities
@@ -226,11 +220,9 @@ Item {
         sessionPanel: sessionWrapper
         utilitiesPanel: utilities
 
-        // Explicit size — never let anchors stretch the notification region
         width: implicitWidth
         height: implicitHeight
 
-        // Position via x/y — avoids QML anchor-binding issues with conditional clearing
         x: {
             if (_notifH === "left") return 0;
             if (_notifH === "right") return Math.max(0, parent.width - implicitWidth);
@@ -241,24 +233,15 @@ Item {
             return Math.max(0, parent.height - implicitHeight - _pushOffset);
         }
     }
-    // Auto-avoidance: check cursor position when the first notification of a batch arrives.
-    // If cursor is in the default corner, flip to opposite. On close, keep the flip until
-    // the next fresh arrival re-evaluates — this prevents a flicker during dismiss animation.
     Connections {
         function onPopupCountChanged() {
             const len = Notifs.popupCount;
-            // Only act on 0 → 1 transition (fresh batch arrival)
             if (len > 0 && root._prevPopupCount === 0 && GlobalConfig.notifs.position === "auto") {
-                // Taken from notifAutoPosition rather than worked out again:
-                // the second copy had drifted (it flipped on "left" where the
-                // first flips on "right"), so with a side bar the avoidance
-                // watched the corner opposite the one notifications were in.
                 const defParts = root.notifAutoPosition.split("-");
                 const defV = defParts[0];
                 const defH = defParts[1];
                 const notifW = Tokens.sizes.notifs.width;
                 const notifH = Math.min(root.height / 2, 600);
-                // Corner bounds in Panels-relative coordinates
                 const panelX = root.cursorPos.x - root.leftMargin;
                 const panelY = root.cursorPos.y - root.topMargin;
                 const cornerX = defH === "right" ? (root.width - notifW) : 0;
@@ -267,8 +250,6 @@ Item {
                     && panelY >= cornerY && panelY <= cornerY + notifH;
                 root.notifAutoFlipped = inCorner;
             }
-            // Do NOT reset on close (len === 0) — avoids flicker during dismiss animation.
-            // The flip resets implicitly on the next 0→1 transition above.
             root._prevPopupCount = len;
         }
 
@@ -365,7 +346,6 @@ Item {
         visibilities: root.visibilities
         popouts: popoutsWrapper.content
         utilities: utilities
-        // Default (non-bottom-bar): sidebar fills from top or below notifications (when notif is at top)
         anchors.top: parent.top
         anchors.bottom: utilities.top
         anchors.right: parent.right

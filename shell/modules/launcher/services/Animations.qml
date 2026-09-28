@@ -26,11 +26,9 @@ Searcher {
             onStreamFinished: {
                 let lines = text.trim().split("\n").filter(l => l.length > 0);
                 
-                // Construct the model data
                 const result = [];
                 
                 if (lines.length > 0) {
-                    // Add the default item that removes the dofile
                     result.push({
                         name: "Default (None)",
                         path: "default"
@@ -42,7 +40,6 @@ Searcher {
                     let filename = parts[parts.length - 1];
                     let name = filename.replace(".lua", "");
                     
-                    // Capitalize first letter
                     name = name.charAt(0).toUpperCase() + name.slice(1);
                     
                     result.push({
@@ -50,7 +47,6 @@ Searcher {
                         path: file
                     });
                 }
-                // Assign the result to Variants model
                 anims.model = result;
                 root.loaded();
             }

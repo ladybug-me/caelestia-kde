@@ -51,7 +51,7 @@ StyledRect {
         id: summaryHeightMetrics
 
         font: summary.font
-        text: " " // Use this height to prevent weird characters from changing the line height
+        text: " "
     }
 
     StyledText {
@@ -158,7 +158,6 @@ StyledRect {
         active: false
         opacity: 0
 
-        // Makes the loader load on the same frame shouldBeActive becomes true, which ensures size is set
         states: State {
             name: "active"
             when: comp.shouldBeActive

@@ -27,7 +27,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // General
         SectionHeader {
             first: true
             text: qsTr("General")
@@ -61,7 +60,6 @@ PageBase {
             onMoved: v => GlobalConfig.session.dragThreshold = v
         }
 
-        // Icons
         SectionHeader {
             text: qsTr("Icons")
         }
@@ -92,7 +90,6 @@ PageBase {
             onCommitted: v => GlobalConfig.session.icons.reboot = v
         }
 
-        // Commands
         SectionHeader {
             text: qsTr("Commands")
         }
@@ -124,7 +121,6 @@ PageBase {
         }
     }
 
-    // Labelled text row for an icon name or command string.
     component LabeledField: ConnectedRect {
         id: field
 

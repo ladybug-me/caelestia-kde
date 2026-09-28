@@ -23,20 +23,14 @@ Item {
 
     StyledClippingRect {
         id: container
-        // Removed manual monitorCenter logic as it's handled natively by Bar.qml layout zones
 
         readonly property bool onSpecial: false
         readonly property bool isHorizontal: root.bar.isHorizontal
-        // Force QML dependency tracker to bind to windowList correctly
         property var kwinWindowList: Kwin.windowList
 
         readonly property int desktopCount: Math.max(1, Kwin.workspaces.length)
         readonly property int activeWsId: Kwin.activeWorkspaceFor(root.screen.name)
         readonly property int shown: Math.max(1, Config.bar.workspaces.shown)
-        // Desktops are global in KDE. With perMonitor on, only windows on this
-        // screen make a desktop count as occupied -- counting the others would
-        // report a desktop as busy because of a window the user cannot see from
-        // here. The option asks for the all-screens view instead.
         readonly property var occupied: {
             const occ = {};
             for (let i = 1; i <= container.desktopCount; ++i) {
@@ -55,10 +49,6 @@ Item {
             }
             return occ;
         }
-        // The desktops the strip shows, in order. With showUnoccupied the strip
-        // is a window of `shown` desktops that pages with the active one;
-        // otherwise it carries the occupied desktops and the active one, still
-        // windowed around the active one so a long list cannot grow forever.
         readonly property var wsIds: {
             if (Config.bar.workspaces.showUnoccupied) {
                 const ids = [];
@@ -81,8 +71,6 @@ Item {
             const end = Math.max(currentIdx + 1, Math.min(container.shown, ids.length));
             return ids.slice(Math.max(0, end - container.shown), end);
         }
-        // The live pills, in the same order. Repeater.itemAt is not a tracked
-        // property, so the count is read to invalidate this when it changes.
         readonly property var pills: {
             void workspaces.count;
             return container.wsIds.map((_, i) => workspaces.itemAt(i)).filter(p => p);
@@ -115,7 +103,6 @@ Item {
             Loader {
                 asynchronous: true
                 active: Config.bar.workspaces.occupiedBg
-                // Same box as the pills, so their coordinates can be used as is.
                 anchors.fill: layout
                 sourceComponent: OccupiedBg {
                     workspaces: container.pills
@@ -123,8 +110,6 @@ Item {
                     isHorizontal: container.isHorizontal
                 }
             }
-            // Markers only mean something while the strip hides desktops: they
-            // stand in the gap where a hidden desktop sits.
             Loader {
                 asynchronous: true
                 active: opacity > 0
@@ -158,11 +143,6 @@ Item {
                     model: container.wsIds
 
                     Workspace {
-                        // The role has to be declared on the delegate itself: a
-                        // delegate that supports required properties takes the
-                        // model's roles as required properties, so an undeclared
-                        // `modelData` in the binding resolves to the enclosing
-                        // screen instead.
                         required property int modelData
 
                         ws: modelData
@@ -188,8 +168,6 @@ Item {
             MouseArea {
                 anchors.fill: layout
                 onClicked: event => {
-                    // The pills hold icon children, so hit test the strip's own
-                    // list rather than whatever child is under the pointer.
                     const pill = container.pills.find(p => container.isHorizontal ? event.x >= p.x && event.x <= p.x + p.width : event.y >= p.y && event.y <= p.y + p.height);
                     const ws = pill?.ws;
                     if (!ws)

@@ -73,7 +73,6 @@ Region {
         panel: root.panels.popoutsWrapper
         width: panel.width * (1 - root.panels.popoutsWrapper.offsetScale)
     }
-    // Overview Corners
     Region {
         x: 0; y: 0
         width: (root.Config.overview.enabled && root.Config.overview.hoverTopLeft) ? root.Config.overview.hoverThickness : 0

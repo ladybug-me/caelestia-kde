@@ -45,8 +45,6 @@ Toast::Toast(const QString& title, const QString& message, const QString& icon, 
         }
     }
 
-    // Armed with the resolved value: the raw argument closes a toast that asked for its
-    // type's default (0) on the next event-loop turn.
     QTimer::singleShot(m_timeout, this, &Toast::close);
 }
 

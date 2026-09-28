@@ -14,10 +14,10 @@ class Gpu : public TickingService {
 
 public:
     enum Type {
-        Auto,    // user override is empty (config "") — defer to detected autoType
-        None,    // no usable GPU
-        Nvidia,  // queried via nvidia-smi
-        Generic, // queried via /sys/class/drm/card*/device/gpu_busy_percent
+        Auto,
+        None,
+        Nvidia,
+        Generic,
     };
     Q_ENUM(Type)
 
@@ -74,8 +74,6 @@ private:
     qreal m_percentage = 0.0;
     qreal m_temperature = 0.0;
 
-    // /sys/class/drm card busy files, enumerated once at construction (the card
-    // set is static at runtime) and reused by detection and the tick path.
     QStringList m_busyFiles;
     bool m_detecting = false;
     bool m_nvidiaQuerying = false;

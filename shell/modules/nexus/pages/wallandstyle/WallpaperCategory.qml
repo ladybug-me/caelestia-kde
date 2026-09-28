@@ -69,7 +69,6 @@ PageBase {
                     readonly property int globalIndex: rowDel.index * Config.nexus.wallpapersPerRow + index
                     readonly property var modelData: root.wallsList[globalIndex]
 
-                    // Empty placeholders for sizing
                     opacity: modelData ? 1 : 0
                     enabled: !!modelData
                     Layout.fillWidth: true

@@ -75,35 +75,27 @@ class LazyListView : public QQuickItem {
     QML_ELEMENT
     QML_ATTACHED(LazyListViewAttached)
 
-    // Model & Delegate
     Q_PROPERTY(QAbstractItemModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(QQmlComponent* delegate READ delegate WRITE setDelegate NOTIFY delegateChanged)
 
-    // Layout
     Q_PROPERTY(qreal spacing READ spacing WRITE setSpacing NOTIFY spacingChanged)
     Q_PROPERTY(qreal contentHeight READ contentHeight NOTIFY contentHeightChanged)
     Q_PROPERTY(qreal layoutHeight READ layoutHeight NOTIFY layoutHeightChanged)
     Q_PROPERTY(qreal contentY READ contentY WRITE setContentY NOTIFY contentYChanged)
 
-    // Viewport & Lazy Loading
     Q_PROPERTY(QRectF viewport READ viewport WRITE setViewport NOTIFY viewportChanged)
     Q_PROPERTY(bool useCustomViewport READ useCustomViewport WRITE setUseCustomViewport NOTIFY useCustomViewportChanged)
     Q_PROPERTY(qreal cacheBuffer READ cacheBuffer WRITE setCacheBuffer NOTIFY cacheBufferChanged)
     Q_PROPERTY(bool cullDelegates READ cullDelegates WRITE setCullDelegates NOTIFY cullDelegatesChanged)
 
-    // Sizing
     Q_PROPERTY(qreal estimatedHeight READ estimatedHeight WRITE setEstimatedHeight NOTIFY estimatedHeightChanged)
 
-    // Async
     Q_PROPERTY(bool asynchronous READ asynchronous WRITE setAsynchronous NOTIFY asynchronousChanged)
 
-    // Animation Durations
     Q_PROPERTY(int removeDuration READ removeDuration WRITE setRemoveDuration NOTIFY removeDurationChanged)
     Q_PROPERTY(int readyDelay READ readyDelay WRITE setReadyDelay NOTIFY readyDelayChanged)
 
-    // State
     Q_PROPERTY(int count READ count NOTIFY countChanged)
-    // Always false; its notify fires when the index to item mapping changes
     Q_PROPERTY(bool itemsDirty READ itemsDirty NOTIFY itemsDirtyChanged)
 
 public:
@@ -112,14 +104,12 @@ public:
 
     static LazyListViewAttached* qmlAttachedProperties(QObject* object);
 
-    // Model & Delegate
     [[nodiscard]] QAbstractItemModel* model() const;
     void setModel(QAbstractItemModel* model);
 
     [[nodiscard]] QQmlComponent* delegate() const;
     void setDelegate(QQmlComponent* delegate);
 
-    // Layout
     [[nodiscard]] qreal spacing() const;
     void setSpacing(qreal spacing);
 
@@ -129,7 +119,6 @@ public:
     [[nodiscard]] qreal contentY() const;
     void setContentY(qreal contentY);
 
-    // Viewport
     [[nodiscard]] QRectF viewport() const;
     void setViewport(const QRectF& viewport);
 
@@ -142,22 +131,18 @@ public:
     [[nodiscard]] bool cullDelegates() const;
     void setCullDelegates(bool cull);
 
-    // Sizing
     [[nodiscard]] qreal estimatedHeight() const;
     void setEstimatedHeight(qreal height);
 
-    // Async
     [[nodiscard]] bool asynchronous() const;
     void setAsynchronous(bool async);
 
-    // Animation Durations
     [[nodiscard]] int removeDuration() const;
     void setRemoveDuration(int duration);
 
     [[nodiscard]] int readyDelay() const;
     void setReadyDelay(int delay);
 
-    // State
     [[nodiscard]] int count() const;
     [[nodiscard]] static bool itemsDirty();
 
@@ -204,20 +189,16 @@ private:
         bool readyDelayStarted = false;
     };
 
-    // Delegate properties in the order they must be applied
     using PropertyList = QList<std::pair<QString, QVariant>>;
 
-    // Result of recording a measured delegate height
     struct HeightUpdate {
         qreal previousHeight = 0;
         bool wasKnown = false;
     };
 
-    // Attached properties
     [[nodiscard]] static LazyListViewAttached* attachedFor(QQuickItem* item);
     [[nodiscard]] static LazyListViewAttached* attachedForCreate(QQuickItem* item);
 
-    // Layout
     void relayout();
     void updateLayoutPositions();
     void updateContentHeight();
@@ -237,7 +218,6 @@ private:
     HeightUpdate setKnownHeight(int index, qreal height);
     void adjustViewportIfAbove(int index, QQuickItem* item, qreal delta);
 
-    // Delegate lifecycle
     void syncDelegates();
     [[nodiscard]] QList<int> delegatesOutsideViewport(const QSet<int>& keep, const QRectF& viewport) const;
     [[nodiscard]] QList<int> missingDelegates(int first, int last) const;
@@ -258,7 +238,6 @@ private:
     void updateDelegateData(DelegateEntry& entry);
     void remapDelegates(const std::function<int(int)>& mapIndex);
 
-    // Model connection
     void connectModel();
     void disconnectModel();
     void resetContent();
@@ -269,7 +248,6 @@ private:
     void onDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight, const QList<int>& roles);
     void onModelReset();
 
-    // Members
     QAbstractItemModel* m_model = nullptr;
     QQmlComponent* m_delegate = nullptr;
 

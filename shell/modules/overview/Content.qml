@@ -31,7 +31,6 @@ Item {
         screen: root.screen
         anchors.fill: parent
         opacity: root.visibilities.overview ? 1 : 0
-        // activeInfoClient is managed manually to ensure synchronous release before WindowInfo requests it
         onRequestWindowInfo: client => {
             windowGrid.activeInfoClient = client
             windowInfoOverlay.clientAddress = client.address
@@ -72,8 +71,8 @@ Item {
             anchors.fill: parent
             color: Qt.rgba(0, 0, 0, 0.5)
 
-            HoverHandler { } // block hover
-            WheelHandler { } // block scroll
+            HoverHandler { }
+            WheelHandler { }
             TapHandler {
                 onTapped: {
                     windowInfoOverlay.isOpen = false

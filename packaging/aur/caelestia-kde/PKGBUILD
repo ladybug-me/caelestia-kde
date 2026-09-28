@@ -74,8 +74,9 @@ prepare() {
     # script fills both _source_url and _source_sum, so a SKIP reaching here means the
     # published hash was never put in, and the tarball is the whole shell.
     if [[ "$_source_sum" == "SKIP" && "${CAELESTIA_ALLOW_UNVERIFIED_SOURCE:-0}" != "1" ]]; then
-        echo "No source checksum: put the release's sha256 in the first sha256sums entry" >&2
-        echo "(see packaging/aur/README.md), or set CAELESTIA_ALLOW_UNVERIFIED_SOURCE=1 to build anyway." >&2
+        echo "No source checksum: put the release's sha256 in the first sha256sums entry." >&2
+        echo "The release job prints it beside the size and attaches it as .sha256;" >&2
+        echo "set CAELESTIA_ALLOW_UNVERIFIED_SOURCE=1 to build anyway." >&2
         return 1
     fi
 
@@ -109,8 +110,6 @@ package() {
     DESTDIR="$pkgdir" cmake --install build
     DESTDIR="$pkgdir" cmake --install effect-build
 
-    rm -rf "$pkgdir/etc/xdg/quickshell/caelestia/assets/fonts"
-
     install -d "$pkgdir/usr/share/caelestia"
     install -d "$pkgdir/usr/share/caelestia/scripts"
     install -m755 scripts/[0-9]*.sh "$pkgdir/usr/share/caelestia/scripts/"
@@ -118,7 +117,7 @@ package() {
     install -d "$pkgdir/usr/share/caelestia/src" "$pkgdir/usr/share/caelestia/assets" \
         "$pkgdir/usr/share/caelestia/shell/assets"
     cp -r src/dots src/dots-extra "$pkgdir/usr/share/caelestia/src/"
-    cp -r shell/assets/wallpapers "$pkgdir/usr/share/caelestia/shell/assets/"
+    cp -r shell/assets/wallpaper.webp "$pkgdir/usr/share/caelestia/shell/assets/"
     cp -r assets/org.quickshell.desktop "$pkgdir/usr/share/caelestia/assets/"
     install -d "$pkgdir/usr/share/sddm/themes/caelestia/scripts"
     cp -r src/sddm/themes/full/* "$pkgdir/usr/share/sddm/themes/caelestia/"
@@ -165,7 +164,7 @@ DROPIN
         usr/share/caelestia/scripts/lib/install-kind.sh
         usr/share/caelestia/src/dots
         usr/share/caelestia/src/dots-extra
-        usr/share/caelestia/shell/assets/wallpapers
+        usr/share/caelestia/shell/assets/wallpaper.webp
         usr/share/caelestia/assets/org.quickshell.desktop
         usr/share/sddm/themes/caelestia/theme.conf
         usr/share/sddm/themes/caelestia/scripts/sync.sh
@@ -180,11 +179,6 @@ DROPIN
             exit 1
         fi
     done
-
-    if [[ -e "$pkgdir/etc/xdg/quickshell/caelestia/assets/fonts" ]]; then
-        echo "the fonts are in the package again: 12-fetch-assets.sh downloads them instead" >&2
-        exit 1
-    fi
 
     echo "package layout checked: ${#required[@]} paths"
 }

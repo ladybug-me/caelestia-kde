@@ -1,8 +1,9 @@
 #include "anim.hpp"
-#include "appearanceconfig.hpp"
-#include "tokens.hpp"
 
 #include <qpoint.h>
+
+#include "appearanceconfig.hpp"
+#include "tokens.hpp"
 
 namespace caelestia::config {
 
@@ -64,9 +65,6 @@ AnimDurations* AnimTokens::durations() const {
 QEasingCurve AnimTokens::buildCurve(const QList<qreal>& points) {
     QEasingCurve curve(QEasingCurve::BezierSpline);
 
-    // Points come in pairs of (x, y) forming cubic bezier segments.
-    // Each segment needs 3 control points: c1, c2, endPoint.
-    // So 6 values per segment: c1x, c1y, c2x, c2y, endX, endY.
     for (int i = 0; i + 5 < points.size(); i += 6) {
         QPointF c1(points[i], points[i + 1]);
         QPointF c2(points[i + 2], points[i + 3]);
@@ -100,7 +98,6 @@ void AnimTokens::rebuildCurves() {
 void AnimTokens::bindCurves(AnimCurves* curves) {
     m_curves = curves;
 
-    // Rebuild when any curve control points change
     connect(curves, &settings::Node::optionChanged, this, &AnimTokens::rebuildCurves);
 
     rebuildCurves();

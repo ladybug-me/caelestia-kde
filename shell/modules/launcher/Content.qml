@@ -346,11 +346,6 @@ Item {
                             search.text = Visibilities.launcherInitialSearch;
                             Visibilities.launcherInitialSearch = "";
                         }
-                        // Re-opening reuses an already-built Content, which does not
-                        // run Component.onCompleted again — without this the search
-                        // field never regains focus, and since the Alt release that
-                        // commits the window switcher is delivered to this field,
-                        // the switcher would stay open and stop cycling.
                         search.forceActiveFocus();
                     } else {
                         Windows.isSwitching = false;

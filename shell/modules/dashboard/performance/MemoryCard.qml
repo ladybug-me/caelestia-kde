@@ -35,7 +35,7 @@ StyledRect {
                 text: "memory_alt"
                 fill: 1
                 color: root.accent
-                fontStyle: Tokens.font.icon.builders.medium.weight(Font.DemiBold).build() // DemiBold to fix fill issues
+                fontStyle: Tokens.font.icon.builders.medium.weight(Font.DemiBold).build()
             }
 
             StyledText {

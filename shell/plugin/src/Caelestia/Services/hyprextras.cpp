@@ -179,7 +179,7 @@ void HyprExtras::readEvent() {
         if (rawEvent.isEmpty()) {
             break;
         }
-        rawEvent.truncate(rawEvent.length() - 1); // Remove trailing \n
+        rawEvent.truncate(rawEvent.length() - 1);
         const auto event = QByteArrayView(rawEvent.data(), rawEvent.indexOf(">>"));
         handleEvent(QString::fromUtf8(event));
     }

@@ -9,8 +9,6 @@ import qs.components.controls
 import qs.services
 import qs.modules.nexus.common
 
-// Detail / settings sub-page for an ethernet device. Reached by tapping an
-// ethernet row on NetworkPage.
 PageBase {
     id: root
 
@@ -33,7 +31,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        // ---- Action button --------------------------------------------------
         ButtonRow {
             Layout.bottomMargin: Tokens.spacing.large - parent.spacing
             Layout.alignment: Qt.AlignHCenter
@@ -81,7 +78,6 @@ PageBase {
             }
         }
 
-        // ---- Connection info ------------------------------------------------
         SectionHeader {
             first: true
             text: qsTr("Connection")

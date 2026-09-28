@@ -31,7 +31,6 @@ PageBase {
                     dark.push(entry);
             }
         } catch (e) {
-            // Leave the lists empty on parse failure.
         }
         root.lightSchemes = light;
         root.darkSchemes = dark;
@@ -67,10 +66,6 @@ PageBase {
             StateLayer {
                 radius: parent.radius
                 onClicked: {
-                    // On a fresh install the deploy script writes path.txt directly, so there
-                    // is nothing derived yet and a bare `scheme set -n dynamic` fails. Seeding
-                    // the wallpaper first is what makes it work, and the two have to be one
-                    // process because the switch reads the path the seed writes.
                     const wall = Wallpapers.actualCurrent || Wallpapers.fallback;
                     const smartArg = Colours.smartArg.join(" ");
                     Quickshell.execDetached(["sh", "-c",
@@ -298,8 +293,6 @@ PageBase {
         StateLayer {
             radius: parent.radius
             onClicked: {
-                // The card carries the whole palette, so the shell can show the result of this
-                // switch at once instead of waiting for the render and the fan out to finish.
                 Colours.previewNamed(card.modelData.name, card.modelData.flavour, card.modelData.colours, card.modelData.mode === "light");
                 setScheme.command = ["caelestia", "scheme", "set", "-n", card.modelData.name,
                     "-f", card.modelData.flavour, "-m", card.modelData.mode, ...Colours.smartArg];
@@ -307,8 +300,6 @@ PageBase {
             }
         }
 
-        // A switch that fails writes no scheme, so the preview standing in for it would keep
-        // showing colors that are not coming. A successful one is ended by the write itself.
         Process {
             id: setScheme
 

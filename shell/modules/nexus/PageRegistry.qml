@@ -14,7 +14,6 @@ QtObject {
     function buildIndex() {
         let index = [];
         pages.forEach((page, pageIdx) => {
-            // Add the parent page itself to the index
             index.push({
                 settingLabel: page.label,
                 settingDescription: page.description || "",

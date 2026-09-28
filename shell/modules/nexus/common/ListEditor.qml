@@ -179,7 +179,7 @@ ListView {
                         return 0;
 
                     const maxOvershoot = Tokens.padding.extraLarge;
-                    const yDiff = item.y - item.lastMoveY; // Extra offset if the y of the item changed between mouseY updates
+                    const yDiff = item.y - item.lastMoveY;
                     const y = mouse.mouseY - item.pressPos.y - yDiff;
                     const absY = item.mapToItem(root.contentItem, 0, y).y;
                     const maxY = root.implicitHeight - item.implicitHeight;
@@ -205,7 +205,6 @@ ListView {
             }
 
             onReleased: e => {
-                // Break bindings
                 itemContent.x = itemContent.x;
                 itemContent.y = itemContent.y;
                 returnAnim.start();

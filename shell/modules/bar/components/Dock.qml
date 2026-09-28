@@ -42,12 +42,6 @@ Item {
 
     HoverHandler { id: dockHover }
 
-    // Re-publishes the icon geometry below. A tile's rect on screen moves for
-    // reasons no single binding can watch — the bar sliding in and out, the
-    // dock list scrolling, a drag reordering tiles — and mapToItem() is a plain
-    // call that never re-runs on its own. Re-reading a handful of rects twice a
-    // second covers all of it, and MinimizeGeometry drops rects that have not
-    // actually changed, so a steady dock sends nothing over the wire.
     Timer {
         interval: 500
         repeat: true
@@ -57,18 +51,6 @@ Item {
 
     ListModel { id: dockModel }
 
-    // Tell KWin where each app's taskbar entry sits, so minimize/restore
-    // effects animate into the dock instead of guessing from the cursor.
-    //
-    // The rects are derived from the list's own geometry and the entry's index
-    // rather than from each delegate: a delegate reports position 0 here, so
-    // asking it gave every window the same rect — whichever tile published last
-    // won, and every app animated to that one spot.
-    //
-    // This component is also instantiated where it has no bar to sit on (with
-    // no window, or laid out to zero size). Those copies have no meaningful
-    // rect to offer and would otherwise overwrite the real dock's, so they are
-    // skipped rather than allowed to publish nonsense.
     function publishMinimizeGeometry(): void {
         const win = QsWindow.window;
         if (!win || listView.width <= 0 || listView.height <= 0)
@@ -86,12 +68,6 @@ Item {
             if (tops.length === 0)
                 continue;
 
-            // Where this entry sits along the list, accounting for scrolling,
-            // clamped to the strip the list actually occupies. A tile scrolled
-            // out of view has no rect of its own, and leaving the last one
-            // published would point the animation at wherever the dock used to
-            // be — stale across a scroll, and badly wrong across a bar move.
-            // The nearest edge is where it would scroll back in from.
             const offset = Math.max(0, Math.min(i * step - scrolled, span - size));
 
             let x = Math.round(horizontal ? origin.x + offset : origin.x);
@@ -135,7 +111,6 @@ Item {
             newArr.push(mData);
         }
 
-        // Only update if arrays are different length or different order
         const currentFavs = GlobalConfig.bar.dock.pinnedApps || [];
         let changed = currentFavs.length !== newFavs.length;
         if (!changed) {
@@ -221,9 +196,6 @@ Item {
     StyledRect {
         id: container
 
-        // Fade alpha to 0 instead of switching to the literal "transparent"
-        // string, which would animate RGB through black via StyledRect's
-        // inherited Behavior on color.
         color: dockModel.count > 0 ? Colours.tPalette.m3surfaceContainer : Qt.alpha(Colours.tPalette.m3surfaceContainer, 0)
         radius: Tokens.rounding.full
 
@@ -244,7 +216,6 @@ Item {
             return "middle";
         }
 
-        // Actual space available from the dock's position to the next zone boundary
         property real availableSize: {
             if (!bar) return 9999;
 
@@ -559,7 +530,6 @@ Item {
                                         }
                                     }
                                 } else if (modelData.entry) {
-                                    // Mark as launching
                                     let newLaunching = Object.assign({}, root.launchingApps);
                                     newLaunching[modelData.appClass || modelData.id] = true;
                                     root.launchingApps = newLaunching;
@@ -778,7 +748,6 @@ Item {
     }
 
     function handleHover(relPos: real, isHorizontal: bool): void {
-        // Don't close dock context menu
         if (bar.popouts.hasCurrent && bar.popouts.currentName === "dockcontext") return;
 
         const itemSize = container.itemSize;
@@ -787,7 +756,6 @@ Item {
         const scrolled = isHorizontal ? listView.contentX : listView.contentY;
         const visibleSpan = isHorizontal ? listView.width : listView.height;
 
-        // Only close if cursor is completely outside dock bounds
         if (adjustedPos < 0 || adjustedPos > visibleSpan) {
             bar.popouts.hasCurrent = false;
             return;
@@ -900,9 +868,6 @@ Item {
                         iconName = appClass.toLowerCase().split(/[^a-z0-9]/)[0] || appClass;
                 }
 
-                // No desktop entry — pull the icon straight from the window
-                // (_NET_WM_ICON), keyed on the pid: appClass is not unique for
-                // these (every unmapped Proton title is "steam_app_default").
                 const pid = ipc.pid || 0;
                 if (!entry)
                     WinIcons.request(appClass, ipc.title || "", pid, ipc.address ? String(ipc.address) : "");
@@ -939,7 +904,6 @@ Item {
             root.launchingApps = newLaunching;
         }
 
-        // Preserve user dock order if present in currentOrder / modelDataArray
         const existingOrder = (root.currentOrder && root.currentOrder.length > 0) ? root.currentOrder : root.modelDataArray;
         const existingPinnedOrder = existingOrder.filter(a => a && a.isPinned).map(a => a.id);
         const pinnedOrderMatches = existingPinnedOrder.length === pinnedIds.length &&

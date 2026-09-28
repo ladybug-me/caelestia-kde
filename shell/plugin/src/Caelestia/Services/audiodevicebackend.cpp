@@ -1,21 +1,20 @@
 #include "audiodevicebackend.hpp"
+
+#include <PulseAudioQt/Card>
 #include <PulseAudioQt/Context>
-#include <PulseAudioQt/Models>
 #include <PulseAudioQt/Device>
+#include <PulseAudioQt/Models>
+#include <PulseAudioQt/Port>
+#include <PulseAudioQt/Profile>
 #include <PulseAudioQt/Sink>
 #include <PulseAudioQt/Source>
-#include <PulseAudioQt/Card>
-#include <PulseAudioQt/Profile>
-#include <PulseAudioQt/Port>
 
 using namespace PulseAudioQt;
 
 AudioDeviceFilterModel::AudioDeviceFilterModel(QObject* parent)
-    : QSortFilterProxyModel(parent)
-{
-}
+    : QSortFilterProxyModel(parent) {}
 
-static bool isDeviceInactive(PulseAudioQt::Device *device) {
+static bool isDeviceInactive(PulseAudioQt::Device* device) {
     if (!device) {
         return false;
     }
@@ -41,13 +40,11 @@ static bool isDeviceInactive(PulseAudioQt::Device *device) {
     return true;
 }
 
-bool AudioDeviceFilterModel::showInactiveDevices() const
-{
+bool AudioDeviceFilterModel::showInactiveDevices() const {
     return m_showInactiveDevices;
 }
 
-void AudioDeviceFilterModel::setShowInactiveDevices(bool show)
-{
+void AudioDeviceFilterModel::setShowInactiveDevices(bool show) {
     if (m_showInactiveDevices != show) {
         m_showInactiveDevices = show;
         Q_EMIT showInactiveDevicesChanged();
@@ -55,15 +52,14 @@ void AudioDeviceFilterModel::setShowInactiveDevices(bool show)
     }
 }
 
-bool AudioDeviceFilterModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
-{
+bool AudioDeviceFilterModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const {
     if (m_showInactiveDevices) {
         return true;
     }
 
     QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
     QVariant data = sourceModel()->data(index, AbstractModel::PulseObjectRole);
-    if (Device *device = qobject_cast<Device *>(data.value<QObject *>())) {
+    if (Device* device = qobject_cast<Device*>(data.value<QObject*>())) {
         if (isDeviceInactive(device)) {
             return false;
         }
@@ -71,13 +67,11 @@ bool AudioDeviceFilterModel::filterAcceptsRow(int source_row, const QModelIndex 
     return true;
 }
 
-static QString getCardFriendlyName(PulseAudioQt::Card *card)
-{
+static QString getCardFriendlyName(PulseAudioQt::Card* card) {
     if (!card) {
         return QString();
     }
 
-    // 1. Try to find the active, non-inactive sink on this card
     for (auto sink : card->sinks()) {
         if (!isDeviceInactive(sink)) {
             const auto props = sink->pulseProperties();
@@ -100,7 +94,6 @@ static QString getCardFriendlyName(PulseAudioQt::Card *card)
         }
     }
 
-    // 2. Check available output ports on the card itself
     for (auto port : card->ports()) {
         if (port && port->availability() != PulseAudioQt::Port::Unavailable) {
             if (!port->name().startsWith(QLatin1String("Mic"), Qt::CaseInsensitive) &&
@@ -112,7 +105,6 @@ static QString getCardFriendlyName(PulseAudioQt::Card *card)
         }
     }
 
-    // 3. Try to find an active source on this card
     for (auto source : card->sources()) {
         if (!isDeviceInactive(source)) {
             const auto props = source->pulseProperties();
@@ -154,32 +146,28 @@ static QString getCardFriendlyName(PulseAudioQt::Card *card)
 }
 
 CardFilterModel::CardFilterModel(QObject* parent)
-    : QSortFilterProxyModel(parent)
-{
-}
+    : QSortFilterProxyModel(parent) {}
 
-QHash<int, QByteArray> CardFilterModel::roleNames() const
-{
+QHash<int, QByteArray> CardFilterModel::roleNames() const {
     QHash<int, QByteArray> roles = QSortFilterProxyModel::roleNames();
     roles[DescriptionRole] = "description";
     return roles;
 }
 
-QVariant CardFilterModel::data(const QModelIndex &index, int role) const
-{
+QVariant CardFilterModel::data(const QModelIndex& index, int role) const {
     if (role == DescriptionRole || role == Qt::DisplayRole) {
         QModelIndex sourceIndex = mapToSource(index);
         QVariant poVar = sourceModel()->data(sourceIndex, PulseAudioQt::AbstractModel::PulseObjectRole);
-        if (auto card = qobject_cast<PulseAudioQt::Card *>(poVar.value<QObject *>())) {
+        if (auto card = qobject_cast<PulseAudioQt::Card*>(poVar.value<QObject*>())) {
             return getCardFriendlyName(card);
         }
     }
     return QSortFilterProxyModel::data(index, role);
 }
 
-AudioBackend::AudioBackend(QObject* parent) : QObject(parent)
-{
-    Context *context = Context::instance();
+AudioBackend::AudioBackend(QObject* parent)
+    : QObject(parent) {
+    Context* context = Context::instance();
 
     m_sinksFilter = new AudioDeviceFilterModel(this);
     m_sinksFilter->setSourceModel(new SinkModel(this));
@@ -190,32 +178,32 @@ AudioBackend::AudioBackend(QObject* parent) : QObject(parent)
     m_cardModel = new CardFilterModel(this);
     m_cardModel->setSourceModel(new CardModel(this));
 
-    connect(context, &Context::sinkAdded, this, [this](Sink *sink) {
+    connect(context, &Context::sinkAdded, this, [this](Sink* sink) {
         registerSink(sink);
         m_sinksFilter->invalidate();
         Q_EMIT devicesChanged();
     });
-    connect(context, &Context::sinkRemoved, this, [this](Sink *) {
+    connect(context, &Context::sinkRemoved, this, [this](Sink*) {
         m_sinksFilter->invalidate();
         Q_EMIT devicesChanged();
     });
 
-    connect(context, &Context::sourceAdded, this, [this](Source *source) {
+    connect(context, &Context::sourceAdded, this, [this](Source* source) {
         registerSource(source);
         m_sourcesFilter->invalidate();
         Q_EMIT devicesChanged();
     });
-    connect(context, &Context::sourceRemoved, this, [this](Source *) {
+    connect(context, &Context::sourceRemoved, this, [this](Source*) {
         m_sourcesFilter->invalidate();
         Q_EMIT devicesChanged();
     });
 
-    connect(context, &Context::cardAdded, this, [this](Card *card) {
+    connect(context, &Context::cardAdded, this, [this](Card* card) {
         registerCard(card);
         m_cardModel->invalidate();
         Q_EMIT devicesChanged();
     });
-    connect(context, &Context::cardRemoved, this, [this](Card *) {
+    connect(context, &Context::cardRemoved, this, [this](Card*) {
         m_cardModel->invalidate();
         Q_EMIT devicesChanged();
     });
@@ -238,64 +226,54 @@ AudioBackend::AudioBackend(QObject* parent) : QObject(parent)
     }
 }
 
-AudioBackend::~AudioBackend()
-{
-}
+AudioBackend::~AudioBackend() {}
 
-void AudioBackend::onSinkChanged()
-{
+void AudioBackend::onSinkChanged() {
     m_sinksFilter->invalidate();
     Q_EMIT devicesChanged();
 }
 
-void AudioBackend::onSourceChanged()
-{
+void AudioBackend::onSourceChanged() {
     m_sourcesFilter->invalidate();
     Q_EMIT devicesChanged();
 }
 
-void AudioBackend::onCardChanged()
-{
+void AudioBackend::onCardChanged() {
     m_sinksFilter->invalidate();
     m_sourcesFilter->invalidate();
     m_cardModel->invalidate();
     Q_EMIT devicesChanged();
 }
 
-void AudioBackend::registerSink(QObject *sinkObj)
-{
-    if (auto sink = qobject_cast<Sink *>(sinkObj)) {
+void AudioBackend::registerSink(QObject* sinkObj) {
+    if (auto sink = qobject_cast<Sink*>(sinkObj)) {
         connect(sink, &Device::portsChanged, this, &AudioBackend::onSinkChanged, Qt::UniqueConnection);
         connect(sink, &Device::activePortIndexChanged, this, &AudioBackend::onSinkChanged, Qt::UniqueConnection);
         connect(sink, &Device::stateChanged, this, &AudioBackend::onSinkChanged, Qt::UniqueConnection);
     }
 }
 
-void AudioBackend::registerSource(QObject *sourceObj)
-{
-    if (auto source = qobject_cast<Source *>(sourceObj)) {
+void AudioBackend::registerSource(QObject* sourceObj) {
+    if (auto source = qobject_cast<Source*>(sourceObj)) {
         connect(source, &Device::portsChanged, this, &AudioBackend::onSourceChanged, Qt::UniqueConnection);
         connect(source, &Device::activePortIndexChanged, this, &AudioBackend::onSourceChanged, Qt::UniqueConnection);
         connect(source, &Device::stateChanged, this, &AudioBackend::onSourceChanged, Qt::UniqueConnection);
     }
 }
 
-void AudioBackend::registerCard(QObject *cardObj)
-{
-    if (auto card = qobject_cast<Card *>(cardObj)) {
+void AudioBackend::registerCard(QObject* cardObj) {
+    if (auto card = qobject_cast<Card*>(cardObj)) {
         connect(card, &Card::activeProfileIndexChanged, this, &AudioBackend::onCardChanged, Qt::UniqueConnection);
         connect(card, &Card::profilesChanged, this, &AudioBackend::onCardChanged, Qt::UniqueConnection);
         connect(card, &Card::portsChanged, this, &AudioBackend::onCardChanged, Qt::UniqueConnection);
     }
 }
 
-bool AudioBackend::showInactiveDevices() const
-{
+bool AudioBackend::showInactiveDevices() const {
     return m_showInactiveDevices;
 }
 
-void AudioBackend::setShowInactiveDevices(bool show)
-{
+void AudioBackend::setShowInactiveDevices(bool show) {
     if (m_showInactiveDevices != show) {
         m_showInactiveDevices = show;
         m_sinksFilter->setShowInactiveDevices(show);
@@ -305,23 +283,19 @@ void AudioBackend::setShowInactiveDevices(bool show)
     }
 }
 
-QAbstractItemModel* AudioBackend::sinks() const
-{
+QAbstractItemModel* AudioBackend::sinks() const {
     return m_sinksFilter;
 }
 
-QAbstractItemModel* AudioBackend::sources() const
-{
+QAbstractItemModel* AudioBackend::sources() const {
     return m_sourcesFilter;
 }
 
-QAbstractItemModel* AudioBackend::cards() const
-{
+QAbstractItemModel* AudioBackend::cards() const {
     return m_cardModel;
 }
 
-bool AudioBackend::isSinkInactive(const QString& name)
-{
+bool AudioBackend::isSinkInactive(const QString& name) {
     bool found = false;
     for (auto sink : Context::instance()->sinks()) {
         if (sink->name() == name || sink->description() == name) {
@@ -334,8 +308,7 @@ bool AudioBackend::isSinkInactive(const QString& name)
     return found;
 }
 
-bool AudioBackend::isSourceInactive(const QString& name)
-{
+bool AudioBackend::isSourceInactive(const QString& name) {
     bool found = false;
     for (auto source : Context::instance()->sources()) {
         if (source->name() == name || source->description() == name) {
@@ -348,9 +321,8 @@ bool AudioBackend::isSourceInactive(const QString& name)
     return found;
 }
 
-QString AudioBackend::cardDescription(QObject *cardObj) const
-{
-    if (auto card = qobject_cast<PulseAudioQt::Card *>(cardObj)) {
+QString AudioBackend::cardDescription(QObject* cardObj) const {
+    if (auto card = qobject_cast<PulseAudioQt::Card*>(cardObj)) {
         return getCardFriendlyName(card);
     }
     return QString();

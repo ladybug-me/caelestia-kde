@@ -64,8 +64,4 @@ install_shell_config() {
     fi
 }
 
-install_assets_dir() {
-    printf '%s\n' "$(dirname -- "$(install_shell_config)")/assets"
-}
-
 fi

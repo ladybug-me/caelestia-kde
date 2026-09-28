@@ -17,7 +17,7 @@ Variants {
         required property ShellScreen modelData
 
         screen: modelData
-        name: "drawers" // Shared layer namespace for compositor blur effects
+        name: "drawers"
         isDesktopWidget: true
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Bottom

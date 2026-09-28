@@ -22,8 +22,8 @@ Item {
     readonly property color safePrimary: useLightSet ? Colours.palette.m3primaryContainer : Colours.palette.m3primary
     readonly property color safeSecondary: useLightSet ? Colours.palette.m3secondaryContainer : Colours.palette.m3secondary
     readonly property color safeTertiary: useLightSet ? Colours.palette.m3tertiaryContainer : Colours.palette.m3tertiary
-    readonly property string clockFont: GlobalConfig.appearance.font.clock || "Sans Serif"
-    readonly property string sansFont: GlobalConfig.appearance.font.body.family || "Sans Serif"
+    readonly property string clockFont: GlobalConfig.appearance.font.clock
+    readonly property string sansFont: GlobalConfig.appearance.font.body.family
 
     implicitWidth: layout.implicitWidth + (Tokens.padding.large * 4 * root.clockScale)
     implicitHeight: layout.implicitHeight + (Tokens.padding.extraLargeIncreased * root.clockScale)

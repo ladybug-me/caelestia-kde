@@ -9,18 +9,7 @@ import qs.utils
 Singleton {
     id: root
 
-    // Four settings changed shape in this release rather than value, and none of them
-    // can be fixed by a different default: a key the user has written wins over the
-    // default, and an array they have written replaces the default whole. So the
-    // retired keys are read here, their meaning is carried into whatever succeeded
-    // them, and they are then reset so the file stops carrying something nothing reads.
-    // Every step returns early once it has run, which makes calling this on every
-    // start the whole of the bookkeeping.
 
-    // The status area used to be one switch per icon under `bar.status`, and the order
-    // the icons were drawn in lived in a file of the bar's own. Both are the ordered
-    // `bar.statusIcons` list now, so each retired switch is named here beside the entry
-    // it decided, and the file is read once as the order to start the list from.
     readonly property var retiredStatusKeys: [
         { id: "lockStatus", key: "showLockStatus" },
         { id: "microphone", key: "showMicrophone" },
@@ -34,10 +23,6 @@ Singleton {
         { id: "nightlight", key: "showNightLight" },
         { id: "notifications", key: "showNotifications" }
     ]
-    // The two entries the list spells differently to the file. `showNetwork` decides two
-    // of them at once because the network glyph and the Ethernet glyph were two halves
-    // of the same switch; `showWifi` is not retired, it still gates the Wi-Fi glyph
-    // riding on the network entry.
     readonly property var retiredIconNames: ({
             lockstatus: "lockStatus",
             kblayout: "kbLayout"
@@ -56,25 +41,16 @@ Singleton {
         return ids;
     }
 
-    // The status icons, once, from the switches and the order the bar used to keep.
-    //
-    // The file is removed a start later, after the list it fed is in the config: a file
-    // removed in the same breath as the write would be the only copy of that order if
-    // the write did not land, and removing it here is what "the migration succeeded"
-    // means in practice.
     function migrateStatusIcons(order: string): void {
         const status = GlobalConfig.bar.status;
         const icons = GlobalConfig.bar.statusIcons;
 
-        // The list is the user's own already, so what the file says has been
-        // superseded by it and the file has no reader left either way.
         if (icons.isOverride("values")) {
             if (order)
                 Quickshell.execDetached(["rm", "-f", root.orderFilePath]);
             return;
         }
 
-        // Neither half of the old shape is in this config.
         if (!order && !root.retiredStatusKeys.some(entry => status.isOverride(entry.key)))
             return;
 
@@ -82,8 +58,6 @@ Singleton {
         for (const entry of root.retiredStatusKeys)
             enabled[entry.id] = status[entry.key];
 
-        // The entries the list ships with, in the order the file asked for, with the
-        // rest of them behind: what is not in the file was not dragged anywhere.
         const shipped = icons.values.map(entry => entry.id);
         const wanted = root.retiredOrder(order).filter(id => shipped.includes(id));
         for (const id of shipped)
@@ -101,11 +75,6 @@ Singleton {
             status.resetOption(entry.key);
     }
 
-    // The workspace indicator used to take a boolean: `useIcon`, true for the material
-    // shapes and false for the workspace number. It takes upstream's `displayType` enum
-    // now, and the boolean is retired - without translating it, a config asking for
-    // numbers would come back to shapes, which is what the enum defaults to once the
-    // key it was written under is gone.
     function migrateWorkspaceDisplay(): void {
         const workspaces = GlobalConfig.bar.workspaces;
         if (!workspaces.isOverride("useIcon"))
@@ -115,10 +84,6 @@ Singleton {
         workspaces.resetOption("useIcon");
     }
 
-    // Game Mode joined the quick toggles that ship by default in this release. The
-    // array is a plain list rather than a node, so a user's own copy replaces the
-    // default whole and would never gain the entry; it goes in beside Settings, where
-    // the default puts it, and a user who has switched it off keeps it off.
     function migrateQuickToggles(): void {
         const utilities = GlobalConfig.utilities;
         if (!utilities.isOverride("quickToggles"))
@@ -134,11 +99,6 @@ Singleton {
         utilities.quickToggles = next;
     }
 
-    // The two temperature switches became TemperatureUnit enums, so that Kelvin is
-    // reachable and so that one enum describes both places temperatures are shown. A
-    // boolean still in the config decides its enum, otherwise a config that asked for
-    // Fahrenheit would come back to Celsius, which is what the enum defaults to once
-    // the key it was written under is gone.
     function migrateTemperatureUnits(): void {
         const services = GlobalConfig.services;
 
@@ -153,11 +113,6 @@ Singleton {
         }
     }
 
-    // The clock format used to be a boolean, `useTwelveHourClock`. It is a ClockFormat
-    // enum now, so that following the locale is a value the user can go back to rather
-    // than only a default they get once, and the boolean is retired. A boolean still in
-    // the config decides its enum, otherwise a config that asked for a 12-hour clock
-    // would come back to Auto, which guesses from the locale and can guess the other way.
     function migrateClockFormat(): void {
         const services = GlobalConfig.services;
 
@@ -167,11 +122,6 @@ Singleton {
         }
     }
 
-    // Per-monitor workspaces used to be one global switch that decided for every bar at
-    // once. It is a per bar option now, so a bar can follow its own monitor or the
-    // focused one on its own, and the global key is retired. A value still in the
-    // config is carried into this bar's own option, otherwise a config that had turned
-    // it off would come back to per monitor, which is what the option defaults to.
     function migratePerMonitor(): void {
         const workspaces = GlobalConfig.bar.workspaces;
 
@@ -182,8 +132,6 @@ Singleton {
         workspaces.resetOption("perMonitorWorkspaces");
     }
 
-    // Pinned apps on the dock now have their own configuration property `bar.dock.pinnedApps`.
-    // If the dock pinned list was not explicitly set, migrate any customized `launcher.favouriteApps`.
     function migrateDockPinned(): void {
         const dock = GlobalConfig.bar.dock;
         const launcher = GlobalConfig.launcher;

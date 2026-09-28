@@ -37,12 +37,7 @@ PageBase {
         }
     ]
 
-    /// Where the intensity handle is, 0 to 1. A change is a run of the color engine, the whole
-    /// theme fan out and a re-apply of the Plasma scheme, so the value in effect only moves once
-    /// that lands, seconds later: a handle bound to it would snap back under whoever is dragging
-    /// it until then. The handle is this page's, and `Colours.intensity` is what the palette is.
     property real intensityPosition: Colours.intensityFraction
-    /// Whether the handle is being dragged, in which case a render landing does not move it.
     property bool draggingIntensity: false
 
     /// The hour of an "HH:MM" config value, for the steppers.
@@ -51,8 +46,6 @@ PageBase {
         return minutes < 0 ? 0 : Math.floor(minutes / 60);
     }
 
-    /// Replaces only the hour, so minutes set by hand in the config file are
-    /// not thrown away by touching the stepper.
     function withHour(time: string, hour: int): string {
         const minutes = Solar.parseTime(time);
         const mins = minutes < 0 ? 0 : minutes % 60;
@@ -147,10 +140,6 @@ PageBase {
             text: qsTr("Theme mode")
         }
 
-        // The schedule above owns the mode while it is on, so a manual pick here
-        // would only stand until its next boundary. The row waits instead, with
-        // the reason in its subtext, the way the intensity row below handles a
-        // named scheme.
         SelectRow {
             first: true
             last: true
@@ -166,9 +155,6 @@ PageBase {
             text: qsTr("Palette")
         }
 
-        // A finished drag is what is rendered, not every step of one, since each is a run of the
-        // color engine, the theme fan out and a re-apply of the Plasma scheme. The wheel, which
-        // emits no more than `moved`, does not reach the palette for that same reason.
         SliderRow {
             first: true
             last: true

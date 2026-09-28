@@ -276,7 +276,6 @@ StyledRect {
                     }
 
                     implicitWidth: {
-                        // Ensure even size so icon is centered properly
                         const h = label.implicitHeight + Tokens.padding.large * 2;
                         if (h % 2 !== 0)
                             return h + 1;
@@ -294,7 +293,6 @@ StyledRect {
                     onClicked: Recorder.stop()
 
                     implicitWidth: {
-                        // Ensure even size so icon is centered properly
                         const h = label.implicitHeight + Tokens.padding.large * 2;
                         if (h % 2 !== 0)
                             return h + 1;

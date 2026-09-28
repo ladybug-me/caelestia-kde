@@ -144,8 +144,6 @@ void ClipboardManager::savePins() {
 }
 
 void ClipboardManager::pin(int id) {
-    // The preview and kind come from the live list; the bytes come from
-    // cliphist, since `preview` is truncated and not the real content.
     QVariantMap source;
     for (const auto& value : std::as_const(m_items)) {
         const auto map = value.toMap();
@@ -195,7 +193,6 @@ void ClipboardManager::pin(int id) {
             f.write(data);
             f.close();
 
-            // Only claim the id once the payload is safely on disk.
             m_nextPinId = pinId + 1;
             m_pinnedItems.append(QVariantMap{
                 { QStringLiteral("pinId"), pinId },
@@ -256,8 +253,6 @@ void ClipboardManager::copyPinned(int pinId) {
 
         auto* proc = new QProcess(this);
         proc->setProgram(QStringLiteral("wl-copy"));
-        // wl-copy sniffs the type from stdin, but binary image data is exactly
-        // the case where it guesses wrong, so be explicit.
         proc->setArguments(
             isImage ? QStringList{ QStringLiteral("--type"), QStringLiteral("image/png") } : QStringList{});
 
@@ -285,7 +280,6 @@ bool ClipboardManager::isImageCached(int id) const {
 }
 
 void ClipboardManager::reload() {
-    // Kill any in-flight list process
     if (m_listProc && m_listProc->state() != QProcess::NotRunning) {
         m_listProc->kill();
         m_listProc->waitForFinished(200);
@@ -296,10 +290,6 @@ void ClipboardManager::reload() {
     proc->setProgram(QStringLiteral("cliphist"));
     proc->setArguments({ QStringLiteral("list") });
 
-    // Capture the process itself rather than reading m_listProc from the
-    // handlers: a crashed cliphist emits errorOccurred() *and* finished() for
-    // the same instance, and a superseded reload can deliver signals after
-    // m_listProc has already been reassigned.
     const auto release = [this, proc] {
         if (m_listProc == proc) {
             m_listProc = nullptr;
@@ -312,7 +302,6 @@ void ClipboardManager::reload() {
         const auto output = proc->readAllStandardOutput();
         release();
 
-        // A newer reload() already replaced this process; its result wins.
         if (!current) {
             return;
         }
@@ -324,7 +313,6 @@ void ClipboardManager::reload() {
             return;
         }
 
-        // Parse natively: each line is "<id>\t<preview>"
         static const QRegularExpression imageRe(
             QStringLiteral(
                 R"(\[\[ binary data [\d\.]+\s*(?:B|KiB|MiB|GiB)\s+(?:png|jpe?g|webp|gif|bmp|ico|tiff|svg)(?:\s+\d+x\d+)?\s*\]\])"),
@@ -368,8 +356,6 @@ void ClipboardManager::reload() {
         m_items = result;
         emit itemsChanged();
 
-        // Pre-warm: decode all image entries in the background so they are
-        // already on disk before the user opens the launcher.
         QDir().mkpath(m_imageCacheDir);
         QFile::setPermissions(m_imageCacheDir, QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner);
         for (const auto& entry : std::as_const(m_items)) {
@@ -379,7 +365,6 @@ void ClipboardManager::reload() {
             const int id = map.value(QStringLiteral("id")).toInt();
             const QString outPath =
                 m_imageCacheDir + QStringLiteral("/") + QString::number(id) + QStringLiteral(".png");
-            // Skip if already cached from a previous reload
             if (isImageCached(id)) {
                 emit imageReady(id, outPath);
                 continue;
@@ -388,17 +373,12 @@ void ClipboardManager::reload() {
         }
     });
 
-    // started() fires exactly when the binary was found and launched, which is
-    // the question `available` answers — independent of what cliphist then
-    // does with its exit code.
     connect(proc, &QProcess::started, this, [this] {
         setAvailable(true);
     });
 
     connect(proc, &QProcess::errorOccurred, this, [this, release](QProcess::ProcessError err) {
         qCWarning(lcClipboard) << "cliphist list process error:" << err;
-        // FailedToStart is the only error for which finished() is not also
-        // emitted, so it is the only one this handler has to clean up after.
         if (err == QProcess::FailedToStart) {
             setAvailable(false);
             release();
@@ -418,7 +398,6 @@ void ClipboardManager::decodeImage(int id, const QString& outPath) {
         return;
     }
 
-    // Ensure output directory exists
     const QFileInfo fi(outPath);
     QDir dir(fi.absolutePath());
     if (!dir.exists() && !dir.mkpath(QStringLiteral("."))) {
@@ -461,7 +440,6 @@ void ClipboardManager::decodeImage(int id, const QString& outPath) {
             return;
         }
 
-        // Signal QML that this specific image is ready — no timers needed.
         emit imageReady(id, outPath);
     });
 
@@ -477,7 +455,6 @@ void ClipboardManager::decodeImage(int id, const QString& outPath) {
 void ClipboardManager::clearHistory() {
     m_activeDecodes.clear();
 
-    // Stop any in-flight list process before wiping history.
     if (m_listProc && m_listProc->state() != QProcess::NotRunning) {
         m_listProc->kill();
         m_listProc->waitForFinished(200);
@@ -495,11 +472,6 @@ void ClipboardManager::clearHistory() {
     wipeProc->setArguments({ QStringLiteral("wipe") });
     m_wipeProc = wipeProc;
 
-    // One wipe settles once, by whichever signal arrives first. A process that
-    // never started emits only errorOccurred, while a crashed one emits
-    // errorOccurred and finished in an order Qt does not promise. Claiming the
-    // run here, by identity, is what keeps a failed wipe from reloading the
-    // list twice and reporting two completions for the one request QML made.
     const auto settle = [this, wipeProc](bool success, const QString& reason) {
         if (m_wipeProc != wipeProc) {
             return;
@@ -509,7 +481,6 @@ void ClipboardManager::clearHistory() {
 
         if (!success) {
             qCWarning(lcClipboard) << "cliphist wipe" << reason;
-            // Reload to keep UI and backend state in sync when wipe fails.
             reload();
             emit clearHistoryFinished(false);
             return;
@@ -537,8 +508,6 @@ void ClipboardManager::clearHistory() {
     });
 
     connect(wipeProc, &QProcess::errorOccurred, this, [settle](QProcess::ProcessError err) {
-        // Only FailedToStart: every other error is followed by finished(), and
-        // settling twice is exactly what the claim above exists to prevent.
         if (err != QProcess::FailedToStart) {
             return;
         }

@@ -1,9 +1,10 @@
 #include "sparklineitem.hpp"
-#include "../circularbuffer.hpp"
 
 #include <qpainter.h>
 #include <qpainterpath.h>
 #include <qpen.h>
+
+#include "../circularbuffer.hpp"
 
 namespace caelestia::components {
 
@@ -26,7 +27,6 @@ void SparklineItem::paint(QPainter* painter) {
 
     painter->setRenderHint(QPainter::Antialiasing, true);
 
-    // Draw line1 first (behind), then line2 (in front)
     if (has1)
         drawLine(painter, m_line1, m_line1Color, m_line1FillAlpha);
     if (has2)
@@ -43,7 +43,6 @@ void SparklineItem::drawLine(QPainter* painter, CircularBuffer* buffer, const QC
     const qreal stepX = w / static_cast<qreal>(m_historyLength - 1);
     const qreal startX = w - (len - 1) * stepX - stepX * m_slideProgress + stepX;
 
-    // Build line path
     QPainterPath linePath;
     linePath.moveTo(startX, h - (buffer->at(0) / m_maxValue) * h);
     for (int i = 1; i < len; ++i) {
@@ -52,7 +51,6 @@ void SparklineItem::drawLine(QPainter* painter, CircularBuffer* buffer, const QC
         linePath.lineTo(x, y);
     }
 
-    // Stroke the line
     QPen pen(color, m_lineWidth);
     pen.setCapStyle(Qt::RoundCap);
     pen.setJoinStyle(Qt::RoundJoin);
@@ -60,7 +58,6 @@ void SparklineItem::drawLine(QPainter* painter, CircularBuffer* buffer, const QC
     painter->setBrush(Qt::NoBrush);
     painter->drawPath(linePath);
 
-    // Fill under the line
     QPainterPath fillPath = linePath;
     fillPath.lineTo(startX + (len - 1) * stepX, h);
     fillPath.lineTo(startX, h);

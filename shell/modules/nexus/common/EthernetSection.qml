@@ -18,7 +18,6 @@ ColumnLayout {
 
     spacing: Tokens.spacing.extraSmall / 2
 
-    // Keep ethernet state fresh while the page is visible.
     Timer {
         running: root.visible
         repeat: true
@@ -90,15 +89,12 @@ ColumnLayout {
             required property int index
 
             readonly property bool isConnected: modelData.connected
-            // IP/MAC/DNS come from the parsed device details, not the basic
-            // device list (which leaves those fields blank).
             readonly property var details: ethRow.isConnected ? Nmcli.ethernetDeviceDetails : null
 
             Layout.fillWidth: true
             last: index === ethRepeater.count - 1
             implicitHeight: ethLayout.implicitHeight + Tokens.padding.medium * 2
 
-            // Tap opens the detail page for this interface.
             StateLayer {
                 onClicked: {
                     root.nState.selectedEthernetInterface = ethRow.modelData.iface;
@@ -133,7 +129,6 @@ ColumnLayout {
                     }
                 }
 
-                // Name + interface
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 0
@@ -203,7 +198,6 @@ ColumnLayout {
                     }
                 }
 
-                // Connect / disconnect
                 IconButton {
                     type: IconButton.Tonal
                     isToggle: true

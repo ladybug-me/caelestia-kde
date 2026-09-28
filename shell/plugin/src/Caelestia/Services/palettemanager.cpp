@@ -10,8 +10,6 @@ Q_LOGGING_CATEGORY(lcPalette, "caelestia.services.palettemanager", QtInfoMsg)
 
 namespace caelestia::services {
 
-// These are the 44 M3TPalette property names, in the same order as Colours.qml.
-// They must match EXACTLY the property names on M3Palette.
 static const QStringList kPaletteKeys = {
     QStringLiteral("m3primary_paletteKeyColor"),
     QStringLiteral("m3secondary_paletteKeyColor"),
@@ -73,8 +71,6 @@ static const QStringList kPaletteKeys = {
     QStringLiteral("m3onTertiaryFixedVariant"),
 };
 
-// Which keys use layer=0 (base transparency) vs layer=1 (alter colour)
-// Matches the Colours.qml: root.layer(color, 0) for bg/surface variants, default layer=1 for others
 static const QSet<QString> kLayer0Keys = {
     QStringLiteral("m3background"),
     QStringLiteral("m3surface"),
@@ -106,13 +102,11 @@ QColor PaletteManager::applyLayer(const QColor& c, bool light, bool transpEnable
         return c;
 
     if (layer == 0) {
-        // Base transparency: Qt.alpha(c, transpBase)
         QColor result = c;
         result.setAlphaF(transpBase);
         return result;
     }
 
-    // alterColour: matches Colours.qml alterColour()
     const double luminance = getLuminance(c);
     if (luminance <= 0.0) {
         QColor result = c;
@@ -141,7 +135,6 @@ void PaletteManager::update(const QVariantMap& palette, bool light, bool transpE
         const auto raw = palette.value(key);
         QColor color;
 
-        // QML may give us a QColor directly or a string
         if (raw.typeId() == QMetaType::QColor) {
             color = raw.value<QColor>();
         } else {

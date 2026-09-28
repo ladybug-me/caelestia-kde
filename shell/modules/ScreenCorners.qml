@@ -3,11 +3,6 @@ import Quickshell
 import Caelestia.Config
 import Caelestia.Services
 
-// Keeps KWin's hold on the four screen corners in sync with which ones the
-// overview wants. Bindings, not one-shot writes on toggle, so a corner is
-// taken at startup too and given back the moment it stops being wanted —
-// ScreenEdges itself handles putting KWin's config back exactly as it found
-// it, including after a crash.
 Scope {
     id: root
 

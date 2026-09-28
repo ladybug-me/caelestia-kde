@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #pragma once
 
+#include <QtQml/qqml.h>
+
 #include <QHash>
 #include <QObject>
 #include <QString>
-#include <QtQml/qqml.h>
 #include <QtWaylandClient/QWaylandClientExtension>
 
 #include "qwayland-kde-output-device-v2.h"
@@ -14,12 +15,15 @@ namespace caelestia::services {
 
 class KdeOutputDevice : public QObject, public QtWayland::kde_output_device_v2 {
     Q_OBJECT
+
 public:
     explicit KdeOutputDevice(struct ::kde_output_device_v2* object);
     ~KdeOutputDevice() override;
 
     QString name() const { return m_name; }
+
     uint32_t brightness() const { return m_brightness; }
+
     bool hasBrightness() const { return m_hasBrightness; }
 
 signals:
@@ -42,6 +46,7 @@ private:
 class KdeOutputDeviceRegistry : public QWaylandClientExtensionTemplate<KdeOutputDeviceRegistry>,
                                 public QtWayland::kde_output_device_registry_v2 {
     Q_OBJECT
+
 public:
     explicit KdeOutputDeviceRegistry(QObject* parent = nullptr);
 
@@ -55,6 +60,7 @@ protected:
 class KdeOutputManagement : public QWaylandClientExtensionTemplate<KdeOutputManagement>,
                             public QtWayland::kde_output_management_v2 {
     Q_OBJECT
+
 public:
     explicit KdeOutputManagement(QObject* parent = nullptr);
 };
@@ -63,6 +69,7 @@ class BrightnessWatcher : public QObject {
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON
+
 public:
     explicit BrightnessWatcher(QObject* parent = nullptr);
 

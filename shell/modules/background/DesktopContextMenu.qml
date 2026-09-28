@@ -41,8 +41,8 @@ Controls.Menu {
                     GlobalConfig.save();
                 } else if (entry.action === "OpenRightClickMenu") {
                     WindowFactory.create(null, {
-                        initialPageIdx: PageRegistry.indexForKey("desktop"), // Desktop
-                        initialSubPageIdx: 2 // Right Click Menu is index 2
+                        initialPageIdx: PageRegistry.indexForKey("desktop"),
+                        initialSubPageIdx: 2
                     });
                 } else if (entry.action === "OpenTerminal") {
                     Launch.exec([...GlobalConfig.general.apps.terminal]);
@@ -116,9 +116,6 @@ Controls.Menu {
     thisSideY: _flipY ? Controls.Menu.Bottom : Controls.Menu.Top
     transparentBackground: true
 
-    // While the menu is open the ContentWindow mask expands to cover the whole
-    // screen, so desktop right-clicks land on this full-screen catcher instead of
-    // Background.qml's TapHandler. Forward them so the menu reopens at the new spot.
     rightClickReposition: true
     onRightClickedAt: (x, y) => ContextMenuStore.openDesktopContextMenu(x, y, root.screenName)
 

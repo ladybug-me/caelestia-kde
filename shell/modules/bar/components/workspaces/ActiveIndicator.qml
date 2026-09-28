@@ -10,15 +10,11 @@ StyledRect {
     id: root
 
     required property int activeWsId
-    /// The strip's live pills, in strip order.
     required property var workspaces
     required property Item mask
     required property bool fullscreen
     property string screenName: ""
 
-    // Index of the active pill in the strip. The strip decides which desktops are
-    // on it, so the pill is found by the desktop it stands for rather than by
-    // arithmetic on the desktop id.
     readonly property int currentWsIdx: workspaces.findIndex(p => p?.ws === activeWsId)
 
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
@@ -30,8 +26,6 @@ StyledRect {
 
     property var currentItem: workspaces[currentWsIdx] ?? null
     property real rawSwipeOffset: Kwin.swipeOffsetByOutput?.[screenName] ?? Kwin.swipeOffset ?? 0.0
-    // isSwiping stays true for a short settle period after swipeOffset returns to 0
-    // to let the SmoothedAnimation reach its target before EAnim kicks back in.
     property bool isSwiping: false
     property real basePos: currentItem ? (isHorizontal ? currentItem.x : currentItem.y) : 0
     property real baseSize: currentItem ? (currentItem as Workspace).size : 0
@@ -59,8 +53,6 @@ StyledRect {
         let endSize = (endItem as Workspace).size;
         return startSize + Math.abs(rawSwipeOffset) * (endSize - startSize);
     }
-    // Smoothed intermediaries absorb rapid swipe updates so the indicator
-    // never jumps even when swipe events arrive faster than a frame.
     property real smoothPos: targetPos
     property real smoothSize: targetSize
 

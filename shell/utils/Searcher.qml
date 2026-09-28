@@ -9,7 +9,6 @@ Singleton {
     property bool useFuzzy: false
     property var extraOpts: ({})
 
-    // Extra stuff for fuzzy
     property list<string> keys: [key]
     property list<real> weights: [1]
 
@@ -30,7 +29,6 @@ Singleton {
     }
 
     function selector(item: var): string {
-        // Only for fzf
         return item[key];
     }
 

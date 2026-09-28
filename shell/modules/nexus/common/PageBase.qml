@@ -24,11 +24,11 @@ ColumnLayout {
 
     spacing: Tokens.spacing.extraLargeIncreased
 
-    MouseArea { // Prevent clicks from reaching flickable
+    MouseArea {
         z: 1
         implicitWidth: header.implicitWidth
         implicitHeight: header.implicitHeight - Layout.bottomMargin
-        Layout.bottomMargin: -flickable.topMargin // Extra height to block clicks on flickable top margin
+        Layout.bottomMargin: -flickable.topMargin
         Layout.fillWidth: true
 
         RowLayout {

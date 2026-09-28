@@ -125,6 +125,15 @@ class InstallStepSafetyTests(unittest.TestCase):
     doing the wrong thing.
     """
 
+    def test_the_legacy_fonts_cleanup_is_called(self) -> None:
+        script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
+
+        self.assertIn("cleanup_legacy_fonts() {", script, "the cleanup should still be defined")
+        self.assertIsNotNone(
+            re.search(r"^\s*cleanup_legacy_fonts\s*$", script, re.MULTILINE),
+            "08-build-shell.sh defines cleanup_legacy_fonts but never calls it",
+        )
+
     def test_shell_config_backup_precedes_the_prebuilt_install(self) -> None:
         """#663: the prebuilt path extracts over $HOME, so it must be backed up first."""
         script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")

@@ -18,12 +18,9 @@ Item {
 
     property bool restartRequired: false
 
-    // Predicted installed state — seeded once from disk scan on startup,
-    // then mutated purely by user actions (no re-scanning at runtime).
     property var installedPluginIds: []
     property bool baselineLoaded: false
 
-    // Raw index from the server
     property var indexData: null
     property ListModel storePlugins: ListModel {}
 
@@ -64,9 +61,6 @@ Item {
 
         let targetDir = (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/caelestia/plugins/" + id;
 
-        // The id, the path and the branch come out of the index this store fetches, so
-        // they are handed to the script as arguments: spliced into the script text, a
-        // `$(...)` in that index would run instead of naming a directory.
         let script = `set -e
 TMP_DIR=$(mktemp -d)
 cd "$TMP_DIR"
@@ -92,7 +86,6 @@ echo "DONE"`;
     function removePlugin(id) {
         let targetDir = (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/caelestia/plugins/" + id;
         removeProc.pendingId = id;
-        // Determine whether this plugin requires a restart when removed.
         let requiresRestart = false;
         for (let i = 0; i < CaelestiaApi.plugins.available.count; i++) {
             let p = CaelestiaApi.plugins.available.get(i);
@@ -110,7 +103,6 @@ echo "DONE"`;
         target: PluginLoader
 
         function onPluginsReloaded() {
-            // Only seed once from the startup scan
             if (storeRoot.baselineLoaded)
                 return;
             storeRoot.baselineLoaded = true;
@@ -123,7 +115,6 @@ echo "DONE"`;
         }
     }
 
-    // ── 1. Fetch store index ──────────────────────────────────────────────────
 
     Process {
         id: fetchProc
@@ -143,8 +134,6 @@ echo "DONE"`;
                     let plugins = storeRoot.indexData.plugins || [];
                     for (let i = 0; i < plugins.length; i++) {
                         let p = plugins[i];
-                        // Rename 'id' to 'pluginId' to avoid clash with QML's reserved 'id' keyword
-                        // in ComponentBehavior:Bound delegates
                         p.pluginId = p.id;
                         p.path = p.path || ("plugins/" + p.id);
                         p.mediaurl = p.mediaurl || "";
@@ -163,7 +152,6 @@ echo "DONE"`;
         }
     }
 
-    // ── 2. Install a plugin ───────────────────────────────────────────────────
 
     Process {
         id: installProc
@@ -183,19 +171,16 @@ echo "DONE"`;
                 console.log("PluginStore: install success for", installProc.pendingId);
                 if (installProc.pendingRestart)
                     storeRoot.restartRequired = true;
-                // Track as installed for UI prediction (predicted post-restart state)
                 let ids = storeRoot.installedPluginIds.slice();
                 if (ids.indexOf(installProc.pendingId) === -1)
                     ids.push(installProc.pendingId);
                 storeRoot.installedPluginIds = ids;
                 console.log("PluginStore: installedPluginIds now:", JSON.stringify(ids));
-                // Also add to installed tab list
                 PluginLoader.addPluginToAvailable(installProc.pendingId, installProc.pendingTargetDir, "user");
             }
         }
     }
 
-    // ── 3. Remove a user plugin ───────────────────────────────────────────────
 
     Process {
         id: removeProc
@@ -206,13 +191,11 @@ echo "DONE"`;
         onExited: (code) => {
             if (removeProc.pendingRestart)
                 storeRoot.restartRequired = true;
-            // Remove from predicted installed set
             let ids = storeRoot.installedPluginIds.slice();
             let idx = ids.indexOf(removeProc.pendingId);
             if (idx !== -1) ids.splice(idx, 1);
             storeRoot.installedPluginIds = ids;
             console.log("PluginStore: removed", removeProc.pendingId, "installedPluginIds now:", JSON.stringify(ids));
-            // Also drop from the installed tab list model
             PluginLoader.removePluginFromAvailable(removeProc.pendingId);
         }
     }

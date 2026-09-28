@@ -24,37 +24,23 @@ Singleton {
     readonly property bool connecting: connectProc.running || connectPending
     readonly property bool disconnecting: disconnectProc.running || disconnectPending
 
-    // Internal id of the currently selected provider (persisted). Only one
-    // provider can be selected at a time; empty means none. Keyed by id rather
-    // than name so the selection survives renames.
     readonly property string selectedProvider: GlobalConfig.utilities.vpn.selectedProvider
 
-    // Live connection stats, refreshed on demand by the UI via refreshStats().
     property double connectedSince: 0
     property string bytesIn: ""
     property string bytesOut: ""
     property int pingMs: -1
     property string serverLocation: ""
 
-    // Tracks an in-flight provider switch (by id) that must wait for disconnect.
     property string pendingSwitchProvider: ""
 
-    // To track whether connect/disconnect procs actually ran
     property bool connectExited
     property bool disconnectExited
 
-    // For auto connect on init from config
     property bool autoConnectPending
 
     readonly property var selected: root.providers.find(p => p.id === root.selectedProvider) ?? null
 
-    // The single point where every configured provider - a built-in name, a
-    // customised built-in, or a fully user-defined entry - is folded into one
-    // uniform endpoint object. Built-in knowledge lives in the adapters below;
-    // config values override adapter defaults; anything unknown falls back to
-    // generic `<name> up/down` commands with an interface-presence status
-    // check. Everything downstream runs off this object and never branches on
-    // a provider name.
     readonly property var active: {
         const custom = root.selected;
         const name = custom ? (custom.name || "custom") : "wireguard";
@@ -77,19 +63,14 @@ Singleton {
         };
     }
 
-    // Kept as thin readouts for the UI.
     readonly property string providerName: active.name
     readonly property string interfaceName: active.interface
     readonly property var currentConfig: active
 
     readonly property var adapters: [wireguardAdapter, warpAdapter, netbirdAdapter, tailscaleAdapter]
 
-    // Live list of configured providers, straight from the typed config list. Each entry is a
-    // config node with id/name/displayName/interface and the optional connect/disconnect
-    // commands, so the VPN management UI reads and writes the config in place.
     readonly property var providers: GlobalConfig.utilities.vpn.provider.values
 
-    // Provider entry keys which are cleared when empty instead of written.
     readonly property list<string> optionalKeys: ["displayName", "interface", "connectCmd", "disconnectCmd"]
 
     // Generate a stable, opaque internal id for a provider entry.
@@ -97,8 +78,6 @@ Singleton {
         return `vpn-${Date.now().toString(36)}-${Math.floor(Math.random() * 0x1000000).toString(36)}`;
     }
 
-    // Write a value to a provider entry, clearing the option when empty so the config stays
-    // sparse.
     function setOrReset(provider: var, key: string, value: var): void {
         if (value && value.length > 0)
             provider[key] = value;
@@ -106,8 +85,6 @@ Singleton {
             provider.resetOption(key);
     }
 
-    // Build the props for a new provider entry, omitting empty optional values. `id` is the
-    // provider's stable internal id.
     function buildProviderProps(id: string, data: var): var {
         const props = {
             "id": id,
@@ -119,19 +96,14 @@ Singleton {
         return props;
     }
 
-    // Resolve the stable internal id of the provider entry at `index`.
     function providerIdAt(index: int): string {
         return GlobalConfig.utilities.vpn.provider.at(index)?.id ?? "";
     }
 
-    // Add a new provider. data: { name, displayName, interface, connectCmd[],
-    // disconnectCmd[] }. Newly added providers are not selected by default.
     function addProvider(data: var): void {
         GlobalConfig.utilities.vpn.provider.insert(root.buildProviderProps(root.generateId(), data));
     }
 
-    // Update an existing provider (by index), preserving its internal id so the
-    // selection sticks even when the name changes.
     function updateProvider(index: int, data: var): void {
         const provider = GlobalConfig.utilities.vpn.provider.at(index);
         if (!provider)
@@ -143,14 +115,10 @@ Singleton {
             root.setOrReset(provider, key, data[key]);
     }
 
-    // Delete a provider by index. ensureSelection() re-homes the selection to
-    // the first remaining provider if the deleted one was selected.
     function deleteProvider(index: int): void {
         GlobalConfig.utilities.vpn.provider.remove(index);
     }
 
-    // Make the provider at `index` the selected one. If a VPN is currently
-    // connected, disconnect first, switch, then reconnect.
     function setActiveProvider(index: int): void {
         const id = root.providerIdAt(index);
         if (id.length === 0)
@@ -167,9 +135,6 @@ Singleton {
         GlobalConfig.utilities.vpn.selectedProvider = id;
     }
 
-    // Guarantee there is always a valid selection while any provider exists: if
-    // the stored id matches no configured provider, fall back to the first one
-    // (or clear it when the list is empty).
     function ensureSelection(): void {
         const providers = root.providers;
         if (providers.some(p => p.id === root.selectedProvider))
@@ -204,14 +169,14 @@ Singleton {
     function reportConnectFailure(reason: string): void {
         connectPending = false;
         connected = false;
-        connectedChanged(); // Force bindings to reeval (mainly for switches)
+        connectedChanged();
         if (GlobalConfig.utilities.toasts.vpnChanged)
             Toaster.toast(qsTr("VPN connection failed"), reason, "vpn_key_alert");
     }
 
     function reportDisconnectFailure(reason: string): void {
         disconnectPending = false;
-        connectedChanged(); // Force bindings to reeval (mainly for switches)
+        connectedChanged();
         if (GlobalConfig.utilities.toasts.vpnChanged)
             Toaster.toast(qsTr("VPN disconnection failed"), reason, "vpn_key_alert");
     }
@@ -226,8 +191,6 @@ Singleton {
         return Units.formatBytes(bytes);
     }
 
-    // Refresh live In/Out byte counters, tunnel latency and - for providers
-    // that expose one - the server location.
     function refreshStats(): void {
         if (!connected)
             return;
@@ -255,18 +218,15 @@ Singleton {
             server: ""
         };
 
-        // Handle empty or whitespace-only output
         if (!output || output.trim().length === 0) {
             return status;
         }
 
-        // Check for common non-JSON states first
         if (output.includes("Logged out") || output.includes("Stopped") || output.includes("not running") || output.includes("Tailscale is not running")) {
             status.state = "disconnected";
             return status;
         }
 
-        // Try to parse as JSON
         try {
             const data = JSON.parse(output);
             const backendState = data.BackendState || "";
@@ -275,7 +235,6 @@ Singleton {
                 status.connected = true;
                 status.state = "connected";
 
-                // Exit node, if one is in use, is the most meaningful "server".
                 try {
                     const peers = data.Peer || {};
                     for (const key in peers) {
@@ -294,7 +253,6 @@ Singleton {
                 status.authUrl = data.AuthURL || "";
             }
         } catch (e) {
-            // JSON parsing failed - treat as disconnected unless it looks like an error
             if (output.includes("error") || output.includes("Error") || output.includes("failed")) {
                 status.state = "disconnected";
                 status.reason = "Tailscale may not be running";
@@ -321,7 +279,6 @@ Singleton {
             if (mgmtConnected && signalConnected) {
                 status.connected = true;
                 status.state = "connected";
-                // The management server URL is the most stable "server" value.
                 const url = data.management?.url || data.management?.URL || "";
                 if (url)
                     status.server = url.replace(/^https?:\/\//, "").replace(/:\d+$/, "");
@@ -350,10 +307,6 @@ Singleton {
             server: ""
         };
 
-        // Order matters: "Disconnected" contains the substring "Connected",
-        // so the disconnected/registration cases must be checked first. Recent
-        // warp-cli prints lines like "Status update: Connected" /
-        // "Status update: Disconnected\nReason: ...".
         if (output.includes("Registration Missing") || output.includes("registration") || output.includes("register") || output.includes("Unable to connect")) {
             status.state = "needs-auth";
             status.reason = "WARP registration required";
@@ -371,8 +324,6 @@ Singleton {
         return status;
     }
 
-    // Generic status for providers without a status command: the tunnel is up
-    // if its interface shows up in `ip link show`.
     function parseInterfaceStatus(output: string, iface: string): var {
         const status = {
             connected: false,
@@ -390,8 +341,6 @@ Singleton {
     }
 
     function parseWarpServer(output: string): string {
-        // Look for an endpoint hint in the tunnel stats output. WARP shows an
-        // "Endpoint" line with the server IP.
         const lines = output.split("\n");
         for (const line of lines) {
             const m = line.match(/Endpoint[^\d]*([\d.]+)/i);
@@ -425,12 +374,9 @@ Singleton {
         status = newStatus;
         root.connected = newStatus.connected;
 
-        // A fresh status is authoritative; drop any in-flight connect/disconnect wait.
         root.connectPending = false;
         root.disconnectPending = false;
 
-        // Surface a server parsed straight out of the status output; providers
-        // with a dedicated server command fill this via refreshStats() instead.
         if (newStatus.connected && newStatus.server)
             root.serverLocation = newStatus.server;
 
@@ -438,7 +384,6 @@ Singleton {
             emitStatusToast(newStatus);
         }
 
-        // Auto connect if config was enabled on init
         if (root.autoConnectPending) {
             root.autoConnectPending = false;
             if (!newStatus.connected)
@@ -472,8 +417,6 @@ Singleton {
         }
     }
 
-    // Backfill a stable internal id for entries that lack one (hand-written config
-    // entries). Runs once at startup.
     function ensureProviderIds(): void {
         for (const provider of root.providers)
             if (provider.id.length === 0)
@@ -481,7 +424,6 @@ Singleton {
     }
 
     onConnectedChanged: {
-        // Stamp / clear the connection start time and the per-connection stats.
         if (connected) {
             if (connectedSince === 0)
                 connectedSince = Date.now();
@@ -493,7 +435,6 @@ Singleton {
             pingMs = -1;
         }
 
-        // Update config flag, but not on provider switch
         if (pendingSwitchProvider.length === 0 && GlobalConfig.utilities.vpn.enabled !== connected)
             GlobalConfig.utilities.vpn.enabled = connected;
 
@@ -508,7 +449,6 @@ Singleton {
     }
 
     onStatusChanged: {
-        // Providers that can self-register (WARP) do so on demand.
         if (status.state === "needs-auth" && active.registerCmd)
             registerProc.exec(active.registerCmd);
     }
@@ -544,17 +484,11 @@ Singleton {
         }
     }
 
-    // ── Provider adapters ───────────────────────────────────────────────────
-    // One adapter per built-in provider, holding everything that is specific
-    // to it. Supporting a new provider means adding one adapter here (plus a
-    // parser if it has a status command) - nothing else changes.
 
     Adapter {
         id: wireguardAdapter
 
         name: "wireguard"
-        // No daemon and no CLI status; the interface comes from config and the
-        // generic interface-presence check reports the state.
         display: iface => iface
         connectCmd: iface => ["pkexec", "wg-quick", "up", iface]
         disconnectCmd: iface => ["pkexec", "wg-quick", "down", iface]
@@ -604,7 +538,6 @@ Singleton {
         connectHint: error => error.includes("Access denied") || error.includes("checkprefs access denied") ? "Permission denied. Run in terminal: sudo tailscale set --operator=$USER" : ""
     }
 
-    // ── Generic engine ──────────────────────────────────────────────────────
 
     Process {
         id: nmMonitor
@@ -695,7 +628,6 @@ Singleton {
             onStreamFinished: {
                 const error = text.trim();
 
-                // Let the provider turn a known failure into an actionable hint.
                 const hint = root.active.connectHint ? root.active.connectHint(error) : "";
                 if (hint) {
                     root.updateStatus({
@@ -759,7 +691,6 @@ Singleton {
         }
     }
 
-    // Reads cumulative rx/tx bytes for the active VPN interface from sysfs.
     Process {
         id: statsProc
 
@@ -783,7 +714,6 @@ Singleton {
                 if (m) {
                     root.pingMs = Math.round(parseFloat(m[1]));
                 } else if (root.connected) {
-                    // Reachable interface but no reply parsed → mark unknown.
                     root.pingMs = -1;
                 }
             }
@@ -818,15 +748,10 @@ Singleton {
         defaultLogLevel: LoggingCategory.Info
     }
 
-    // Everything a provider needs to be driven by the generic engine above.
-    // Commands may be plain arrays or functions of the interface name; parse
-    // hooks are optional and fall back to the interface-presence check.
     component Adapter: QtObject {
         required property string name
         property var display
         property string iface
-        // Systemd unit behind the provider's CLI; used for the "service not
-        // running" hint. Empty = daemonless.
         property string service
         property var connectCmd
         property var disconnectCmd

@@ -4,21 +4,20 @@
 #include <qobject.h>
 #include <qvariant.h>
 
-#include "listnode.hpp" // IWYU pragma: keep
-#include "schema.hpp"   // IWYU pragma: keep
+#include "listnode.hpp"
+#include "schema.hpp"
 
 namespace caelestia::settings {
 
 inline QVariantMap vmap(std::initializer_list<std::pair<QString, QVariant>> entries) {
     QVariantMap map;
     for (const auto& [key, value] : entries)
-        map.insert(key, value); // Not const, so std::move would be a no-op here
+        map.insert(key, value);
     return map;
 }
 
 template <typename... Ts> inline QList<QMetaType> unionTypes() {
     static_assert(sizeof...(Ts) >= 2, "A union needs at least two types");
-    // If the max size is changed, common.cpp `mismatchStr` must be updated
     static_assert(sizeof...(Ts) <= 4, "A union cannot have more than 4 types");
     static_assert((!std::is_same_v<Ts, QVariant> && ...), "A union cannot contain QVariant");
 
@@ -49,10 +48,8 @@ template <std::floating_point T> bool compare(const QList<T>& a, const QList<T>&
 
 } // namespace caelestia::settings
 
-// Helper macro to prevent splitting initialiser lists
 #define DEFAULT_ARG(...) __VA_ARGS__
 
-// Declares a class to be a node class. This replaces the Q_OBJECT call at the top of the class.
 #define SETTINGS_NODE_NO_CTOR(Class, Base)                                                                             \
     Q_OBJECT                                                                                                           \
                                                                                                                        \
@@ -64,7 +61,7 @@ public:                                                                         
     }                                                                                                                  \
                                                                                                                        \
 private:                                                                                                               \
-    using Self = Class; // For use in the below macros
+    using Self = Class;
 
 #define SETTINGS_NODE(Class, Base)                                                                                     \
     SETTINGS_NODE_NO_CTOR(Class, Base)                                                                                 \
@@ -76,7 +73,6 @@ public:                                                                         
                                                                                                                        \
 private:
 
-// Defines a property on a node.
 #define SETTINGS_PROPERTY_IMPL(Type, name, global, defaultVal, ...)                                                    \
     Q_PROPERTY(Type name READ name WRITE set_##name NOTIFY name##Changed)                                              \
                                                                                                                        \
@@ -109,15 +105,12 @@ private:                                                                        
              { .defaultValue = QVariant::fromValue<Type>(defaultVal), .globalOnly = global, __VA_ARGS__ }),            \
             true);
 
-// Defines a property on a node.
 #define SETTINGS_PROPERTY(Type, name, defaultVal, ...)                                                                 \
     SETTINGS_PROPERTY_IMPL(Type, name, false, DEFAULT_ARG(defaultVal), __VA_ARGS__)
 
-// Defines a global property on a node. Shorthand for .globalOnly = true.
 #define SETTINGS_GLOBAL_PROPERTY(Type, name, defaultVal, ...)                                                          \
     SETTINGS_PROPERTY_IMPL(Type, name, true, DEFAULT_ARG(defaultVal), __VA_ARGS__)
 
-// Defines a subobject property on a node. Subobject properties are CONSTANT.
 #define SETTINGS_SUBOBJECT_IMPL(Type, name, global)                                                                    \
     Q_PROPERTY(Type* name READ name CONSTANT)                                                                          \
                                                                                                                        \
@@ -137,10 +130,8 @@ private:                                                                        
 
 #define SETTINGS_SUBOBJECT(Type, name) SETTINGS_SUBOBJECT_IMPL(Type, name, false)
 
-// Defines a global subobject on a node. Everything inside it is global only.
 #define SETTINGS_GLOBAL_SUBOBJECT(Type, name) SETTINGS_SUBOBJECT_IMPL(Type, name, true)
 
-// Defines a list type for use with SETTINGS_LIST.
 #define SETTINGS_LIST_TYPE(Element, Name)                                                                              \
     class Name : public caelestia::settings::ListNode {                                                                \
         Q_OBJECT                                                                                                       \
@@ -163,7 +154,6 @@ private:                                                                        
         }                                                                                                              \
     };
 
-// Defines a list property on a node. List properties are CONSTANT.
 #define SETTINGS_LIST_IMPL(Type, name, global, defaultVal, ...)                                                        \
     Q_PROPERTY(Type* name READ name CONSTANT)                                                                          \
                                                                                                                        \
@@ -186,6 +176,5 @@ private:                                                                        
 #define SETTINGS_LIST(Type, name, defaultVal, ...)                                                                     \
     SETTINGS_LIST_IMPL(Type, name, false, DEFAULT_ARG(defaultVal), __VA_ARGS__)
 
-// Defines a global list on a node. Everything inside it is global only.
 #define SETTINGS_GLOBAL_LIST(Type, name, defaultVal, ...)                                                              \
     SETTINGS_LIST_IMPL(Type, name, true, DEFAULT_ARG(defaultVal), __VA_ARGS__)

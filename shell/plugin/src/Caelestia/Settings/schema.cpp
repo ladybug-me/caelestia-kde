@@ -9,8 +9,6 @@ Q_LOGGING_CATEGORY(lcSchema, "caelestia.settings.schema", QtInfoMsg)
 
 namespace {
 
-// Descriptor annotations are stored here by Schema::annotate, which is called in the CONFIG_XXX macros.
-// Schema::build then takes them from here.
 QHash<const QMetaObject*, QHash<QString, Annotation>>& annotationCache() {
     static QHash<const QMetaObject*, QHash<QString, Annotation>> cache;
     return cache;
@@ -23,7 +21,6 @@ bool isNodeType(const QMetaType& type) {
     return meta && meta->inherits(&Node::staticMetaObject);
 }
 
-// Union options carry their alternatives in the annotation, everything else goes by property type
 const ValueCodec* resolveCodec(Descriptor& desc) {
     auto& allowed = desc.annotation.allowedTypes;
 
@@ -59,7 +56,6 @@ QString Descriptor::typeString() const {
 }
 
 bool Descriptor::accepts(const QMetaType& valueType) const {
-    // Unset is a valid state for QVariant options, they are simply absent from the file
     if (type.id() == QMetaType::QVariant && !valueType.isValid())
         return true;
 
@@ -70,9 +66,6 @@ bool Descriptor::accepts(const QMetaType& valueType) const {
 }
 
 QMetaType Descriptor::coercionTarget(const QMetaType& valueType) const {
-    // QML hands a JS array over as a QVariantList whatever the option asks for, so a list
-    // written from QML is the one mismatch worth converting away. Everything else is a
-    // genuine type error and is reported as one.
     if (valueType.id() != QMetaType::QVariantList)
         return {};
 
@@ -90,7 +83,6 @@ Schema Schema::build(const QMetaObject* meta, int baseOffset, bool includeReadOn
     Schema schema;
     schema.m_descriptors.reserve(meta->propertyCount() - baseOffset);
 
-    // Descriptors are taken from cache since this should be called exactly once per class
     const auto annotations = annotationCache().take(meta);
 
     qCDebug(lcSchema) << "Building schema for" << meta->className();
@@ -100,7 +92,6 @@ Schema Schema::build(const QMetaObject* meta, int baseOffset, bool includeReadOn
         const auto key = QString::fromUtf8(prop.name());
         const auto isNode = isNodeType(prop.metaType());
 
-        // Skip read only properties (unless includeReadOnly)
         if (!isNode && !includeReadOnly && !prop.isWritable()) {
             qCDebug(lcSchema) << "  Skipping computed property" << key;
             continue;

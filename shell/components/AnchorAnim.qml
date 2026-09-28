@@ -30,7 +30,7 @@ AnchorAnimation {
             return Tokens.anim.durations.expressiveSlowSpatial;
 
         const types = ["small", "normal", "large", "extraLarge"];
-        const idx = type % 4; // 0-7 are the 4 standard types
+        const idx = type % 4;
         return Tokens.anim.durations[types[idx]];
     }
     easing: {

@@ -102,9 +102,6 @@ RowLayout {
         stepSize: root.step
         value: root.value
 
-        // onInteraction fires with a 0-1 visual position from StyledSlider's
-        // custom MouseArea, NOT the Slider's value property (which stays
-        // bound to root.value and never moves).
         onInteraction: v => {
             const raw = root.min + v * (root.max - root.min);
             const rounded = root._round(raw);

@@ -95,7 +95,6 @@ Singleton {
         return false;
     }
 
-    // The icon of the first rule in the list that matches, or an empty string
     function matchIconRuleList(name: string, rules: var): string {
         if (!rules)
             return "";

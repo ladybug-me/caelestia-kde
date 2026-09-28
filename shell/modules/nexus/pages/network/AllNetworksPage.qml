@@ -13,7 +13,7 @@ PageBase {
 
     title: qsTr("All networks")
     isSubPage: true
-    flickable.bottomMargin: Tokens.padding.extraExtraLarge * 2 // Extra scrolling space at the bottom
+    flickable.bottomMargin: Tokens.padding.extraExtraLarge * 2
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

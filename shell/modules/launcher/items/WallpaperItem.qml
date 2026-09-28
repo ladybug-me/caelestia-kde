@@ -76,8 +76,6 @@ Item {
 
         CachingImage {
             anchors.fill: parent
-            // Videos get an extracted frame; until it exists this is empty and the
-            // videocam icon above shows through.
             path: Images.isVideo(root.modelData.name) ? Wallpapers.thumbFor(root.modelData.path) : root.modelData.path
             smooth: !root.PathView.view.moving
             visible: path !== ""

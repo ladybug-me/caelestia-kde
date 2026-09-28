@@ -1,7 +1,8 @@
 #include "configattached.hpp"
-#include "rootnodes.hpp"
 
 #include <qquickitem.h>
+
+#include "rootnodes.hpp"
 
 namespace caelestia::config {
 
@@ -56,7 +57,7 @@ void Config::attachedParentChange(
     const Type* Config::name() const {                                                                                 \
         if (m_config)                                                                                                  \
             return m_config->name();                                                                                   \
-        return ConfigSingleton::instance()->name();                                                                       \
+        return ConfigSingleton::instance()->name();                                                                    \
     }
 
 CONFIG_ATTACHED_GETTER(AppearanceConfig, appearance)

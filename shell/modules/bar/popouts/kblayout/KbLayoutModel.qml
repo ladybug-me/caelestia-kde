@@ -84,7 +84,7 @@ Item {
             layoutsModel.append({
                 layoutIndex: idx,
                 token: p,
-                label: p // In KDE, the DBus gives us the full display name (e.g. "English (US)")
+                label: p
             });
             idx++;
         }
@@ -176,7 +176,6 @@ Item {
         }
     }
 
-    // Unused in KDE
     Process { id: fetchLayoutsFromDevices }
 
     Process {

@@ -22,8 +22,6 @@ Item {
         root.list.visibilities.launcher = false;
         const preview = root.modelData.preview.length > 30 ? root.modelData.preview.slice(0, 30) + "..." : root.modelData.preview;
 
-        // A pinned entry may have rotated out of cliphist, so `cliphist decode`
-        // can no longer produce it — the stored bytes are the source of truth.
         if (root.isPinned)
             Clipboard.copyPinned(root.modelData.pinId);
         else
@@ -39,8 +37,6 @@ Item {
             return;
         }
 
-        // A pinned image has its own stored copy; nothing pre-warms it and no
-        // imageReady will ever arrive for it.
         if (root.isPinned) {
             imagePreview.imagePath = root.modelData.imagePath ?? "";
             return;
@@ -60,8 +56,6 @@ Item {
     onModelDataChanged: updateImage()
     Component.onCompleted: updateImage()
 
-    /// Listen for the imageReady signal from the C++ backend (forwarded via Clipboard singleton).
-    /// This fires as soon as the decoded file is fully written — no timers needed.
     Connections {
         function onImageReady(id: int, path: string): void {
             if (root.modelData?.isImage && id === root.modelData.id)

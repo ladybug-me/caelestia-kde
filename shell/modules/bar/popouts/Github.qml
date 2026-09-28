@@ -18,7 +18,6 @@ ColumnLayout {
     property string username: BarComponents.GithubStore.username || ""
     property string lastError: BarComponents.GithubStore.lastError || ""
 
-    // Injected by Content.qml's Popout.
     property real scaleOffset: 1.0
     property real fontScale: 1.0
     property bool _isSidebarOpen: false

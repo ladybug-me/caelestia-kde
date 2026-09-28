@@ -32,7 +32,6 @@ Singleton {
     }
 
     function getScript(x, y, width, height, screenshotPath, action, saveDir = "") {
-        // Build the action script for the given region.
         const rx = Math.round(x);
         const ry = Math.round(y);
         const rw = Math.round(width);
@@ -42,7 +41,7 @@ Singleton {
             + `-crop ${rw}x${rh}+${rx}+${ry} +repage`
         const cropToFile = (outPath) => `${cropBase} '${escapeShellStr(outPath)}'`
         const cleanup = `rm -f '${escapeShellStr(screenshotPath)}'`
-        const annotationCommand = `swappy -f -`; // default to swappy
+        const annotationCommand = `swappy -f -`;
         const uploadAndGetUrl = (filePath) => {
             return `curl -sF files[]=@'${escapeShellStr(filePath)}' ${root.fileUploadApiEndpoint} | jq -r '.files[0].url'`
         }
@@ -103,7 +102,6 @@ Singleton {
 
             case ScreenshotAction.SnipAction.CharRecognition:
                 return `set -euo pipefail; TMPF=$(mktemp /tmp/qs-snip-XXXXXX.png); ` +
-                    // Crop and heavily preprocess the image for Tesseract (upscale and grayscale for better accuracy)
                     `${cropBase} -colorspace gray -type grayscale -contrast-stretch 0 -resize 300% "$TMPF" && ` +
                     `LANGS=$(tesseract --list-langs 2>/dev/null | awk 'NR>1 && $1!="osd" {print $1}' | tr '\\n' '+' | sed 's/\\+$//'); ` +
                     `if [ -n "$LANGS" ]; then ` +

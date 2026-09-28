@@ -103,11 +103,6 @@ ConnectedRect {
                             radius: width / 2
                             color: Colours.palette.m3error
 
-                            // Deliberately static. An endless animation inside a
-                            // settings list made the shell recomposite the window
-                            // every frame, which on a translucent window with a
-                            // backdrop blur reads as the whole thing blinking. The
-                            // dot and its tooltip carry the warning without it.
                             layer.enabled: true
 
                             layer.effect: MultiEffect {

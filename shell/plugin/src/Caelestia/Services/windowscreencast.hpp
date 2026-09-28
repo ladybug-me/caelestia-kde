@@ -19,10 +19,9 @@
 #include <QObject>
 #include <QQmlEngine>
 #include <QtWaylandClient/QWaylandClientExtension>
+#include <memory>
 
 #include "qwayland-zkde-screencast-unstable-v1.h"
-
-#include <memory>
 
 namespace caelestia::services {
 
@@ -36,17 +35,18 @@ public:
 signals:
     void created(quint32 nodeId);
     void objectSerialArrived(quint64 objectSerial);
-    void failed(const QString &error);
+    void failed(const QString& error);
     void closed();
 
 protected:
     void zkde_screencast_stream_unstable_v1_created(uint32_t node) override;
     void zkde_screencast_stream_unstable_v1_closed() override;
-    void zkde_screencast_stream_unstable_v1_failed(const QString &error) override;
+    void zkde_screencast_stream_unstable_v1_failed(const QString& error) override;
     void zkde_screencast_stream_unstable_v1_serial(uint32_t object_serial_hi, uint32_t object_serial_low) override;
 };
 
-class WindowScreencastGlobal : public QWaylandClientExtensionTemplate<WindowScreencastGlobal>, public QtWayland::zkde_screencast_unstable_v1 {
+class WindowScreencastGlobal : public QWaylandClientExtensionTemplate<WindowScreencastGlobal>,
+                               public QtWayland::zkde_screencast_unstable_v1 {
     Q_OBJECT
 
 public:
@@ -55,17 +55,10 @@ public:
     WindowScreencastGlobal();
     ~WindowScreencastGlobal() override;
 
-    std::unique_ptr<WindowScreencastStream> createWindowStream(const QString &uuid);
-    std::unique_ptr<WindowScreencastStream> createOutputStream(wl_output *output);
+    std::unique_ptr<WindowScreencastStream> createWindowStream(const QString& uuid);
+    std::unique_ptr<WindowScreencastStream> createOutputStream(wl_output* output);
 };
 
-// Per-window request: bind `uuid` to a KWin window's internalId and read back
-// `objectSerial` once available, feeding it to a PipeWireSourceItem's
-// `objectSerial` property (org.kde.pipewire) to render the live window
-// contents. `nodeId` is also exposed but is deprecated upstream (KPipeWire):
-// raw PipeWire node ids require broad PipeWire registry access that a regular
-// desktop client isn't granted, so binding via `objectSerial` is required for
-// playback to actually work for an unprivileged client like this shell.
 class WindowScreencastRequest : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString uuid READ uuid WRITE setUuid NOTIFY uuidChanged)
@@ -74,11 +67,11 @@ class WindowScreencastRequest : public QObject {
     QML_ELEMENT
 
 public:
-    explicit WindowScreencastRequest(QObject *parent = nullptr);
+    explicit WindowScreencastRequest(QObject* parent = nullptr);
     ~WindowScreencastRequest() override;
 
     QString uuid() const;
-    void setUuid(const QString &uuid);
+    void setUuid(const QString& uuid);
 
     quint32 nodeId() const;
     quint64 objectSerial() const;
@@ -93,7 +86,6 @@ private:
     void setNodeId(quint32 nodeId);
     void setObjectSerial(quint64 objectSerial);
 
-    /// Shared global — no longer own a private instance.
     std::unique_ptr<WindowScreencastStream> m_stream;
     QString m_uuid;
     quint32 m_nodeId = 0;
@@ -108,11 +100,11 @@ class OutputScreencastRequest : public QObject {
     QML_ELEMENT
 
 public:
-    explicit OutputScreencastRequest(QObject *parent = nullptr);
+    explicit OutputScreencastRequest(QObject* parent = nullptr);
     ~OutputScreencastRequest() override;
 
     QString outputName() const;
-    void setOutputName(const QString &outputName);
+    void setOutputName(const QString& outputName);
 
     quint32 nodeId() const;
     quint64 objectSerial() const;
@@ -127,11 +119,10 @@ private:
     void setNodeId(quint32 nodeId);
     void setObjectSerial(quint64 objectSerial);
 
-    /// Shared global — no longer own a private instance.
     std::unique_ptr<WindowScreencastStream> m_stream;
     QString m_outputName;
     quint32 m_nodeId = 0;
     quint64 m_objectSerial = 0;
 };
 
-}
+} // namespace caelestia::services

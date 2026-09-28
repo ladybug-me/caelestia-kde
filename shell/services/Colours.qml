@@ -106,7 +106,6 @@ Singleton {
         );
     }
 
-    property bool cooldownPending
 
     property real lastBaseTransparency
 
@@ -273,46 +272,12 @@ Singleton {
         Quickshell.execDetached(["bash", Quickshell.shellPath("scripts/reseed-scheme.sh"), ...root.smartArg]);
     }
 
-    function reloadHyprRules(): void {
-        // Layer rules are Hyprland-only; KWin handles blur via effects.
-                    return;
-
-        let rule, trEnabled;
-        if (Kwin.usingLua) {
-            rule = `eval hl.layer_rule({ match = { namespace = "caelestia-drawers" }, %1 = %2 })`;
-            trEnabled = transparency.enabled;
-        } else {
-            rule = "keyword layerrule %1 %2, match:namespace caelestia-drawers";
-            trEnabled = transparency.enabled ? 1 : 0;
-        }
-        Kwin.extras.batchMessage([rule.arg("blur").arg(trEnabled), rule.arg("ignore_alpha").arg(Math.max(0, transparency.base - 0.03))]);
-    }
-
-    function requestReloadHyprRules(): void {
-        if (cooldownTimer.running) {
-            root.cooldownPending = true;
-        } else {
-            root.reloadHyprRules();
-            cooldownTimer.restart();
-        }
-    }
-
     Component.onCompleted: {
-        root.requestReloadHyprRules()
         Qt.callLater(updatePaletteManager)
         scheduleSchemeReload()
         startupSchemePollTimer.start()
         reseedTimer.start()
     }
-
-    Connections {
-        function onConfigReloaded(): void {
-            root.reloadHyprRules();
-        }
-
-        target: Kwin
-    }
-
 
 
     FileView {
@@ -396,19 +361,6 @@ Singleton {
     onShowPreviewChanged: Qt.callLater(updatePaletteManager)
 
 
-
-    Timer {
-        id: cooldownTimer
-
-        interval: 30
-        onTriggered: {
-            if (root.cooldownPending) {
-                root.cooldownPending = false;
-                root.reloadHyprRules();
-                restart();
-            }
-        }
-    }
 
     Timer {
         id: cAnimCompleteTimer

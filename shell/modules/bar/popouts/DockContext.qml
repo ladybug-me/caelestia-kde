@@ -154,7 +154,7 @@ ColumnLayout {
                 } else if (Kwin.windowList.length > 0) {
                     Kwin.closeWindow(toplevel.address);
                 } else {
-                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.window.close({ window = "address:0x${toplevel.address}" })` : `closewindow address:0x${toplevel.address}`);
+                    Kwin.dispatch(`closewindow address:0x${toplevel.address}`);
                 }
             }
             root.popouts.hasCurrent = false;

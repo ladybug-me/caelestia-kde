@@ -610,9 +610,9 @@ StyledRect {
                     roleValue: "nightlight"
                     delegate: Toggle {
                         icon: "bedtime"
-                        checked: HyprSunset.active
+                        checked: NightColor.active
                         onClicked: {
-                            HyprSunset.toggleNightLight();
+                            NightColor.toggleNightLight();
                         }
                     }
                 }

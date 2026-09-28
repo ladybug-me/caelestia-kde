@@ -283,11 +283,11 @@ Item {
             const mon = (Config.bar.workspaces.perMonitor ? Kwin.monitorFor(screen) : Kwin.focusedMonitor);
             const specialWs = mon?.lastIpcObject.specialWorkspace.name;
             if (specialWs?.length > 0)
-                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${specialWs.slice(8)}")` : `togglespecialworkspace ${specialWs.slice(8)}`);
+                Kwin.dispatch(`togglespecialworkspace ${specialWs.slice(8)}`);
             else {
                 const activeId = Kwin.activeWsId;
                 if (angleDelta.y < 0 || activeId > 1)
-                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ workspace = "r${angleDelta.y > 0 ? "-" : "+"}1" })` : `workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
+                    Kwin.dispatch(`workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
             }
         } else if ((isHorizontal ? pos < screen.width / 2 : pos < screen.height / 2) && Config.bar.scrollActions.volume) {
             if (angleDelta.y > 0)

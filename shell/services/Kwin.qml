@@ -30,13 +30,8 @@ Singleton {
     readonly property var focusedWorkspace: ({ id: root.activeWsId, name: root.activeWsId.toString() })
     readonly property bool capsLock: CUtils.capsLock
     readonly property bool numLock: CUtils.numLock
-    readonly property string defaultKbLayout: ""
     readonly property string kbLayoutFull: KbLayout.activeLabel
     readonly property string kbLayout: KbLayout.activeShortLabel
-    readonly property bool usingLua: false
-    readonly property alias extras: extras
-    readonly property alias options: extras.options
-    readonly property alias devices: extras.devices
     property var monitorState: []
     property var _monitorCache: ({})
     property bool hadKeyboard: false
@@ -447,10 +442,6 @@ Singleton {
         return cached;
     }
 
-    function refreshDevices(): void {
-        extras.refreshDevices();
-    }
-
     function listSpecialWorkspaces(): string {
         return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0).map(w => w.name).join("\n");
     }
@@ -494,10 +485,6 @@ Singleton {
     onWorkspacesChanged: root.refreshWindows()
 
     IpcHandler {
-        function refreshDevices(): void {
-            root.refreshDevices();
-        }
-
         function cycleSpecialWorkspace(direction: string): void {
             root.cycleSpecialWorkspace(direction);
         }
@@ -515,44 +502,5 @@ Singleton {
         }
 
         target: "kwin"
-    }
-
-    IpcHandler {
-        function refreshDevices(): void {
-            root.refreshDevices();
-        }
-
-        function cycleSpecialWorkspace(direction: string): void {
-            root.cycleSpecialWorkspace(direction);
-        }
-
-        function listSpecialWorkspaces(): string {
-            return root.listSpecialWorkspaces();
-        }
-
-        function getFocusedMonitor(): string {
-            return root.getFocusedMonitor();
-        }
-
-        function listMonitors(): string {
-            return root.listMonitors();
-        }
-
-        target: "hypr"
-    }
-
-    // qmllint disable unresolved-type
-    CustomShortcut {
-        // qmllint enable unresolved-type
-        name: "refreshDevices"
-        description: qsTr("Reload devices")
-        onPressed: extras.refreshDevices()
-        onReleased: extras.refreshDevices()
-    }
-
-    HyprExtras {
-        id: extras
-
-        usingLua: false
     }
 }

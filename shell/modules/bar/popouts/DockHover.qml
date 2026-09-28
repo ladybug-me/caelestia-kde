@@ -32,7 +32,7 @@ StyledRect {
         if (Kwin.windowList.length > 0) {
             Kwin.closeWindow(address);
         } else {
-            Kwin.dispatch(Kwin.usingLua ? `hl.dsp.window.close({ window = "address:0x${address}" })` : `closewindow address:0x${address}`);
+            Kwin.dispatch(`closewindow address:0x${address}`);
         }
 
         if (!root.model || !root.model.toplevels)
@@ -175,7 +175,7 @@ StyledRect {
                                 if (Kwin.windowList.length > 0) {
                                     Kwin.focusWindow(card.modelData.address);
                                 } else {
-                                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${card.modelData.address}" })` : `focuswindow address:0x${card.modelData.address}`);
+                                    Kwin.dispatch(`focuswindow address:0x${card.modelData.address}`);
                                 }
                             }
                             root.popouts.hasCurrent = false;

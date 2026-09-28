@@ -282,9 +282,9 @@ Item {
 
             const ws = view.itemAt(event.x, event.y) as SpecialWsDelegate;
             if (ws?.modelData)
-                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${ws.modelData.name.slice(8)}")` : `togglespecialworkspace ${ws.modelData.name.slice(8)}`);
+                Kwin.dispatch(`togglespecialworkspace ${ws.modelData.name.slice(8)}`);
             else
-                Kwin.dispatch(Kwin.usingLua ? 'hl.dsp.workspace.toggle_special("special")' : "togglespecialworkspace special");
+                Kwin.dispatch("togglespecialworkspace special");
         }
     }
 

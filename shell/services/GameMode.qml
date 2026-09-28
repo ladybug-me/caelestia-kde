@@ -72,6 +72,7 @@ Singleton {
             Quickshell.execDetached(["sh", "-c",
                 `p="${stateFile}"; ` +
                 'blur="$(sed -n 1p "$p" 2>/dev/null)"; anim="$(sed -n 2p "$p" 2>/dev/null)"; ' +
+                '[ -e \"$p\" ] || exit 0; ' +
                 '[ -n "$blur" ] || blur=true; [ -n "$anim" ] || anim=1; ' +
                 'kwriteconfig6 --file kwinrc --group Plugins --key blurEnabled "$blur"; ' +
                 'kwriteconfig6 --file kdeglobals --group KDE --key AnimationDurationFactor --notify "$anim"; ' +
@@ -89,6 +90,7 @@ Singleton {
             if (root.restoreVideoWallpaper)
                 GlobalConfig.background.videoWallpaperPaused = true;
 
+            applyKwin(true);
 
             if (GlobalConfig.utilities.toasts.gameModeChanged)
                 Toaster.toast(qsTr("Game mode enabled"),

@@ -81,7 +81,6 @@ Singleton {
         return keys.length > 0 ? root._monitorCache[keys[0]] : null;
     }
 
-    signal configReloaded
 
     function focusWindow(address: string): void {
         KWinActiveWindowBridge.focusWindow(address);

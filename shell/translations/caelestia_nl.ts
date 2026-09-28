@@ -9,7 +9,7 @@
       <translation>Informatie</translation>
     </message>
     <message>
-      <location line="+75"/>
+      <location line="+70"/>
       <source>System</source>
       <translation>Systeem</translation>
     </message>
@@ -39,7 +39,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
       <source>Software</source>
       <translation type="unfinished"/>
     </message>
@@ -64,7 +64,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
       <source>Plugins</source>
       <translation>Plug-ins</translation>
     </message>
@@ -74,7 +74,7 @@
       <translation>Ingeschakelde plugins</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+12"/>
       <source>Advanced</source>
       <translation>Geavanceerd</translation>
     </message>
@@ -105,7 +105,7 @@
   <context>
     <name>AddNetworkPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/AddNetworkPage.qml" line="+78"/>
+      <location filename="../modules/nexus/pages/network/AddNetworkPage.qml" line="+66"/>
       <source>Enter password</source>
       <translation>Wachtwoord invoeren</translation>
     </message>
@@ -115,7 +115,7 @@
       <translation>Netwerk toevoegen</translation>
     </message>
     <message>
-      <location line="+42"/>
+      <location line="+39"/>
       <source>Enter the password for &quot;%1&quot;.</source>
       <translation>Voer het wachtwoord in voor &quot;%1&quot;.</translation>
     </message>
@@ -125,7 +125,7 @@
       <translation>Vul onderstaande gegevens in om handmatig verbinding te maken met een netwerk.</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+13"/>
       <source>Network name (SSID)</source>
       <translation>Netwerk naam (SSID)</translation>
     </message>
@@ -140,7 +140,7 @@
       <translation>Netwerknaam is vereist</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Hidden network</source>
       <translation>Verborgen netwerk</translation>
     </message>
@@ -150,7 +150,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Security</source>
       <translation>Beveiliging</translation>
     </message>
@@ -191,7 +191,7 @@
       <translation>annuleren</translation>
     </message>
     <message>
-      <location line="+26"/>
+      <location line="+24"/>
       <source>Connect</source>
       <translation>Verbinden</translation>
     </message>
@@ -232,7 +232,7 @@
   <context>
     <name>AddVpnPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/AddVpnPage.qml" line="+76"/>
+      <location filename="../modules/nexus/pages/network/AddVpnPage.qml" line="+75"/>
       <source>Edit VPN provider</source>
       <translation>Bewerk VPN provider</translation>
     </message>
@@ -346,7 +346,7 @@
       <translation>Donker</translation>
     </message>
     <message>
-      <location line="+28"/>
+      <location line="+21"/>
       <source>Advanced Colors</source>
       <translation type="unfinished"/>
     </message>
@@ -416,7 +416,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Mode</source>
       <translation>Modus</translation>
     </message>
@@ -436,7 +436,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+7"/>
       <source>Color intensity</source>
       <translation type="unfinished"/>
     </message>
@@ -454,53 +454,53 @@
   <context>
     <name>AiAssistant</name>
     <message>
-      <location filename="../modules/sidebar/AiAssistant.qml" line="+792"/>
-      <location line="+1360"/>
+      <location filename="../modules/sidebar/AiAssistant.qml" line="+701"/>
+      <location line="+1280"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>Tarief beperkt - opnieuw proberen in %1s…</translation>
     </message>
     <message>
-      <location line="+292"/>
+      <location line="+282"/>
       <source>Provider</source>
       <translation>Leverancier</translation>
     </message>
     <message>
-      <location line="+41"/>
+      <location line="+39"/>
       <source>Select Model</source>
       <translation>Selecteer model</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+39"/>
       <source>Effort</source>
       <translation>Inspanning</translation>
     </message>
     <message>
-      <location line="+32"/>
+      <location line="+31"/>
       <source>Account</source>
       <translation>Rekening</translation>
     </message>
     <message>
-      <location line="+358"/>
+      <location line="+352"/>
       <source>Thought Process</source>
       <translation>Gedachten proces</translation>
     </message>
     <message>
-      <location line="+187"/>
+      <location line="+184"/>
       <source>Suggestions</source>
       <translation>Suggesties</translation>
     </message>
     <message>
-      <location line="+124"/>
+      <location line="+123"/>
       <source>Ask assistant...</source>
       <translation>Vraag assistent...</translation>
     </message>
     <message>
-      <location line="+244"/>
+      <location line="+241"/>
       <source>Clear All</source>
       <translation>Alles wissen</translation>
     </message>
     <message>
-      <location line="+35"/>
+      <location line="+34"/>
       <source>New Chat</source>
       <translation>Nieuwe chat</translation>
     </message>
@@ -513,7 +513,7 @@
       <translation>AI Assistent</translation>
     </message>
     <message>
-      <location line="+32"/>
+      <location line="+29"/>
       <source>API key</source>
       <translation>API sleutel</translation>
     </message>
@@ -523,7 +523,7 @@
       <translation>Opgeslagen in je sessie sleutelring, niet in shell.json. De %1 omgeving variabele overschrijft het.</translation>
     </message>
     <message>
-      <location line="+96"/>
+      <location line="+79"/>
       <source>API key saved</source>
       <translation>API-sleutel opgeslagen</translation>
     </message>
@@ -543,24 +543,24 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+31"/>
-      <location line="+545"/>
+      <location line="+27"/>
+      <location line="+520"/>
       <source>Checking…</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-543"/>
-      <location line="+520"/>
+      <location line="-518"/>
+      <location line="+497"/>
       <source>Not installed</source>
       <translation>Niet geïnstalleerd</translation>
     </message>
     <message>
-      <location line="-511"/>
+      <location line="-488"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>Daemon niet actief - start het met: sudo systemctl start ollama</translation>
     </message>
     <message>
-      <location line="+80"/>
+      <location line="+73"/>
       <source>Default</source>
       <translation>Standaard</translation>
     </message>
@@ -570,19 +570,19 @@
       <translation>Rekening</translation>
     </message>
     <message>
-      <location line="+58"/>
+      <location line="+54"/>
       <source>Login done? You can close this window.</source>
       <translation>Afmelden klaar? U kunt dit venster sluiten.</translation>
     </message>
     <message>
-      <location line="+81"/>
-      <location line="+40"/>
+      <location line="+79"/>
+      <location line="+35"/>
       <source>Installed.</source>
       <translation>Geïnstalleerd.</translation>
     </message>
     <message>
-      <location line="-40"/>
-      <location line="+44"/>
+      <location line="-35"/>
+      <location line="+39"/>
       <source>Failed</source>
       <translation>Mislukt</translation>
     </message>
@@ -592,7 +592,7 @@
       <translation>Geannuleerd.</translation>
     </message>
     <message>
-      <location line="+50"/>
+      <location line="+49"/>
       <source>Local provider</source>
       <translation>Lokale provider</translation>
     </message>
@@ -603,36 +603,36 @@
     </message>
     <message>
       <location line="+8"/>
-      <location line="+146"/>
+      <location line="+142"/>
       <source>Status</source>
       <translation>status</translation>
     </message>
     <message>
-      <location line="-137"/>
+      <location line="-133"/>
       <source>Download Ollama</source>
       <translation>Ollama downloaden</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+155"/>
-      <location line="+19"/>
+      <location line="+149"/>
+      <location line="+18"/>
       <source>Installing…</source>
       <translation>Installeren…</translation>
     </message>
     <message>
-      <location line="-168"/>
+      <location line="-161"/>
       <source>Claude</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+114"/>
+      <location line="+110"/>
       <source>Claude Code</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-113"/>
+      <location line="-109"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Gebruikt de Claude CLI en uw Claude login</translation>
     </message>
@@ -717,7 +717,7 @@
       <translation>API sleutels</translation>
     </message>
     <message>
-      <location line="+67"/>
+      <location line="+61"/>
       <source>Download Claude Code</source>
       <translation>Claude Code downloaden</translation>
     </message>
@@ -737,7 +737,7 @@
       <translation>Bijgewerkt tot</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+19"/>
       <source>Claude accounts</source>
       <translation>Claude rekeningen</translation>
     </message>
@@ -752,7 +752,7 @@
       <translation>Tik om te selecteren</translation>
     </message>
     <message>
-      <location line="+33"/>
+      <location line="+31"/>
       <source>Log in to selected account</source>
       <translation>Log in op geselecteerde account</translation>
     </message>
@@ -845,7 +845,7 @@
   <context>
     <name>AppBrowser</name>
     <message>
-      <location filename="../modules/launcher/AppBrowser.qml" line="+225"/>
+      <location filename="../modules/launcher/AppBrowser.qml" line="+221"/>
       <source>No apps in this category</source>
       <translation>Geen apps in deze categorie</translation>
     </message>
@@ -891,12 +891,12 @@
   <context>
     <name>AppInfo</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+31"/>
+      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+30"/>
       <source>App info</source>
       <translation>App informatie</translation>
     </message>
     <message>
-      <location line="+47"/>
+      <location line="+45"/>
       <source>Taskbar &amp; Dock</source>
       <translation type="unfinished"/>
     </message>
@@ -916,7 +916,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Launcher</source>
       <translation>Loper</translation>
     </message>
@@ -951,7 +951,7 @@
       <translation>Verbergen in de launcher</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Details</source>
       <translation>Beschrijving</translation>
     </message>
@@ -969,7 +969,7 @@
   <context>
     <name>AppStreamRow</name>
     <message>
-      <location filename="../components/controls/AppStreamRow.qml" line="+24"/>
+      <location filename="../components/controls/AppStreamRow.qml" line="+19"/>
       <source>Muted</source>
       <translation>Gedempt</translation>
     </message>
@@ -977,7 +977,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+147"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+143"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Overeengekomen met een regex in favoriteApps - wijzig het configuratiebestand om te wijzigen</translation>
     </message>
@@ -1004,22 +1004,22 @@
     <name>AppearancePage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+21"/>
-      <source>San Francisco Pro</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
       <source>Google Sans Flex</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+1"/>
+      <source>Rubik</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
-      <source>SF Mono</source>
+      <source>CaskaydiaCove NF</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>CaskaydiaCove NF</source>
+      <source>JetBrainsMono Nerd Font</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -1143,7 +1143,7 @@
       <translation>Schakel een bevroren glazen effect in door de achtergrond te vervagen</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+22"/>
       <source>High Quality Blur Masks</source>
       <translation>Hoge kwaliteit vervaging maskers</translation>
     </message>
@@ -1216,7 +1216,7 @@
       <translation>Applicaties</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Default applications</source>
       <translation>Standaard toepassingen</translation>
     </message>
@@ -1251,7 +1251,7 @@
       <translation>Bestandsbeheer</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Library</source>
       <translation>Bibliotheek</translation>
     </message>
@@ -1307,7 +1307,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+43"/>
+      <location line="+40"/>
       <source>Broadcast settings</source>
       <translation>Instellingen voor uitzenden</translation>
     </message>
@@ -1435,7 +1435,7 @@
   <context>
     <name>Audio</name>
     <message>
-      <location filename="../modules/bar/popouts/Audio.qml" line="+82"/>
+      <location filename="../modules/bar/popouts/Audio.qml" line="+81"/>
       <source>Audio</source>
       <translation>Geluid</translation>
     </message>
@@ -1482,7 +1482,7 @@
     </message>
     <message>
       <location line="+57"/>
-      <location filename="../services/Audio.qml" line="+124"/>
+      <location filename="../services/Audio.qml" line="+117"/>
       <source>Unknown</source>
       <translation>onbekend</translation>
     </message>
@@ -1492,12 +1492,12 @@
       <translation>Onbekend apparaat</translation>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+36"/>
       <source>Unknown Application</source>
       <translation>Onbekende applicatie</translation>
     </message>
     <message>
-      <location line="+176"/>
+      <location line="+174"/>
       <source>Audio output changed</source>
       <translation>Audio-uitvoer gewijzigd</translation>
     </message>
@@ -1848,7 +1848,7 @@
       <translation>Schakelen &amp; herschikken</translation>
     </message>
     <message>
-      <location line="+24"/>
+      <location line="+23"/>
       <source>Active components</source>
       <translation>Actieve componenten</translation>
     </message>
@@ -1858,22 +1858,22 @@
       <translation>Sleep om te herschikken of uitschakelen</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+15"/>
       <source>Left Zone</source>
       <translation>Linker Zone</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+55"/>
       <source>Middle Zone</source>
       <translation>Middelste zone</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+55"/>
       <source>Right Zone</source>
       <translation>Rechter Zone</translation>
     </message>
     <message>
-      <location line="+61"/>
+      <location line="+60"/>
       <source>Library</source>
       <translation>Bibliotheek</translation>
     </message>
@@ -1969,7 +1969,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+7"/>
       <source>No token set</source>
       <translation>Geen token ingesteld</translation>
     </message>
@@ -1999,7 +1999,7 @@
       <translation>Plak hieronder een token en sla deze op om de widget in te schakelen</translation>
     </message>
     <message>
-      <location line="+53"/>
+      <location line="+50"/>
       <source>Configuration</source>
       <translation>Configuratie</translation>
     </message>
@@ -2102,7 +2102,7 @@
       <translation>Media wisselen volgens de tijd van de dag of cyclus door een diavoorstelling</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+11"/>
       <source>Time of Day Periods &amp; Media</source>
       <translation>Tijd van de dag Perioden &amp; Media</translation>
     </message>
@@ -2112,7 +2112,15 @@
       <translation>Ochtend Media</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+1"/>
+      <location line="+45"/>
+      <location line="+45"/>
+      <location line="+45"/>
+      <source>Not set</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-129"/>
       <source>Select Morning Media</source>
       <translation>Selecteer Morning Media</translation>
     </message>
@@ -2121,12 +2129,12 @@
       <location line="+45"/>
       <location line="+45"/>
       <location line="+45"/>
-      <location line="+191"/>
+      <location line="+188"/>
       <source>Multimedia files (Images, GIFs, Videos)</source>
       <translation>Multimedia-bestanden (Images, GIFs, Video&apos;s)</translation>
     </message>
     <message>
-      <location line="-315"/>
+      <location line="-312"/>
       <source>Morning start time</source>
       <translation>Begintijd van ochtend</translation>
     </message>
@@ -2196,7 +2204,7 @@
       <translation>Nacht Wenstekst</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+11"/>
       <source>Slideshow Timing &amp; Order</source>
       <translation>Slideshow Timing &amp; Bestelling</translation>
     </message>
@@ -2299,7 +2307,7 @@
       <translation>Voorvertoning schaal en lettertype voor elk pop-uptype aanpassen</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+22"/>
       <source>RESET ALL</source>
       <translation>ALLES HERSTEL</translation>
     </message>
@@ -2447,12 +2455,12 @@
       <translation>Status pictogrammen</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Visible icons</source>
       <translation>Zichtbare pictogrammen</translation>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+26"/>
       <source>Add entry</source>
       <translation>Invoer toevoegen</translation>
     </message>
@@ -2467,7 +2475,7 @@
       <translation>Toevoegen</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+12"/>
       <source>Wi-Fi</source>
       <translation type="unfinished"/>
     </message>
@@ -2477,7 +2485,7 @@
       <translation>Wifi-pictogram naast het netwerkpictogram weergeven</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -2649,7 +2657,7 @@
   <context>
     <name>Battery</name>
     <message>
-      <location filename="../modules/bar/popouts/Battery.qml" line="+24"/>
+      <location filename="../modules/bar/popouts/Battery.qml" line="+23"/>
       <source>The device is too hot</source>
       <translation>Het apparaat is te heet</translation>
     </message>
@@ -2669,7 +2677,7 @@
       <translation>Accu</translation>
     </message>
     <message>
-      <location line="+149"/>
+      <location line="+146"/>
       <source>%1%</source>
       <translation type="unfinished"/>
     </message>
@@ -2754,7 +2762,7 @@
   <context>
     <name>Bluetooth</name>
     <message>
-      <location filename="../modules/bar/popouts/Bluetooth.qml" line="+29"/>
+      <location filename="../modules/bar/popouts/Bluetooth.qml" line="+28"/>
       <source>Bluetooth</source>
       <translation type="unfinished"/>
     </message>
@@ -2911,12 +2919,12 @@
       <translation>Niet gekoppeld</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Device</source>
       <translation>Apparaat</translation>
     </message>
     <message>
-      <location line="+49"/>
+      <location line="+48"/>
       <source>Forget</source>
       <translation>Vergeet</translation>
     </message>
@@ -2931,7 +2939,7 @@
       <translation>Verbinden</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+12"/>
       <source>Trusted</source>
       <translation>Vertrouwd</translation>
     </message>
@@ -2971,7 +2979,7 @@
       <translation>Dit apparaat toestaan om het systeem te ontwaken</translation>
     </message>
     <message>
-      <location line="+30"/>
+      <location line="+29"/>
       <source>Battery</source>
       <translation>Accu</translation>
     </message>
@@ -3040,7 +3048,7 @@
   <context>
     <name>Categories</name>
     <message>
-      <location filename="../modules/launcher/services/Categories.qml" line="+15"/>
+      <location filename="../modules/launcher/services/Categories.qml" line="+12"/>
       <source>Favorites</source>
       <translation>Favorieten</translation>
     </message>
@@ -3123,7 +3131,7 @@
   <context>
     <name>ClipItem</name>
     <message>
-      <location filename="../modules/launcher/items/ClipItem.qml" line="+33"/>
+      <location filename="../modules/launcher/items/ClipItem.qml" line="+31"/>
       <source>Copied to clipboard</source>
       <translation>Gekopieerd naar klembord</translation>
     </message>
@@ -3154,7 +3162,7 @@
   <context>
     <name>ClockContext</name>
     <message>
-      <location filename="../modules/bar/popouts/ClockContext.qml" line="+81"/>
+      <location filename="../modules/bar/popouts/ClockContext.qml" line="+79"/>
       <source>Clock settings</source>
       <translation type="unfinished"/>
     </message>
@@ -3162,12 +3170,12 @@
   <context>
     <name>ColourSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ColourSelect.qml" line="+40"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ColourSelect.qml" line="+39"/>
       <source>Colors</source>
       <translation>Kleuren</translation>
     </message>
     <message>
-      <location line="+84"/>
+      <location line="+80"/>
       <source>Dynamic</source>
       <translation>Dynamisch</translation>
     </message>
@@ -3286,7 +3294,7 @@
       <translation>Type &quot;%1&quot; voor commando&apos;s</translation>
     </message>
     <message>
-      <location line="+328"/>
+      <location line="+323"/>
       <source>Clear clipboard history?</source>
       <translation>Klembord geschiedenis wissen?</translation>
     </message>
@@ -3306,7 +3314,7 @@
       <translation>Verwijderen</translation>
     </message>
     <message>
-      <location filename="../modules/sidebar/Content.qml" line="+100"/>
+      <location filename="../modules/sidebar/Content.qml" line="+99"/>
       <source>Notifications</source>
       <translation>Notificaties</translation>
     </message>
@@ -3324,7 +3332,7 @@
   <context>
     <name>ContentList</name>
     <message>
-      <location filename="../modules/launcher/ContentList.qml" line="+225"/>
+      <location filename="../modules/launcher/ContentList.qml" line="+217"/>
       <source>Images</source>
       <translation>Afbeeldingen</translation>
     </message>
@@ -3339,7 +3347,7 @@
       <translation>Video&apos;s</translation>
     </message>
     <message>
-      <location line="+238"/>
+      <location line="+236"/>
       <source>cliphist not found</source>
       <translation>cliphist niet gevonden</translation>
     </message>
@@ -3541,12 +3549,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+85"/>
+      <location line="+84"/>
       <source>Pill</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-80"/>
+      <location line="-79"/>
       <source>Diamond</source>
       <translation>Diamant</translation>
     </message>
@@ -3592,12 +3600,12 @@
     </message>
     <message>
       <location line="+4"/>
-      <location line="+64"/>
+      <location line="+62"/>
       <source>Dashboard</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-52"/>
+      <location line="-51"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -3637,7 +3645,7 @@
       <translation>Seconden onder de klok weergeven in het dashboard</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
       <source>Tabs</source>
       <translation type="unfinished"/>
     </message>
@@ -3692,7 +3700,7 @@
       <translation>Toon een welkomstbericht op het dashboard</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Performance widgets</source>
       <translation>Prestatie widgets</translation>
     </message>
@@ -3727,7 +3735,7 @@
       <translation>Netwerk</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -3932,7 +3940,7 @@
   <context>
     <name>DesktopLyrics</name>
     <message>
-      <location filename="../modules/background/DesktopLyrics.qml" line="+286"/>
+      <location filename="../modules/background/DesktopLyrics.qml" line="+285"/>
       <source>Loading lyrics...</source>
       <translation>Songtekst laden...</translation>
     </message>
@@ -4123,7 +4131,7 @@
   <context>
     <name>DinoGame</name>
     <message>
-      <location filename="../modules/sidebar/DinoGame.qml" line="+256"/>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+251"/>
       <source>All up to date!</source>
       <translation>Tot op heden bijgewerkt!</translation>
     </message>
@@ -4131,7 +4139,7 @@
   <context>
     <name>DockContext</name>
     <message>
-      <location filename="../modules/bar/popouts/DockContext.qml" line="+100"/>
+      <location filename="../modules/bar/popouts/DockContext.qml" line="+98"/>
       <source>Unpin from dock</source>
       <translation>Losmaken van dock</translation>
     </message>
@@ -4141,7 +4149,7 @@
       <translation>Vastmaken aan dock</translation>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+33"/>
       <source>Open new window</source>
       <translation>Nieuw venster openen</translation>
     </message>
@@ -4162,7 +4170,7 @@
   <context>
     <name>Entries</name>
     <message>
-      <location filename="../modules/whatsnew/Entries.qml" line="+23"/>
+      <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
       <source>Window Rules Out of the Box</source>
       <translation type="unfinished"/>
     </message>
@@ -4245,12 +4253,12 @@
   <context>
     <name>EthernetDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+22"/>
+      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+20"/>
       <source>Ethernet</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+54"/>
       <source>Disconnect</source>
       <translation>Verbreek</translation>
     </message>
@@ -4260,7 +4268,7 @@
       <translation>Verbinden</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Connection</source>
       <translation>Verbindingsinstellingen</translation>
     </message>
@@ -4316,7 +4324,7 @@
   <context>
     <name>EthernetSection</name>
     <message>
-      <location filename="../modules/nexus/common/EthernetSection.qml" line="+53"/>
+      <location filename="../modules/nexus/common/EthernetSection.qml" line="+52"/>
       <source>Ethernet</source>
       <translation type="unfinished"/>
     </message>
@@ -4336,7 +4344,7 @@
       <translation>Gegevensgebruik: %1</translation>
     </message>
     <message>
-      <location line="+72"/>
+      <location line="+68"/>
       <source>Wired connection</source>
       <translation>Bedrade verbinding</translation>
     </message>
@@ -4388,7 +4396,7 @@
   <context>
     <name>GameMode</name>
     <message>
-      <location filename="../services/GameMode.qml" line="+169"/>
+      <location filename="../services/GameMode.qml" line="+113"/>
       <source>Game mode enabled</source>
       <translation>Spelmodus ingeschakeld</translation>
     </message>
@@ -4547,7 +4555,7 @@
   <context>
     <name>Github</name>
     <message>
-      <location filename="../modules/bar/popouts/Github.qml" line="+32"/>
+      <location filename="../modules/bar/popouts/Github.qml" line="+31"/>
       <source>GitHub</source>
       <translation type="unfinished"/>
     </message>
@@ -4575,7 +4583,7 @@
   <context>
     <name>GithubActivity</name>
     <message>
-      <location filename="../modules/bar/components/GithubActivity.qml" line="+85"/>
+      <location filename="../modules/bar/components/GithubActivity.qml" line="+83"/>
       <source>GitHub widget needs a token</source>
       <translation>GitHub widget heeft een token nodig</translation>
     </message>
@@ -4588,7 +4596,7 @@
   <context>
     <name>GreeterContext</name>
     <message>
-      <location filename="../modules/bar/popouts/GreeterContext.qml" line="+81"/>
+      <location filename="../modules/bar/popouts/GreeterContext.qml" line="+79"/>
       <source>Greeter settings</source>
       <translation>Groeter instellingen</translation>
     </message>
@@ -4710,7 +4718,7 @@
   <context>
     <name>KbLayout</name>
     <message>
-      <location filename="../modules/bar/popouts/kblayout/KbLayout.qml" line="+38"/>
+      <location filename="../modules/bar/popouts/kblayout/KbLayout.qml" line="+37"/>
       <source>Keyboard Layouts</source>
       <translation>Toetsenbord Lay-outs</translation>
     </message>
@@ -4736,7 +4744,7 @@
       <translation>Toetsencombinatie opnemen</translation>
     </message>
     <message>
-      <location line="+69"/>
+      <location line="+68"/>
       <source>Press keys now...</source>
       <translation>Druk nu op knoppen...</translation>
     </message>
@@ -4754,7 +4762,7 @@
   <context>
     <name>KeybindItem</name>
     <message>
-      <location filename="../modules/launcher/items/KeybindItem.qml" line="+68"/>
+      <location filename="../modules/launcher/items/KeybindItem.qml" line="+67"/>
       <source>No keybinds</source>
       <translation>Geen sleutelhangers</translation>
     </message>
@@ -4763,77 +4771,77 @@
     <name>KrohnkitePage</name>
     <message>
       <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+20"/>
-      <location line="+58"/>
+      <location line="+57"/>
       <source>Window Tiling</source>
       <translation>Kilm Venster</translation>
     </message>
     <message>
-      <location line="-53"/>
+      <location line="-52"/>
       <source>BTree</source>
       <translation>Boom</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+272"/>
+      <location line="+271"/>
       <source>Monocle</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-271"/>
-      <location line="+264"/>
+      <location line="-270"/>
+      <location line="+263"/>
       <source>Floating</source>
       <translation>Zwevend</translation>
     </message>
     <message>
-      <location line="-263"/>
-      <location line="+277"/>
+      <location line="-262"/>
+      <location line="+276"/>
       <source>Quarter</source>
       <translation>Kwartaal</translation>
     </message>
     <message>
-      <location line="-276"/>
-      <location line="+290"/>
+      <location line="-275"/>
+      <location line="+289"/>
       <source>Spread</source>
       <translation>Verspreiding</translation>
     </message>
     <message>
-      <location line="-289"/>
-      <location line="+296"/>
+      <location line="-288"/>
+      <location line="+295"/>
       <source>Stacked</source>
       <translation>Gestapeld</translation>
     </message>
     <message>
-      <location line="-295"/>
-      <location line="+302"/>
+      <location line="-294"/>
+      <location line="+301"/>
       <source>Stair</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-301"/>
-      <location line="+330"/>
+      <location line="-300"/>
+      <location line="+329"/>
       <source>Columns</source>
       <translation>Kolommen</translation>
     </message>
     <message>
-      <location line="-329"/>
-      <location line="+307"/>
+      <location line="-328"/>
+      <location line="+306"/>
       <source>Three Column</source>
       <translation>Drie kolom</translation>
     </message>
     <message>
-      <location line="-306"/>
-      <location line="+278"/>
+      <location line="-305"/>
+      <location line="+277"/>
       <source>Spiral</source>
       <translation>Spiraal</translation>
     </message>
     <message>
-      <location line="-277"/>
-      <location line="+312"/>
+      <location line="-276"/>
+      <location line="+311"/>
       <source>Tile</source>
       <translation>Tegel</translation>
     </message>
     <message>
-      <location line="-302"/>
+      <location line="-301"/>
       <source>Save Changes</source>
       <translation>Wijzigingen opslaan</translation>
     </message>
@@ -4843,7 +4851,7 @@
       <translation>Log uit om wijzigingen toe te passen</translation>
     </message>
     <message>
-      <location line="+24"/>
+      <location line="+23"/>
       <source>Automatically tile windows using Krohnkite</source>
       <translation>Automatisch tegel vensters met Krohnkite</translation>
     </message>
@@ -5011,7 +5019,7 @@
   <context>
     <name>KrohnkitePreview</name>
     <message>
-      <location filename="../modules/nexus/pages/desktop/KrohnkitePreview.qml" line="+268"/>
+      <location filename="../modules/nexus/pages/desktop/KrohnkitePreview.qml" line="+262"/>
       <source>Layout Preview</source>
       <translation>Lay-out voorbeeld</translation>
     </message>
@@ -5082,13 +5090,13 @@
   <context>
     <name>LanguageAndRegion</name>
     <message>
-      <location filename="../modules/nexus/pages/LanguageAndRegion.qml" line="+45"/>
-      <location line="+44"/>
+      <location filename="../modules/nexus/pages/LanguageAndRegion.qml" line="+44"/>
+      <location line="+41"/>
       <source>Auto</source>
       <translation>Automatisch</translation>
     </message>
     <message>
-      <location line="-40"/>
+      <location line="-37"/>
       <source>°C</source>
       <translation type="unfinished"/>
     </message>
@@ -5103,7 +5111,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+7"/>
       <source>Binary (KiB, MiB)</source>
       <translation>Binair (KiB, MiB)</translation>
     </message>
@@ -5113,13 +5121,13 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
-      <location line="+62"/>
+      <location line="+8"/>
+      <location line="+60"/>
       <source>System language</source>
       <translation>Taal systeem</translation>
     </message>
     <message>
-      <location line="-47"/>
+      <location line="-46"/>
       <source>12-hour</source>
       <translation>12-uur</translation>
     </message>
@@ -5134,7 +5142,7 @@
       <translation>Taal &amp; regio</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Language</source>
       <translation>Taal</translation>
     </message>
@@ -5154,7 +5162,7 @@
       <translation>Onvertaalde tekst valt terug naar het Engels</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Weather</source>
       <translation>Weer</translation>
     </message>
@@ -5199,7 +5207,7 @@
       <translation>Geen locatie geselecteerd</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+18"/>
       <source>Units</source>
       <translation>Eenheden</translation>
     </message>
@@ -5234,7 +5242,7 @@
       <translation>Eenheden voor gegevensgrootte en netwerksnelheden</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+7"/>
       <source>Time &amp; date</source>
       <translation>Tijd &amp; datum</translation>
     </message>
@@ -5257,7 +5265,7 @@
       <translation>Loper</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -5332,7 +5340,7 @@
       <translation>Onthullen wanneer de cursor de schermrand bereikt</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Display</source>
       <translation>Weergeven</translation>
     </message>
@@ -5397,7 +5405,7 @@
       <translation>Pixels gesleept voor de launcher opent</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Clipboard</source>
       <translation>Klembord</translation>
     </message>
@@ -5422,7 +5430,7 @@
       <translation>Vraag voor het wissen van de klembord geschiedenis</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -5447,7 +5455,7 @@
       <translation>Acties toestaan die afsluiten of uitloggen</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Fuzzy search</source>
       <translation>Fuzzy zoeken</translation>
     </message>
@@ -5536,12 +5544,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+160"/>
+      <location line="+157"/>
       <source>Pentagon</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-155"/>
+      <location line="-152"/>
       <source>Gem</source>
       <translation>Edelsteen</translation>
     </message>
@@ -5576,7 +5584,7 @@
       <translation>Vergrendel scherm</translation>
     </message>
     <message>
-      <location line="+26"/>
+      <location line="+25"/>
       <source>Wallpaper</source>
       <translation>Achtergrond</translation>
     </message>
@@ -5621,7 +5629,7 @@
       <translation>Vervaag de hele achtergrond, niet alleen achter de widgets</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Authentication</source>
       <translation>Authenticatie</translation>
     </message>
@@ -5646,7 +5654,7 @@
       <translation>Probeert voordat u terugvalt naar het wachtwoord</translation>
     </message>
     <message>
-      <location line="+17"/>
+      <location line="+16"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -5701,7 +5709,7 @@
       <translation>Tint het vergrendelingsscherm samen met het palet</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Session icons</source>
       <translation>Sessie pictogrammen</translation>
     </message>
@@ -5769,7 +5777,7 @@
   <context>
     <name>LockStatus</name>
     <message>
-      <location filename="../modules/bar/popouts/LockStatus.qml" line="+22"/>
+      <location filename="../modules/bar/popouts/LockStatus.qml" line="+21"/>
       <source>Keyboard Locks</source>
       <translation>Toetsenbord sloten</translation>
     </message>
@@ -5986,7 +5994,7 @@
   <context>
     <name>NavPane</name>
     <message>
-      <location filename="../modules/nexus/NavPane.qml" line="+37"/>
+      <location filename="../modules/nexus/NavPane.qml" line="+35"/>
       <source>Search settings</source>
       <translation>Zoek instellingen</translation>
     </message>
@@ -6019,12 +6027,12 @@
       <translation>MAC-adres</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+20"/>
       <source>Network</source>
       <translation>Netwerk</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+37"/>
       <source>Wireless</source>
       <translation>Draadloos</translation>
     </message>
@@ -6039,7 +6047,7 @@
       <translation>%1 netwerken beschikbaar</translation>
     </message>
     <message>
-      <location line="+146"/>
+      <location line="+143"/>
       <source>Rescan networks</source>
       <translation>Netwerken opnieuw scannen</translation>
     </message>
@@ -6059,7 +6067,7 @@
       <translation>Geen VPN-profielen gevonden</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Ethernet</source>
       <translation type="unfinished"/>
     </message>
@@ -6074,7 +6082,7 @@
       <translation>onbekend</translation>
     </message>
     <message>
-      <location line="+47"/>
+      <location line="+46"/>
       <source>Connection details</source>
       <translation>Details verbinding</translation>
     </message>
@@ -6087,22 +6095,22 @@
       <translation>Netwerk</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+54"/>
       <source>Collecting data...</source>
       <translation>Gegevens verzamelen...</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+18"/>
       <source>Download</source>
       <translation>downloaden</translation>
     </message>
     <message>
-      <location line="+28"/>
+      <location line="+27"/>
       <source>Upload</source>
       <translation>Uploaden</translation>
     </message>
     <message>
-      <location line="+28"/>
+      <location line="+27"/>
       <source>Total</source>
       <translation>Totaal</translation>
     </message>
@@ -6110,27 +6118,27 @@
   <context>
     <name>NetworkDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+52"/>
+      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+40"/>
       <source>Network</source>
       <translation>Netwerk</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+22"/>
       <source>Forget</source>
       <translation>Vergeet</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+12"/>
       <source>Connect</source>
       <translation>Verbinden</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+10"/>
       <source>Disconnect</source>
       <translation>Verbreek</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Connection</source>
       <translation>Verbindingsinstellingen</translation>
     </message>
@@ -6189,7 +6197,7 @@
       <translation>MAC-adres</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+7"/>
       <source>Behaviour</source>
       <translation>Gedrag</translation>
     </message>
@@ -6217,7 +6225,7 @@
       <translation>Wifi uitgeschakeld</translation>
     </message>
     <message>
-      <location line="+127"/>
+      <location line="+119"/>
       <source>Security: %1%2</source>
       <translation>Beveiliging: %1%2</translation>
     </message>
@@ -6245,12 +6253,12 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+51"/>
+      <location line="+50"/>
       <source>Show all networks (%1)</source>
       <translation>Toon alle netwerken (%1)</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+39"/>
       <source>Saved networks</source>
       <translation>Opgeslagen netwerken</translation>
     </message>
@@ -6271,17 +6279,17 @@
     </message>
     <message>
       <location line="+80"/>
-      <location line="+146"/>
+      <location line="+145"/>
       <source>Connected</source>
       <translation>Verbonden</translation>
     </message>
     <message>
-      <location line="-146"/>
+      <location line="-145"/>
       <source>Available</source>
       <translation>Beschikbaar</translation>
     </message>
     <message>
-      <location line="+44"/>
+      <location line="+43"/>
       <source>VPN providers</source>
       <translation type="unfinished"/>
     </message>
@@ -6349,22 +6357,22 @@
   <context>
     <name>News</name>
     <message>
-      <location filename="../modules/sidebar/News.qml" line="+94"/>
+      <location filename="../modules/sidebar/News.qml" line="+90"/>
       <source>Failed to fetch news (Status: %1)</source>
       <translation>Nieuws ophalen mislukt (Status: %1)</translation>
     </message>
     <message>
-      <location line="+42"/>
+      <location line="+40"/>
       <source>No news articles found.</source>
       <translation>Geen nieuwsartikelen gevonden.</translation>
     </message>
     <message>
-      <location line="+20"/>
+      <location line="+19"/>
       <source>Arch Linux News</source>
       <translation>Arch Linux nieuws</translation>
     </message>
     <message>
-      <location line="+28"/>
+      <location line="+26"/>
       <source>Fetching latest news...</source>
       <translation>Laatste nieuws ophalen...</translation>
     </message>
@@ -6372,7 +6380,7 @@
   <context>
     <name>Nexus</name>
     <message>
-      <location filename="../modules/nexus/Nexus.qml" line="+170"/>
+      <location filename="../modules/nexus/Nexus.qml" line="+162"/>
       <source>Update in progress</source>
       <translation>Bezig met bijwerken</translation>
     </message>
@@ -6395,7 +6403,7 @@
   <context>
     <name>NightLight</name>
     <message>
-      <location filename="../modules/bar/popouts/NightLight.qml" line="+27"/>
+      <location filename="../modules/bar/popouts/NightLight.qml" line="+26"/>
       <source>Night Light</source>
       <translation>Nacht Licht</translation>
     </message>
@@ -6410,12 +6418,12 @@
       <translation>Handleiding</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+12"/>
       <source>Daylight Temperature (%1K)</source>
       <translation>Daglicht temperatuur (%1K)</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+37"/>
       <source>Nightlight Temperature (%1K)</source>
       <translation>Nachtlichttemperatuur (%1K)</translation>
     </message>
@@ -6428,7 +6436,7 @@
   <context>
     <name>Nmcli</name>
     <message>
-      <location filename="../services/Nmcli.qml" line="+432"/>
+      <location filename="../services/Nmcli.qml" line="+409"/>
       <source>Open</source>
       <translation type="unfinished"/>
     </message>
@@ -6455,7 +6463,7 @@
     <name>NotifData</name>
     <message>
       <location filename="../services/NotifData.qml" line="+19"/>
-      <location line="+150"/>
+      <location line="+149"/>
       <source>now</source>
       <translation>nu</translation>
     </message>
@@ -6702,7 +6710,7 @@
   <context>
     <name>Notifications</name>
     <message>
-      <location filename="../modules/bar/popouts/Notifications.qml" line="+27"/>
+      <location filename="../modules/bar/popouts/Notifications.qml" line="+26"/>
       <source>Notifications</source>
       <translation>Notificaties</translation>
     </message>
@@ -6787,7 +6795,7 @@
   <context>
     <name>Notifs</name>
     <message>
-      <location filename="../services/Notifs.qml" line="+150"/>
+      <location filename="../services/Notifs.qml" line="+133"/>
       <source>Do not disturb enabled</source>
       <translation>Niet storen ingeschakeld</translation>
     </message>
@@ -6807,7 +6815,7 @@
       <translation>Pop-up notificaties zijn nu ingeschakeld</translation>
     </message>
     <message>
-      <location line="+103"/>
+      <location line="+97"/>
       <source>Clear all notifications</source>
       <translation>Wis alle meldingen</translation>
     </message>
@@ -6815,7 +6823,7 @@
   <context>
     <name>OptionsToolbar</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/OptionsToolbar.qml" line="+43"/>
+      <location filename="../modules/screenshot/regionSelector/OptionsToolbar.qml" line="+40"/>
       <source>Window Selector</source>
       <translation>Venster Selectiemenu</translation>
     </message>
@@ -7171,7 +7179,7 @@
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+346"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+325"/>
       <source>Page under construction</source>
       <translation>Pagina onder constructie</translation>
     </message>
@@ -7184,7 +7192,7 @@
   <context>
     <name>PageDictionary</name>
     <message>
-      <location filename="../modules/nexus/PageDictionary.qml" line="+10"/>
+      <location filename="../modules/nexus/PageDictionary.qml" line="+9"/>
       <source>Appearance</source>
       <translation>Uiterlijk</translation>
     </message>
@@ -7459,7 +7467,7 @@
       <translation>Venster schakelaar</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+4"/>
       <source>Network</source>
       <translation>Netwerk</translation>
     </message>
@@ -7559,7 +7567,7 @@
       <translation>Gedempte meldingsapps</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+4"/>
       <source>Notifications</source>
       <translation>Notificaties</translation>
     </message>
@@ -7674,7 +7682,7 @@
       <translation>Aangepaste sneltoetsen</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+4"/>
       <source>Apps</source>
       <translation>Applicaties</translation>
     </message>
@@ -7704,7 +7712,7 @@
       <translation>Favorieten &amp; verborgen</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+4"/>
       <source>Services</source>
       <translation>Voorzieningen</translation>
     </message>
@@ -7749,7 +7757,7 @@
       <translation>Weer Locatie</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+4"/>
       <source>Updates</source>
       <translation>Bijwerken</translation>
     </message>
@@ -7838,7 +7846,7 @@
   <context>
     <name>PageRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageRegistry.qml" line="+23"/>
+      <location filename="../modules/nexus/PageRegistry.qml" line="+22"/>
       <source>Main Page</source>
       <translation>Hoofd pagina</translation>
     </message>
@@ -7964,7 +7972,7 @@
   <context>
     <name>Players</name>
     <message>
-      <location filename="../services/Players.qml" line="+64"/>
+      <location filename="../services/Players.qml" line="+63"/>
       <source>Now Playing</source>
       <translation>Speelt nu</translation>
     </message>
@@ -8002,7 +8010,7 @@
       <translation>Instellingen</translation>
     </message>
     <message>
-      <location line="+52"/>
+      <location line="+51"/>
       <source>Done</source>
       <translation>Voltooid</translation>
     </message>
@@ -8010,7 +8018,7 @@
   <context>
     <name>PluginsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginsPage.qml" line="+60"/>
+      <location filename="../modules/nexus/pages/PluginsPage.qml" line="+59"/>
       <source>Plugins</source>
       <translation>Plug-ins</translation>
     </message>
@@ -8026,12 +8034,12 @@
     </message>
     <message>
       <location line="+34"/>
-      <location line="+335"/>
+      <location line="+333"/>
       <source>Installed</source>
       <translation>Geinstalleerd</translation>
     </message>
     <message>
-      <location line="-326"/>
+      <location line="-324"/>
       <source>Store</source>
       <translation>Winkel</translation>
     </message>
@@ -8041,7 +8049,7 @@
       <translation>Er is een shell herstart nodig om wijzigingen door te voeren</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+14"/>
       <source>Shell Plugins</source>
       <translation type="unfinished"/>
     </message>
@@ -8056,7 +8064,7 @@
       <translation>Geen plugins geïnstalleerd</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+38"/>
       <source>Loading store...</source>
       <translation>Opslag laden...</translation>
     </message>
@@ -8079,12 +8087,12 @@
   <context>
     <name>PolkitDialog</name>
     <message>
-      <location filename="../components/PolkitDialog.qml" line="+124"/>
+      <location filename="../components/PolkitDialog.qml" line="+122"/>
       <source>Enter your password</source>
       <translation>Voer je wachtwoord in</translation>
     </message>
     <message>
-      <location line="+99"/>
+      <location line="+96"/>
       <source>Authentication Required</source>
       <translation>Authenticatie vereist</translation>
     </message>
@@ -8311,7 +8319,7 @@
   <context>
     <name>RecordingDeleteModal</name>
     <message>
-      <location filename="../modules/utilities/RecordingDeleteModal.qml" line="+170"/>
+      <location filename="../modules/utilities/RecordingDeleteModal.qml" line="+168"/>
       <source>Delete recording?</source>
       <translation>Opname verwijderen?</translation>
     </message>
@@ -8352,17 +8360,17 @@
   <context>
     <name>RegionSelection</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+581"/>
+      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+543"/>
       <source>Full Screen Screenshot</source>
       <translation>Volledig scherm schermafbeelding</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+13"/>
       <source>Snip selected region (Enter)</source>
       <translation>Snip geselecteerde regio (Enter)</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+20"/>
       <source>Clear selection</source>
       <translation>Selectie wissen</translation>
     </message>
@@ -8375,7 +8383,7 @@
   <context>
     <name>RegionSelector</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/RegionSelector.qml" line="+90"/>
+      <location filename="../modules/screenshot/regionSelector/RegionSelector.qml" line="+85"/>
       <source>Takes a screenshot of the selected region</source>
       <translation>Neemt een schermafbeelding van het geselecteerde gebied</translation>
     </message>
@@ -8413,7 +8421,7 @@
       <translation>Geen opgeslagen netwerken</translation>
     </message>
     <message>
-      <location line="+53"/>
+      <location line="+48"/>
       <source>%1 (%2)</source>
       <translation type="unfinished"/>
     </message>
@@ -8436,7 +8444,7 @@
   <context>
     <name>SearchResults</name>
     <message>
-      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+149"/>
+      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+148"/>
       <source>in </source>
       <translation>inch </translation>
     </message>
@@ -8444,14 +8452,14 @@
   <context>
     <name>ServicesPage</name>
     <message>
-      <location filename="../modules/nexus/pages/ServicesPage.qml" line="+18"/>
-      <location line="+16"/>
-      <location line="+108"/>
+      <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
+      <location line="+15"/>
+      <location line="+105"/>
       <source>Auto</source>
       <translation>Automatisch</translation>
     </message>
     <message>
-      <location line="-102"/>
+      <location line="-99"/>
       <source>Generic</source>
       <translation type="unfinished"/>
     </message>
@@ -8466,7 +8474,7 @@
       <translation>Voorzieningen</translation>
     </message>
     <message>
-      <location line="+26"/>
+      <location line="+24"/>
       <source>Polling</source>
       <translation>Stemming</translation>
     </message>
@@ -8501,7 +8509,7 @@
       <translation>Hoe vaak beschikbare netwerken opnieuw gescand worden (seconden)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Media &amp; lyrics</source>
       <translation>Media &amp; songteksten</translation>
     </message>
@@ -8526,7 +8534,7 @@
       <translation>Voorkeur mediaspeler wanneer meerdere open zijn</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Input increments</source>
       <translation>Voer incrementen in</translation>
     </message>
@@ -8561,7 +8569,7 @@
       <translation>Bovenste limiet voor output volume (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Service tuning</source>
       <translation>Service afstemmen</translation>
     </message>
@@ -8609,7 +8617,7 @@
       <translation>Sessie</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -8644,31 +8652,31 @@
       <translation>Pixels om te slepen voor menubewegingen</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Icons</source>
       <translation>Pictogrammen</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+31"/>
+      <location line="+30"/>
       <source>Logout</source>
       <translation>Afmelden</translation>
     </message>
     <message>
-      <location line="-25"/>
-      <location line="+31"/>
+      <location line="-24"/>
+      <location line="+30"/>
       <source>Shutdown</source>
       <translation>Afsluiten</translation>
     </message>
     <message>
-      <location line="-25"/>
-      <location line="+31"/>
+      <location line="-24"/>
+      <location line="+30"/>
       <source>Hibernate</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-24"/>
-      <location line="+31"/>
+      <location line="-23"/>
+      <location line="+30"/>
       <source>Reboot</source>
       <translation type="unfinished"/>
     </message>
@@ -8719,7 +8727,7 @@
   <context>
     <name>ShortcutRow</name>
     <message>
-      <location filename="../modules/nexus/common/ShortcutRow.qml" line="+124"/>
+      <location filename="../modules/nexus/common/ShortcutRow.qml" line="+119"/>
       <source>Collides with: </source>
       <translation>Kolommen met: </translation>
     </message>
@@ -8727,7 +8735,7 @@
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+29"/>
+      <location filename="../modules/Shortcuts.qml" line="+28"/>
       <source>Open nexus</source>
       <translation>Zoom openen</translation>
     </message>
@@ -8812,7 +8820,7 @@
       <translation>Open vensterwisselaar</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+21"/>
       <source>Open window switcher (reverse)</source>
       <translation>Open vensterschakelaar (omgekeerd)</translation>
     </message>
@@ -8907,7 +8915,7 @@
       <translation>Overschakelen naar werkruimte 10</translation>
     </message>
     <message>
-      <location line="+90"/>
+      <location line="+89"/>
       <source>Focus the window above</source>
       <translation>Focus het venster hierboven</translation>
     </message>
@@ -9146,7 +9154,7 @@
       <translation>Pixels van schermrand gereserveerd voor het oppakken van de zijbalk</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Sidebar Tabs</source>
       <translation type="unfinished"/>
     </message>
@@ -9275,7 +9283,7 @@
   <context>
     <name>StatusIconsContext</name>
     <message>
-      <location filename="../modules/bar/popouts/StatusIconsContext.qml" line="+85"/>
+      <location filename="../modules/bar/popouts/StatusIconsContext.qml" line="+83"/>
       <source>Status icons settings</source>
       <translation type="unfinished"/>
     </message>
@@ -9311,7 +9319,7 @@
       <translation>Venster schakelaar</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+37"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -9336,7 +9344,7 @@
       <translation>Achteruit</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -9361,7 +9369,7 @@
       <translation>Markeer en toon het venster zelf op de werkruimte tijdens het fietsen van Alt+Tab</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+13"/>
       <source>Display</source>
       <translation>Weergeven</translation>
     </message>
@@ -9482,7 +9490,7 @@
   <context>
     <name>TaskbarPanel</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/TaskbarPanel.qml" line="+18"/>
+      <location filename="../modules/nexus/pages/panels/TaskbarPanel.qml" line="+19"/>
       <source>Top</source>
       <translation>Bovenkant</translation>
     </message>
@@ -9507,12 +9515,12 @@
       <translation>Gebruik globale positie</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+24"/>
       <source>Taskbar</source>
       <translation>Taakbalk</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -9557,7 +9565,7 @@
       <translation>Schermrand om de balk aan te zetten</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+10"/>
       <source>Show on hover</source>
       <translation>Toon bij zweven</translation>
     </message>
@@ -9592,7 +9600,7 @@
       <translation>Gebruik globale positie</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+13"/>
       <source>Scaling</source>
       <translation>Schalen</translation>
     </message>
@@ -9657,7 +9665,7 @@
       <translation>Aanpassen van schaal en lettertype voor elk pop-uptype</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
       <source>Components</source>
       <translation>Onderdelen</translation>
     </message>
@@ -9682,7 +9690,7 @@
       <translation>Workspaces, tray, statuspictogrammen, klok, dock en meer</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
       <source>Scroll actions</source>
       <translation>Scroll acties</translation>
     </message>
@@ -9891,7 +9899,7 @@
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+97"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+95"/>
       <source>Quick Toggles</source>
       <translation type="unfinished"/>
     </message>
@@ -9899,7 +9907,7 @@
   <context>
     <name>TrayItem</name>
     <message>
-      <location filename="../modules/bar/components/TrayItem.qml" line="+46"/>
+      <location filename="../modules/bar/components/TrayItem.qml" line="+34"/>
       <source>Left-click activates, right-click opens the menu, middle-click runs the secondary action.</source>
       <translation>Linksklik geactiveerd, klik met de rechtermuisknop opent het menu, in de middelste muisknop draait de secundaire actie.</translation>
     </message>
@@ -9912,7 +9920,7 @@
   <context>
     <name>TrayMenu</name>
     <message>
-      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+335"/>
+      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
       <source>Back</source>
       <translation>Achterzijde</translation>
     </message>
@@ -9920,7 +9928,7 @@
   <context>
     <name>Units</name>
     <message>
-      <location filename="../services/Units.qml" line="+26"/>
+      <location filename="../services/Units.qml" line="+22"/>
       <source>%1°</source>
       <comment>temperature</comment>
       <translation type="unfinished"/>
@@ -9944,7 +9952,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+10"/>
       <source>%1 B</source>
       <comment>data unit</comment>
       <translation type="unfinished"/>
@@ -10058,7 +10066,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+36"/>
+      <location line="+34"/>
       <source>%1 / %2</source>
       <comment>used / total amount</comment>
       <translation type="unfinished"/>
@@ -10067,7 +10075,7 @@
   <context>
     <name>UpdateChecker</name>
     <message>
-      <location filename="../services/UpdateChecker.qml" line="+375"/>
+      <location filename="../services/UpdateChecker.qml" line="+363"/>
       <source>Done!</source>
       <translation>Klaar!</translation>
     </message>
@@ -10083,28 +10091,28 @@
     </message>
     <message>
       <location line="+15"/>
-      <location line="+397"/>
+      <location line="+379"/>
       <source>Canceled</source>
       <translation>Geannuleerd</translation>
     </message>
     <message>
-      <location line="-310"/>
-      <location line="+22"/>
+      <location line="-294"/>
+      <location line="+21"/>
       <source>Release</source>
       <translation>Vrijgeven</translation>
     </message>
     <message>
-      <location line="-20"/>
+      <location line="-19"/>
       <source>GitHub release</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+21"/>
       <source>Tag</source>
       <translation>Tagnaam</translation>
     </message>
     <message>
-      <location line="+290"/>
+      <location line="+275"/>
       <source>Update Successful</source>
       <translation>Update geslaagd</translation>
     </message>
@@ -10145,7 +10153,7 @@
   <context>
     <name>UpdateTimeline</name>
     <message>
-      <location filename="../modules/nexus/common/UpdateTimeline.qml" line="+35"/>
+      <location filename="../modules/nexus/common/UpdateTimeline.qml" line="+27"/>
       <source>feat</source>
       <translation>tarief</translation>
     </message>
@@ -10200,7 +10208,7 @@
       <translation>Terugzetten</translation>
     </message>
     <message>
-      <location line="+260"/>
+      <location line="+230"/>
       <source>merge</source>
       <translation>samenvoegen</translation>
     </message>
@@ -10208,7 +10216,7 @@
   <context>
     <name>Updates</name>
     <message>
-      <location filename="../modules/bar/popouts/Updates.qml" line="+35"/>
+      <location filename="../modules/bar/popouts/Updates.qml" line="+34"/>
       <source>Updating…</source>
       <translation>Bijwerken…</translation>
     </message>
@@ -10244,12 +10252,12 @@
     </message>
     <message>
       <location line="+69"/>
-      <location line="+80"/>
+      <location line="+78"/>
       <source>Checking…</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-78"/>
+      <location line="-76"/>
       <source>Last check: not yet</source>
       <translation>Laatste controle: nog niet</translation>
     </message>
@@ -10264,17 +10272,17 @@
       <translation>Volgende aanmelding in %1</translation>
     </message>
     <message>
-      <location line="+57"/>
+      <location line="+55"/>
       <source>Check for updates</source>
       <translation>Op updates controleren</translation>
     </message>
     <message>
-      <location line="+41"/>
+      <location line="+40"/>
       <source>Open Updates</source>
       <translation>Updates openen</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+37"/>
       <source>Hide from bar</source>
       <translation>Verbergen van balk</translation>
     </message>
@@ -10282,7 +10290,7 @@
   <context>
     <name>UpdatesPage</name>
     <message>
-      <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+162"/>
+      <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+136"/>
       <source>Updates</source>
       <translation>Bijwerken</translation>
     </message>
@@ -10292,7 +10300,7 @@
       <translation>Hulp</translation>
     </message>
     <message>
-      <location line="+99"/>
+      <location line="+97"/>
       <source>Update complete - log out to apply</source>
       <translation>Update voltooid - Log uit om toe te passen</translation>
     </message>
@@ -10347,7 +10355,7 @@
       <translation>Kanaal: %1</translation>
     </message>
     <message>
-      <location line="+26"/>
+      <location line="+22"/>
       <source>Log Out</source>
       <translation>Log uit</translation>
     </message>
@@ -10372,7 +10380,7 @@
       <translation>Installeer Update</translation>
     </message>
     <message>
-      <location line="+44"/>
+      <location line="+40"/>
       <source>Stop</source>
       <translation>Stoppen</translation>
     </message>
@@ -10392,7 +10400,7 @@
       <translation>Controleer</translation>
     </message>
     <message>
-      <location line="+35"/>
+      <location line="+31"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -10422,7 +10430,7 @@
       <translation>Een notificatiepictogram in de taakbalk weergeven wanneer er updates beschikbaar zijn</translation>
     </message>
     <message>
-      <location line="+67"/>
+      <location line="+63"/>
       <source>Customize Installation</source>
       <translation>Installatie aanpassen</translation>
     </message>
@@ -10462,7 +10470,7 @@
       <translation>Overschakelen naar %1…</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+7"/>
       <source>Version History</source>
       <translation>Versie Geschiedenis</translation>
     </message>
@@ -10472,7 +10480,7 @@
       <translation>Commit geschiedenis</translation>
     </message>
     <message>
-      <location line="+62"/>
+      <location line="+54"/>
       <source>Loading…</source>
       <translation type="unfinished"/>
     </message>
@@ -10482,7 +10490,7 @@
       <translation>Laad 10 meer</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Update Log</source>
       <translation>Logboek bijwerken</translation>
     </message>
@@ -10669,7 +10677,7 @@
   <context>
     <name>VPN</name>
     <message>
-      <location filename="../services/VPN.qml" line="+209"/>
+      <location filename="../services/VPN.qml" line="+174"/>
       <source>VPN connection failed</source>
       <translation>VPN-verbinding mislukt</translation>
     </message>
@@ -10679,7 +10687,7 @@
       <translation>VPN-verbinding verbreken mislukt</translation>
     </message>
     <message>
-      <location line="+241"/>
+      <location line="+221"/>
       <source>VPN connected</source>
       <translation>VPN verbonden</translation>
     </message>
@@ -10715,13 +10723,13 @@
       <translation>VPN fout</translation>
     </message>
     <message>
-      <location line="+196"/>
-      <location line="+69"/>
+      <location line="+184"/>
+      <location line="+68"/>
       <source>Could not start %1. Is it installed?</source>
       <translation>Kan %1niet starten. Is het geïnstalleerd?</translation>
     </message>
     <message>
-      <location line="-55"/>
+      <location line="-54"/>
       <source>Could not connect to %1</source>
       <translation>Kan geen verbinding maken met %1</translation>
     </message>
@@ -10734,7 +10742,7 @@
       <translation>Video achtergronden</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+12"/>
       <source>Pause video wallpapers</source>
       <translation>Videoachtergronden pauzeren</translation>
     </message>
@@ -10785,12 +10793,12 @@
       <translation>Zoek voorvertoning, en stel achtergronden direct in</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+21"/>
       <source>Search wallpapers...</source>
       <translation>Achtergronden zoeken...</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+38"/>
       <source>Found %1 wallpapers (page %2 of %3)</source>
       <translation>Gevonden %1 achtergronden (pagina %2 van %3)</translation>
     </message>
@@ -10805,7 +10813,7 @@
       <translation>Meer laden</translation>
     </message>
     <message>
-      <location line="+140"/>
+      <location line="+138"/>
       <source>Downloading...</source>
       <translation>Downloadenchar@@0</translation>
     </message>
@@ -10821,18 +10829,18 @@
     </message>
     <message>
       <location line="+16"/>
-      <location line="+102"/>
+      <location line="+101"/>
       <source>Wallpaper applied</source>
       <translation>Achtergrond toegepast</translation>
     </message>
     <message>
-      <location line="-100"/>
-      <location line="+113"/>
+      <location line="-99"/>
+      <location line="+112"/>
       <source>Download failed</source>
       <translation>Downloaden mislukt</translation>
     </message>
     <message>
-      <location line="-112"/>
+      <location line="-111"/>
       <source>Downloading... %1%</source>
       <translation>Downloaden... %1%</translation>
     </message>
@@ -10973,7 +10981,7 @@
   <context>
     <name>WallpaperSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+132"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+122"/>
       <source>Select wallpaper</source>
       <translation>Achtergrond selecteren</translation>
     </message>
@@ -11003,12 +11011,12 @@
       <translation>Map openen</translation>
     </message>
     <message>
-      <location line="+20"/>
+      <location line="+16"/>
       <source>Featured wallpaper</source>
       <translation>Aanbevolen achtergrond</translation>
     </message>
     <message>
-      <location line="+175"/>
+      <location line="+168"/>
       <location line="+7"/>
       <source>All</source>
       <translation>Allemaal</translation>
@@ -11034,7 +11042,7 @@
       <translation>Lokale achtergronden</translation>
     </message>
     <message>
-      <location line="+101"/>
+      <location line="+100"/>
       <source>No local wallpapers found</source>
       <translation>Geen lokale achtergronden gevonden</translation>
     </message>
@@ -11146,13 +11154,13 @@
   <context>
     <name>WhatsNewWindow</name>
     <message>
-      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+114"/>
-      <location line="+151"/>
+      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+109"/>
+      <location line="+148"/>
       <source>What&apos;s New in Caelestia</source>
       <translation>Wat&apos;s Nieuw in Caelestia</translation>
     </message>
     <message>
-      <location line="-99"/>
+      <location line="-97"/>
       <source>What&apos;s New</source>
       <translation>Wat&apos;s Nieuw</translation>
     </message>
@@ -11160,18 +11168,18 @@
   <context>
     <name>WirelessPassword</name>
     <message>
-      <location filename="../modules/bar/popouts/WirelessPassword.qml" line="+58"/>
-      <location line="+22"/>
-      <location line="+460"/>
-      <location line="+32"/>
-      <location line="+12"/>
-      <location line="+51"/>
+      <location filename="../modules/bar/popouts/WirelessPassword.qml" line="+52"/>
+      <location line="+21"/>
+      <location line="+449"/>
+      <location line="+28"/>
+      <location line="+10"/>
+      <location line="+48"/>
       <location line="+44"/>
       <source>Connect</source>
       <translation>Verbinden</translation>
     </message>
     <message>
-      <location line="-454"/>
+      <location line="-439"/>
       <source>Enter password</source>
       <translation>Wachtwoord invoeren</translation>
     </message>
@@ -11192,12 +11200,12 @@
     </message>
     <message>
       <location line="+3"/>
-      <location line="+273"/>
+      <location line="+265"/>
       <source>Connecting...</source>
       <translation>Verbinden...</translation>
     </message>
     <message>
-      <location line="-140"/>
+      <location line="-138"/>
       <source>Password</source>
       <translation>Wachtwoord</translation>
     </message>

@@ -47,7 +47,6 @@ PageBase {
             type: TextButton.Filled
             onClicked: {
                 KrohnkiteConfig.apply()
-                showLogout = true;
             }
         },
         IconTextButton {

@@ -164,6 +164,16 @@ void KrohnkiteConfig::refresh() {
 }
 
 void KrohnkiteConfig::apply() {
+    // Krohnkite reads its KWin config once at script start, so a plain reconfigure
+    // leaves a running script on stale settings and the page demanded a logout to
+    // apply anything (issue #678). Unload the script first; the reconfigure that
+    // follows starts every enabled script again and picks up the fresh values -
+    // the same unload/reconfigure dance the enable toggle performs.
+    QDBusMessage unload = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/Scripting"),
+        QStringLiteral("org.kde.kwin.Scripting"), QStringLiteral("unloadScript"));
+    unload << QStringLiteral("krohnkite");
+    QDBusConnection::sessionBus().call(unload, QDBus::NoBlock);
+
     QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.KWin"), QStringLiteral("/KWin"),
         QStringLiteral("org.kde.KWin"), QStringLiteral("reconfigure"));
     QDBusConnection::sessionBus().call(msg, QDBus::NoBlock);

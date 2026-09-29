@@ -354,53 +354,6 @@ Singleton {
         return wins.some(w => (screenName === "" || w.output === screenName) && isMaximizedOnWs(w, screenName));
     }
 
-    function dispatch(request: string): void {
-        if (request.startsWith("workspace ")) {
-            const ws = request.split(" ").slice(1).join(" ");
-            if (/^r[+-]\d+$/.test(ws)) {
-                if (ws.charAt(1) === "+")
-                    root.nextDesktop();
-                else
-                    root.previousDesktop();
-            } else {
-                root.switchToWorkspace(ws);
-            }
-            return;
-        }
-
-        if (request.startsWith("focuswindow address:0x")) {
-            root.focusWindow(request.slice("focuswindow address:0x".length).trim());
-            return;
-        }
-
-        if (request.startsWith("closewindow address:0x")) {
-            root.closeWindow(request.slice("closewindow address:0x".length).trim());
-            return;
-        }
-
-        const moveMatch = request.match(/^movetoworkspace\s+(\S+),address:0x/);
-        if (moveMatch) {
-            const desktopId = parseInt(moveMatch[1], 10);
-            const addr = request.slice(moveMatch[0].length).trim();
-            if (!isNaN(desktopId))
-                root.setWindowDesktop(addr, desktopId);
-            return;
-        }
-
-        if (request === "dpms off" || request === "dpms on") {
-            const method = (request === "dpms on") ? "turnOn" : "turnOff";
-            Quickshell.execDetached([
-                "qdbus6", "org.kde.Solid.PowerManagement",
-                "/org/kde/Solid/PowerManagement/Actions/DPMSControl",
-                "org.kde.Solid.PowerManagement.Actions.DPMSControl." + method
-            ]);
-            return;
-        }
-
-        if (request.startsWith("togglespecialworkspace"))
-            return;
-    }
-
     function cycleSpecialWorkspace(direction: string): void {
         const openSpecials = root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0);
         if (openSpecials.length === 0)
@@ -411,11 +364,11 @@ Singleton {
             if (root.lastSpecialWorkspace) {
                 const ws = openSpecials.find(w => w.name === root.lastSpecialWorkspace);
                 if (ws) {
-                    root.dispatch(`workspace ${root.lastSpecialWorkspace}`);
+                    root.switchToWorkspace(root.lastSpecialWorkspace);
                     return;
                 }
             }
-            root.dispatch(`workspace ${openSpecials[0].name}`);
+            root.switchToWorkspace(openSpecials[0].name);
             return;
         }
 
@@ -424,7 +377,7 @@ Singleton {
             : (direction === "next")
                 ? (currentIndex + 1) % openSpecials.length
                 : (currentIndex - 1 + openSpecials.length) % openSpecials.length;
-        root.dispatch(`workspace ${openSpecials[nextIndex].name}`);
+        root.switchToWorkspace(openSpecials[nextIndex].name);
     }
 
     function monitorNames(): list<string> {

@@ -87,6 +87,9 @@ private:
     QString resolveDesktopUuid(const QString& id) const;
 
     QList<KWinDesktopData> m_desktops;
+    // Serialised ids/positions/names of m_desktops, used to keep workspacesChanged
+    // silent when a signal delivery did not actually change the list.
+    QString m_workspacesSignature;
     QString m_currentUuid;
     int m_activeId = 0;
     QVariantMap m_activeByOutput;

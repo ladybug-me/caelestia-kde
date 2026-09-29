@@ -280,6 +280,23 @@ void KWinWorkspaceState::updateActiveId() {
         return a.position < b.position;
     });
 
+    // workspacesChanged drives full window-list refreshes in every bar instance,
+    // so it must fire only when the desktop list itself moved. Before this guard,
+    // each current-desktop change re-emitted it, rebuilding every bar's window
+    // list during the very frames KWin animates the switch (issue #894).
+    QString signature;
+    for (const auto& d : m_desktops) {
+        signature += d.id;
+        signature += QLatin1Char(':');
+        signature += QString::number(d.position);
+        signature += QLatin1Char(':');
+        signature += d.name;
+        signature += QLatin1Char(',');
+    }
+    const bool listChanged = signature != m_workspacesSignature;
+    if (listChanged)
+        m_workspacesSignature = signature;
+
     int newActiveId = 1;
     for (int i = 0; i < m_desktops.size(); ++i) {
         if (m_desktops[i].id == m_currentUuid) {
@@ -293,7 +310,8 @@ void KWinWorkspaceState::updateActiveId() {
         emit activeIdChanged();
     }
 
-    emit workspacesChanged();
+    if (listChanged)
+        emit workspacesChanged();
 }
 
 QVariantMap KWinWorkspaceState::activeByOutput() const {
@@ -310,9 +328,12 @@ QVariantList KWinWorkspaceState::workspaces() const {
         const auto& d = m_desktops[i];
         if (d.id.isEmpty())
             continue;
+        // Deliberately no "active" entry: the active desktop has its own
+        // activeIdChanged/activeByOutputChanged signals, and baking it into this
+        // list would force workspacesChanged to fire on every desktop switch.
         list.append(QVariantMap{ { QStringLiteral("id"), d.id },
             { QStringLiteral("name"), d.name.isEmpty() ? QString::number(i + 1) : d.name },
-            { QStringLiteral("index"), i + 1 }, { QStringLiteral("active"), (d.id == m_currentUuid) } });
+            { QStringLiteral("index"), i + 1 } });
     }
     return list;
 }

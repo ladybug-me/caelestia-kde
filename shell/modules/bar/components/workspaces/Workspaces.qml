@@ -49,27 +49,39 @@ Item {
             }
             return occ;
         }
+        // Cache keyed on the joined ids: active-id and occupied churn during a
+        // desktop switch recomputes the same window, and returning the cached
+        // array keeps the Repeater from resetting and rebuilding every pill.
+        property string _wsIdsKey: ""
+        property var _wsIdsCache: []
         readonly property var wsIds: {
+            let ids = [];
             if (Config.bar.workspaces.showUnoccupied) {
-                const ids = [];
                 const start = Math.floor((container.activeWsId - 1) / container.shown) * container.shown;
                 for (let i = 0; i < container.shown; ++i) {
                     const id = start + i + 1;
                     if (id <= container.desktopCount)
                         ids.push(id);
                 }
-                return ids;
+            } else {
+                for (let id = 1; id <= container.desktopCount; ++id) {
+                    if (container.occupied[id] || id === container.activeWsId)
+                        ids.push(id);
+                }
+                const currentIdx = ids.indexOf(container.activeWsId);
+                if (currentIdx >= 0) {
+                    const end = Math.max(currentIdx + 1, Math.min(container.shown, ids.length));
+                    ids = ids.slice(Math.max(0, end - container.shown), end);
+                } else {
+                    ids = [];
+                }
             }
-            const ids = [];
-            for (let id = 1; id <= container.desktopCount; ++id) {
-                if (container.occupied[id] || id === container.activeWsId)
-                    ids.push(id);
-            }
-            const currentIdx = ids.indexOf(container.activeWsId);
-            if (currentIdx < 0)
-                return [];
-            const end = Math.max(currentIdx + 1, Math.min(container.shown, ids.length));
-            return ids.slice(Math.max(0, end - container.shown), end);
+            const key = ids.join(",");
+            if (key === container._wsIdsKey)
+                return container._wsIdsCache;
+            container._wsIdsKey = key;
+            container._wsIdsCache = ids;
+            return ids;
         }
         readonly property var pills: {
             void workspaces.count;

@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
+import Caelestia.Config
 import qs.components.controls as Controls
 import qs.utils
 
@@ -11,6 +12,10 @@ Controls.Menu {
     property Item target: null
 
     property real menuExtent: 260
+
+    readonly property DesktopEntry appEntry: target?.desktopEntry ?? null
+
+    readonly property bool isPinnedToDock: appEntry ? Strings.testRegexList(GlobalConfig.bar.dock.pinnedApps, appEntry.id) : false
 
     signal renameRequested(Item delegateTarget)
 
@@ -30,11 +35,10 @@ Controls.Menu {
     function openTarget(): void {
         if (!target)
             return;
-        const p = target.path;
-        if (p.toLowerCase().endsWith(".desktop"))
-            Launch.exec(["kioclient", "exec", p]);
+        if (target.desktopEntry)
+            Launch.launchEntry(target.desktopEntry);
         else
-            Launch.exec(["xdg-open", p]);
+            Launch.exec(["xdg-open", target.path]);
     }
 
     function revealTarget(): void {
@@ -44,10 +48,23 @@ Controls.Menu {
         Launch.exec(["xdg-open", target.path.substring(0, idx)]);
     }
 
+    function togglePinToDock(): void {
+        if (!appEntry?.id)
+            return;
+        const current = GlobalConfig.bar.dock.pinnedApps ? [...GlobalConfig.bar.dock.pinnedApps] : [];
+        const id = appEntry.id;
+        if (Strings.testRegexList(current, id)) {
+            const idx = current.indexOf(id);
+            if (idx !== -1)
+                current.splice(idx, 1);
+        } else {
+            current.push(id);
+        }
+        GlobalConfig.bar.dock.pinnedApps = current;
+    }
+
     attachTo: target
-
     z: 9999
-
     attachSideX: Controls.Menu.Left
     attachSideY: Controls.Menu.Top
     thisSideX: Controls.Menu.Left
@@ -68,6 +85,15 @@ Controls.Menu {
             onClicked: {
                 root.expanded = false;
                 root.revealTarget();
+            }
+        },
+        Controls.MenuItem {
+            text: root.isPinnedToDock ? qsTr("Unpin from dock") : qsTr("Pin to dock")
+            icon: "push_pin"
+            visible: root.appEntry !== null
+            onClicked: {
+                root.expanded = false;
+                root.togglePinToDock();
             }
         },
         Controls.MenuItem {

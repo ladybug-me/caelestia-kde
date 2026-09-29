@@ -22,19 +22,94 @@ Item {
 
     property int cellWidth: 100
     property int cellHeight: 120
+    property var savedOrder: []
+    property bool layoutLoaded: false
+    // True while an icon's inline rename editor is open; the background window
+    // raises its layer-shell keyboard focus on this so the editor can type.
+    property Item renamingDelegate: null
 
-    function getIconCols() { return Math.max(1, Math.floor(gridItem.width / root.cellWidth)); }
-        
-    function getIconRows() { return Math.max(1, Math.floor(gridItem.height / root.cellHeight)); }
+    readonly property bool renameActive: renamingDelegate !== null
+
+    function getIconCols(): int {
+        return Math.max(1, Math.floor(gridItem.width / root.cellWidth));
+    }
+
+    function getIconRows(): int {
+        return Math.max(1, Math.floor(gridItem.height / root.cellHeight));
+    }
+
+    function saveLayout(): void {
+        if (!layoutLoaded)
+            return;
+        let arr = [];
+        for (let i = 0; i < instantiator.count; i++) {
+            let item = instantiator.objectAt(i);
+            if (item)
+                arr.push({ name: item.fileName, col: item.col, row: item.row });
+        }
+        saveProc.jsonContent = JSON.stringify(arr);
+        saveProc.running = true;
+    }
+
+    function isCellFree(c: int, r: int, ignoreItem: Item): bool {
+        for (let i = 0; i < instantiator.count; i++) {
+            let item = instantiator.objectAt(i);
+            if (item && item !== ignoreItem && item.col === c && item.row === r)
+                return false;
+        }
+        return true;
+    }
+
+    function findFreeCell(): var {
+        for (let r = 0; r < 1000; r++) {
+            for (let c = 0; c < getIconCols(); c++) {
+                if (isCellFree(c, r, null))
+                    return { col: c, row: r };
+            }
+        }
+        return { col: 0, row: 0 };
+    }
+
+    function runFileOp(args: var): void {
+        fileOpProc.commandLine = args;
+        fileOpProc.running = true;
+    }
+
+    function trashIcon(path: string): void {
+        if (path.length === 0)
+            return;
+        runFileOp(["kioclient", "move", path, "trash:/"]);
+    }
+
+    function renameIcon(oldPath: string, newName: string): void {
+        const idx = Math.max(oldPath.lastIndexOf("/"), 0);
+        const dir = oldPath.substring(0, idx);
+        const trimmed = newName.trim();
+        if (trimmed.length === 0 || trimmed === oldPath.substring(idx + 1))
+            return;
+        // Stay inside the desktop folder: no separators, no relative walks.
+        if (trimmed === "." || trimmed === ".." || trimmed.includes("/"))
+            return;
+        runFileOp(["kioclient", "move", oldPath, dir + "/" + trimmed]);
+    }
+
+    function iconAt(x: real, y: real): bool {
+        if (!visible)
+            return false;
+        const c = Math.floor((x - gridItem.x) / root.cellWidth);
+        const r = Math.floor((y - gridItem.y) / root.cellHeight);
+        for (let i = 0; i < instantiator.count; i++) {
+            const item = instantiator.objectAt(i);
+            if (item && item.col === c && item.row === r)
+                return true;
+        }
+        return false;
+    }
 
     anchors.fill: parent
     visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.wallpaperEnabled && GlobalConfig.forScreen(screenData.name).background.desktopIconsEnabled
 
-    property var savedOrder: []
-
-    property bool layoutLoaded: false
-
-    Component.onCompleted: { 
+    Component.onCompleted: {
         loadLayoutProc.running = true;
     }
 
@@ -52,7 +127,8 @@ Item {
                 root.layoutLoaded = true;
                 for (var i = 0; i < instantiator.count; i++) {
                     var item = instantiator.objectAt(i);
-                    if (item) item.initPosition();
+                    if (item)
+                        item.initPosition();
                 }
             }
         }
@@ -66,57 +142,17 @@ Item {
         command: ["python3", "-c", "import sys, os; d = os.path.dirname(sys.argv[1]); os.makedirs(d, exist_ok=True) if d else None; open(sys.argv[1], 'w').write(sys.argv[2])", Quickshell.env("HOME") + "/.local/share/caelestia/desktop_layout.json", jsonContent]
     }
 
-    function saveLayout() {
-        if (!layoutLoaded) return;
-        let arr = [];
-        for (let i = 0; i < instantiator.count; i++) {
-            let item = instantiator.objectAt(i);
-            if (item) {
-                arr.push({ name: item.fileName, col: item.col, row: item.row });
-            }
-        }
-        saveProc.jsonContent = JSON.stringify(arr);
-        saveProc.running = true;
-    }
-
-    function isCellFree(c, r, ignoreItem) {
-        for (let i = 0; i < instantiator.count; i++) {
-            let item = instantiator.objectAt(i);
-            if (item && item !== ignoreItem && item.col === c && item.row === r) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    function findFreeCell() {
-        for (let r = 0; r < 1000; r++) {
-            for (let c = 0; c < getIconCols(); c++) {
-                if (isCellFree(c, r, null))
-                    return {col: c, row: r};
-            }
-        }
-        return {col: 0, row: 0};
-    }
-
-    // True while an icon's inline rename editor is open; the background window
-    // raises its layer-shell keyboard focus on this so the editor can type.
-    property Item renamingDelegate: null
-
-    readonly property bool renameActive: renamingDelegate !== null
-
     Process {
         id: fileOpProc
 
         property var commandLine: []
-
         property string errorText: ""
 
         command: commandLine
         stderr: StdioCollector {
             onStreamFinished: fileOpProc.errorText = text.trim()
         }
-        onExited: {
+        onExited: (exitCode) => {
             if (exitCode !== 0)
                 Toaster.toast(qsTr("File operation failed"),
                     fileOpProc.errorText.length > 0 ? fileOpProc.errorText : qsTr("kioclient could not complete the request"),
@@ -125,51 +161,13 @@ Item {
         }
     }
 
-    function runFileOp(args) {
-        fileOpProc.commandLine = args;
-        fileOpProc.running = true;
-    }
-
-    function trashIcon(path) {
-        if (path.length === 0)
-            return;
-        runFileOp(["kioclient", "move", path, "trash:/"]);
-    }
-
-    function renameIcon(oldPath, newName) {
-        const idx = Math.max(oldPath.lastIndexOf("/"), 0);
-        const dir = oldPath.substring(0, idx);
-        const trimmed = newName.trim();
-        if (trimmed.length === 0 || trimmed === oldPath.substring(idx + 1))
-            return;
-        // Stay inside the desktop folder: no separators, no relative walks.
-        if (trimmed === "." || trimmed === ".." || trimmed.includes("/"))
-            return;
-        runFileOp(["kioclient", "move", oldPath, dir + "/" + trimmed]);
-    }
-
-    function iconAt(x, y) {
-        if (!visible)
-            return false;
-        const c = Math.floor((x - gridItem.x) / root.cellWidth);
-        const r = Math.floor((y - gridItem.y) / root.cellHeight);
-        for (let i = 0; i < instantiator.count; i++) {
-            const item = instantiator.objectAt(i);
-            if (item && item.col === c && item.row === r)
-                return true;
-        }
-        return false;
-    }
-
     Item {
         id: gridItem
 
-        anchors.fill: parent
-        
         readonly property int barZone: Visibilities.bars.get(root.screenData.name)?.visualThickness ?? (Tokens.sizes.bar.innerWidth + Math.max(Tokens.padding.small, Config.border.thickness))
-
         readonly property int baseMargin: Tokens.padding.large * 2
-        
+
+        anchors.fill: parent
         anchors.margins: baseMargin
         anchors.leftMargin: Config.bar.position === "left" ? baseMargin + barZone : baseMargin
         anchors.rightMargin: Config.bar.position === "right" ? baseMargin + barZone : baseMargin
@@ -193,30 +191,32 @@ Item {
             delegate: Item {
                 id: delegateItem
 
-                width: root.cellWidth
-                height: root.cellHeight
-
                 required property string fileName
-
                 required property string filePath
-
                 required property bool fileIsDir
-
                 required property string fileSuffix
 
                 property string path: filePath.replace("file://", "")
-
                 property string desktopName: fileName
-
                 property string desktopIcon: ""
-
                 property int col: -1
-
                 property int row: -1
-
                 property bool renaming: false
 
-                function startRename() {
+                readonly property DesktopEntry desktopEntry: {
+                    if (!fileName.toLowerCase().endsWith(".desktop"))
+                        return null;
+                    const cleanId = fileName.endsWith(".desktop") ? fileName.slice(0, -8) : fileName;
+                    return DesktopEntries.applications.values.find(e => e.id === fileName || e.id === cleanId || e.id + ".desktop" === fileName)
+                        ?? DesktopEntries.heuristicLookup(cleanId)
+                        ?? null;
+                }
+
+                readonly property string iconSetBase: Qt.resolvedUrl(Quickshell.shellDir + "/assets/icons/yet-another-monochrome-icon-set")
+                property bool useMaterialYouIcons: GlobalConfig.forScreen(screenData.name).background.materialYouIconsEnabled
+                property bool useVibrantIcons: GlobalConfig.forScreen(screenData.name).background.materialYouIconsVibrant
+
+                function startRename(): void {
                     if (root.renamingDelegate && root.renamingDelegate !== delegateItem)
                         root.renamingDelegate.cancelRename();
                     root.renamingDelegate = delegateItem;
@@ -225,7 +225,7 @@ Item {
                     renameField.forceActiveFocus();
                 }
 
-                function commitRename() {
+                function commitRename(): void {
                     if (!renaming)
                         return;
                     renaming = false;
@@ -234,25 +234,16 @@ Item {
                     root.renameIcon(path, renameField.text);
                 }
 
-                function cancelRename() {
+                function cancelRename(): void {
                     renaming = false;
                     if (root.renamingDelegate === delegateItem)
                         root.renamingDelegate = null;
                 }
 
-                Component.onDestruction: {
-                    if (root.renamingDelegate === delegateItem)
-                        root.renamingDelegate = null;
-                }
+                function initPosition(): void {
+                    if (col !== -1 && row !== -1)
+                        return;
 
-                x: col * root.cellWidth + (dragHandler.active ? dragHandler.translation.x : 0)
-                y: row * root.cellHeight + (dragHandler.active ? dragHandler.translation.y : 0)
-                
-                z: dragHandler.active ? 10 : 1
-
-                function initPosition() {
-                    if (col !== -1 && row !== -1) return;
-                    
                     let targetCol = -1;
                     let targetRow = -1;
                     let foundSaved = false;
@@ -264,7 +255,7 @@ Item {
                             break;
                         }
                     }
-                    
+
                     if (foundSaved && root.isCellFree(targetCol, targetRow, delegateItem)) {
                         col = targetCol;
                         row = targetRow;
@@ -276,13 +267,89 @@ Item {
                     }
                 }
 
+                function getIconName(isDir: bool, filename: string, suffix: string): string {
+                    if (isDir)
+                        return "folder";
+                    const ext = suffix.toLowerCase();
+                    const imageExts = ["png", "jpg", "jpeg", "gif", "svg", "webp", "bmp"];
+                    const videoExts = ["mp4", "mkv", "webm", "avi", "mov"];
+                    const archiveExts = ["zip", "tar", "gz", "rar", "7z"];
+                    const audioExts = ["mp3", "wav", "flac", "ogg"];
+                    const codeExts = ["qml", "js", "html", "css", "py", "sh", "cpp", "c", "h", "json"];
+
+                    if (ext === "pdf")
+                        return "application-pdf";
+                    if (filename.toLowerCase().endsWith(".desktop"))
+                        return desktopIcon || desktopEntry?.icon || "application-x-executable";
+                    if (imageExts.includes(ext))
+                        return "image-x-generic";
+                    if (videoExts.includes(ext))
+                        return "video-x-generic";
+                    if (archiveExts.includes(ext))
+                        return "package-x-generic";
+                    if (audioExts.includes(ext))
+                        return "audio-x-generic";
+                    if (codeExts.includes(ext))
+                        return "text-x-script";
+
+                    return "text-x-generic";
+                }
+
+                function getIconSource(isDir: bool, filename: string, suffix: string): string {
+                    if (filename.toLowerCase().endsWith(".desktop")) {
+                        const iconVal = desktopEntry?.icon || desktopIcon;
+                        if (iconVal !== "") {
+                            if (iconVal.startsWith("/"))
+                                return "file://" + iconVal;
+                            if (useMaterialYouIcons)
+                                return iconSetBase + "/apps/scalable/" + iconVal + ".svg";
+                            return Quickshell.iconPath(iconVal, "application-x-executable");
+                        }
+                    }
+                    const iconName = getIconName(isDir, filename, suffix);
+                    if (useMaterialYouIcons) {
+                        if (isDir)
+                            return iconSetBase + "/places/scalable/folder.svg";
+                        return iconSetBase + "/mimetypes/scalable/" + iconName + ".svg";
+                    }
+                    return "image://icon/" + iconName;
+                }
+
+                function getFallbackIconSource(isDir: bool, filename: string, suffix: string): string {
+                    if (filename.toLowerCase().endsWith(".desktop")) {
+                        const iconVal = desktopEntry?.icon || desktopIcon;
+                        if (iconVal !== "") {
+                            if (iconVal.startsWith("/"))
+                                return "file://" + iconVal;
+                            return Quickshell.iconPath(iconVal, "application-x-executable");
+                        }
+                    }
+                    return "image://icon/" + getIconName(isDir, filename, suffix);
+                }
+
+                function launch(): void {
+                    if (delegateItem.desktopEntry)
+                        Launch.launchEntry(delegateItem.desktopEntry);
+                    else
+                        Launch.exec(["xdg-open", path]);
+                }
+
+                width: root.cellWidth
+                height: root.cellHeight
+                x: col * root.cellWidth + (dragHandler.active ? dragHandler.translation.x : 0)
+                y: row * root.cellHeight + (dragHandler.active ? dragHandler.translation.y : 0)
+                z: dragHandler.active ? 10 : 1
+
                 Component.onCompleted: {
-                    if (root.layoutLoaded) {
+                    if (root.layoutLoaded)
                         initPosition();
-                    }
-                    if (fileName.toLowerCase().endsWith(".desktop")) {
+                    if (fileName.toLowerCase().endsWith(".desktop"))
                         desktopInfoProc.running = true;
-                    }
+                }
+
+                Component.onDestruction: {
+                    if (root.renamingDelegate === delegateItem)
+                        root.renamingDelegate = null;
                 }
 
                 Process {
@@ -303,7 +370,7 @@ Item {
                                 } else if (line.startsWith("[")) {
                                     inDesktopEntry = false;
                                 }
-                                
+
                                 if (inDesktopEntry) {
                                     if (!nameFound && line.startsWith("Name=")) {
                                         desktopName = line.substring(5);
@@ -313,60 +380,11 @@ Item {
                                         iconFound = true;
                                     }
                                 }
-                                if (nameFound && iconFound) break;
+                                if (nameFound && iconFound)
+                                    break;
                             }
                         }
                     }
-                }
-
-                function getIconName(isDir, filename, suffix) {
-                    if (isDir) return "folder";
-                    const ext = suffix.toLowerCase();
-                    const imageExts = ["png", "jpg", "jpeg", "gif", "svg", "webp", "bmp"];
-                    const videoExts = ["mp4", "mkv", "webm", "avi", "mov"];
-                    const archiveExts = ["zip", "tar", "gz", "rar", "7z"];
-                    const audioExts = ["mp3", "wav", "flac", "ogg"];
-                    const codeExts = ["qml", "js", "html", "css", "py", "sh", "cpp", "c", "h", "json"];
-                    
-                    if (ext === "pdf") return "application-pdf";
-                    if (filename.toLowerCase().endsWith(".desktop")) return desktopIcon || "application-x-executable";
-                    if (imageExts.includes(ext)) return "image-x-generic";
-                    if (videoExts.includes(ext)) return "video-x-generic";
-                    if (archiveExts.includes(ext)) return "package-x-generic";
-                    if (audioExts.includes(ext)) return "audio-x-generic";
-                    if (codeExts.includes(ext)) return "text-x-script";
-                    
-                    return "text-x-generic";
-                }
-
-                readonly property string iconSetBase: Qt.resolvedUrl(Quickshell.shellDir + "/assets/icons/yet-another-monochrome-icon-set")
-
-                property bool useMaterialYouIcons: GlobalConfig.forScreen(screenData.name).background.materialYouIconsEnabled
-
-                property bool useVibrantIcons: GlobalConfig.forScreen(screenData.name).background.materialYouIconsVibrant
-
-                function getIconSource(isDir, filename, suffix) {
-                    if (filename.toLowerCase().endsWith(".desktop") && desktopIcon !== "") {
-                        if (desktopIcon.startsWith("/")) return "file://" + desktopIcon;
-                        if (useMaterialYouIcons) {
-                            return iconSetBase + "/apps/scalable/" + desktopIcon + ".svg";
-                        }
-                        return Quickshell.iconPath(desktopIcon, "application-x-executable");
-                    }
-                    const iconName = getIconName(isDir, filename, suffix);
-                    if (useMaterialYouIcons) {
-                        if (isDir) return iconSetBase + "/places/scalable/folder.svg";
-                        return iconSetBase + "/mimetypes/scalable/" + iconName + ".svg";
-                    }
-                    return "image://icon/" + iconName;
-                }
-
-                function getFallbackIconSource(isDir, filename, suffix) {
-                    if (filename.toLowerCase().endsWith(".desktop") && desktopIcon !== "") {
-                        if (desktopIcon.startsWith("/")) return "file://" + desktopIcon;
-                        return Quickshell.iconPath(desktopIcon, "application-x-executable");
-                    }
-                    return "image://icon/" + getIconName(isDir, filename, suffix);
                 }
 
                 Rectangle {
@@ -375,7 +393,11 @@ Item {
                     opacity: mouseArea.containsMouse || dragHandler.active ? 0.12 : 0
                     radius: Tokens.rounding.medium
 
-                    Behavior on opacity { NumberAnimation { duration: 100 } }
+                    Behavior on opacity {
+                        NumberAnimation {
+                            duration: 100
+                        }
+                    }
                 }
 
                 ColumnLayout {
@@ -386,36 +408,42 @@ Item {
                     Item {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
+
                         Image {
                             id: iconImage
 
                             anchors.centerIn: parent
-                            width: 64; height: 64
-                            source: getIconSource(fileIsDir, fileName, fileSuffix)
+                            width: 64
+                            height: 64
+                            source: delegateItem.getIconSource(delegateItem.fileIsDir, delegateItem.fileName, delegateItem.fileSuffix)
                             fillMode: Image.PreserveAspectFit
-                            layer.enabled: useMaterialYouIcons
+                            layer.enabled: delegateItem.useMaterialYouIcons
                             layer.effect: Colouriser {
                                 sourceColor: "black"
                                 colorizationColor: {
                                     let c = Colours.palette.m3primary;
-                                    if (useVibrantIcons) {
+                                    if (delegateItem.useVibrantIcons)
                                         return Qt.hsla(c.hslHue, 1.0, Math.max(0.4, Math.min(0.6, c.hslLightness)), c.a);
-                                    }
                                     return c;
                                 }
                             }
                             onStatusChanged: {
-                                if (status === Image.Error && useMaterialYouIcons) {
+                                if (status === Image.Error && delegateItem.useMaterialYouIcons) {
                                     layer.enabled = false;
-                                    source = getFallbackIconSource(fileIsDir, fileName, fileSuffix);
+                                    source = delegateItem.getFallbackIconSource(delegateItem.fileIsDir, delegateItem.fileName, delegateItem.fileSuffix);
                                 }
                             }
                         }
                     }
+
                     Text {
                         visible: !delegateItem.renaming
                         Layout.fillWidth: true
-                        text: fileName.toLowerCase().endsWith(".desktop") ? desktopName : fileName
+                        text: {
+                            if (delegateItem.fileName.toLowerCase().endsWith(".desktop"))
+                                return delegateItem.desktopEntry?.name || delegateItem.desktopName;
+                            return delegateItem.fileName;
+                        }
                         color: Colours.palette.m3onSurface
                         font: Tokens.font.body.small
                         horizontalAlignment: Text.AlignHCenter
@@ -425,6 +453,7 @@ Item {
                         style: Text.Outline
                         styleColor: Colours.palette.m3surface
                     }
+
                     StyledTextField {
                         id: renameField
 
@@ -443,27 +472,24 @@ Item {
                 DragHandler {
                     id: dragHandler
 
+                    property real lastTranslationX: 0
+                    property real lastTranslationY: 0
+
                     target: null
                     enabled: !delegateItem.renaming
-                    
-                    property real lastTranslationX: 0
-
-                    property real lastTranslationY: 0
-                    
                     onTranslationChanged: {
                         if (active) {
                             lastTranslationX = translation.x;
                             lastTranslationY = translation.y;
                         }
                     }
-                    
                     onActiveChanged: {
                         if (!active) {
                             let dropX = col * root.cellWidth + lastTranslationX + delegateItem.width / 2;
                             let dropY = row * root.cellHeight + lastTranslationY + delegateItem.height / 2;
                             let newCol = Math.floor(dropX / root.cellWidth);
                             let newRow = Math.floor(dropY / root.cellHeight);
-                            
+
                             newCol = Math.max(0, Math.min(newCol, root.getIconCols() - 1));
                             newRow = Math.max(0, Math.min(newRow, root.getIconRows() - 1));
 
@@ -474,12 +500,17 @@ Item {
                                     for (let r = Math.max(0, newRow - rad); r <= Math.min(root.getIconRows() - 1, newRow + rad); r++) {
                                         for (let c = Math.max(0, newCol - rad); c <= Math.min(root.getIconCols() - 1, newCol + rad); c++) {
                                             if (root.isCellFree(c, r, delegateItem)) {
-                                                newCol = c; newRow = r; found = true; break;
+                                                newCol = c;
+                                                newRow = r;
+                                                found = true;
+                                                break;
                                             }
                                         }
-                                        if (found) break;
+                                        if (found)
+                                            break;
                                     }
-                                    if (found) break;
+                                    if (found)
+                                        break;
                                 }
                             }
 
@@ -515,11 +546,7 @@ Item {
                             root.renamingDelegate.cancelRename();
                             return;
                         }
-                        if (fileName.toLowerCase().endsWith(".desktop")) {
-                            Launch.exec(["kioclient", "exec", path]);
-                        } else {
-                            Launch.exec(["xdg-open", path]);
-                        }
+                        delegateItem.launch();
                     }
                 }
             }

@@ -2,9 +2,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import qs.components
 import qs.components.controls as Controls
-import qs.services
+import qs.utils
 
 // Right-click menu for a single desktop icon: open it, reveal the parent
 // folder in the file manager, start the icon's inline rename editor, or

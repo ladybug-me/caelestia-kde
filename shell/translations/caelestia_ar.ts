@@ -845,7 +845,7 @@
   <context>
     <name>AppBrowser</name>
     <message>
-      <location filename="../modules/launcher/AppBrowser.qml" line="+221"/>
+      <location filename="../modules/launcher/AppBrowser.qml" line="+213"/>
       <source>No apps in this category</source>
       <translation>لا توجد تطبيقات في هذه الفئة</translation>
     </message>
@@ -1723,7 +1723,6 @@
     </message>
     <message>
       <location line="+2"/>
-      <location line="+1"/>
       <source>Greeter</source>
       <translation>أيها</translation>
     </message>
@@ -2332,7 +2331,7 @@
       <translation>أيها</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+13"/>
       <source>Audio</source>
       <translation>الصوت</translation>
     </message>
@@ -3938,6 +3937,52 @@
     </message>
   </context>
   <context>
+    <name>DesktopIconContextMenu</name>
+    <message>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+75"/>
+      <source>Open</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Show in File Manager</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Unpin from dock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Pin to dock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Rename</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>DesktopIcons</name>
+    <message>
+      <location filename="../modules/background/DesktopIcons.qml" line="+157"/>
+      <source>File operation failed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>kioclient could not complete the request</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>DesktopLyrics</name>
     <message>
       <location filename="../modules/background/DesktopLyrics.qml" line="+285"/>
@@ -4195,7 +4240,7 @@
       <translation>أيقونات حالة يمكنك ترتيبها</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
       <translation>أصبحت أيقونات حالة الشريط قائمة مرتبة الآن بدلاً من مفاتيح تبديل فقط: يمكنك إضافة واحدة، إيقاف تشغيلها، أو سحبها إلى مكانها في الإعدادات -&gt; اللوحات -&gt; شريط المهام -&gt; أيقونات الحالة، وسيقوم الشريط برسمها بهذا الترتيب. يمكن للساعة إظهار الثواني، ويمكن لمؤشر مساحات العمل إخفاء المساحات الفارغة وغير النشطة.</translation>
     </message>
@@ -4205,9 +4250,9 @@
       <translation>وضع الألعاب بنقرة واحدة</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</source>
-      <translation>تحتوي لوحة الأدوات على تبديل وضع الألعاب: فهو يوقف حركات النوافذ والضبابية، ويوقف مؤقتاً خلفية الفيديو ويوقف أشكال وسائط سطح المكتب أثناء تشغيله، ثم يعيد كل شيء كما كان لاحقاً. لا يزال بإمكان وضع الألعاب تشغيل نفسه عندما تفتح إحدى نوافذك المستهدفة، في الإعدادات -&gt; الخدمات -&gt; وضع الألعاب.</translation>
+      <location line="+3"/>
+      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Utilities -&gt; Game mode.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
@@ -4215,7 +4260,7 @@
       <translation>كثافة اللون</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
       <translation>اكتسبت إعدادات الألوان المتقدمة شريط تمرير يحدد مدى تشبع لوحة الألوان المستمدة من خلفية الشاشة: 0 بالمئة يترك نفس اللوحة باللون الرمادي، 100 بالمئة هو ما ينتجه محرك الألوان، و 200 بالمئة هو أقصى ما تأخذه اللمسات. يُحفظ مع السمة، لذا يستمر حتى بعد تغيير الخلفية أو إعادة التشغيل، ويقوم &apos;caelestia scheme set -i&apos; بتعيينه من سطر الأوامر.</translation>
     </message>
@@ -4225,7 +4270,7 @@
       <translation>شارات تطبيقات الـ Dock</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
       <translation>يمكن لأيقونات الـ Dock الآن عرض العدد والتقدم والأهمية التي تنشرها التطبيقات قيد التشغيل. قم بتكوين ذلك في الإعدادات -&gt; اللوحات -&gt; شريط المهام -&gt; الـ Dock.</translation>
     </message>
@@ -4235,7 +4280,7 @@
       <translation>التوهج المحيطي</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
       <translation>يمكن لأسطح Shell ومعاينات النوافذ الآن إلقاء توهج محيطي دقيق وديناميكي مستمد من محتوى النافذة. قم بتمكينه في الإعدادات -&gt; المظهر.</translation>
     </message>
@@ -4762,7 +4807,7 @@
   <context>
     <name>KeybindItem</name>
     <message>
-      <location filename="../modules/launcher/items/KeybindItem.qml" line="+67"/>
+      <location filename="../modules/launcher/items/KeybindItem.qml" line="+62"/>
       <source>No keybinds</source>
       <translation>لا توجد روابط مفتاحية</translation>
     </message>
@@ -11154,7 +11199,7 @@
   <context>
     <name>WhatsNewWindow</name>
     <message>
-      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+109"/>
+      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+110"/>
       <location line="+148"/>
       <source>What&apos;s New in Caelestia</source>
       <translation>ماذا&apos;s جديد في كايلستا</translation>
@@ -11163,6 +11208,11 @@
       <location line="-97"/>
       <source>What&apos;s New</source>
       <translation>ماذا&apos;s جديد</translation>
+    </message>
+    <message>
+      <location line="+421"/>
+      <source>Open in Settings</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

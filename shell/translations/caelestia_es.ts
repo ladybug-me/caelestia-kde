@@ -845,7 +845,7 @@
   <context>
     <name>AppBrowser</name>
     <message>
-      <location filename="../modules/launcher/AppBrowser.qml" line="+221"/>
+      <location filename="../modules/launcher/AppBrowser.qml" line="+213"/>
       <source>No apps in this category</source>
       <translation>No hay aplicaciones en esta categoría</translation>
     </message>
@@ -1723,7 +1723,6 @@
     </message>
     <message>
       <location line="+2"/>
-      <location line="+1"/>
       <source>Greeter</source>
       <translation>Pantalla de bienvenida</translation>
     </message>
@@ -2332,7 +2331,7 @@
       <translation>Pantalla de bienvenida</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+13"/>
       <source>Audio</source>
       <translation type="unfinished"/>
     </message>
@@ -3938,6 +3937,52 @@
     </message>
   </context>
   <context>
+    <name>DesktopIconContextMenu</name>
+    <message>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+75"/>
+      <source>Open</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Show in File Manager</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Unpin from dock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Pin to dock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Rename</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>DesktopIcons</name>
+    <message>
+      <location filename="../modules/background/DesktopIcons.qml" line="+157"/>
+      <source>File operation failed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>kioclient could not complete the request</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>DesktopLyrics</name>
     <message>
       <location filename="../modules/background/DesktopLyrics.qml" line="+285"/>
@@ -4195,7 +4240,7 @@
       <translation>Iconos de estado que puedes organizar</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
       <translation>Los iconos de estado de la barra ahora forman una lista ordenada en lugar de un conjunto de interruptores: añade uno, desactívalo o arrástralo a su posición en Configuración -&gt; Paneles -&gt; Barra de tareas -&gt; Iconos de estado, y la barra los mostrará en ese orden. El reloj puede mostrar los segundos y el indicador de espacios de trabajo puede ocultar los que estén vacíos e inactivos.</translation>
     </message>
@@ -4205,9 +4250,9 @@
       <translation>Modo de juego con un toque</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</source>
-      <translation>El panel de utilidades tiene un interruptor para el modo de juego: mientras está activado, detiene las animaciones y el desenfoque de las ventanas, pausa los fondos de pantalla de vídeo y detiene las formas multimedia del escritorio; al desactivarlo, restaura todo. El modo de juego también puede activarse automáticamente cuando se abre una de las ventanas configuradas en Configuración -&gt; Servicios -&gt; Modo de juego.</translation>
+      <location line="+3"/>
+      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Utilities -&gt; Game mode.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
@@ -4215,7 +4260,7 @@
       <translation>Intensidad del color</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
       <translation>La configuración avanzada de color ahora incluye un control deslizante que ajusta la saturación de la paleta derivada del fondo de pantalla: 0 % deja la misma paleta en gris, 100 % corresponde a lo que produce el motor de color y 200 % es la intensidad máxima que pueden alcanzar los colores de acento. El valor se guarda con el esquema, por lo que se conserva al cambiar el fondo de pantalla y al reiniciar, y &apos;caelestia scheme set -i&apos; permite configurarlo desde la línea de comandos.</translation>
     </message>
@@ -4225,7 +4270,7 @@
       <translation>Indicadores de aplicaciones del dock</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
       <translation>Los iconos del dock ahora pueden mostrar el contador, el progreso y la urgencia publicados por las aplicaciones en ejecución. Puedes configurarlo en Configuración -&gt; Paneles -&gt; Barra de tareas -&gt; Dock.</translation>
     </message>
@@ -4235,7 +4280,7 @@
       <translation>Brillo ambiental</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
       <translation>Las superficies del shell y las vistas previas de las ventanas ahora pueden proyectar un sutil brillo ambiental dinámico derivado del contenido de la ventana. Actívalo en Configuración -&gt; Apariencia.</translation>
     </message>
@@ -4762,7 +4807,7 @@
   <context>
     <name>KeybindItem</name>
     <message>
-      <location filename="../modules/launcher/items/KeybindItem.qml" line="+67"/>
+      <location filename="../modules/launcher/items/KeybindItem.qml" line="+62"/>
       <source>No keybinds</source>
       <translation>No hay atajos de teclado</translation>
     </message>
@@ -11154,7 +11199,7 @@
   <context>
     <name>WhatsNewWindow</name>
     <message>
-      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+109"/>
+      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+110"/>
       <location line="+148"/>
       <source>What&apos;s New in Caelestia</source>
       <translation>Novedades de Caelestia</translation>
@@ -11163,6 +11208,11 @@
       <location line="-97"/>
       <source>What&apos;s New</source>
       <translation>Novedades</translation>
+    </message>
+    <message>
+      <location line="+421"/>
+      <source>Open in Settings</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

@@ -167,7 +167,17 @@ Item {
             }
             MouseArea {
                 anchors.fill: layout
+                acceptedButtons: Qt.LeftButton | Qt.RightButton
                 onClicked: event => {
+                    if (event.button === Qt.RightButton) {
+                        const popouts = root.bar?.popouts;
+                        if (!popouts)
+                            return;
+                        popouts.currentName = "workspacescontext";
+                        popouts.currentCenter = root.bar.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+                        popouts.hasCurrent = true;
+                        return;
+                    }
                     const pill = container.pills.find(p => container.isHorizontal ? event.x >= p.x && event.x <= p.x + p.width : event.y >= p.y && event.y <= p.y + p.height);
                     const ws = pill?.ws;
                     if (!ws)

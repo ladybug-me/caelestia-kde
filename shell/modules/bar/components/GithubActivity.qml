@@ -93,7 +93,21 @@ StyledRect {
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.github.background ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
 
-
+    // Right-click opens the GitHub settings, matching the other bar widgets'
+    // context popouts.
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        cursorShape: Qt.PointingHandCursor
+        onClicked: mouse => {
+            if (!root.popouts)
+                return;
+            root.popouts.currentName = "githubcontext";
+            root.popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+            root.popouts.hasCurrent = true;
+            mouse.accepted = true;
+        }
+    }
 
     Grid {
         id: cells

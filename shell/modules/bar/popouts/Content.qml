@@ -207,6 +207,33 @@ Item {
             }
         }
 
+        Popout {
+            name: "workspacescontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Workspaces settings")
+                subPageIdx: 7
+            }
+        }
+
+        Popout {
+            name: "traycontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Tray settings")
+                subPageIdx: 9
+            }
+        }
+
+        Popout {
+            name: "githubcontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("GitHub settings")
+                subPageIdx: 13
+            }
+        }
+
         Repeater {
             model: ScriptModel {
                 values: SystemTray.items.values.filter(i => i.hasMenu && i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))

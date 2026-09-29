@@ -229,9 +229,20 @@ StyledWindow {
         id: overviewWallpaperLayer
 
         property bool active: visibilities.overview || warming
+        // Sticky once true: after the layer has been built, keep the wallpaper
+        // instance alive with the layer hidden instead of tearing it down and paying
+        // the full synchronous rebuild (image decode, FBO and blur-chain setup) on
+        // every overview open. Video wallpapers opt out: a kept-alive copy would run
+        // a second decode pipeline behind the hidden layer.
+        property bool keepAlive: false
         property bool warming: false
         property real _maxBorder: Math.max(1, Math.min(root.width, root.height) * 0.15)
         property real bgScale: 1.0 + (dynamicBorderThickness / _maxBorder) * 0.1
+
+        onActiveChanged: {
+            if (active)
+                keepAlive = true;
+        }
 
         anchors.fill: parent
         visible: active || opacity > 0
@@ -262,7 +273,12 @@ StyledWindow {
                 width: parent.width
                 height: parent.height
                 scale: overviewWallpaperLayer.bgScale
+                // The layer's own fade-out keeps opacity > 0 until it settles, so the
+                // ordinary teardown path is unchanged; keepAlive then holds the item
+                // for the next open. A live wallpaper switch to a video drops the
+                // keep-alive so the copy is not kept running off screen.
                 active: overviewWallpaperLayer.active || overviewWallpaperLayer.opacity > 0
+                        || (overviewWallpaperLayer.keepAlive && wallpaperLoader.item && !wallpaperLoader.item.isVideo(wallpaperLoader.item.source))
                 sourceComponent: Component { Wallpaper { screen: root.screen; skipTransition: true } }
             }
         }

@@ -5,10 +5,6 @@ import Quickshell
 import qs.components.controls as Controls
 import qs.utils
 
-// Right-click menu for a single desktop icon: open it, reveal the parent
-// folder in the file manager, start the icon's inline rename editor, or
-// move the file to the trash. One instance per DesktopIcons is retargeted
-// to whichever delegate was right-clicked (see openFor()).
 Controls.Menu {
     id: root
 
@@ -24,8 +20,6 @@ Controls.Menu {
         target = delegateItem;
         const bgW = backgroundItem && backgroundItem.implicitWidth > 0 ? backgroundItem.implicitWidth : menuExtent;
         const bgH = backgroundItem && backgroundItem.implicitHeight > 0 ? backgroundItem.implicitHeight : menuExtent;
-        // Menu corner lands on the cursor; flip near the desktop edges so it
-        // never spills off screen.
         const flipX = delegateItem.x + clickX + bgW > delegateItem.parent.width;
         const flipY = delegateItem.y + clickY + bgH > delegateItem.parent.height;
         marginX = clickX - (flipX ? bgW : 0);
@@ -54,8 +48,6 @@ Controls.Menu {
 
     z: 9999
 
-    // The menu's own corner is positioned purely through marginX/marginY in
-    // openFor(); anchoring to the delegate's top-left keeps that math honest.
     attachSideX: Controls.Menu.Left
     attachSideY: Controls.Menu.Top
     thisSideX: Controls.Menu.Left

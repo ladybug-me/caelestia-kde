@@ -48,8 +48,8 @@ Variants {
         TapHandler {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onTapped: (eventPoint, button) => {
-                // A right press over a desktop icon is that icon's menu, not
-                // the wallpaper menu.
+                if (desktopIcons.renameActive)
+                    desktopIcons.renamingDelegate?.cancelRename();
                 if (button === Qt.RightButton && Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y)) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.LeftButton) {
@@ -467,8 +467,6 @@ Variants {
         }
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Bottom
-        // The desktop surface never takes keyboard focus except while a desktop
-        // icon's rename editor is open, which needs key events (issue #853).
-        WlrLayershell.keyboardFocus: desktopIcons.renameActive ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: desktopIcons.renameActive ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     }
 }

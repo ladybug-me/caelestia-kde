@@ -820,27 +820,34 @@ Item {
 
             if (appClass.toLowerCase().includes("xwaylandvideobridge")) continue;
 
+            // Ungrouped mode gives every window its own entry ("never combine");
+            // pinned entries stay where they are and keep acting as launchers.
+            // The per-window id has to carry something window-stable, so the
+            // address (falling back to the pid) is appended to the app class.
+            const ungrouped = GlobalConfig.bar.dock.ungroupWindows;
             let found = false;
-            for (const app of apps) {
-                const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
+            if (!ungrouped) {
+                for (const app of apps) {
+                    const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
 
-                if (isToplevelSteamGame) {
-                    if (app.appClass.toLowerCase() === appClass.toLowerCase()) {
-                        app.toplevels.push(toplevel);
-                        found = true;
-                        break;
-                    }
-                } else {
-                    const isAppSteamGame = app.id.toLowerCase().startsWith("steam_app_") || app.appClass.toLowerCase().startsWith("steam_app_");
-                    if (isAppSteamGame) continue;
+                    if (isToplevelSteamGame) {
+                        if (app.appClass.toLowerCase() === appClass.toLowerCase()) {
+                            app.toplevels.push(toplevel);
+                            found = true;
+                            break;
+                        }
+                    } else {
+                        const isAppSteamGame = app.id.toLowerCase().startsWith("steam_app_") || app.appClass.toLowerCase().startsWith("steam_app_");
+                        if (isAppSteamGame) continue;
 
-                    const baseId = app.id.toLowerCase().replace(".desktop", "");
-                    if (app.appClass.toLowerCase() === appClass.toLowerCase() ||
-                        app.id.toLowerCase().includes(appClass.toLowerCase()) ||
-                        appClass.toLowerCase().includes(baseId)) {
-                        app.toplevels.push(toplevel);
-                        found = true;
-                        break;
+                        const baseId = app.id.toLowerCase().replace(".desktop", "");
+                        if (app.appClass.toLowerCase() === appClass.toLowerCase() ||
+                            app.id.toLowerCase().includes(appClass.toLowerCase()) ||
+                            appClass.toLowerCase().includes(baseId)) {
+                            app.toplevels.push(toplevel);
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -873,7 +880,7 @@ Item {
                     WinIcons.request(appClass, ipc.title || "", pid, ipc.address ? String(ipc.address) : "");
 
                 apps.push({
-                    id: appClass,
+                    id: ungrouped ? `${appClass}#${ipc.address || pid}` : appClass,
                     isPinned: false,
                     entry: entry,
                     toplevels: [toplevel],
@@ -1043,6 +1050,10 @@ Item {
         target: Config.bar.dock
 
         function onCurrentDesktopOnlyChanged(): void {
+            root.rebuildModel();
+        }
+
+        function onUngroupWindowsChanged(): void {
             root.rebuildModel();
         }
     }

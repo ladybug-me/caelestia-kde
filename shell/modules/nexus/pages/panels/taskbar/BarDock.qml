@@ -90,6 +90,14 @@ PageBase {
 
         ToggleRow {
             Layout.fillWidth: true
+            text: qsTr("Ungroup windows")
+            subtext: qsTr("Give every window its own dock icon instead of combining them under one app")
+            checked: Config.bar.dock.ungroupWindows
+            onToggled: GlobalConfig.bar.dock.ungroupWindows = checked
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
             last: true
             text: qsTr("Preview window on desktop")
             subtext: qsTr("Highlight and show the window itself on the workspace while hovering over dock previews")

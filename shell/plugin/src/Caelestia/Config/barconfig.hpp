@@ -151,6 +151,7 @@ class BarDock : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, showBadges, true)
     CONFIG_PROPERTY(int, iconSize, 32)
     CONFIG_PROPERTY(bool, currentDesktopOnly, false)
+    CONFIG_PROPERTY(bool, ungroupWindows, false)
     CONFIG_PROPERTY(bool, previewOnDesktop, true)
     CONFIG_GLOBAL_PROPERTY(QStringList, pinnedApps, QStringList({ u"firefox"_s, u"org.kde.dolphin"_s }))
 };

@@ -38,6 +38,7 @@ Item {
     // which can be narrower than the bar's right side now that it is resizable.
     property bool underSidebar: true
     property string detachedMode
+    property bool detachedWindowWasActive: false
     readonly property QtObject dummy: QtObject {}
     property int animLength: dummy.Tokens.anim.durations.expressiveDefaultSpatial
     property var animCurve: dummy.Tokens.anim.expressiveDefaultSpatial
@@ -97,6 +98,25 @@ Item {
         target: QsWindow.window
         property: "WlrLayershell.keyboardFocus"
         value: WlrKeyboardFocus.OnDemand
+    }
+    // KWin has no focus-grab protocol, so a detached popout closes when its
+    // window was active and then lost focus (the same rule the drawers use).
+    Timer {
+        interval: 100
+        repeat: true
+        running: root.isDetached
+
+        onTriggered: {
+            const win = QsWindow.window;
+            if (!win || Visibilities.openDialogs > 0)
+                return;
+            if (win.active) {
+                root.detachedWindowWasActive = true;
+            } else if (root.detachedWindowWasActive) {
+                root.detachedWindowWasActive = false;
+                root.close();
+            }
+        }
     }
     Comp {
         id: content

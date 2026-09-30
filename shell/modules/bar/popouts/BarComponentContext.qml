@@ -11,8 +11,9 @@ import qs.utils
 import qs.modules.nexus
 
 // The shared "open the matching settings page" card used by the bar widget
-// context popouts (workspaces, tray, github). Clock and the dock keep their
-// own context popouts because they carry component-specific rows beyond this.
+// context popouts (clock, workspaces, tray, github, status icons). It sizes to
+// its label instead of a fixed width. The dock keeps its own context popout
+// because it carries rows beyond the settings entry.
 ColumnLayout {
     id: root
 
@@ -24,12 +25,15 @@ ColumnLayout {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    width: 200 * scaleOffset
-    implicitWidth: 200 * scaleOffset
+    width: card.implicitWidth
+    implicitWidth: card.implicitWidth
     spacing: Tokens.spacing.medium * scaleOffset
 
     StyledRect {
+        id: card
+
         Layout.fillWidth: true
+        implicitWidth: cardLayout.implicitWidth + Tokens.padding.medium * 2 * root.scaleOffset
         implicitHeight: cardLayout.implicitHeight + Tokens.padding.medium * 2 * root.scaleOffset
         radius: Tokens.rounding.medium * root.scaleOffset
         color: Colours.tPalette.m3surfaceContainer
@@ -48,6 +52,7 @@ ColumnLayout {
                 id: settingsItem
 
                 Layout.fillWidth: true
+                implicitWidth: settingsRow.implicitWidth + Tokens.padding.medium * 2 * root.scaleOffset
                 implicitHeight: settingsRow.implicitHeight + Tokens.padding.small * 2 * root.scaleOffset
 
                 radius: Tokens.rounding.medium * root.scaleOffset

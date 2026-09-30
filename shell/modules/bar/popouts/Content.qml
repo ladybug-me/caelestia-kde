@@ -115,15 +115,19 @@ Item {
         Popout {
             name: "clockcontext"
             previewKey: "clock"
-            sourceComponent: ClockContext {
+            sourceComponent: BarComponentContext {
                 popouts: root.popouts
+                label: qsTr("Clock settings")
+                subPageIdx: 11
             }
         }
 
         Popout {
             name: "statusiconscontext"
-            sourceComponent: StatusIconsContext {
+            sourceComponent: BarComponentContext {
                 popouts: root.popouts
+                label: qsTr("Status icons settings")
+                subPageIdx: 10
             }
         }
 

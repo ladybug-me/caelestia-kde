@@ -845,7 +845,7 @@
   <context>
     <name>AppBrowser</name>
     <message>
-      <location filename="../modules/launcher/AppBrowser.qml" line="+213"/>
+      <location filename="../modules/launcher/AppBrowser.qml" line="+236"/>
       <source>No apps in this category</source>
       <translation>Brak aplikacji w tej kategorii</translation>
     </message>
@@ -1274,29 +1274,6 @@
       <location line="+7"/>
       <source>Uses xdg-open (KDE Default)</source>
       <translation>Używa xdg (domyślnie KDE)</translation>
-    </message>
-  </context>
-  <context>
-    <name>AreaPicker</name>
-    <message>
-      <location filename="../modules/areapicker/AreaPicker.qml" line="+99"/>
-      <source>Open screenshot tool</source>
-      <translation>Otwórz narzędzie zrzutu ekranu</translation>
-    </message>
-    <message>
-      <location line="+13"/>
-      <source>Open screenshot tool (freeze mode)</source>
-      <translation>Otwórz narzędzie zrzutu ekranu (tryb zamrożenia)</translation>
-    </message>
-    <message>
-      <location line="+13"/>
-      <source>Open screenshot tool (clipboard)</source>
-      <translation>Otwórz narzędzie zrzutu ekranu (schowek)</translation>
-    </message>
-    <message>
-      <location line="+13"/>
-      <source>Open screenshot tool (freeze mode, clipboard)</source>
-      <translation>Otwórz narzędzie zrzutu ekranu (tryb zamrożenia, schowek)</translation>
     </message>
   </context>
   <context>
@@ -3200,37 +3177,6 @@
     </message>
   </context>
   <context>
-    <name>ConnectionInfoSection</name>
-    <message>
-      <location filename="../components/ConnectionInfoSection.qml" line="+15"/>
-      <source>IP Address</source>
-      <translation>Adres IP</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <source>Not available</source>
-      <translation>Niedostępne</translation>
-    </message>
-    <message>
-      <location line="-26"/>
-      <source>Subnet Mask</source>
-      <translation>Maska podsieci</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Gateway</source>
-      <translation>Brama</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>DNS Servers</source>
-      <translation>Serwery DNS</translation>
-    </message>
-  </context>
-  <context>
     <name>Content</name>
     <message>
       <location filename="../modules/dashboard/Content.qml" line="+25"/>
@@ -3313,7 +3259,7 @@
       <translation>Wyczyść</translation>
     </message>
     <message>
-      <location filename="../modules/sidebar/Content.qml" line="+99"/>
+      <location filename="../modules/sidebar/Content.qml" line="+110"/>
       <source>Notifications</source>
       <translation>Powiadomienia</translation>
     </message>
@@ -4216,83 +4162,53 @@
     <name>Entries</name>
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
-      <source>Window Rules Out of the Box</source>
-      <translation>Zasady okien od początku</translation>
+      <source>Desktop Context Menus</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</source>
-      <translation>Instalator zapisuje teraz trzy reguły KWin: niesfokusowane okna i okna dialogowe będą przyciemnione do 95 %, otwarte okna dialogowe wyśrodkowane, a obrazy okien znajdują się nad innymi. Tylko Caelestia&apos;posiada zapisane własne grupy, więc Twoje zasady zachowują swoje nazwy i kolejność. Edytuj lub usuń je w ustawieniach systemu -&gt; Reguły okna, lub pozwól skryptowi uninstall.sh wyłączyć je ponownie.</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Right-Click Any App</source>
-      <translation>Kliknij prawym przyciskiem myszy dowolną aplikację</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</source>
-      <translation>Aplikacja w launcherze lub przeglądarka aplikacji otwiera teraz menu kontekstowe po kliknięciu prawym: przypnij do doku, dodaj na pulpit, ukryj w launcherze lub otwórz w edytorze menu. Dok &apos; posiada listę przypiętych - od teraz to osobna opcja (bar.dock.pinnedApps) zamiast pożyczania ulubionych od launchera&apos;, obecna lista ulubionych zostaje przeniesiona.</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Status Icons You Can Arrange</source>
-      <translation>Ikony statusu, które można rozmieścić</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
-      <translation>Ikony statusu paska&apos;są teraz uporządkowaną listą zamiast ściany przełączników: dodaj jeden, wyłącz ją, lub przeciągnij go na miejsce w Ustawieniach -&gt; Panele -&gt; Pasek zadań -&gt; Ikony stanu, wówczas pasek rysuje je w ustalonej kolejności. Zegar może pokazywać sekundy, a wskaźnik obszaru roboczego może ukryć te obszary, które są puste i nieaktywne.</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Game Mode at a Tap</source>
-      <translation>Tryb gry po kliknięciu</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Utilities -&gt; Game mode.</source>
+      <source>Desktop icons now feature a dedicated right-click context menu. You can rename the icon directly or send it to the trash right from the desktop.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Color Intensity</source>
-      <translation>Intensywność kolorów</translation>
+      <source>Calendar Popout</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
-      <translation>Zaawansowane ustawienia kolorów zyskały suwak, który skaluje poziom nasycenia palety pochodzącej z tapety to: 0 % pozostawia tę samą paletę w szarości, 100% jest tym, co wytwarza silnik kolorów, a 200 procent jest największą ilością akcentów. Jest on trzymany w systemie, więc przetrwa zmianę tapety i reset systemu, Caelestia ustawia -i ustawia go z wiersza polecenia.</translation>
+      <source>Hovering the clock now shows a mini calendar with a month grid, today highlighted, and month navigation. Click the title to jump back to today. Enable this feature in Settings -&gt; Panels -&gt; Taskbar -&gt; Clock.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Dock App Badges</source>
-      <translation>Plakietki aplikacji w doku</translation>
+      <source>Status Icons Context Menu</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
-      <translation>Ikony doku mogą teraz wyświetlać liczbę, postęp i ważność powiadomień przekazywanych przez uruchomione aplikacje. Skonfiguruj je w Ustawieniach -&gt; Panele -&gt; Pasek zadań -&gt; Dok.</translation>
+      <source>Right-clicking the status icons block in the bar now opens a context menu popout with a shortcut to the Status Icons configuration page, where you can reorder or toggle them.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Ambient Glow</source>
-      <translation>Poświata otoczenia</translation>
+      <source>Multiple Wi-Fi Profiles</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
-      <translation>Powierzchnie powłoki i podglądy okna mogą teraz rzucić podgląd, dynamiczną poświatę otoczenia, wywodzącą się z zawartości okna. Włącz ją w Ustawieniach -&gt; Wygląd.</translation>
+      <source>You can now manage multiple saved profiles (e.g. DHCP and static IP) for the same Wi-Fi network (SSID). The Saved Networks page lists one row per profile, allowing you to edit, autoconnect, or forget them individually.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Lock Screen Password Reveal</source>
-      <translation>Pokaż hasło ekranu blokady</translation>
+      <source>Manual Light/Dark Mode</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</source>
-      <translation>Kliknij lub dotknij ikonę kłódki wewnątrz ekranu logowania, by odkryć wpisane hasło przed odblokowaniem.</translation>
+      <location line="+3"/>
+      <source>A manual light/dark mode selector has been added to the colors page, allowing you to override the automatic theme switching. Open Settings -&gt; Appearance -&gt; Colors -&gt; Advanced Settings to manually set the light/dark mode. Alternatively, you can open launcher -&gt; Type &gt; -&gt; Select light/dark mode.</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4652,6 +4568,94 @@
       <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
       <source>Usage</source>
       <translation>Użycie</translation>
+    </message>
+  </context>
+  <context>
+    <name>HotspotPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/network/HotspotPage.qml" line="+20"/>
+      <source>The hotspot could not be started</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+37"/>
+      <location line="+36"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-19"/>
+      <source>Share this machine&apos;s connection over Wi-Fi. The hotspot is saved as a connection named &quot;%1&quot;, so Plasma&apos;s own network applet can see it too.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>No wireless device on this machine can run an access point.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Sharing as &quot;%1&quot;</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Off</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Hotspot name (SSID)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Leave empty to use this machine&apos;s name, %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Password</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>At least %1 characters. Leave empty to share an open network.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>A password is either empty or at least %1 characters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+28"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+21"/>
+      <source>Save</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>HotspotSwitch</name>
+    <message>
+      <location filename="../services/HotspotSwitch.qml" line="+27"/>
+      <location line="+14"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-14"/>
+      <source>Give it a name and a password in Settings &gt; Network &gt; Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>The hotspot could not be started</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -5077,7 +5081,7 @@
   <context>
     <name>Kwin</name>
     <message>
-      <location filename="../services/Kwin.qml" line="+477"/>
+      <location filename="../services/Kwin.qml" line="+483"/>
       <source>Caps lock enabled</source>
       <translation>Blokada caps włączona</translation>
     </message>
@@ -5127,7 +5131,7 @@
       <translation>Układ zmieniony na: %1</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+57"/>
       <source>Reload devices</source>
       <translation>Załaduj ponownie urządzenia</translation>
     </message>
@@ -6082,12 +6086,7 @@
       <translation>Bezprzewodowe</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <source>Enabled</source>
-      <translation>Włączone</translation>
-    </message>
-    <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>%1 networks available</source>
       <translation>Dostępne sieci %1</translation>
     </message>
@@ -6298,22 +6297,27 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+50"/>
+      <location line="+25"/>
       <source>Show all networks (%1)</source>
       <translation>Pokaż wszystkie sieci (%1)</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+13"/>
       <source>Saved networks</source>
       <translation>Zapisane sieci</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+6"/>
       <source>Add network</source>
       <translation>Dodaj sieć</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>VPN connections</source>
       <translation>Połączenia VPN</translation>
     </message>
@@ -6324,17 +6328,17 @@
     </message>
     <message>
       <location line="+80"/>
-      <location line="+145"/>
+      <location line="+146"/>
       <source>Connected</source>
       <translation>Połączono</translation>
     </message>
     <message>
-      <location line="-145"/>
+      <location line="-146"/>
       <source>Available</source>
       <translation>Dostępny</translation>
     </message>
     <message>
-      <location line="+43"/>
+      <location line="+44"/>
       <source>VPN providers</source>
       <translation>Dostawcy VPN</translation>
     </message>
@@ -6481,7 +6485,7 @@
   <context>
     <name>Nmcli</name>
     <message>
-      <location filename="../services/Nmcli.qml" line="+409"/>
+      <location filename="../services/Nmcli.qml" line="+212"/>
       <source>Open</source>
       <translation>Otwórz</translation>
     </message>
@@ -7224,7 +7228,7 @@
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+325"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+328"/>
       <source>Page under construction</source>
       <translation>Strona w budowie</translation>
     </message>
@@ -7545,6 +7549,11 @@
       <location line="+1"/>
       <source>Saved networks</source>
       <translation>Zapisane sieci</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+4"/>
@@ -8130,19 +8139,6 @@
     </message>
   </context>
   <context>
-    <name>PolkitDialog</name>
-    <message>
-      <location filename="../components/PolkitDialog.qml" line="+122"/>
-      <source>Enter your password</source>
-      <translation>Wprowadź hasło</translation>
-    </message>
-    <message>
-      <location line="+96"/>
-      <source>Authentication Required</source>
-      <translation>Wymagane uwierzytelnienie</translation>
-    </message>
-  </context>
-  <context>
     <name>Power</name>
     <message>
       <location filename="../modules/bar/components/Power.qml" line="+22"/>
@@ -8173,6 +8169,11 @@
     <message>
       <location filename="../modules/nexus/pages/utilities/QuickTogglesPage.qml" line="+13"/>
       <source>Wi-Fi</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hotspot</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -8397,7 +8398,7 @@
       <translation>Nagrywanie w %1</translation>
     </message>
     <message>
-      <location line="+126"/>
+      <location line="+128"/>
       <source>No recordings found</source>
       <translation>Nie znaleziono nagrań</translation>
     </message>
@@ -9164,7 +9165,27 @@
   <context>
     <name>SidebarPanel</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+15"/>
+      <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+16"/>
+      <source>Last used</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Notifications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>AI Assistant</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>News</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Sidebar</source>
       <translation>Panel boczny</translation>
     </message>
@@ -9204,7 +9225,17 @@
       <translation>Karty panelu bocznego</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
+      <source>Open on</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Tab shown when the sidebar opens</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
       <source>Show News tab</source>
       <translation>Pokaż zakładkę Wiadomości</translation>
     </message>
@@ -9944,7 +9975,7 @@
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+95"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+102"/>
       <source>Quick Toggles</source>
       <translation>Szybkie ustawienia</translation>
     </message>

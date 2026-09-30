@@ -820,20 +820,27 @@ Item {
 
             if (appClass.toLowerCase().includes("xwaylandvideobridge")) continue;
 
-            // Ungrouped mode gives every window its own entry ("never combine");
-            // pinned entries stay where they are and keep acting as launchers.
-            // The per-window id has to carry something window-stable, so the
-            // address (falling back to the pid) is appended to the app class.
-            const ungrouped = GlobalConfig.bar.dock.ungroupWindows;
+            // Ungrouped keeps every window on its own icon (pinned entries stay
+            // launchers); PinnedFirst caps a pinned entry at its first window and
+            // lets the rest stand alone. Per-window ids carry the address (or pid)
+            // so they stay stable for the window's lifetime.
+            const grouping = GlobalConfig.bar.dock.windowGrouping;
+            const ungrouped = grouping === DockWindowGrouping.Ungrouped;
+            const pinnedFirst = grouping === DockWindowGrouping.PinnedFirst;
             let found = false;
+            let pinnedCapped = false;
             if (!ungrouped) {
                 for (const app of apps) {
                     const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
 
                     if (isToplevelSteamGame) {
                         if (app.appClass.toLowerCase() === appClass.toLowerCase()) {
-                            app.toplevels.push(toplevel);
-                            found = true;
+                            if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
+                                pinnedCapped = true;
+                            else {
+                                app.toplevels.push(toplevel);
+                                found = true;
+                            }
                             break;
                         }
                     } else {
@@ -844,8 +851,12 @@ Item {
                         if (app.appClass.toLowerCase() === appClass.toLowerCase() ||
                             app.id.toLowerCase().includes(appClass.toLowerCase()) ||
                             appClass.toLowerCase().includes(baseId)) {
-                            app.toplevels.push(toplevel);
-                            found = true;
+                            if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
+                                pinnedCapped = true;
+                            else {
+                                app.toplevels.push(toplevel);
+                                found = true;
+                            }
                             break;
                         }
                     }
@@ -880,7 +891,7 @@ Item {
                     WinIcons.request(appClass, ipc.title || "", pid, ipc.address ? String(ipc.address) : "");
 
                 apps.push({
-                    id: ungrouped ? `${appClass}#${ipc.address || pid}` : appClass,
+                    id: ungrouped || pinnedCapped ? `${appClass}#${ipc.address || pid}` : appClass,
                     isPinned: false,
                     entry: entry,
                     toplevels: [toplevel],
@@ -1053,7 +1064,7 @@ Item {
             root.rebuildModel();
         }
 
-        function onUngroupWindowsChanged(): void {
+        function onWindowGroupingChanged(): void {
             root.rebuildModel();
         }
     }

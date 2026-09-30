@@ -8,6 +8,24 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
+    readonly property list<MenuItem> windowGroupingItems: [
+        MenuItem {
+            property int value: DockWindowGrouping.Combined
+
+            text: qsTr("Group all windows")
+        },
+        MenuItem {
+            property int value: DockWindowGrouping.PinnedFirst
+
+            text: qsTr("Pinned icon holds first window")
+        },
+        MenuItem {
+            property int value: DockWindowGrouping.Ungrouped
+
+            text: qsTr("No grouping")
+        }
+    ]
+
     title: qsTr("Dock")
     isSubPage: true
 
@@ -88,12 +106,13 @@ PageBase {
             onToggled: GlobalConfig.bar.dock.currentDesktopOnly = checked
         }
 
-        ToggleRow {
+        SelectRow {
             Layout.fillWidth: true
-            text: qsTr("Ungroup windows")
-            subtext: qsTr("Give every window its own dock icon instead of combining them under one app")
-            checked: Config.bar.dock.ungroupWindows
-            onToggled: GlobalConfig.bar.dock.ungroupWindows = checked
+            label: qsTr("Window grouping")
+            subtext: qsTr("How windows of one app share a dock icon: grouped, pinned icon holds the first window only, or every window on its own icon")
+            active: Config.bar.dock.windowGrouping === DockWindowGrouping.Ungrouped ? root.windowGroupingItems[2] : Config.bar.dock.windowGrouping === DockWindowGrouping.PinnedFirst ? root.windowGroupingItems[1] : root.windowGroupingItems[0]
+            menuItems: root.windowGroupingItems
+            onSelected: item => GlobalConfig.bar.dock.windowGrouping = item.value
         }
 
         ToggleRow {

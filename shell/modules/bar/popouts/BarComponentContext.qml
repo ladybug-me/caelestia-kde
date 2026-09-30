@@ -10,10 +10,8 @@ import qs.services
 import qs.utils
 import qs.modules.nexus
 
-// The shared "open the matching settings page" card used by the bar widget
-// context popouts (clock, workspaces, tray, github, status icons). It sizes to
-// its label instead of a fixed width. The dock keeps its own context popout
-// because it carries rows beyond the settings entry.
+// Shared "open the matching settings page" card for the bar widget context
+// popouts; sizes to its label.
 ColumnLayout {
     id: root
 

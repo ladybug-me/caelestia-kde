@@ -277,7 +277,21 @@ Item {
         property var _appsValues: DesktopEntries.applications.values
         on_AppsValuesChanged: root.rebuildModel()
 
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            enabled: dockModel.count > 0
 
+            onClicked: mouse => {
+                const popouts = root.bar?.popouts;
+                if (!popouts)
+                    return;
+                popouts.currentName = "dockbgcontext";
+                popouts.currentCenter = bar.isHorizontal ? container.mapToItem(null, container.width / 2, 0).x : (container.mapToItem(null, 0, container.height / 2).y ?? 0);
+                popouts.hasCurrent = true;
+                mouse.accepted = true;
+            }
+        }
 
         Item {
             id: layout

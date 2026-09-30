@@ -54,8 +54,10 @@ Item {
         Popout {
             name: "greetercontext"
             previewKey: "greeter"
-            sourceComponent: GreeterContext {
+            sourceComponent: BarComponentContext {
                 popouts: root.popouts
+                label: qsTr("Greeter settings")
+                subPageIdx: 8
             }
         }
 
@@ -235,6 +237,15 @@ Item {
                 popouts: root.popouts
                 label: qsTr("GitHub settings")
                 subPageIdx: 13
+            }
+        }
+
+        Popout {
+            name: "dockbgcontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Dock settings")
+                subPageIdx: 12
             }
         }
 

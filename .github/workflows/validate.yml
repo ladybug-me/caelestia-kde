@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "::group::flake8"
           flake8 .github/scripts/ shell/scripts/ \
-            --exclude 'orion_search.py,menu_perf_stats.py' \
+            --exclude 'orion_search.py' \
             --max-line-length=120 \
             --extend-ignore=E402,W503,E501,E203 \
             --count \

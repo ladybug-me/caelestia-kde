@@ -207,9 +207,6 @@ StyledWindow {
             panels.popouts.detachedMode = "";
             bar.closeTray();
         }
-
-        onActiveChanged: {
-        }
     }
     StyledRect {
         property bool _wasActive: false

@@ -151,29 +151,6 @@ Singleton {
         return Qt.hsla(c.hslHue, c.hslSaturation, 0.1, 1);
     }
 
-    function harmonizeWith(designColor: color, sourceColor: color): color {
-        let fromHue = designColor.hslHue;
-        let toHue = sourceColor.hslHue;
-
-        let diff = toHue - fromHue;
-        if (diff > 0.5) diff -= 1.0;
-        else if (diff < -0.5) diff += 1.0;
-
-        const cap = 15.0 / 360.0;
-        let rotation = diff * 0.5;
-        if (rotation > cap) rotation = cap;
-        else if (rotation < -cap) rotation = -cap;
-
-        let outputHue = fromHue + rotation;
-        if (outputHue < 0) outputHue += 1.0;
-        if (outputHue > 1) outputHue -= 1.0;
-
-        return Qt.hsla(outputHue, designColor.hslSaturation, designColor.hslLightness, designColor.a);
-    }
-
-    function harmonize(designColor: color): color {
-        return harmonizeWith(designColor, root.palette.m3primary);
-    }
 
     function load(data: string, isPreview: bool): void {
         const raw = (data || "").trim();

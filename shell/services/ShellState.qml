@@ -9,9 +9,6 @@ import qs.services
 Singleton {
     property ShellRoot shellRoot
 
-    function anySidebarOpen(): bool {
-        return states.instances.some(s => s.sidebar);
-    }
 
     function forScreen(screen: ShellScreen): ScreenState {
         for (const s of states.instances)

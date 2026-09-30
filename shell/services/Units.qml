@@ -104,9 +104,6 @@ QtObject {
         return `${mins}:${secs}`;
     }
 
-    function formatPercent(value: real): string {
-        return `${Math.round(value * 100)}%`;
-    }
 
     function formatDurationShort(seconds: int, fallback = ""): string {
         if (seconds <= 0)

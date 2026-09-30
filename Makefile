@@ -74,7 +74,7 @@ check: check-python check-shell ## Lint the repo's own Python and shell
 
 check-python: ## flake8 the repo's own Python (as CI does)
 	$(PYTHON) -m flake8 $(CI_DIR)/ $(SHELL_DIR)/scripts/ \
-		--exclude 'orion_search.py,menu_perf_stats.py' \
+		--exclude 'orion_search.py' \
 		--max-line-length=120 \
 		--extend-ignore=E402,W503,E501,E203 \
 		--count --show-source --statistics

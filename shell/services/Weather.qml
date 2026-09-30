@@ -31,17 +31,6 @@ Singleton {
     readonly property bool hasWeather: CServices.Weather.hasWeather
     readonly property bool loading: CServices.Weather.loading
 
-    readonly property var cc: CServices.Weather.hasWeather ? ({
-        weatherCode: CServices.Weather.weatherCode,
-        weatherDesc: CServices.Weather.description,
-        tempC: CServices.Weather.tempC,
-        feelsLikeC: CServices.Weather.feelsLikeC,
-        humidity: CServices.Weather.humidity,
-        windSpeed: CServices.Weather.windSpeed,
-        isDay: true,
-        sunrise: CServices.Weather.sunrise,
-        sunset: CServices.Weather.sunset
-    }) : null
 
     property string locationSearchQuery: ""
     property bool locationSearchLoading: false

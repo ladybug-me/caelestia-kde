@@ -305,7 +305,6 @@ root.snapshotWorkspaceUuid = Kwin.workspaces[snapIdx]
         root.screenshotConsumed = true;
 
         const saveDir = `${Paths.absolutePath("~/Pictures/Screenshots")}`;
-        const saveFile = `${saveDir}/screenshot-$(date +%Y-%m-%d_%H.%M.%S).png`;
 
         let spectacleFlags = "-b -a -n";
         if (root.mouseButton === Qt.RightButton || root.action === ScreenshotAction.SnipAction.Edit) {

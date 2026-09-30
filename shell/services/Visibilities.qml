@@ -23,7 +23,6 @@ Singleton {
     property real dragHeight: 0
     property string streamClaim: ""
 
-    signal cycleOverview(bool backwards)
 
     function sidebarOpenTab(): string {
         return GlobalConfig.sidebar.defaultTab === "last" ? lastSidebarTab : GlobalConfig.sidebar.defaultTab;

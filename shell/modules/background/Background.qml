@@ -53,9 +53,7 @@ Variants {
                 if (button === Qt.RightButton && Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y)) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.LeftButton) {
-                    if (true) {
-                        Kwin.setActiveOutputName(win.screen.name);
-                    }
+                    Kwin.setActiveOutputName(win.screen.name);
                 }
             }
         }

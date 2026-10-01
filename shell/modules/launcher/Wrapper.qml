@@ -35,16 +35,6 @@ Item {
     // end up loading synchronously and defeat the point.
     property bool warmAsync: false
 
-    Timer {
-        running: !root.warmWanted
-        interval: 1500
-
-        onTriggered: {
-            root.warmAsync = true;
-            root.warmWanted = true;
-        }
-    }
-
     onShouldBeActiveChanged: {
         if (shouldBeActive) {
             implicitHeight = Qt.binding(() => content.implicitHeight);
@@ -60,6 +50,15 @@ Item {
     opacity: 1 - offsetScale
     Component.onCompleted: Qt.callLater(() => Apps)
 
+    Timer {
+        running: !root.warmWanted
+        interval: 1500
+
+        onTriggered: {
+            root.warmAsync = true;
+            root.warmWanted = true;
+        }
+    }
     Behavior on offsetScale {
         enabled: !visibilities.skipLauncherAnim
 

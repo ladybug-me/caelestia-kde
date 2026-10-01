@@ -242,7 +242,6 @@ QtObject {
                 { label: qsTr("OS Version"), keywords: ["caelestia", "quickshell", "release"] }
             ]
         },
-        // AI
         // Last, to stay aligned with PageCompRegistry.pageComps — this list is
         // indexed by position, so entries cannot be reordered independently.
         {

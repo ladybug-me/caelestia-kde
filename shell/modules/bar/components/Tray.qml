@@ -48,7 +48,7 @@ StyledRect {
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, (Config.bar.tray.background && items.count > 0) ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
 
-    // Right-click on the tray background opens the tray settings; icon-level
+    // icon-level
     // right-clicks stay with the icons themselves (their own handlers sit on top
     // of this one, so they win first).
     MouseArea {

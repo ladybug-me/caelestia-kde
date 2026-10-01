@@ -67,7 +67,7 @@ StyledRect {
         console.error("[GitHubWidget] " + msg);
     }
 
-    // No credential stored yet. Say so once in the UI, pointing at the page that
+    // Say so once in the UI, pointing at the page that
     // fixes it, instead of leaving the user to find it in the log.
     function setTokenMissing(): void {
         root.lastError = "";
@@ -93,8 +93,6 @@ StyledRect {
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.github.background ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
 
-    // Right-click opens the GitHub settings, matching the other bar widgets'
-    // context popouts.
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
@@ -138,16 +136,6 @@ StyledRect {
             }
         }
 
-        /* Uncomment for total count beside the widget
-        StyledText {
-            id: text
-            verticalAlignment: StyledText.AlignVCenter
-            text: root.total
-            font.pointSize: Appearance.font.size.smaller
-            font.family: Appearance.font.family.mono
-            color: root.colour
-        }
-        */
     }
 
 

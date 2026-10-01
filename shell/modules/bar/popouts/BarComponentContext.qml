@@ -10,8 +10,6 @@ import qs.services
 import qs.utils
 import qs.modules.nexus
 
-// Shared "open the matching settings page" card for the bar widget context
-// popouts; sizes to its label.
 ColumnLayout {
     id: root
 

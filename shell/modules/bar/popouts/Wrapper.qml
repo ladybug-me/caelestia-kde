@@ -66,7 +66,6 @@ Item {
     implicitHeight: nonAnimHeight
     focus: hasCurrent
     Keys.onEscapePressed: {
-        // Forward escape to password popout if active, otherwise close
         if (currentName === "wirelesspassword" && content.item) {
             const passwordPopout = (content.item as Content)?.children.find(c => c.name === "wirelesspassword");
             if (passwordPopout && passwordPopout.item) {

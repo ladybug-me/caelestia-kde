@@ -135,7 +135,6 @@ StyledRect {
                 }
             }
         }
-
     }
 
 

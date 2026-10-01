@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 import Caelestia.Config
 import qs.components
 import qs.components.effects
@@ -14,8 +13,7 @@ Item {
     id: root
 
     required property ShellScreen screen
-    // See ContentWindow.qml note: loosely typed because the KDE fallback
-    // bridge's monitorFor() returns a mock QtObject, not a real HyprlandMonitor.
+    // Loosely typed: monitorFor() returns a mock QtObject, not a typed monitor.
     readonly property var monitor: Kwin.monitorFor(screen)
     readonly property string activeSpecial: (Config.bar.workspaces.perMonitor ? monitor : Kwin.focusedMonitor)?.lastIpcObject.specialWorkspace?.name ?? ""
 
@@ -259,8 +257,6 @@ Item {
     }
 
     MouseArea {
-        property real startPos
-
         anchors.fill: view
 
         drag.target: view.contentItem
@@ -270,28 +266,12 @@ Item {
         drag.minimumX: isHorizontal ? Math.min(0, view.width - view.contentWidth - Tokens.padding.small) : 0
         drag.maximumY: 0
         drag.minimumY: isHorizontal ? 0 : Math.min(0, view.height - view.contentHeight - Tokens.padding.extraSmall)
-
-        onPressed: event => startPos = isHorizontal ? event.x : event.y
-
-        onClicked: event => {
-            const currentPos = isHorizontal ? event.x : event.y;
-            if (Math.abs(currentPos - startPos) > drag.threshold)
-                return;
-
-                            return;
-
-            const ws = view.itemAt(event.x, event.y) as SpecialWsDelegate;
-            if (ws?.modelData)
-                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${ws.modelData.name.slice(8)}")` : `togglespecialworkspace ${ws.modelData.name.slice(8)}`);
-            else
-                Kwin.dispatch(Kwin.usingLua ? 'hl.dsp.workspace.toggle_special("special")' : "togglespecialworkspace special");
-        }
     }
 
     component SpecialWsDelegate: GridLayout {
         id: ws
 
-        required property HyprlandWorkspace modelData
+        required property var modelData
         readonly property int size: isHorizontal ? (label.Layout.preferredWidth + (hasWindows ? windows.implicitWidth + Tokens.padding.extraSmall : 0)) : (label.Layout.preferredHeight + (hasWindows ? windows.implicitHeight + Tokens.padding.extraSmall : 0))
         property int wsId
         property string icon
@@ -401,7 +381,6 @@ Item {
             }
         }
 
-        // MOVED COMPONENTS INSIDE DELEGATE: This fixes the "ws is not defined" error
         Component {
             id: columnComponent
 

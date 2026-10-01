@@ -4610,9 +4610,9 @@
     </message>
 </context>
 <context>
-    <name>HyprSunset</name>
+    <name>NightColor</name>
     <message>
-        <location filename="../services/HyprSunset.qml" line="+20"/>
+        <location filename="../services/NightColor.qml" line="+20"/>
         <source>Night Light</source>
         <translation>Ночная подсветка</translation>
     </message>

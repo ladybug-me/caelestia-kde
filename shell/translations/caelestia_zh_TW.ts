@@ -9,7 +9,7 @@
       <translation>關於</translation>
     </message>
     <message>
-      <location line="+70"/>
+      <location line="+75"/>
       <source>System</source>
       <translation>系統</translation>
     </message>
@@ -39,7 +39,7 @@
       <translation>韌體</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Software</source>
       <translation>軟體</translation>
     </message>
@@ -64,7 +64,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Plugins</source>
       <translation>外掛</translation>
     </message>
@@ -74,7 +74,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Advanced</source>
       <translation>高階</translation>
     </message>
@@ -105,7 +105,7 @@
   <context>
     <name>AddNetworkPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/AddNetworkPage.qml" line="+66"/>
+      <location filename="../modules/nexus/pages/network/AddNetworkPage.qml" line="+78"/>
       <source>Enter password</source>
       <translation>輸入密碼</translation>
     </message>
@@ -115,7 +115,7 @@
       <translation>新增網路</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+42"/>
       <source>Enter the password for &quot;%1&quot;.</source>
       <translation>輸入 “%1” 的密碼。</translation>
     </message>
@@ -125,7 +125,7 @@
       <translation>請填寫以下資訊手動連線網路</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Network name (SSID)</source>
       <translation>網路名稱 (SSID)</translation>
     </message>
@@ -140,7 +140,7 @@
       <translation>網路名稱為必填</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Hidden network</source>
       <translation>隱藏網路</translation>
     </message>
@@ -150,7 +150,7 @@
       <translation>主動掃描隱藏網路</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Security</source>
       <translation>安全性</translation>
     </message>
@@ -191,7 +191,7 @@
       <translation>取消</translation>
     </message>
     <message>
-      <location line="+24"/>
+      <location line="+26"/>
       <source>Connect</source>
       <translation>連線</translation>
     </message>
@@ -232,7 +232,7 @@
   <context>
     <name>AddVpnPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/AddVpnPage.qml" line="+75"/>
+      <location filename="../modules/nexus/pages/network/AddVpnPage.qml" line="+76"/>
       <source>Edit VPN provider</source>
       <translation>編輯 VPN 服務商</translation>
     </message>
@@ -346,7 +346,7 @@
       <translation>深色</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+28"/>
       <source>Advanced Colors</source>
       <translation>高階顏色</translation>
     </message>
@@ -416,7 +416,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+11"/>
       <source>Mode</source>
       <translation>模式</translation>
     </message>
@@ -436,7 +436,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+10"/>
       <source>Color intensity</source>
       <translation type="unfinished"/>
     </message>
@@ -454,53 +454,53 @@
   <context>
     <name>AiAssistant</name>
     <message>
-      <location filename="../modules/sidebar/AiAssistant.qml" line="+701"/>
-      <location line="+1280"/>
+      <location filename="../modules/sidebar/AiAssistant.qml" line="+792"/>
+      <location line="+1360"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>觸發限流——%1 秒後重試…</translation>
     </message>
     <message>
-      <location line="+282"/>
+      <location line="+292"/>
       <source>Provider</source>
       <translation>服務商</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+41"/>
       <source>Select Model</source>
       <translation>選擇模型</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+40"/>
       <source>Effort</source>
       <translation>努力</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+32"/>
       <source>Account</source>
       <translation>賬戶</translation>
     </message>
     <message>
-      <location line="+352"/>
+      <location line="+358"/>
       <source>Thought Process</source>
       <translation>思考過程</translation>
     </message>
     <message>
-      <location line="+184"/>
+      <location line="+187"/>
       <source>Suggestions</source>
       <translation>建議</translation>
     </message>
     <message>
-      <location line="+123"/>
+      <location line="+124"/>
       <source>Ask assistant...</source>
       <translation>詢問助手…</translation>
     </message>
     <message>
-      <location line="+241"/>
+      <location line="+244"/>
       <source>Clear All</source>
       <translation>全部清除</translation>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+35"/>
       <source>New Chat</source>
       <translation>新對話</translation>
     </message>
@@ -513,7 +513,7 @@
       <translation>AI 助手</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+32"/>
       <source>API key</source>
       <translation>API 金鑰</translation>
     </message>
@@ -523,7 +523,7 @@
       <translation>儲存在你的會話金鑰環中，而非 shell.json。%1 環境變數會覆蓋它。</translation>
     </message>
     <message>
-      <location line="+79"/>
+      <location line="+96"/>
       <source>API key saved</source>
       <translation type="unfinished"/>
     </message>
@@ -543,24 +543,24 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+27"/>
-      <location line="+520"/>
+      <location line="+31"/>
+      <location line="+545"/>
       <source>Checking…</source>
       <translation>正在檢查…</translation>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-543"/>
+      <location line="+520"/>
       <source>Not installed</source>
       <translation>未安裝</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-511"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+73"/>
+      <location line="+80"/>
       <source>Default</source>
       <translation>預設</translation>
     </message>
@@ -570,19 +570,19 @@
       <translation>賬戶</translation>
     </message>
     <message>
-      <location line="+54"/>
+      <location line="+58"/>
       <source>Login done? You can close this window.</source>
       <translation>登入完成了？可以關閉此視窗。</translation>
     </message>
     <message>
-      <location line="+79"/>
-      <location line="+35"/>
+      <location line="+81"/>
+      <location line="+40"/>
       <source>Installed.</source>
       <translation>已安裝。</translation>
     </message>
     <message>
-      <location line="-35"/>
-      <location line="+39"/>
+      <location line="-40"/>
+      <location line="+44"/>
       <source>Failed</source>
       <translation>失敗</translation>
     </message>
@@ -592,7 +592,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+49"/>
+      <location line="+50"/>
       <source>Local provider</source>
       <translation>本地服務商</translation>
     </message>
@@ -603,36 +603,36 @@
     </message>
     <message>
       <location line="+8"/>
-      <location line="+142"/>
+      <location line="+146"/>
       <source>Status</source>
       <translation>狀態</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-137"/>
       <source>Download Ollama</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
-      <location line="+18"/>
+      <location line="+155"/>
+      <location line="+19"/>
       <source>Installing…</source>
       <translation>正在安裝…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-168"/>
       <source>Claude</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+114"/>
       <source>Claude Code</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-113"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>使用 Claude CLI 與你的 Claude 登入</translation>
     </message>
@@ -717,7 +717,7 @@
       <translation>API 金鑰</translation>
     </message>
     <message>
-      <location line="+61"/>
+      <location line="+67"/>
       <source>Download Claude Code</source>
       <translation>下載 Claude Code</translation>
     </message>
@@ -737,7 +737,7 @@
       <translation>已是最新</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+21"/>
       <source>Claude accounts</source>
       <translation>Claude 賬戶</translation>
     </message>
@@ -752,7 +752,7 @@
       <translation>單擊選擇</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+33"/>
       <source>Log in to selected account</source>
       <translation>登入所選賬戶</translation>
     </message>
@@ -845,7 +845,7 @@
   <context>
     <name>AppBrowser</name>
     <message>
-      <location filename="../modules/launcher/AppBrowser.qml" line="+236"/>
+      <location filename="../modules/launcher/AppBrowser.qml" line="+225"/>
       <source>No apps in this category</source>
       <translation>此類別沒有應用</translation>
     </message>
@@ -891,12 +891,12 @@
   <context>
     <name>AppInfo</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+30"/>
+      <location filename="../modules/nexus/pages/apps/AppInfo.qml" line="+31"/>
       <source>App info</source>
       <translation>應用資訊</translation>
     </message>
     <message>
-      <location line="+45"/>
+      <location line="+47"/>
       <source>Taskbar &amp; Dock</source>
       <translation type="unfinished"/>
     </message>
@@ -916,7 +916,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Launcher</source>
       <translation>啟動器</translation>
     </message>
@@ -951,7 +951,7 @@
       <translation>從啟動器隱藏</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Details</source>
       <translation>詳情</translation>
     </message>
@@ -969,7 +969,7 @@
   <context>
     <name>AppStreamRow</name>
     <message>
-      <location filename="../components/controls/AppStreamRow.qml" line="+19"/>
+      <location filename="../components/controls/AppStreamRow.qml" line="+24"/>
       <source>Muted</source>
       <translation>已靜音</translation>
     </message>
@@ -977,7 +977,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+143"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+147"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>由 favouriteApps 中的正則匹配——編輯配置檔案以更改</translation>
     </message>
@@ -1004,22 +1004,22 @@
     <name>AppearancePage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+21"/>
+      <source>San Francisco Pro</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Google Sans Flex</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Rubik</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
       <location line="+4"/>
-      <source>CaskaydiaCove NF</source>
+      <source>SF Mono</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>JetBrainsMono Nerd Font</source>
+      <source>CaskaydiaCove NF</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -1143,7 +1143,7 @@
       <translation>通過模糊背景啟用磨砂玻璃效果</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>High Quality Blur Masks</source>
       <translation>高質量模糊遮罩</translation>
     </message>
@@ -1216,7 +1216,7 @@
       <translation>應用</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Default applications</source>
       <translation>預設應用</translation>
     </message>
@@ -1251,7 +1251,7 @@
       <translation>檔案管理器</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Library</source>
       <translation>庫</translation>
     </message>
@@ -1277,6 +1277,29 @@
     </message>
   </context>
   <context>
+    <name>AreaPicker</name>
+    <message>
+      <location filename="../modules/areapicker/AreaPicker.qml" line="+99"/>
+      <source>Open screenshot tool</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>Open screenshot tool (freeze mode)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>Open screenshot tool (clipboard)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>Open screenshot tool (freeze mode, clipboard)</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>ArpcPage</name>
     <message>
       <location filename="../modules/nexus/pages/services/ArpcPage.qml" line="+19"/>
@@ -1284,7 +1307,7 @@
       <translation>Discord 富媒體狀態</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+43"/>
       <source>Broadcast settings</source>
       <translation>廣播設定</translation>
     </message>
@@ -1412,7 +1435,7 @@
   <context>
     <name>Audio</name>
     <message>
-      <location filename="../modules/bar/popouts/Audio.qml" line="+81"/>
+      <location filename="../modules/bar/popouts/Audio.qml" line="+82"/>
       <source>Audio</source>
       <translation>音訊</translation>
     </message>
@@ -1459,7 +1482,7 @@
     </message>
     <message>
       <location line="+57"/>
-      <location filename="../services/Audio.qml" line="+117"/>
+      <location filename="../services/Audio.qml" line="+124"/>
       <source>Unknown</source>
       <translation>未知</translation>
     </message>
@@ -1469,12 +1492,12 @@
       <translation>未知裝置</translation>
     </message>
     <message>
-      <location line="+36"/>
+      <location line="+37"/>
       <source>Unknown Application</source>
       <translation>未知應用程式</translation>
     </message>
     <message>
-      <location line="+174"/>
+      <location line="+176"/>
       <source>Audio output changed</source>
       <translation>音訊輸出已更改</translation>
     </message>
@@ -1700,6 +1723,7 @@
     </message>
     <message>
       <location line="+2"/>
+      <location line="+1"/>
       <source>Greeter</source>
       <translation>歡迎器</translation>
     </message>
@@ -1824,7 +1848,7 @@
       <translation>切換與重排</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+24"/>
       <source>Active components</source>
       <translation>啟用的元件</translation>
     </message>
@@ -1834,22 +1858,22 @@
       <translation>拖動以重排或停用</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Left Zone</source>
       <translation>左區</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>中區</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>右區</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>庫</translation>
     </message>
@@ -1945,7 +1969,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+9"/>
       <source>No token set</source>
       <translation type="unfinished"/>
     </message>
@@ -1975,7 +1999,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+50"/>
+      <location line="+53"/>
       <source>Configuration</source>
       <translation>配置</translation>
     </message>
@@ -2078,7 +2102,7 @@
       <translation>按時間段切換媒體，或迴圈幻燈片</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+14"/>
       <source>Time of Day Periods &amp; Media</source>
       <translation>時段與媒體</translation>
     </message>
@@ -2088,15 +2112,7 @@
       <translation>早晨媒體</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <source>Not set</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="-129"/>
+      <location line="+7"/>
       <source>Select Morning Media</source>
       <translation>選擇早晨媒體</translation>
     </message>
@@ -2105,12 +2121,12 @@
       <location line="+45"/>
       <location line="+45"/>
       <location line="+45"/>
-      <location line="+188"/>
+      <location line="+191"/>
       <source>Multimedia files (Images, GIFs, Videos)</source>
       <translation>多媒體檔案（圖片、GIF、影片）</translation>
     </message>
     <message>
-      <location line="-312"/>
+      <location line="-315"/>
       <source>Morning start time</source>
       <translation>早晨開始時間</translation>
     </message>
@@ -2180,7 +2196,7 @@
       <translation>夜間問候語</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+14"/>
       <source>Slideshow Timing &amp; Order</source>
       <translation>幻燈片時間與順序</translation>
     </message>
@@ -2283,7 +2299,7 @@
       <translation>為每種彈出型別自定義預覽比例和字型</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>RESET ALL</source>
       <translation>全部重置</translation>
     </message>
@@ -2308,7 +2324,7 @@
       <translation>歡迎器</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+19"/>
       <source>Audio</source>
       <translation>音訊</translation>
     </message>
@@ -2431,12 +2447,12 @@
       <translation>狀態圖示</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Visible icons</source>
       <translation>可見圖示</translation>
     </message>
     <message>
-      <location line="+26"/>
+      <location line="+34"/>
       <source>Add entry</source>
       <translation type="unfinished"/>
     </message>
@@ -2451,7 +2467,7 @@
       <translation>新增</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Wi-Fi</source>
       <translation type="unfinished"/>
     </message>
@@ -2461,7 +2477,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -2633,7 +2649,7 @@
   <context>
     <name>Battery</name>
     <message>
-      <location filename="../modules/bar/popouts/Battery.qml" line="+23"/>
+      <location filename="../modules/bar/popouts/Battery.qml" line="+24"/>
       <source>The device is too hot</source>
       <translation type="unfinished"/>
     </message>
@@ -2653,7 +2669,7 @@
       <translation>電池</translation>
     </message>
     <message>
-      <location line="+146"/>
+      <location line="+149"/>
       <source>%1%</source>
       <translation type="unfinished"/>
     </message>
@@ -2738,7 +2754,7 @@
   <context>
     <name>Bluetooth</name>
     <message>
-      <location filename="../modules/bar/popouts/Bluetooth.qml" line="+28"/>
+      <location filename="../modules/bar/popouts/Bluetooth.qml" line="+29"/>
       <source>Bluetooth</source>
       <translation>藍牙</translation>
     </message>
@@ -2895,12 +2911,12 @@
       <translation>未配對</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Device</source>
       <translation>裝置</translation>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Forget</source>
       <translation>忘記</translation>
     </message>
@@ -2915,7 +2931,7 @@
       <translation>連線</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Trusted</source>
       <translation>已信任</translation>
     </message>
@@ -2955,7 +2971,7 @@
       <translation>允許此裝置喚醒系統</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+30"/>
       <source>Battery</source>
       <translation>電池</translation>
     </message>
@@ -3024,7 +3040,7 @@
   <context>
     <name>Categories</name>
     <message>
-      <location filename="../modules/launcher/services/Categories.qml" line="+12"/>
+      <location filename="../modules/launcher/services/Categories.qml" line="+15"/>
       <source>Favorites</source>
       <translation>收藏</translation>
     </message>
@@ -3107,7 +3123,7 @@
   <context>
     <name>ClipItem</name>
     <message>
-      <location filename="../modules/launcher/items/ClipItem.qml" line="+31"/>
+      <location filename="../modules/launcher/items/ClipItem.qml" line="+33"/>
       <source>Copied to clipboard</source>
       <translation>已複製到剪貼簿</translation>
     </message>
@@ -3138,7 +3154,7 @@
   <context>
     <name>ClockContext</name>
     <message>
-      <location filename="../modules/bar/popouts/ClockContext.qml" line="+79"/>
+      <location filename="../modules/bar/popouts/ClockContext.qml" line="+81"/>
       <source>Clock settings</source>
       <translation type="unfinished"/>
     </message>
@@ -3146,12 +3162,12 @@
   <context>
     <name>ColourSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ColourSelect.qml" line="+39"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ColourSelect.qml" line="+40"/>
       <source>Colors</source>
       <translation>顏色</translation>
     </message>
     <message>
-      <location line="+80"/>
+      <location line="+84"/>
       <source>Dynamic</source>
       <translation>動態</translation>
     </message>
@@ -3174,6 +3190,37 @@
       <location line="+19"/>
       <source>Variants</source>
       <translation>變體</translation>
+    </message>
+  </context>
+  <context>
+    <name>ConnectionInfoSection</name>
+    <message>
+      <location filename="../components/ConnectionInfoSection.qml" line="+15"/>
+      <source>IP Address</source>
+      <translation>IP 地址</translation>
+    </message>
+    <message>
+      <location line="+4"/>
+      <location line="+11"/>
+      <location line="+11"/>
+      <location line="+11"/>
+      <source>Not available</source>
+      <translation>不可用</translation>
+    </message>
+    <message>
+      <location line="-26"/>
+      <source>Subnet Mask</source>
+      <translation>子網掩碼</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Gateway</source>
+      <translation>閘道器</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>DNS Servers</source>
+      <translation>DNS 伺服器</translation>
     </message>
   </context>
   <context>
@@ -3239,7 +3286,7 @@
       <translation>輸入 &quot;%1&quot; 搜尋命令</translation>
     </message>
     <message>
-      <location line="+323"/>
+      <location line="+328"/>
       <source>Clear clipboard history?</source>
       <translation>清空剪貼簿歷史？</translation>
     </message>
@@ -3259,7 +3306,7 @@
       <translation>清除</translation>
     </message>
     <message>
-      <location filename="../modules/sidebar/Content.qml" line="+110"/>
+      <location filename="../modules/sidebar/Content.qml" line="+100"/>
       <source>Notifications</source>
       <translation>通知</translation>
     </message>
@@ -3277,7 +3324,7 @@
   <context>
     <name>ContentList</name>
     <message>
-      <location filename="../modules/launcher/ContentList.qml" line="+217"/>
+      <location filename="../modules/launcher/ContentList.qml" line="+225"/>
       <source>Images</source>
       <translation>圖片</translation>
     </message>
@@ -3292,7 +3339,7 @@
       <translation>影片</translation>
     </message>
     <message>
-      <location line="+236"/>
+      <location line="+238"/>
       <source>cliphist not found</source>
       <translation>未找到 cliphist</translation>
     </message>
@@ -3494,12 +3541,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+84"/>
+      <location line="+85"/>
       <source>Pill</source>
       <translation>藥丸形</translation>
     </message>
     <message>
-      <location line="-79"/>
+      <location line="-80"/>
       <source>Diamond</source>
       <translation>菱形</translation>
     </message>
@@ -3545,12 +3592,12 @@
     </message>
     <message>
       <location line="+4"/>
-      <location line="+62"/>
+      <location line="+64"/>
       <source>Dashboard</source>
       <translation>儀表盤</translation>
     </message>
     <message>
-      <location line="-51"/>
+      <location line="-52"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -3590,7 +3637,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Tabs</source>
       <translation>標籤頁</translation>
     </message>
@@ -3645,7 +3692,7 @@
       <translation>在儀表盤顯示歡迎訊息</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance widgets</source>
       <translation>效能元件</translation>
     </message>
@@ -3680,7 +3727,7 @@
       <translation>網路</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -3883,55 +3930,9 @@
     </message>
   </context>
   <context>
-    <name>DesktopIconContextMenu</name>
-    <message>
-      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+75"/>
-      <source>Open</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Show in File Manager</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Unpin from dock</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Pin to dock</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Rename</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Move to Trash</source>
-      <translation type="unfinished"/>
-    </message>
-  </context>
-  <context>
-    <name>DesktopIcons</name>
-    <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+157"/>
-      <source>File operation failed</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>kioclient could not complete the request</source>
-      <translation type="unfinished"/>
-    </message>
-  </context>
-  <context>
     <name>DesktopLyrics</name>
     <message>
-      <location filename="../modules/background/DesktopLyrics.qml" line="+285"/>
+      <location filename="../modules/background/DesktopLyrics.qml" line="+286"/>
       <source>Loading lyrics...</source>
       <translation>載入歌詞中...</translation>
     </message>
@@ -4122,7 +4123,7 @@
   <context>
     <name>DinoGame</name>
     <message>
-      <location filename="../modules/sidebar/DinoGame.qml" line="+251"/>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+256"/>
       <source>All up to date!</source>
       <translation>全部最新！</translation>
     </message>
@@ -4130,7 +4131,7 @@
   <context>
     <name>DockContext</name>
     <message>
-      <location filename="../modules/bar/popouts/DockContext.qml" line="+98"/>
+      <location filename="../modules/bar/popouts/DockContext.qml" line="+100"/>
       <source>Unpin from dock</source>
       <translation>從底座取消固定</translation>
     </message>
@@ -4140,7 +4141,7 @@
       <translation>固定到底座</translation>
     </message>
     <message>
-      <location line="+33"/>
+      <location line="+34"/>
       <source>Open new window</source>
       <translation>開啟新視窗</translation>
     </message>
@@ -4161,65 +4162,95 @@
   <context>
     <name>Entries</name>
     <message>
-      <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
-      <source>Desktop Context Menus</source>
+      <location filename="../modules/whatsnew/Entries.qml" line="+23"/>
+      <source>Window Rules Out of the Box</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Desktop icons now feature a dedicated right-click context menu. You can rename the icon directly or send it to the trash right from the desktop.</source>
+      <source>The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Calendar Popout</source>
+      <source>Right-Click Any App</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
-      <source>Hovering the clock now shows a mini calendar with a month grid, today highlighted, and month navigation. Click the title to jump back to today. Enable this feature in Settings -&gt; Panels -&gt; Taskbar -&gt; Clock.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Status Icons Context Menu</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Right-clicking the status icons block in the bar now opens a context menu popout with a shortcut to the Status Icons configuration page, where you can reorder or toggle them.</source>
+      <location line="+1"/>
+      <source>An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Multiple Wi-Fi Profiles</source>
+      <source>Status Icons You Can Arrange</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
-      <source>You can now manage multiple saved profiles (e.g. DHCP and static IP) for the same Wi-Fi network (SSID). The Saved Networks page lists one row per profile, allowing you to edit, autoconnect, or forget them individually.</source>
+      <location line="+1"/>
+      <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Manual Light/Dark Mode</source>
+      <source>Game Mode at a Tap</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
-      <source>A manual light/dark mode selector has been added to the colors page, allowing you to override the automatic theme switching. Open Settings -&gt; Appearance -&gt; Colors -&gt; Advanced Settings to manually set the light/dark mode. Alternatively, you can open launcher -&gt; Type &gt; -&gt; Select light/dark mode.</source>
+      <location line="+1"/>
+      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Color Intensity</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Dock App Badges</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Ambient Glow</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Lock Screen Password Reveal</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</source>
       <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>EthernetDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+20"/>
+      <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+22"/>
       <source>Ethernet</source>
       <translation>有線網路</translation>
     </message>
     <message>
-      <location line="+54"/>
+      <location line="+55"/>
       <source>Disconnect</source>
       <translation>斷開</translation>
     </message>
@@ -4229,7 +4260,7 @@
       <translation>連線</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Connection</source>
       <translation>連線</translation>
     </message>
@@ -4285,7 +4316,7 @@
   <context>
     <name>EthernetSection</name>
     <message>
-      <location filename="../modules/nexus/common/EthernetSection.qml" line="+52"/>
+      <location filename="../modules/nexus/common/EthernetSection.qml" line="+53"/>
       <source>Ethernet</source>
       <translation>有線網路</translation>
     </message>
@@ -4305,7 +4336,7 @@
       <translation>資料用量：%1</translation>
     </message>
     <message>
-      <location line="+68"/>
+      <location line="+72"/>
       <source>Wired connection</source>
       <translation>有線連線</translation>
     </message>
@@ -4357,7 +4388,7 @@
   <context>
     <name>GameMode</name>
     <message>
-      <location filename="../services/GameMode.qml" line="+113"/>
+      <location filename="../services/GameMode.qml" line="+169"/>
       <source>Game mode enabled</source>
       <translation>遊戲模式已啟用</translation>
     </message>
@@ -4516,7 +4547,7 @@
   <context>
     <name>Github</name>
     <message>
-      <location filename="../modules/bar/popouts/Github.qml" line="+31"/>
+      <location filename="../modules/bar/popouts/Github.qml" line="+32"/>
       <source>GitHub</source>
       <translation type="unfinished"/>
     </message>
@@ -4544,7 +4575,7 @@
   <context>
     <name>GithubActivity</name>
     <message>
-      <location filename="../modules/bar/components/GithubActivity.qml" line="+83"/>
+      <location filename="../modules/bar/components/GithubActivity.qml" line="+85"/>
       <source>GitHub widget needs a token</source>
       <translation type="unfinished"/>
     </message>
@@ -4557,7 +4588,7 @@
   <context>
     <name>GreeterContext</name>
     <message>
-      <location filename="../modules/bar/popouts/GreeterContext.qml" line="+79"/>
+      <location filename="../modules/bar/popouts/GreeterContext.qml" line="+81"/>
       <source>Greeter settings</source>
       <translation>歡迎器設定</translation>
     </message>
@@ -4571,97 +4602,9 @@
     </message>
   </context>
   <context>
-    <name>HotspotPage</name>
+    <name>NightColor</name>
     <message>
-      <location filename="../modules/nexus/pages/network/HotspotPage.qml" line="+20"/>
-      <source>The hotspot could not be started</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+37"/>
-      <location line="+36"/>
-      <source>Hotspot</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="-19"/>
-      <source>Share this machine&apos;s connection over Wi-Fi. The hotspot is saved as a connection named &quot;%1&quot;, so Plasma&apos;s own network applet can see it too.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>No wireless device on this machine can run an access point.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Sharing as &quot;%1&quot;</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Off</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Hotspot name (SSID)</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Leave empty to use this machine&apos;s name, %1</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Password</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>At least %1 characters. Leave empty to share an open network.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>A password is either empty or at least %1 characters</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+28"/>
-      <source>Cancel</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+21"/>
-      <source>Save</source>
-      <translation type="unfinished"/>
-    </message>
-  </context>
-  <context>
-    <name>HotspotSwitch</name>
-    <message>
-      <location filename="../services/HotspotSwitch.qml" line="+27"/>
-      <location line="+14"/>
-      <source>Hotspot</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="-14"/>
-      <source>Give it a name and a password in Settings &gt; Network &gt; Hotspot</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+14"/>
-      <source>The hotspot could not be started</source>
-      <translation type="unfinished"/>
-    </message>
-  </context>
-  <context>
-    <name>HyprSunset</name>
-    <message>
-      <location filename="../services/HyprSunset.qml" line="+20"/>
+      <location filename="../services/NightColor.qml" line="+20"/>
       <source>Night Light</source>
       <translation>夜間模式</translation>
     </message>
@@ -4767,7 +4710,7 @@
   <context>
     <name>KbLayout</name>
     <message>
-      <location filename="../modules/bar/popouts/kblayout/KbLayout.qml" line="+37"/>
+      <location filename="../modules/bar/popouts/kblayout/KbLayout.qml" line="+38"/>
       <source>Keyboard Layouts</source>
       <translation>鍵盤佈局</translation>
     </message>
@@ -4793,7 +4736,7 @@
       <translation>錄製按鍵</translation>
     </message>
     <message>
-      <location line="+68"/>
+      <location line="+69"/>
       <source>Press keys now...</source>
       <translation>現在按下按鍵…</translation>
     </message>
@@ -4811,7 +4754,7 @@
   <context>
     <name>KeybindItem</name>
     <message>
-      <location filename="../modules/launcher/items/KeybindItem.qml" line="+62"/>
+      <location filename="../modules/launcher/items/KeybindItem.qml" line="+68"/>
       <source>No keybinds</source>
       <translation>無快捷鍵</translation>
     </message>
@@ -4820,77 +4763,77 @@
     <name>KrohnkitePage</name>
     <message>
       <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+20"/>
-      <location line="+57"/>
+      <location line="+58"/>
       <source>Window Tiling</source>
       <translation>視窗平鋪</translation>
     </message>
     <message>
-      <location line="-52"/>
+      <location line="-53"/>
       <source>BTree</source>
       <translation>二叉樹</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+271"/>
+      <location line="+272"/>
       <source>Monocle</source>
       <translation>單片鏡</translation>
     </message>
     <message>
-      <location line="-270"/>
-      <location line="+263"/>
+      <location line="-271"/>
+      <location line="+264"/>
       <source>Floating</source>
       <translation>浮動</translation>
     </message>
     <message>
-      <location line="-262"/>
-      <location line="+276"/>
+      <location line="-263"/>
+      <location line="+277"/>
       <source>Quarter</source>
       <translation>四分之一</translation>
     </message>
     <message>
-      <location line="-275"/>
-      <location line="+289"/>
+      <location line="-276"/>
+      <location line="+290"/>
       <source>Spread</source>
       <translation>鋪開</translation>
     </message>
     <message>
-      <location line="-288"/>
-      <location line="+295"/>
+      <location line="-289"/>
+      <location line="+296"/>
       <source>Stacked</source>
       <translation>堆疊</translation>
     </message>
     <message>
-      <location line="-294"/>
-      <location line="+301"/>
+      <location line="-295"/>
+      <location line="+302"/>
       <source>Stair</source>
       <translation>階梯</translation>
     </message>
     <message>
-      <location line="-300"/>
-      <location line="+329"/>
+      <location line="-301"/>
+      <location line="+330"/>
       <source>Columns</source>
       <translation>列</translation>
     </message>
     <message>
-      <location line="-328"/>
-      <location line="+306"/>
+      <location line="-329"/>
+      <location line="+307"/>
       <source>Three Column</source>
       <translation>三列</translation>
     </message>
     <message>
-      <location line="-305"/>
-      <location line="+277"/>
+      <location line="-306"/>
+      <location line="+278"/>
       <source>Spiral</source>
       <translation>螺旋</translation>
     </message>
     <message>
-      <location line="-276"/>
-      <location line="+311"/>
+      <location line="-277"/>
+      <location line="+312"/>
       <source>Tile</source>
       <translation>平鋪</translation>
     </message>
     <message>
-      <location line="-301"/>
+      <location line="-302"/>
       <source>Save Changes</source>
       <translation>儲存更改</translation>
     </message>
@@ -4900,7 +4843,7 @@
       <translation>登出以應用更改</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+24"/>
       <source>Automatically tile windows using Krohnkite</source>
       <translation>使用 Krohnkite 自動平鋪視窗</translation>
     </message>
@@ -5068,7 +5011,7 @@
   <context>
     <name>KrohnkitePreview</name>
     <message>
-      <location filename="../modules/nexus/pages/desktop/KrohnkitePreview.qml" line="+262"/>
+      <location filename="../modules/nexus/pages/desktop/KrohnkitePreview.qml" line="+268"/>
       <source>Layout Preview</source>
       <translation>佈局預覽</translation>
     </message>
@@ -5081,7 +5024,7 @@
   <context>
     <name>Kwin</name>
     <message>
-      <location filename="../services/Kwin.qml" line="+483"/>
+      <location filename="../services/Kwin.qml" line="+477"/>
       <source>Caps lock enabled</source>
       <translation>大寫鎖定已啟用</translation>
     </message>
@@ -5131,7 +5074,7 @@
       <translation>佈局已切換為：%1</translation>
     </message>
     <message>
-      <location line="+57"/>
+      <location line="+56"/>
       <source>Reload devices</source>
       <translation type="unfinished"/>
     </message>
@@ -5139,13 +5082,13 @@
   <context>
     <name>LanguageAndRegion</name>
     <message>
-      <location filename="../modules/nexus/pages/LanguageAndRegion.qml" line="+44"/>
-      <location line="+41"/>
+      <location filename="../modules/nexus/pages/LanguageAndRegion.qml" line="+45"/>
+      <location line="+44"/>
       <source>Auto</source>
       <translation>自動</translation>
     </message>
     <message>
-      <location line="-37"/>
+      <location line="-40"/>
       <source>°C</source>
       <translation type="unfinished"/>
     </message>
@@ -5160,7 +5103,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Binary (KiB, MiB)</source>
       <translation type="unfinished"/>
     </message>
@@ -5170,13 +5113,13 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+60"/>
+      <location line="+9"/>
+      <location line="+62"/>
       <source>System language</source>
       <translation>系統語言</translation>
     </message>
     <message>
-      <location line="-46"/>
+      <location line="-47"/>
       <source>12-hour</source>
       <translation>12 小時制</translation>
     </message>
@@ -5191,7 +5134,7 @@
       <translation>語言與地區</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Language</source>
       <translation>語言</translation>
     </message>
@@ -5211,7 +5154,7 @@
       <translation>未翻譯的文本回退為英語</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Weather</source>
       <translation>天氣</translation>
     </message>
@@ -5256,7 +5199,7 @@
       <translation>未選擇位置</translation>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+19"/>
       <source>Units</source>
       <translation>單位</translation>
     </message>
@@ -5291,7 +5234,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Time &amp; date</source>
       <translation>時間與日期</translation>
     </message>
@@ -5314,7 +5257,7 @@
       <translation>啟動器</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -5389,7 +5332,7 @@
       <translation>游標到達螢幕邊緣時顯示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Display</source>
       <translation>顯示</translation>
     </message>
@@ -5454,7 +5397,7 @@
       <translation>啟動器開啟前需拖拽的畫素數</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clipboard</source>
       <translation>剪貼簿</translation>
     </message>
@@ -5479,7 +5422,7 @@
       <translation>清空剪貼簿歷史前詢問</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -5504,7 +5447,7 @@
       <translation>允許關機和登出操作</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Fuzzy search</source>
       <translation>模糊搜尋</translation>
     </message>
@@ -5593,12 +5536,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+157"/>
+      <location line="+160"/>
       <source>Pentagon</source>
       <translation>五邊形</translation>
     </message>
     <message>
-      <location line="-152"/>
+      <location line="-155"/>
       <source>Gem</source>
       <translation>寶石形</translation>
     </message>
@@ -5633,7 +5576,7 @@
       <translation>鎖屏</translation>
     </message>
     <message>
-      <location line="+25"/>
+      <location line="+26"/>
       <source>Wallpaper</source>
       <translation>桌布</translation>
     </message>
@@ -5678,7 +5621,7 @@
       <translation>模糊整張桌布，而非僅元件背後</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Authentication</source>
       <translation>認證</translation>
     </message>
@@ -5703,7 +5646,7 @@
       <translation>回退到密碼前的嘗試次數</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -5758,7 +5701,7 @@
       <translation>給鎖屏藝術圖著色以匹配調色盤</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Session icons</source>
       <translation>會話圖示</translation>
     </message>
@@ -5826,7 +5769,7 @@
   <context>
     <name>LockStatus</name>
     <message>
-      <location filename="../modules/bar/popouts/LockStatus.qml" line="+21"/>
+      <location filename="../modules/bar/popouts/LockStatus.qml" line="+22"/>
       <source>Keyboard Locks</source>
       <translation>鍵盤鎖定</translation>
     </message>
@@ -6043,7 +5986,7 @@
   <context>
     <name>NavPane</name>
     <message>
-      <location filename="../modules/nexus/NavPane.qml" line="+35"/>
+      <location filename="../modules/nexus/NavPane.qml" line="+37"/>
       <source>Search settings</source>
       <translation>搜尋設定</translation>
     </message>
@@ -6076,22 +6019,27 @@
       <translation>MAC 地址</translation>
     </message>
     <message>
-      <location line="+20"/>
+      <location line="+21"/>
       <source>Network</source>
       <translation>網路</translation>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+38"/>
       <source>Wireless</source>
       <translation>無線網路</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+8"/>
+      <source>Enabled</source>
+      <translation>已啟用</translation>
+    </message>
+    <message>
+      <location line="+10"/>
       <source>%1 networks available</source>
       <translation>%1 個可用網路</translation>
     </message>
     <message>
-      <location line="+143"/>
+      <location line="+146"/>
       <source>Rescan networks</source>
       <translation>重新掃描網路</translation>
     </message>
@@ -6111,7 +6059,7 @@
       <translation>沒有找到 VPN 配置檔案</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Ethernet</source>
       <translation>有線網路</translation>
     </message>
@@ -6126,7 +6074,7 @@
       <translation>未知</translation>
     </message>
     <message>
-      <location line="+46"/>
+      <location line="+47"/>
       <source>Connection details</source>
       <translation>連線詳情</translation>
     </message>
@@ -6139,22 +6087,22 @@
       <translation>網路</translation>
     </message>
     <message>
-      <location line="+54"/>
+      <location line="+56"/>
       <source>Collecting data...</source>
       <translation>正在收集資料...</translation>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+19"/>
       <source>Download</source>
       <translation>下載</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+28"/>
       <source>Upload</source>
       <translation>上傳</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+28"/>
       <source>Total</source>
       <translation>總計</translation>
     </message>
@@ -6162,27 +6110,27 @@
   <context>
     <name>NetworkDetailPage</name>
     <message>
-      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+40"/>
+      <location filename="../modules/nexus/pages/network/NetworkDetailPage.qml" line="+52"/>
       <source>Network</source>
       <translation>網路</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Forget</source>
       <translation>忘記</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+14"/>
       <source>Connect</source>
       <translation>連線</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+14"/>
       <source>Disconnect</source>
       <translation>斷開</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Connection</source>
       <translation>連線</translation>
     </message>
@@ -6241,7 +6189,7 @@
       <translation>MAC 地址</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Behaviour</source>
       <translation>行為</translation>
     </message>
@@ -6269,7 +6217,7 @@
       <translation>Wi-Fi 已停用</translation>
     </message>
     <message>
-      <location line="+119"/>
+      <location line="+127"/>
       <source>Security: %1%2</source>
       <translation>安全性：%1%2</translation>
     </message>
@@ -6297,27 +6245,22 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+25"/>
+      <location line="+51"/>
       <source>Show all networks (%1)</source>
       <translation>顯示所有網路（%1）</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+40"/>
       <source>Saved networks</source>
       <translation>已儲存的網路</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+39"/>
       <source>Add network</source>
       <translation>新增網路</translation>
     </message>
     <message>
-      <location line="+9"/>
-      <source>Hotspot</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
+      <location line="+8"/>
       <source>VPN connections</source>
       <translation>VPN 連線</translation>
     </message>
@@ -6406,22 +6349,22 @@
   <context>
     <name>News</name>
     <message>
-      <location filename="../modules/sidebar/News.qml" line="+90"/>
+      <location filename="../modules/sidebar/News.qml" line="+94"/>
       <source>Failed to fetch news (Status: %1)</source>
       <translation>獲取新聞失敗（狀態：%1）</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+42"/>
       <source>No news articles found.</source>
       <translation>未找到新聞文章。</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+20"/>
       <source>Arch Linux News</source>
       <translation>Arch Linux 新聞</translation>
     </message>
     <message>
-      <location line="+26"/>
+      <location line="+28"/>
       <source>Fetching latest news...</source>
       <translation>正在獲取最新新聞…</translation>
     </message>
@@ -6429,7 +6372,7 @@
   <context>
     <name>Nexus</name>
     <message>
-      <location filename="../modules/nexus/Nexus.qml" line="+162"/>
+      <location filename="../modules/nexus/Nexus.qml" line="+170"/>
       <source>Update in progress</source>
       <translation>更新進行中</translation>
     </message>
@@ -6452,7 +6395,7 @@
   <context>
     <name>NightLight</name>
     <message>
-      <location filename="../modules/bar/popouts/NightLight.qml" line="+26"/>
+      <location filename="../modules/bar/popouts/NightLight.qml" line="+27"/>
       <source>Night Light</source>
       <translation>夜間模式</translation>
     </message>
@@ -6467,12 +6410,12 @@
       <translation>手動</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Daylight Temperature (%1K)</source>
       <translation>日光色溫（%1K）</translation>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+38"/>
       <source>Nightlight Temperature (%1K)</source>
       <translation>夜間色溫（%1K）</translation>
     </message>
@@ -6485,7 +6428,7 @@
   <context>
     <name>Nmcli</name>
     <message>
-      <location filename="../services/Nmcli.qml" line="+212"/>
+      <location filename="../services/Nmcli.qml" line="+432"/>
       <source>Open</source>
       <translation>開放</translation>
     </message>
@@ -6512,7 +6455,7 @@
     <name>NotifData</name>
     <message>
       <location filename="../services/NotifData.qml" line="+19"/>
-      <location line="+149"/>
+      <location line="+150"/>
       <source>now</source>
       <translation>剛剛</translation>
     </message>
@@ -6759,7 +6702,7 @@
   <context>
     <name>Notifications</name>
     <message>
-      <location filename="../modules/bar/popouts/Notifications.qml" line="+26"/>
+      <location filename="../modules/bar/popouts/Notifications.qml" line="+27"/>
       <source>Notifications</source>
       <translation>通知</translation>
     </message>
@@ -6844,7 +6787,7 @@
   <context>
     <name>Notifs</name>
     <message>
-      <location filename="../services/Notifs.qml" line="+133"/>
+      <location filename="../services/Notifs.qml" line="+150"/>
       <source>Do not disturb enabled</source>
       <translation>免打擾已啟用</translation>
     </message>
@@ -6864,7 +6807,7 @@
       <translation>彈窗通知現已啟用</translation>
     </message>
     <message>
-      <location line="+97"/>
+      <location line="+103"/>
       <source>Clear all notifications</source>
       <translation type="unfinished"/>
     </message>
@@ -6872,7 +6815,7 @@
   <context>
     <name>OptionsToolbar</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/OptionsToolbar.qml" line="+40"/>
+      <location filename="../modules/screenshot/regionSelector/OptionsToolbar.qml" line="+43"/>
       <source>Window Selector</source>
       <translation>視窗選擇器</translation>
     </message>
@@ -7228,7 +7171,7 @@
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+328"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+346"/>
       <source>Page under construction</source>
       <translation>此頁面正在建設中</translation>
     </message>
@@ -7241,7 +7184,7 @@
   <context>
     <name>PageDictionary</name>
     <message>
-      <location filename="../modules/nexus/PageDictionary.qml" line="+9"/>
+      <location filename="../modules/nexus/PageDictionary.qml" line="+10"/>
       <source>Appearance</source>
       <translation>外觀</translation>
     </message>
@@ -7516,7 +7459,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>Network</source>
       <translation>網路</translation>
     </message>
@@ -7549,11 +7492,6 @@
       <location line="+1"/>
       <source>Saved networks</source>
       <translation>已儲存的網路</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hotspot</source>
-      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+4"/>
@@ -7621,7 +7559,7 @@
       <translation>已靜音通知的應用</translation>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>Notifications</source>
       <translation>通知</translation>
     </message>
@@ -7736,7 +7674,7 @@
       <translation>自定義快捷鍵</translation>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>Apps</source>
       <translation>應用</translation>
     </message>
@@ -7766,7 +7704,7 @@
       <translation>收藏與隱藏</translation>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+7"/>
       <source>Services</source>
       <translation>服務</translation>
     </message>
@@ -7811,7 +7749,7 @@
       <translation>天氣位置</translation>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>Updates</source>
       <translation>更新</translation>
     </message>
@@ -7900,7 +7838,7 @@
   <context>
     <name>PageRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageRegistry.qml" line="+22"/>
+      <location filename="../modules/nexus/PageRegistry.qml" line="+23"/>
       <source>Main Page</source>
       <translation>主頁</translation>
     </message>
@@ -8026,7 +7964,7 @@
   <context>
     <name>Players</name>
     <message>
-      <location filename="../services/Players.qml" line="+63"/>
+      <location filename="../services/Players.qml" line="+64"/>
       <source>Now Playing</source>
       <translation>正在播放</translation>
     </message>
@@ -8064,7 +8002,7 @@
       <translation>設定</translation>
     </message>
     <message>
-      <location line="+51"/>
+      <location line="+52"/>
       <source>Done</source>
       <translation>完成</translation>
     </message>
@@ -8072,7 +8010,7 @@
   <context>
     <name>PluginsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginsPage.qml" line="+59"/>
+      <location filename="../modules/nexus/pages/PluginsPage.qml" line="+60"/>
       <source>Plugins</source>
       <translation>外掛</translation>
     </message>
@@ -8088,12 +8026,12 @@
     </message>
     <message>
       <location line="+34"/>
-      <location line="+333"/>
+      <location line="+335"/>
       <source>Installed</source>
       <translation>已安裝</translation>
     </message>
     <message>
-      <location line="-324"/>
+      <location line="-326"/>
       <source>Store</source>
       <translation>商店</translation>
     </message>
@@ -8103,7 +8041,7 @@
       <translation>需要重啟 Shell 才能使更改生效</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Shell Plugins</source>
       <translation>Shell 外掛</translation>
     </message>
@@ -8118,7 +8056,7 @@
       <translation>未安裝外掛</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+39"/>
       <source>Loading store...</source>
       <translation>正在載入商店…</translation>
     </message>
@@ -8136,6 +8074,19 @@
       <location line="+0"/>
       <source>Install</source>
       <translation>安裝</translation>
+    </message>
+  </context>
+  <context>
+    <name>PolkitDialog</name>
+    <message>
+      <location filename="../components/PolkitDialog.qml" line="+124"/>
+      <source>Enter your password</source>
+      <translation>輸入密碼</translation>
+    </message>
+    <message>
+      <location line="+99"/>
+      <source>Authentication Required</source>
+      <translation>需要認證</translation>
     </message>
   </context>
   <context>
@@ -8169,11 +8120,6 @@
     <message>
       <location filename="../modules/nexus/pages/utilities/QuickTogglesPage.qml" line="+13"/>
       <source>Wi-Fi</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hotspot</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -8365,7 +8311,7 @@
   <context>
     <name>RecordingDeleteModal</name>
     <message>
-      <location filename="../modules/utilities/RecordingDeleteModal.qml" line="+168"/>
+      <location filename="../modules/utilities/RecordingDeleteModal.qml" line="+170"/>
       <source>Delete recording?</source>
       <translation>刪除錄製？</translation>
     </message>
@@ -8398,7 +8344,7 @@
       <translation>錄製於 %1</translation>
     </message>
     <message>
-      <location line="+128"/>
+      <location line="+126"/>
       <source>No recordings found</source>
       <translation>未找到錄製</translation>
     </message>
@@ -8406,17 +8352,17 @@
   <context>
     <name>RegionSelection</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+543"/>
+      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+581"/>
       <source>Full Screen Screenshot</source>
       <translation>全屏截圖</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Snip selected region (Enter)</source>
       <translation>截圖所選區域（回車）</translation>
     </message>
     <message>
-      <location line="+20"/>
+      <location line="+21"/>
       <source>Clear selection</source>
       <translation>清除選擇</translation>
     </message>
@@ -8429,7 +8375,7 @@
   <context>
     <name>RegionSelector</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/RegionSelector.qml" line="+85"/>
+      <location filename="../modules/screenshot/regionSelector/RegionSelector.qml" line="+90"/>
       <source>Takes a screenshot of the selected region</source>
       <translation type="unfinished"/>
     </message>
@@ -8467,7 +8413,7 @@
       <translation>沒有已儲存的網路</translation>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+53"/>
       <source>%1 (%2)</source>
       <translation type="unfinished"/>
     </message>
@@ -8490,7 +8436,7 @@
   <context>
     <name>SearchResults</name>
     <message>
-      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+148"/>
+      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+149"/>
       <source>in </source>
       <translation>位於 </translation>
     </message>
@@ -8498,14 +8444,14 @@
   <context>
     <name>ServicesPage</name>
     <message>
-      <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
-      <location line="+15"/>
-      <location line="+105"/>
+      <location filename="../modules/nexus/pages/ServicesPage.qml" line="+18"/>
+      <location line="+16"/>
+      <location line="+108"/>
       <source>Auto</source>
       <translation>自動</translation>
     </message>
     <message>
-      <location line="-99"/>
+      <location line="-102"/>
       <source>Generic</source>
       <translation>通用</translation>
     </message>
@@ -8520,7 +8466,7 @@
       <translation>服務</translation>
     </message>
     <message>
-      <location line="+24"/>
+      <location line="+26"/>
       <source>Polling</source>
       <translation>輪詢</translation>
     </message>
@@ -8555,7 +8501,7 @@
       <translation>可用網路重新掃描間隔（秒）</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>媒體與歌詞</translation>
     </message>
@@ -8580,7 +8526,7 @@
       <translation>多個播放器開啟時的首選</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Input increments</source>
       <translation>輸入增量</translation>
     </message>
@@ -8615,7 +8561,7 @@
       <translation>輸出音量上限（%）</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>服務調優</translation>
     </message>
@@ -8663,7 +8609,7 @@
       <translation>會話</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -8698,31 +8644,31 @@
       <translation>選單移動前拖動的畫素數</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>圖示</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+30"/>
+      <location line="+31"/>
       <source>Logout</source>
       <translation>登出</translation>
     </message>
     <message>
-      <location line="-24"/>
-      <location line="+30"/>
+      <location line="-25"/>
+      <location line="+31"/>
       <source>Shutdown</source>
       <translation>關機</translation>
     </message>
     <message>
-      <location line="-24"/>
-      <location line="+30"/>
+      <location line="-25"/>
+      <location line="+31"/>
       <source>Hibernate</source>
       <translation>休眠</translation>
     </message>
     <message>
-      <location line="-23"/>
-      <location line="+30"/>
+      <location line="-24"/>
+      <location line="+31"/>
       <source>Reboot</source>
       <translation>重啟</translation>
     </message>
@@ -8773,7 +8719,7 @@
   <context>
     <name>ShortcutRow</name>
     <message>
-      <location filename="../modules/nexus/common/ShortcutRow.qml" line="+119"/>
+      <location filename="../modules/nexus/common/ShortcutRow.qml" line="+124"/>
       <source>Collides with: </source>
       <translation>與以下衝突：</translation>
     </message>
@@ -8781,7 +8727,7 @@
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+28"/>
+      <location filename="../modules/Shortcuts.qml" line="+29"/>
       <source>Open nexus</source>
       <translation type="unfinished"/>
     </message>
@@ -8866,7 +8812,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+22"/>
       <source>Open window switcher (reverse)</source>
       <translation type="unfinished"/>
     </message>
@@ -8961,7 +8907,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+89"/>
+      <location line="+90"/>
       <source>Focus the window above</source>
       <translation type="unfinished"/>
     </message>
@@ -9165,27 +9111,7 @@
   <context>
     <name>SidebarPanel</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+16"/>
-      <source>Last used</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Notifications</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>AI Assistant</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>News</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+4"/>
+      <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+15"/>
       <source>Sidebar</source>
       <translation>側邊欄</translation>
     </message>
@@ -9220,22 +9146,12 @@
       <translation>為抓取側邊欄保留的螢幕邊緣畫素</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Sidebar Tabs</source>
       <translation>側邊欄標籤頁</translation>
     </message>
     <message>
-      <location line="+5"/>
-      <source>Open on</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Tab shown when the sidebar opens</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+13"/>
+      <location line="+6"/>
       <source>Show News tab</source>
       <translation>顯示新聞標籤頁</translation>
     </message>
@@ -9359,7 +9275,7 @@
   <context>
     <name>StatusIconsContext</name>
     <message>
-      <location filename="../modules/bar/popouts/StatusIconsContext.qml" line="+83"/>
+      <location filename="../modules/bar/popouts/StatusIconsContext.qml" line="+85"/>
       <source>Status icons settings</source>
       <translation type="unfinished"/>
     </message>
@@ -9395,7 +9311,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+38"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -9420,7 +9336,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -9445,7 +9361,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Display</source>
       <translation>顯示</translation>
     </message>
@@ -9566,7 +9482,7 @@
   <context>
     <name>TaskbarPanel</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/TaskbarPanel.qml" line="+19"/>
+      <location filename="../modules/nexus/pages/panels/TaskbarPanel.qml" line="+18"/>
       <source>Top</source>
       <translation>頂部</translation>
     </message>
@@ -9591,12 +9507,12 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+24"/>
+      <location line="+13"/>
       <source>Taskbar</source>
       <translation>工作列</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -9641,7 +9557,7 @@
       <translation>頂欄放置的螢幕邊緣</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+7"/>
       <source>Show on hover</source>
       <translation>懸停顯示</translation>
     </message>
@@ -9676,7 +9592,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+15"/>
       <source>Scaling</source>
       <translation>縮放</translation>
     </message>
@@ -9741,7 +9657,7 @@
       <translation>為每種彈出型別自定義比例和字型</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Components</source>
       <translation>元件</translation>
     </message>
@@ -9766,7 +9682,7 @@
       <translation>工作區、托盤、狀態圖示、時鐘、底座等</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Scroll actions</source>
       <translation>滾動操作</translation>
     </message>
@@ -9975,7 +9891,7 @@
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+102"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+97"/>
       <source>Quick Toggles</source>
       <translation>快捷開關</translation>
     </message>
@@ -9983,7 +9899,7 @@
   <context>
     <name>TrayItem</name>
     <message>
-      <location filename="../modules/bar/components/TrayItem.qml" line="+34"/>
+      <location filename="../modules/bar/components/TrayItem.qml" line="+46"/>
       <source>Left-click activates, right-click opens the menu, middle-click runs the secondary action.</source>
       <translation type="unfinished"/>
     </message>
@@ -9996,7 +9912,7 @@
   <context>
     <name>TrayMenu</name>
     <message>
-      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
+      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+335"/>
       <source>Back</source>
       <translation>返回</translation>
     </message>
@@ -10004,7 +9920,7 @@
   <context>
     <name>Units</name>
     <message>
-      <location filename="../services/Units.qml" line="+22"/>
+      <location filename="../services/Units.qml" line="+26"/>
       <source>%1°</source>
       <comment>temperature</comment>
       <translation type="unfinished"/>
@@ -10028,7 +9944,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>%1 B</source>
       <comment>data unit</comment>
       <translation type="unfinished"/>
@@ -10142,7 +10058,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+34"/>
+      <location line="+36"/>
       <source>%1 / %2</source>
       <comment>used / total amount</comment>
       <translation type="unfinished"/>
@@ -10151,7 +10067,7 @@
   <context>
     <name>UpdateChecker</name>
     <message>
-      <location filename="../services/UpdateChecker.qml" line="+363"/>
+      <location filename="../services/UpdateChecker.qml" line="+375"/>
       <source>Done!</source>
       <translation>完成！</translation>
     </message>
@@ -10167,28 +10083,28 @@
     </message>
     <message>
       <location line="+15"/>
-      <location line="+379"/>
+      <location line="+397"/>
       <source>Canceled</source>
       <translation>已取消</translation>
     </message>
     <message>
-      <location line="-294"/>
-      <location line="+21"/>
+      <location line="-310"/>
+      <location line="+22"/>
       <source>Release</source>
       <translation>釋出</translation>
     </message>
     <message>
-      <location line="-19"/>
+      <location line="-20"/>
       <source>GitHub release</source>
       <translation>GitHub 釋出</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+22"/>
       <source>Tag</source>
       <translation>標記</translation>
     </message>
     <message>
-      <location line="+275"/>
+      <location line="+290"/>
       <source>Update Successful</source>
       <translation>更新成功</translation>
     </message>
@@ -10229,7 +10145,7 @@
   <context>
     <name>UpdateTimeline</name>
     <message>
-      <location filename="../modules/nexus/common/UpdateTimeline.qml" line="+27"/>
+      <location filename="../modules/nexus/common/UpdateTimeline.qml" line="+35"/>
       <source>feat</source>
       <translation>功能</translation>
     </message>
@@ -10284,7 +10200,7 @@
       <translation>回退</translation>
     </message>
     <message>
-      <location line="+230"/>
+      <location line="+260"/>
       <source>merge</source>
       <translation>合併</translation>
     </message>
@@ -10292,7 +10208,7 @@
   <context>
     <name>Updates</name>
     <message>
-      <location filename="../modules/bar/popouts/Updates.qml" line="+34"/>
+      <location filename="../modules/bar/popouts/Updates.qml" line="+35"/>
       <source>Updating…</source>
       <translation>正在更新…</translation>
     </message>
@@ -10328,12 +10244,12 @@
     </message>
     <message>
       <location line="+69"/>
-      <location line="+78"/>
+      <location line="+80"/>
       <source>Checking…</source>
       <translation>正在檢查…</translation>
     </message>
     <message>
-      <location line="-76"/>
+      <location line="-78"/>
       <source>Last check: not yet</source>
       <translation>上次檢查：尚未</translation>
     </message>
@@ -10348,17 +10264,17 @@
       <translation>%1 後進行下次檢查</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+57"/>
       <source>Check for updates</source>
       <translation>檢查更新</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+41"/>
       <source>Open Updates</source>
       <translation>開啟更新</translation>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+38"/>
       <source>Hide from bar</source>
       <translation>從頂欄隱藏</translation>
     </message>
@@ -10366,7 +10282,7 @@
   <context>
     <name>UpdatesPage</name>
     <message>
-      <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+136"/>
+      <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+162"/>
       <source>Updates</source>
       <translation>更新</translation>
     </message>
@@ -10376,7 +10292,7 @@
       <translation>幫助</translation>
     </message>
     <message>
-      <location line="+97"/>
+      <location line="+99"/>
       <source>Update complete - log out to apply</source>
       <translation>更新完成——登出以應用</translation>
     </message>
@@ -10431,7 +10347,7 @@
       <translation>通道：%1</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+26"/>
       <source>Log Out</source>
       <translation>登出</translation>
     </message>
@@ -10456,7 +10372,7 @@
       <translation>安裝更新</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+44"/>
       <source>Stop</source>
       <translation>停止</translation>
     </message>
@@ -10476,7 +10392,7 @@
       <translation>檢查</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+35"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -10506,7 +10422,7 @@
       <translation>有可用更新時在工作列顯示通知圖示</translation>
     </message>
     <message>
-      <location line="+63"/>
+      <location line="+67"/>
       <source>Customize Installation</source>
       <translation>自定義安裝</translation>
     </message>
@@ -10546,7 +10462,7 @@
       <translation>正在切換到 %1…</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Version History</source>
       <translation>版本歷史</translation>
     </message>
@@ -10556,7 +10472,7 @@
       <translation>提交歷史</translation>
     </message>
     <message>
-      <location line="+54"/>
+      <location line="+62"/>
       <source>Loading…</source>
       <translation>正在載入…</translation>
     </message>
@@ -10566,7 +10482,7 @@
       <translation>再載入 10 個</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Update Log</source>
       <translation>更新日誌</translation>
     </message>
@@ -10753,7 +10669,7 @@
   <context>
     <name>VPN</name>
     <message>
-      <location filename="../services/VPN.qml" line="+174"/>
+      <location filename="../services/VPN.qml" line="+209"/>
       <source>VPN connection failed</source>
       <translation>VPN 連線失敗</translation>
     </message>
@@ -10763,7 +10679,7 @@
       <translation>VPN 斷開失敗</translation>
     </message>
     <message>
-      <location line="+221"/>
+      <location line="+241"/>
       <source>VPN connected</source>
       <translation>VPN 已連線</translation>
     </message>
@@ -10799,13 +10715,13 @@
       <translation>VPN 錯誤</translation>
     </message>
     <message>
-      <location line="+184"/>
-      <location line="+68"/>
+      <location line="+196"/>
+      <location line="+69"/>
       <source>Could not start %1. Is it installed?</source>
       <translation>無法啟動 %1。是否已安裝？</translation>
     </message>
     <message>
-      <location line="-54"/>
+      <location line="-55"/>
       <source>Could not connect to %1</source>
       <translation>無法連線到 %1</translation>
     </message>
@@ -10818,7 +10734,7 @@
       <translation>影片桌布</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Pause video wallpapers</source>
       <translation>暫停影片桌布</translation>
     </message>
@@ -10869,12 +10785,12 @@
       <translation>立即搜尋、預覽並設定桌布</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+22"/>
       <source>Search wallpapers...</source>
       <translation>搜尋桌布…</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+39"/>
       <source>Found %1 wallpapers (page %2 of %3)</source>
       <translation>找到 %1 張桌布（第 %2/%3 頁）</translation>
     </message>
@@ -10889,7 +10805,7 @@
       <translation>載入更多</translation>
     </message>
     <message>
-      <location line="+138"/>
+      <location line="+140"/>
       <source>Downloading...</source>
       <translation>正在下載…</translation>
     </message>
@@ -10905,18 +10821,18 @@
     </message>
     <message>
       <location line="+16"/>
-      <location line="+101"/>
+      <location line="+102"/>
       <source>Wallpaper applied</source>
       <translation>桌布已應用</translation>
     </message>
     <message>
-      <location line="-99"/>
-      <location line="+112"/>
+      <location line="-100"/>
+      <location line="+113"/>
       <source>Download failed</source>
       <translation>下載失敗</translation>
     </message>
     <message>
-      <location line="-111"/>
+      <location line="-112"/>
       <source>Downloading... %1%</source>
       <translation>正在下載… %1%</translation>
     </message>
@@ -11057,7 +10973,7 @@
   <context>
     <name>WallpaperSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+122"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+132"/>
       <source>Select wallpaper</source>
       <translation>選擇桌布</translation>
     </message>
@@ -11087,12 +11003,12 @@
       <translation>開啟資料夾</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+20"/>
       <source>Featured wallpaper</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+168"/>
+      <location line="+175"/>
       <location line="+7"/>
       <source>All</source>
       <translation>全部</translation>
@@ -11118,7 +11034,7 @@
       <translation>本地桌布</translation>
     </message>
     <message>
-      <location line="+100"/>
+      <location line="+101"/>
       <source>No local wallpapers found</source>
       <translation>未找到本地桌布</translation>
     </message>
@@ -11230,37 +11146,32 @@
   <context>
     <name>WhatsNewWindow</name>
     <message>
-      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+110"/>
-      <location line="+148"/>
+      <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+114"/>
+      <location line="+151"/>
       <source>What&apos;s New in Caelestia</source>
       <translation>Caelestia 的新變化</translation>
     </message>
     <message>
-      <location line="-97"/>
+      <location line="-99"/>
       <source>What&apos;s New</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+421"/>
-      <source>Open in Settings</source>
       <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>WirelessPassword</name>
     <message>
-      <location filename="../modules/bar/popouts/WirelessPassword.qml" line="+52"/>
-      <location line="+21"/>
-      <location line="+449"/>
-      <location line="+28"/>
-      <location line="+10"/>
-      <location line="+48"/>
+      <location filename="../modules/bar/popouts/WirelessPassword.qml" line="+58"/>
+      <location line="+22"/>
+      <location line="+460"/>
+      <location line="+32"/>
+      <location line="+12"/>
+      <location line="+51"/>
       <location line="+44"/>
       <source>Connect</source>
       <translation>連線</translation>
     </message>
     <message>
-      <location line="-439"/>
+      <location line="-454"/>
       <source>Enter password</source>
       <translation>輸入密碼</translation>
     </message>
@@ -11281,12 +11192,12 @@
     </message>
     <message>
       <location line="+3"/>
-      <location line="+265"/>
+      <location line="+273"/>
       <source>Connecting...</source>
       <translation>正在連線...</translation>
     </message>
     <message>
-      <location line="-138"/>
+      <location line="-140"/>
       <source>Password</source>
       <translation>密碼</translation>
     </message>

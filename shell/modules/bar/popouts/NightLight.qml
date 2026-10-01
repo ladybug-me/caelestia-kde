@@ -31,19 +31,19 @@ ColumnLayout {
     IconTextButton {
         Layout.fillWidth: true
         Layout.topMargin: Tokens.spacing.small * root.scaleOffset
-        inactiveColour: HyprSunset.autoMode ? Colours.palette.m3primaryContainer : Colours.palette.m3surfaceVariant
-        inactiveOnColour: HyprSunset.autoMode ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
+        inactiveColour: NightColor.autoMode ? Colours.palette.m3primaryContainer : Colours.palette.m3surfaceVariant
+        inactiveOnColour: NightColor.autoMode ? Colours.palette.m3onPrimaryContainer : Colours.palette.m3onSurfaceVariant
         verticalPadding: Tokens.padding.small * root.scaleOffset
-        text: HyprSunset.autoMode ? qsTr("Auto") : qsTr("Manual")
+        text: NightColor.autoMode ? qsTr("Auto") : qsTr("Manual")
         icon: "routine"
         
         onClicked: {
-            HyprSunset.toggleAutoMode();
+            NightColor.toggleAutoMode();
         }
     }
 
     StyledText {
-        visible: HyprSunset.autoMode
+        visible: NightColor.autoMode
         Layout.topMargin: Tokens.spacing.medium * root.scaleOffset
         Layout.leftMargin: Tokens.padding.small * root.scaleOffset
         text: qsTr("Daylight Temperature (%1K)").arg(Math.round(2000 + daySlider.pos * 4500))
@@ -53,15 +53,15 @@ ColumnLayout {
     }
 
     CustomMouseArea {
-        visible: HyprSunset.autoMode
+        visible: NightColor.autoMode
         Layout.fillWidth: true
         implicitHeight: Tokens.padding.medium * 3 * root.scaleOffset
 
         onWheel: event => {
             if (event.angleDelta.y > 0)
-                HyprSunset.setDayTemperature(Math.min(6500, HyprSunset.dayTemperature + 100));
+                NightColor.setDayTemperature(Math.min(6500, NightColor.dayTemperature + 100));
             else if (event.angleDelta.y < 0)
-                HyprSunset.setDayTemperature(Math.max(2000, HyprSunset.dayTemperature - 100));
+                NightColor.setDayTemperature(Math.max(2000, NightColor.dayTemperature - 100));
         }
 
         StyledSlider {
@@ -71,11 +71,11 @@ ColumnLayout {
             anchors.right: parent.right
             implicitHeight: parent.implicitHeight
 
-            value: Math.max(0, Math.min(1, (HyprSunset.dayTemperature - 2000) / 4500))
-            onInteraction: v => HyprSunset.previewTemperature(Math.round(2000 + v * 4500))
+            value: Math.max(0, Math.min(1, (NightColor.dayTemperature - 2000) / 4500))
+            onInteraction: v => NightColor.previewTemperature(Math.round(2000 + v * 4500))
             onReleased: v => {
-                HyprSunset.stopPreview();
-                HyprSunset.setDayTemperature(Math.round(2000 + v * 4500));
+                NightColor.stopPreview();
+                NightColor.setDayTemperature(Math.round(2000 + v * 4500));
             }
         }
     }
@@ -83,7 +83,7 @@ ColumnLayout {
     StyledText {
         Layout.topMargin: Tokens.spacing.medium * root.scaleOffset
         Layout.leftMargin: Tokens.padding.small * root.scaleOffset
-        text: HyprSunset.autoMode ? qsTr("Nightlight Temperature (%1K)").arg(Math.round(2000 + nightSlider.pos * 4500)) : qsTr("Temperature (%1K)").arg(Math.round(2000 + nightSlider.pos * 4500))
+        text: NightColor.autoMode ? qsTr("Nightlight Temperature (%1K)").arg(Math.round(2000 + nightSlider.pos * 4500)) : qsTr("Temperature (%1K)").arg(Math.round(2000 + nightSlider.pos * 4500))
         font.weight: Font.Medium
         font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
         font.features: { "tnum": 1 }
@@ -95,9 +95,9 @@ ColumnLayout {
 
         onWheel: event => {
             if (event.angleDelta.y > 0)
-                HyprSunset.setNightTemperature(Math.min(6500, HyprSunset.nightTemperature + 100));
+                NightColor.setNightTemperature(Math.min(6500, NightColor.nightTemperature + 100));
             else if (event.angleDelta.y < 0)
-                HyprSunset.setNightTemperature(Math.max(2000, HyprSunset.nightTemperature - 100));
+                NightColor.setNightTemperature(Math.max(2000, NightColor.nightTemperature - 100));
         }
 
         StyledSlider {
@@ -107,11 +107,11 @@ ColumnLayout {
             anchors.right: parent.right
             implicitHeight: parent.implicitHeight
 
-            value: Math.max(0, Math.min(1, (HyprSunset.nightTemperature - 2000) / 4500))
-            onInteraction: v => HyprSunset.previewTemperature(Math.round(2000 + v * 4500))
+            value: Math.max(0, Math.min(1, (NightColor.nightTemperature - 2000) / 4500))
+            onInteraction: v => NightColor.previewTemperature(Math.round(2000 + v * 4500))
             onReleased: v => {
-                HyprSunset.stopPreview();
-                HyprSunset.setNightTemperature(Math.round(2000 + v * 4500));
+                NightColor.stopPreview();
+                NightColor.setNightTemperature(Math.round(2000 + v * 4500));
             }
         }
     }

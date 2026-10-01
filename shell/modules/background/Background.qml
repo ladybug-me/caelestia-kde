@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import "../drawers/blur" as Blur
 import QtQuick
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Wayland
 import Caelestia.Blobs
 import Caelestia.Config

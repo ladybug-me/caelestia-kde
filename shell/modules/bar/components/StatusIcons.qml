@@ -62,7 +62,7 @@ StyledRect {
         case "ethernet":
             return Nmcli.activeEthernet;
         case "nightlight":
-            return HyprSunset.active;
+            return NightColor.active;
         case "audio":
         case "microphone":
         case "bluetooth":

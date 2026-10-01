@@ -16,8 +16,6 @@ PageBase {
     isSubPage: true
     title: qsTr("Video Wallpapers")
 
-    readonly property bool isHyprland: !!Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
-
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
@@ -39,14 +37,12 @@ PageBase {
 
         ToggleRow {
             text: qsTr("Pause video on fullscreen")
-            visible: root.isHyprland
             checked: Config.background.videoWallpaperPauseOnFullscreen
             onToggled: GlobalConfig.background.videoWallpaperPauseOnFullscreen = checked
         }
 
         ToggleRow {
             text: qsTr("Pause video on tiled windows")
-            visible: root.isHyprland
             checked: Config.background.videoWallpaperPauseOnTiled
             onToggled: GlobalConfig.background.videoWallpaperPauseOnTiled = checked
         }

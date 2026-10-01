@@ -6,7 +6,6 @@ import QtQuick.Controls
 import QtQuick.Effects
 import QtCore
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Wayland
 import Caelestia.Blobs
 import Caelestia.Config

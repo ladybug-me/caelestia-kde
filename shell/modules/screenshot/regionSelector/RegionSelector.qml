@@ -2,7 +2,6 @@ import ".."
 import QtQuick
 import QtCore
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Io
 import qs.components.misc
 import qs.services

@@ -29,11 +29,7 @@ StyledRect {
 
     function closeToplevel(address: string): void {
         Kwin.clearHighlight();
-        if (Kwin.windowList.length > 0) {
-            Kwin.closeWindow(address);
-        } else {
-            Kwin.dispatch(Kwin.usingLua ? `hl.dsp.window.close({ window = "address:0x${address}" })` : `closewindow address:0x${address}`);
-        }
+        Kwin.closeWindow(address);
 
         if (!root.model || !root.model.toplevels)
             return;
@@ -69,7 +65,6 @@ StyledRect {
         anchors.top: parent.top
         anchors.margins: Tokens.padding.medium * scaleOffset
         spacing: Tokens.spacing.small
-        // Fallback for pinned apps with no active windows
 
         StyledRect {
             implicitWidth: fallbackLayout.implicitWidth + Tokens.padding.small * scaleOffset * 2
@@ -171,13 +166,8 @@ StyledRect {
                         onClicked: {
                             previewTimer.stop();
                             Kwin.clearHighlight();
-                            if (card.modelData.address) {
-                                if (Kwin.windowList.length > 0) {
-                                    Kwin.focusWindow(card.modelData.address);
-                                } else {
-                                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${card.modelData.address}" })` : `focuswindow address:0x${card.modelData.address}`);
-                                }
-                            }
+                            if (card.modelData.address)
+                                Kwin.focusWindow(card.modelData.address);
                             root.popouts.hasCurrent = false;
                         }
                     }

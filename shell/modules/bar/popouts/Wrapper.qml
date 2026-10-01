@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Hyprland
 import Quickshell.Wayland
 import Caelestia.Config
 import qs.components
@@ -36,6 +35,7 @@ Item {
     property alias tasksModel: popoutState.tasksModel
     property real currentCenter
     property string detachedMode
+    property bool detachedWindowWasActive: false
     readonly property QtObject dummy: QtObject {}
     property int animLength: dummy.Tokens.anim.durations.expressiveDefaultSpatial
     property var animCurve: dummy.Tokens.anim.expressiveDefaultSpatial
@@ -88,16 +88,30 @@ Item {
         isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
         onDetachRequested: mode => root.detach(mode)
     }
-    HyprlandFocusGrab {
-        active: root.isDetached
-        windows: [QsWindow.window]
-        onCleared: root.close()
-    }
     Binding {
         when: root.isDetached || (root.hasCurrent && root.currentName === "wirelesspassword")
         target: QsWindow.window
         property: "WlrLayershell.keyboardFocus"
         value: WlrKeyboardFocus.OnDemand
+    }
+    // KWin has no focus-grab protocol, so a detached popout closes when its
+    // window was active and then lost focus (the same rule the drawers use).
+    Timer {
+        interval: 100
+        repeat: true
+        running: root.isDetached
+
+        onTriggered: {
+            const win = QsWindow.window;
+            if (!win || Visibilities.openDialogs > 0)
+                return;
+            if (win.active) {
+                root.detachedWindowWasActive = true;
+            } else if (root.detachedWindowWasActive) {
+                root.detachedWindowWasActive = false;
+                root.close();
+            }
+        }
     }
     Comp {
         id: content

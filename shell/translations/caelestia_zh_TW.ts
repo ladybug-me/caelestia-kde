@@ -791,7 +791,7 @@
   <context>
     <name>AllApps</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+16"/>
+      <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+17"/>
       <source>All apps</source>
       <translation>全部應用</translation>
     </message>
@@ -6864,7 +6864,7 @@
       <translation>彈窗通知現已啟用</translation>
     </message>
     <message>
-      <location line="+97"/>
+      <location line="+98"/>
       <source>Clear all notifications</source>
       <translation type="unfinished"/>
     </message>

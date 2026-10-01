@@ -791,7 +791,7 @@
   <context>
     <name>AllApps</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+16"/>
+      <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+17"/>
       <source>All apps</source>
       <translation>Todos os aplicativos</translation>
     </message>
@@ -6864,7 +6864,7 @@
       <translation>As notificações pop-up estão ativadas</translation>
     </message>
     <message>
-      <location line="+97"/>
+      <location line="+98"/>
       <source>Clear all notifications</source>
       <translation>Limpar todas as notificações</translation>
     </message>

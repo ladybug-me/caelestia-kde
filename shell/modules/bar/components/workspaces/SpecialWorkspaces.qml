@@ -381,7 +381,6 @@ Item {
             }
         }
 
-        // MOVED COMPONENTS INSIDE DELEGATE: This fixes the "ws is not defined" error
         Component {
             id: columnComponent
 

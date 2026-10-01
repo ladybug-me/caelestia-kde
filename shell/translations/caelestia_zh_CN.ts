@@ -71,7 +71,7 @@
     <message>
         <location line="+10"/>
         <source>Enabled plugins</source>
-        <translation type="unfinished"></translation>
+        <translation>已启用的插件</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -328,12 +328,12 @@
     <message>
         <location filename="../modules/nexus/pages/wallandstyle/AdvancedColorsPage.qml" line="+19"/>
         <source>Sunrise and sunset</source>
-        <translation type="unfinished"></translation>
+        <translation>日出与日落</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Fixed times</source>
-        <translation type="unfinished"></translation>
+        <translation>固定时间</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -348,72 +348,72 @@
     <message>
         <location line="+28"/>
         <source>Advanced Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>高级颜色</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>Theme Automation</source>
-        <translation type="unfinished"></translation>
+        <translation>主题自动化</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Smart color scheme</source>
-        <translation type="unfinished"></translation>
+        <translation>智能配色方案</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Automatically select color variants and theme mode</source>
-        <translation type="unfinished"></translation>
+        <translation>自动选择配色变体与主题模式</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Automatic light and dark</source>
-        <translation type="unfinished"></translation>
+        <translation>自动深浅色</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Switch the theme mode on a schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>按计划切换主题模式</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>计划</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sunrise and sunset use your weather location</source>
-        <translation type="unfinished"></translation>
+        <translation>日出与日落依据你的天气位置</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Set a weather location to use sunrise and sunset</source>
-        <translation type="unfinished"></translation>
+        <translation>设置天气位置后即可使用日出与日落</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Light mode hour</source>
-        <translation type="unfinished"></translation>
+        <translation>浅色模式时刻</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Switches at %1</source>
-        <translation type="unfinished"></translation>
+        <translation>在 %1 切换</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Dark mode hour</source>
-        <translation type="unfinished"></translation>
+        <translation>深色模式时刻</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Switches at %1, also used when sunrise and sunset are unavailable</source>
-        <translation type="unfinished"></translation>
+        <translation>在 %1 切换；日出日落不可用时也使用该时刻</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Theme mode</source>
-        <translation type="unfinished"></translation>
+        <translation>主题模式</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -423,32 +423,32 @@
     <message>
         <location line="+1"/>
         <source>Switch the color scheme between light and dark</source>
-        <translation type="unfinished"></translation>
+        <translation>在浅色与深色之间切换配色</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Managed by the automatic light and dark schedule</source>
-        <translation type="unfinished"></translation>
+        <translation>由自动深浅色计划管理</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Palette</source>
-        <translation type="unfinished"></translation>
+        <translation>调色板</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Color intensity</source>
-        <translation type="unfinished"></translation>
+        <translation>颜色强度</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Chroma of the wallpaper-derived palette, at 100% by default</source>
-        <translation type="unfinished"></translation>
+        <translation>由壁纸提取的配色的饱和度，默认 100%</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>%1 keeps its own colors, so this does not apply</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 使用自己的配色，此项不适用</translation>
     </message>
 </context>
 <context>
@@ -525,27 +525,27 @@
     <message>
         <location line="+96"/>
         <source>API key saved</source>
-        <translation type="unfinished"></translation>
+        <translation>API 密钥已保存</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>secret-tool exited with code %1</source>
-        <translation type="unfinished"></translation>
+        <translation>secret-tool 退出，返回码 %1</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Couldn&apos;t remove API key</source>
-        <translation type="unfinished"></translation>
+        <translation>无法移除 API 密钥</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Couldn&apos;t save API key</source>
-        <translation type="unfinished"></translation>
+        <translation>无法保存 API 密钥</translation>
     </message>
     <message>
         <location line="+42"/>
         <source>Daemon not running - start it with: sudo systemctl start ollama</source>
-        <translation type="unfinished"></translation>
+        <translation>守护进程未运行 — 请先启动：sudo systemctl start ollama</translation>
     </message>
     <message>
         <location line="+80"/>
@@ -577,7 +577,7 @@
     <message>
         <location line="-2"/>
         <source>Cancelled.</source>
-        <translation type="unfinished"></translation>
+        <translation>已取消。</translation>
     </message>
     <message>
         <location line="+50"/>
@@ -592,7 +592,7 @@
     <message>
         <location line="+17"/>
         <source>Download Ollama</source>
-        <translation type="unfinished"></translation>
+        <translation>下载 Ollama</translation>
     </message>
     <message>
         <location line="+12"/>
@@ -613,12 +613,12 @@
     <message>
         <location line="+7"/>
         <source>Let the CLI run its own tools</source>
-        <translation type="unfinished"></translation>
+        <translation>允许 CLI 运行自带工具</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Off by default; the assistant&apos;s own tools do not need it</source>
-        <translation type="unfinished"></translation>
+        <translation>默认关闭；助手自带的工具不需要它</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -698,12 +698,12 @@
     <message>
         <location line="+5"/>
         <source>Save chat history</source>
-        <translation type="unfinished"></translation>
+        <translation>保存对话历史</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</source>
-        <translation type="unfinished"></translation>
+        <translation>跨会话保留对话；侧边栏的清除按钮会删掉已保存的内容</translation>
     </message>
     <message>
         <location line="-305"/>
@@ -865,22 +865,22 @@
     <message>
         <location line="+18"/>
         <source>Remove from desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>从桌面移除</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Add to desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>添加到桌面</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>Show in launcher</source>
-        <translation type="unfinished"></translation>
+        <translation>在启动器中显示</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Hide app</source>
-        <translation type="unfinished"></translation>
+        <translation>隐藏应用</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -898,7 +898,7 @@
     <message>
         <location line="+47"/>
         <source>Taskbar &amp; Dock</source>
-        <translation type="unfinished"></translation>
+        <translation>任务栏与 Dock</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -908,12 +908,12 @@
     <message>
         <location line="+1"/>
         <source>Matched by a regex in pinnedApps - edit the config file to change</source>
-        <translation type="unfinished"></translation>
+        <translation>由 pinnedApps 中的正则匹配 — 请编辑配置文件修改</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Show on the dock even when not running</source>
-        <translation type="unfinished"></translation>
+        <translation>未运行时也显示在 Dock 上</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -1110,22 +1110,22 @@
     <message>
         <location line="+8"/>
         <source>Ambient color mode</source>
-        <translation type="unfinished"></translation>
+        <translation>氛围光模式</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ambient glow is unavailable in light mode</source>
-        <translation type="unfinished"></translation>
+        <translation>浅色模式下无法使用氛围光</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Ambient light glow in window info panel</source>
-        <translation type="unfinished"></translation>
+        <translation>窗口信息面板中的氛围光</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Ambient glow opacity</source>
-        <translation type="unfinished"></translation>
+        <translation>氛围光不透明度</translation>
     </message>
     <message>
         <location line="+22"/>
@@ -1281,22 +1281,22 @@
     <message>
         <location filename="../modules/areapicker/AreaPicker.qml" line="+99"/>
         <source>Open screenshot tool</source>
-        <translation type="unfinished"></translation>
+        <translation>打开截图工具</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Open screenshot tool (freeze mode)</source>
-        <translation type="unfinished"></translation>
+        <translation>打开截图工具（冻结画面）</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Open screenshot tool (clipboard)</source>
-        <translation type="unfinished"></translation>
+        <translation>打开截图工具（复制到剪贴板）</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Open screenshot tool (freeze mode, clipboard)</source>
-        <translation type="unfinished"></translation>
+        <translation>打开截图工具（冻结画面，复制到剪贴板）</translation>
     </message>
 </context>
 <context>
@@ -1681,22 +1681,22 @@
     <message>
         <location line="+6"/>
         <source>Show seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>显示秒</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add a seconds line to the clock</source>
-        <translation type="unfinished"></translation>
+        <translation>在时钟下方增加一行秒</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Calendar popout</source>
-        <translation type="unfinished"></translation>
+        <translation>日历弹出面板</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show a mini calendar when hovering the clock</source>
-        <translation type="unfinished"></translation>
+        <translation>悬停时钟时显示迷你日历</translation>
     </message>
 </context>
 <context>
@@ -1835,12 +1835,12 @@
     <message>
         <location line="+12"/>
         <source>Add to right zone</source>
-        <translation type="unfinished"></translation>
+        <translation>移到右侧区域</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Disable component</source>
-        <translation type="unfinished"></translation>
+        <translation>停用组件</translation>
     </message>
     <message>
         <location line="+183"/>
@@ -1933,32 +1933,32 @@
     <message>
         <location line="+7"/>
         <source>Show app badges</source>
-        <translation type="unfinished"></translation>
+        <translation>显示应用角标</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show the count, progress and urgency an app publishes for its dock icon</source>
-        <translation type="unfinished"></translation>
+        <translation>显示应用为其 Dock 图标发布的计数、进度与紧急标记</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Filter by current desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>仅当前桌面</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Only show applications and windows belonging to the active virtual desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>只显示属于当前虚拟桌面的应用与窗口</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Preview window on desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>在桌面高亮预览窗口</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Highlight and show the window itself on the workspace while hovering over dock previews</source>
-        <translation type="unfinished"></translation>
+        <translation>悬停 Dock 缩略图时，在工作区上高亮并显示该窗口</translation>
     </message>
 </context>
 <context>
@@ -1971,17 +1971,17 @@
     <message>
         <location line="+9"/>
         <source>No token set</source>
-        <translation type="unfinished"></translation>
+        <translation>未设置令牌</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Last fetch failed</source>
-        <translation type="unfinished"></translation>
+        <translation>上次获取失败</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Connected as %1</source>
-        <translation type="unfinished"></translation>
+        <translation>已连接：%1</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1991,12 +1991,12 @@
     <message>
         <location line="+2"/>
         <source>Not fetched yet</source>
-        <translation type="unfinished"></translation>
+        <translation>尚未获取</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Paste a token below and save it to enable the widget</source>
-        <translation type="unfinished"></translation>
+        <translation>在下方粘贴令牌并保存，即可启用该组件</translation>
     </message>
     <message>
         <location line="+53"/>
@@ -2414,7 +2414,7 @@
     <message>
         <location line="-1"/>
         <source>Lock keys</source>
-        <translation type="unfinished"></translation>
+        <translation>锁定键</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -2434,17 +2434,17 @@
     <message>
         <location line="+1"/>
         <source>Night light</source>
-        <translation type="unfinished"></translation>
+        <translation>夜间模式</translation>
     </message>
     <message>
         <location line="+54"/>
         <source>Add entry</source>
-        <translation type="unfinished"></translation>
+        <translation>添加条目</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add new entry</source>
-        <translation type="unfinished"></translation>
+        <translation>添加新条目</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -2459,7 +2459,7 @@
     <message>
         <location line="+1"/>
         <source>Show the Wi-Fi icon alongside the network icon</source>
-        <translation type="unfinished"></translation>
+        <translation>在网络图标旁同时显示 Wi-Fi 图标</translation>
     </message>
     <message>
         <location line="-73"/>
@@ -2558,12 +2558,12 @@
     <message>
         <location filename="../modules/nexus/pages/panels/taskbar/BarWorkspaces.qml" line="+16"/>
         <source>Shape</source>
-        <translation type="unfinished"></translation>
+        <translation>形状</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Text</source>
-        <translation type="unfinished"></translation>
+        <translation>数字</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -2598,12 +2598,12 @@
     <message>
         <location line="+7"/>
         <source>Indicator style</source>
-        <translation type="unfinished"></translation>
+        <translation>指示器样式</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Draw each workspace as a material shape or as its number</source>
-        <translation type="unfinished"></translation>
+        <translation>把每个工作区画成 Material 形状或它的编号</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -2618,12 +2618,12 @@
     <message>
         <location line="+7"/>
         <source>Show unoccupied</source>
-        <translation type="unfinished"></translation>
+        <translation>显示空闲工作区</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show workspaces that are inactive and empty</source>
-        <translation type="unfinished"></translation>
+        <translation>显示未激活且为空的工作区</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -2638,12 +2638,12 @@
     <message>
         <location line="+12"/>
         <source>Per monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>按显示器</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide workspaces not on the current monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>隐藏不在当前显示器上的工作区</translation>
     </message>
 </context>
 <context>
@@ -2651,17 +2651,17 @@
     <message>
         <location filename="../modules/bar/popouts/Battery.qml" line="+24"/>
         <source>The device is too hot</source>
-        <translation type="unfinished"></translation>
+        <translation>设备过热</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The device is on a lap</source>
-        <translation type="unfinished"></translation>
+        <translation>设备放在腿上</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Unknown reason</source>
-        <translation type="unfinished"></translation>
+        <translation>原因未知</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -2697,7 +2697,7 @@
     <message>
         <location line="+40"/>
         <source>Performance degraded: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>性能受限：%1</translation>
     </message>
 </context>
 <context>
@@ -2885,12 +2885,12 @@
     <message>
         <location filename="../services/Brightness.qml" line="+113"/>
         <source>Increase brightness</source>
-        <translation type="unfinished"></translation>
+        <translation>提高亮度</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Decrease brightness</source>
-        <translation type="unfinished"></translation>
+        <translation>降低亮度</translation>
     </message>
 </context>
 <context>
@@ -3156,7 +3156,7 @@
     <message>
         <location filename="../modules/bar/popouts/ClockContext.qml" line="+81"/>
         <source>Clock settings</source>
-        <translation type="unfinished"></translation>
+        <translation>时钟设置</translation>
     </message>
 </context>
 <context>
@@ -3637,12 +3637,12 @@
     <message>
         <location line="+18"/>
         <source>Show clock seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>显示时钟秒数</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display seconds below the clock in the dashboard</source>
-        <translation type="unfinished"></translation>
+        <translation>在仪表盘时钟下方显示秒</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -3833,17 +3833,17 @@
         <location line="-79"/>
         <location line="+123"/>
         <source>Desktop media shapes</source>
-        <translation type="unfinished"></translation>
+        <translation>桌面媒体形状</translation>
     </message>
     <message>
         <location line="-110"/>
         <source>Auto-hide media shapes</source>
-        <translation type="unfinished"></translation>
+        <translation>自动隐藏媒体形状</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide media shapes when a window is open</source>
-        <translation type="unfinished"></translation>
+        <translation>有窗口打开时隐藏媒体形状</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -4025,7 +4025,7 @@
     <message>
         <location line="+1"/>
         <source>Clock, Shapes, Lyrics, Visualiser</source>
-        <translation type="unfinished"></translation>
+        <translation>时钟、形状、歌词、可视化</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -4172,82 +4172,82 @@
     <message>
         <location filename="../modules/whatsnew/Entries.qml" line="+23"/>
         <source>Window Rules Out of the Box</source>
-        <translation type="unfinished"></translation>
+        <translation>自带窗口规则</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</source>
-        <translation type="unfinished"></translation>
+        <translation>安装器现在会写入三条 KWin 规则：未聚焦的窗口与对话框降到 95% 亮度、对话框居中打开、画中画窗口始终置顶。只会写入 Caelestia 自己的规则组，所以你原有规则的名字与顺序不受影响。可在 系统设置 → 窗口规则 中编辑或删除，也可以在卸载时由 uninstall.sh 一并移除。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Right-Click Any App</source>
-        <translation type="unfinished"></translation>
+        <translation>右键点击任意应用</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</source>
-        <translation type="unfinished"></translation>
+        <translation>启动器及其应用浏览里的应用现在支持右键菜单：固定到 Dock、添加到桌面、从启动器隐藏，或在菜单编辑器中打开。Dock 的固定列表已成为独立设置（bar.dock.pinnedApps），不再沿用启动器的收藏，原有列表会自动迁移。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Status Icons You Can Arrange</source>
-        <translation type="unfinished"></translation>
+        <translation>状态图标可自由排列</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
-        <translation type="unfinished"></translation>
+        <translation>状态栏的状态图标已改成有序列表，不再是满屏开关：在 设置 → 面板 → 任务栏 → 状态图标 中新增、停用或拖动排序，状态栏就按这个顺序绘制。时钟可以显示秒，工作区指示器也可以隐藏空闲且未激活的工作区。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Game Mode at a Tap</source>
-        <translation type="unfinished"></translation>
+        <translation>一键游戏模式</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Services -&gt; Game mode.</source>
-        <translation type="unfinished"></translation>
+        <translation>工具面板新增游戏模式开关：开启后会停止窗口动画与模糊、暂停视频壁纸和桌面媒体形状，关闭后自动恢复。在 设置 → 服务 → 游戏模式 中，仍可让它在目标窗口打开时自动开启。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Color Intensity</source>
-        <translation type="unfinished"></translation>
+        <translation>颜色强度</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
-        <translation type="unfinished"></translation>
+        <translation>高级颜色设置新增了饱和度滑块，用来缩放从壁纸提取的配色：0% 会把同一套配色变成灰阶，100% 是配色引擎的原始输出，200% 是强调色的上限。该值随配色方案保存，换壁纸、重启后依然有效；也可以用 'caelestia scheme set -i' 从命令行设置。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Dock App Badges</source>
-        <translation type="unfinished"></translation>
+        <translation>Dock 应用角标</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
-        <translation type="unfinished"></translation>
+        <translation>Dock 图标现在可以显示运行中应用发布的计数、进度与紧急标记。可在 设置 → 面板 → 任务栏 → Dock 中配置。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Ambient Glow</source>
-        <translation type="unfinished"></translation>
+        <translation>氛围光</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
-        <translation type="unfinished"></translation>
+        <translation>外壳表面与窗口预览现在可以发出由窗口内容生成的柔和动态氛围光。可在 设置 → 外观 中开启。</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Lock Screen Password Reveal</source>
-        <translation type="unfinished"></translation>
+        <translation>锁屏密码明文显示</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</source>
-        <translation type="unfinished"></translation>
+        <translation>点击登录界面密码框内的锁形图标，可在解锁前显示已输入的密码。</translation>
     </message>
 </context>
 <context>
@@ -4585,12 +4585,12 @@
     <message>
         <location filename="../modules/bar/components/GithubActivity.qml" line="+85"/>
         <source>GitHub widget needs a token</source>
-        <translation type="unfinished"></translation>
+        <translation>GitHub 组件需要令牌</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add a personal access token in Settings → Panels → Taskbar → GitHub.</source>
-        <translation type="unfinished"></translation>
+        <translation>请在 设置 → 面板 → 任务栏 → GitHub 中添加个人访问令牌。</translation>
     </message>
 </context>
 <context>
@@ -4645,23 +4645,23 @@
     <message>
         <location filename="../modules/nexus/common/Ipv4ConfigSection.qml" line="+98"/>
         <source>IPv4</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv4</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>IP assignment</source>
-        <translation type="unfinished"></translation>
+        <translation>IP 分配方式</translation>
     </message>
     <message>
         <location line="+1"/>
         <location line="+8"/>
         <source>Automatic (DHCP)</source>
-        <translation type="unfinished"></translation>
+        <translation>自动（DHCP）</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Automatic, DNS only</source>
-        <translation type="unfinished"></translation>
+        <translation>自动，仅 DNS</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -4671,17 +4671,17 @@
     <message>
         <location line="+84"/>
         <source>Address (CIDR)</source>
-        <translation type="unfinished"></translation>
+        <translation>地址（CIDR）</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>IP and prefix, e.g. 192.168.1.50/24</source>
-        <translation type="unfinished"></translation>
+        <translation>IP 与前缀，例如 192.168.1.50/24</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter a valid address in CIDR notation</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入 CIDR 格式的有效地址</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -4691,28 +4691,28 @@
     <message>
         <location line="+2"/>
         <source>Enter a valid gateway address</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入有效的网关地址</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>DNS servers</source>
-        <translation type="unfinished"></translation>
+        <translation>DNS 服务器</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Comma-separated</source>
-        <translation type="unfinished"></translation>
+        <translation>用逗号分隔</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Enter valid DNS server addresses</source>
-        <translation type="unfinished"></translation>
+        <translation>请输入有效的 DNS 服务器地址</translation>
     </message>
     <message>
         <location line="+45"/>
         <location line="+26"/>
         <source>Apply</source>
-        <translation type="unfinished"></translation>
+        <translation>应用</translation>
     </message>
 </context>
 <context>
@@ -5034,57 +5034,57 @@
     <message>
         <location filename="../services/Kwin.qml" line="+477"/>
         <source>Caps lock enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>大写锁定已开启</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Caps lock disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>大写锁定已关闭</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Caps lock is currently enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>大写锁定当前已开启</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Caps lock is currently disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>大写锁定当前已关闭</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Num lock enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>数字锁定已开启</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Num lock disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>数字锁定已关闭</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Num lock is currently enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>数字锁定当前已开启</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Num lock is currently disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>数字锁定当前已关闭</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Keyboard layout changed</source>
-        <translation type="unfinished"></translation>
+        <translation>键盘布局已切换</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Layout changed to: %1</source>
-        <translation type="unfinished"></translation>
+        <translation>布局已切换为：%1</translation>
     </message>
     <message>
         <location line="+56"/>
         <source>Reload devices</source>
-        <translation type="unfinished"></translation>
+        <translation>重新加载设备</translation>
     </message>
 </context>
 <context>
@@ -5107,12 +5107,12 @@
     <message>
         <location line="+8"/>
         <source>Binary (KiB, MiB)</source>
-        <translation type="unfinished"></translation>
+        <translation>二进制（KiB、MiB）</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Decimal (KB, MB)</source>
-        <translation type="unfinished"></translation>
+        <translation>十进制（KB、MB）</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -5234,12 +5234,12 @@
     <message>
         <location line="+8"/>
         <source>Data sizes</source>
-        <translation type="unfinished"></translation>
+        <translation>数据大小</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Units for data sizes and network speeds</source>
-        <translation type="unfinished"></translation>
+        <translation>数据大小与网速的单位</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -5784,22 +5784,22 @@
     <message>
         <location line="+22"/>
         <source>Caps Lock enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>大写锁定已开启</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Caps Lock disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>大写锁定已关闭</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Num Lock enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>数字锁定已开启</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Num Lock disabled</source>
-        <translation type="unfinished"></translation>
+        <translation>数字锁定已关闭</translation>
     </message>
 </context>
 <context>
@@ -6501,12 +6501,12 @@
     <message>
         <location line="+7"/>
         <source>All screens</source>
-        <translation type="unfinished"></translation>
+        <translation>所有屏幕</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Focused screen</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦屏幕</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6566,12 +6566,12 @@
     <message>
         <location line="+7"/>
         <source>Display on screen</source>
-        <translation type="unfinished"></translation>
+        <translation>显示在屏幕</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Which screens show notification popups</source>
-        <translation type="unfinished"></translation>
+        <translation>哪些屏幕显示通知弹窗</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -6817,7 +6817,7 @@
     <message>
         <location line="+103"/>
         <source>Clear all notifications</source>
-        <translation type="unfinished"></translation>
+        <translation>清除所有通知</translation>
     </message>
 </context>
 <context>
@@ -7229,12 +7229,12 @@
     <message>
         <location line="+1"/>
         <source>Advanced color settings</source>
-        <translation type="unfinished"></translation>
+        <translation>高级颜色设置</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Color intensity</source>
-        <translation type="unfinished"></translation>
+        <translation>颜色强度</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7259,7 +7259,7 @@
     <message>
         <location line="+1"/>
         <source>Wallpaper settings</source>
-        <translation type="unfinished"></translation>
+        <translation>壁纸设置</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7269,7 +7269,7 @@
     <message>
         <location line="+1"/>
         <source>Video wallpapers</source>
-        <translation type="unfinished"></translation>
+        <translation>视频壁纸</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7279,12 +7279,12 @@
     <message>
         <location line="+1"/>
         <source>Fingerprint</source>
-        <translation type="unfinished"></translation>
+        <translation>指纹</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Bezel mode</source>
-        <translation type="unfinished"></translation>
+        <translation>边框模式</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -7319,7 +7319,7 @@
     <message>
         <location line="+1"/>
         <source>Floating windows</source>
-        <translation type="unfinished"></translation>
+        <translation>浮动窗口</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7374,12 +7374,12 @@
     <message>
         <location line="+1"/>
         <source>Workspaces indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>工作区指示器</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Unoccupied workspaces</source>
-        <translation type="unfinished"></translation>
+        <translation>空闲工作区</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7389,7 +7389,7 @@
     <message>
         <location line="+1"/>
         <source>Greeter slideshow</source>
-        <translation type="unfinished"></translation>
+        <translation>登录屏幻灯片</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7409,7 +7409,7 @@
     <message>
         <location line="+1"/>
         <source>Clock seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>时钟秒数</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7434,7 +7434,7 @@
     <message>
         <location line="+1"/>
         <source>Update indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>更新指示</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7449,7 +7449,7 @@
     <message>
         <location line="+1"/>
         <source>Dashboard clock seconds</source>
-        <translation type="unfinished"></translation>
+        <translation>仪表盘时钟秒数</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7464,7 +7464,7 @@
     <message>
         <location line="+1"/>
         <source>Window Switcher</source>
-        <translation type="unfinished"></translation>
+        <translation>窗口切换器</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -7489,7 +7489,7 @@
     <message>
         <location line="+1"/>
         <source>IPv4</source>
-        <translation type="unfinished"></translation>
+        <translation>IPv4</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7830,7 +7830,7 @@
     <message>
         <location line="+1"/>
         <source>Let the CLI run its own tools</source>
-        <translation type="unfinished"></translation>
+        <translation>允许 CLI 运行自带工具</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7925,17 +7925,17 @@
     <message>
         <location line="+7"/>
         <source>Window Switcher</source>
-        <translation type="unfinished"></translation>
+        <translation>窗口切换器</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Current desktop only</source>
-        <translation type="unfinished"></translation>
+        <translation>仅当前桌面</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>All desktops</source>
-        <translation type="unfinished"></translation>
+        <translation>所有桌面</translation>
     </message>
 </context>
 <context>
@@ -7984,22 +7984,22 @@
     <message>
         <location line="+33"/>
         <source>Toggle media playback</source>
-        <translation type="unfinished"></translation>
+        <translation>播放/暂停</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Previous track</source>
-        <translation type="unfinished"></translation>
+        <translation>上一首</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Next track</source>
-        <translation type="unfinished"></translation>
+        <translation>下一首</translation>
     </message>
     <message>
         <location line="+12"/>
         <source>Stop media playback</source>
-        <translation type="unfinished"></translation>
+        <translation>停止播放</translation>
     </message>
 </context>
 <context>
@@ -8385,27 +8385,27 @@
     <message>
         <location filename="../modules/screenshot/regionSelector/RegionSelector.qml" line="+90"/>
         <source>Takes a screenshot of the selected region</source>
-        <translation type="unfinished"></translation>
+        <translation>截取所选区域</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Searches the selected region</source>
-        <translation type="unfinished"></translation>
+        <translation>搜索所选区域</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Recognizes text in the selected region</source>
-        <translation type="unfinished"></translation>
+        <translation>识别所选区域中的文字</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Records the selected region</source>
-        <translation type="unfinished"></translation>
+        <translation>录制所选区域</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Records the selected region with sound</source>
-        <translation type="unfinished"></translation>
+        <translation>录制所选区域（含声音）</translation>
     </message>
 </context>
 <context>
@@ -8737,127 +8737,127 @@
     <message>
         <location filename="../modules/Shortcuts.qml" line="+29"/>
         <source>Open nexus</source>
-        <translation type="unfinished"></translation>
+        <translation>打开设置中心</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Toggle launcher, dashboard and osd</source>
-        <translation type="unfinished"></translation>
+        <translation>切换启动器、仪表盘与 OSD</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Toggle dashboard</source>
-        <translation type="unfinished"></translation>
+        <translation>切换仪表盘</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Toggle overview</source>
-        <translation type="unfinished"></translation>
+        <translation>切换概览</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Toggle screenshot overlay</source>
-        <translation type="unfinished"></translation>
+        <translation>切换截图浮层</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Toggle Google Lens search</source>
-        <translation type="unfinished"></translation>
+        <translation>切换 Google Lens 搜图</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Recognize text on screen</source>
-        <translation type="unfinished"></translation>
+        <translation>识别屏幕文字</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Toggle screen recording</source>
-        <translation type="unfinished"></translation>
+        <translation>切换屏幕录制</translation>
     </message>
     <message>
         <location line="+31"/>
         <source>Toggle session menu</source>
-        <translation type="unfinished"></translation>
+        <translation>切换会话菜单</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Toggle launcher</source>
-        <translation type="unfinished"></translation>
+        <translation>切换启动器</translation>
     </message>
     <message>
         <location line="+15"/>
         <source>Interrupt launcher keybind</source>
-        <translation type="unfinished"></translation>
+        <translation>中断启动器快捷键</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Toggle sidebar</source>
-        <translation type="unfinished"></translation>
+        <translation>切换侧边栏</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Toggle AI Assistant</source>
-        <translation type="unfinished"></translation>
+        <translation>切换 AI 助手</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Toggle utilities</source>
-        <translation type="unfinished"></translation>
+        <translation>切换工具面板</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Open emoji picker</source>
-        <translation type="unfinished"></translation>
+        <translation>打开表情选择器</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Open clipboard history</source>
-        <translation type="unfinished"></translation>
+        <translation>打开剪贴板历史</translation>
     </message>
     <message>
         <location line="+29"/>
         <source>Open window switcher</source>
-        <translation type="unfinished"></translation>
+        <translation>打开窗口切换器</translation>
     </message>
     <message>
         <location line="+22"/>
         <source>Open window switcher (reverse)</source>
-        <translation type="unfinished"></translation>
+        <translation>反向打开窗口切换器</translation>
     </message>
     <message>
         <location line="+21"/>
         <source>Open wallpaper picker</source>
-        <translation type="unfinished"></translation>
+        <translation>打开壁纸选择器</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Open keybinds list</source>
-        <translation type="unfinished"></translation>
+        <translation>打开快捷键列表</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Launch Terminal</source>
-        <translation type="unfinished"></translation>
+        <translation>启动终端</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Launch Browser</source>
-        <translation type="unfinished"></translation>
+        <translation>启动浏览器</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Launch Editor</source>
-        <translation type="unfinished"></translation>
+        <translation>启动编辑器</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Launch GitHub Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>启动 GitHub Desktop</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Launch File Manager</source>
-        <translation type="unfinished"></translation>
+        <translation>启动文件管理器</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -8867,232 +8867,232 @@
     <message>
         <location line="+7"/>
         <source>Switch to workspace 1</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 1</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 2</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 2</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 3</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 3</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 4</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 4</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 5</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 5</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 6</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 6</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 7</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 7</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 8</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 8</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 9</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 9</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to workspace 10</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到工作区 10</translation>
     </message>
     <message>
         <location line="+90"/>
         <source>Focus the window above</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦上方窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Focus the window below</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦下方窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Focus the window to the left</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦左侧窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Focus the window to the right</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦右侧窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Move window up</source>
-        <translation type="unfinished"></translation>
+        <translation>向上移动窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Move window down</source>
-        <translation type="unfinished"></translation>
+        <translation>向下移动窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Move window left</source>
-        <translation type="unfinished"></translation>
+        <translation>向左移动窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Move window right</source>
-        <translation type="unfinished"></translation>
+        <translation>向右移动窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Close current window</source>
-        <translation type="unfinished"></translation>
+        <translation>关闭当前窗口</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Focus next window</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦下一个窗口</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Focus previous window</source>
-        <translation type="unfinished"></translation>
+        <translation>聚焦上一个窗口</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Set active window as Master</source>
-        <translation type="unfinished"></translation>
+        <translation>将活动窗口设为主窗口</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to next layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到下一个布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to previous layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到上一个布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to BTree layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到 BTree 布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Monocle layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到单窗布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Floating layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到浮动布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Quarter layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到四分布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Spread layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到平铺布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Stacked layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到堆叠布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Stair layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到阶梯布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Columns layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到多列布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Three Column layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到三列布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Spiral layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到螺旋布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Switch to Tile layout</source>
-        <translation type="unfinished"></translation>
+        <translation>切换到瓦片布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Increase window height</source>
-        <translation type="unfinished"></translation>
+        <translation>增加窗口高度</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Decrease window height</source>
-        <translation type="unfinished"></translation>
+        <translation>减少窗口高度</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Increase window width</source>
-        <translation type="unfinished"></translation>
+        <translation>增加窗口宽度</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Decrease window width</source>
-        <translation type="unfinished"></translation>
+        <translation>减少窗口宽度</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Increase master area size</source>
-        <translation type="unfinished"></translation>
+        <translation>增大主区域尺寸</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Decrease master area size</source>
-        <translation type="unfinished"></translation>
+        <translation>减小主区域尺寸</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Toggle floating state</source>
-        <translation type="unfinished"></translation>
+        <translation>切换浮动状态</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Toggle floating state for all</source>
-        <translation type="unfinished"></translation>
+        <translation>切换所有窗口的浮动状态</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Rotate the window layout</source>
-        <translation type="unfinished"></translation>
+        <translation>旋转窗口布局</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Rotate windows within a part</source>
-        <translation type="unfinished"></translation>
+        <translation>在区域内旋转窗口</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Toggle dock support</source>
-        <translation type="unfinished"></translation>
+        <translation>切换 Dock 支持</translation>
     </message>
 </context>
 <context>
@@ -9285,7 +9285,7 @@
     <message>
         <location filename="../modules/bar/popouts/StatusIconsContext.qml" line="+85"/>
         <source>Status icons settings</source>
-        <translation type="unfinished"></translation>
+        <translation>状态图标设置</translation>
     </message>
 </context>
 <context>
@@ -9316,7 +9316,7 @@
     <message>
         <location filename="../modules/nexus/pages/panels/TabSwitcherPanel.qml" line="+31"/>
         <source>Window Switcher</source>
-        <translation type="unfinished"></translation>
+        <translation>窗口切换器</translation>
     </message>
     <message>
         <location line="+38"/>
@@ -9326,22 +9326,22 @@
     <message>
         <location line="+6"/>
         <source>Enable Window Switcher</source>
-        <translation type="unfinished"></translation>
+        <translation>启用窗口切换器</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Use Caelestia&apos;s window switcher for Alt+Tab</source>
-        <translation type="unfinished"></translation>
+        <translation>用 Caelestia 的窗口切换器接管 Alt+Tab</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Forward</source>
-        <translation type="unfinished"></translation>
+        <translation>正向</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Backward</source>
-        <translation type="unfinished"></translation>
+        <translation>反向</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -9351,22 +9351,22 @@
     <message>
         <location line="+5"/>
         <source>Filter by current desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>仅当前桌面</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Only show windows belonging to the active virtual desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>只显示属于当前虚拟桌面的窗口</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Preview window on desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>在桌面高亮预览窗口</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Highlight and show the window itself on the workspace while cycling Alt+Tab</source>
-        <translation type="unfinished"></translation>
+        <translation>Alt+Tab 切换时，在工作区上高亮并显示该窗口</translation>
     </message>
     <message>
         <location line="+14"/>
@@ -9376,22 +9376,22 @@
     <message>
         <location line="+5"/>
         <source>Show minimized windows</source>
-        <translation type="unfinished"></translation>
+        <translation>显示最小化窗口</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Include minimized windows in the window switcher</source>
-        <translation type="unfinished"></translation>
+        <translation>把最小化窗口也纳入切换列表</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Show windows from all screens</source>
-        <translation type="unfinished"></translation>
+        <translation>显示所有屏幕的窗口</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Include windows from all connected monitors</source>
-        <translation type="unfinished"></translation>
+        <translation>把所有已连接显示器的窗口也纳入</translation>
     </message>
 </context>
 <context>
@@ -9512,7 +9512,7 @@
     <message>
         <location line="+6"/>
         <source>Use global position</source>
-        <translation type="unfinished"></translation>
+        <translation>使用全局位置</translation>
     </message>
     <message>
         <location line="+13"/>
@@ -9587,17 +9587,17 @@
     <message>
         <location line="+10"/>
         <source>Per-monitor position</source>
-        <translation type="unfinished"></translation>
+        <translation>每显示器独立位置</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Overridden for this monitor</source>
-        <translation type="unfinished"></translation>
+        <translation>已被此显示器覆盖</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Using global position</source>
-        <translation type="unfinished"></translation>
+        <translation>正在使用全局位置</translation>
     </message>
     <message>
         <location line="+15"/>
@@ -9909,12 +9909,12 @@
     <message>
         <location filename="../modules/bar/components/TrayItem.qml" line="+46"/>
         <source>Left-click activates, right-click opens the menu, middle-click runs the secondary action.</source>
-        <translation type="unfinished"></translation>
+        <translation>左键激活，右键打开菜单，中键执行次要操作。</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Left-click activates, middle- or right-click runs the secondary action.</source>
-        <translation type="unfinished"></translation>
+        <translation>左键激活，中键或右键执行次要操作。</translation>
     </message>
 </context>
 <context>
@@ -11013,7 +11013,7 @@
     <message>
         <location line="+20"/>
         <source>Featured wallpaper</source>
-        <translation type="unfinished"></translation>
+        <translation>精选壁纸</translation>
     </message>
     <message>
         <location line="+175"/>
@@ -11157,12 +11157,12 @@
         <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+114"/>
         <location line="+151"/>
         <source>What&apos;s New in Caelestia</source>
-        <translation type="unfinished"></translation>
+        <translation>Caelestia 新功能</translation>
     </message>
     <message>
         <location line="-99"/>
         <source>What&apos;s New</source>
-        <translation type="unfinished"></translation>
+        <translation>新功能</translation>
     </message>
 </context>
 <context>
@@ -11191,7 +11191,7 @@
     <message>
         <location line="+3"/>
         <source>Unknown network</source>
-        <translation type="unfinished"></translation>
+        <translation>未知网络</translation>
     </message>
     <message>
         <location line="+43"/>
@@ -11220,12 +11220,12 @@
     <message>
         <location filename="../services/WorkspaceTrackerGuard.qml" line="+36"/>
         <source>Workspace tracker effect is not running</source>
-        <translation type="unfinished"></translation>
+        <translation>工作区跟踪特效未运行</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in.</source>
-        <translation type="unfinished"></translation>
+        <translation>KDE 更新后 KWin 不再加载该特效。请运行 caelestia update，然后注销并重新登录。</translation>
     </message>
 </context>
 <context>

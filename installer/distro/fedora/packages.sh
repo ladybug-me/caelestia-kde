@@ -199,7 +199,9 @@ for pkg in "${COPR_PKGS[@]}"; do
             fi
             ;;
         gpu-screen-recorder)
-            if caelestia_sudo dnf copr enable -y brycensranch/gpu-screen-recorder-git && caelestia_sudo dnf install -y gpu-screen-recorder-ui; then
+            # Install the package that was asked for: the COPR also ships -ui, and
+            # reporting success for it would leave gpu-screen-recorder itself missing.
+            if caelestia_sudo dnf copr enable -y brycensranch/gpu-screen-recorder-git && caelestia_sudo dnf install -y gpu-screen-recorder; then
                 COPR_FAILED="no"
             fi
             ;;
@@ -329,7 +331,7 @@ else
     info "Skipping Darkly package installation by user choice."
 fi
 
-fi  # end of PACKAGE_GROUP themes/all block
+fi
 
 if command -v xdg-user-dirs-update >/dev/null 2>&1; then
     xdg-user-dirs-update || true
@@ -351,7 +353,7 @@ if ! command -v qdbus6 >/dev/null 2>&1; then
     fi
 fi
 
-fi  # end of PACKAGE_GROUP shell/all block
+fi
 
 if [ ${#FAILED_PKGS[@]} -ne 0 ]; then
     mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"

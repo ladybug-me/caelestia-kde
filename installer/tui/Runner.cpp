@@ -294,7 +294,6 @@ void draw_progress_ui(size_t current_index) {
 
   Draw::box(x, y, w, h, "", "container", "primary");
 
-  // Progress bar
   string progress_text =
       to_string(current_index) + "/" + to_string(steps.size());
   int bar_w = w - 8 - (int)progress_text.length();
@@ -308,7 +307,6 @@ void draw_progress_ui(size_t current_index) {
                Draw::repeat(" ", bar_w - (int)done - (arrow ? 1 : 0));
   Draw::text(x + 2, y + 1, "[" + bar + "] " + progress_text, "primary");
 
-  // Aggregate status per phase, then build display lines grouped by phase.
   auto phase_status = [&](const string &pid) -> string {
     bool any_failed = false, any_running = false, any_pending = false,
          any_warn = false, any_ignored = false;
@@ -451,7 +449,6 @@ void execute() {
   }
   std::filesystem::remove(cache_dir + "/failed_steps.txt", fs_error);
   std::filesystem::remove(cache_dir + "/failed_packages.txt", fs_error);
-  std::filesystem::remove(cache_dir + "/failed_patches.txt", fs_error);
 
   setenv("BASE_DISTRO", g_base_distro.c_str(), 1);
   setenv("BUNDLE_DIR", g_bundle_dir.c_str(), 1);
@@ -484,7 +481,6 @@ void execute() {
   bool log_open = false;
   UI::LogViewState log_state;
 
-  // Draws the progress screen only when the live log view is not covering it.
   auto show_progress = [&](size_t idx) {
     if (!log_open)
       draw_progress_ui(idx);
@@ -535,9 +531,6 @@ void execute() {
       exit(1);
     }
 
-    // Polls the child, redraws on resize, and lets the user toggle the log
-    // view. waitpid keeps running beneath it, so the step finishes and the next
-    // starts with the full log open.
     int child_status = 0;
     while (true) {
       pid_t r = waitpid(child, &child_status, WNOHANG);
@@ -567,8 +560,7 @@ void execute() {
       bool closed_log = false;
       if (key == "l" || key == "L" || key == "KEY_shift_tab" ||
           (log_open && key == "escape")) {
-        // Toggles the full-screen log; opening resets scroll so the view
-        // follows the newest output.
+        // Opening resets scroll so the view follows the newest output.
         log_open = !log_open;
         if (log_open) {
           log_state = UI::LogViewState();
@@ -576,7 +568,6 @@ void execute() {
           closed_log = true;
         }
       } else if (log_open) {
-        // Scroll/pause/next-issue keys; the view is redrawn below.
         UI::log_view_key(key, log_state);
       }
 
@@ -624,6 +615,19 @@ void execute() {
       } else {
         Term::restore();
         exit(1);
+      }
+    }
+  }
+
+  // Record the steps that failed and were ignored, so the completion screen's
+  // "completed with warnings" summary (and TROUBLESHOOTING's `cat` advice) is real.
+  // The file is cleared at the start of this run, so a stale failure cannot leak in.
+  {
+    ofstream failed_steps(cache_dir + "/failed_steps.txt", ios::app);
+    if (failed_steps) {
+      for (const auto& st : steps) {
+        if (st.status == "IGNORED")
+          failed_steps << st.name << '\n';
       }
     }
   }

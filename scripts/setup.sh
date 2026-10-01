@@ -287,8 +287,10 @@ if [[ ! -x "$BIN" ]]; then
 fi
 
 _installer_start=$(date +%s)
-"$BIN" "$@" 2>/tmp/caelestia_installer_err.log
-_exit_code=$?
+# Under set -e a plain invocation would kill this script on the installer's first
+# non-zero exit, making the diagnostic block below unreachable exactly when it matters.
+_exit_code=0
+"$BIN" "$@" 2>/tmp/caelestia_installer_err.log || _exit_code=$?
 _installer_elapsed=$(($(date +%s) - _installer_start))
 
 _reached_done=0

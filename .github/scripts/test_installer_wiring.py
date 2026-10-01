@@ -236,9 +236,9 @@ class InstallerEnvironmentTests(unittest.TestCase):
     getenv("HOME"), and libstdc++ throws std::logic_error ("basic_string: construction
     from null is not valid") on a null pointer rather than yielding an empty string.
     That aborts the installer: in Runner::execute before the first step runs, and again
-    on the success path in phase 5. Nothing executes the TUI - no test, no CI job - so
-    only reading the source catches it. Every caller now goes through xdg_cache_dir()
-    in Globals.cpp, which is where the checked form lives.
+    on the success path in phase 5. Nothing executes the TUI at test time - the CI job
+    only compiles it - so reading the source is what catches it. Every caller now goes
+    through xdg_cache_dir() in Globals.cpp, which is where the checked form lives.
     """
 
     TUI = ROOT / "installer" / "tui"

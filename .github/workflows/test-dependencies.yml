@@ -2,7 +2,7 @@ name: Test Dependencies
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Runs every Sunday at midnight
+    - cron: '0 0 * * 0'
   workflow_dispatch:
     inputs:
       distro:
@@ -31,6 +31,9 @@ env:
   INSTALL_DISCORD: "false"
   INSTALL_TODOIST: "false"
   INSTALL_FIREFOX_THEME: "false"
+
+permissions:
+  contents: read
 
 jobs:
   test-arch:

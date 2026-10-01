@@ -53,6 +53,13 @@ INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
+# gpu-screen-recorder has no apt package, so the fallback below clones upstream and
+# runs its ./install.sh as root. That is only acceptable against a pinned revision:
+# never point this at master. To update, list the upstream tags with
+#   git ls-remote --tags https://repo.dec05eba.com/gpu-screen-recorder
+# bump the ref, and test the build before shipping it.
+GPU_SCREEN_RECORDER_REF="6.1.3" # commit 396526a908f8f1b9cb826a9187a2c9150f44d94d
+
 CORE_PACKAGES=(
     cmake ninja-build ccache g++ build-essential qt6-l10n-tools qt6-tools-dev extra-cmake-modules
 
@@ -213,7 +220,8 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
         gpu-screen-recorder)
             tmpdir="$(mktemp -d)"
             caelestia_sudo apt-get install -y build-essential git ffmpeg meson libxi-dev libdrm-dev libavcodec-dev libavformat-dev libx11-dev libxcomposite-dev libxdamage-dev libxrender-dev libxrandr-dev libpulse-dev libva-dev libcap-dev libdbus-1-dev libpipewire-0.3-dev libavfilter-dev libvulkan-dev || true
-            if git clone --depth 1 https://repo.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
+            info "Building gpu-screen-recorder $GPU_SCREEN_RECORDER_REF from repo.dec05eba.com (pinned ref; its ./install.sh runs as root)."
+            if git clone --depth 1 --branch "$GPU_SCREEN_RECORDER_REF" https://repo.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
                     caelestia_sudo ./install.sh
@@ -402,7 +410,7 @@ else
     info "Skipping Darkly package installation by user choice."
 fi
 
-fi  # end of PACKAGE_GROUP themes/all block
+fi
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "shell" ]]; then
 
@@ -418,7 +426,7 @@ if ! command -v qdbus6 >/dev/null 2>&1; then
     fi
 fi
 
-fi  # end of PACKAGE_GROUP shell/all block
+fi
 
 if [ ${#FAILED_PKGS[@]} -ne 0 ]; then
     mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"

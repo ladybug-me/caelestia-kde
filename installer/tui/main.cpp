@@ -132,7 +132,7 @@ int main(int argc, char** argv) {
             std::string script = g_bundle_dir + (action == "update" ? "/update.sh" : "/uninstall.sh");
             run_external(script); // exits; does not return
         }
-        break; // install
+        break;
     }
 
     std::cerr << "[installer] phase 2: sudo_prompt" << std::endl;
@@ -143,7 +143,9 @@ int main(int argc, char** argv) {
     }
     check_signals();
 
-    if (!g_menu.is_null() && g_menu.contains("menu")) {
+    // render_menu walks the tree by index, so only a real array qualifies: any other
+    // menu.json shape would abort the TUI on a bad element access.
+    if (!g_menu.is_null() && g_menu.contains("menu") && g_menu["menu"].is_array()) {
         std::cerr << "[installer] phase 3: configure + review" << std::endl;
         UI::init_menu_defaults(g_menu["menu"]);
 
@@ -216,7 +218,6 @@ int main(int argc, char** argv) {
     Runner::execute();
 
     check_signals();
-    // Phase 5: Complete
     std::cerr << "[installer] phase 5: complete_screen" << std::endl;
     UI::complete_screen();
     Term::restore();
@@ -233,7 +234,6 @@ int main(int argc, char** argv) {
         std::filesystem::remove_all(cache_dir, remove_error);
     }
 
-    // Secure cleanup of sudo credentials
     Sudo::cleanup();
 
     if (g_logout) {

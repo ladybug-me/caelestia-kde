@@ -3,6 +3,9 @@ name: Dump github context
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   dump_github_context:
     runs-on: ubuntu-latest

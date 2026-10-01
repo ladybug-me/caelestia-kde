@@ -8,13 +8,6 @@
 
 namespace caelestia::services {
 
-/**
- * Replaces the 44-binding M3TPalette QML component in Colours.qml with a
- * single C++ recompute triggered by palette/transparency/luminance changes.
- *
- * All 44 transparent color variants are computed in one C++ loop
- * using QColor math instead of 44 individual JS property bindings.
- */
 class PaletteManager : public QObject {
     Q_OBJECT
     QML_ELEMENT

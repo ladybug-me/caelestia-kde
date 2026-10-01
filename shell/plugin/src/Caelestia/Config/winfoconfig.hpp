@@ -6,7 +6,6 @@
 namespace caelestia::config {
 
 // WInfoConfig has no serialized properties (serializer returns {})
-// All properties are in AdvancedConfig.winfo
 class WInfoConfig : public settings::ObjectNode {
     CONFIG_NODE(WInfoConfig, settings::ObjectNode)
 };

@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# js_string escapes everything outside [A-Za-z0-9/._:-] as \uXXXX, giving a
 if [[ -z "${CAELESTIA_JS_SOURCED:-}" ]]; then
 CAELESTIA_JS_SOURCED=1
 

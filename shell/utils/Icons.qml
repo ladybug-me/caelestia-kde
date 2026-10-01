@@ -79,7 +79,6 @@ Singleton {
             Office: "content_paste"
         })
 
-    // Checks if a name matches an icon rule. See the IconRule type in the config module.
     function matchIconRule(name: string, iconRule: var): bool {
         if (!iconRule.icon)
             return false;

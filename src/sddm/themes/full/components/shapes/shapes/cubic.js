@@ -8,9 +8,6 @@ var interpolate = UtilsModule.interpolate;
 var directionVector = UtilsModule.directionVector;
 var distance = UtilsModule.distance;
 
-/**
- * Represents a cubic Bézier curve with anchor and control points
- */
 class Cubic {
     /**
      * @param {Array<float>} points Array of 8 numbers [anchor0X, anchor0Y, control0X, control0Y, control1X, control1Y, anchor1X, anchor1Y]
@@ -28,13 +25,6 @@ class Cubic {
     get anchor1X() { return this.points[6]; }
     get anchor1Y() { return this.points[7]; }
 
-    /**
-     * @param {Point} anchor0
-     * @param {Point} control0
-     * @param {Point} control1
-     * @param {Point} anchor1
-     * @returns {Cubic}
-     */
     static create(anchor0, control0, control1, anchor1) {
         return new Cubic([
             anchor0.x, anchor0.y,
@@ -44,10 +34,6 @@ class Cubic {
         ]);
     }
 
-    /**
-     * @param {float} t
-     * @returns {Point}
-     */
     pointOnCurve(t) {
         const u = 1 - t;
         return new Point(
@@ -62,18 +48,11 @@ class Cubic {
         );
     }
 
-    /**
-     * @returns {boolean}
-     */
     zeroLength() {
         return Math.abs(this.anchor0X - this.anchor1X) < DistanceEpsilon &&
                Math.abs(this.anchor0Y - this.anchor1Y) < DistanceEpsilon;
     }
 
-    /**
-     * @param {Cubic} next
-     * @returns {boolean}
-     */
     convexTo(next) {
         const prevVertex = new Point(this.anchor0X, this.anchor0Y);
         const currVertex = new Point(this.anchor1X, this.anchor1Y);
@@ -81,18 +60,10 @@ class Cubic {
         return convex(prevVertex, currVertex, nextVertex);
     }
 
-    /**
-     * @param {float} value
-     * @returns {boolean}
-     */
     zeroIsh(value) {
         return Math.abs(value) < DistanceEpsilon;
     }
 
-    /**
-     * @param {Array<float>} bounds
-     * @param {boolean} [approximate=false]
-     */
     calculateBounds(bounds, approximate = false) {
         if (this.zeroLength()) {
             bounds[0] = this.anchor0X;
@@ -148,7 +119,6 @@ class Cubic {
             }
         }
 
-        // Repeat for y coord
         const ya = -this.anchor0Y + 3 * this.control0Y - 3 * this.control1Y + this.anchor1Y;
         const yb = 2 * this.anchor0Y - 4 * this.control0Y + 2 * this.control1Y;
         const yc = -this.anchor0Y + this.control0Y;
@@ -186,10 +156,6 @@ class Cubic {
         bounds[3] = maxY;
     }
 
-    /**
-     * @param {float} t
-     * @returns {{a: Cubic, b: Cubic}}
-     */
     split(t) {
         const u = 1 - t;
         const pointOnCurve = this.pointOnCurve(t);
@@ -217,9 +183,6 @@ class Cubic {
         };
     }
 
-    /**
-     * @returns {Cubic}
-     */
     reverse() {
         return new Cubic([
             this.anchor1X, this.anchor1Y,
@@ -229,55 +192,28 @@ class Cubic {
         ]);
     }
 
-    /**
-     * @param {Cubic} other
-     * @returns {Cubic}
-     */
     plus(other) {
         return new Cubic(other.points.map((_, index) => this.points[index] + other.points[index]));
     }
 
-    /**
-     * @param {float} x
-     * @returns {Cubic}
-     */
     times(x) {
         return new Cubic(this.points.map(v => v * x));
     }
 
-    /**
-     * @param {float} x
-     * @returns {Cubic}
-     */
     div(x) {
         return this.times(1 / x);
     }
 
-    /**
-     * @param {Cubic} other
-     * @returns {boolean}
-     */
     equals(other) {
         return this.points.every((p, i) => other.points[i] === p);
     }
 
-    /**
-     * @param {function(float, float): Point} f
-     * @returns {Cubic}
-     */
     transformed(f) {
         const newCubic = new MutableCubic([...this.points]);
         newCubic.transform(f);
         return newCubic;
     }
 
-    /**
-     * @param {float} x0
-     * @param {float} y0
-     * @param {float} x1
-     * @param {float} y1
-     * @returns {Cubic}
-     */
     static straightLine(x0, y0, x1, y1) {
         return new Cubic([
             x0,
@@ -291,15 +227,6 @@ class Cubic {
         ]);
     }
 
-    /**
-     * @param {float} centerX
-     * @param {float} centerY
-     * @param {float} x0
-     * @param {float} y0
-     * @param {float} x1
-     * @param {float} y1
-     * @returns {Cubic}
-     */
     static circularArc(centerX, centerY, x0, y0, x1, y1) {
         const p0d = directionVector(x0 - centerX, y0 - centerY);
         const p1d = directionVector(x1 - centerX, y1 - centerY);
@@ -326,20 +253,12 @@ class Cubic {
         ]);
     }
 
-    /**
-     * @param {float} x0
-     * @param {float} y0
-     * @returns {Cubic}
-     */
     static empty(x0, y0) {
         return new Cubic([x0, y0, x0, y0, x0, y0, x0, y0]);
     }
 }
 
 class MutableCubic extends Cubic {
-    /**
-     * @param {function(float, float): Point} f
-     */
     transform(f) {
         this.transformOnePoint(f, 0);
         this.transformOnePoint(f, 2);
@@ -347,22 +266,12 @@ class MutableCubic extends Cubic {
         this.transformOnePoint(f, 6);
     }
 
-    /**
-     * @param {Cubic} c1
-     * @param {Cubic} c2
-     * @param {float} progress
-     */
     interpolate(c1, c2, progress) {
         for (let i = 0; i < 8; i++) {
             this.points[i] = interpolate(c1.points[i], c2.points[i], progress);
         }
     }
 
-    /**
-     * @private
-     * @param {function(float, float): Point} f
-     * @param {number} ix
-     */
     transformOnePoint(f, ix) {
         const result = f(this.points[ix], this.points[ix + 1]);
         this.points[ix] = result.x;

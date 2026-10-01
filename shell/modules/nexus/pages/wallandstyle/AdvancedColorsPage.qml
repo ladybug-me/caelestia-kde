@@ -40,7 +40,6 @@ PageBase {
     property real intensityPosition: Colours.intensityFraction
     property bool draggingIntensity: false
 
-    /// The hour of an "HH:MM" config value, for the steppers.
     function schemeHour(time: string): int {
         const minutes = Solar.parseTime(time);
         return minutes < 0 ? 0 : Math.floor(minutes / 60);

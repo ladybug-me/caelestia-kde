@@ -75,26 +75,21 @@ def read_webpage(url):
         )
         html = urllib.request.urlopen(req, timeout=15).read().decode('utf-8', errors='ignore')
 
-        # Remove script and style tags completely
         html = re.sub(r'<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>', '', html, flags=re.IGNORECASE | re.DOTALL)
         html = re.sub(r'<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>', '', html, flags=re.IGNORECASE | re.DOTALL)
 
-        # Remove header, footer, nav
         html = re.sub(r'<nav\b[^<]*(?:(?!<\/nav>)<[^<]*)*<\/nav>', '', html, flags=re.IGNORECASE | re.DOTALL)
         html = re.sub(r'<footer\b[^<]*(?:(?!<\/footer>)<[^<]*)*<\/footer>', '', html, flags=re.IGNORECASE | re.DOTALL)
         html = re.sub(r'<header\b[^<]*(?:(?!<\/header>)<[^<]*)*<\/header>', '', html, flags=re.IGNORECASE | re.DOTALL)
         html = re.sub(r'<aside\b[^<]*(?:(?!<\/aside>)<[^<]*)*<\/aside>', '', html, flags=re.IGNORECASE | re.DOTALL)
 
-        # Extract text from remaining body
         body_match = re.search(r'<body[^>]*>(.*?)</body>', html, re.IGNORECASE | re.DOTALL)
         if body_match:
             body_html = body_match.group(1)
         else:
             body_html = html
 
-        # Strip remaining tags
         text = re.sub(r'<[^>]+>', ' ', body_html)
-        # Collapse whitespace
         text = re.sub(r'\s+', ' ', text).strip()
 
         if len(text) > 10000:

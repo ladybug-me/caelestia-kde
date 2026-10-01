@@ -46,7 +46,6 @@ void destroyEntry(const QString& uuid) {
     streams().erase(it);
 }
 
-/// Drops idle streams whose grace period has expired.
 void sweep() {
     const qint64 now = clock().elapsed();
     const auto keys = streams().keys();

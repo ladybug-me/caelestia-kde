@@ -276,7 +276,6 @@ void KWinWorkspaceState::updateShowingDesktop(bool showing) {
 }
 
 void KWinWorkspaceState::updateActiveId() {
-    // Counting sort by desktop position.
     int maxPos = 0;
     for (const auto& d : std::as_const(m_desktops)) {
         if (d.position > maxPos)

@@ -78,14 +78,13 @@ PageBase {
             }
         }
 
-        // All networks button, only when > max networks
         NavRow {
             Layout.preferredHeight: Nmcli.wifiEnabled && Nmcli.networks.length > GlobalConfig.nexus.maxNetworksShown ? implicitHeight : 0
             clip: true
 
             icon: "expand_content"
             label: qsTr("Show all networks (%1)").arg(Nmcli.networks.length)
-            onClicked: root.nState.openSubPage(5) // All networks sub-page
+            onClicked: root.nState.openSubPage(5)
 
             Behavior on Layout.preferredHeight {
                 Anim {
@@ -94,17 +93,16 @@ PageBase {
             }
         }
 
-        // Saved networks button
         NavRow {
             icon: "bookmark"
             label: qsTr("Saved networks")
-            onClicked: root.nState.openSubPage(6) // Saved networks sub-page
+            onClicked: root.nState.openSubPage(6)
         }
 
         NavRow {
             icon: "add"
             label: qsTr("Add network")
-            onClicked: root.nState.openSubPage(2) // Add network sub-page
+            onClicked: root.nState.openSubPage(2)
         }
 
         // Sits with the Wi-Fi controls rather than with the saved-network rows:
@@ -114,7 +112,7 @@ PageBase {
             icon: "wifi_tethering"
             label: qsTr("Hotspot")
             status: Nmcli.hotspot.enabled ? Nmcli.hotspot.ssid : ""
-            onClicked: root.nState.openSubPage(7) // Hotspot sub-page
+            onClicked: root.nState.openSubPage(7)
         }
 
         SectionHeader {
@@ -246,7 +244,6 @@ PageBase {
             }
         }
 
-        // VPN providers (WireGuard, WARP, NetBird, Tailscale)
         ToggleRow {
             Layout.topMargin: Tokens.spacing.large
             first: true

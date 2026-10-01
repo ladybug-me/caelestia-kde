@@ -8,8 +8,6 @@ import Caelestia.Config
 import Caelestia.Services
 
 /// Adapter over the C++ NmQt (NetworkManagerQt/D-Bus) singleton.
-/// Forwards the QML-facing network API to the D-Bus backend and keeps the
-/// AccessPoint/SavedProfile/EthernetDevice object models rebuilt in sync.
 Singleton {
     id: root
 

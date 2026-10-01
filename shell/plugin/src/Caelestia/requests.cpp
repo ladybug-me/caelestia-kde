@@ -43,8 +43,6 @@ Requests::Requests(QObject* parent)
     : QObject(parent)
     , m_manager(new QNetworkAccessManager(this)) {}
 
-// ── internal wiring ───────────────────────────────────────────────
-
 int Requests::nextRequestId() {
     int id = m_nextRequestId;
     for (int attempts = 0; attempts < 100000; ++attempts) {
@@ -79,7 +77,7 @@ int Requests::registerReply(QNetworkReply* reply, QJSValue callback, QJSValue on
         timer->setSingleShot(true);
         ar.timeoutTimer = timer;
         QObject::connect(timer, &QTimer::timeout, this, [this, reqId]() {
-            abortAndFail(reqId, QStringLiteral("Request timed out"), /*removeDestFile=*/false);
+            abortAndFail(reqId, QStringLiteral("Request timed out"), false);
         });
         timer->start(timeoutMs);
     }
@@ -276,7 +274,7 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         timer->setSingleShot(true);
         ar.timeoutTimer = timer;
         QObject::connect(timer, &QTimer::timeout, this, [this, reqId]() {
-            abortAndFail(reqId, QStringLiteral("Download timed out"), /*removeDestFile=*/true);
+            abortAndFail(reqId, QStringLiteral("Download timed out"), true);
         });
         timer->start(timeoutMs);
     }
@@ -290,7 +288,7 @@ int Requests::download(const QUrl& url, const QString& destPath, QJSValue onComp
         if (it->destFile->write(data) != data.size()) {
             const QString writeError = it->destFile->errorString();
             qCWarning(lcRequests) << "download" << reqId << "write failed:" << writeError;
-            abortAndFail(reqId, QStringLiteral("Write failed: ") + writeError, /*removeDestFile=*/true);
+            abortAndFail(reqId, QStringLiteral("Write failed: ") + writeError, true);
         }
     });
 

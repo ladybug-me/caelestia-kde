@@ -251,7 +251,6 @@ void BlobShape::updatePolish() {
         const float innerHW = outerHW - static_cast<float>((inv->borderLeft() + inv->borderRight()) / 2.0);
         const float innerHH = outerHH - static_cast<float>((inv->borderTop() + inv->borderBottom()) / 2.0);
 
-        // Check if this rect is near the border (within 2x smoothing of inner edge)
         bool nearBorder = isInvertedRect();
         if (!nearBorder) {
             const float margin = pad * 2.0f;

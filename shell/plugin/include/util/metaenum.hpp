@@ -31,4 +31,4 @@ inline const char* enumKeyFor(const QMetaEnum& metaEnum, const QVariant& value) 
     return metaEnum.valueToKey(static_cast<quint64>(value.toLongLong()));
 }
 
-} // namespace util
+}

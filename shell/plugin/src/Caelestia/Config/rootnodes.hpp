@@ -62,7 +62,6 @@ public:
     explicit ConfigRoot(const QString& path, ConfigRoot* fallback = nullptr, QObject* parent = nullptr);
 
 private:
-    // Binds the computed appearance values to the global token base values
     void bindTokens();
 };
 

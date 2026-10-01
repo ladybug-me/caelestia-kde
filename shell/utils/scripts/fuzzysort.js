@@ -61,7 +61,6 @@ var go = (search, targets, options) => {
 
     // This code is copy/pasted 3 times for performance reasons [options.key, options.keys, no keys]
 
-    // options.key
     if(options?.key) {
     var key = options.key
     for(var i = 0; i < targetsLen; ++i) { var obj = targets[i]
@@ -78,14 +77,13 @@ var go = (search, targets, options) => {
         push_result(result)
     }
 
-    // options.keys
     } else if(options?.keys) {
     var keys = options.keys
     var keysLen = keys.length
 
     outer: for(var i = 0; i < targetsLen; ++i) { var obj = targets[i]
 
-        { // early out based on bitflags
+        {
         var keysBitflags = 0
         for (var keyI = 0; keyI < keysLen; ++keyI) {
             var key = keys[keyI]
@@ -109,8 +107,6 @@ var go = (search, targets, options) => {
         tmpResults[keyI] = algorithm(preparedSearch, target, /*allowSpaces=*/false, /*allowPartialMatch=*/containsSpace)
         if(tmpResults[keyI] === NULL) { tmpResults[keyI] = noTarget; continue }
 
-        // todo: this seems weird and wrong. like what if our first match wasn't good. this should just replace it instead of averaging with it
-        // if our second match isn't good we ignore it instead of averaging with it
         if(containsSpace) for(let i=0; i<preparedSearch.spaceSearches.length; i++) {
             if(allowPartialMatchScores[i] > -1000) {
             if(keysSpacesBestScores[i] > NEGATIVE_INFINITY) {
@@ -137,8 +133,6 @@ var go = (search, targets, options) => {
         var score = 0
         for(let i=0; i<preparedSearch.spaceSearches.length; i++) score += keysSpacesBestScores[i]
         } else {
-        // todo could rewrite this scoring to be more similar to when there's spaces
-        // if we match multiple keys give us bonus points
         var score = NEGATIVE_INFINITY
         for(let i=0; i<keysLen; i++) {
             var result = objResults[i]
@@ -165,7 +159,6 @@ var go = (search, targets, options) => {
         push_result(objResults)
     }
 
-    // no keys
     } else {
     for(var i = 0; i < targetsLen; ++i) { var target = targets[i]
         if(!target) continue
@@ -187,9 +180,6 @@ var go = (search, targets, options) => {
     return results
 }
 
-
-// this is written as 1 function instead of 2 for minification. perf seems fine ...
-// except when minified. the perf is very slow
 var highlight = (result, open='<b>', close='</b>') => {
     var callback = typeof open === 'function' ? open : undefined
 
@@ -248,13 +238,6 @@ var prepare = (target) => {
 
 var cleanup = () => { preparedCache.clear(); preparedSearchCache.clear() }
 
-
-// Below this point is only internal code
-// Below this point is only internal code
-// Below this point is only internal code
-// Below this point is only internal code
-
-
 class Result {
     get ['indexes']() { return this._indexes.slice(0, this._indexes.len).sort((a,b)=>a-b) }
     set ['indexes'](indexes) { return this._indexes = indexes }
@@ -303,7 +286,7 @@ var prepareSearch = (search) => {
     var spaceSearches = []
     if(info.containsSpace) {
     var searches = search.split(/\s+/)
-    searches = [...new Set(searches)] // distinct
+    searches = [...new Set(searches)]
     for(var i=0; i<searches.length; i++) {
         if(searches[i] === '') continue
         var _info = prepareLowerInfo(searches[i])
@@ -385,13 +368,11 @@ var algorithm = (preparedSearch, prepared, allowSpaces=false, allowPartialMatch=
     var targetLowerCodes = prepared._targetLowerCodes
     var searchLen        = searchLowerCodes.length
     var targetLen        = targetLowerCodes.length
-    var searchI          = 0 // where we at
-    var targetI          = 0 // where you at
+    var searchI          = 0
+    var targetI          = 0
     var matchesSimpleLen = 0
 
     // very basic fuzzy match; to remove non-matching targets ASAP!
-    // walk through target. find sequential matches.
-    // if all chars aren't found then exit
     for(;;) {
     var isMatch = searchLowerCode === targetLowerCodes[targetI]
     if(isMatch) {
@@ -399,7 +380,7 @@ var algorithm = (preparedSearch, prepared, allowSpaces=false, allowPartialMatch=
         ++searchI; if(searchI === searchLen) break
         searchLowerCode = searchLowerCodes[searchI]
     }
-    ++targetI; if(targetI >= targetLen) return NULL // Failed to find searchI
+    ++targetI; if(targetI >= targetLen) return NULL
     }
 
     var searchI = 0
@@ -410,14 +391,13 @@ var algorithm = (preparedSearch, prepared, allowSpaces=false, allowPartialMatch=
     if(nextBeginningIndexes === NULL) nextBeginningIndexes = prepared._nextBeginningIndexes = prepareNextBeginningIndexes(prepared.target)
     targetI = matchesSimple[0]===0 ? 0 : nextBeginningIndexes[matchesSimple[0]-1]
 
-    // Our target string successfully matched all characters in sequence!
     // Let's try a more advanced and strict test to improve the score
     // only count it as a match if it's consecutive or a beginning character!
     var backtrackCount = 0
     if(targetI !== targetLen) for(;;) {
     if(targetI >= targetLen) {
         // We failed to find a good spot for this search char, go back to the previous search char and force it forward
-        if(searchI <= 0) break // We failed to push chars forward for a better match
+        if(searchI <= 0) break
 
         ++backtrackCount; if(backtrackCount > 200) break // exponential backtracking is taking too long, just give up and return a bad match
 
@@ -437,8 +417,7 @@ var algorithm = (preparedSearch, prepared, allowSpaces=false, allowPartialMatch=
     }
     }
 
-    // check if it's a substring match
-    var substringIndex = searchLen <= 1 ? -1 : prepared._targetLower.indexOf(searchLower, matchesSimple[0]) // perf: this is slow
+    var substringIndex = searchLen <= 1 ? -1 : prepared._targetLower.indexOf(searchLower, matchesSimple[0])
     var isSubstring = !!~substringIndex
     var isSubstringBeginning = !isSubstring ? false : substringIndex===0 || prepared._nextBeginningIndexes[substringIndex-1] === substringIndex
 
@@ -476,7 +455,7 @@ var algorithm = (preparedSearch, prepared, allowSpaces=false, allowPartialMatch=
         var uniqueBeginningIndexes = 1
         for(var i = nextBeginningIndexes[0]; i < targetLen; i=nextBeginningIndexes[i]) ++uniqueBeginningIndexes
 
-        if(uniqueBeginningIndexes > 24) score *= (uniqueBeginningIndexes-24)*10 // quite arbitrary numbers here ...
+        if(uniqueBeginningIndexes > 24) score *= (uniqueBeginningIndexes-24)*10
     }
 
     score -= (targetLen - searchLen)/2 // penality for longer targets
@@ -525,7 +504,6 @@ var algorithmSpaces = (preparedSearch, target, allowPartialMatch) => {
     var searchesLen = searches.length
     var changeslen = 0
 
-    // Return _nextBeginningIndexes back to its normal state
     var resetNextBeginningIndexes = () => {
     for(let i=changeslen-1; i>=0; i--) target._nextBeginningIndexes[nextBeginningIndexesChanges[i*2 + 0]] = nextBeginningIndexesChanges[i*2 + 1]
     }
@@ -701,5 +679,5 @@ var noTarget = prepare('')
 
 // Hacked version of https://github.com/lemire/FastPriorityQueue.js
 var fastpriorityqueue=r=>{var e=[],o=0,a={},v=r=>{for(var a=0,v=e[a],c=1;c<o;){var s=c+1;a=c,s<o&&e[s]._score<e[c]._score&&(a=s),e[a-1>>1]=e[a],c=1+(a<<1)}for(var f=a-1>>1;a>0&&v._score<e[f]._score;f=(a=f)-1>>1)e[a]=e[f];e[a]=v};return a.add=(r=>{var a=o;e[o++]=r;for(var v=a-1>>1;a>0&&r._score<e[v]._score;v=(a=v)-1>>1)e[a]=e[v];e[a]=r}),a.poll=(r=>{if(0!==o){var a=e[0];return e[0]=e[--o],v(),a}}),a.peek=(r=>{if(0!==o)return e[0]}),a.replaceTop=(r=>{e[0]=r,v()}),a}
-var q = fastpriorityqueue() // reuse this
+var q = fastpriorityqueue()
 

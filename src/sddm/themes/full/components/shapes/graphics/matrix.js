@@ -15,7 +15,6 @@ class Matrix {
         this.values[(row * 4) + column] = v;
     }
 
-    /** Does the 3D transform on [point] and returns the `x` and `y` values in an [Offset]. */
     map(point) {
         if (this.values.length < 16) return point;
 
@@ -38,7 +37,6 @@ class Matrix {
         return new Offset.Offset(pZ * (v00 * x + v10 * y + v30), pZ * (v01 * x + v11 * y + v31));
     }
 
-    /** Multiply this matrix by [m] and assign the result to this matrix. */
     timesAssign(m) {
         const v = this.values;
         if (v.length < 16) return;
@@ -86,7 +84,6 @@ class Matrix {
             this.get(row, 3) * m.get(3, column);
     }
 
-    /** Resets the `this` to the identity matrix. */
     reset() {
         const v = this.values;
         if (v.length < 16) return;
@@ -108,7 +105,6 @@ class Matrix {
         v[15] = 1;
     }
 
-    /** Applies a [degrees] rotation around Z to `this`. */
     rotateZ(degrees) {
         if (this.values.length < 16) return;
 
@@ -146,7 +142,6 @@ class Matrix {
         this.set(1, 3, v13);
     }
 
-    /** Scale this matrix by [x], [y], [z] */
     scale(x = 1, y = 1, z = 1) {
         if (this.values.length < 16) return;
         this.set(0, 0, this.get(0, 0) * x);
@@ -163,7 +158,6 @@ class Matrix {
         this.set(2, 3, this.get(2, 3) * z);
     }
 
-    /** Translate this matrix by [x], [y], [z] */
     translate(x = 0, y = 0, z = 0) {
         if (this.values.length < 16) return;
         const t1 = this.get(0, 0) * x + this.get(1, 0) * y + this.get(2, 0) * z + this.get(3, 0);
@@ -184,7 +178,6 @@ class Matrix {
     }
 }
 
-// Companion object constants
 Matrix.ScaleX = 0;
 Matrix.SkewY = 1;
 Matrix.Perspective0 = 3;

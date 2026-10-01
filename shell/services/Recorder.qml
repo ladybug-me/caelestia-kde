@@ -45,7 +45,6 @@ Singleton {
         Launch.exec(["spectacle", "-R", "r"]);
     }
 
-    // Forces a fresh probe of gpu-screen-recorder; `running` updates on exit.
     function probeRecording(): void {
         if (!checkProc.running) checkProc.running = true;
     }

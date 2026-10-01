@@ -52,7 +52,6 @@ if [[ "$EXIT_CODE" -eq 0 ]]; then
     log_ok "All shell scripts passed syntax check"
 fi
 
-# 2. shellcheck
 echo ""
 echo -e "${BOLD}=== ShellCheck Lint ===${RESET}"
 if command -v shellcheck &>/dev/null; then

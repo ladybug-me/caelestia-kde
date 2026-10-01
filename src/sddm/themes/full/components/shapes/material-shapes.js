@@ -342,7 +342,6 @@ function oval() {
 
 function pill() {
     return customPolygon([
-        // new PointNRound(new Offset.Offset(0.609, 0.000), new CornerRounding.CornerRounding(1.000)),
         new PointNRound(new Offset.Offset(0.428, -0.001), new CornerRounding.CornerRounding(0.426)),
         new PointNRound(new Offset.Offset(0.961, 0.039), new CornerRounding.CornerRounding(0.426)),
         new PointNRound(new Offset.Offset(1.001, 0.428)),

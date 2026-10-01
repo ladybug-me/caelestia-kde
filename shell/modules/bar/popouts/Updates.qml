@@ -67,7 +67,6 @@ ColumnLayout {
     implicitWidth: 300 * scaleOffset
     spacing: Tokens.spacing.small * scaleOffset
 
-    // Status card: state icon + summary + last/next check timings.
     StyledRect {
         Layout.fillWidth: true
         implicitHeight: statusLayout.implicitHeight + Tokens.padding.medium * 2 * root.scaleOffset

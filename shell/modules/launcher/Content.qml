@@ -99,13 +99,6 @@ Item {
             anchors.margins: Tokens.padding.medium
             spacing: Tokens.spacing.small
 
-            // StyledText {
-            //     Layout.fillWidth: true
-            //     text: qsTr("Quick session controls")
-            //     color: Colours.palette.m3onSurfaceVariant
-            //     font: Tokens.font.label.large
-            // }
-
             RowLayout {
                 Layout.fillWidth: true
                 spacing: Tokens.spacing.small

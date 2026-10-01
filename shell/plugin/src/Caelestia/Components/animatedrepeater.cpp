@@ -141,8 +141,6 @@ QQuickItem* AnimatedRepeater::itemAt(int index) const {
     return m_items.value(index);
 }
 
-// --- QQuickItem Overrides ---
-
 void AnimatedRepeater::componentComplete() {
     QQuickItem::componentComplete();
     m_componentComplete = true;

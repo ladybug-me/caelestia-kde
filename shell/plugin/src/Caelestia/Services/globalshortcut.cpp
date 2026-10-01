@@ -100,7 +100,6 @@ GlobalShortcutDispatcher* GlobalShortcutDispatcher::instance() {
                     emit inst->collisionIndexChanged();
                 }
             }
-            // Remove recovery file — crash recovery is done
             QFile::remove(path);
         }
 

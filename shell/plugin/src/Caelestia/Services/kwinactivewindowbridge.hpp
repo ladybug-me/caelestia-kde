@@ -75,7 +75,7 @@ private:
     QVariantMap m_activeWindow;
     QVariantList m_windowList;
     QHash<QString, QVariantMap> m_windowCache;
-    QHash<QString, int> m_windowIndex; // uuid → index in m_windowList, O(1) lookup
+    QHash<QString, int> m_windowIndex;
     QString m_activeOutputName;
     QString m_pendingFocusAddress;
     QString m_highlightedAddress;

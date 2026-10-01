@@ -917,7 +917,6 @@ Item {
             }
         }
 
-        // TODO: re-instantiates ClockWidget, ProfileAvatar, GreetingPill and PasswordPill
         Item {
             id: portraitContent
 

@@ -64,14 +64,12 @@ for class in "${IGNORE_CLASSES[@]}"; do
 done
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key ignoreClass "$NEW_IGNORE"
 
-# Set default tiling gaps for Krohnkite
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key screenGapBetween 10
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key screenGapBottom 4
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key screenGapLeft 4
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key screenGapRight 4
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key screenGapTop 4
 
-# Set binary as the tiling method and disable others to avoid interference
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key binaryTreeLayoutOrder 1
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key cascadeLayoutOrder 0
 kwriteconfig6 --file kwinrc --group Script-krohnkite --key columnsLayoutOrder 0

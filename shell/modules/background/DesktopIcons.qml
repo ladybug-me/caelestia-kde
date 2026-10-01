@@ -461,7 +461,6 @@ Item {
                         Layout.fillWidth: true
                         onAccepted: delegateItem.commitRename()
                         onActiveFocusChanged: {
-                            // Clicking anywhere outside the editor cancels the rename.
                             if (!activeFocus && delegateItem.renaming)
                                 delegateItem.cancelRename();
                         }
@@ -494,7 +493,6 @@ Item {
                             newRow = Math.max(0, Math.min(newRow, root.getIconRows() - 1));
 
                             if (!root.isCellFree(newCol, newRow, delegateItem)) {
-                                // Find nearest free cell outwards using a spiral or simple fallback
                                 let found = false;
                                 for (let rad = 1; rad < Math.max(root.getIconCols(), root.getIconRows()); rad++) {
                                     for (let r = Math.max(0, newRow - rad); r <= Math.min(root.getIconRows() - 1, newRow + rad); r++) {

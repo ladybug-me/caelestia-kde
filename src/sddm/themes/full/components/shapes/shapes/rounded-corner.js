@@ -11,12 +11,6 @@ var directionVector = UtilsModule.directionVector;
 var Cubic = CubicModule.Cubic;
 
 class RoundedCorner {
-    /**
-     * @param {Point} p0
-     * @param {Point} p1
-     * @param {Point} p2
-     * @param {CornerRounding} [rounding=null]
-     */
     constructor(p0, p1, p2, rounding = null) {
         this.p0 = p0;
         this.p1 = p1;
@@ -62,17 +56,11 @@ class RoundedCorner {
         return ((1 + this.smoothing) * this.expectedRoundCut);
     }
 
-    /**
-     * @param {float} allowedCut0
-     * @param {float} [allowedCut1]
-     * @returns {Array<Cubic>}
-     */
     getCubics(allowedCut0, allowedCut1 = allowedCut0) {
         // We use the minimum of both cuts to determine the radius, but if there is more space
         // in one side we can use it for smoothing.
         const allowedCut = Math.min(allowedCut0, allowedCut1);
 
-        // Nothing to do, just use lines, or a point
         if (
             this.expectedRoundCut < DistanceEpsilon ||
             allowedCut < DistanceEpsilon ||
@@ -82,7 +70,6 @@ class RoundedCorner {
             return [Cubic.straightLine(this.p1.x, this.p1.y, this.p1.x, this.p1.y)];
         }
 
-        // How much of the cut is required for the rounding part.
         const actualRoundCut = Math.min(allowedCut, this.expectedRoundCut);
 
         // We have two smoothing values, one for each side of the vertex
@@ -91,13 +78,11 @@ class RoundedCorner {
         const actualSmoothing0 = this.calculateActualSmoothingValue(allowedCut0);
         const actualSmoothing1 = this.calculateActualSmoothingValue(allowedCut1);
 
-        // Scale the radius if needed
         const actualR = this.cornerRadius * actualRoundCut / this.expectedRoundCut;
 
         // Distance from the corner (p1) to the center
         const centerDistance = Math.sqrt(Math.pow(actualR, 2) + Math.pow(actualRoundCut, 2));
 
-        // Center of the arc we will use for rounding
         this.center = this.p1.plus(this.d1.plus(this.d2).div(2).getDirection().times(centerDistance));
 
         const circleIntersection0 = this.p1.plus(this.d1.times(actualRoundCut));
@@ -139,11 +124,6 @@ class RoundedCorner {
         ];
     }
 
-    /**
-     * @private
-     * @param {float} allowedCut
-     * @returns {float}
-     */
     calculateActualSmoothingValue(allowedCut) {
         if (allowedCut > this.expectedCut) {
             return this.smoothing;
@@ -154,18 +134,6 @@ class RoundedCorner {
         }
     }
 
-    /**
-     * @private
-     * @param {float} actualRoundCut
-     * @param {float} actualSmoothingValues
-     * @param {Point} corner
-     * @param {Point} sideStart
-     * @param {Point} circleSegmentIntersection
-     * @param {Point} otherCircleSegmentIntersection
-     * @param {Point} circleCenter
-     * @param {float} actualR
-     * @returns {Cubic}
-     */
     computeFlankingCurve(
         actualRoundCut,
         actualSmoothingValues,
@@ -205,14 +173,6 @@ class RoundedCorner {
         return Cubic.create(curveStart, anchorStart, anchorEnd, curveEnd);
     }
 
-    /**
-     * @private
-     * @param {Point} p0
-     * @param {Point} d0
-     * @param {Point} p1
-     * @param {Point} d1
-     * @returns {Point|null}
-     */
     lineIntersection(p0, d0, p1, d1) {
         const rotatedD1 = d1.rotate90();
         const den = d0.dotProduct(rotatedD1);

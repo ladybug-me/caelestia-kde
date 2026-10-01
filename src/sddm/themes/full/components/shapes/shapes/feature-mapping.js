@@ -14,10 +14,6 @@ var DistanceEpsilon = UtilsModule.DistanceEpsilon;
 var IdentityMapping = [{ a: 0, b: 0 }, { a: 0.5, b: 0.5 }];
 
 class ProgressableFeature {
-    /**
-     * @param {float} progress
-     * @param {Feature} feature
-     */
     constructor(progress, feature) {
         this.progress = progress;
         this.feature = feature;
@@ -25,11 +21,6 @@ class ProgressableFeature {
 }
 
 class DistanceVertex {
-    /**
-     * @param {float} distance
-     * @param {ProgressableFeature} f1
-     * @param {ProgressableFeature} f2
-     */
     constructor(distance, f1, f2) {
         this.distance = distance;
         this.f1 = f1;
@@ -44,10 +35,6 @@ class MappingHelper {
         this.usedF2 = new Set();
     }
 
-    /**
-     * @param {ProgressableFeature} f1
-     * @param {ProgressableFeature} f2
-     */
     addMapping(f1, f2) {
         if (this.usedF1.has(f1) || this.usedF2.has(f2)) {
             return;
@@ -81,11 +68,6 @@ class MappingHelper {
     }
 }
 
-/**
- * @param {Array<ProgressableFeature>} features1
- * @param {Array<ProgressableFeature>} features2
- * @returns {DoubleMapper}
- */
 function featureMapper(features1, features2) {
     const filteredFeatures1 = features1.filter(f => f.feature instanceof Corner);
     const filteredFeatures2 = features2.filter(f => f.feature instanceof Corner);
@@ -94,11 +76,6 @@ function featureMapper(features1, features2) {
     return new DoubleMapper(...featureProgressMapping);
 }
 
-/**
- * @param {Array<ProgressableFeature>} features1
- * @param {Array<ProgressableFeature>} features2
- * @returns {Array<{a: float, b: float}>}
- */
 function doMapping(features1, features2) {
     const distanceVertexList = [];
 
@@ -113,7 +90,6 @@ function doMapping(features1, features2) {
 
     distanceVertexList.sort((a, b) => a.distance - b.distance);
 
-    // Special cases
     if (distanceVertexList.length === 0) {
         return IdentityMapping;
     } else if (distanceVertexList.length === 1) {
@@ -131,11 +107,6 @@ function doMapping(features1, features2) {
     return helper.mapping;
 }
 
-/**
- * @param {Feature} f1
- * @param {Feature} f2
- * @returns {float}
- */
 function featureDistSquared(f1, f2) {
     if (f1 instanceof Corner && f2 instanceof Corner && f1.convex != f2.convex) {
         return Number.MAX_VALUE;
@@ -143,10 +114,6 @@ function featureDistSquared(f1, f2) {
     return featureRepresentativePoint(f1).minus(featureRepresentativePoint(f2)).getDistanceSquared();
 }
 
-/**
- * @param {Feature} feature
- * @returns {Point}
- */
 function featureRepresentativePoint(feature) {
     const firstCubic = feature.cubics[0];
     const lastCubic = feature.cubics[feature.cubics.length - 1];
@@ -155,11 +122,6 @@ function featureRepresentativePoint(feature) {
     return new Point(x, y);
 }
 
-/**
- * @param {float} p1
- * @param {float} p2
- * @returns {float}
- */
 function progressDistance(p1, p2) {
     const it = Math.abs(p1 - p2);
     return Math.min(it, 1 - it);

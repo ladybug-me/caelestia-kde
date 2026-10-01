@@ -157,7 +157,6 @@ bool Node::rejectGlobalWrite(const QString& key) {
     if ((!m_globalOnly && !desc->globalOnly()) || !fromUser || !m_fallbackNode)
         return false;
 
-    // Overlays cannot write the global layer, whatever the origin
     if (origin == WriteOrigin::QmlReset)
         qCWarning(lcSettings,
             "Attempted to reset global option %s from an overlay layer, ignoring. "

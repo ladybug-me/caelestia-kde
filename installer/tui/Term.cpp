@@ -41,7 +41,7 @@ namespace Term {
         if (!initialized && isatty(STDIN_FILENO)) {
             tcgetattr(STDIN_FILENO, &initial_settings);
             termios settings = initial_settings;
-            settings.c_lflag &= ~(ECHO | ICANON); // disable echo and canonical mode
+            settings.c_lflag &= ~(ECHO | ICANON);
             settings.c_cc[VMIN] = 0;
             settings.c_cc[VTIME] = 0;
             tcsetattr(STDIN_FILENO, TCSANOW, &settings);

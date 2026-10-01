@@ -21,7 +21,7 @@ public:
     Q_INVOKABLE QString collisionForKey(const QString& portableKeyString) const;
 
     // Rebuilds the dispatcher's collision index from all current in-memory
-    // stolen shortcuts. Called by GlobalShortcut::persistStolenShortcuts().
+    // stolen shortcuts.
     void rebuildCollisionIndex();
 
     QHash<QString, QString> m_collisionIndex;

@@ -215,18 +215,14 @@ class RoundedPolygon {
             // Check expectedRoundCut first, and ensure we fulfill rounding needs first for
             // both corners before using space for smoothing
             if (expectedRoundCut > sideSize) {
-                // Not enough room for fully rounding, see how much we can actually do.
                 return { a: sideSize / expectedRoundCut, b: 0 }
             } else if (expectedCut > sideSize) {
-                // We can do full rounding, but not full smoothing.
                 return { a: 1, b: (sideSize - expectedRoundCut) / (expectedCut - expectedRoundCut) }
             } else {
-                // There is enough room for rounding & smoothing.
                 return { a: 1, b: 1 }
             }
         })
 
-        // Create and store list of beziers for each [potentially] rounded corner
         for (let i = 0; i < n; i++) {
             // allowedCuts[0] is for the side from the previous corner to this one,
             // allowedCuts[1] is for the side from this corner to the next one.
@@ -318,8 +314,6 @@ class RoundedPolygon {
 
     static star(numVerticesPerRadius, radius = 1, innerRadius = .5, rounding = CornerRounding.Unrounded, innerRounding = null, perVertexRounding = null, centerX = 0, centerY = 0) {
         let pvRounding = perVertexRounding
-        // If no per-vertex rounding supplied and caller asked for inner rounding,
-        // create per-vertex rounding list based on supplied outer/inner rounding parameters
         if (pvRounding == null && innerRounding != null) {
             pvRounding = Array.from({ length: numVerticesPerRadius * 2 }).flatMap(() => [rounding, innerRounding])
         }

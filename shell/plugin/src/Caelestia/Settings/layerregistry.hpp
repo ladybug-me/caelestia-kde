@@ -8,7 +8,6 @@
 
 namespace caelestia::settings {
 
-// Derived from Node and has ctor(path, fallback, parent)
 template <typename T>
 concept LayerType = std::derived_from<T, Node> && std::constructible_from<T, const QString&, T*, QObject*>;
 

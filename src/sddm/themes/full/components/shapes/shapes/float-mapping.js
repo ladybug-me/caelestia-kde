@@ -3,9 +3,6 @@
 
 var positiveModulo = UtilsModule.positiveModulo;
 
-/**
- * Maps values between two ranges
- */
 class DoubleMapper {
     constructor(...mappings) {
         this.sourceValues = [];
@@ -34,7 +31,6 @@ class DoubleMapper {
     }
 }
 
-// Static property
 DoubleMapper.Identity = new DoubleMapper({ a: 0, b: 0 }, { a: 0.5, b: 0.5 });
 
 /**

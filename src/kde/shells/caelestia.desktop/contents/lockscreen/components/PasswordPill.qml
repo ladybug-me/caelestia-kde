@@ -270,7 +270,6 @@ FocusScope {
                     text: PasswordSync.password
 
                     onTextChanged: {
-                        // Never leave a revealed password on screen once the field empties
                         if (text.length === 0) root.showPassword = false;
                         var targetLen = text.length;
                         while (charModel.count < targetLen) {

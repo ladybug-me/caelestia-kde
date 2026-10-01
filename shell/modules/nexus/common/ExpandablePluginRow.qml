@@ -34,7 +34,6 @@ StyledRect {
         return lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mkv");
     }
 
-    // Helper for transparent images (png, svg, gif)
     function isTransparentMedia(url) {
         if (!url) return false;
         let lower = url.toString().toLowerCase();

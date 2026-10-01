@@ -22,9 +22,6 @@ Item {
 
     Component.onCompleted: fetchNews()
 
-    // ── Distro-aware news feed ────────────────────────────────────
-    // The feed URL is chosen based on the running distribution so Fedora
-    // users see Fedora news rather than an irrelevant Arch Linux feed.
 
     function newsFeedUrl() {
         var process = Qt.createQmlObject(
@@ -64,8 +61,6 @@ Item {
 
     function doFetch(distroId) {
         var feedUrl = "https://archlinux.org/feeds/news/";
-        // Map known distro IDs to their news/blog feeds. Falls back to
-        // Arch Linux news for unrecognised distributions.
         var feedMap = {
             "fedora": "https://fedoramagazine.org/feed/",
             "arch": "https://archlinux.org/feeds/news/",

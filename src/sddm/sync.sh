@@ -109,7 +109,7 @@ wallpaper_on_screen() {
 
 FAILED=0
 if [[ "${1:-}" = "--posthook" ]]; then
-    : # Skip color generation when run as posthook (--posthook)
+    :
     echo "✓ Running as posthook, skipping color generation"
 elif [[ -z "$CAELESTIA_BIN" ]]; then
     echo "Caelestia CLI not found, skipping color generation"

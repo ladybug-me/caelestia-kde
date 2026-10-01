@@ -135,4 +135,4 @@ caelestia_sudo_quiet() {
     caelestia_sudo_run "$method" "$@"
 }
 
-fi # CAELESTIA_PRIVILEGES_SOURCED
+fi

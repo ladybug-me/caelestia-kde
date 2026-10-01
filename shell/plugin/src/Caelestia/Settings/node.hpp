@@ -49,7 +49,6 @@ signals:
     void overridesChanged();
 
 protected:
-    // Null means empty, otherwise it has content
     std::unique_ptr<Quarantine> m_quarantine;
     const bool m_globalOnly;
 

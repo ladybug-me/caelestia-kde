@@ -3,28 +3,6 @@ pragma Singleton
 import QtQuick
 import qs.services
 
-/**
- * NetworkConnection
- *
- * Centralized utility for network connection logic. Provides a single source of truth
- * for connecting to wireless networks, eliminating code duplication across
- * controlcenter components and bar popouts.
- *
- * Usage:
- * ```qml
- * import qs.utils
- *
- * // With Session object (controlcenter)
- * NetworkConnection.handleConnect(network, session);
- *
- * // Without Session object (bar popouts) - provide password dialog callback
- * NetworkConnection.handleConnect(network, null, (network) => {
- *     // Show password dialog
- *     root.passwordNetwork = network;
- *     root.showPasswordDialog = true;
- * });
- * ```
- */
 QtObject {
     id: root
 
@@ -80,7 +58,6 @@ QtObject {
                             Nmcli.pendingConnection = null;
                         }
 
-                        // Handle password dialog - use session if available, otherwise use callback
                         if (session && session.network) {
                             session.network.showPasswordDialog = true;
                             session.network.pendingNetwork = network;

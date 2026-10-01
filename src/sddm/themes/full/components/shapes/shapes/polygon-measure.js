@@ -20,7 +20,6 @@ class MeasuredPolygon {
                 measuredCubics.push(
                     new MeasuredCubic(this, cubics[i], startOutlineProgress, outlineProgress[i + 1])
                 )
-                // The next measured cubic will start exactly where this one ends.
                 startOutlineProgress = outlineProgress[i + 1]
             }
         }
@@ -32,11 +31,8 @@ class MeasuredPolygon {
     cutAndShift(cuttingPoint) {
         if (cuttingPoint < Utils.DistanceEpsilon) return this
 
-        // Find the index of cubic we want to cut
         const targetIndex = this.cubics.findIndex(it => cuttingPoint >= it.startOutlineProgress && cuttingPoint <= it.endOutlineProgress)
         const target = this.cubics[targetIndex]
-        // Cut the target cubic.
-        // b1, b2 are two resulting cubics after cut
         const { a: b1, b: b2 } = target.cutAtProgress(cuttingPoint)
 
         // Construct the list of the cubics we need:
@@ -71,7 +67,6 @@ class MeasuredPolygon {
             }
         }
 
-        // Shift the feature's outline progress too.
         const newFeatures = []
         for(let i = 0; i < this.features.length; i++) {
             newFeatures.push(new FeatureMapping.ProgressableFeature(Utils.positiveModulo(this.features[i].progress - cuttingPoint, 1), this.features[i].feature))

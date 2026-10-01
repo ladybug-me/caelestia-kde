@@ -17,8 +17,6 @@ Item {
 
     property bool breathingBorderOnly: false
 
-    // Overlay to darken screen
-    // Base dark overlay around region
     Rectangle {
         id: darkenOverlay
 

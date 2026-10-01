@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# editor integrations, Spicetify, Discord/Equibop, Todoist and Firefox theming.
-# INSTALL_SPICETIFY, INSTALL_DISCORD, INSTALL_TODOIST, INSTALL_FIREFOX_THEME),
 
 set -euo pipefail
 
@@ -88,7 +86,6 @@ if [[ "${INSTALL_DISCORD:-false}" == "true" ]]; then
     fi
 fi
 
-# Todoist (AppImage)
 if [[ "${INSTALL_TODOIST:-false}" == "true" ]]; then
     echo "  Installing Todoist AppImage..."
     appimage="$HOME/.local/bin/todoist.AppImage"

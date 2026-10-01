@@ -44,7 +44,6 @@ SKIP_PREFIXES = (
 
 
 def git(*args: str, cwd: str = ROOT) -> str:
-    """Run git and return stdout, raising on failure."""
     proc = subprocess.run(
         ["git", *args], cwd=cwd, capture_output=True, text=True, encoding="utf-8"
     )

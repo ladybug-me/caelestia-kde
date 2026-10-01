@@ -29,8 +29,6 @@ PanelWindow {
         bottom: true
     }
 
-    // Modes
-    // TODO: Ask: sidebar AI
     enum SelectionMode { RectCorners, Circle }
 
     enum Phase { Select, Post }
@@ -285,11 +283,11 @@ root.snapshotWorkspaceUuid = Kwin.workspaces[snapIdx]
         }
 
         const command = ScreenshotAction.getCommand(
-            root.regionX * root.monitorScale, //
-            root.regionY * root.monitorScale, //
-            root.regionWidth * root.monitorScale,//
-            root.regionHeight * root.monitorScale, //
-            root.screenshotPath, //
+            root.regionX * root.monitorScale,
+            root.regionY * root.monitorScale,
+            root.regionWidth * root.monitorScale,
+            root.regionHeight * root.monitorScale,
+            root.screenshotPath,
             root.action
         )
         Quickshell.execDetached(command);
@@ -469,10 +467,10 @@ root.snapshotWorkspaceUuid = Kwin.workspaces[snapIdx]
                 showIcon: true
                 text: modelData.title || modelData["class"] || ""
                 iconName: modelData["class"] || ""
-                targeted: !root.draggedAway && //
-                    (root.targetedRegionX === modelData.at[0]  //
-                    && root.targetedRegionY === modelData.at[1] //
-                    && root.targetedRegionWidth === modelData.size[0] //
+                targeted: !root.draggedAway &&
+                    (root.targetedRegionX === modelData.at[0]
+                    && root.targetedRegionY === modelData.at[1]
+                    && root.targetedRegionWidth === modelData.size[0]
                     && root.targetedRegionHeight === modelData.size[1])
                 opacity: root.draggedAway ? 0 : (root.targetedRegionValid() && !targeted ? 0 : root.targetRegionOpacity)
                 borderColor: root.windowBorderColor

@@ -126,7 +126,6 @@ jobs:
       - name: Run QML convention regression check
         run: python3 .github/scripts/check_qml_conventions.py
 
-# error cascades so the reported file is not the cause. qmllint cannot resolve Quickshell's
   qml-syntax:
     runs-on: ubuntu-latest
     steps:
@@ -141,7 +140,6 @@ jobs:
       - name: Check QML structural syntax
         run: python3 .github/scripts/check_qml_syntax.py --source-root shell
 
-# Bash inside QML `command: ["bash", "-c", `...`]` strings, which qmllint and shellcheck
   embedded-bash:
     runs-on: ubuntu-latest
     steps:
@@ -170,7 +168,6 @@ jobs:
       - name: Cross-check QML config references against C++ declarations
         run: python3 .github/scripts/check_config_references.py
 
-  # Job 10: actionlint - validate workflow files themselves
   actionlint:
     runs-on: ubuntu-latest
     steps:
@@ -201,7 +198,6 @@ jobs:
       - name: Check for value-typed statics of Wayland proxy-wrapping types
         run: python3 .github/scripts/check_wayland_static_lifetime.py
 
-# No Qt/QML toolchain here (qmllint6 cannot resolve this repo's qs.* directory imports), so
   qml-imports:
     runs-on: ubuntu-latest
     steps:
@@ -230,7 +226,6 @@ jobs:
       - name: Check for unescaped bash interpolation in QML template literals
         run: python3 .github/scripts/check_qml_template_interp.py
 
-  # Job 14: Shell quality - syntax, shellcheck, strict mode, unsafe patterns
   shell-quality:
     runs-on: ubuntu-latest
     steps:
@@ -243,7 +238,6 @@ jobs:
       - name: Run shell quality checks
         run: bash .github/scripts/check_shell_quality.sh
 
-  # Job 15: C++ formatting - the files this change touches, against shell/.clang-format.
   # The plugin has a backlog of files that predate the formatter, so the check is
   # scoped to changed files rather than the whole tree.
   cpp-format:

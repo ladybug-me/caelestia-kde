@@ -63,7 +63,6 @@ Item {
     signal requestWindowInfo(var client)
     signal requestClose()
 
-    /// The screen containing a point in global coordinates, or null.
     function screenAtGlobal(gx: real, gy: real): var {
         const all = Quickshell.screens;
         for (let i = 0; i < all.length; ++i) {

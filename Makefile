@@ -3,10 +3,6 @@
 # Installing and updating stays with the shell entry points at the repo root
 # (install.sh, update.sh, uninstall.sh) so the published `curl | sh` one-liner
 # keeps working. Everything here is for working on the repo itself.
-#
-#   make            list every target
-#   make test       everything CI runs for tests
-#   make check      everything CI runs for lint
 
 SHELL_DIR     := shell
 INSTALLER_DIR := installer
@@ -30,7 +26,6 @@ BASH   ?= bash
 help: ## List the available targets
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-# Install / update
 # These call the shipped entry points rather than reimplementing them, so the
 # commands here and the published ones cannot drift apart.
 
@@ -43,7 +38,6 @@ update: ## Update an existing install (prompts for main or dev)
 uninstall: ## Remove the shell, its configs and the lockscreen plugin
 	$(BASH) uninstall.sh
 
-# Build
 
 build-shell: ## Build and install the C++ QML plugin (needs Qt6 + CMake; Linux only)
 	$(BASH) $(STEPS_DIR)/08-build-shell.sh
@@ -52,7 +46,6 @@ installer: ## Compile the TUI installer to installer/build/caelestia-install
 	cmake -B $(BUILD_DIR) -S $(TUI_DIR) -DCMAKE_BUILD_TYPE=Release
 	cmake --build $(BUILD_DIR)
 
-# Test
 
 test: test-bash test-repo validate ## Run every test CI runs
 
@@ -68,7 +61,6 @@ validate: ## Validate the installer's menu.json and theme.json
 hygiene: ## Check file sizes, merge markers, trailing whitespace, line endings
 	$(PYTHON) $(CI_DIR)/check_file_hygiene.py --all
 
-# Lint
 
 check: check-python check-shell ## Lint the repo's own Python and shell
 
@@ -93,7 +85,6 @@ check-qml: ## QML conventions, syntax, imports, embedded bash, config references
 search-coverage: ## Report settings pages that no search entry can open
 	$(PYTHON) $(CI_DIR)/audit_search_coverage.py
 
-# Repo tooling
 
 sync-fetch: ## Refresh the upstream mirror used by the shell sync report
 	$(PYTHON) $(TOOLS_DIR)/sync-shell.py fetch

@@ -8,7 +8,6 @@ QtObject {
 
     readonly property bool twelveHourClock: GlobalConfig.services.twelveHourClock
 
-    // Converts a temperature in Celsius to the given TemperatureUnit
     function toTemperature(celsius: real, unit: int): real {
         if (Number(unit) === TemperatureUnit.Fahrenheit)
             return celsius * 9 / 5 + 32;

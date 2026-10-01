@@ -9,7 +9,7 @@ import qs.utils
 import qs.modules.launcher.items
 import qs.modules.launcher.services
 
-// The compact app browser: one scrolling list with the favourites on top, a
+// The simple app browser: one scrolling list with the favourites on top, a
 // divider, and every other app sorted by name below them. It has no category
 // sidebar, and exposes the same interface as AppBrowserGrid for the callers
 // that drive it (ContentList and the search field's key handling).
@@ -130,7 +130,10 @@ Item {
             flick.contentY = Math.min(Math.max(0, flick.contentHeight - flick.height), flick.contentY + p.y + item.height - (flick.height - root.padding));
     }
 
-    implicitWidth: Math.min(Tokens.sizes.launcher.browseWidth, root.maxWidth)
+    // Match the grid the default browser shows: leave out the width the sidebar
+    // would have taken (plus the gap), so both layouts fit the same number of
+    // icons per row and come out the same size.
+    implicitWidth: Math.min(Tokens.sizes.launcher.browseWidth, root.maxWidth) - Tokens.sizes.launcher.browseSidebarWidth - Tokens.spacing.medium
     implicitHeight: root.padding * 2 + (root.count === 0 ? root.tileHeight * 2 : root.favRows * (root.tileHeight + root.gridSpacing) + (root.showSeparator ? root.gridSpacing * 2 + 1 : 0) + root.otherRows * (root.tileHeight + root.gridSpacing))
 
     Component.onCompleted: {

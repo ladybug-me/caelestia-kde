@@ -20,7 +20,7 @@ Item {
 
     readonly property bool isFavourite: root.modelData && Strings.testRegexList(GlobalConfig.launcher.favouriteApps, root.modelData.id)
     readonly property bool favouriteByRegex: root.modelData && !((GlobalConfig.launcher.favouriteApps ?? []).includes(root.modelData.id)) && root.isFavourite
-    readonly property bool compact: Config.launcher.browseLayout === LauncherBrowseLayout.Compact
+    readonly property bool simple: Config.launcher.browseLayout === LauncherBrowseLayout.Simple
 
     implicitWidth: Tokens.sizes.launcher.browseTileWidth
     implicitHeight: Tokens.sizes.launcher.browseTileHeight
@@ -79,7 +79,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             text: root.modelData?.name ?? ""
             color: root.selected ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
-            font: root.compact ? Tokens.font.label.builders.medium.size(9).build() : Tokens.font.label.large
+            font: root.simple ? Tokens.font.label.builders.medium.size(9).build() : Tokens.font.label.large
             elide: Text.ElideRight
             maximumLineCount: 1
             width: root.implicitWidth - Tokens.padding.medium * 2
@@ -99,7 +99,7 @@ Item {
         height: 22
         fontStyle: Tokens.font.icon.small
 
-        opacity: ((root.compact ? tileArea.containsMouse : root.isFavourite) || favArea.containsMouse) ? 1 : 0
+        opacity: ((root.simple ? tileArea.containsMouse : root.isFavourite) || favArea.containsMouse) ? 1 : 0
         text: root.isFavourite ? "favorite" : "favorite_border"
         fill: root.isFavourite ? 1 : 0
         color: root.favouriteByRegex ? Colours.palette.m3outline : (root.isFavourite ? Colours.palette.m3primary : (favArea.containsMouse ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant))

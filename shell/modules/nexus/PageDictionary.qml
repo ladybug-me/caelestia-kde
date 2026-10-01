@@ -195,6 +195,7 @@ QtObject {
             category: "shell",
             settings: [
                 { label: qsTr("Background Services"), keywords: ["daemons", "systemd", "tuning"] },
+                { label: qsTr("Visualiser Input"), keywords: ["visualiser", "microphone", "cava", "audio"] },
                 { label: qsTr("Rich Presence"), keywords: ["discord", "steamgriddb", "activity"], pagePath: "services/ArpcPage.qml", subPageIdx: 1 }
             ]
         },

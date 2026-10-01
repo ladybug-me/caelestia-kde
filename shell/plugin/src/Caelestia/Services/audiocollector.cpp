@@ -46,7 +46,11 @@ PipeWireWorker::PipeWireWorker(std::stop_token token, AudioCollector* collector)
 
     auto props = pw_properties_new(
         PW_KEY_MEDIA_TYPE, "Audio", PW_KEY_MEDIA_CATEGORY, "Capture", PW_KEY_MEDIA_ROLE, "Music", nullptr);
-    pw_properties_set(props, PW_KEY_STREAM_CAPTURE_SINK, "true");
+    if (m_collector->captureMode() == caelestia::config::VisualiserInput::Output) {
+        // Tap the default sink's monitor: everything the system is playing.
+        pw_properties_set(props, PW_KEY_STREAM_CAPTURE_SINK, "true");
+    }
+    // Otherwise a plain capture stream auto-connects to the default source.
     pw_properties_setf(
         props, PW_KEY_NODE_LATENCY, "%u/%u", nextPowerOf2(512 * ac::SAMPLE_RATE / 48000), ac::SAMPLE_RATE);
     pw_properties_set(props, PW_KEY_NODE_PASSIVE, "true");
@@ -237,7 +241,8 @@ AudioCollector::AudioCollector(QObject* parent)
     , m_buffer1(ac::CHUNK_SIZE)
     , m_buffer2(ac::CHUNK_SIZE)
     , m_readBuffer(&m_buffer1)
-    , m_writeBuffer(&m_buffer2) {}
+    , m_writeBuffer(&m_buffer2)
+    , m_captureMode(caelestia::config::VisualiserInput::Output) {}
 
 AudioCollector::~AudioCollector() {
     AudioCollector::stop();
@@ -259,6 +264,23 @@ void AudioCollector::stop() {
     if (m_thread.joinable()) {
         m_thread.request_stop();
         m_thread.join();
+    }
+}
+
+caelestia::config::VisualiserInput::Enum AudioCollector::captureMode() const {
+    return m_captureMode.load(std::memory_order_relaxed);
+}
+
+void AudioCollector::setCaptureMode(caelestia::config::VisualiserInput::Enum mode) {
+    if (m_captureMode.exchange(mode, std::memory_order_acq_rel) == mode) {
+        return;
+    }
+
+    // The worker reads the mode once while building its stream; only a running
+    // stream needs restarting, otherwise the next start() picks the mode up.
+    if (m_thread.joinable()) {
+        stop();
+        start();
     }
 }
 

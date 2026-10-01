@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick.Layouts
 import Caelestia.Config
+import qs.components.controls
 import qs.utils
 import qs.modules.nexus.common
 
@@ -67,8 +68,6 @@ PageBase {
             }
         }
 
-
-
         StepperRow {
             Layout.fillWidth: true
             label: qsTr("Icon size")
@@ -79,8 +78,6 @@ PageBase {
             stepSize: 2
             onMoved: v => GlobalConfig.bar.dock.iconSize = v
         }
-
-
 
         ToggleRow {
             Layout.fillWidth: true

@@ -6,6 +6,7 @@ import Quickshell.Widgets
 import Caelestia
 import Caelestia.Config
 import qs.components
+import qs.components.images
 import qs.services
 import qs.utils
 import qs.modules.launcher.services
@@ -43,12 +44,13 @@ Item {
         anchors.rightMargin: Tokens.padding.medium
         anchors.margins: Tokens.padding.small
 
-        IconImage {
+        CachingIconImage {
             id: icon
 
-            asynchronous: false
             source: WinIcons.sourceFor(root.modelData, "", root.modelData?.id ?? "", 0)
-            implicitSize: Math.max(1, parent.height * 0.8)
+            // Same shape as the dock icons: parent.height is 0 on the first layout pass, which used to
+            // leave this at its 1px floor for the lifetime of the delegate. (#924)
+            implicitSize: Math.max(16, parent.height * 0.8)
 
             anchors.verticalCenter: parent.verticalCenter
         }

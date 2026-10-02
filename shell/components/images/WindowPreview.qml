@@ -25,10 +25,10 @@ Item {
         address: root.address
     }
 
-    IconImage {
+    CachingIconImage {
         anchors.centerIn: parent
-        asynchronous: true
-        implicitSize: Math.min(root.width, root.height) * root.fallbackScale
+        // root has no size on the first pass, which used to leave the fallback icon at 0px. (#924)
+        implicitSize: Math.max(16, Math.min(root.width, root.height) * root.fallbackScale)
         source: root.fallbackIcon
         visible: !root.hasStream
         z: 0

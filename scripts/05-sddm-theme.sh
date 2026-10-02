@@ -33,10 +33,15 @@ esac
 
 THEME_SOURCE="$SRC_DIR/themes/$VARIANT"
 FONT_SOURCE="$BUNDLE_DIR/src/kde/shells/caelestia.desktop/contents/fonts/GoogleSansFlex.ttf"
+# Downloaded per-user by 02-packages.sh (all distros; opensuse included). SDDM cannot see
+# a user's ~/.local/share/fonts, so the icon glyphs in MaterialIcon.qml need their own copy
+# bundled into the theme, the same way GoogleSansFlex.ttf already is just below.
+ICON_FONT_SOURCE="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf"
 
 if install_is_packaged; then
     THEME_SOURCE="$INSTALL_DIR"
     FONT_SOURCE="$INSTALL_DIR/assets/google-sans-flex/GoogleSansFlex.ttf"
+    ICON_FONT_SOURCE="$INSTALL_DIR/assets/material-symbols/MaterialSymbolsRounded.ttf"
     if [[ ! -f "$INSTALL_DIR/theme.conf" ]]; then
         die "The package's login screen theme is not installed at $INSTALL_DIR"
     fi
@@ -214,6 +219,48 @@ elif [[ "${BASE_DISTRO:-}" == "fedora" ]]; then
         caelestia_sudo dnf install -y "${MISSING[@]}"
     fi
     ok "Dependencies met."
+elif [[ "${BASE_DISTRO:-}" == "opensuse" ]]; then
+    # openSUSE splits the Qt6 QML modules into "-imports" packages. Each entry lists
+    # alternatives (first one that exists wins) because these names are the ones most
+    # likely to differ between Tumbleweed, Slowroll and Leap.
+    SDDM_DEPS=()
+    # openSUSE splits sddm into "sddm" and "sddm-qt6", which conflict with each other -
+    # whichever is already the display manager must be left alone, or zypper offers to
+    # remove it to install the other. Only ask for one if neither is present yet.
+    if rpm -q --whatprovides sddm &>/dev/null; then
+        _sddm_cands=""
+    else
+        _sddm_cands="sddm-qt6|sddm"
+    fi
+    for _cands in "$_sddm_cands" "qt6-declarative-imports|qt6-declarative" \
+                  "qt6-qt5compat-imports|qt6-qt5compat" "qt6-svg-imports|qt6-svg|libQt6Svg6" \
+                  "qt6-multimedia-imports|qt6-multimedia"; do
+        [[ -z "$_cands" ]] && continue
+        _picked=""
+        IFS='|' read -ra _alts <<< "$_cands"
+        for _alt in "${_alts[@]}"; do
+            if rpm -q "$_alt" &>/dev/null || zypper --non-interactive --no-refresh search -x --provides "$_alt" &>/dev/null; then
+                _picked="$_alt"
+                break
+            fi
+        done
+        if [[ -n "$_picked" ]]; then
+            SDDM_DEPS+=("$_picked")
+        else
+            warn "None of [${_cands//|/, }] is available; the login screen may lack a Qt module."
+        fi
+    done
+    MISSING=()
+    for pkg in "${SDDM_DEPS[@]}"; do
+        if ! rpm -q "$pkg" &>/dev/null; then
+            MISSING+=("$pkg")
+        fi
+    done
+    if [[ ${#MISSING[@]} -gt 0 ]]; then
+        info "Installing SDDM dependencies: ${MISSING[*]}"
+        caelestia_sudo zypper --non-interactive install "${MISSING[@]}"
+    fi
+    ok "Dependencies met."
 elif [[ "${BASE_DISTRO:-}" == "debian" ]]; then
     SDDM_DEPS=(sddm qml6-module-qtquick qt6-5compat-dev libqt6svg6 qt6-multimedia-dev)
     MISSING=()
@@ -246,6 +293,14 @@ install_theme_files() {
         caelestia_sudo cp "$FONT_SOURCE" "$INSTALL_DIR/assets/google-sans-flex/GoogleSansFlex.ttf"
     else
         warn "GoogleSansFlex.ttf not found at $FONT_SOURCE, theme text may not render correctly."
+        ALL_OK=false
+    fi
+
+    caelestia_sudo mkdir -p "$INSTALL_DIR/assets/material-symbols"
+    if [[ -f "$ICON_FONT_SOURCE" ]]; then
+        caelestia_sudo cp "$ICON_FONT_SOURCE" "$INSTALL_DIR/assets/material-symbols/MaterialSymbolsRounded.ttf"
+    else
+        warn "MaterialSymbolsRounded.ttf not found at $ICON_FONT_SOURCE, login screen icons may not render."
         ALL_OK=false
     fi
 

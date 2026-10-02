@@ -56,17 +56,30 @@ test_detect_base_distro_reads_the_id() {
     assert_eq "arch" "$(distro_for cachyos)" "an arch derivative should map to arch"
     assert_eq "fedora" "$(distro_for nobara)" "a fedora derivative should map to fedora"
     assert_eq "debian" "$(distro_for ubuntu)" "ubuntu should map to debian"
+    assert_eq "opensuse" "$(distro_for opensuse-tumbleweed 'opensuse suse')" "tumbleweed should map to opensuse"
+    assert_eq "opensuse" "$(distro_for opensuse-leap 'suse opensuse')" "leap should map to opensuse"
+    assert_eq "opensuse" "$(distro_for opensuse-slowroll 'opensuse suse')" "slowroll should map to opensuse"
+}
+
+test_detect_base_distro_leaves_the_immutable_suse_variants_unsupported() {
+    # They share ID_LIKE with Tumbleweed, but zypper cannot install onto a read-only
+    # root: reporting opensuse for them would send the installer down a path that fails
+    # halfway through instead of saying so up front.
+    assert_eq "unsupported" "$(distro_for opensuse-microos 'suse opensuse')" "MicroOS is immutable"
+    assert_eq "unsupported" "$(distro_for opensuse-aeon 'suse opensuse opensuse-tumbleweed')" "Aeon is immutable"
+    assert_eq "unsupported" "$(distro_for opensuse-kalpa 'suse opensuse opensuse-tumbleweed')" "Kalpa is immutable"
 }
 
 test_detect_base_distro_falls_back_to_id_like() {
     assert_eq "arch" "$(distro_for someos arch)" "ID_LIKE=arch should map to arch"
     assert_eq "fedora" "$(distro_for someos 'fedora rhel')" "ID_LIKE=fedora should map to fedora"
     assert_eq "debian" "$(distro_for someos ubuntu)" "ID_LIKE=ubuntu should map to debian"
+    assert_eq "opensuse" "$(distro_for someos 'suse opensuse')" "ID_LIKE=suse should map to opensuse"
 }
 
 test_detect_base_distro_reports_unknown_when_nothing_matches() {
     assert_eq "unknown" "$(distro_for someos)" "an unrecognised id with no ID_LIKE is unknown"
-    assert_eq "unknown" "$(distro_for someos suse)" "an unrecognised ID_LIKE is unknown"
+    assert_eq "unknown" "$(distro_for someos gentoo)" "an unrecognised ID_LIKE is unknown"
 }
 
 test_detect_base_distro_prefers_the_environment_override() {
@@ -171,6 +184,32 @@ test_install_if_missing_records_the_whole_failed_chain() {
 
     assert_status 1 "$status" "no candidate installed means failure"
     assert_eq "one two " "$(failed_packages "$tmp")" "every candidate that failed should be recorded"
+}
+
+test_package_present_asks_rpm_on_opensuse() {
+    local tmp
+    tmp="$(new_tmpdir)"
+    # openSUSE is an RPM system whose installer is zypper, but zypper has no cheap
+    # "is this installed" query: rpm is the one that answers, and dpkg must not be asked.
+    recording_stub "$tmp/bin" rpm "$tmp/rpm.log"
+    recording_stub "$tmp/bin" dpkg "$tmp/dpkg.log" 1
+
+    (BASE_DISTRO=opensuse; with_path "$tmp/bin" "" package_present bash) ||
+        fail "a package rpm knows about is installed on an opensuse base"
+    assert_contains "$(calls_to "$tmp/rpm.log" rpm)" "-q bash" "rpm must be asked about the package"
+    assert_eq "" "$(calls_to "$tmp/dpkg.log" dpkg)" "dpkg must not be consulted on an opensuse base"
+}
+
+test_package_install_uses_zypper_non_interactively_on_opensuse() {
+    local tmp out
+    tmp="$(new_tmpdir)"
+    stub_bin "$tmp/bin" caelestia_sudo 'for a in "$@"; do printf "[%s]\n" "$a"; done'
+
+    out="$(with_package_env "$tmp" opensuse package_install kvantum)"
+    assert_eq "[zypper]
+[--non-interactive]
+[install]
+[kvantum]" "$out" "opensuse installs go through zypper without prompting"
 }
 
 test_package_install_never_passes_an_empty_flag() {

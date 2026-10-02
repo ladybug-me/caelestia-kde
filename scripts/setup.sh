@@ -70,6 +70,9 @@ normalize_line_endings_first() {
                         debian)
                             caelestia_sudo apt-get update && caelestia_sudo apt-get install -y dos2unix || return 1
                             ;;
+                        opensuse)
+                            caelestia_sudo zypper --non-interactive install dos2unix || return 1
+                            ;;
                         *)
                             echo "[WARN]  Could not detect distro for automatic dos2unix installation."
                             return 1
@@ -211,6 +214,8 @@ else
                 caelestia_sudo dnf install -y gcc-c++ cmake make
             elif [[ "$BASE_DISTRO" == "debian" ]]; then
                 caelestia_sudo apt-get update && caelestia_sudo apt-get install -y build-essential g++ cmake make
+            elif [[ "$BASE_DISTRO" == "opensuse" ]]; then
+                caelestia_sudo zypper --non-interactive install gcc-c++ cmake make
             else
                 echo "Could not auto-install build tools. Please install manually: ${MISSING_PKGS[*]}"
                 exit 1

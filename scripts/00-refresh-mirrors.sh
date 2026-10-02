@@ -58,6 +58,11 @@ case "$BASE_DISTRO" in
         caelestia_sudo dnf makecache --refresh >/dev/null 2>&1 || \
             warn "Failed to refresh DNF metadata. Continuing..."
         ;;
+    opensuse)
+        info "Refreshing openSUSE repository metadata with zypper..."
+        caelestia_sudo zypper --non-interactive refresh >/dev/null 2>&1 || \
+            warn "Failed to refresh zypper metadata. Continuing..."
+        ;;
     debian)
         info "Refreshing Debian repository metadata with APT..."
         caelestia_sudo apt-get update >/dev/null 2>&1 || \

@@ -21,6 +21,8 @@ if ! command -v python3 >/dev/null 2>&1 || ! python3 -m pip --version >/dev/null
         caelestia_sudo dnf install -y python3 python3-pip
     elif [[ "$BASE_DISTRO" == "debian" ]]; then
         caelestia_sudo apt-get update && caelestia_sudo apt-get install -y python3 python3-pip python3-venv
+    elif [[ "$BASE_DISTRO" == "opensuse" ]]; then
+        caelestia_sudo zypper --non-interactive install python3 python3-pip
     else
         warn "Could not determine the distro for Python tooling installation."
     fi
@@ -34,6 +36,7 @@ else
     warn "matugen installation failed: wallpapers and schemes cannot generate a palette."
     info "  Arch:   sudo pacman -S matugen"
     info "  Fedora: sudo dnf copr enable avengemedia/danklinux && sudo dnf install matugen"
+    info "  openSUSE: cargo install matugen (the installer attempts this for you)"
     info "  Debian: cargo install matugen (the installer builds it for you)"
 fi
 

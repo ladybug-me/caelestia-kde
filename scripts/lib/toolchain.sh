@@ -33,7 +33,7 @@ linguist_tools_available() {
     command -v lrelease >/dev/null 2>&1 || [[ -x "$fallback" ]]
 }
 
-# install_linguist_tools <arch|fedora|debian>
+# install_linguist_tools <arch|fedora|debian|opensuse>
 #
 # Takes the distro for the same reason install_cava_sdk does: "whichever manager is on
 # PATH" answers for the wrong package universe on a machine with a second one installed.
@@ -48,11 +48,12 @@ install_linguist_tools() {
         arch) caelestia_sudo pacman -S --needed --noconfirm qt6-tools ;;
         fedora) caelestia_sudo dnf install -y qt6-qttools-devel ;;
         debian) caelestia_sudo apt-get install -y qt6-l10n-tools qt6-tools-dev ;;
+        opensuse) caelestia_sudo zypper --non-interactive install qt6-linguist-devel qt6-tools-devel ;;
         *) return 1 ;;
     esac
 }
 
-# install_cava_sdk <arch|fedora|debian>
+# install_cava_sdk <arch|fedora|debian|opensuse>
 #
 # Unpacks the prebuilt SDK into /usr, which needs escalation. Callers that cannot
 # know the SDK is missing should ask cava_sdk_installed first: this asks for a
@@ -64,7 +65,9 @@ install_cava_sdk() {
     local asset_suffix
     case "$distro" in
         arch) asset_suffix="arch" ;;
-        fedora) asset_suffix="fedora" ;;
+        # No openSUSE build of the SDK is published. Fedora's is the closest: the same
+        # RPM layout with libraries in /usr/lib64, which openSUSE uses too.
+        fedora|opensuse) asset_suffix="fedora" ;;
         debian|ubuntu) asset_suffix="ubuntu" ;;
         *) return 1 ;;
     esac

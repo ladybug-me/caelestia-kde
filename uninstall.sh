@@ -22,12 +22,13 @@ section() {
 
 if [[ "$BASE_DISTRO" == "unknown" ]]; then
     echo "Could not detect distribution. Select base:"
-    echo "  1) Arch-based   2) Fedora-based   3) Debian-based   4) Exit"
-    read -r -p "Choice [1-4]: " _dc
+    echo "  1) Arch-based   2) Fedora-based   3) Debian-based   4) openSUSE   5) Exit"
+    read -r -p "Choice [1-5]: " _dc
     case "$_dc" in
         1) BASE_DISTRO="arch" ;;
         2) BASE_DISTRO="fedora" ;;
         3) BASE_DISTRO="debian" ;;
+        4) BASE_DISTRO="opensuse" ;;
         *) die "Exiting." ;;
     esac
 fi
@@ -805,7 +806,19 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
         adw-gtk3 adw-gtk3-theme papirus-icon-theme darkly
     )
 
-    # One flow for all three: the distro only decides which list to walk and which
+    # Names as openSUSE calls them. The Qt and KDE development packages the build pulled
+    # in are left alone on purpose: other software on the machine links against them.
+    OPENSUSE_PACKAGES=(
+        quickshell-git quickshell
+        foot eza fastfetch starship btop
+        fuzzel swappy grim slurp gpu-screen-recorder
+        wl-clipboard cliphist wl-clip-persist app2unit
+        brightnessctl ddcutil tesseract-ocr tesseract-ocr-traineddata-english
+        jq trash-cli inotify-tools ImageMagick sassc spectacle
+        adw-gtk3 papirus-icon-theme darkly
+    )
+
+    # One flow for all four: the distro only decides which list to walk and which
     # remover to call. What is not installed is filtered out first, because a single
     # unknown name makes dnf and apt refuse the whole batch.
     case "$BASE_DISTRO" in
@@ -820,6 +833,10 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
         debian)
             _pkg_list=("${DEBIAN_PACKAGES[@]}")
             _remove_cmd=(caelestia_sudo apt-get remove -y)
+            ;;
+        opensuse)
+            _pkg_list=("${OPENSUSE_PACKAGES[@]}")
+            _remove_cmd=(caelestia_sudo zypper --non-interactive remove)
             ;;
         *)
             _pkg_list=()
@@ -840,6 +857,16 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
                 ok "$BASE_DISTRO packages removed"
             else
                 skip "None of the listed packages are installed"
+            fi
+
+            # openSUSE builds quickshell, cliphist and wl-clip-persist into /usr/local,
+            # where the package manager cannot see them: remove what this installer put there.
+            if [[ "$BASE_DISTRO" == "opensuse" ]]; then
+                for _bin in quickshell qs cliphist wl-clip-persist app2unit caelestia; do
+                    if [[ -e "/usr/local/bin/$_bin" || -L "/usr/local/bin/$_bin" ]]; then
+                        caelestia_sudo rm -f "/usr/local/bin/$_bin" && ok "Removed /usr/local/bin/$_bin"
+                    fi
+                done
             fi
         else
             skip "Package removal skipped"

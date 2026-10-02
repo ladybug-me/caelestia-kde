@@ -81,4 +81,19 @@ elif [[ "$BASE_DISTRO" == "debian" ]]; then
         caelestia_sudo apt-get install -y yq jq build-essential git curl
         ok "Prerequisites installed."
     fi
+elif [[ "$BASE_DISTRO" == "opensuse" ]]; then
+    info "Checking for openSUSE prerequisites (zypper, jq, git, curl, a C++ toolchain)..."
+
+    if ! command -v zypper >/dev/null 2>&1; then
+        die "zypper not found. This installer requires openSUSE Tumbleweed, Slowroll or Leap."
+    fi
+
+    if command -v jq >/dev/null 2>&1 && command -v git >/dev/null 2>&1 &&
+       command -v curl >/dev/null 2>&1 && command -v g++ >/dev/null 2>&1; then
+        ok "Prerequisites are already installed."
+    else
+        info "Missing prerequisites, installing..."
+        caelestia_sudo zypper --non-interactive install jq git curl gcc-c++ make
+        ok "Prerequisites installed."
+    fi
 fi

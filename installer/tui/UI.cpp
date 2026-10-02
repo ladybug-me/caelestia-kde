@@ -32,6 +32,7 @@ namespace {
 string distro_label(const string& id) {
     if (id == "arch") return "Arch-based Linux";
     if (id == "fedora") return "Fedora";
+    if (id == "opensuse") return "openSUSE";
     if (id == "debian") return "Debian-based Linux";
     return id.empty() ? "unknown" : id;
 }

@@ -30,6 +30,15 @@ detect_base_distro() {
             debian|ubuntu|pop|mint|kali|raspbian|elementary|zorin|deepin|devuan)
                 detected="debian"
                 ;;
+            # The immutable SUSE variants share ID_LIKE with Tumbleweed but a read-only
+            # root means zypper cannot install onto them: name them, so the generic
+            # ID_LIKE match below cannot mistake them for a supported system.
+            opensuse-microos|opensuse-aeon|opensuse-kalpa|sle-micro|leap-micro|sl-micro)
+                detected="unsupported"
+                ;;
+            opensuse|opensuse-tumbleweed|opensuse-leap|opensuse-slowroll|sles|sled)
+                detected="opensuse"
+                ;;
             *)
                 if echo "${ID_LIKE:-}" | grep -iq "arch"; then
                     detected="arch"
@@ -37,6 +46,8 @@ detect_base_distro() {
                     detected="fedora"
                 elif echo "${ID_LIKE:-}" | grep -iq -E "debian|ubuntu"; then
                     detected="debian"
+                elif echo "${ID_LIKE:-}" | grep -iq "suse"; then
+                    detected="opensuse"
                 fi
                 ;;
         esac
@@ -49,6 +60,8 @@ detect_base_distro() {
             detected="fedora"
         elif command -v apt-get >/dev/null 2>&1; then
             detected="debian"
+        elif command -v zypper >/dev/null 2>&1; then
+            detected="opensuse"
         fi
     fi
 
@@ -64,7 +77,7 @@ package_present() {
     local pkg="$1"
     case "$BASE_DISTRO" in
         arch) pacman -Qq "$pkg" >/dev/null 2>&1 ;;
-        fedora) rpm -q "$pkg" >/dev/null 2>&1 ;;
+        fedora|opensuse) rpm -q "$pkg" >/dev/null 2>&1 ;;
         debian) dpkg -s "$pkg" >/dev/null 2>&1 ;;
         *) return 1 ;;
     esac
@@ -111,6 +124,9 @@ package_install() {
             ;;
         debian)
             caelestia_sudo apt-get install -y "$pkg" 2>/dev/null
+            ;;
+        opensuse)
+            caelestia_sudo zypper --non-interactive install "$pkg" 2>/dev/null
             ;;
         *)
             warn "No package manager is known for '$BASE_DISTRO'; cannot install $pkg."

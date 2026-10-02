@@ -235,7 +235,12 @@ Item {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: qsTr("No apps in this category")
                     color: Colours.palette.m3outline
-                    font: Tokens.font.body.builders.large.weight(Font.Medium).build()
+                    // (#932) see ClipItem.qml: read the style directly instead of through builders.
+                    font: Qt.font({
+                        family: Tokens.font.body.large.family,
+                        pointSize: Tokens.font.body.large.pointSize,
+                        weight: Font.Medium
+                    })
                 }
             }
         }

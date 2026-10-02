@@ -42,7 +42,11 @@ Item {
             id: emojiChar
 
             text: root.modelData?.ch ?? ""
-            font.pixelSize: Tokens.font.icon.builders.large.scale(1.3).build().pixelSize
+            // (#932) see ClipItem.qml: read the style directly instead of through builders.
+            font.pixelSize: Qt.font({
+                family: Tokens.font.icon.large.family,
+                pointSize: Math.round(Tokens.font.icon.large.pointSize * 1.3)
+            }).pixelSize
 
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left

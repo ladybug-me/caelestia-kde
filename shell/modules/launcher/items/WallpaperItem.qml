@@ -62,7 +62,12 @@ Item {
             anchors.centerIn: parent
             text: "image"
             color: Colours.tPalette.m3onSurfaceVariant
-            fontStyle: Tokens.font.icon.builders.extraLarge.scale(2).weight(Font.DemiBold).build()
+            // (#932) see ClipItem.qml: read the style directly instead of through builders.
+            fontStyle: Qt.font({
+                family: Tokens.font.icon.extraLarge.family,
+                pointSize: Math.round(Tokens.font.icon.extraLarge.pointSize * 2),
+                weight: Font.DemiBold
+            })
             visible: !Images.isVideo(root.modelData.name)
         }
 
@@ -70,7 +75,12 @@ Item {
             anchors.centerIn: parent
             text: "videocam"
             color: Colours.tPalette.m3onSurfaceVariant
-            fontStyle: Tokens.font.icon.builders.extraLarge.scale(2).weight(Font.DemiBold).build()
+            // (#932) see ClipItem.qml: read the style directly instead of through builders.
+            fontStyle: Qt.font({
+                family: Tokens.font.icon.extraLarge.family,
+                pointSize: Math.round(Tokens.font.icon.extraLarge.pointSize * 2),
+                weight: Font.DemiBold
+            })
             visible: Images.isVideo(root.modelData.name) && Wallpapers.thumbFor(root.modelData.path) === ""
         }
 

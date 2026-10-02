@@ -478,7 +478,12 @@ Item {
                     return qsTr("No results");
                 }
                 color: Colours.palette.m3onSurfaceVariant
-                font: Tokens.font.body.builders.large.weight(Font.Medium).build()
+                // (#932) see ClipItem.qml: read the style directly instead of through builders.
+                font: Qt.font({
+                    family: Tokens.font.body.large.family,
+                    pointSize: Tokens.font.body.large.pointSize,
+                    weight: Font.Medium
+                })
             }
 
             StyledText {

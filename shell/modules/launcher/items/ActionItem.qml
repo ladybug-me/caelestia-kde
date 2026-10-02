@@ -31,7 +31,12 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: root.modelData?.icon ?? ""
             color: Colours.palette.m3onSurfaceVariant
-            fontStyle: Tokens.font.icon.builders.large.scale(1.3).build()
+            // (#932) see ClipItem.qml: read the style directly instead of through builders.
+            fontStyle: Qt.font({
+                family: Tokens.font.icon.large.family,
+                pointSize: Math.round(Tokens.font.icon.large.pointSize * 1.3),
+                weight: Tokens.font.icon.large.weight
+            })
         }
 
         Item {

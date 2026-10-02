@@ -30,6 +30,38 @@ Item {
 
     readonly property bool renameActive: renamingDelegate !== null
 
+    // Rewrites one key in the [Desktop Entry] group, leaving the rest of the file as is.
+    readonly property string setDesktopKeyScript: `import os, sys
+path, key, value = sys.argv[1:4]
+value = value.replace('\\\\', '\\\\\\\\').replace('\\n', '\\\\n').replace('\\t', '\\\\t').replace('\\r', '\\\\r')
+with open(path, encoding='utf-8') as f:
+    lines = f.read().split('\\n')
+group = None
+header = None
+found = False
+for i, line in enumerate(lines):
+    stripped = line.strip()
+    if stripped.startswith('['):
+        group = stripped
+        if group == '[Desktop Entry]' and header is None:
+            header = i
+        continue
+    if group == '[Desktop Entry]' and stripped.split('=', 1)[0].strip() == key:
+        lines[i] = key + '=' + value
+        found = True
+        break
+if not found:
+    if header is None:
+        sys.exit('no [Desktop Entry] group in ' + path)
+    lines.insert(header + 1, key + '=' + value)
+mode = os.stat(path).st_mode & 0o7777
+tmp = os.path.join(os.path.dirname(path), '.' + os.path.basename(path) + '.tmp')
+with open(tmp, 'w', encoding='utf-8') as f:
+    f.write('\\n'.join(lines))
+os.chmod(tmp, mode)
+os.replace(tmp, path)
+`
+
     function getIconCols(): int {
         return Math.max(1, Math.floor(gridItem.width / root.cellWidth));
     }
@@ -198,10 +230,21 @@ Item {
 
                 property string path: filePath.replace("file://", "")
                 property string desktopName: fileName
+                // The Name key the label was read from, e.g. "Name[zh_CN]".
+                property string desktopNameKey: "Name"
+                property bool desktopNameFound: false
                 property string desktopIcon: ""
                 property int col: -1
                 property int row: -1
                 property bool renaming: false
+                readonly property bool isDesktopFile: fileName.toLowerCase().endsWith(".desktop")
+                readonly property string displayName: {
+                    if (!isDesktopFile)
+                        return fileName;
+                    if (desktopNameFound)
+                        return desktopName;
+                    return desktopEntry?.name || fileName.slice(0, -8);
+                }
 
                 readonly property DesktopEntry desktopEntry: {
                     if (!fileName.toLowerCase().endsWith(".desktop"))
@@ -218,10 +261,17 @@ Item {
 
                 function startRename(): void {
                     if (root.renamingDelegate && root.renamingDelegate !== delegateItem)
-                        root.renamingDelegate.cancelRename();
+                        root.renamingDelegate.commitRename();
                     root.renamingDelegate = delegateItem;
                     renaming = true;
-                    renameField.text = fileName;
+                    // Launchers are renamed by their shown name, not the file name.
+                    renameField.text = isDesktopFile ? displayName : fileName;
+                    // Preselect the base name so typing replaces it but keeps the extension.
+                    const dot = fileName.lastIndexOf(".");
+                    if (!isDesktopFile && !fileIsDir && dot > 0)
+                        renameField.select(0, dot);
+                    else
+                        renameField.selectAll();
                     renameField.forceActiveFocus();
                 }
 
@@ -231,7 +281,13 @@ Item {
                     renaming = false;
                     if (root.renamingDelegate === delegateItem)
                         root.renamingDelegate = null;
-                    root.renameIcon(path, renameField.text);
+                    if (isDesktopFile) {
+                        const newName = renameField.text.trim();
+                        if (newName.length > 0 && newName !== displayName)
+                            desktopNameWriteProc.exec(["python3", "-c", root.setDesktopKeyScript, path, desktopNameKey, newName]);
+                    } else {
+                        root.renameIcon(path, renameField.text);
+                    }
                 }
 
                 function cancelRename(): void {
@@ -328,8 +384,10 @@ Item {
                 }
 
                 function launch(): void {
-                    if (delegateItem.desktopEntry)
-                        Launch.launchEntry(delegateItem.desktopEntry);
+                    // Run the launcher file itself: its name need not match an installed app id,
+                    // and xdg-open would open it in an editor instead.
+                    if (isDesktopFile)
+                        Launch.exec(["gio", "launch", path]);
                     else
                         Launch.exec(["xdg-open", path]);
                 }
@@ -358,32 +416,46 @@ Item {
                     command: ["cat", path]
                     stdout: StdioCollector {
                         onStreamFinished: {
-                            var lines = text.trim().split("\n");
-                            var inDesktopEntry = false;
-                            var nameFound = false;
-                            var iconFound = false;
-                            for (var i = 0; i < lines.length; i++) {
-                                var line = lines[i].trim();
-                                if (line === "[Desktop Entry]") {
-                                    inDesktopEntry = true;
+                            // Prefer Name[lang_COUNTRY], then Name[lang], then Name, as the spec says.
+                            const locale = Qt.locale().name;
+                            const nameKeys = [`Name[${locale}]`, `Name[${locale.split("_")[0]}]`, "Name"];
+                            const values = {};
+                            let inDesktopEntry = false;
+                            for (const raw of text.split("\n")) {
+                                const line = raw.trim();
+                                if (line.startsWith("[")) {
+                                    inDesktopEntry = line === "[Desktop Entry]";
                                     continue;
-                                } else if (line.startsWith("[")) {
-                                    inDesktopEntry = false;
                                 }
-
-                                if (inDesktopEntry) {
-                                    if (!nameFound && line.startsWith("Name=")) {
-                                        desktopName = line.substring(5);
-                                        nameFound = true;
-                                    } else if (!iconFound && line.startsWith("Icon=")) {
-                                        desktopIcon = line.substring(5);
-                                        iconFound = true;
-                                    }
-                                }
-                                if (nameFound && iconFound)
-                                    break;
+                                const eq = line.indexOf("=");
+                                if (!inDesktopEntry || eq < 0)
+                                    continue;
+                                const key = line.substring(0, eq).trim();
+                                if (!(key in values))
+                                    values[key] = line.substring(eq + 1).trim();
                             }
+                            const nameKey = nameKeys.find(k => values[k]);
+                            if (nameKey) {
+                                desktopName = values[nameKey];
+                                desktopNameKey = nameKey;
+                                desktopNameFound = true;
+                            }
+                            if (values["Icon"])
+                                desktopIcon = values["Icon"];
                         }
+                    }
+                }
+
+                Process {
+                    id: desktopNameWriteProc
+
+                    stderr: StdioCollector {
+                        id: desktopNameWriteErr
+                    }
+                    onExited: (exitCode) => {
+                        if (exitCode !== 0)
+                            Toaster.toast(qsTr("Rename failed"), desktopNameWriteErr.text.trim(), "error");
+                        desktopInfoProc.running = true;
                     }
                 }
 
@@ -405,9 +477,10 @@ Item {
                     anchors.margins: Tokens.padding.small
                     spacing: Tokens.spacing.small
 
+                    // Fixed height so the icon stays put whether the label wraps to one or two lines.
                     Item {
                         Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        Layout.preferredHeight: 64
 
                         Image {
                             id: iconImage
@@ -439,11 +512,9 @@ Item {
                     Text {
                         visible: !delegateItem.renaming
                         Layout.fillWidth: true
-                        text: {
-                            if (delegateItem.fileName.toLowerCase().endsWith(".desktop"))
-                                return delegateItem.desktopEntry?.name || delegateItem.desktopName;
-                            return delegateItem.fileName;
-                        }
+                        Layout.fillHeight: true
+                        verticalAlignment: Text.AlignTop
+                        text: delegateItem.displayName
                         color: Colours.palette.m3onSurface
                         font: Tokens.font.body.small
                         horizontalAlignment: Text.AlignHCenter
@@ -461,11 +532,28 @@ Item {
                         Layout.fillWidth: true
                         onAccepted: delegateItem.commitRename()
                         onActiveFocusChanged: {
-                            // Clicking anywhere outside the editor cancels the rename.
+                            // Clicking anywhere outside the editor applies the rename.
                             if (!activeFocus && delegateItem.renaming)
-                                delegateItem.cancelRename();
+                                delegateItem.commitRename();
                         }
                         Keys.onEscapePressed: delegateItem.cancelRename()
+
+                        // The window only gets keyboard focus once the compositor applies the
+                        // exclusive grab, after startRename() has run; focus the editor then.
+                        Connections {
+                            function onActiveChanged(): void {
+                                if (renameField.Window.window.active)
+                                    renameField.forceActiveFocus();
+                            }
+
+                            target: renameField.Window.window
+                            enabled: delegateItem.renaming
+                        }
+                    }
+
+                    Item {
+                        visible: delegateItem.renaming
+                        Layout.fillHeight: true
                     }
                 }
 
@@ -542,8 +630,8 @@ Item {
                         }
                         if (root.renameActive) {
                             // Another icon's editor is open: click outside it
-                            // cancels the rename instead of opening the file.
-                            root.renamingDelegate.cancelRename();
+                            // applies the rename instead of opening the file.
+                            root.renamingDelegate.commitRename();
                             return;
                         }
                         delegateItem.launch();

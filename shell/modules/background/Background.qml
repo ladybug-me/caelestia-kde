@@ -49,7 +49,7 @@ Variants {
             acceptedButtons: Qt.LeftButton | Qt.RightButton
             onTapped: (eventPoint, button) => {
                 if (desktopIcons.renameActive)
-                    desktopIcons.renamingDelegate?.cancelRename();
+                    desktopIcons.renamingDelegate?.commitRename();
                 if (button === Qt.RightButton && Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y)) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.LeftButton) {

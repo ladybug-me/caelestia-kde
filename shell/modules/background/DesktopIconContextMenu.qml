@@ -35,10 +35,7 @@ Controls.Menu {
     function openTarget(): void {
         if (!target)
             return;
-        if (target.desktopEntry)
-            Launch.launchEntry(target.desktopEntry);
-        else
-            Launch.exec(["xdg-open", target.path]);
+        target.launch();
     }
 
     function revealTarget(): void {

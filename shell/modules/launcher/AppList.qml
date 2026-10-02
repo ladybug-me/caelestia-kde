@@ -21,8 +21,11 @@ StyledListView {
     readonly property string requestedState: stateForText(search.text)
     readonly property string displayState: stateForText(displayText)
 
+    // Also sync while the launcher is closed: the list has to be able to reach its next
+    // state off-screen, otherwise that switch happens during the open animation and the
+    // panel visibly changes content and height.
     function syncDisplayText(): void {
-        if (visibilities.launcher && requestedState === displayState)
+        if (requestedState === displayState)
             displayText = search.text;
     }
 

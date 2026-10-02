@@ -29,6 +29,15 @@ Item {
         Clipboard.clearHistory();
     }
 
+    /// Called by Wrapper.qml once the close animation is over, i.e. while the panel is
+    /// already invisible. The search field otherwise survives a close (the content stays
+    /// built), so a prefix like ">clipboard " would stick around and every later open
+    /// would land straight back in that mode instead of the app grid.
+    function clearSearch(): void {
+        if (!root.visibilities.launcher && search.text !== "")
+            search.text = "";
+    }
+
     function triggerSessionCommand(command: list<string>): void {
         root.visibilities.launcher = false;
         if (!SessionManager.exec(command))
@@ -49,6 +58,23 @@ Item {
         }
 
         target: Clipboard
+    }
+
+    // The shortcuts that open the launcher in a mode (clipboard, emoji, window switcher,
+    // ...) write launcherInitialSearch *before* flipping visibilities.launcher. Applying
+    // it here — while the panel is still hidden — lets the list reach its target state
+    // off-screen; applying it after the panel appeared would switch state (and the
+    // panel's height) during the open animation.
+    Connections {
+        function onLauncherInitialSearchChanged(): void {
+            if (!Visibilities.launcherInitialSearch)
+                return;
+
+            search.text = Visibilities.launcherInitialSearch;
+            Visibilities.launcherInitialSearch = "";
+        }
+
+        target: Visibilities
     }
 
     Item {
@@ -350,10 +376,10 @@ Item {
                     } else {
                         Windows.isSwitching = false;
                         Kwin.clearHighlight();
-                        // The search field survives a close (Content stays built), so a
-                        // prefix like ">clipboard " would stick around: every later open
-                        // would land straight back in that mode instead of the app grid.
-                        search.text = "";
+                        // The search field is cleared by Wrapper.qml once the close
+                        // animation has finished (clearSearch() above), not here: doing
+                        // it now would switch the list to another state — and with it the
+                        // panel's height — while the drawer is still animating out.
                     }
                 }
 

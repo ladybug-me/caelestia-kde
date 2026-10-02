@@ -23,6 +23,16 @@ Item {
     }
     property real offsetScale: shouldBeActive ? 0 : 1
 
+    // Clear the search field once the close animation is over (offsetScale reaches 1,
+    // which is also when `visible` goes false), not at the moment the launcher closes:
+    // clearing earlier switches the list to another state — and with it the panel's
+    // height — while the drawer is still animating out. offsetScale changes on every
+    // frame, so this is checked each time; clearSearch() is idempotent.
+    onOffsetScaleChanged: {
+        if (offsetScale >= 1 && content.item)
+            content.item.clearSearch();
+    }
+
     onShouldBeActiveChanged: {
         if (shouldBeActive) {
             implicitHeight = Qt.binding(() => content.implicitHeight);

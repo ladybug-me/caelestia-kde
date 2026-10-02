@@ -40,20 +40,17 @@ void FontStyleBase::bind(FontStyleNode* cfg) {
     if (m_cfg == cfg)
         return;
 
-    if (m_cfg) {
-        disconnect(m_cfg, nullptr, this, nullptr);
-        disconnect(m_cfg->large(), nullptr, this, nullptr);
-        disconnect(m_cfg->medium(), nullptr, this, nullptr);
-        disconnect(m_cfg->small(), nullptr, this, nullptr);
-    }
+    for (const QMetaObject::Connection& connection : m_cfgConnections)
+        disconnect(connection);
+    m_cfgConnections.clear();
 
     m_cfg = cfg;
 
     if (cfg) {
-        connect(cfg, &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
-        connect(cfg->large(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
-        connect(cfg->medium(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
-        connect(cfg->small(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
+        m_cfgConnections.append(connect(cfg, &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
+        m_cfgConnections.append(connect(cfg->large(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
+        m_cfgConnections.append(connect(cfg->medium(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
+        m_cfgConnections.append(connect(cfg->small(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
     }
 
     rebuild();
@@ -110,13 +107,13 @@ void IconFontStyle::bind(FontStyleNode* cfg) {
     if (m_cfg == cfg)
         return;
 
-    if (auto* previous = qobject_cast<FontStyleIconNode*>(m_cfg))
-        disconnect(previous->extraLarge(), nullptr, this, nullptr);
-
+    // FontStyleBase::bind() drops every connection recorded for the previous node, including
+    // the extraLarge one added below, so there is no raw pointer left to disconnect here.
     FontStyleBase::bind(cfg);
 
     if (auto* icon = qobject_cast<FontStyleIconNode*>(cfg))
-        connect(icon->extraLarge(), &settings::Node::optionChanged, this, &IconFontStyle::rebuild);
+        m_cfgConnections.append(
+            connect(icon->extraLarge(), &settings::Node::optionChanged, this, &IconFontStyle::rebuild));
 }
 
 QFont IconFontStyle::extraLarge() const {

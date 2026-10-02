@@ -40,36 +40,43 @@ void FontStyleBase::bind(FontStyleNode* cfg) {
     if (m_cfg == cfg)
         return;
 
-    if (m_cfg) {
-        disconnect(m_cfg, nullptr, this, nullptr);
-        disconnect(m_cfg->large(), nullptr, this, nullptr);
-        disconnect(m_cfg->medium(), nullptr, this, nullptr);
-        disconnect(m_cfg->small(), nullptr, this, nullptr);
-    }
+    for (const QMetaObject::Connection& connection : m_cfgConnections)
+        disconnect(connection);
+    m_cfgConnections.clear();
 
     m_cfg = cfg;
 
     if (cfg) {
-        connect(cfg, &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
-        connect(cfg->large(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
-        connect(cfg->medium(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
-        connect(cfg->small(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild);
+        m_cfgConnections.append(connect(cfg, &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
+        m_cfgConnections.append(connect(cfg->large(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
+        m_cfgConnections.append(connect(cfg->medium(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
+        m_cfgConnections.append(connect(cfg->small(), &settings::Node::optionChanged, this, &FontStyleBase::rebuild));
     }
 
     rebuild();
 }
 
 void FontStyleBase::rebuild() {
+    QFont large;
+    QFont medium;
+    QFont small;
+
     if (m_cfg) {
         const auto family = m_cfg->family();
-        m_large = buildFont(m_cfg->large(), family, m_scale);
-        m_medium = buildFont(m_cfg->medium(), family, m_scale);
-        m_small = buildFont(m_cfg->small(), family, m_scale);
-    } else {
-        m_large = QFont();
-        m_medium = QFont();
-        m_small = QFont();
+        large = buildFont(m_cfg->large(), family, m_scale);
+        medium = buildFont(m_cfg->medium(), family, m_scale);
+        small = buildFont(m_cfg->small(), family, m_scale);
     }
+
+    // Emitting unconditionally invalidates every binding that reads a font (directly or
+    // through the builder chain), even when the built fonts are identical. Only notify
+    // when something actually changed; QFont::operator== compares the variable axes too.
+    if (large == m_large && medium == m_medium && small == m_small)
+        return;
+
+    m_large = large;
+    m_medium = medium;
+    m_small = small;
     emit fontsChanged();
 }
 
@@ -100,13 +107,13 @@ void IconFontStyle::bind(FontStyleNode* cfg) {
     if (m_cfg == cfg)
         return;
 
-    if (auto* previous = qobject_cast<FontStyleIconNode*>(m_cfg))
-        disconnect(previous->extraLarge(), nullptr, this, nullptr);
-
+    // FontStyleBase::bind() drops every connection recorded for the previous node, including
+    // the extraLarge one added below, so there is no raw pointer left to disconnect here.
     FontStyleBase::bind(cfg);
 
     if (auto* icon = qobject_cast<FontStyleIconNode*>(cfg))
-        connect(icon->extraLarge(), &settings::Node::optionChanged, this, &IconFontStyle::rebuild);
+        m_cfgConnections.append(
+            connect(icon->extraLarge(), &settings::Node::optionChanged, this, &IconFontStyle::rebuild));
 }
 
 QFont IconFontStyle::extraLarge() const {
@@ -118,22 +125,30 @@ IconFontBuilders* IconFontStyle::builders() const {
 }
 
 void IconFontStyle::rebuild() {
+    QFont large;
+    QFont medium;
+    QFont small;
+    QFont extraLarge;
+
     if (m_cfg) {
         const auto family = m_cfg->family();
-        m_large = buildFont(m_cfg->large(), family, m_scale);
-        m_medium = buildFont(m_cfg->medium(), family, m_scale);
-        m_small = buildFont(m_cfg->small(), family, m_scale);
+        large = buildFont(m_cfg->large(), family, m_scale);
+        medium = buildFont(m_cfg->medium(), family, m_scale);
+        small = buildFont(m_cfg->small(), family, m_scale);
 
         // Only the icon node carries the fourth size; the cast is the one place the icon
         // style needs more than FontStyleNode offers.
         const auto* icon = qobject_cast<FontStyleIconNode*>(m_cfg);
-        m_extraLarge = icon ? buildFont(icon->extraLarge(), family, m_scale) : QFont();
-    } else {
-        m_large = QFont();
-        m_medium = QFont();
-        m_small = QFont();
-        m_extraLarge = QFont();
+        extraLarge = icon ? buildFont(icon->extraLarge(), family, m_scale) : QFont();
     }
+
+    if (large == m_large && medium == m_medium && small == m_small && extraLarge == m_extraLarge)
+        return;
+
+    m_large = large;
+    m_medium = medium;
+    m_small = small;
+    m_extraLarge = extraLarge;
     emit fontsChanged();
 }
 

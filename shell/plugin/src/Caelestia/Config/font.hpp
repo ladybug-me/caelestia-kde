@@ -1,5 +1,7 @@
 #pragma once
 
+#include <qlist.h>
+#include <qpointer.h>
 #include <qqmlintegration.h>
 
 #include "../Settings/objectnode.hpp"
@@ -75,7 +77,8 @@ protected:
 
     static QFont buildFont(const FontConfigNode* cfg, const QString& fallbackFamily, qreal scale);
 
-    FontStyleNode* m_cfg = nullptr;
+    QPointer<FontStyleNode> m_cfg;
+    QList<QMetaObject::Connection> m_cfgConnections;
     qreal m_scale = 1;
     QFont m_large;
     QFont m_medium;
@@ -159,7 +162,7 @@ private:
     void rebuildScale();
     void applyMonoTokenSizes();
 
-    AppearanceFont* m_font = nullptr;
+    QPointer<AppearanceFont> m_font;
     AppearanceTokens* m_tokens = nullptr;
     FontStyle* m_headline;
     FontStyle* m_title;

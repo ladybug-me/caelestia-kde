@@ -62,7 +62,6 @@ Item {
             anchors.centerIn: parent
             text: "image"
             color: Colours.tPalette.m3onSurfaceVariant
-            // (#932) see ClipItem.qml: read the style directly instead of through builders.
             fontStyle: Qt.font({
                 family: Tokens.font.icon.extraLarge.family,
                 pointSize: Math.round(Tokens.font.icon.extraLarge.pointSize * 2),
@@ -75,7 +74,6 @@ Item {
             anchors.centerIn: parent
             text: "videocam"
             color: Colours.tPalette.m3onSurfaceVariant
-            // (#932) see ClipItem.qml: read the style directly instead of through builders.
             fontStyle: Qt.font({
                 family: Tokens.font.icon.extraLarge.family,
                 pointSize: Math.round(Tokens.font.icon.extraLarge.pointSize * 2),

@@ -80,9 +80,6 @@ Item {
             id: icon
 
             text: (root.modelData?.isImage ?? false) ? "image" : "content_paste"
-            // Read the style directly: reading through builders makes this depend on
-            // FontBuilders::buildersChanged, and it costs a full evaluate of the chain
-            // every time the style is rebuilt. Same font, much cheaper. (#932)
             fontStyle: Qt.font({
                 family: Tokens.font.icon.large.family,
                 pointSize: Math.round(Tokens.font.icon.large.pointSize * 1.3),

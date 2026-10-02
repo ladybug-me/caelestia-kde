@@ -509,7 +509,6 @@ Item {
 
             StyledText {
                 text: qsTr("Clear clipboard history?")
-                // (#932) see ClipItem.qml: read the style directly instead of through builders.
                 font: Qt.font({
                     family: Tokens.font.body.large.family,
                     pointSize: Tokens.font.body.large.pointSize,

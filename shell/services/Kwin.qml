@@ -41,6 +41,10 @@ Singleton {
     property var _monitorCache: ({})
     property bool hadKeyboard: false
     property string lastSpecialWorkspace: ""
+    property string lastNormalWorkspace: ""
+    property var _lastNormalByOutput: ({})
+    property string _pendingSpecialSwitch: ""
+    property string _pendingSpecialSwitchOutput: ""
     readonly property var monitors: {
         const screens = [...Quickshell.screens];
         const screenNames = screens.map(s => s.name);
@@ -411,12 +415,41 @@ Singleton {
             return;
         }
 
-        if (request.startsWith("togglespecialworkspace"))
+        if (request.startsWith("togglespecialworkspace")) {
+            root.toggleSpecialWorkspace(request.slice("togglespecialworkspace".length).trim());
             return;
+        }
+    }
+
+    function toggleSpecialWorkspace(name: string): void {
+        const wsName = name.startsWith("special:") ? name : `special:${name}`;
+        const output = root.focusedMonitor?.name ?? "";
+        const currentId = root.activeWorkspaceFor(output);
+        const current = root.workspaces.find(w => w.index === currentId);
+
+        if (current && (current.name ?? "") === wsName) {
+            // Toggling the active special workspace off returns this output to
+            // the last normal desktop it was on, or the first one.
+            const last = root._lastNormalByOutput[output] ?? root.lastNormalWorkspace ?? "";
+            root.switchToWorkspace(last.length > 0 ? last : "1", output);
+            return;
+        }
+
+        if (!root.workspaces.some(w => (w.name ?? "") === wsName)) {
+            // createWorkspace resolves asynchronously over DBus; switch once
+            // the desktop actually shows up in onWorkspacesChanged.
+            if (root._pendingSpecialSwitch === wsName)
+                return;
+            root._pendingSpecialSwitch = wsName;
+            root._pendingSpecialSwitchOutput = output;
+            root.createWorkspace(wsName);
+            return;
+        }
+        root.switchToWorkspace(wsName, output);
     }
 
     function cycleSpecialWorkspace(direction: string): void {
-        const openSpecials = root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0);
+        const openSpecials = root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && root.workspaceWindowCount(w.index) > 0);
         if (openSpecials.length === 0)
             return;
 
@@ -458,12 +491,63 @@ Singleton {
         return cached;
     }
 
+    // The monitor mocks are the QML-facing shape callers still read
+    // (lastIpcObject.specialWorkspace / activeWorkspace), so keep them in
+    // step with the real per-output tracker state.
+    function syncMonitorMocks(): void {
+        for (const key in root._monitorCache) {
+            if (key === "values")
+                continue;
+            const m = root._monitorCache[key];
+            if (!m || typeof m !== "object")
+                continue;
+            const position = root.activeWorkspaceFor(key);
+            const current = root.workspaces.find(w => w.index === position);
+            const name = current?.name ?? "";
+            if (m.activeWorkspace)
+                m.activeWorkspace = Object.assign({}, m.activeWorkspace, { id: position });
+            if (m.specialWorkspace)
+                m.specialWorkspace = Object.assign({}, m.specialWorkspace, { name: name.startsWith("special:") ? name : "" });
+        }
+    }
+
+    // Remember the last normal desktop per output so toggling a special
+    // workspace off can go back to where the user was.
+    function rememberWorkspaces(): void {
+        // Without the per-output tracker, fall back to the global active desktop.
+        if (Object.keys(root.activeByOutput).filter(key => key !== "values").length === 0) {
+            const active = root.workspaces.find(w => w.index === root.activeWsId);
+            const activeName = active?.name ?? "";
+            if (activeName.startsWith("special:"))
+                root.lastSpecialWorkspace = activeName;
+            else if (activeName)
+                root.lastNormalWorkspace = activeName;
+        }
+        for (const output in root.activeByOutput) {
+            const current = root.workspaces.find(w => w.index === root.activeByOutput[output]);
+            const name = current?.name ?? "";
+            if (!name)
+                continue;
+            if (name.startsWith("special:")) {
+                root.lastSpecialWorkspace = name;
+            } else {
+                root.lastNormalWorkspace = name;
+                root._lastNormalByOutput[output] = name;
+            }
+        }
+        root.syncMonitorMocks();
+    }
+
+    function workspaceWindowCount(workspaceId: int): int {
+        return root.windowsForWorkspace(workspaceId, false).length;
+    }
+
     function refreshDevices(): void {
         extras.refreshDevices();
     }
 
     function listSpecialWorkspaces(): string {
-        return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0).map(w => w.name).join("\n");
+        return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && root.workspaceWindowCount(w.index) > 0).map(w => w.name).join("\n");
     }
 
     function getFocusedMonitor(): string {
@@ -550,6 +634,30 @@ Singleton {
         }
 
         target: "hypr"
+    }
+
+    Connections {
+        function onActiveByOutputChanged(): void {
+            root.rememberWorkspaces();
+        }
+
+        function onActiveIdChanged(): void {
+            root.rememberWorkspaces();
+        }
+
+        function onWorkspacesChanged(): void {
+            root.syncMonitorMocks();
+            if (root._pendingSpecialSwitch.length > 0) {
+                const pending = root._pendingSpecialSwitch;
+                const pendingOutput = root._pendingSpecialSwitchOutput;
+                root._pendingSpecialSwitch = "";
+                root._pendingSpecialSwitchOutput = "";
+                if (root.workspaces.some(w => (w.name ?? "") === pending))
+                    root.switchToWorkspace(pending, pendingOutput);
+            }
+        }
+
+        target: KWinWorkspaceState
     }
 
     // qmllint disable unresolved-type

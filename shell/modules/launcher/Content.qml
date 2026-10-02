@@ -350,6 +350,10 @@ Item {
                     } else {
                         Windows.isSwitching = false;
                         Kwin.clearHighlight();
+                        // The search field survives a close (Content stays built), so a
+                        // prefix like ">clipboard " would stick around: every later open
+                        // would land straight back in that mode instead of the app grid.
+                        search.text = "";
                     }
                 }
 

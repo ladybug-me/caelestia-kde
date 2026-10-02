@@ -19,6 +19,7 @@ Controls.Menu {
     property var itemPool: ({})
     property var entryByKey: ({})
     property real perfMenuOpenStartedAt: 0
+    readonly property bool iconsShown: GlobalConfig.forScreen(screenName).background.wallpaperEnabled && GlobalConfig.forScreen(screenName).background.desktopIconsEnabled
 
     function executeEntryByKey(key) {
         let entry = root.entryByKey[key];
@@ -92,7 +93,7 @@ Controls.Menu {
         }
 
         root.entryByKey = nextEntryByKey;
-        root.dynamicModel = newArr;
+        root.dynamicModel = [pasteItem, addWidgetItem, arrangeItem, ...newArr];
         const buildMs = Date.now() - buildStartedAt;
         console.log("[perf][DesktopContextMenu] build model source=" + sourceName + " items=" + newArr.length + " ms=" + buildMs);
 
@@ -121,6 +122,7 @@ Controls.Menu {
 
     onExpandedChanged: {
         if (expanded) {
+            DesktopLayout.refreshClipboard();
             root.perfMenuOpenStartedAt = Date.now();
             reloadMenu(false);
         }
@@ -148,6 +150,33 @@ Controls.Menu {
         }
 
         target: ContextMenuStore
+    }
+
+    Controls.MenuItem {
+        id: pasteItem
+
+        text: qsTr("Paste")
+        icon: "content_paste"
+        visible: root.iconsShown && DesktopLayout.clipboardHasFiles
+        onClicked: DesktopLayout.pasteRequested(root.screenName, root.attachTo.x, root.attachTo.y)
+    }
+
+    Controls.MenuItem {
+        id: addWidgetItem
+
+        text: qsTr("Add Widget...")
+        icon: "widgets"
+        visible: root.iconsShown
+        onClicked: DesktopLayout.addWidgetRequested(root.screenName, root.attachTo.x, root.attachTo.y)
+    }
+
+    Controls.MenuItem {
+        id: arrangeItem
+
+        text: qsTr("Arrange Icons...")
+        icon: "sort"
+        visible: root.iconsShown
+        onClicked: DesktopLayout.viewOptionsRequested(root.screenName, root.attachTo.x, root.attachTo.y)
     }
 
     Component {

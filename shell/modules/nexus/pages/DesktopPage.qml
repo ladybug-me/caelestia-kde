@@ -5,10 +5,31 @@ import Quickshell
 import Quickshell.Io
 import Caelestia.Config
 import Caelestia.Services
+import qs.components.controls
+import qs.services
 import qs.modules.nexus.common
 
 PageBase {
     id: root
+
+    readonly property list<MenuItem> iconSizeItems: [
+        MenuItem {
+            text: qsTr("Small")
+            value: 48
+        },
+        MenuItem {
+            text: qsTr("Medium")
+            value: 64
+        },
+        MenuItem {
+            text: qsTr("Large")
+            value: 80
+        },
+        MenuItem {
+            text: qsTr("Huge")
+            value: 96
+        }
+    ]
 
     title: qsTr("Desktop & Tiling")
 
@@ -86,6 +107,27 @@ PageBase {
                 GlobalConfig.save();
             }
             enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled && Config.background.materialYouIconsEnabled
+        }
+
+        SelectRow {
+            Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+            Layout.fillWidth: true
+            label: qsTr("Desktop Icon Size")
+            subtext: qsTr("Ctrl+scroll on the desktop also changes it")
+            menuItems: root.iconSizeItems
+            active: root.iconSizeItems.find(i => i.value === DesktopLayout.iconSize) ?? root.iconSizeItems[1]
+            enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled
+            onSelected: item => DesktopLayout.setIconSize(item.value)
+        }
+
+        ToggleRow {
+            Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+            Layout.fillWidth: true
+            text: qsTr("Arrange Icons Automatically")
+            subtext: qsTr("Keep desktop icons packed; dragging one reorders the rest")
+            checked: DesktopLayout.autoArrange
+            onToggled: DesktopLayout.setAutoArrange(checked)
+            enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled
         }
 
         ToggleRow {

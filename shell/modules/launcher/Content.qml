@@ -70,6 +70,15 @@ Item {
             if (!Visibilities.launcherInitialSearch)
                 return;
 
+            // launcherInitialSearch lives on the Visibilities singleton, but there is one
+            // Content per screen and all of them see this change. Without this check the
+            // first handler to run takes the value and clears it for everyone, so the mode
+            // could be applied to a screen that is not being opened, leaving the screen
+            // that actually opens showing the plain launcher. Only the screen the shortcut
+            // is about to open may consume it.
+            if (root.visibilities !== Visibilities.getForActive())
+                return;
+
             search.text = Visibilities.launcherInitialSearch;
             Visibilities.launcherInitialSearch = "";
         }

@@ -46,12 +46,16 @@ Variants {
             height: 0
         }
         TapHandler {
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
+            acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
             onTapped: (eventPoint, button) => {
                 if (desktopIcons.renameActive)
                     desktopIcons.renamingDelegate?.cancelRename();
-                if (button === Qt.RightButton && Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y)) {
+                const onEmptyDesktop = Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y);
+                if (button === Qt.RightButton && onEmptyDesktop) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
+                } else if (button === Qt.MiddleButton && onEmptyDesktop) {
+                    // Middle click on empty desktop shows or hides the icons.
+                    ContextMenuStore.toggleIcons(win.modelData.name);
                 } else if (button === Qt.LeftButton) {
                     if (true) {
                         Kwin.setActiveOutputName(win.screen.name);

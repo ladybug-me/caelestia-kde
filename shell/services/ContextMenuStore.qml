@@ -4,6 +4,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Caelestia.Config
 
 Singleton {
     id: root
@@ -30,6 +31,19 @@ Singleton {
             { id: "open_terminal", label: qsTr("Open Terminal"), icon: "terminal", command: "terminal", enabled: true, type: "default" },
             { id: "add_shortcut", label: qsTr("Add Shortcut..."), icon: "add", action: "OpenRightClickMenu", enabled: true, type: "default" }
         ];
+    }
+
+    function iconsShownOn(screenName: string): bool {
+        return GlobalConfig.forScreen(screenName).background.desktopIconsEnabled;
+    }
+
+    // Flips the icons as seen on the given screen and applies the result to
+    // every screen, dropping per-screen overrides so they stay in step.
+    function toggleIcons(screenName: string): void {
+        GlobalConfig.background.desktopIconsEnabled = !iconsShownOn(screenName);
+        for (const screen of Quickshell.screens)
+            GlobalConfig.forScreen(screen.name)?.background.resetOption("desktopIconsEnabled");
+        GlobalConfig.save();
     }
 
     function cloneEntries(value) {

@@ -38,9 +38,47 @@ MouseArea {
     property real maxHeight: 320
     readonly property alias backgroundItem: menu
     property bool transparentBackground: false
+    // Unfold sideways from the anchor with a short, non-overshooting curve
+    // instead of dropping down.
+    property bool revealHorizontal: false
+    readonly property int firstVisibleIndex: {
+        const model = dynamicModel ?? [];
+        for (let i = 0; i < model.length; i++)
+            if (model[i]?.visible)
+                return i;
+        return -1;
+    }
+    readonly property int lastVisibleIndex: {
+        const model = dynamicModel ?? [];
+        for (let i = model.length - 1; i >= 0; i--)
+            if (model[i]?.visible)
+                return i;
+        return -1;
+    }
 
     signal itemSelected(item: MenuItem)
     signal rightClickedAt(real x, real y)
+
+    // Plays the opening animation again, e.g. after the menu moved while open.
+    function replayReveal(): void {
+        if (!revealHorizontal || !expanded)
+            return;
+        revealOut.stop();
+        revealIn.stop();
+        menu.hScale = 0;
+        revealIn.start();
+    }
+
+    onExpandedChanged: {
+        if (!revealHorizontal)
+            return;
+        revealIn.stop();
+        revealOut.stop();
+        if (expanded)
+            revealIn.start();
+        else
+            revealOut.start();
+    }
 
     parent: {
         let node = root.attachTo;
@@ -76,8 +114,28 @@ MouseArea {
 
     Behavior on opacity {
         Anim {
-            type: Anim.DefaultEffects
+            type: root.revealHorizontal ? Anim.FastEffects : Anim.DefaultEffects
         }
+    }
+
+    NumberAnimation {
+        id: revealIn
+
+        target: menu
+        property: "hScale"
+        to: 1
+        duration: Tokens.anim.durations.small
+        easing: Tokens.anim.emphasizedDecel
+    }
+
+    NumberAnimation {
+        id: revealOut
+
+        target: menu
+        property: "hScale"
+        to: 0
+        duration: Math.round(Tokens.anim.durations.small * 0.75)
+        easing: Tokens.anim.emphasizedAccel
     }
 
     TransformWatcher {
@@ -93,7 +151,9 @@ MouseArea {
         property string vAnchor: "none"
         property string hAnchor: "none"
         property real offsetScale: 1 - animScale
-        property real animScale: root.expanded ? 1 : 0.0
+        property real vScale: root.expanded ? 1 : 0.0
+        property real hScale: 0
+        readonly property real animScale: root.revealHorizontal ? hScale : vScale
 
         x: {
             watcher.transform;
@@ -122,10 +182,13 @@ MouseArea {
         level: root.transparentBackground ? 0 : 2
         implicitWidth: Math.max(200, column.implicitWidth + Tokens.padding.extraSmall * 2)
         implicitHeight: Math.min(root.maxHeight, column.implicitHeight + Tokens.padding.extraSmall * 2)
-        width: implicitWidth
-        height: implicitHeight * animScale
+        width: root.revealHorizontal ? implicitWidth * animScale : implicitWidth
+        height: root.revealHorizontal ? implicitHeight : implicitHeight * animScale
+        clip: root.revealHorizontal
 
-        Behavior on animScale {
+        Behavior on vScale {
+            enabled: !root.revealHorizontal
+
             Anim {}
         }
 
@@ -137,12 +200,21 @@ MouseArea {
         }
 
         StyledRect {
+            // Sideways, the content stays pinned to the edge the menu grows
+            // from and trails it by a few pixels while the panel unfolds.
+            x: {
+                if (!root.revealHorizontal)
+                    return 0;
+                const trail = (1 - menu.animScale) * Tokens.padding.extraLarge;
+                return root.thisSideX === Menu.Right ? menu.width - menu.implicitWidth + trail : -trail;
+            }
             y: root.thisSideY === Menu.Bottom ? menu.height - menu.implicitHeight : 0
             width: menu.implicitWidth
             height: menu.implicitHeight
-            
+            opacity: root.revealHorizontal ? Math.min(1, menu.animScale * 1.5) : 1
+
             transform: Scale {
-                yScale: menu.animScale
+                yScale: root.revealHorizontal ? 1 : menu.animScale
                 origin.y: root.thisSideY === Menu.Bottom ? menu.implicitHeight : 0
             }
             
@@ -194,10 +266,10 @@ MouseArea {
 
 
                         radius: active ? Tokens.rounding.medium : Tokens.rounding.extraSmall
-                        topLeftRadius: index === 0 ? Tokens.rounding.medium : radius
-                        topRightRadius: index === 0 ? Tokens.rounding.medium : radius
-                        bottomLeftRadius: index === repeater?.count - 1 ? Tokens.rounding.medium : radius
-                        bottomRightRadius: index === repeater?.count - 1 ? Tokens.rounding.medium : radius
+                        topLeftRadius: index === root.firstVisibleIndex ? Tokens.rounding.medium : radius
+                        topRightRadius: index === root.firstVisibleIndex ? Tokens.rounding.medium : radius
+                        bottomLeftRadius: index === root.lastVisibleIndex ? Tokens.rounding.medium : radius
+                        bottomRightRadius: index === root.lastVisibleIndex ? Tokens.rounding.medium : radius
 
                         color: "transparent"
 

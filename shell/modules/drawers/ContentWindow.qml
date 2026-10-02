@@ -454,7 +454,8 @@ StyledWindow {
             id: contextMenuBg
 
             panel: desktopContextMenu.backgroundItem
-            visible: desktopContextMenu.expanded
+            // Stay up while the closing animation runs, not just while expanded.
+            visible: desktopContextMenu.visible && panel.width > 0
             x: panel.x
             y: panel.y
         }
@@ -674,23 +675,16 @@ StyledWindow {
                 if (root.screen.name === screenName) {
                     desktopContextMenuAnchor.x = x;
                     desktopContextMenuAnchor.y = y;
-                    if (desktopContextMenu.expanded) {
-                        desktopContextMenu.expanded = false;
-                        desktopMenuReopen.restart();
-                    } else {
+                    // Already open: jump to the new spot and unfold again
+                    // instead of closing and waiting before reopening.
+                    if (desktopContextMenu.expanded)
+                        desktopContextMenu.reopen();
+                    else
                         desktopContextMenu.expanded = true;
-                    }
                 }
             }
 
             target: ContextMenuStore
-        }
-        Timer {
-            id: desktopMenuReopen
-
-            interval: 300
-            repeat: false
-            onTriggered: desktopContextMenu.expanded = true
         }
         Item {
             id: desktopContextMenuAnchor
@@ -879,7 +873,7 @@ StyledWindow {
             deformMatrix: utilsBg.deformMatrix
         }
         BlurMask {
-            target: desktopContextMenu.expanded ? desktopContextMenu.backgroundItem : null
+            target: desktopContextMenu.visible ? desktopContextMenu.backgroundItem : null
             contentItem: root.contentItem
             blurOffsetTop: root.blurOffsetTop
             blurOffsetBottom: root.blurOffsetBottom

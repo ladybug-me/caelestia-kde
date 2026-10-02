@@ -619,11 +619,6 @@ Item {
                         id: icon
 
                         anchors.centerIn: parent
-                        // IconImage requests the icon at the size it has when loading starts, and a
-                        // delegate has no width yet at that point: the old expression evaluated to 0,
-                        // so the icon was requested at ~0px and never rescaled once the layout settled,
-                        // leaving a few-pixel icon. CachingIconImage is sized by the container instead,
-                        // and the floor keeps it sane until the delegate has a width. (#924)
                         implicitSize: Math.round((Math.max(16, delegateItem.width || root.configuredItemSize) * 0.7) / 2) * 2
                         source: modelData ? WinIcons.sourceFor(modelData.entry, modelData.appClass, modelData.iconName, modelData.pid ?? 0) : ""
                         visible: !(Config.bar.dock.recolourIcons ?? false)

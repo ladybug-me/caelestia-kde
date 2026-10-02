@@ -48,8 +48,6 @@ Item {
             id: icon
 
             source: WinIcons.sourceFor(root.modelData, "", root.modelData?.id ?? "", 0)
-            // Same shape as the dock icons: parent.height is 0 on the first layout pass, which used to
-            // leave this at its 1px floor for the lifetime of the delegate. (#924)
             implicitSize: Math.max(16, parent.height * 0.8)
 
             anchors.verticalCenter: parent.verticalCenter

@@ -449,8 +449,6 @@ Item {
 
                             CachingIconImage {
                                 anchors.centerIn: parent
-                                // activeWin has no geometry yet on the first pass, which used to
-                                // request this icon at 0px. Floor it like the dock icon. (#924)
                                 implicitSize: Math.round(Math.max(16, Math.min(activeWin.width, activeWin.height) * 0.62))
                                 opacity: activeWin.morphed ? 1 : 0
                                 source: WinIcons.sourceForClient(modelData)

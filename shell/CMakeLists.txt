@@ -200,21 +200,29 @@ if("shell" IN_LIST ENABLE_MODULES)
 
     file(GLOB CAELESTIA_BIN_FILES CONFIGURE_DEPENDS "${CAELESTIA_ROOT_DIR}/src/bin/*")
     install(PROGRAMS ${CAELESTIA_BIN_FILES} DESTINATION "${INSTALL_BINDIR}")
+
+    # A directory install never carries the checkout's VCS metadata. CMake
+    # records every file it installs in the build directory's
+    # install_manifest.txt, and the package recipe prunes .git/.github/.gitignore
+    # from the staged tree, so shipping them here would make the two disagree.
     install(DIRECTORY
         "${CAELESTIA_ROOT_DIR}/src/matugen"
         "${CAELESTIA_ROOT_DIR}/src/schemes"
-        DESTINATION "${INSTALL_DATADIR}")
+        DESTINATION "${INSTALL_DATADIR}"
+        PATTERN ".git*" EXCLUDE)
 
     file(GLOB CAELESTIA_STEP_SCRIPTS CONFIGURE_DEPENDS
         "${CAELESTIA_ROOT_DIR}/scripts/[0-9]*.sh")
     install(PROGRAMS ${CAELESTIA_STEP_SCRIPTS}
         DESTINATION "${INSTALL_DATADIR}/scripts")
     install(DIRECTORY "${CAELESTIA_ROOT_DIR}/scripts/lib"
-        DESTINATION "${INSTALL_DATADIR}/scripts")
+        DESTINATION "${INSTALL_DATADIR}/scripts"
+        PATTERN ".git*" EXCLUDE)
     install(DIRECTORY
         "${CAELESTIA_ROOT_DIR}/src/dots"
         "${CAELESTIA_ROOT_DIR}/src/dots-extra"
-        DESTINATION "${INSTALL_DATADIR}/src")
+        DESTINATION "${INSTALL_DATADIR}/src"
+        PATTERN ".git*" EXCLUDE)
     install(FILES
         "${CAELESTIA_ROOT_DIR}/shell/assets/wallpaper.webp"
         DESTINATION "${INSTALL_DATADIR}/shell/assets")
@@ -224,13 +232,15 @@ if("shell" IN_LIST ENABLE_MODULES)
 
     foreach(dir assets components modules services utils)
         install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${dir}
-                DESTINATION ${INSTALL_QSCONFDIR})
+                DESTINATION ${INSTALL_QSCONFDIR}
+                PATTERN ".git*" EXCLUDE)
     endforeach()
 
     # scripts/ installs with the dev tooling stripped: the conventions
     # linter runs in CI and the perf profiler is not runtime code.
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/scripts/
             DESTINATION ${INSTALL_QSCONFDIR}/scripts
+            PATTERN ".git*" EXCLUDE
             PATTERN "qml-lint-conventions.py" EXCLUDE
             PATTERN "menu_perf_stats.py" EXCLUDE)
 
@@ -283,4 +293,8 @@ if("shell" IN_LIST ENABLE_MODULES)
     elseif(TS_FILES)
         message(WARNING "Qt Linguist tools not found and no compiled catalogues - the shell will only be available in English")
     endif()
+
+    # The package recipe validates CMake's own install_manifest.txt (written into
+    # the build directory) against the staged tree, so there is no second,
+    # hand-maintained list of installed paths to drift out of date.
 endif()

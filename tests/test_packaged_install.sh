@@ -130,6 +130,14 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "CMake should own the fallback wallpaper"
     assert_contains "$cmake" '"${CAELESTIA_ROOT_DIR}/assets/org.quickshell.desktop"' \
         "CMake should own the desktop integration asset"
+    assert_contains "$cmake" 'PATTERN ".git*" EXCLUDE' \
+        "CMake must not install the checkout's VCS metadata"
+    assert_contains "$pkgbuild" 'install_manifest.txt' \
+        "the package should validate CMake's install manifest"
+    assert_contains "$pkgbuild" 'validate_install_manifest' \
+        "the package should reuse the shared manifest validator"
+    assert_not_contains "$pkgbuild" 'caelestia-install-manifest' \
+        "the package must not ship a second, hand-maintained manifest"
     assert_not_contains "$pkgbuild" 'install -m755 src/bin/*' \
         "the package must not copy CLI wrappers outside CMake"
     assert_not_contains "$pkgbuild" 'cp -r src/matugen src/schemes' \
@@ -287,6 +295,20 @@ test_the_payload_carries_no_version_control_metadata() {
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
 
     assert_contains "$pkgbuild" "-name '.git' -o -name '.github' -o -name '.gitignore'" "the package should strip version control metadata"
+}
+
+# CMake records every file it installs in install_manifest.txt, so a prune that
+# walks the whole staging root would delete files CMake owns and recorded there.
+# validate_install_manifest would then fail the build on a missing path, so the
+# prune has to stay scoped to the trees the recipe copies by hand.
+test_the_package_prune_leaves_cmake_owned_paths_alone() {
+    local pkgbuild
+    pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
+
+    assert_not_contains "$pkgbuild" 'find "$pkgdir" \(' \
+        "the package prune must not walk the whole staging root"
+    assert_contains "$pkgbuild" 'find "$pkgdir/etc/xdg/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set"' \
+        "the package prune should be scoped to the trees it copies by hand"
 }
 
 test_the_install_says_how_to_start_the_shell_now() {

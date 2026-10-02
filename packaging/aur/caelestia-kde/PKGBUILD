@@ -1,7 +1,7 @@
 # Maintainer: ladybug-me <rajveer2027singh@gmail.com>
 
 pkgname=caelestia-kde
-pkgver=2.4.3
+pkgver=2.5.1
 pkgrel=1
 pkgdesc='The Caelestia desktop shell, ported to KDE Plasma'
 arch=('x86_64' 'aarch64')
@@ -141,17 +141,20 @@ DROPIN
 
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
-    find "$pkgdir" \( -name '.git' -o -name '.github' -o -name '.gitignore' \) \
+    # Only the trees this recipe copies by hand can carry VCS metadata: CMake's
+    # own directory installs exclude .git* (shell/CMakeLists.txt). Walking all of
+    # $pkgdir here would delete files CMake installed and recorded in
+    # install_manifest.txt, and the manifest check below would then reject them.
+    find "$pkgdir/etc/xdg/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set" \
+         "$pkgdir/usr/share/plasma/shells/caelestia.desktop" \
+         "$pkgdir/usr/share/sddm/themes/caelestia" \
+        \( -name '.git' -o -name '.github' -o -name '.gitignore' \) \
         -prune -exec rm -rf {} + 2>/dev/null || true
 
+    # Only the distro-specific paths this recipe adds by hand. Everything else
+    # the shell ships is owned by CMake, so it is checked against CMake's own
+    # install manifest below instead of a second hand-maintained list.
     local required=(
-        usr/bin/caelestia
-        usr/share/caelestia/scripts/03-deploy-configs.sh
-        usr/share/caelestia/scripts/lib/install-kind.sh
-        usr/share/caelestia/src/dots
-        usr/share/caelestia/src/dots-extra
-        usr/share/caelestia/shell/assets/wallpaper.webp
-        usr/share/caelestia/assets/org.quickshell.desktop
         usr/share/sddm/themes/caelestia/theme.conf
         usr/share/sddm/themes/caelestia/scripts/sync.sh
         etc/sddm.conf.d/zz-caelestia.conf
@@ -166,5 +169,11 @@ DROPIN
         fi
     done
 
-    echo "package layout checked: ${#required[@]} paths"
+    # CMake records every file it installed in build/install_manifest.txt, so
+    # validating that against the staged tree catches a shell file that went
+    # missing after install, without repeating the list here.
+    source "$srcdir/$pkgname-$pkgver/scripts/lib/install-fs.sh"
+    validate_install_manifest "$srcdir/$pkgname-$pkgver/build/install_manifest.txt" "$pkgdir" || exit 1
+
+    echo "package layout checked: ${#required[@]} package paths plus CMake's manifest"
 }

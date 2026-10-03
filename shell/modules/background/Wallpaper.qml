@@ -33,6 +33,17 @@ Item {
         return ["mp4", "webm", "mkv", "avi", "mov", "wmv", "flv"].includes(ext);
     }
 
+    // Stops the video in the layer that is no longer shown, once the transition
+    // to the current one has finished. If the source changed again mid-transition
+    // the hidden layer is loading it, so it is left alone.
+    function releaseHidden(): void {
+        if (!current || (current.videoPath !== source && current.imagePath !== source))
+            return;
+        for (const img of [one, two])
+            if (img !== current)
+                img.videoPath = "";
+    }
+
     onSourceChanged: {
         if (!source)
             current = null;
@@ -152,7 +163,9 @@ Item {
 
         property string imagePath: ""
         property string videoPath: ""
-        property bool isVideoImage: root.isVideo(root.source)
+        // Follows what this layer holds, not root.source: the hidden layer keeps
+        // its old content and must not start decoding a new video as well.
+        readonly property bool isVideoImage: videoPath !== ""
         property var screen: null
         readonly property bool shown: {
             if (root.source === "")
@@ -197,18 +210,7 @@ Item {
                 }
             }
         }
-        function updateContent(): void {
-            const isVideoImage = root.isVideo(root.source);
-            if (isVideoImage) {
-                imagePath = "";
-                videoPath = root.source;
-            } else {
-                videoPath = "";
-                imagePath = root.source;
-            }
-        }
 
-        onIsVideoImageChanged: updateContent()
         anchors.fill: parent
         opacity: 1
         scale: 1
@@ -218,6 +220,7 @@ Item {
             if (z === 1) {
                 if (root.skipTransition) {
                     maskRadius = maxRadius;
+                    Qt.callLater(root.releaseHidden);
                 } else {
                     maskRadius = 0;
                     maskAnim.restart();
@@ -323,6 +326,7 @@ Item {
                 to: img.maxRadius
                 type: Anim.Emphasized
                 duration: 2500
+                onFinished: root.releaseHidden()
             }
     }
 }

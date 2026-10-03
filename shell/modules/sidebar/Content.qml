@@ -18,7 +18,10 @@ Item {
 
     readonly property bool isBarHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property bool showPopoutSeparator: isBarHorizontal && root.visibilities.sidebar && popouts && popouts.hasCurrent && popouts.currentName !== "dockhover" && popouts.currentName !== "dockcontext" && popouts.currentName !== "activewindow" && popouts.currentName !== "greeter" && popouts.currentName !== "greetercontext" && popouts.currentName !== "github"
-    readonly property bool aiBusy: aiLoader.item ? (aiLoader.item.isTyping || aiLoader.item.inAgentLoop) : false
+    // Keeps the sidebar loaded after it is closed: the assistant is still replying,
+    // or one of the shell's file dialogs is open (clicking into a dialog can close
+    // the sidebar, and unloading it would destroy the dialog's owner with it).
+    readonly property bool keepLoaded: (aiLoader.item?.busy ?? false) || Visibilities.openDialogs > 0
     readonly property bool aiEnabled: GlobalConfig.ai.enableAiAssistant && (GlobalConfig.ai.enableOllama || GlobalConfig.ai.enableClaudeCode || GlobalConfig.ai.enableClaude || GlobalConfig.ai.enableOpenai || GlobalConfig.ai.enableGemini || GlobalConfig.ai.enableOpenrouter || GlobalConfig.ai.enableOpencode || GlobalConfig.ai.enableOpencodeGo)
 
     function checkAiTab(): void {

@@ -17,6 +17,7 @@ Item {
 
     required property DrawerVisibilities visibilities
     required property var panels
+    required property Wrapper wrapper
     required property real maxWidth
     required property real maxHeight
 
@@ -32,6 +33,14 @@ Item {
     function clearSearch(): void {
         if (!root.visibilities.launcher && search.text !== "")
             search.text = "";
+    }
+
+    function applyInitialSearch(): void {
+        if (!Visibilities.launcherInitialSearch)
+            return;
+
+        search.text = Visibilities.launcherInitialSearch;
+        Visibilities.launcherInitialSearch = "";
     }
 
     function triggerSessionCommand(command: list<string>): void {
@@ -58,17 +67,19 @@ Item {
 
     Connections {
         function onLauncherInitialSearchChanged(): void {
-            if (!Visibilities.launcherInitialSearch)
-                return;
-
-            if (root.visibilities !== Visibilities.getForActive())
-                return;
-
-            search.text = Visibilities.launcherInitialSearch;
-            Visibilities.launcherInitialSearch = "";
+            if (root.visibilities === Visibilities.getForActive())
+                root.applyInitialSearch();
         }
 
         target: Visibilities
+    }
+
+    Connections {
+        function onCloseAnimationFinished(): void {
+            root.clearSearch();
+        }
+
+        target: root.wrapper
     }
 
     Item {
@@ -352,20 +363,14 @@ Item {
             }
 
             Component.onCompleted: {
-                if (Visibilities.launcherInitialSearch) {
-                    text = Visibilities.launcherInitialSearch;
-                    Visibilities.launcherInitialSearch = "";
-                }
+                root.applyInitialSearch();
                 forceActiveFocus();
             }
 
             Connections {
                 function onLauncherChanged(): void {
                     if (root.visibilities.launcher) {
-                        if (Visibilities.launcherInitialSearch) {
-                            search.text = Visibilities.launcherInitialSearch;
-                            Visibilities.launcherInitialSearch = "";
-                        }
+                        root.applyInitialSearch();
                         search.forceActiveFocus();
                     } else {
                         Windows.isSwitching = false;

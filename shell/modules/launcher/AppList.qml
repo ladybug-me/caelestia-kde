@@ -22,7 +22,7 @@ StyledListView {
     readonly property string displayState: stateForText(displayText)
 
     function syncDisplayText(): void {
-        if (visibilities.launcher && requestedState === displayState)
+        if (requestedState === displayState)
             displayText = search.text;
     }
 

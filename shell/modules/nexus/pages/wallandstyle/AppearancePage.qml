@@ -52,10 +52,14 @@ PageBase {
             id: resetBtn
 
             property bool armed: false
+            readonly property bool dirty: {
+                const nodes = [GlobalConfig.appearance, GlobalConfig.border, GlobalConfig.appearance.rounding, GlobalConfig.appearance.transparency, GlobalConfig.appearance.font, GlobalConfig.appearance.spacing, GlobalConfig.appearance.padding, GlobalConfig.appearance.anim.durations];
+                return nodes.some(n => n.overrides.length > 0);
+            }
 
-            text: resetBtn.armed ? qsTr("Sure?") : qsTr("Reset")
+            text: resetBtn.armed ? qsTr("Sure?") : qsTr("Reset settings")
             icon: "restart_alt"
-            type: TextButton.Tonal
+            type: resetBtn.dirty ? TextButton.Filled : TextButton.Tonal
             onClicked: {
                 if (resetBtn.armed) {
                     resetBtn.armed = false;

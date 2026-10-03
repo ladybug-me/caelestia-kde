@@ -47,8 +47,8 @@ StyledSwitch {
         anchors.leftMargin: root.horizontalPadding
         anchors.rightMargin: Tokens.spacing.medium
 
-        implicitWidth: column.implicitWidth + (resetBtn.visible ? resetBtn.implicitWidth + Tokens.spacing.small : 0)
-        implicitHeight: Math.max(column.implicitHeight, resetBtn.visible ? resetBtn.implicitHeight : 0)
+        implicitWidth: column.implicitWidth
+        implicitHeight: column.implicitHeight
 
         SettingResetButton {
             id: resetBtn

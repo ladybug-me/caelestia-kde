@@ -25,9 +25,8 @@ Item {
         address: root.address
     }
 
-    IconImage {
+    CachingIconImage {
         anchors.centerIn: parent
-        asynchronous: true
         implicitSize: Math.min(root.width, root.height) * root.fallbackScale
         source: root.fallbackIcon
         visible: !root.hasStream

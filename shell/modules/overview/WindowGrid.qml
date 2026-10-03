@@ -447,9 +447,8 @@ Item {
                                 }
                             }
 
-                            IconImage {
+                            CachingIconImage {
                                 anchors.centerIn: parent
-                                asynchronous: true
                                 implicitSize: Math.round(Math.min(activeWin.width, activeWin.height) * 0.62)
                                 opacity: activeWin.morphed ? 1 : 0
                                 source: WinIcons.sourceForClient(modelData)

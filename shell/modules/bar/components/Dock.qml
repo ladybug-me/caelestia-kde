@@ -12,6 +12,7 @@ import Caelestia.Services
 import qs.components
 import qs.components.controls
 import qs.components.effects
+import qs.components.images
 import qs.services
 import qs.utils
 
@@ -614,13 +615,12 @@ Item {
 
 
 
-                    IconImage {
+                    CachingIconImage {
                         id: icon
 
                         anchors.centerIn: parent
-                        implicitSize: Math.round(((delegateItem.width || 0) * 0.7) / 2) * 2 || 0
+                        implicitSize: Math.round((root.configuredItemSize * 0.7) / 2) * 2
                         source: modelData ? WinIcons.sourceFor(modelData.entry, modelData.appClass, modelData.iconName, modelData.pid ?? 0) : ""
-                        asynchronous: true
                         visible: !(Config.bar.dock.recolourIcons ?? false)
 
                         SequentialAnimation {

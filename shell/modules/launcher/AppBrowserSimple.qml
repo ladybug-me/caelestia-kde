@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import Caelestia.Config
 import qs.components
 import qs.components.controls
@@ -60,11 +61,10 @@ Item {
 
         const others = all.filter(a => !Strings.testRegexList(favIds, a.id)).sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
 
-        if (root.sameIds(root.favourites, favs) && root.sameIds(root.others, others))
-            return;
-
-        root.favourites = favs;
-        root.others = others;
+        if (!root.sameIds(root.favourites, favs))
+            root.favourites = favs;
+        if (!root.sameIds(root.others, others))
+            root.others = others;
 
         if (root.currentIndex >= root.count)
             root.currentIndex = Math.max(0, root.count - 1);
@@ -199,7 +199,9 @@ Item {
         highlightFollowsCurrentItem: false
         cacheBuffer: root.cellHeight * 4
 
-        model: root.others
+        model: ScriptModel {
+            values: root.others
+        }
 
         header: Item {
             id: headerItem

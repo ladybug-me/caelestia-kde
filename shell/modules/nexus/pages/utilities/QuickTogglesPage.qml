@@ -33,31 +33,36 @@ PageBase {
 
     readonly property var allToggleDefs: [...root.connectivityToggles, ...root.toolToggles, ...root.systemToggles]
     readonly property bool customOrder: Config.utilities.quickTogglesCustomOrder ?? false
-    readonly property var orderedToggles: {
+    readonly property var orderedIds: {
         const labels = {};
         root.allToggleDefs.forEach(d => {
             labels[d.id] = d.label;
         });
         const stored = Config.utilities.quickToggles || [];
-        const known = stored.filter(t => t.id in labels);
-        const knownIds = new Set(known.map(t => t.id));
-        const missing = root.allToggleDefs.filter(d => !knownIds.has(d.id)).map(d => ({
-                    id: d.id,
-                    enabled: true
-                }));
-        return [...known, ...missing].map(t => ({
-                    id: t.id,
-                    label: labels[t.id],
-                    enabled: t.enabled !== false
+        const known = stored.filter(t => t.id in labels).map(t => t.id);
+        const knownSet = new Set(known);
+        const missing = root.allToggleDefs.filter(d => !knownSet.has(d.id)).map(d => d.id);
+        return [...known, ...missing];
+    }
+
+    function toggleLabel(id: string): string {
+        const def = root.allToggleDefs.find(d => d.id === id);
+        return def ? def.label : id;
+    }
+
+    function toggleEnabled(id: string): bool {
+        const stored = Config.utilities.quickToggles || [];
+        const found = stored.find(t => t.id === id);
+        return found ? found.enabled !== false : true;
+    }
+
+    function writeOrder(ids: var): void {
+        GlobalConfig.utilities.quickToggles = ids.map(id => ({
+                    id: id,
+                    enabled: root.toggleEnabled(id)
                 }));
     }
 
-    function saveToggles(list: var): void {
-        GlobalConfig.utilities.quickToggles = list.map(t => ({
-                    id: t.id,
-                    enabled: t.enabled
-                }));
-    }
 
     title: qsTr("Quick toggles")
     isSubPage: true
@@ -79,23 +84,42 @@ PageBase {
         }
 
         ListEditor {
+            function labelFor(item: var): string {
+                return root.toggleLabel(item);
+            }
+
+            function toggledFor(item: var): bool {
+                return root.toggleEnabled(item);
+            }
+
             visible: root.customOrder
             allowRemove: false
-            values: root.orderedToggles
+            values: root.orderedIds
             onItemMoved: (from, to) => {
-                const list = [...root.orderedToggles];
-                const moved = list.splice(from, 1)[0];
-                list.splice(to, 0, moved);
-                root.saveToggles(list);
+                const ids = [...root.orderedIds];
+                const moved = ids.splice(from, 1)[0];
+                ids.splice(to, 0, moved);
+                root.writeOrder(ids);
             }
             onItemToggled: (index, checked) => {
-                const list = [...root.orderedToggles];
-                list[index] = {
-                    id: list[index].id,
-                    label: list[index].label,
-                    enabled: checked
-                };
-                root.saveToggles(list);
+                const stored = Config.utilities.quickToggles || [];
+                const id = root.orderedIds[index];
+                const entry = stored.find(t => t.id === id);
+                if (entry) {
+                    const list = stored.map(t => ({
+                                id: t.id,
+                                enabled: t.id === id ? checked : (t.enabled !== false)
+                            }));
+                    GlobalConfig.utilities.quickToggles = list;
+                } else {
+                    GlobalConfig.utilities.quickToggles = [...stored.map(t => ({
+                                id: t.id,
+                                enabled: t.enabled !== false
+                            })), {
+                            id: id,
+                            enabled: checked
+                        }];
+                }
             }
         }
 
@@ -108,9 +132,8 @@ PageBase {
         Repeater {
             id: connectivityRepeater
 
-            visible: !root.customOrder
+            model: root.customOrder ? [] : root.connectivityToggles
 
-            model: root.connectivityToggles
 
             delegate: QuickToggleRow {
                 first: index === 0
@@ -126,9 +149,8 @@ PageBase {
         Repeater {
             id: toolRepeater
 
-            visible: !root.customOrder
+            model: root.customOrder ? [] : root.toolToggles
 
-            model: root.toolToggles
 
             delegate: QuickToggleRow {
                 first: index === 0
@@ -144,9 +166,8 @@ PageBase {
         Repeater {
             id: systemRepeater
 
-            visible: !root.customOrder
+            model: root.customOrder ? [] : root.systemToggles
 
-            model: root.systemToggles
 
             delegate: QuickToggleRow {
                 first: index === 0

@@ -619,7 +619,7 @@ Item {
                         id: icon
 
                         anchors.centerIn: parent
-                        implicitSize: Math.round((Math.max(16, delegateItem.width || root.configuredItemSize) * 0.7) / 2) * 2
+                        implicitSize: Math.round((root.configuredItemSize * 0.7) / 2) * 2
                         source: modelData ? WinIcons.sourceFor(modelData.entry, modelData.appClass, modelData.iconName, modelData.pid ?? 0) : ""
                         visible: !(Config.bar.dock.recolourIcons ?? false)
 

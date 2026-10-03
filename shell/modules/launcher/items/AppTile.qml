@@ -67,7 +67,7 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
             asynchronous: true
             source: WinIcons.sourceFor(root.modelData, "", root.modelData?.id ?? "", 0)
-            implicitSize: Math.round(Math.max(16, root.implicitWidth) * 0.42)
+            implicitSize: Math.round(root.implicitWidth * 0.42)
         }
 
         StyledText {

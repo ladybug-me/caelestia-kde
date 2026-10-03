@@ -48,7 +48,7 @@ Item {
             id: icon
 
             source: WinIcons.sourceFor(root.modelData, "", root.modelData?.id ?? "", 0)
-            implicitSize: Math.max(16, parent.height * 0.8)
+            implicitSize: (Tokens.sizes.launcher.itemHeight - Tokens.padding.small * 2) * 0.8
 
             anchors.verticalCenter: parent.verticalCenter
         }

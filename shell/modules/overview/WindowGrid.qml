@@ -449,7 +449,7 @@ Item {
 
                             CachingIconImage {
                                 anchors.centerIn: parent
-                                implicitSize: Math.round(Math.max(16, Math.min(activeWin.width, activeWin.height) * 0.62))
+                                implicitSize: Math.round(Math.min(activeWin.width, activeWin.height) * 0.62)
                                 opacity: activeWin.morphed ? 1 : 0
                                 source: WinIcons.sourceForClient(modelData)
                                 visible: opacity > 0.01

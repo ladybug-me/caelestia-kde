@@ -27,7 +27,7 @@ Item {
 
     CachingIconImage {
         anchors.centerIn: parent
-        implicitSize: Math.max(16, Math.min(root.width, root.height) * root.fallbackScale)
+        implicitSize: Math.min(root.width, root.height) * root.fallbackScale
         source: root.fallbackIcon
         visible: !root.hasStream
         z: 0

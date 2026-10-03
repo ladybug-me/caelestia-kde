@@ -59,7 +59,6 @@ RowLayout {
             const numValue = parseFloat(text);
             if (!isNaN(numValue)) {
                 const clampedValue = root._round(Math.max(root.min, Math.min(root.max, numValue)));
-                root.value = clampedValue;
                 root.displayText = clampedValue.toString();
                 root.valueModified(clampedValue);
             } else {
@@ -72,7 +71,6 @@ RowLayout {
                 const numValue = parseFloat(text);
                 if (!isNaN(numValue)) {
                     const clampedValue = root._round(Math.max(root.min, Math.min(root.max, numValue)));
-                    root.value = clampedValue;
                     root.displayText = clampedValue.toString();
                     root.valueModified(clampedValue);
                 } else {
@@ -106,7 +104,6 @@ RowLayout {
             const raw = root.min + v * (root.max - root.min);
             const rounded = root._round(raw);
             if (root.value !== rounded) {
-                root.value = rounded;
                 root.displayText = rounded.toString();
                 root.valueModified(rounded);
             }

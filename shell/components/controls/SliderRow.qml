@@ -65,7 +65,7 @@ StyledRect {
 
             RowLayout {
                 Layout.fillWidth: true
-                Layout.minimumHeight: root.roomyHeader ? 30 : 0
+                Layout.minimumHeight: root.roomyHeader ? 40 : 0
                 spacing: Tokens.spacing.small
 
                 ColumnLayout {

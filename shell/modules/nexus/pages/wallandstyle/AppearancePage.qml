@@ -60,6 +60,7 @@ PageBase {
             text: resetBtn.armed ? qsTr("Sure?") : qsTr("Reset settings")
             icon: "restart_alt"
             type: resetBtn.dirty ? TextButton.Filled : TextButton.Tonal
+            enabled: resetBtn.dirty || resetBtn.armed
             onClicked: {
                 if (resetBtn.armed) {
                     resetBtn.armed = false;

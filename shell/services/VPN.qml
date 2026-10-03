@@ -252,13 +252,13 @@ Singleton {
                 status.state = "connecting";
             } else if (backendState === "NeedsLogin" || backendState === "NeedsMachineAuth") {
                 status.state = "needs-auth";
-                status.reason = backendState === "NeedsLogin" ? "Login required" : "Machine authorization required";
+                status.reason = backendState === "NeedsLogin" ? qsTr("Login required") : qsTr("Machine authorization required");
                 status.authUrl = data.AuthURL || "";
             }
         } catch (e) {
             if (output.includes("error") || output.includes("Error") || output.includes("failed")) {
                 status.state = "disconnected";
-                status.reason = "Tailscale may not be running";
+                status.reason = qsTr("Tailscale may not be running");
             } else {
                 status.state = "disconnected";
             }
@@ -289,7 +289,7 @@ Singleton {
                 const error = data.management.error;
                 if (error.includes("auth") || error.includes("login")) {
                     status.state = "needs-auth";
-                    status.reason = "Authentication required";
+                    status.reason = qsTr("Authentication required");
                 } else {
                     status.reason = error;
                 }
@@ -362,7 +362,7 @@ Singleton {
         return {
             connected: false,
             state: "needs-auth",
-            reason: "Authentication required",
+            reason: qsTr("Authentication required"),
             authUrl: authUrl,
             server: ""
         };
@@ -408,7 +408,7 @@ Singleton {
             Toaster.toast(qsTr("VPN disconnected"), qsTr("Disconnected from %1").arg(displayName), "vpn_key_off");
             break;
         case "needs-auth":
-            const authMsg = statusObj.reason || "Authentication required";
+            const authMsg = statusObj.reason || qsTr("Authentication required");
             Toaster.toast(qsTr("VPN authentication required"), qsTr("%1: %2").arg(displayName).arg(authMsg), "vpn_lock");
             break;
         case "error":

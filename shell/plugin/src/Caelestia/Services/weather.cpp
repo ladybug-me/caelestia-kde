@@ -90,7 +90,7 @@ qreal Weather::feelsLikeC() const {
 
 QString Weather::description() const {
     if (m_description.isEmpty()) {
-        return QStringLiteral("No weather");
+        return tr("No weather");
     }
     return m_description;
 }
@@ -243,50 +243,50 @@ QString Weather::getWeatherCondition(int code) {
     switch (code) {
     case 0:
     case 1:
-        return QStringLiteral("Clear");
+        return tr("Clear");
     case 2:
-        return QStringLiteral("Partly cloudy");
+        return tr("Partly cloudy");
     case 3:
-        return QStringLiteral("Overcast");
+        return tr("Overcast");
     case 45:
     case 48:
-        return QStringLiteral("Fog");
+        return tr("Fog");
     case 51:
     case 53:
     case 55:
-        return QStringLiteral("Drizzle");
+        return tr("Drizzle");
     case 56:
     case 57:
-        return QStringLiteral("Freezing drizzle");
+        return tr("Freezing drizzle");
     case 61:
     case 66:
     case 80:
-        return QStringLiteral("Light rain");
+        return tr("Light rain");
     case 63:
     case 81:
-        return QStringLiteral("Rain");
+        return tr("Rain");
     case 65:
     case 67:
     case 82:
-        return QStringLiteral("Heavy rain");
+        return tr("Heavy rain");
     case 71:
-        return QStringLiteral("Light snow");
+        return tr("Light snow");
     case 73:
     case 77:
-        return QStringLiteral("Snow");
+        return tr("Snow");
     case 75:
-        return QStringLiteral("Heavy snow");
+        return tr("Heavy snow");
     case 85:
-        return QStringLiteral("Light snow showers");
+        return tr("Light snow showers");
     case 86:
-        return QStringLiteral("Heavy snow showers");
+        return tr("Heavy snow showers");
     case 95:
-        return QStringLiteral("Thunderstorm");
+        return tr("Thunderstorm");
     case 96:
     case 99:
-        return QStringLiteral("Thunderstorm with hail");
+        return tr("Thunderstorm with hail");
     default:
-        return QStringLiteral("Unknown");
+        return tr("Unknown");
     }
 }
 

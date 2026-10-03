@@ -215,7 +215,7 @@ Item {
             if (root.currentSteamData) {
                 root.sendActivity({
                     details: root.currentSteamData.name,
-                    state: root.currentSteamData.state || "Playing via Steam",
+                    state: root.currentSteamData.state || qsTr("Playing via Steam"),
                     large_image: root.currentSteamData.icon || "steam",
                     small_image: "",
                     startTimestamp: root.shellStartTime
@@ -255,7 +255,7 @@ Item {
             let detailsStr = os;
             if (kernel) detailsStr += " • " + kernel;
 
-            let schemeName = Colours.scheme || (Colours.light ? "Light Mode" : "Dark Mode");
+            let schemeName = Colours.scheme || (Colours.light ? qsTr("Light Mode") : qsTr("Dark Mode"));
             let stateStr = "Scheme: " + schemeName;
             if (Colours.variant) stateStr += " | Variant: " + Colours.variant;
 
@@ -267,8 +267,8 @@ Item {
                 small_image: "",
                 startTimestamp: root.shellStartTime,
                 buttons: [
-                    { label: "Website", url: "https://caelestiashell.com" },
-                    { label: "GitHub", url: "https://github.com/ladybug-me/caelestia-kde" }
+                    { label: qsTr("Website"), url: "https://caelestiashell.com" },
+                    { label: qsTr("GitHub"), url: "https://github.com/ladybug-me/caelestia-kde" }
                 ]
             });
             return;
@@ -289,7 +289,7 @@ Item {
             Requests.get("https://store.steampowered.com/appreviews/" + appId + "?json=1", function(revRes) {
                 let revData = null;
                 try { revData = JSON.parse(revRes); } catch(e) {}
-                let reviewText = "Playing via Steam";
+                let reviewText = qsTr("Playing via Steam");
                 if (revData && revData.query_summary && revData.query_summary.total_reviews > 0) {
                     let score = Math.round((revData.query_summary.total_positive / revData.query_summary.total_reviews) * 100);
                     let desc = revData.query_summary.review_score_desc || "Mixed";
@@ -340,7 +340,7 @@ Item {
                     root.updatePresence();
                 }
             }, function() {
-                root.currentSteamData = { name: gameName, icon: "", state: "Playing via Steam" };
+                root.currentSteamData = { name: gameName, icon: "", state: qsTr("Playing via Steam") };
                 root.fetchingSteam = false;
                 root.updatePresence();
             });

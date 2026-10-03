@@ -47,6 +47,33 @@ PageBase {
             icon: "restart_alt"
             type: TextButton.Filled
             onClicked: Launch.exec(["bash", "-c", `bash "${Quickshell.shellPath("scripts/restart_shell.sh")}"; sleep 1; caelestia shell nexus openPage 0 8`])
+        },
+        IconTextButton {
+            id: resetBtn
+
+            property bool armed: false
+
+            text: resetBtn.armed ? qsTr("Sure?") : qsTr("Reset")
+            icon: "restart_alt"
+            type: TextButton.Tonal
+            onClicked: {
+                if (resetBtn.armed) {
+                    resetBtn.armed = false;
+                    resetArmTimer.stop();
+                    GlobalConfig.resetOption("appearance");
+                    GlobalConfig.resetOption("border");
+                } else {
+                    resetBtn.armed = true;
+                    resetArmTimer.start();
+                }
+            }
+
+            Timer {
+                id: resetArmTimer
+
+                interval: 3000
+                onTriggered: resetBtn.armed = false
+            }
         }
     ]
 

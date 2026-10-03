@@ -31,9 +31,6 @@ PageBase {
         { id: "restartShell", label: qsTr("Restart Shell") },
     ]
 
-    title: qsTr("Quick toggles")
-    isSubPage: true
-
     readonly property var allToggleDefs: [...root.connectivityToggles, ...root.toolToggles, ...root.systemToggles]
     readonly property bool customOrder: Config.utilities.quickTogglesCustomOrder ?? false
     readonly property var orderedToggles: {
@@ -61,6 +58,9 @@ PageBase {
                     enabled: t.enabled
                 }));
     }
+
+    title: qsTr("Quick toggles")
+    isSubPage: true
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -106,8 +106,9 @@ PageBase {
         }
 
         Repeater {
-            visible: !root.customOrder
             id: connectivityRepeater
+
+            visible: !root.customOrder
 
             model: root.connectivityToggles
 
@@ -123,8 +124,9 @@ PageBase {
         }
 
         Repeater {
-            visible: !root.customOrder
             id: toolRepeater
+
+            visible: !root.customOrder
 
             model: root.toolToggles
 
@@ -140,8 +142,9 @@ PageBase {
         }
 
         Repeater {
-            visible: !root.customOrder
             id: systemRepeater
+
+            visible: !root.customOrder
 
             model: root.systemToggles
 

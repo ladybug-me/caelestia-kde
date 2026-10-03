@@ -46,6 +46,13 @@ StyledRect {
         ].filter(t => !disabledIds.has(t.id));
 
         const allToggles = [...configToggles.filter(t => !disabledIds.has(t.id)), ...builtIn];
+        if (Config.utilities.quickTogglesCustomOrder ?? false) {
+            const order = {};
+            configToggles.forEach((t, i) => {
+                order[t.id] = i;
+            });
+            allToggles.sort((a, b) => (order[a.id] ?? 9999) - (order[b.id] ?? 9999));
+        }
         const seenIds = new Set();
 
         return allToggles.filter(item => {

@@ -99,6 +99,7 @@ class UtilitiesConfig : public settings::ObjectNode {
             vmap({ { u"id"_s, u"wallpaper"_s }, { u"enabled"_s, true } }),
             vmap({ { u"id"_s, u"badapple"_s }, { u"enabled"_s, true } }),
         }))
+    CONFIG_PROPERTY(bool, quickTogglesCustomOrder, false)
 };
 
 } // namespace caelestia::config

@@ -34,18 +34,79 @@ PageBase {
     title: qsTr("Quick toggles")
     isSubPage: true
 
+    readonly property var allToggleDefs: [...root.connectivityToggles, ...root.toolToggles, ...root.systemToggles]
+    readonly property bool customOrder: Config.utilities.quickTogglesCustomOrder ?? false
+    readonly property var orderedToggles: {
+        const labels = {};
+        root.allToggleDefs.forEach(d => {
+            labels[d.id] = d.label;
+        });
+        const stored = Config.utilities.quickToggles || [];
+        const known = stored.filter(t => t.id in labels);
+        const knownIds = new Set(known.map(t => t.id));
+        const missing = root.allToggleDefs.filter(d => !knownIds.has(d.id)).map(d => ({
+                    id: d.id,
+                    enabled: true
+                }));
+        return [...known, ...missing].map(t => ({
+                    id: t.id,
+                    label: labels[t.id],
+                    enabled: t.enabled !== false
+                }));
+    }
+
+    function saveToggles(list: var): void {
+        GlobalConfig.utilities.quickToggles = list.map(t => ({
+                    id: t.id,
+                    enabled: t.enabled
+                }));
+    }
+
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
+        ToggleRow {
+            first: true
+            text: qsTr("Custom order")
+            subtext: qsTr("Rearrange toggles with drag handles")
+            checked: root.customOrder
+            onToggled: {
+                GlobalConfig.utilities.quickTogglesCustomOrder = checked;
+            }
+        }
+
+        ListEditor {
+            visible: root.customOrder
+            allowRemove: false
+            values: root.orderedToggles
+            onItemMoved: (from, to) => {
+                const list = [...root.orderedToggles];
+                const moved = list.splice(from, 1)[0];
+                list.splice(to, 0, moved);
+                root.saveToggles(list);
+            }
+            onItemToggled: (index, checked) => {
+                const list = [...root.orderedToggles];
+                list[index] = {
+                    id: list[index].id,
+                    label: list[index].label,
+                    enabled: checked
+                };
+                root.saveToggles(list);
+            }
+        }
+
         SectionHeader {
+            visible: !root.customOrder
             first: true
             text: qsTr("Connectivity")
         }
 
         Repeater {
+            visible: !root.customOrder
             id: connectivityRepeater
 
             model: root.connectivityToggles
@@ -57,10 +118,12 @@ PageBase {
         }
 
         SectionHeader {
+            visible: !root.customOrder
             text: qsTr("Tools")
         }
 
         Repeater {
+            visible: !root.customOrder
             id: toolRepeater
 
             model: root.toolToggles
@@ -72,10 +135,12 @@ PageBase {
         }
 
         SectionHeader {
+            visible: !root.customOrder
             text: qsTr("System")
         }
 
         Repeater {
+            visible: !root.customOrder
             id: systemRepeater
 
             model: root.systemToggles

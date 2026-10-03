@@ -20,6 +20,7 @@ StyledRect {
     property bool last
     property bool iconClickable: false
     property bool spacious: false
+    property bool roomyHeader: false
 
     signal moved(value: real)
     signal interaction(value: real)
@@ -64,6 +65,7 @@ StyledRect {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.minimumHeight: root.roomyHeader ? 30 : 0
                 spacing: Tokens.spacing.small
 
                 ColumnLayout {

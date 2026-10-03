@@ -176,6 +176,7 @@ PageBase {
             }
             SliderRow {
                 reset: ({ node: GlobalConfig.appearance.transparency, setting: "base" })
+                roomyHeader: true
                 label: qsTr("Base opacity")
                 valueLabel: Math.round(value * 100) + "%"
                 value: GlobalConfig.appearance.transparency.base
@@ -205,6 +206,7 @@ PageBase {
             }
             SliderRow {
                 reset: ({ node: GlobalConfig.appearance, setting: "ambientOpacity" })
+                roomyHeader: true
                 label: qsTr("Ambient glow opacity")
                 valueLabel: Math.round(value * 100) + "%"
                 value: GlobalConfig.appearance.ambientOpacity

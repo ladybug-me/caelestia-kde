@@ -1,11 +1,9 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import Caelestia.Components
-import qs.components
-import qs.services
+import qs.components.controls
 
-Item {
+IconButton {
     id: root
 
     property var options
@@ -22,21 +20,7 @@ Item {
     }
 
     visible: root.dirty
-    implicitWidth: icon.implicitWidth
-    implicitHeight: icon.implicitHeight
-
-    MaterialIcon {
-        id: icon
-
-        anchors.centerIn: parent
-        text: "restart_alt"
-        color: Colours.palette.m3onSurfaceVariant
-        fontStyle: Tokens.font.icon.medium
-    }
-
-    CustomMouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        onClicked: root.options.node.resetOption(root.options.setting)
-    }
+    icon: "restart_alt"
+    type: IconButton.Text
+    onClicked: root.options.node.resetOption(root.options.setting)
 }

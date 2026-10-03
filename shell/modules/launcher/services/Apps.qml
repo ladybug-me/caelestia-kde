@@ -19,7 +19,7 @@ Searcher {
     /// Every visible desktop entry in AppDb order (favourites, then frequency, then name).
     function allApps(): list<var> {
         const res = [];
-        const apps = appDb.apps;
+        const apps = list;
         for (let i = 0; i < apps.length; i++)
             res.push(apps[i].entry);
         return res;
@@ -67,7 +67,7 @@ Searcher {
         return keys.map(k => item[k]).join(" ");
     }
 
-    list: appDb.apps
+    list: appDb.apps.filter(a => !Strings.testRegexList(GlobalConfig.launcher.hiddenApps, a.id))
     useFuzzy: GlobalConfig.launcher.useFuzzy.apps
 
     AppDb {
@@ -75,6 +75,6 @@ Searcher {
 
         path: `${Paths.state}/apps.sqlite`
         favouriteApps: GlobalConfig.launcher.favouriteApps
-        entries: DesktopEntries.applications.values.filter(a => !Strings.testRegexList(GlobalConfig.launcher.hiddenApps, a.id))
+        entries: DesktopEntries.applications.values
     }
 }

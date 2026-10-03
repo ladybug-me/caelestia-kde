@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 import Qt5Compat.GraphicalEffects
 import QtQuick
 import QtQuick.Effects
+import QtQuick.Window
 
 Item {
     id: root
@@ -21,11 +22,26 @@ Item {
             "ROND": 10,
             "opsz": 224
         })
+    readonly property real screenAvailableWidth: Math.max(1, Math.min(Screen.width > 0 ? Screen.width : 1e9, root.rootWidth > 0 ? root.rootWidth : 1e9) - 120)
+    readonly property real fitPointSize: Math.min(80, 80 * screenAvailableWidth / Math.max(1, widthProbe.width))
 
     FontLoader {
         id: googleSansFlex
 
         source: "../assets/google-sans-flex/GoogleSansFlex.ttf"
+    }
+
+    Text {
+        id: widthProbe
+
+        visible: false
+        text: root.greetingText + " " + root.username
+        font.pointSize: 80
+        font.family: googleSansFlex.name
+        font.variableAxes: root.fontAxes
+        font.features: ({
+                "liga": 0
+            })
     }
 
     Rectangle {
@@ -118,7 +134,7 @@ Item {
             renderType: Text.QtRendering
             text: "<span style='color:" + config.text + ";'>" + root.greetingText + " " + "</span>" + "<span style='color:" + config.primary + ";'>" + root.username + "</span>"
             textFormat: Text.RichText
-            font.pointSize: 80
+            font.pointSize: root.fitPointSize
             font.family: googleSansFlex.name
             font.variableAxes: root.fontAxes
             font.features: ({

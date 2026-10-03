@@ -9,10 +9,6 @@ import qs.utils
 import qs.modules.launcher.items
 import qs.modules.launcher.services
 
-// The simple app browser: one scrolling list with the favourites on top, a
-// divider, and every other app sorted by name below them. It has no category
-// sidebar, and exposes the same interface as AppBrowserGrid for the callers
-// that drive it (ContentList and the search field's key handling).
 Item {
     id: root
 
@@ -27,9 +23,10 @@ Item {
     readonly property int tileWidth: Tokens.sizes.launcher.browseTileWidth
     readonly property int tileHeight: Tokens.sizes.launcher.browseTileHeight
     readonly property int gridSpacing: Tokens.spacing.medium
+    readonly property int cellWidth: root.tileWidth + root.gridSpacing
+    readonly property int cellHeight: root.tileHeight + root.gridSpacing
 
-    // Columns the flows end up with, so the arrow keys can move a row at a time.
-    readonly property int columns: Math.max(1, Math.floor((root.implicitWidth - root.padding * 2 + root.gridSpacing) / (root.tileWidth + root.gridSpacing)))
+    readonly property int columns: Math.max(1, Math.floor((root.implicitWidth - root.padding * 2) / root.cellWidth))
     readonly property int favRows: Math.ceil(root.favourites.length / root.columns)
     readonly property int otherRows: Math.ceil(root.others.length / root.columns)
 
@@ -41,21 +38,33 @@ Item {
         return GlobalConfig.launcher.favouriteApps ?? [];
     }
 
+    function sameIds(a: var, b: var): bool {
+        if (a.length !== b.length)
+            return false;
+        for (let i = 0; i < a.length; ++i)
+            if (a[i].id !== b[i].id)
+                return false;
+        return true;
+    }
+
     function refresh(): void {
         const all = Apps.allApps();
         const favIds = root.favouriteIds();
         const favs = all.filter(a => Strings.testRegexList(favIds, a.id));
 
-        // Favourites keep the order they are written in shell.json; anything
-        // matched by a regex but not named there goes after the named ones.
         const rank = a => {
             const i = favIds.indexOf(a.id);
             return i < 0 ? favIds.length : i;
         };
         favs.sort((a, b) => rank(a) - rank(b));
 
+        const others = all.filter(a => !Strings.testRegexList(favIds, a.id)).sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
+
+        if (root.sameIds(root.favourites, favs) && root.sameIds(root.others, others))
+            return;
+
         root.favourites = favs;
-        root.others = all.filter(a => !Strings.testRegexList(favIds, a.id)).sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
+        root.others = others;
 
         if (root.currentIndex >= root.count)
             root.currentIndex = Math.max(0, root.count - 1);
@@ -74,8 +83,8 @@ Item {
         if (index < 0)
             return null;
         if (index < root.favourites.length)
-            return favRepeater.itemAt(index)?.tile ?? null;
-        return otherRepeater.itemAt(index - root.favourites.length)?.tile ?? null;
+            return grid.headerItem?.favouriteRepeater?.itemAt(index)?.tile ?? null;
+        return grid.itemAtIndex(index - root.favourites.length)?.tile ?? null;
     }
 
     function moveBy(delta: int): void {
@@ -86,12 +95,11 @@ Item {
         root.ensureVisible();
     }
 
-    // Keyboard entry points, invoked from the search field's Keys handlers.
-    function incrementCurrentIndex(): void { // Down
+    function incrementCurrentIndex(): void {
         root.moveBy(root.columns);
     }
 
-    function decrementCurrentIndex(): void { // Up
+    function decrementCurrentIndex(): void {
         root.moveBy(-root.columns);
     }
 
@@ -103,7 +111,6 @@ Item {
         root.moveBy(1);
     }
 
-    // There is no sidebar to hand focus to here, so Tab does what Enter does.
     function toggleFocus(): void {
         root.activateCurrent();
     }
@@ -118,23 +125,24 @@ Item {
         contextMenu.openFor(app, targetItem);
     }
 
-    // Bring the highlighted tile into view when the arrow keys walk past it.
     function ensureVisible(): void {
-        const item = root.currentItem;
-        if (!item || !flick.height)
+        if (root.currentIndex < 0)
             return;
-        const p = item.mapToItem(flick, 0, 0);
-        if (p.y < root.padding)
-            flick.contentY = Math.max(0, flick.contentY + p.y - root.padding);
-        else if (p.y + item.height > flick.height - root.padding)
-            flick.contentY = Math.min(Math.max(0, flick.contentHeight - flick.height), flick.contentY + p.y + item.height - (flick.height - root.padding));
+        if (root.currentIndex < root.favourites.length) {
+            grid.contentY = grid.originY;
+            return;
+        }
+        grid.positionViewAtIndex(root.currentIndex - root.favourites.length, GridView.Contain);
     }
 
-    // Match the grid the default browser shows: leave out the width the sidebar
-    // would have taken (plus the gap), so both layouts fit the same number of
-    // icons per row and come out the same size.
+    function resetView(): void {
+        root.currentIndex = 0;
+        grid.cancelFlick();
+        grid.contentY = grid.originY;
+    }
+
     implicitWidth: Math.min(Tokens.sizes.launcher.browseWidth, root.maxWidth) - Tokens.sizes.launcher.browseSidebarWidth - Tokens.spacing.medium
-    implicitHeight: root.padding * 2 + (root.count === 0 ? root.tileHeight * 2 : root.favRows * (root.tileHeight + root.gridSpacing) + (root.showSeparator ? root.gridSpacing * 2 + 1 : 0) + root.otherRows * (root.tileHeight + root.gridSpacing))
+    implicitHeight: root.padding * 2 + (root.count === 0 ? root.tileHeight * 2 : root.favRows * root.cellHeight + (root.showSeparator ? root.gridSpacing * 2 + 1 : 0) + root.otherRows * root.cellHeight)
 
     Component.onCompleted: {
         root.refresh();
@@ -161,6 +169,15 @@ Item {
         target: GlobalConfig.launcher
     }
 
+    Connections {
+        function onLauncherChanged(): void {
+            if (root.visibilities.launcher)
+                root.resetView();
+        }
+
+        target: root.visibilities
+    }
+
     AppContextMenu {
         id: contextMenu
 
@@ -168,71 +185,72 @@ Item {
         visibilities: root.visibilities
     }
 
-    Flickable {
-        id: flick
+    GridView {
+        id: grid
 
         anchors.fill: parent
-        contentHeight: column.implicitHeight + root.padding * 2
+        anchors.margins: root.padding
         clip: true
         boundsBehavior: Flickable.StopAtBounds
 
-        Column {
-            id: column
+        cellWidth: root.cellWidth
+        cellHeight: root.cellHeight
+        currentIndex: -1
+        highlightFollowsCurrentItem: false
+        cacheBuffer: root.cellHeight * 4
 
-            x: root.padding
-            y: root.padding
-            width: flick.width - root.padding * 2
-            spacing: root.gridSpacing
+        model: root.others
 
-            Flow {
-                width: column.width
+        header: Item {
+            id: headerItem
+
+            readonly property alias favouriteRepeater: favRepeater
+
+            width: grid.width
+            height: headerColumn.implicitHeight
+
+            Column {
+                id: headerColumn
+
+                width: parent.width
                 spacing: root.gridSpacing
 
-                Repeater {
-                    id: favRepeater
+                Flow {
+                    width: root.columns * root.cellWidth - root.gridSpacing
+                    spacing: root.gridSpacing
 
-                    model: root.favourites
+                    Repeater {
+                        id: favRepeater
 
-                    delegate: Tile {
-                        flatIndex: index
+                        model: root.favourites
+
+                        delegate: Tile {
+                            flatIndex: index
+                        }
                     }
                 }
-            }
 
-            Rectangle {
-                width: column.width - Tokens.padding.medium * 2
-                height: 1
-                color: Colours.palette.m3outline
-                opacity: 0.5
-                visible: root.showSeparator
+                Rectangle {
+                    width: parent.width - Tokens.padding.medium * 2
+                    height: 1
+                    color: Colours.palette.m3outline
+                    opacity: 0.5
+                    visible: root.showSeparator
 
-                anchors.horizontalCenter: parent.horizontalCenter
-            }
-
-            Flow {
-                width: column.width
-                spacing: root.gridSpacing
-
-                Repeater {
-                    id: otherRepeater
-
-                    model: root.others
-
-                    delegate: Tile {
-                        flatIndex: root.favourites.length + index
-                    }
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
+        }
+
+        delegate: Tile {
+            flatIndex: root.favourites.length + index
         }
 
         StyledScrollBar.vertical: StyledScrollBar {
-            flickable: flick
+            flickable: grid
         }
     }
 
-    // The two sections are separate repeaters, so a tile's index has to be its
-    // position in the flattened list: the arrow keys and the highlight follow
-    // that, and would otherwise jump between the sections.
     component Tile: Item {
         id: tileWrapper
 

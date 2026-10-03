@@ -11,6 +11,8 @@
 #include "qwayland-kde-output-device-v2.h"
 #include "qwayland-kde-output-management-v2.h"
 
+struct wl_registry;
+
 namespace caelestia::services {
 
 class KdeOutputDevice : public QObject, public QtWayland::kde_output_device_v2 {
@@ -18,6 +20,7 @@ class KdeOutputDevice : public QObject, public QtWayland::kde_output_device_v2 {
 
 public:
     explicit KdeOutputDevice(struct ::kde_output_device_v2* object);
+    KdeOutputDevice(struct ::wl_registry* registry, uint32_t name, int version);
     ~KdeOutputDevice() override;
 
     QString name() const { return m_name; }
@@ -25,6 +28,8 @@ public:
     uint32_t brightness() const { return m_brightness; }
 
     bool hasBrightness() const { return m_hasBrightness; }
+
+    void notifyRemoved();
 
 signals:
     void nameChanged();
@@ -43,18 +48,26 @@ private:
     bool m_hasBrightness = false;
 };
 
-class KdeOutputDeviceRegistry : public QWaylandClientExtensionTemplate<KdeOutputDeviceRegistry>,
-                                public QtWayland::kde_output_device_registry_v2 {
+class KdeOutputDeviceRegistry : public QObject, public QtWayland::kde_output_device_registry_v2 {
     Q_OBJECT
 
 public:
     explicit KdeOutputDeviceRegistry(QObject* parent = nullptr);
+    ~KdeOutputDeviceRegistry() override;
 
 signals:
     void deviceAdded(KdeOutputDevice* device);
 
 protected:
     void kde_output_device_registry_v2_output(struct ::kde_output_device_v2* output) override;
+
+private:
+    static void handleGlobal(
+        void* data, struct ::wl_registry* registry, uint32_t name, const char* interface, uint32_t version);
+    static void handleGlobalRemove(void* data, struct ::wl_registry* registry, uint32_t name);
+
+    struct ::wl_registry* m_registry = nullptr;
+    QHash<uint32_t, KdeOutputDevice*> m_globalDevices;
 };
 
 class KdeOutputManagement : public QWaylandClientExtensionTemplate<KdeOutputManagement>,

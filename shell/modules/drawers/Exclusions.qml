@@ -19,11 +19,21 @@ Scope {
     // so the other windows are not resized back and forth.
     readonly property bool reserveSidebar: Visibilities.sidebarPinned && Config.sidebar.enabled
         && (visibilities.sidebar || visibilities.sidebarSuspended)
+    // Follows the sidebar width, but only once a resize drag ends: reserving every
+    // step of the drag would resize maximised windows on each frame. The default
+    // comes from the bar, which has the screen's tokens.
+    property real sidebarWidth
+
+    Binding on sidebarWidth {
+        value: Visibilities.sidebarWidthFor(root.bar.Tokens.sizes.sidebar.width)
+        when: !Visibilities.sidebarResizing
+        restoreMode: Binding.RestoreNone
+    }
 
     ExclusionZone {
         anchors.left: true
         exclusiveZone: (root.bar.position === "left" ? root.bar.exclusiveZone : Config.border.thickness)
-            + (root.reserveSidebar && root.bar.position === "right" ? Tokens.sizes.sidebar.width : 0)
+            + (root.reserveSidebar && root.bar.position === "right" ? root.sidebarWidth : 0)
         Config.screen: root.screen.name
     }
 
@@ -36,7 +46,7 @@ Scope {
     ExclusionZone {
         anchors.right: true
         exclusiveZone: (root.bar.position === "right" ? root.bar.exclusiveZone : Config.border.thickness)
-            + (root.reserveSidebar && root.bar.position !== "right" ? Tokens.sizes.sidebar.width : 0)
+            + (root.reserveSidebar && root.bar.position !== "right" ? root.sidebarWidth : 0)
         Config.screen: root.screen.name
     }
 

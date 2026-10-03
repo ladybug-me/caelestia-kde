@@ -23,7 +23,7 @@ ColumnLayout {
     }
 
     spacing: Tokens.spacing.small * scaleOffset
-    width: Math.max(Tokens.sizes.bar.kbLayoutWidth * scaleOffset, _isSidebarOpen ? (Tokens.sizes.sidebar.width * scaleOffset) - Tokens.padding.extraLargeIncreased * scaleOffset : 0)
+    width: Math.max(Tokens.sizes.bar.kbLayoutWidth * scaleOffset, _isSidebarOpen ? (Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) * scaleOffset) - Tokens.padding.extraLargeIncreased * scaleOffset : 0)
 
     Component.onCompleted: kb.start()
 

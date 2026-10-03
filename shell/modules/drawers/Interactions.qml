@@ -66,10 +66,15 @@ CustomMouseArea {
         if (bar.position === "right")
             return x > screen.width - panels.rightMargin - panelWidth && withinPanelHeight(panel, x, y);
         if (bar.position === "top")
-            return y < panels.topMargin + panel.y + panelHeight && withinPanelWidth(panel, x, y);
+            return y < panels.topMargin + panel.y + panelHeight && (withinPanelWidth(panel, x, y) || abovePopoutItem(panel, x));
         if (bar.position === "bottom")
-            return y > screen.height - panels.bottomMargin - panelHeight && withinPanelWidth(panel, x, y);
+            return y > screen.height - panels.bottomMargin - panelHeight && (withinPanelWidth(panel, x, y) || abovePopoutItem(panel, x));
         return false;
+    }
+    // Next to the open sidebar a popout doesn't always cover the bar item that
+    // opened it; keep the strip straight above the item so it can be reached.
+    function abovePopoutItem(panel: Item, x: real): bool {
+        return panel === panels.popoutsWrapper && !popouts.isDetached && Math.abs(x - popouts.currentCenter) <= Config.border.rounding;
     }
     function inRightPanel(panel: Item, x: real, y: real, edge = 0, span = 100): bool {
         const onLeft = bar.position === "right";

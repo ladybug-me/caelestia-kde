@@ -42,7 +42,9 @@ ColumnLayout {
     property real fontScale: 1.0
 
     spacing: Tokens.spacing.medium * scaleOffset
-    width: Math.max(400 * scaleOffset, _isSidebarOpen ? (Tokens.sizes.sidebar.width * scaleOffset) - Tokens.padding.extraLargeIncreased : 0)
+    // With the sidebar open, match its width so the popout joins it (like the
+    // narrower popouts do) instead of sticking out past it.
+    width: _isSidebarOpen ? Math.max(300 * scaleOffset, (Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) * scaleOffset) - Tokens.padding.extraLargeIncreased) : 400 * scaleOffset
 
     RowLayout {
         Layout.topMargin: Tokens.padding.small * root.scaleOffset

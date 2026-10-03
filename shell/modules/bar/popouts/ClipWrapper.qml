@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Caelestia.Config
 import qs.components
+import qs.services
 import qs.modules.bar.popouts
 
 Item {
@@ -18,6 +19,27 @@ Item {
     readonly property alias content: content
     readonly property bool isHorizontal: bar.isHorizontal
     property real offsetScale: content.isDetached || content.hasCurrent ? 0 : 1
+    // Where x is heading; x itself animates towards it.
+    readonly property real targetX: {
+        if (content.isDetached)
+            return (parent.width - content.nonAnimWidth) / 2;
+        if (isHorizontal) {
+            if (content.sidebarOpen && !content.isDockPopout)
+                return parent.width - content.nonAnimWidth;
+
+            // An item left of the open sidebar gets its popout kept clear of it, so
+            // the sidebar doesn't have to be pushed out of the way.
+            const right = root.visibilities.sidebar && !content.underSidebar ? parent.width - Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) - Tokens.spacing.extraLarge : parent.width;
+            const off = content.currentCenter - parent.leftMargin - content.nonAnimWidth / 2;
+            const diff = right - Math.floor(off + content.nonAnimWidth);
+            if (diff < 0)
+                return Math.max(off + diff, 0);
+            return Math.max(off, 0);
+        }
+        if (bar.position === "right")
+            return parent.width - implicitWidth;
+        return 0;
+    }
 
     visible: width > 0 && height > 0
     clip: true
@@ -25,23 +47,7 @@ Item {
     implicitWidth: isHorizontal ? content.implicitWidth : content.implicitWidth * (1 - offsetScale)
     implicitHeight: isHorizontal ? content.implicitHeight * (1 - offsetScale) : content.implicitHeight
 
-    x: {
-        if (content.isDetached)
-            return (parent.width - content.nonAnimWidth) / 2;
-        if (isHorizontal) {
-            if (content.sidebarOpen && !content.isDockPopout)
-                return parent.width - content.nonAnimWidth;
-
-            const off = content.currentCenter - parent.leftMargin - content.nonAnimWidth / 2;
-            const diff = parent.width - Math.floor(off + content.nonAnimWidth);
-            if (diff < 0)
-                return off + diff;
-            return Math.max(off, 0);
-        }
-        if (bar.position === "right")
-            return parent.width - implicitWidth;
-        return 0;
-    }
+    x: targetX
     y: {
         if (content.isDetached)
             return (parent.height - content.nonAnimHeight) / 2;
@@ -86,6 +92,7 @@ Item {
         screen: root.screen
         offsetScale: root.offsetScale
         visibilities: root.visibilities
+        underSidebar: !root.isHorizontal || content.currentCenter - root.parent.leftMargin >= root.parent.width - Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width)
 
         anchors.leftMargin: bar.position === "left" ? (-implicitWidth - 5) * root.offsetScale : 0
         anchors.rightMargin: bar.position === "right" ? (-implicitWidth - 5) * root.offsetScale : 0

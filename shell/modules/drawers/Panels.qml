@@ -72,8 +72,10 @@ Item {
         if (bar.isHorizontal) {
             const notifLeft = notifications.x;
             const notifRight = notifLeft + (notifications.implicitWidth > 0 ? notifications.implicitWidth : Tokens.sizes.notifs.width);
-            const popLeft = popoutsWrapper.x;
-            const popRight = popoutsWrapper.x + popoutsWrapper.content.nonAnimWidth;
+            // Use where the popout ends up, not where its slide currently is, so
+            // switching between bar items doesn't push the sidebar on the way.
+            const popLeft = popoutsWrapper.targetX;
+            const popRight = popoutsWrapper.targetX + popoutsWrapper.content.nonAnimWidth;
             return popLeft < notifRight && popRight > notifLeft;
         } else {
             const notifTop = notifications.y;
@@ -344,7 +346,7 @@ Item {
         property bool shouldPush: root.popoutIntersectsSidebar && !popoutsWrapper.content.isDockPopout
         // A popout no wider than the sidebar is drawn joined to it (ContentWindow.qml),
         // so it goes right below the sidebar instead of leaving a gap.
-        readonly property real pushSpacing: popoutsWrapper.content.implicitWidth <= Tokens.sizes.sidebar.width + 1 ? 0 : Tokens.spacing.extraLarge
+        readonly property real pushSpacing: popoutsWrapper.content.implicitWidth <= Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) + 1 ? 0 : Tokens.spacing.extraLarge
 
         visibilities: root.visibilities
         popouts: popoutsWrapper.content

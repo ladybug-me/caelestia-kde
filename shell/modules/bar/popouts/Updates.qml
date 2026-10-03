@@ -59,8 +59,9 @@ ColumnLayout {
         root.popouts.hasCurrent = false;
     }
 
-    width: 300 * scaleOffset
-    implicitWidth: 300 * scaleOffset
+    // Joins the sidebar like the other panel-sized popouts while it is open.
+    width: Math.max(300 * scaleOffset, _isSidebarOpen ? (Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) * scaleOffset) - Tokens.padding.extraLargeIncreased : 0)
+    implicitWidth: width
     spacing: Tokens.spacing.small * scaleOffset
 
     // Status card: state icon + summary + last/next check timings.

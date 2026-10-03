@@ -22,6 +22,8 @@ Searcher {
     property string actualCurrent
     property bool previewColourLock
     property bool pendingPreviewClear
+    property string previewColourSource
+    property bool previewColoursStale
     property var videoThumbs: ({})
     property var videoThumbsPending: ({})
 
@@ -146,7 +148,21 @@ Searcher {
         showPreview = true;
 
         if (Colours.scheme === "dynamic")
-            getPreviewColoursProc.running = true;
+            requestPreviewColours();
+    }
+
+    // matugen cannot read a video, so a video is previewed through its first frame. Only one
+    // preview runs at a time; a request made while one is running is picked up when it ends.
+    function requestPreviewColours(): void {
+        const source = thumbFor(previewPath);
+        if (source === "")
+            return;
+        if (getPreviewColoursProc.running) {
+            previewColoursStale = true;
+            return;
+        }
+        previewColourSource = source;
+        getPreviewColoursProc.running = true;
     }
 
     function stopPreview(): void {
@@ -210,6 +226,8 @@ Searcher {
                 Quickshell.execDetached(["sh", "-c", script, "--", out, path, root.currentNamePath]);
                 syncPlasmaWallpaper(out);
             }
+            if (path === root.previewPath && root.showPreview && Colours.scheme === "dynamic")
+                root.requestPreviewColours();
         }
         const pending = root.videoThumbsPending;
         delete pending[path];
@@ -285,11 +303,22 @@ Searcher {
     Process {
         id: getPreviewColoursProc
 
-        command: ["caelestia", "wallpaper", "-p", root.previewPath, ...Colours.smartArg]
+        command: ["caelestia", "wallpaper", "-p", root.previewColourSource, ...Colours.smartArg]
         stdout: StdioCollector {
             onStreamFinished: {
-                Colours.load(text, true);
-                Colours.showPreview = true;
+                // The result is for a wallpaper that is no longer highlighted.
+                if (root.previewColoursStale) {
+                    root.previewColoursStale = false;
+                    if (root.showPreview)
+                        Qt.callLater(root.requestPreviewColours);
+                    return;
+                }
+                // The preview ended and the chosen scheme has landed; showing this now would
+                // cover the real scheme until something else clears it.
+                if (!root.showPreview && !root.previewColourLock)
+                    return;
+                if (Colours.load(text, true))
+                    Colours.showPreview = true;
             }
         }
     }

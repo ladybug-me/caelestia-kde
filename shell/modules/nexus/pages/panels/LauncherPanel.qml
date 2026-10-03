@@ -5,12 +5,26 @@ import QtQuick.Layouts
 import Quickshell.Io
 import Caelestia.Config
 import qs.components
+import qs.components.controls
 import qs.components.filedialog
 import qs.utils
 import qs.modules.nexus.common
 
 PageBase {
     id: root
+
+    readonly property list<MenuItem> browseLayoutItems: [
+        MenuItem {
+            property int value: LauncherBrowseLayout.Default
+
+            text: qsTr("Default")
+        },
+        MenuItem {
+            property int value: LauncherBrowseLayout.Simple
+
+            text: qsTr("Simple")
+        }
+    ]
 
     title: qsTr("Launcher")
     isSubPage: true
@@ -125,6 +139,14 @@ PageBase {
             subtext: qsTr("Show the categorized app grid in the launcher when the search field is empty")
             checked: Config.launcher.showBrowseOnEmpty
             onToggled: GlobalConfig.launcher.showBrowseOnEmpty = checked
+        }
+
+        SelectRow {
+            label: qsTr("App browser layout")
+            subtext: qsTr("Default: a sidebar of categories next to the apps. Simple: one list with the favourites on top and every other app sorted by name below")
+            active: Config.launcher.browseLayout === LauncherBrowseLayout.Simple ? root.browseLayoutItems[1] : root.browseLayoutItems[0]
+            menuItems: root.browseLayoutItems
+            onSelected: item => GlobalConfig.launcher.browseLayout = item.value
         }
 
         ToggleRow {

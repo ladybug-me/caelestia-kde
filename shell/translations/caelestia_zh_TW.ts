@@ -122,7 +122,197 @@
   <context>
     <name>Actions</name>
     <message>
-      <location filename="../modules/launcher/services/Actions.qml" line="+34"/>
+      <location filename="../modules/launcher/services/Actions.qml" line="+15"/>
+      <source>Calculator</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Scheme</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Variant</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Random</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Light</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Dark</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Shutdown</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Reboot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Logout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Sleep</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>What&apos;s New</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Emoji</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Clipboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Windows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keybinds</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Animations</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Do simple math equations (powered by Qalc)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the current color scheme</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the current wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the current scheme variant</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to a random wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the scheme to light mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the scheme to dark mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Shutdown the system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Reboot the system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Log out of the current session</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lock the current session</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Suspend then hibernate</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Configure the shell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Read the Caelestia release notes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Pick an emoji to copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>View clipboard history</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to another window</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>View all keybinds</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch your animation style</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+23"/>
       <source>Unnamed</source>
       <translation>未命名</translation>
     </message>
@@ -490,7 +680,17 @@
       <translation>觸發限流——%1 秒後重試…</translation>
     </message>
     <message>
-      <location line="+282"/>
+      <location line="+208"/>
+      <source>Chat</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+36"/>
+      <source>History</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+38"/>
       <source>Provider</source>
       <translation>服務商</translation>
     </message>
@@ -525,14 +725,15 @@
       <translation>詢問助手…</translation>
     </message>
     <message>
-      <location line="+241"/>
-      <source>Clear All</source>
-      <translation>全部清除</translation>
-    </message>
-    <message>
-      <location line="+34"/>
+      <location line="+170"/>
+      <location line="+105"/>
       <source>New Chat</source>
       <translation>新對話</translation>
+    </message>
+    <message>
+      <location line="-34"/>
+      <source>Clear All</source>
+      <translation>全部清除</translation>
     </message>
   </context>
   <context>
@@ -1419,7 +1620,12 @@
       <translation>選擇開啟的 Steam 遊戲以阻止其廣播</translation>
     </message>
     <message>
-      <location line="+93"/>
+      <location line="+60"/>
+      <source>Steam App ID: %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+33"/>
       <source>Manual custom presence</source>
       <translation>手動自定義狀態</translation>
     </message>
@@ -1434,7 +1640,32 @@
       <translation>強制廣播此自定義狀態並忽略所有其他應用</translation>
     </message>
     <message>
-      <location line="+95"/>
+      <location line="+22"/>
+      <source>App/game name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Details</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>State</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Large image key/URL</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Small image key/URL</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+17"/>
       <source>Save presence</source>
       <translation>儲存狀態</translation>
     </message>
@@ -2068,7 +2299,17 @@
       <translation>幻燈片</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+8"/>
+      <source>PM</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>AM</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
       <source>Greeter</source>
       <translation>歡迎器</translation>
     </message>
@@ -2175,7 +2416,12 @@
       <translation>早晨問候語</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <source>Good Morning</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Afternoon Media</source>
       <translation>下午媒體</translation>
     </message>
@@ -2195,7 +2441,12 @@
       <translation>下午問候語</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <source>Good Afternoon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Evening Media</source>
       <translation>晚間媒體</translation>
     </message>
@@ -2215,7 +2466,12 @@
       <translation>晚間問候語</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <source>Good Evening</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Night Media</source>
       <translation>夜間媒體</translation>
     </message>
@@ -2235,7 +2491,12 @@
       <translation>夜間問候語</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+1"/>
+      <source>Good Night</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
       <source>Slideshow Timing &amp; Order</source>
       <translation>幻燈片時間與順序</translation>
     </message>
@@ -2270,7 +2531,13 @@
       <translation>頂欄上的可選自定義文本，支援 {user}</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <location line="+13"/>
+      <source>Blank for defaults</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-2"/>
       <source>Slideshow Greeting Icon</source>
       <translation>幻燈片問候圖示</translation>
     </message>
@@ -4218,6 +4485,18 @@
       <source>All up to date!</source>
       <translation>全部最新！</translation>
     </message>
+    <message>
+      <location line="+85"/>
+      <source>G A M E   O V E R
+Click to restart</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Y O U   W I N !
+Now go touch grass</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>DockContext</name>
@@ -4428,7 +4707,12 @@
   <context>
     <name>FileDialog</name>
     <message>
-      <location filename="../components/filedialog/FileDialog.qml" line="+16"/>
+      <location filename="../components/filedialog/FileDialog.qml" line="+13"/>
+      <source>All files</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
       <source>Select a folder</source>
       <translation>選擇一個資料夾</translation>
     </message>
@@ -4647,6 +4931,35 @@
     </message>
   </context>
   <context>
+    <name>Greeter</name>
+    <message>
+      <location filename="../modules/bar/components/Greeter.qml" line="+26"/>
+      <source>User</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <location line="+8"/>
+      <source>Good Night</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-6"/>
+      <source>Good Morning</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Good Afternoon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Good Evening</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>HeroCard</name>
     <message>
       <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
@@ -4854,6 +5167,11 @@
       <location filename="../modules/bar/popouts/kblayout/KbLayout.qml" line="+37"/>
       <source>Keyboard Layouts</source>
       <translation>鍵盤佈局</translation>
+    </message>
+    <message>
+      <location line="+64"/>
+      <source>XKB supports only 4 layouts at a time</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6180,7 +6498,7 @@
       <translation>重新掃描網路</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+26"/>
       <source>VPN</source>
       <translation type="unfinished"/>
     </message>
@@ -6190,7 +6508,7 @@
       <translation>有 %1 個配置檔案可用</translation>
     </message>
     <message>
-      <location line="+85"/>
+      <location line="+133"/>
       <source>No VPN profiles found</source>
       <translation>沒有找到 VPN 配置檔案</translation>
     </message>
@@ -6638,6 +6956,16 @@
       <location line="+112"/>
       <source>Caelestia Mode</source>
       <translation>Caelestia 模式</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Spinning kurukuru activated</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Classic dinosaur character</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -8615,7 +8943,12 @@
       <translation>自動</translation>
     </message>
     <message>
-      <location line="-99"/>
+      <location line="-117"/>
+      <source>Local</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
       <source>Generic</source>
       <translation>通用</translation>
     </message>
@@ -10106,7 +10439,7 @@
   <context>
     <name>UninstallDialog</name>
     <message>
-      <location filename="../modules/nexus/common/UninstallDialog.qml" line="+66"/>
+      <location filename="../modules/nexus/common/UninstallDialog.qml" line="+75"/>
       <source>Uninstall Caelestia?</source>
       <translation type="unfinished"/>
     </message>
@@ -10287,6 +10620,51 @@
       <location line="+34"/>
       <source>%1 / %2</source>
       <comment>used / total amount</comment>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+30"/>
+      <source>%1d</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1h</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1m</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>%1 day</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1 hour</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 hours</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1 minute</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 minutes</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -10630,6 +11008,14 @@
       <location line="+0"/>
       <source>Load 10 More</source>
       <translation>再載入 10 個</translation>
+    </message>
+  </context>
+  <context>
+    <name>User</name>
+    <message>
+      <location filename="../modules/dashboard/dash/User.qml" line="+216"/>
+      <source>up %1</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11405,6 +11791,26 @@
       <location line="+1"/>
       <source>Image files</source>
       <translation>影像檔案</translation>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Profile picture changed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Profile picture changed to %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Unable to change profile picture</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Failed to change profile picture to %1</source>
+      <translation type="unfinished"/>
     </message>
   </context>
 </TS>

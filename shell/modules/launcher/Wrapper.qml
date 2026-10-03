@@ -22,6 +22,18 @@ Item {
         return max;
     }
     property real offsetScale: shouldBeActive ? 0 : 1
+    // Build the content once, shortly after startup, instead of inside the frame
+    // that handles the click. The loader below is synchronous, so the first open
+    // constructs Content -> ContentList -> the app list/browser on the GUI
+    // thread; nothing is painted until that finishes, so the open animation only
+    // starts after it. It is paid on every open, because `visible` going false
+    // unloads the content again once the close animation reaches offsetScale 1.
+    property bool warmWanted: false
+    // Whether the warm-up load is asynchronous, kept separate so it can be
+    // flipped to true before `active`: both bindings depend on the same property
+    // and their evaluation order is not defined, so the warm-up could otherwise
+    // end up loading synchronously and defeat the point.
+    property bool warmAsync: false
 
     onShouldBeActiveChanged: {
         if (shouldBeActive) {
@@ -38,6 +50,15 @@ Item {
     opacity: 1 - offsetScale
     Component.onCompleted: Qt.callLater(() => Apps)
 
+    Timer {
+        running: !root.warmWanted
+        interval: 1500
+
+        onTriggered: {
+            root.warmAsync = true;
+            root.warmWanted = true;
+        }
+    }
     Behavior on offsetScale {
         enabled: !visibilities.skipLauncherAnim
 
@@ -48,7 +69,11 @@ Item {
 
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
-        active: root.shouldBeActive || root.visible
+        // The warm-up load is incubated off the GUI thread and the item is kept
+        // from then on; a click that arrives before the warm-up has run still
+        // loads synchronously, so the drawer can never come up empty.
+        asynchronous: root.warmAsync
+        active: root.shouldBeActive || root.visible || root.warmWanted
         sourceComponent: Component {
             Content {
                 visibilities: root.visibilities

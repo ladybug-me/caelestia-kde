@@ -350,6 +350,12 @@ Item {
                     } else {
                         Windows.isSwitching = false;
                         Kwin.clearHighlight();
+                        // The content outlives the drawer now, so what used to be
+                        // undone in Component.onDestruction has to be undone here:
+                        // a colour scheme or wallpaper preview left showing would
+                        // otherwise stay applied to the whole shell.
+                        Colours.showPreview = false;
+                        Wallpapers.stopPreview();
                     }
                 }
 

@@ -504,11 +504,21 @@ Item {
         } catch (e) {}
     }
 
+    function fetchModelsForKey(p) {
+        if (root.openaiCompatProviders.indexOf(p) !== -1) {
+            if (!root.modelsFetched[p])
+                root.fetchOpenaiCompatModels(p);
+        } else if (p === "claude" && root.claudeModelsList.length === 0) {
+            root.fetchClaudeModels();
+        }
+    }
+
     function onKeyringKey(p, key, proc) {
         if (key !== "") {
             const m = root.keyringKeys;
             m[p] = key;
             root.keyringKeys = Object.assign({}, m);
+            root.fetchModelsForKey(p);
         }
         if (proc)
             proc.destroy();
@@ -519,6 +529,8 @@ Item {
         const m = root.keyringKeys;
         m[which] = key;
         root.keyringKeys = Object.assign({}, m);
+        if (key !== "")
+            root.fetchModelsForKey(which);
 
         const attr = root.keyringAttr(which);
         const script = key === ""

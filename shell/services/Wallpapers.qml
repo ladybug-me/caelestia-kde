@@ -118,7 +118,7 @@ Searcher {
                 Quickshell.execDetached(["sh", "-c", script, "--", thumb, path, root.currentNamePath]);
                 syncPlasmaWallpaper(thumb);
             } else {
-                Quickshell.execDetached(["sh", "-c", 'printf "%s" > "$1"', "--", path, root.currentNamePath]);
+                Quickshell.execDetached(["sh", "-c", 'printf "%s" "$1" > "$2"', "--", path, root.currentNamePath]);
             }
         } else {
             Quickshell.execDetached(["caelestia", "wallpaper", "-f", path, ...Colours.smartArg]);

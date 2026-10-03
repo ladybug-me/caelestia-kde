@@ -15,6 +15,7 @@ StyledRect {
     property alias valueLabel: valueLabel.text
     property string subtext
     property real value
+    property var reset
     property bool first
     property bool last
     property bool iconClickable: false
@@ -92,6 +93,10 @@ StyledRect {
 
                     color: Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.body.small
+                }
+
+                SettingResetButton {
+                    options: root.reset
                 }
             }
 

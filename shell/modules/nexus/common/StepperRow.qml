@@ -13,6 +13,7 @@ ConnectedRect {
 
     property alias label: label.text
     property string subtext
+    property var reset
     property real value
     property real from: 0
     property real to: 99
@@ -52,6 +53,11 @@ ConnectedRect {
                 font: Tokens.font.label.small
                 elide: Text.ElideRight
             }
+        }
+
+        SettingResetButton {
+            Layout.alignment: Qt.AlignVCenter
+            options: root.reset
         }
 
         CustomMouseArea {

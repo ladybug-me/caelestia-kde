@@ -90,6 +90,7 @@ PageBase {
             spacing: 0
 
             ToggleRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "pitchBlack" })
                 first: true
                 text: qsTr("Bezel mode (Pitch black)")
                 subtext: qsTr("Make the shell pitch black to blend with display bezels")
@@ -98,6 +99,7 @@ PageBase {
                 Layout.fillWidth: true
             }
             ToggleRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "islands" })
                 text: qsTr("Islands")
                 subtext: qsTr("Everything appears as its own floating widget (Very Experimental)")
                 checked: GlobalConfig.appearance.islands
@@ -106,6 +108,7 @@ PageBase {
                 Layout.fillWidth: true
             }
             StepperRow {
+                reset: ({ node: GlobalConfig.border, setting: "thickness" })
                 label: qsTr("Border thickness")
                 subtext: qsTr("Thickness of the shell border in pixels. Set to 0 for a borderless look")
                 value: GlobalConfig.border.thickness
@@ -116,6 +119,7 @@ PageBase {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }
             StepperRow {
+                reset: ({ node: GlobalConfig.appearance.rounding, setting: "scale" })
                 label: qsTr("Corner radius scale")
                 subtext: qsTr("Multiplies the shell's corner rounding")
                 value: GlobalConfig.appearance.rounding.scale
@@ -126,6 +130,7 @@ PageBase {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }
             ToggleRow {
+                reset: ({ node: GlobalConfig.appearance.transparency, setting: "enabled" })
                 text: qsTr("Transparency")
                 subtext: qsTr("Enable transparency across the shell")
                 checked: GlobalConfig.appearance.transparency.enabled
@@ -139,6 +144,7 @@ PageBase {
                 Layout.fillWidth: true
             }
             SliderRow {
+                reset: ({ node: GlobalConfig.appearance.transparency, setting: "base" })
                 label: qsTr("Base opacity")
                 valueLabel: Math.round(value * 100) + "%"
                 value: GlobalConfig.appearance.transparency.base
@@ -147,6 +153,7 @@ PageBase {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }
             SliderRow {
+                reset: ({ node: GlobalConfig.appearance.transparency, setting: "layers" })
                 label: qsTr("Layers opacity")
                 subtext: qsTr("Requires shell restart")
                 valueLabel: Math.round(value * 100) + "%"
@@ -156,6 +163,7 @@ PageBase {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }
             ToggleRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "ambientColor" })
                 text: qsTr("Ambient color mode")
                 subtext: Colours.light ? qsTr("Ambient glow is unavailable in light mode") : qsTr("Ambient light glow in window info panel")
                 checked: GlobalConfig.appearance.ambientColor
@@ -165,6 +173,7 @@ PageBase {
                 Layout.fillWidth: true
             }
             SliderRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "ambientOpacity" })
                 label: qsTr("Ambient glow opacity")
                 valueLabel: Math.round(value * 100) + "%"
                 value: GlobalConfig.appearance.ambientOpacity
@@ -187,6 +196,7 @@ PageBase {
                 command: ["bash", Quickshell.shellDir + "/scripts/bbdx-window-classes.sh"]
             }
             ToggleRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "blur" })
                 text: qsTr("Background Blur")
                 subtext: parent.isBbdxEnabled ? qsTr("Disabling has no effect if Better Blur dx is enabled") : qsTr("Enable a frosted glass effect by blurring the background")
                 checked: parent.isBbdxEnabled ? true : GlobalConfig.appearance.blur
@@ -210,6 +220,7 @@ PageBase {
                 Layout.fillWidth: true
             }
             ToggleRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "blurMask" })
                 text: qsTr("High Quality Blur Masks")
                 subtext: qsTr("Disable this to use high performance Wayland/KWin blur")
                 checked: GlobalConfig.appearance.blurMask
@@ -249,6 +260,7 @@ PageBase {
             spacing: 0
 
             StepperRow {
+                reset: ({ node: GlobalConfig.appearance.font, setting: "scale" })
                 first: true
                 Layout.fillWidth: true
                 label: qsTr("Font scale")
@@ -260,6 +272,7 @@ PageBase {
             }
 
             StepperRow {
+                reset: ({ node: GlobalConfig.appearance.spacing, setting: "scale" })
                 Layout.fillWidth: true
                 label: qsTr("Spacing scale")
                 value: GlobalConfig.appearance.spacing.scale
@@ -270,6 +283,7 @@ PageBase {
             }
 
             StepperRow {
+                reset: ({ node: GlobalConfig.appearance.padding, setting: "scale" })
                 Layout.fillWidth: true
                 label: qsTr("Padding scale")
                 value: GlobalConfig.appearance.padding.scale
@@ -280,6 +294,7 @@ PageBase {
             }
 
             StepperRow {
+                reset: ({ node: GlobalConfig.appearance.anim.durations, setting: "scale" })
                 last: true
                 Layout.fillWidth: true
                 label: qsTr("Animation speed scale")
@@ -300,6 +315,7 @@ PageBase {
             spacing: 0
 
             StepperRow {
+                reset: ({ node: GlobalConfig.border, setting: "rounding" })
                 first: true
                 Layout.fillWidth: true
                 label: qsTr("Border rounding")
@@ -311,6 +327,7 @@ PageBase {
             }
 
             StepperRow {
+                reset: ({ node: GlobalConfig.border, setting: "smoothing" })
                 Layout.fillWidth: true
                 label: qsTr("Border smoothing")
                 value: GlobalConfig.border.smoothing
@@ -321,6 +338,7 @@ PageBase {
             }
 
             StepperRow {
+                reset: ({ node: GlobalConfig.appearance, setting: "deformScale" })
                 last: true
                 Layout.fillWidth: true
                 label: qsTr("Blur deform")

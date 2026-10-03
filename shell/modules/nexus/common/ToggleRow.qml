@@ -9,6 +9,7 @@ StyledSwitch {
     id: root
 
     property string subtext
+    property var reset
     property alias first: bg.first
     property alias last: bg.last
     readonly property alias bg: bg
@@ -46,14 +47,23 @@ StyledSwitch {
         anchors.leftMargin: root.horizontalPadding
         anchors.rightMargin: Tokens.spacing.medium
 
-        implicitWidth: column.implicitWidth
-        implicitHeight: column.implicitHeight
+        implicitWidth: column.implicitWidth + (resetBtn.visible ? resetBtn.implicitWidth + Tokens.spacing.small : 0)
+        implicitHeight: Math.max(column.implicitHeight, resetBtn.visible ? resetBtn.implicitHeight : 0)
+
+        SettingResetButton {
+            id: resetBtn
+
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            options: root.reset
+        }
 
         Column {
             id: column
 
             anchors.left: parent.left
-            anchors.right: parent.right
+            anchors.right: resetBtn.visible ? resetBtn.left : parent.right
+            anchors.rightMargin: resetBtn.visible ? Tokens.spacing.small : 0
             anchors.verticalCenter: parent.verticalCenter
             spacing: 0
 

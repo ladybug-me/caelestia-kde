@@ -10,7 +10,6 @@ Item {
     required property DrawerVisibilities visibilities
     required property real maxWidth
 
-    readonly property bool simple: Config.launcher.browseLayout === LauncherBrowseLayout.Simple
     readonly property var browser: loader.item
     readonly property var currentItem: root.browser?.currentItem ?? null
     readonly property int count: root.browser?.count ?? 0
@@ -58,7 +57,16 @@ Item {
         id: loader
 
         anchors.fill: parent
-        sourceComponent: root.simple ? simpleBrowser : gridBrowser
+        sourceComponent: {
+            switch (Config.launcher.browseLayout) {
+            case LauncherBrowseLayout.Simple:
+                return simpleBrowser;
+            case LauncherBrowseLayout.Compact:
+                return compactBrowser;
+            default:
+                return gridBrowser;
+            }
+        }
     }
 
     Component {
@@ -74,6 +82,15 @@ Item {
         id: simpleBrowser
 
         AppBrowserSimple {
+            visibilities: root.visibilities
+            maxWidth: root.maxWidth
+        }
+    }
+
+    Component {
+        id: compactBrowser
+
+        AppBrowserCompact {
             visibilities: root.visibilities
             maxWidth: root.maxWidth
         }

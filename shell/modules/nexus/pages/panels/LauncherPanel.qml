@@ -23,6 +23,11 @@ PageBase {
             property int value: LauncherBrowseLayout.Simple
 
             text: qsTr("Simple")
+        },
+        MenuItem {
+            property int value: LauncherBrowseLayout.Compact
+
+            text: qsTr("Compact")
         }
     ]
 
@@ -143,8 +148,8 @@ PageBase {
 
         SelectRow {
             label: qsTr("App browser layout")
-            subtext: qsTr("Default: a sidebar of categories next to the apps. Simple: one list with the favourites on top and every other app sorted by name below")
-            active: Config.launcher.browseLayout === LauncherBrowseLayout.Simple ? root.browseLayoutItems[1] : root.browseLayoutItems[0]
+            subtext: qsTr("Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results")
+            active: root.browseLayoutItems.find(item => item.value === Config.launcher.browseLayout) ?? root.browseLayoutItems[0]
             menuItems: root.browseLayoutItems
             onSelected: item => GlobalConfig.launcher.browseLayout = item.value
         }

@@ -24,10 +24,10 @@ Item {
     readonly property int tileWidth: Tokens.sizes.launcher.browseTileWidth
     readonly property int tileHeight: Tokens.sizes.launcher.browseTileHeight
     readonly property int gridSpacing: Tokens.spacing.medium
-    readonly property int cellWidth: root.tileWidth + root.gridSpacing
+    readonly property int columns: Math.max(1, Math.floor((root.implicitWidth - root.padding * 2 + root.gridSpacing) / (root.tileWidth + root.gridSpacing)))
+    readonly property int cellWidth: Math.floor((root.implicitWidth - root.padding * 2) / root.columns)
     readonly property int cellHeight: root.tileHeight + root.gridSpacing
 
-    readonly property int columns: Math.max(1, Math.floor((root.implicitWidth - root.padding * 2) / root.cellWidth))
     readonly property int favRows: Math.ceil(root.favourites.length / root.columns)
     readonly property int otherRows: Math.ceil(root.others.length / root.columns)
 
@@ -146,12 +146,12 @@ Item {
         grid.contentY = grid.originY;
     }
 
-    implicitWidth: Math.min(Tokens.sizes.launcher.browseWidth, root.maxWidth) - Tokens.sizes.launcher.browseSidebarWidth - Tokens.spacing.medium
-    implicitHeight: root.padding * 2 + (root.count === 0 ? root.tileHeight * 2 : root.favRows * root.cellHeight + (root.showSeparator ? root.gridSpacing * 2 + 1 : 0) + root.otherRows * root.cellHeight)
+    implicitWidth: Math.min(Tokens.sizes.launcher.browseWidth, root.maxWidth)
+    implicitHeight: Tokens.sizes.launcher.browseMinHeight
 
     Component.onCompleted: {
         root.refresh();
-        root.currentIndex = 0;
+        root.resetView();
     }
 
     Connections {
@@ -198,6 +198,13 @@ Item {
         clip: true
         boundsBehavior: Flickable.StopAtBounds
 
+        contentY: originY
+
+        onOriginYChanged: {
+            if (root.currentIndex === 0 && !grid.moving && !grid.dragging)
+                grid.contentY = grid.originY;
+        }
+
         cellWidth: root.cellWidth
         cellHeight: root.cellHeight
         currentIndex: -1
@@ -223,8 +230,8 @@ Item {
                 spacing: root.gridSpacing
 
                 Flow {
-                    width: root.columns * root.cellWidth - root.gridSpacing
-                    spacing: root.gridSpacing
+                    width: grid.width
+                    spacing: root.columns > 1 ? root.cellWidth - root.tileWidth : root.gridSpacing
 
                     Repeater {
                         id: favRepeater

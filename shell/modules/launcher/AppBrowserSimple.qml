@@ -49,17 +49,22 @@ Item {
     }
 
     function refresh(): void {
-        const all = Apps.allApps();
+        const alpha = Apps.alphaApps;
         const favIds = root.favouriteIds();
-        const favs = all.filter(a => Strings.testRegexList(favIds, a.id));
+        const hiddenIds = GlobalConfig.launcher.hiddenApps ?? [];
 
+        const isVisible = a => a && !Strings.testRegexList(hiddenIds, a.id);
+        const isFav = a => isVisible(a) && Strings.testRegexList(favIds, a.id);
+        const isOther = a => isVisible(a) && !Strings.testRegexList(favIds, a.id);
+
+        const favs = alpha.filter(isFav);
         const rank = a => {
             const i = favIds.indexOf(a.id);
             return i < 0 ? favIds.length : i;
         };
         favs.sort((a, b) => rank(a) - rank(b));
 
-        const others = all.filter(a => !Strings.testRegexList(favIds, a.id)).sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
+        const others = alpha.filter(isOther);
 
         if (!root.sameIds(root.favourites, favs))
             root.favourites = favs;

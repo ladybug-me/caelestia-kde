@@ -1,0 +1,58 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "dev",
+      "displayName": "Installer developer build",
+      "description": "Warnings visible but not fatal, and the build directory scripts/setup.sh already uses, so a local tree and the installer's own build never disagree about where the binary lands.",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/../build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra"
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Installer release build",
+      "description": "Release quality: the same warnings the dev build prints, promoted to errors. This is the preset the release CI job has always effectively used.",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/../build-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -Werror"
+      }
+    },
+    {
+      "name": "sanitizers",
+      "displayName": "Installer sanitizer build",
+      "description": "AddressSanitizer and UndefinedBehaviorSanitizer against the step-policy unit tests.",
+      "generator": "Unix Makefiles",
+      "binaryDir": "${sourceDir}/../build-sanitizers",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CAELESTIA_ENABLE_SANITIZERS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "sanitizers",
+      "configurePreset": "sanitizers"
+    }
+  ]
+}

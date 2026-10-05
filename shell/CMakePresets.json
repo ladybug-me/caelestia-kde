@@ -1,0 +1,131 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "description": "Everything the shell build shares: Ninja, the cached pinned dependency, the module set, and the runtime install layout.",
+      "generator": "Ninja",
+      "cacheVariables": {
+        "ENABLE_MODULES": "extras;plugin;shell;m3shapes",
+        "INSTALL_DATADIR": "usr/share/caelestia",
+        "CAELESTIA_CACHE_DEPS": "ON"
+      }
+    },
+    {
+      "name": "dev",
+      "inherits": "base",
+      "displayName": "Shell developer build",
+      "description": "Iterate locally: debug info, compile commands, and a build-local install root. Not offline, so the first configure may fetch the pinned M3Shapes revision itself.",
+      "binaryDir": "${sourceDir}/../build/shell-dev",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CAELESTIA_PACKAGE": "OFF",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/shell-dev-root"
+      }
+    },
+    {
+      "name": "source-offline",
+      "inherits": "base",
+      "displayName": "Shell source-layout release build",
+      "description": "The build-parity CI job's source half: offline, Release, staged with DESTDIR against a / prefix because the install tree is compared artifact by artifact.",
+      "binaryDir": "${sourceDir}/../build/shell-source",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CAELESTIA_PACKAGE": "OFF",
+        "CAELESTIA_OFFLINE": "ON",
+        "CMAKE_INSTALL_PREFIX": "/"
+      }
+    },
+    {
+      "name": "package-offline",
+      "inherits": "base",
+      "displayName": "Shell package-layout release build",
+      "description": "The build-parity CI job's package half, identical to source-offline except for the package-only assets, so the two trees can be diffed.",
+      "binaryDir": "${sourceDir}/../build/shell-package",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CAELESTIA_PACKAGE": "ON",
+        "CAELESTIA_OFFLINE": "ON",
+        "CMAKE_INSTALL_PREFIX": "/"
+      }
+    },
+    {
+      "name": "release",
+      "inherits": "base",
+      "displayName": "Shell release build",
+      "description": "The prebuilt artifact the release job publishes: offline and Release, installed under usr/lib rather than the distro data root so the tarball carries one self-contained tree.",
+      "binaryDir": "${sourceDir}/../build/shell-release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CAELESTIA_PACKAGE": "OFF",
+        "CAELESTIA_OFFLINE": "ON",
+        "CMAKE_INSTALL_PREFIX": "/",
+        "INSTALL_BINDIR": "usr/bin",
+        "INSTALL_DATADIR": "usr/lib/caelestia",
+        "INSTALL_QSCONFDIR": "etc/xdg/quickshell/caelestia",
+        "INSTALL_LIBDIR": "usr/lib/caelestia",
+        "INSTALL_QMLDIR": "usr/lib/qt6/qml"
+      }
+    },
+    {
+      "name": "runtime",
+      "inherits": "base",
+      "displayName": "Shell runtime smoke build",
+      "description": "The runtime smoke harness's build. The caller overrides CMAKE_INSTALL_PREFIX with the workspace-relative install root it asserts against.",
+      "binaryDir": "${sourceDir}/../build/shell-runtime",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CAELESTIA_PACKAGE": "OFF",
+        "CAELESTIA_OFFLINE": "ON",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/shell-runtime-root"
+      }
+    },
+    {
+      "name": "sanitizers",
+      "inherits": "base",
+      "displayName": "Shell sanitizer build",
+      "description": "AddressSanitizer and UndefinedBehaviorSanitizer for the C++ plugins and KWin effect, pinned to Debug so the reports stay readable.",
+      "binaryDir": "${sourceDir}/../build/shell-sanitizers",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CAELESTIA_PACKAGE": "OFF",
+        "CAELESTIA_OFFLINE": "ON",
+        "CAELESTIA_ENABLE_SANITIZERS": "ON",
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/../build/shell-sanitizers-root"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "dev",
+      "configurePreset": "dev"
+    },
+    {
+      "name": "source-offline",
+      "configurePreset": "source-offline"
+    },
+    {
+      "name": "package-offline",
+      "configurePreset": "package-offline"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release"
+    },
+    {
+      "name": "runtime",
+      "configurePreset": "runtime"
+    },
+    {
+      "name": "sanitizers",
+      "configurePreset": "sanitizers"
+    }
+  ]
+}

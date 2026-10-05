@@ -217,8 +217,10 @@ Scope {
         onReleased: {
             if (!root.launcherInterrupted) {
                 root.lastAction = "launcher";
-                const visibilities = Visibilities.getForActive();
-                visibilities.launcher = !visibilities.launcher;
+                if (Visibilities.launcherOpenVisibilities())
+                    Visibilities.closeLauncher();
+                else
+                    Visibilities.openLauncher("");
             }
             root.launcherInterrupted = false;
         }
@@ -267,22 +269,14 @@ Scope {
         // qmllint enable unresolved-type
         name: "emoji"
         description: qsTr("Open emoji picker")
-        onPressed: {
-            Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}emoji `;
-            const visibilities = Visibilities.getForActive();
-            visibilities.launcher = true;
-        }
+        onPressed: Visibilities.toggleLauncher("emoji")
     }
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type
         name: "clipboard"
         description: qsTr("Open clipboard history")
-        onPressed: {
-            Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}clipboard `;
-            const visibilities = Visibilities.getForActive();
-            visibilities.launcher = true;
-        }
+        onPressed: Visibilities.toggleLauncher("clipboard")
     }
 
     Connections {
@@ -349,22 +343,14 @@ Scope {
         // qmllint enable unresolved-type
         name: "wallpaper"
         description: qsTr("Open wallpaper picker")
-        onPressed: {
-            Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}wallpaper `;
-            const visibilities = Visibilities.getForActive();
-            visibilities.launcher = true;
-        }
+        onPressed: Visibilities.toggleLauncher("wallpaper")
     }
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type
         name: "keybinds"
         description: qsTr("Open keybinds list")
-        onPressed: {
-            Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}keybinds `;
-            const visibilities = Visibilities.getForActive();
-            visibilities.launcher = true;
-        }
+        onPressed: Visibilities.toggleLauncher("keybinds")
     }
     CustomShortcut {
         name: "foot"
@@ -543,12 +529,9 @@ Scope {
     IpcHandler {
         function action(name: string): void {
             root.lastAction = name;
-            Visibilities.launcherInitialSearch =
-            `${GlobalConfig.launcher.actionPrefix}${name} `;
-
-            const visibilities = Visibilities.getForActive();
-            visibilities.launcher = true;
+            Visibilities.toggleLauncher(name);
         }
+
         target: "launcher"
     }
     Instantiator {

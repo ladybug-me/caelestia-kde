@@ -51,6 +51,20 @@ Item {
         target: Clipboard
     }
 
+    Connections {
+        function onLauncherInitialSearchChanged(): void {
+            if (!Visibilities.launcherInitialSearch)
+                return;
+            if (root.visibilities !== Visibilities.launcherInitialSearchTarget)
+                return;
+            search.text = Visibilities.launcherInitialSearch;
+            Visibilities.launcherInitialSearch = "";
+            Visibilities.launcherInitialSearchTarget = null;
+        }
+
+        target: Visibilities
+    }
+
     Item {
         id: listWrapper
 
@@ -325,6 +339,8 @@ Item {
             }
 
             onTextChanged: {
+                if (root.visibilities.launcher)
+                    Visibilities.launcherMode = Visibilities.modeForText(text);
                 if (!text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
                     Windows.isSwitching = false;
                     Kwin.clearHighlight();

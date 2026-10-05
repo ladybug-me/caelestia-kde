@@ -119,6 +119,11 @@ CustomMouseArea {
     onPressed: event => {
         dragStart = Qt.point(event.x, event.y);
 
+        if (Visibilities.launcherOpenAnywhere && !root.visibilities.launcher) {
+            Visibilities.closeLauncher();
+            return;
+        }
+
         if (root.focusGrab && (root.focusGrab.active || popouts.isDetached)) {
             let inside = false;
             

@@ -262,9 +262,10 @@ test_the_package_sources_and_their_hashes_stay_in_step() {
     done
 }
 test_the_release_tarball_is_the_thing_the_package_sources() {
-    local workflow pkgbuild
+    local workflow pkgbuild preset
     workflow="$(cat "$REPO_ROOT/.github/workflows/version-release.yml")"
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
+    preset="$(cat "$REPO_ROOT/shell/CMakePresets.json")"
 
     assert_contains "$workflow" 'ARTIFACT="caelestia-kde-v$PKGVER.tar.gz"' "the release job should build the versioned tarball"
     assert_contains "$pkgbuild" '$pkgname-v$pkgver.tar.gz' "and the PKGBUILD should source that same name"
@@ -287,9 +288,10 @@ test_the_release_tarball_is_the_thing_the_package_sources() {
 
     assert_contains "$workflow" 'bash scripts/fetch-dependencies.sh' "the release build should prepare pinned dependencies"
     assert_contains "$workflow" 'rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"' "the release build should start with a clean dependency cache"
-    assert_contains "$workflow" '-DCAELESTIA_OFFLINE=ON' "the release build should configure without dependency network access"
-    assert_contains "$workflow" '-DINSTALL_DATADIR=usr/lib/caelestia' "the release build should share the source data layout"
-    assert_contains "$workflow" '-DINSTALL_LIBDIR=usr/lib/caelestia' "the release build should stage the library tree under usr"
+    assert_contains "$workflow" 'cmake --preset release' "the release build should take its configuration from the preset"
+    assert_contains "$preset" '"CAELESTIA_OFFLINE": "ON"' "the release preset should configure without dependency network access"
+    assert_contains "$preset" '"INSTALL_DATADIR": "usr/lib/caelestia"' "the release preset should share the source data layout"
+    assert_contains "$preset" '"INSTALL_LIBDIR": "usr/lib/caelestia"' "the release preset should stage the library tree under usr"
     assert_contains "$workflow" 'tar -C dist/root -czf "$ARTIFACT" bin lib quickshell' "the prebuilt artifact should carry all CMake-owned runtime files"
     assert_contains "$workflow" 'http_proxy: http://127.0.0.1:9' "the release build should exercise the offline path"
 

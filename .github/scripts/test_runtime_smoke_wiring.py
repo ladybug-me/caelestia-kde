@@ -8,6 +8,7 @@ They read the same handful of CI files and change for their own reasons, which
 is why they are not in test_repo_integrity.py.
 """
 
+import json
 import re
 import unittest
 from pathlib import Path
@@ -111,16 +112,21 @@ class RuntimeSmokeWiringTests(unittest.TestCase):
             "add the providing package to EXTERNAL_QML_MODULES and to install-build-deps",
         )
 
-        deps_action = (ROOT / ".github" / "actions" / "install-build-deps" / "action.yml").read_text(
-            encoding="utf-8"
+        manifest = json.loads(
+            (ROOT / "packaging" / "build-dependencies.json").read_text(encoding="utf-8")
         )
+        arch_packages = {
+            package
+            for dependency in manifest["dependencies"].values()
+            for package in dependency["arch"]
+        }
         nightly = (ROOT / ".github" / "workflows" / "runtime-smoke.yml").read_text(encoding="utf-8")
         for module, package in self.EXTERNAL_QML_MODULES.items():
             with self.subTest(module=module):
-                self.assertRegex(
-                    deps_action,
-                    rf"(?<![\w-]){re.escape(package)}(?![\w-])",
-                    f"shell/ imports {module}, but install-build-deps never installs {package}",
+                self.assertIn(
+                    package,
+                    arch_packages,
+                    f"shell/ imports {module}, but no build dependency installs {package}",
                 )
                 self.assertIn(
                     f"/usr/lib/qt6/qml/{module.replace('.', '/')}",

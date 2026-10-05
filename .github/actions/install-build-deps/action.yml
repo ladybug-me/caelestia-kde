@@ -1,8 +1,9 @@
 name: Install shell build dependencies
 description: >-
-  Install the Arch packages the shell build and its QML runtime expect. Every
-  container job that builds the shell needs the same list, and keeping it in one
-  place is what stops one job from silently missing a Qt module.
+  Install the Arch packages the shell build and its QML runtime expect. The
+  packages are declared once in packaging/build-dependencies.json and read from
+  there: a second copy here is what used to let one container job install a set
+  that another job's build needed.
 
 inputs:
   extra-packages:
@@ -13,16 +14,33 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Read the build dependency manifest
+      id: manifest
+      shell: bash
+      run: |
+        set -euo pipefail
+        if ! command -v python3 >/dev/null 2>&1; then
+          pacman -Syu --noconfirm --needed python
+        fi
+        python3 - >> "$GITHUB_OUTPUT" <<'PY'
+        import json
+        import pathlib
+
+        manifest = json.loads(
+            pathlib.Path("packaging/build-dependencies.json").read_text(encoding="utf-8")
+        )
+        packages = [
+            package
+            for dependency in manifest["dependencies"].values()
+            for package in dependency["arch"]
+        ]
+        print("packages=" + " ".join(packages))
+        PY
+
     - name: Install packages
       shell: bash
       run: |
         set -euo pipefail
         pacman -Syu --noconfirm --needed \
-          git cmake ninja python extra-cmake-modules \
-          qt6-base qt6-declarative qt6-shadertools qt6-wayland qt6-tools \
-          qt6-multimedia qt6-5compat \
-          kwindowsystem kguiaddons kglobalaccel kconfig kcoreaddons \
-          kpipewire networkmanager-qt pulseaudio-qt libqalculate \
-          pipewire libpipewire aubio lm_sensors fftw ncurses alsa-lib \
-          iniparser libglvnd sdl2 portaudio sndio libpulse \
+          ${{ steps.manifest.outputs.packages }} \
           ${{ inputs.extra-packages }}

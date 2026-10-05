@@ -1,0 +1,102 @@
+{
+  "distros": ["arch", "fedora", "debian"],
+  "dependencies": {
+    "git": { "arch": ["git"], "fedora": [], "debian": [] },
+    "cmake": { "arch": ["cmake"], "fedora": ["cmake"], "debian": ["cmake"] },
+    "ninja": { "arch": ["ninja"], "fedora": ["ninja-build"], "debian": ["ninja-build"] },
+    "python": { "arch": ["python"], "fedora": [], "debian": [] },
+    "extra-cmake-modules": {
+      "arch": ["extra-cmake-modules"],
+      "fedora": ["extra-cmake-modules"],
+      "debian": ["extra-cmake-modules"]
+    },
+    "qt6-base": {
+      "arch": ["qt6-base"],
+      "fedora": ["qt6-qtbase-private-devel"],
+      "debian": ["qt6-base-dev"]
+    },
+    "qt6-declarative": {
+      "arch": ["qt6-declarative"],
+      "fedora": ["qt6-qtdeclarative-devel"],
+      "debian": ["qt6-declarative-dev"]
+    },
+    "qt6-shadertools": {
+      "arch": ["qt6-shadertools"],
+      "fedora": ["qt6-qtshadertools-devel"],
+      "debian": ["qt6-shadertools-dev"]
+    },
+    "qt6-wayland": {
+      "arch": ["qt6-wayland"],
+      "fedora": ["qt6-qtwayland-devel"],
+      "debian": ["qt6-wayland-dev"]
+    },
+    "qt6-tools": {
+      "arch": ["qt6-tools"],
+      "fedora": ["qt6-qttools-devel"],
+      "debian": ["qt6-tools-dev", "qt6-l10n-tools"]
+    },
+    "qt6-multimedia": {
+      "arch": ["qt6-multimedia"],
+      "fedora": ["qt6-qtmultimedia-devel"],
+      "debian": ["qt6-multimedia-dev"]
+    },
+    "qt6-5compat": {
+      "arch": ["qt6-5compat"],
+      "fedora": ["qt6-qt5compat-devel"],
+      "debian": ["qt6-5compat-dev"]
+    },
+    "kwindowsystem": {
+      "arch": ["kwindowsystem"],
+      "fedora": ["kf6-kwindowsystem-devel"],
+      "debian": ["libkf6windowsystem-dev"]
+    },
+    "kguiaddons": {
+      "arch": ["kguiaddons"],
+      "fedora": ["kf6-kguiaddons-devel"],
+      "debian": ["libkf6guiaddons-dev"]
+    },
+    "kglobalaccel": {
+      "arch": ["kglobalaccel"],
+      "fedora": ["kf6-kglobalaccel-devel"],
+      "debian": ["libkf6globalaccel-dev"]
+    },
+    "kconfig": { "arch": ["kconfig"], "fedora": ["kf6-kconfig-devel"], "debian": ["libkf6config-dev"] },
+    "kcoreaddons": {
+      "arch": ["kcoreaddons"],
+      "fedora": ["kf6-kcoreaddons-devel"],
+      "debian": ["libkf6coreaddons-dev"]
+    },
+    "kpipewire": { "arch": ["kpipewire"], "fedora": ["kpipewire-devel"], "debian": ["libkpipewire-dev"] },
+    "networkmanager-qt": {
+      "arch": ["networkmanager-qt"],
+      "fedora": ["kf6-networkmanager-qt-devel"],
+      "debian": ["libkf6networkmanagerqt-dev"]
+    },
+    "pulseaudio-qt": {
+      "arch": ["pulseaudio-qt"],
+      "fedora": ["pulseaudio-qt-qt6-devel"],
+      "debian": ["libkf6pulseaudioqt-dev"]
+    },
+    "libqalculate": {
+      "arch": ["libqalculate"],
+      "fedora": ["libqalculate-devel"],
+      "debian": ["libqalculate-dev"]
+    },
+    "pipewire": {
+      "arch": ["pipewire", "libpipewire"],
+      "fedora": ["pipewire-devel"],
+      "debian": ["libpipewire-0.3-dev"]
+    },
+    "aubio": { "arch": ["aubio"], "fedora": ["aubio-devel"], "debian": ["libaubio-dev"] },
+    "lm-sensors": { "arch": ["lm_sensors"], "fedora": ["lm_sensors-devel"], "debian": ["libsensors-dev"] },
+    "fftw": { "arch": ["fftw"], "fedora": ["fftw-devel"], "debian": ["libfftw3-dev"] },
+    "libpulse": { "arch": ["libpulse"], "fedora": ["pulseaudio-libs-devel"], "debian": ["libpulse-dev"] },
+    "ncurses": { "arch": ["ncurses"], "fedora": [], "debian": [] },
+    "alsa": { "arch": ["alsa-lib"], "fedora": [], "debian": [] },
+    "iniparser": { "arch": ["iniparser"], "fedora": [], "debian": [] },
+    "libglvnd": { "arch": ["libglvnd"], "fedora": [], "debian": [] },
+    "sdl2": { "arch": ["sdl2"], "fedora": [], "debian": [] },
+    "portaudio": { "arch": ["portaudio"], "fedora": [], "debian": [] },
+    "sndio": { "arch": ["sndio"], "fedora": [], "debian": [] }
+  }
+}

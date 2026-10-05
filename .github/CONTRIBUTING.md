@@ -36,6 +36,24 @@ Make your changes in the cloned repo, test them (see below), then open a PR. Tha
 
 ## Development workflow
 
+### Build configuration
+
+Builds are configured by CMake presets, not by flags repeated in each script:
+
+- `shell/CMakePresets.json` - `dev`, `source-offline`, `package-offline`, `release`, `runtime`, `sanitizers`
+- `installer/tui/CMakePresets.json` - `dev`, `release`, `sanitizers`
+
+`make build` uses the shell's `dev` preset and CI runs the rest, so the
+configuration you build with and the one CI builds with come from the same file.
+A preset that builds offline needs `make fetch-dependencies` once first.
+
+The packages the shell build needs are declared in
+`packaging/build-dependencies.json`. Its `arch` column is what CI installs; the
+Fedora and Debian columns may only name packages
+`installer/distro/<distro>/packages.sh` already installs, so the manifest cannot
+introduce a name nothing else has installed from. An empty list means no package
+is named for that distribution yet. `make test-repo` checks all of it.
+
 ### For QML / shell changes
 
 Edit files in `~/.config/quickshell/caelestia/`. Restart the shell.
@@ -57,7 +75,8 @@ caelestia-shell-ipc log
 ### For C++ plugin changes
 
 ```bash
-bash scripts/08-build-shell.sh   # Recompiles and installs the plugins
+make build                       # Configure and compile with the developer preset
+bash scripts/08-build-shell.sh   # Compile and install them into your session
 bash shell/scripts/restart_shell.sh  # Restart to pick up the new .so
 ```
 
@@ -83,7 +102,7 @@ kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelest
 ### For installer changes
 
 ```bash
-cmake -B installer/build -S installer/tui && cmake --build installer/build   # Compile
+make installer                                # Compile with the developer preset
 ./installer/build/caelestia-install "$PWD"    # Run from the repo root (use with care!)
 ```
 

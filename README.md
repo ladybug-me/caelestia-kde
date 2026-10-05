@@ -97,6 +97,23 @@ For detailed logs, enable Debug Mode in Nexus -> About -> Advanced, then run
 `caelestia shell -l`. Bug reports and questions go to
 [GitHub Issues](https://github.com/ladybug-me/caelestia-kde/issues).
 
+## Working on this repo
+
+```bash
+make            # list every target
+make build      # configure and build the shell with the developer preset
+make test       # every test CI runs
+make check      # every lint CI runs
+```
+
+Every build goes through the CMake presets that sit beside each project -
+`shell/CMakePresets.json` and `installer/tui/CMakePresets.json` - and CI runs the
+same presets, so a local build and a CI build cannot be configured differently.
+`make build` uses the `dev` preset; the offline presets behind
+`make build-release`, `make build-package` and `make build-sanitizers` need
+`make fetch-dependencies` first. See [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+for the per-area workflow.
+
 ## Repository layout
 
 ```

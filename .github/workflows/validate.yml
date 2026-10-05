@@ -297,12 +297,9 @@ jobs:
           all_proxy: http://127.0.0.1:9
         run: |
           set -euo pipefail
-          cmake -G Ninja -B build-source -S shell -DCMAKE_BUILD_TYPE=Release \
-            -DCAELESTIA_CACHE_DEPS=ON -DCAELESTIA_OFFLINE=ON \
-            -DCAELESTIA_PACKAGE=OFF -DCMAKE_INSTALL_PREFIX=/ \
-            -DINSTALL_DATADIR=usr/share/caelestia
-          cmake --build build-source --parallel
-          DESTDIR="$PWD/stage-source" cmake --install build-source
+          (cd shell && cmake --preset source-offline)
+          cmake --build build/shell-source --parallel
+          DESTDIR="$PWD/stage-source" cmake --install build/shell-source
           python3 .github/scripts/write_provenance_hash.py \
             stage-source/usr/share/caelestia/build-provenance.json stage-source
 
@@ -314,12 +311,9 @@ jobs:
           all_proxy: http://127.0.0.1:9
         run: |
           set -euo pipefail
-          cmake -G Ninja -B build-package -S shell -DCMAKE_BUILD_TYPE=Release \
-            -DCAELESTIA_CACHE_DEPS=ON -DCAELESTIA_OFFLINE=ON \
-            -DCAELESTIA_PACKAGE=ON -DCMAKE_INSTALL_PREFIX=/ \
-            -DINSTALL_DATADIR=usr/share/caelestia
-          cmake --build build-package --parallel
-          DESTDIR="$PWD/stage-package" cmake --install build-package
+          (cd shell && cmake --preset package-offline)
+          cmake --build build/shell-package --parallel
+          DESTDIR="$PWD/stage-package" cmake --install build/shell-package
           python3 .github/scripts/write_provenance_hash.py \
             stage-package/usr/share/caelestia/build-provenance.json stage-package
           python3 .github/scripts/check_artifact_parity.py stage-source stage-package
@@ -328,8 +322,8 @@ jobs:
         run: |
           set -euo pipefail
           source scripts/lib/install-fs.sh
-          validate_install_manifest build-source/install_manifest.txt stage-source
-          validate_install_manifest build-package/install_manifest.txt stage-package
+          validate_install_manifest build/shell-source/install_manifest.txt stage-source
+          validate_install_manifest build/shell-package/install_manifest.txt stage-package
           python3 .github/scripts/check_provenance.py \
             stage-source/usr/share/caelestia/build-provenance.json
           python3 .github/scripts/check_provenance.py \
@@ -346,15 +340,16 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq cmake g++
 
       - name: Configure installer
-        run: cmake -S installer/tui -B installer/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
+        run: cd installer/tui && cmake --preset release
 
       - name: Build installer
-        run: cmake --build installer/build --parallel
+        run: cd installer/tui && cmake --build --preset release --parallel
 
       - name: Run installer unit tests
         run: |
-          cmake --build installer/build --target step-policy-tests --parallel
-          ctest --test-dir installer/build --output-on-failure -R step-policy-tests
+          cd installer/tui
+          cmake --build --preset release --target step-policy-tests --parallel
+          ctest --test-dir ../build-release --output-on-failure -R step-policy-tests
 
   installer-sanitizers:
     name: Build installer with sanitizers
@@ -367,15 +362,16 @@ jobs:
         run: sudo apt-get update -qq && sudo apt-get install -y -qq cmake g++
 
       - name: Configure sanitizer build
-        run: cmake -S installer/tui -B installer/build-sanitizers -DCMAKE_BUILD_TYPE=Debug -DCAELESTIA_ENABLE_SANITIZERS=ON
+        run: cd installer/tui && cmake --preset sanitizers
 
       - name: Build sanitizer target
-        run: cmake --build installer/build-sanitizers --parallel
+        run: cd installer/tui && cmake --build --preset sanitizers --parallel
 
       - name: Run sanitizer unit tests
         run: |
-          cmake --build installer/build-sanitizers --target step-policy-tests --parallel
-          ctest --test-dir installer/build-sanitizers --output-on-failure -R step-policy-tests
+          cd installer/tui
+          cmake --build --preset sanitizers --target step-policy-tests --parallel
+          ctest --test-dir ../build-sanitizers --output-on-failure -R step-policy-tests
 
   runtime-smoke:
     name: Installed QML runtime smoke
@@ -428,13 +424,10 @@ jobs:
           all_proxy: http://127.0.0.1:9
         run: |
           set -euo pipefail
-          cmake -G Ninja -B build-shell-sanitizers -S shell \
-            -DCMAKE_BUILD_TYPE=Debug \
-            -DCAELESTIA_CACHE_DEPS=ON -DCAELESTIA_OFFLINE=ON \
-            -DCAELESTIA_PACKAGE=OFF -DCAELESTIA_ENABLE_SANITIZERS=ON
+          (cd shell && cmake --preset sanitizers)
 
       - name: Build sanitized shell plugins
-        run: cmake --build build-shell-sanitizers --parallel
+        run: cmake --build build/shell-sanitizers --parallel
 
   validate-gate:
     needs:

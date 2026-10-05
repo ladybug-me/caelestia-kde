@@ -19,16 +19,22 @@ CI_DIR        := .github/scripts
 
 PYTHON ?= python3
 BASH   ?= bash
+CMAKE  ?= cmake
+
+SHELL_PRESET     ?= dev
+INSTALLER_PRESET ?= dev
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install update uninstall build-shell fetch-dependencies installer \
+.PHONY: help install update uninstall \
+        configure build build-release build-package build-runtime build-sanitizers \
+        build-shell fetch-dependencies installer installer-sanitizers \
         test test-bash test-fast test-isolated test-artifacts test-repo validate hygiene \
         check check-shell check-python check-qml search-coverage \
         sync-fetch sync-report translations clean
 
 help: ## List the available targets
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 # Install / update
 # These call the shipped entry points rather than reimplementing them, so the
@@ -45,6 +51,24 @@ uninstall: ## Remove the shell, its configs and the lockscreen plugin
 
 # Build
 
+configure: ## Configure the shell with a preset (SHELL_PRESET=dev by default)
+	cd $(SHELL_DIR) && $(CMAKE) --preset $(SHELL_PRESET)
+
+build: ## Configure and build the shell with the developer preset
+	cd $(SHELL_DIR) && $(CMAKE) --preset $(SHELL_PRESET) && $(CMAKE) --build --preset $(SHELL_PRESET)
+
+build-release: ## Build the shell offline in the source layout (make fetch-dependencies first)
+	cd $(SHELL_DIR) && $(CMAKE) --preset source-offline && $(CMAKE) --build --preset source-offline
+
+build-package: ## Build the shell offline in the package layout (make fetch-dependencies first)
+	cd $(SHELL_DIR) && $(CMAKE) --preset package-offline && $(CMAKE) --build --preset package-offline
+
+build-runtime: ## Build the shell offline into the runtime smoke tree
+	cd $(SHELL_DIR) && $(CMAKE) --preset runtime && $(CMAKE) --build --preset runtime
+
+build-sanitizers: ## Build the shell and its plugins with ASan and UBSan
+	cd $(SHELL_DIR) && $(CMAKE) --preset sanitizers && $(CMAKE) --build --preset sanitizers
+
 build-shell: ## Build and install the C++ QML plugin (needs Qt6 + CMake; Linux only)
 	$(BASH) $(STEPS_DIR)/08-build-shell.sh
 
@@ -52,8 +76,10 @@ fetch-dependencies: ## Fetch pinned build dependencies for offline builds
 	$(BASH) $(STEPS_DIR)/fetch-dependencies.sh
 
 installer: ## Compile the TUI installer to installer/build/caelestia-install
-	cmake -B $(BUILD_DIR) -S $(TUI_DIR) -DCMAKE_BUILD_TYPE=Release
-	cmake --build $(BUILD_DIR)
+	cd $(TUI_DIR) && $(CMAKE) --preset $(INSTALLER_PRESET) && $(CMAKE) --build --preset $(INSTALLER_PRESET)
+
+installer-sanitizers: ## Compile the TUI installer and its unit tests with ASan and UBSan
+	cd $(TUI_DIR) && $(CMAKE) --preset sanitizers && $(CMAKE) --build --preset sanitizers
 
 # Test
 
@@ -117,4 +143,5 @@ translations: ## Refresh the Qt translation catalogs
 	$(BASH) $(TOOLS_DIR)/update-translations.sh
 
 clean: ## Remove build output
-	rm -rf $(BUILD_DIR) $(SHELL_DIR)/build
+	rm -rf build $(SHELL_DIR)/build $(BUILD_DIR) \
+		$(INSTALLER_DIR)/build-release $(INSTALLER_DIR)/build-sanitizers

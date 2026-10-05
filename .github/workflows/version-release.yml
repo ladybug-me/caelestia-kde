@@ -178,13 +178,9 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install Shell Build Dependencies
-        run: |
-          set -euo pipefail
-          pacman -Syu --noconfirm --needed git github-cli cmake ninja meson autoconf-archive \
-            qt6-base qt6-declarative qt6-shadertools qt6-wayland qt6-tools \
-            kwindowsystem kguiaddons kglobalaccel kconfig networkmanager-qt pulseaudio-qt \
-            libqalculate pipewire libpipewire aubio lm_sensors extra-cmake-modules \
-            fftw ncurses alsa-lib iniparser libglvnd sdl2 portaudio sndio libpulse
+        uses: ./.github/actions/install-build-deps
+        with:
+          extra-packages: github-cli meson autoconf-archive
 
       - name: Install Prebuilt CAVA SDK (Arch)
         run: |
@@ -195,7 +191,7 @@ jobs:
       - name: Prepare Pinned Build Dependencies
         run: |
           set -euo pipefail
-          rm -rf shell/build
+          rm -rf build/shell-release
           rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"
           bash scripts/fetch-dependencies.sh
 
@@ -208,26 +204,18 @@ jobs:
       - name: Configure Shell
         run: |
           set -euo pipefail
-          cmake -G Ninja -B shell/build -S shell -DCMAKE_BUILD_TYPE=Release \
-            -DCAELESTIA_CACHE_DEPS=ON \
-            -DCAELESTIA_OFFLINE=ON \
-            -DCMAKE_INSTALL_PREFIX=/ \
-            -DINSTALL_BINDIR=usr/bin \
-            -DINSTALL_DATADIR=usr/lib/caelestia \
-            -DINSTALL_QSCONFDIR=etc/xdg/quickshell/caelestia \
-            -DINSTALL_LIBDIR=usr/lib/caelestia \
-            -DINSTALL_QMLDIR=usr/lib/qt6/qml
+          cd shell && cmake --preset release
 
       - name: Build Shell
         run: |
           set -euo pipefail
-          cmake --build shell/build -j"$(nproc)"
+          cd shell && cmake --build --preset release -j"$(nproc)"
 
       - name: Stage Compiled Artifacts
         run: |
           set -euo pipefail
           QT_ABI="$(pkg-config --modversion Qt6Core | grep -oE '^[0-9]+\.[0-9]+')"
-          DESTDIR="$PWD/stage" cmake --install shell/build
+          DESTDIR="$PWD/stage" cmake --install build/shell-release
           mkdir -p dist/root/bin dist/root/lib/qt6/qml dist/root/lib/caelestia dist/root/quickshell
           cp -a stage/usr/bin/. dist/root/bin/
           cp -a stage/usr/lib/qt6/qml/Caelestia stage/usr/lib/qt6/qml/M3Shapes dist/root/lib/qt6/qml/

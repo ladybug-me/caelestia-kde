@@ -46,11 +46,10 @@ runs:
         export http_proxy=http://127.0.0.1:9
         export https_proxy=http://127.0.0.1:9
         export all_proxy=http://127.0.0.1:9
-        cmake -G Ninja -B build-runtime -S shell -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-          -DCAELESTIA_CACHE_DEPS=ON -DCAELESTIA_OFFLINE=ON \
-          -DCAELESTIA_PACKAGE=OFF -DCMAKE_INSTALL_PREFIX="$PWD/${{ inputs.install-root }}"
-        cmake --build build-runtime --parallel
-        cmake --install build-runtime
+        install_root="$PWD/${{ inputs.install-root }}"
+        (cd shell && cmake --preset runtime -DCMAKE_INSTALL_PREFIX="$install_root")
+        cmake --build build/shell-runtime --parallel
+        cmake --install build/shell-runtime
 
     - name: Run installed runtime and lifecycle smoke
       shell: bash

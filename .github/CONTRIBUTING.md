@@ -38,7 +38,8 @@ Make your changes in the cloned repo, test them (see below), then open a PR. Tha
 
 ### Build configuration
 
-Builds are configured by CMake presets, not by flags repeated in each script:
+Every build a contributor or a CI job starts is configured by a CMake preset,
+not by flags repeated in each script:
 
 - `shell/CMakePresets.json` - `dev`, `source-offline`, `package-offline`, `release`, `runtime`, `sanitizers`
 - `installer/tui/CMakePresets.json` - `dev`, `release`, `sanitizers`
@@ -47,12 +48,17 @@ Builds are configured by CMake presets, not by flags repeated in each script:
 configuration you build with and the one CI builds with come from the same file.
 A preset that builds offline needs `make fetch-dependencies` once first.
 
-The packages the shell build needs are declared in
-`packaging/build-dependencies.json`. Its `arch` column is what CI installs; the
-Fedora and Debian columns may only name packages
-`installer/distro/<distro>/packages.sh` already installs, so the manifest cannot
-introduce a name nothing else has installed from. An empty list means no package
-is named for that distribution yet. `make test-repo` checks all of it.
+Presets need CMake 3.21, which is newer than the `cmake_minimum_required` the two
+projects declare. That is why `scripts/setup.sh`, `scripts/08-build-shell.sh` and
+the CI jobs that build the installer the same way still configure CMake by hand:
+they run against whatever CMake the machine has. `make test-repo` pins that short
+list, so another hand-written configuration fails instead of quietly becoming a
+second one that nothing compares against the presets.
+
+The Arch packages the shell build needs are declared once, in
+`packaging/build-dependencies.json`. The CI action installs exactly that list
+rather than keeping its own copy of it, and `make test-repo` checks that it
+keeps doing so.
 
 ### For QML / shell changes
 
@@ -75,8 +81,7 @@ caelestia-shell-ipc log
 ### For C++ plugin changes
 
 ```bash
-make build                       # Configure and compile with the developer preset
-bash scripts/08-build-shell.sh   # Compile and install them into your session
+bash scripts/08-build-shell.sh   # Recompiles and installs the plugins into your session
 bash shell/scripts/restart_shell.sh  # Restart to pick up the new .so
 ```
 

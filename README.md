@@ -106,9 +106,13 @@ make test       # every test CI runs
 make check      # every lint CI runs
 ```
 
-Every build goes through the CMake presets that sit beside each project -
-`shell/CMakePresets.json` and `installer/tui/CMakePresets.json` - and CI runs the
-same presets, so a local build and a CI build cannot be configured differently.
+Every build a contributor or a CI job starts goes through the CMake presets that
+sit beside each project - `shell/CMakePresets.json` and
+`installer/tui/CMakePresets.json` - so the two cannot be configured differently.
+The install path is the deliberate exception: the install and release scripts,
+and the CI jobs that build the installer the same way, configure CMake by hand
+because they run against whatever CMake the machine has, which can be older than
+a preset file needs. A test pins that list, so it cannot quietly grow.
 `make build` uses the `dev` preset; the offline presets behind
 `make build-release`, `make build-package` and `make build-sanitizers` need
 `make fetch-dependencies` first. See [CONTRIBUTING.md](.github/CONTRIBUTING.md)

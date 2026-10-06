@@ -41,6 +41,14 @@ Singleton {
     property var _monitorCache: ({})
     property bool hadKeyboard: false
     property string lastSpecialWorkspace: ""
+    // Per-output index (1-based, as reported by the workspace tracker) of the last
+    // normal (non special:) desktop each output was on. Special-workspace toggles
+    // return the output here instead of guessing.
+    property var _lastNormalByOutput: ({})
+    // A toggle for a special desktop that does not exist yet: creation is async
+    // over DBus, so the switch is parked here and completed from onWorkspacesChanged
+    // once KWin reports the new desktop. { name: "special:xyz", output: "DP-1" }
+    property var _pendingSpecialSwitch: null
     readonly property var monitors: {
         const screens = [...Quickshell.screens];
         const screenNames = screens.map(s => s.name);
@@ -411,12 +419,118 @@ Singleton {
             return;
         }
 
-        if (request.startsWith("togglespecialworkspace"))
+        if (request.startsWith("togglespecialworkspace")) {
+            const name = request.slice("togglespecialworkspace".length).trim();
+            root.toggleSpecialWorkspace(name);
             return;
+        }
+    }
+
+    function toggleSpecialWorkspace(name: string, outputName: string): void {
+        // Accepts "special:xyz", a bare "xyz" ("" toggles the default "special")
+        // or a desktop uuid. KWin has no native special workspaces, so they are
+        // ordinary named desktops with a "special:" prefix, created on demand.
+        const bare = String(name ?? "").trim();
+        const target = bare.startsWith("special:") ? bare : `special:${bare || "special"}`;
+        const out = String(outputName ?? "");
+        const wss = root.workspaces || [];
+        const ws = wss.find(w => w.name === target || w.id === target);
+
+        // Resolve the output's currently active workspace from the tracker's
+        // per-output state, falling back to the global active desktop.
+        const byOutput = root.activeByOutput || {};
+        const activeIdx = out ? byOutput[out] : 0;
+        let activeName = "";
+        if (activeIdx > 0 && activeIdx <= wss.length)
+            activeName = String(wss[activeIdx - 1]?.name ?? "");
+        else
+            activeName = String(wss[root.activeWsId - 1]?.name ?? "");
+
+        if (activeName === target) {
+            // Toggling the active one off: return this output to its last normal
+            // desktop, or the first normal desktop when nothing is recorded.
+            const last = root._lastNormalByOutput[out];
+            const fallback = wss.find(w => !String(w.name ?? "").startsWith("special:"));
+            const dest = (last > 0 && last <= wss.length) ? String(wss[last - 1].id)
+                : (fallback ? String(fallback.id) : "");
+            root._pendingSpecialSwitch = null;
+            if (dest)
+                root.switchToWorkspace(dest, out);
+            return;
+        }
+
+        if (ws) {
+            root.lastSpecialWorkspace = target;
+            root.switchToWorkspace(String(ws.id), out);
+            return;
+        }
+
+        // Missing: create it asynchronously and park the switch until KWin
+        // reports the new desktop.
+        root._pendingSpecialSwitch = { name: target, output: out };
+        root.createWorkspace(target);
+    }
+
+    function trackLastNormalDesktops(): void {
+        // Remember, per output, the desktop it was last on whenever that desktop
+        // is a normal one. While an output sits on a special: desktop its entry
+        // is left untouched, so toggling off can always return to it.
+        const byOutput = root.activeByOutput || {};
+        const wss = root.workspaces || [];
+        for (const out in byOutput) {
+            const idx = byOutput[out];
+            if (!(idx > 0) || idx > wss.length)
+                continue;
+            if (String(wss[idx - 1]?.name ?? "").startsWith("special:"))
+                continue;
+            if (root._lastNormalByOutput[out] !== idx)
+                root._lastNormalByOutput[out] = idx;
+        }
+    }
+
+    function syncMonitorMocks(): void {
+        // Feed the real per-output special-workspace state into the monitor
+        // mocks so the active pill, the pill window counts and the
+        // wheel-over-workspaces toggle read actual state instead of the
+        // never-updated defaults.
+        const byOutput = root.activeByOutput || {};
+        const wss = root.workspaces || [];
+        const globalName = String(wss[root.activeWsId - 1]?.name ?? "");
+        for (const key in root._monitorCache) {
+            if (key === "values")
+                continue;
+            const m = root._monitorCache[key];
+            if (!m || typeof m !== "object")
+                continue;
+            let specialName = "";
+            const idx = byOutput[m.name];
+            if (idx > 0 && idx <= wss.length)
+                specialName = String(wss[idx - 1]?.name ?? "");
+            else if (globalName.startsWith("special:") && (m.focused || m.name === root.activeOutputName))
+                specialName = globalName;
+            if (!specialName.startsWith("special:"))
+                specialName = "";
+            if (m.specialWorkspace?.name !== specialName)
+                m.specialWorkspace = { name: specialName, toplevels: { values: [] } };
+        }
+    }
+
+    function completePendingSpecialSwitch(): void {
+        const pending = root._pendingSpecialSwitch;
+        if (!pending)
+            return;
+        root._pendingSpecialSwitch = null;
+        const ws = (root.workspaces || []).find(w => w.name === pending.name || w.id === pending.name);
+        if (ws) {
+            root.lastSpecialWorkspace = pending.name;
+            root.switchToWorkspace(String(ws.id), String(pending.output ?? ""));
+        }
     }
 
     function cycleSpecialWorkspace(direction: string): void {
-        const openSpecials = root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0);
+        // Workspace maps carry { id, name, index, active } — there is no windows
+        // key, so cycle over every special: desktop that exists.
+        const openSpecials = root.workspaces.filter(w => String(w.name ?? "").startsWith("special:"));
         if (openSpecials.length === 0)
             return;
 
@@ -454,6 +568,7 @@ Singleton {
         if (!cached) {
             cached = root.createMonitorMock(screen.name, Object.keys(root._monitorCache).filter(k => k !== "values").length);
             root._monitorCache[screen.name] = cached;
+            root.syncMonitorMocks();
         }
         return cached;
     }
@@ -463,7 +578,7 @@ Singleton {
     }
 
     function listSpecialWorkspaces(): string {
-        return root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0).map(w => w.name).join("\n");
+        return root.workspaces.filter(w => String(w.name ?? "").startsWith("special:")).map(w => w.name).join("\n");
     }
 
     function getFocusedMonitor(): string {
@@ -502,7 +617,22 @@ Singleton {
             Toaster.toast(qsTr("Keyboard layout changed"), qsTr("Layout changed to: %1").arg(kbLayoutFull), "keyboard");
         hadKeyboard = kbLayoutFull.length > 0;
     }
-    onWorkspacesChanged: root.refreshWindows()
+    onWorkspacesChanged: {
+        root.refreshWindows();
+        root.trackLastNormalDesktops();
+        root.syncMonitorMocks();
+        root.completePendingSpecialSwitch();
+    }
+
+    onActiveByOutputChanged: {
+        root.trackLastNormalDesktops();
+        root.syncMonitorMocks();
+    }
+
+    Component.onCompleted: {
+        root.trackLastNormalDesktops();
+        root.syncMonitorMocks();
+    }
 
     IpcHandler {
         function refreshDevices(): void {

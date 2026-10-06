@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Hyprland
 import Caelestia.Config
 import qs.components
 import qs.components.effects
@@ -16,8 +15,10 @@ Item {
     required property ShellScreen screen
     // See ContentWindow.qml note: loosely typed because the KDE fallback
     // bridge's monitorFor() returns a mock QtObject, not a real HyprlandMonitor.
+    // Kwin.qml feeds the mocks' specialWorkspace from the real per-output
+    // tracker state, so this reads actual state.
     readonly property var monitor: Kwin.monitorFor(screen)
-    readonly property string activeSpecial: (Config.bar.workspaces.perMonitor ? monitor : Kwin.focusedMonitor)?.lastIpcObject.specialWorkspace?.name ?? ""
+    readonly property string activeSpecial: (Config.bar.workspaces.perMonitor ? root.monitor : Kwin.focusedMonitor)?.specialWorkspace?.name ?? ""
 
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
 
@@ -112,7 +113,9 @@ Item {
         model: ScriptModel {
             // Kwin.workspaces is a plain array (KWinWorkspaceState.workspaces): `.values` is
             // Array.prototype.values, so the filter threw and the strip never rendered.
-            values: Kwin.workspaces.filter(w => w.name.startsWith("special:") && (!Config.bar.workspaces.perMonitor || w.monitor === root.monitor))
+            // Workspace maps carry no monitor key, so the strip lists every special:
+            // desktop.
+            values: Kwin.workspaces.filter(w => String(w.name ?? "").startsWith("special:"))
         }
 
         preferredHighlightBegin: 0
@@ -278,24 +281,27 @@ Item {
             if (Math.abs(currentPos - startPos) > drag.threshold)
                 return;
 
-                            return;
-
             const ws = view.itemAt(event.x, event.y) as SpecialWsDelegate;
-            if (ws?.modelData)
-                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${ws.modelData.name.slice(8)}")` : `togglespecialworkspace ${ws.modelData.name.slice(8)}`);
-            else
-                Kwin.dispatch(Kwin.usingLua ? 'hl.dsp.workspace.toggle_special("special")' : "togglespecialworkspace special");
+            // Plain workspace maps, not HyprlandWorkspace objects: pass the pill's
+            // full special: name (or "" for the default one) straight to the bridge.
+            Kwin.toggleSpecialWorkspace(String(ws?.modelData?.name ?? ""), root.screen.name);
         }
     }
 
     component SpecialWsDelegate: GridLayout {
         id: ws
 
-        required property HyprlandWorkspace modelData
+        // Plain workspace map ({ id: uuid, name, index, active }), not a
+        // HyprlandWorkspace: this port has no lastIpcObject to reach through.
+        required property var modelData
+        readonly property string wsName: String(ws.modelData?.name ?? "")
+        readonly property string wsUuid: String(ws.modelData?.id ?? "")
+        readonly property int wsIndex: Number(ws.modelData?.index ?? 0)
+        // Counts bind through Kwin.windowList so they follow open/close events.
+        readonly property int windowCount: wsUuid ? Kwin.filterWindows(Kwin.windowList, wsUuid, "", true).length : 0
+        readonly property bool hasWindows: root.Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.windowCount > 0
         readonly property int size: isHorizontal ? (label.Layout.preferredWidth + (hasWindows ? windows.implicitWidth + Tokens.padding.extraSmall : 0)) : (label.Layout.preferredHeight + (hasWindows ? windows.implicitHeight + Tokens.padding.extraSmall : 0))
-        property int wsId
-        property string icon
-        property bool hasWindows
+        readonly property string icon: Icons.getSpecialWsIcon(ws.wsName)
 
         columns: isHorizontal ? -1 : 1
         rows: isHorizontal ? 1 : -1
@@ -308,42 +314,6 @@ Item {
 
         columnSpacing: 0
         rowSpacing: 0
-
-        Component.onCompleted: {
-            wsId = modelData.id;
-            icon = Icons.getSpecialWsIcon(modelData.name);
-            hasWindows = Config.bar.workspaces.showWindowsOnSpecialWorkspaces && modelData.lastIpcObject.windows > 0;
-        }
-
-        Connections {
-            function onIdChanged(): void {
-                if (ws.modelData)
-                    ws.wsId = ws.modelData.id;
-            }
-
-            function onNameChanged(): void {
-                if (ws.modelData)
-                    ws.icon = Icons.getSpecialWsIcon(ws.modelData.name);
-            }
-
-            function onLastIpcObjectChanged(): void {
-                if (ws.modelData) {
-                    ws.hasWindows = root.Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.modelData.lastIpcObject.windows > 0;
-                    ws.wsId = ws.modelData.id;
-                }
-            }
-
-            target: ws.modelData
-        }
-
-        Connections {
-            function onShowWindowsOnSpecialWorkspacesChanged(): void {
-                if (ws.modelData)
-                    ws.hasWindows = root.Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.modelData.lastIpcObject.windows > 0;
-            }
-
-            target: root.Config.bar.workspaces
-        }
 
         Loader {
             id: label
@@ -431,9 +401,9 @@ Item {
                 Repeater {
                     model: ScriptModel {
                         values: {
-                            const windows = Kwin.toplevels.values.filter(c => c.workspace?.id === ws.wsId);
+                            const wins = Kwin.windowList.filter(c => c.workspace?.uuid === ws.wsUuid || (c.workspace?.id === ws.wsIndex && ws.wsIndex > 0));
                             const maxIcons = root.Config.bar.workspaces.maxWindowIcons;
-                            return maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
+                            return maxIcons > 0 ? wins.slice(0, maxIcons) : wins;
                         }
                     }
 
@@ -441,7 +411,7 @@ Item {
                         required property var modelData
 
                         grade: 0
-                        text: Icons.getAppCategoryIcon(modelData.lastIpcObject.class, "terminal")
+                        text: Icons.getAppCategoryIcon(modelData.class, "terminal")
                         color: Colours.palette.m3onSurfaceVariant
                     }
                 }
@@ -475,9 +445,9 @@ Item {
                 Repeater {
                     model: ScriptModel {
                         values: {
-                            const windows = Kwin.toplevels.values.filter(c => c.workspace?.id === ws.wsId);
+                            const wins = Kwin.windowList.filter(c => c.workspace?.uuid === ws.wsUuid || (c.workspace?.id === ws.wsIndex && ws.wsIndex > 0));
                             const maxIcons = root.Config.bar.workspaces.maxWindowIcons;
-                            return maxIcons > 0 ? windows.slice(0, maxIcons) : windows;
+                            return maxIcons > 0 ? wins.slice(0, maxIcons) : wins;
                         }
                     }
 
@@ -485,7 +455,7 @@ Item {
                         required property var modelData
 
                         grade: 0
-                        text: Icons.getAppCategoryIcon(modelData.lastIpcObject.class, "terminal")
+                        text: Icons.getAppCategoryIcon(modelData.class, "terminal")
                         color: Colours.palette.m3onSurfaceVariant
                     }
                 }

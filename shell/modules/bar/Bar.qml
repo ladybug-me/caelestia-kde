@@ -266,9 +266,9 @@ Item {
 
         if (ch?.id === "workspaces" && Config.bar.scrollActions.workspaces) {
             const mon = (Config.bar.workspaces.perMonitor ? Kwin.monitorFor(screen) : Kwin.focusedMonitor);
-            const specialWs = mon?.lastIpcObject.specialWorkspace.name;
-            if (specialWs?.length > 0)
-                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${specialWs.slice(8)}")` : `togglespecialworkspace ${specialWs.slice(8)}`);
+            const specialWs = mon?.specialWorkspace?.name ?? "";
+            if (specialWs.startsWith("special:"))
+                Kwin.toggleSpecialWorkspace(specialWs, mon?.name ?? "");
             else {
                 const activeId = Kwin.activeWsId;
                 if (angleDelta.y < 0 || activeId > 1)

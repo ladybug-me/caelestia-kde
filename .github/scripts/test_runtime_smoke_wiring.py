@@ -115,11 +115,7 @@ class RuntimeSmokeWiringTests(unittest.TestCase):
         manifest = json.loads(
             (ROOT / "packaging" / "build-dependencies.json").read_text(encoding="utf-8")
         )
-        arch_packages = {
-            package
-            for dependency in manifest["dependencies"].values()
-            for package in dependency["arch"]
-        }
+        arch_packages = set(manifest["arch"])
         nightly = (ROOT / ".github" / "workflows" / "runtime-smoke.yml").read_text(encoding="utf-8")
         for module, package in self.EXTERNAL_QML_MODULES.items():
             with self.subTest(module=module):

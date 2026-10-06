@@ -29,12 +29,7 @@ runs:
         manifest = json.loads(
             pathlib.Path("packaging/build-dependencies.json").read_text(encoding="utf-8")
         )
-        packages = [
-            package
-            for dependency in manifest["dependencies"].values()
-            for package in dependency["arch"]
-        ]
-        print("packages=" + " ".join(packages))
+        print("packages=" + " ".join(manifest["arch"]))
         PY
 
     - name: Install packages

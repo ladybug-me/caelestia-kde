@@ -3,9 +3,12 @@ import Caelestia.Config
 import qs.components
 import qs.services
 import qs.utils
+import qs.modules.nexus
 
 Item {
     id: root
+
+    readonly property int desktopPageIdx: PageRegistry.indexForKey("desktop")
 
     implicitWidth: icon.implicitHeight + Tokens.padding.small
     implicitHeight: icon.implicitHeight
@@ -20,10 +23,19 @@ Item {
         Accessible.name: qsTr("Show desktop")
         Accessible.role: Accessible.Button
         Accessible.description: qsTr("Minimize all windows to show the desktop")
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         // KWin's showDesktop() takes the state to end up in; the kglobalaccel
         // shortcut this used to shell out to is a toggle whose result cannot be
         // read back, so a second click could leave the desktop showing.
-        onClicked: Kwin.setShowingDesktop(!Kwin.showingDesktop)
+        onClicked: mouse => {
+            if (mouse.button === Qt.RightButton) {
+                WindowFactory.create(null, {
+                    initialPageIdx: root.desktopPageIdx
+                });
+                return;
+            }
+            Kwin.setShowingDesktop(!Kwin.showingDesktop)
+        }
     }
 
     MaterialIcon {

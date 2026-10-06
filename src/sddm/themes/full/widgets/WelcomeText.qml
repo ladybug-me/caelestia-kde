@@ -10,11 +10,11 @@ Item {
         var now = new Date();
         var hour = now.getHours();
         if (hour >= 20 || hour < 4)
-            welcomeString = "Good night";
+            welcomeString = qsTr("Good night");
         else if (hour >= 4 && hour < 10)
-            welcomeString = "Good morning";
+            welcomeString = qsTr("Good morning");
         else
-            welcomeString = "Good afternoon";
+            welcomeString = qsTr("Good afternoon");
     }
 
     Component.onCompleted: getPhase()

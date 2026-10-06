@@ -269,12 +269,12 @@ aboverule=2
 EOF
 }
 
-# uninstall.sh runs from top to bottom and cannot be sourced, so the revert of the
-# window rules is cut out by the comment that introduces it and the line that
-# reports it, then run against the same stubs the installer step is tested with.
+# uninstall.sh runs from top to bottom and cannot be sourced, so its revert of the window
+# rules is cut out by its own first and last lines - the first delete through the line that
+# reports it - and run against the same stubs the installer step is tested with.
 extract_uninstall_revert() {
     awk '
-        /^# The three rule groups the installer writes are removed/ { inside = 1 }
+        /^kwriteconfig6 .*--group "caelestia-opacity"/ { inside = 1 }
         inside { print }
         inside && /^ok "Removed the Caelestia window rules/ { exit }
     ' "$UNINSTALL_SCRIPT"

@@ -15,6 +15,7 @@ Variants {
         Exclusions {
             screen: scope.modelData
             bar: content.bar
+            visibilities: content.visibilities
         }
 
         ContentWindow {

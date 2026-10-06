@@ -18,7 +18,6 @@ require_unprivileged_user() {
     return 0
 }
 
-# Records every call, and reports the credential probe as failed unless asked for one.
 sudo_stub() {
     local dir="$1" credential="$2" log="$3"
     stub_bin "$dir" sudo "
@@ -120,6 +119,37 @@ test_priming_uses_the_askpass_helper() {
 
     assert_status 0 "$status" "priming should succeed through the helper"
     assert_contains "$(calls_to "$log" sudo)" "-A -v" "the credential should be refreshed through the helper"
+    assert_eq "1" "${CAELESTIA_SUDO_PRIMED:-}" "priming should be remembered"
+    reset_sudo_state
+}
+
+nopasswd_sudo_stub() {
+    local dir="$1" log="$2"
+    stub_bin "$dir" sudo "
+printf 'sudo %s\n' \"\$*\" >> '$log'
+for arg in \"\$@\"; do
+    if [ \"\$arg\" = -v ]; then
+        printf 'sudo: a password is required\n' >&2
+        exit 1
+    fi
+done
+exit 0"
+    printf '%s\n' "$dir/sudo"
+}
+
+test_a_nopasswd_account_primes_without_a_password() {
+    require_unprivileged_user || return 0
+
+    local tmp log status
+    reset_sudo_state
+    tmp="$(new_tmpdir)"
+    log="$tmp/calls.log"
+    CAELESTIA_SUDO_BIN="$(nopasswd_sudo_stub "$tmp/bin" "$log")"
+
+    caelestia_prime_sudo
+    status=$?
+
+    assert_status 0 "$status" "a NOPASSWD account needs no prompt, so priming must succeed"
     assert_eq "1" "${CAELESTIA_SUDO_PRIMED:-}" "priming should be remembered"
     reset_sudo_state
 }

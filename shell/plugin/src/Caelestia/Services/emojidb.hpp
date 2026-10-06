@@ -4,6 +4,7 @@
 #include <qhash.h>
 #include <qobject.h>
 #include <qqmlintegration.h>
+#include <qset.h>
 #include <qstringlist.h>
 #include <qvariant.h>
 #include <qvector.h>
@@ -44,11 +45,14 @@ private:
     bool loadTextFile(const QString& path);
     void loadFrequencies();
     void saveFrequencies();
+    void buildTrigramIndex();
 
     QString m_freqPath;
 
     QVector<EmojiEntry> m_emojis;
     QHash<QString, int> m_frequencies;
+    // Trigram -> emoji indices
+    QHash<QString, QVector<int>> m_trigramIndex;
     bool m_loaded = false;
 };
 

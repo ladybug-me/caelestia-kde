@@ -1,0 +1,75 @@
+name: Installed runtime smoke
+description: >-
+  Build the shell offline, install it into a prefix, and run the headless
+  Weston/Quickshell runtime and lifecycle smoke test against the installed tree.
+
+  The directory inputs are workspace-relative on purpose. A path interpolated
+  from `github.workspace` is the runner's host path, which inside a job
+  container names a directory outside the workspace mount: the build would
+  install and log where neither the artifact upload nor the runner can see it.
+  Resolving the directories against `$PWD` inside the step keeps every path in
+  the container's own view.
+
+inputs:
+  deps-dir:
+    description: Workspace-relative directory holding the pre-fetched pinned build dependency
+    required: true
+  install-root:
+    description: Workspace-relative CMAKE_INSTALL_PREFIX for the runtime tree
+    required: true
+  log-dir:
+    description: Workspace-relative directory for the smoke logs and the results document
+    required: true
+  runs:
+    description: Number of launch and shutdown cycles
+    required: false
+    default: "3"
+  timeout:
+    description: Per-cycle readiness timeout in seconds
+    required: false
+    default: "60"
+
+runs:
+  using: composite
+  steps:
+    - name: Build and install runtime tree
+      shell: bash
+      run: |
+        set -euo pipefail
+        for directory in "${{ inputs.deps-dir }}" "${{ inputs.install-root }}" "${{ inputs.log-dir }}"; do
+          if [[ "$directory" == /* ]]; then
+            echo "runtime smoke needs workspace-relative directories, got: $directory" >&2
+            exit 2
+          fi
+        done
+        export CAELESTIA_DEPS_DIR="$PWD/${{ inputs.deps-dir }}"
+        export http_proxy=http://127.0.0.1:9
+        export https_proxy=http://127.0.0.1:9
+        export all_proxy=http://127.0.0.1:9
+        cmake -G Ninja -B build-runtime -S shell -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+          -DCAELESTIA_CACHE_DEPS=ON -DCAELESTIA_OFFLINE=ON \
+          -DCAELESTIA_PACKAGE=OFF -DCMAKE_INSTALL_PREFIX="$PWD/${{ inputs.install-root }}"
+        cmake --build build-runtime --parallel
+        cmake --install build-runtime
+
+    - name: Run installed runtime and lifecycle smoke
+      shell: bash
+      run: |
+        set -euo pipefail
+        log_dir="$PWD/${{ inputs.log-dir }}"
+        mkdir -p "$log_dir"
+        bash tests/runtime-smoke.sh \
+          --install-root "$PWD/${{ inputs.install-root }}" \
+          --runs "${{ inputs.runs }}" \
+          --timeout "${{ inputs.timeout }}" \
+          --baseline .github/ci-baselines/runtime-smoke.json \
+          --log-dir "$log_dir" \
+          | tee "$log_dir/results.json"
+
+    - name: Upload runtime diagnostics
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: runtime-smoke-diagnostics
+        path: ${{ inputs.log-dir }}
+        if-no-files-found: ignore

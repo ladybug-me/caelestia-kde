@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QDBusArgument>
+#include <QHash>
 #include <QObject>
 #include <QQmlEngine>
 #include <QStringList>
@@ -34,8 +35,8 @@ class KWinWorkspaceState : public QObject {
 
 public:
     static KWinWorkspaceState* instance();
-    int indexForId(const QString& id) const;
-    QString uuidForIndex(int index) const;
+    Q_INVOKABLE int indexForId(const QString& id) const;
+    Q_INVOKABLE QString uuidForIndex(int index) const;
 
     explicit KWinWorkspaceState(QObject* parent = nullptr);
     ~KWinWorkspaceState() override;
@@ -87,6 +88,7 @@ private:
     QString resolveDesktopUuid(const QString& id) const;
 
     QList<KWinDesktopData> m_desktops;
+    QHash<QString, int> m_uuidToIndex;
     QString m_currentUuid;
     int m_activeId = 0;
     QVariantMap m_activeByOutput;

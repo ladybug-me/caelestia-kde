@@ -9,3 +9,4 @@ GreetingPill 1.0 GreetingPill.qml
 PasswordPill 1.0 PasswordPill.qml
 Session 1.0 Session.qml
 AuthHandler 1.0 AuthHandler.qml
+DinoGame 1.0 DinoGame.qml

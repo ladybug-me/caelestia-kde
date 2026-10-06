@@ -5,15 +5,14 @@ import QtQuick
 import QtQuick.Controls
 import Qt.labs.synchronizer
 import Quickshell
+import Caelestia.Config
 import qs.services
 import qs.utils
 
 Singleton {
     id: root
 
-    // The single snip-action enum. Lives next to the command builder so the
-    // switch and its values can't drift apart. UI files reference it via
-    // ScreenshotAction.SnipAction.
+    // Lives next to the command builder so the switch and its values can't drift apart.
     enum SnipAction {
         Copy,
         Edit,
@@ -50,7 +49,7 @@ Singleton {
 
         switch (action) {
             case ScreenshotAction.SnipAction.Copy: {
-                let saveDir = rawSaveDir === "" ? "~/Pictures/Screenshots" : rawSaveDir;
+                let saveDir = rawSaveDir === "" ? GlobalConfig.paths.screenshotsDir : rawSaveDir;
                 return `set -euo pipefail; ` +
                     `SAVE_DIR='${escapeShellStr(saveDir)}'; ` +
                     `SAVE_DIR="\${SAVE_DIR/#\\~/$HOME}"; ` +
@@ -58,13 +57,13 @@ Singleton {
                     `saveFile="$SAVE_DIR/screenshot-$(date +%Y-%m-%d_%H.%M.%S).png" && ` +
                     `${cropBase} "$saveFile" && ` +
                     `wl-copy -t image/png < "$saveFile"; ` +
-                    `ACTION=$(notify-send "Screenshot Captured" "Saved to $saveFile" -i "$saveFile" -a "Screenshot" --action="open=Open" --action="folder=Open Folder" || true); ` +
-                    `if [ "$ACTION" = "open" ]; then xdg-open "$saveFile"; elif [ "$ACTION" = "folder" ]; then xdg-open "$SAVE_DIR"; fi; ` +
-                    `${cleanup}`
+                    `${cleanup}; ` +
+                    `(ACTION=$(notify-send "Screenshot Captured" "Saved to $saveFile" -i "$saveFile" -a "Screenshot" --action="open=Open" --action="folder=Open Folder" || true); ` +
+                    `if [ "$ACTION" = "open" ]; then xdg-open "$saveFile"; elif [ "$ACTION" = "folder" ]; then xdg-open "$SAVE_DIR"; fi) &`
             }
 
             case ScreenshotAction.SnipAction.Edit: {
-                let saveDir = rawSaveDir === "" ? "~/Pictures/Screenshots" : rawSaveDir;
+                let saveDir = rawSaveDir === "" ? GlobalConfig.paths.screenshotsDir : rawSaveDir;
                 return `set -euo pipefail; ` +
                     `SAVE_DIR='${escapeShellStr(saveDir)}'; ` +
                     `SAVE_DIR="\${SAVE_DIR/#\\~/$HOME}"; ` +
@@ -86,8 +85,8 @@ Singleton {
                     `rm -rf "$SWAPPY_OUT_DIR"; ` +
                     `if [ -s "$saveFile" ]; then ` +
                         `wl-copy -t image/png < "$saveFile"; ` +
-                        `ACTION=$(notify-send "Screenshot Captured" "Saved to $saveFile" -i "$saveFile" -a "Screenshot" --action="open=Open" --action="folder=Open Folder" || true); ` +
-                        `if [ "$ACTION" = "open" ]; then xdg-open "$saveFile"; elif [ "$ACTION" = "folder" ]; then xdg-open "$SAVE_DIR"; fi; ` +
+                        `(ACTION=$(notify-send "Screenshot Captured" "Saved to $saveFile" -i "$saveFile" -a "Screenshot" --action="open=Open" --action="folder=Open Folder" || true); ` +
+                        `if [ "$ACTION" = "open" ]; then xdg-open "$saveFile"; elif [ "$ACTION" = "folder" ]; then xdg-open "$SAVE_DIR"; fi) & ` +
                     `fi; ` +
                     `rm -f "$TMPF"; ${cleanup}`
             }
@@ -96,7 +95,9 @@ Singleton {
                 const tmpFile = Paths.runtimeTemp("snip-search.png")
                 return `set -euo pipefail; ` +
                     `${cropToFile(tmpFile)} && ` +
-                    `xdg-open "${root.imageSearchEngineBaseUrl}$(${uploadAndGetUrl(tmpFile)})"; ` +
+                    `URL="$(${uploadAndGetUrl(tmpFile)})"; ` +
+                    `case "$URL" in https://*|http://*) ;; *) echo "screenshot search: unexpected upload response" >&2; exit 1;; esac; ` +
+                    `xdg-open "${root.imageSearchEngineBaseUrl}$URL"; ` +
                     `rm -f '${tmpFile}'; ${cleanup}`
             }
 

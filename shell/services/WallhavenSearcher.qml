@@ -123,7 +123,7 @@ Singleton {
             params.colors = filters.colors;
 
         const url = buildUrl("/search", params);
-        Logger.log("Wallhaven search:", url);
+        Logger.log("Wallhaven search:", url.replace(/([?&])apikey=[^&]*/, "$1apikey=<redacted>"));
 
         Requests.get(url, text => {
             try {
@@ -162,7 +162,7 @@ Singleton {
         };
 
         const url = buildUrl("/search", params);
-        Logger.log("Wallhaven random:", url);
+        Logger.log("Wallhaven random:", url.replace(/([?&])apikey=[^&]*/, "$1apikey=<redacted>"));
 
         Requests.get(url, text => {
             try {

@@ -10,8 +10,9 @@ CURRENT_FILE="${STATE_DIR}/current_recording_path"
 MODE_FILE="${STATE_DIR}/current_recording_mode"
 IPC_SOCK="${XDG_RUNTIME_DIR:-/tmp}/caelestia-gsr.sock"
 
-# Where finished recordings live; must match Paths.qml's recsdir so the shell finds them.
-RECS_DIR="${CAELESTIA_RECORDINGS_DIR:-${XDG_VIDEOS_DIR:-$HOME/Videos}/Recordings}"
+# Where finished recordings live; must match the shell's recordingsDir so the shell finds them.
+# Resolved via user-dirs (not $XDG_VIDEOS_DIR, which is empty in the shell session).
+RECS_DIR="${CAELESTIA_RECORDINGS_DIR:-$(xdg-user-dir VIDEOS 2>/dev/null || echo "$HOME/Videos")/Recordings}"
 
 mkdir -p "$STATE_DIR" "$RECS_DIR"
 
@@ -21,22 +22,31 @@ _notify() {
 }
 
 _is_recording() {
+    local recorder_name
+    recorder_name=$(basename -- "$RECORDER")
+
     if [[ -f "$PID_FILE" ]]; then
         local pid
         pid=$(cat "$PID_FILE" 2>/dev/null || true)
-        local recorder_name
-        recorder_name=$(basename -- "$RECORDER")
-        if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null \
-            && [[ "$(ps -o comm= -p "$pid" 2>/dev/null | tr -d ' ')" == "$recorder_name" ]]; then
+        if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+            # Check /proc/$pid/cmdline to avoid the 15-character truncation limit
+            if grep -q -- "$recorder_name" "/proc/$pid/cmdline" 2>/dev/null; then
+                return 0
+            fi
+        fi
+    fi
+
+    # Fallback when the pid file is stale: a live recorder with a real output file
+    local current_path=""
+    [[ -f "$CURRENT_FILE" ]] && current_path=$(cat "$CURRENT_FILE" 2>/dev/null || true)
+    if [[ -n "$current_path" ]] && [[ -f "$current_path" ]]; then
+        if pgrep -u "$(id -u)" -f "$recorder_name" >/dev/null 2>&1; then
             return 0
         fi
     fi
-    # Fallback when the pid file is stale: a live recorder with a real output file.
-    local current_path=""
-    [[ -f "$CURRENT_FILE" ]] && current_path=$(cat "$CURRENT_FILE" 2>/dev/null || true)
-    pidof "$RECORDER" >/dev/null 2>&1 && [[ -n "$current_path" ]] && [[ -f "$current_path" ]]
-}
 
+    return 1
+}
 _get_focused_refresh_rate() {
     local rr=60  # fallback
     local active_output=""
@@ -88,25 +98,32 @@ _stop_recording() {
         local pid
         pid=$(cat "$PID_FILE" 2>/dev/null || true)
         if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
-            # SIGINT so gpu-screen-recorder finalizes the mp4 trailer.
+            # SIGINT so gpu-screen-recorder finalizes the mp4 trailer
             kill -INT "$pid" 2>/dev/null || true
-            # Give it 5 seconds to exit, then force it.
+
+            # Wait up to 5s for clean shutdown
             local waited=0
             while kill -0 "$pid" 2>/dev/null && [[ $waited -lt 50 ]]; do
                 sleep 0.1
                 waited=$((waited + 1))
             done
-            kill -KILL "$pid" 2>/dev/null || true
+
+            # Only force kill if it actually hung
+            if kill -0 "$pid" 2>/dev/null; then
+                kill -KILL "$pid" 2>/dev/null || true
+            fi
         fi
         rm -f "$PID_FILE"
     fi
-    # Stray recorders of ours that the pid file does not know about.
+
+    # Kill stray instances: use -f (full cmdline) to bypass kernel 15-char name truncation
     local recorder_name
     recorder_name=$(basename -- "$RECORDER")
     while read -r pid; do
         [[ -z "$pid" ]] && continue
         kill -INT "$pid" 2>/dev/null || true
-    done < <(pgrep -u "$(id -u)" -x "$recorder_name" 2>/dev/null || true)
+    done < <(pgrep -u "$(id -u)" -f "$recorder_name" 2>/dev/null || true)
+
     rm -f "$LOCK_FILE" "$CURRENT_FILE" "$MODE_FILE"
     rm -f "$IPC_SOCK"
 }

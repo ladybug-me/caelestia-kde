@@ -276,17 +276,32 @@ void KWinWorkspaceState::updateShowingDesktop(bool showing) {
 }
 
 void KWinWorkspaceState::updateActiveId() {
-    std::sort(m_desktops.begin(), m_desktops.end(), [](const KWinDesktopData& a, const KWinDesktopData& b) {
-        return a.position < b.position;
-    });
+    // Counting sort by desktop position.
+    int maxPos = 0;
+    for (const auto& d : std::as_const(m_desktops)) {
+        if (d.position > maxPos)
+            maxPos = d.position;
+    }
 
-    int newActiveId = 1;
-    for (int i = 0; i < m_desktops.size(); ++i) {
-        if (m_desktops[i].id == m_currentUuid) {
-            newActiveId = i + 1;
-            break;
+    QVector<const KWinDesktopData*> buckets(maxPos + 1, nullptr);
+    for (const auto& d : std::as_const(m_desktops)) {
+        if (d.position >= 0 && d.position <= maxPos)
+            buckets[d.position] = &d;
+    }
+
+    m_uuidToIndex.clear();
+    m_uuidToIndex.reserve(m_desktops.size());
+    QList<KWinDesktopData> sorted;
+    sorted.reserve(m_desktops.size());
+    for (const auto* d : std::as_const(buckets)) {
+        if (d) {
+            m_uuidToIndex.insert(d->id, static_cast<int>(sorted.size()) + 1);
+            sorted.append(*d);
         }
     }
+    m_desktops = std::move(sorted);
+
+    const int newActiveId = m_uuidToIndex.value(m_currentUuid, 1);
 
     if (m_activeId != newActiveId) {
         m_activeId = newActiveId;

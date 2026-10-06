@@ -12,6 +12,7 @@ import Caelestia.Services
 import qs.components
 import qs.components.controls
 import qs.components.effects
+import qs.components.images
 import qs.services
 import qs.utils
 
@@ -36,6 +37,9 @@ Item {
     readonly property int baseThickness: Tokens.sizes.bar.innerWidth
     readonly property int effectiveThickness: rawScale < 1.0 ? baseThickness : barThickness
     readonly property real configuredItemSize: Math.max(16, Math.min(effectiveThickness, Config.bar.dock.iconSize || 32))
+    // Icon size of a dock item. Derived from the configured item size rather than the
+    // delegate's laid-out width, which is still 0 while the delegate is being created.
+    readonly property real iconSize: Math.round(configuredItemSize * 0.7 / 2) * 2
 
     implicitWidth: bar.isHorizontal ? container.width : container.implicitWidth
     implicitHeight: bar.isHorizontal ? container.implicitHeight : container.height
@@ -94,6 +98,86 @@ Item {
                 if (address)
                     MinimizeGeometry.setGeometry(root, String(address), x, y, w, h);
             }
+        }
+    }
+
+    function activateEntry(entry: var): void {
+        if (!entry)
+            return;
+
+        if (entry.toplevels.length > 0) {
+            let activeIdx = -1;
+            let activeAddr = "";
+
+            if (Kwin.activeWindow) {
+                activeAddr = Kwin.activeWindow.address ? String(Kwin.activeWindow.address) : "";
+            } else if (root.activeTop && root.activeTop.address) {
+                activeAddr = String(root.activeTop.address);
+            }
+
+            for (let i = 0; i < entry.toplevels.length; i++) {
+                let top = entry.toplevels[i];
+                let topAddr = String(top.address);
+                let isMinimized = top.minimized || false;
+                if (!isMinimized && (top.focused || (activeAddr !== "" && activeAddr === topAddr))) {
+                    activeIdx = i;
+                    break;
+                }
+            }
+
+            const isKWin = (Kwin.windowList.length > 0);
+
+            if (entry.toplevels.length === 1) {
+                let addr = String(entry.toplevels[0].address);
+                if (activeIdx === 0) {
+                    if (isKWin) {
+                        Kwin.minimizeWindow(addr);
+                    }
+                } else {
+                    if (isKWin) {
+                        Kwin.focusWindow(addr);
+                    } else {
+                        Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
+                    }
+                }
+            } else {
+                let nextIdx = activeIdx !== -1 ? (activeIdx + 1) % entry.toplevels.length : 0;
+                let addr = String(entry.toplevels[nextIdx].address);
+                if (isKWin) {
+                    Kwin.focusWindow(addr);
+                } else {
+                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
+                }
+            }
+        } else if (entry.entry) {
+            let newLaunching = Object.assign({}, root.launchingApps);
+            newLaunching[entry.appClass || entry.id] = true;
+            root.launchingApps = newLaunching;
+
+            Launch.launchEntry(entry.entry);
+        }
+    }
+
+    function activateIndex(idx: int): void {
+        if (idx < 0 || idx >= root.modelDataArray.length)
+            return;
+        root.activateEntry(root.modelDataArray[idx]);
+    }
+
+    function activateNewIndex(idx: int): void {
+        if (idx < 0 || idx >= root.modelDataArray.length)
+            return;
+        const entry = root.modelDataArray[idx];
+        if (!entry)
+            return;
+        if (entry.entry) {
+            let newLaunching = Object.assign({}, root.launchingApps);
+            newLaunching[entry.appClass || entry.id] = true;
+            root.launchingApps = newLaunching;
+
+            Launch.launchEntry(entry.entry);
+        } else if (entry.toplevels.length > 0) {
+            root.activateEntry(entry);
         }
     }
 
@@ -277,7 +361,21 @@ Item {
         property var _appsValues: DesktopEntries.applications.values
         on_AppsValuesChanged: root.rebuildModel()
 
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            enabled: dockModel.count > 0
 
+            onClicked: mouse => {
+                const popouts = root.bar?.popouts;
+                if (!popouts)
+                    return;
+                popouts.currentName = "dockbgcontext";
+                popouts.currentCenter = bar.isHorizontal ? container.mapToItem(null, container.width / 2, 0).x : (container.mapToItem(null, 0, container.height / 2).y ?? 0);
+                popouts.hasCurrent = true;
+                mouse.accepted = true;
+            }
+        }
 
         Item {
             id: layout
@@ -485,57 +583,7 @@ Item {
                                     bounceAnim.start();
                                 }
 
-                                if (modelData.toplevels.length > 0) {
-                                    let activeIdx = -1;
-                                    let activeAddr = "";
-
-                                    if (Kwin.activeWindow) {
-                                        activeAddr = Kwin.activeWindow.address ? String(Kwin.activeWindow.address) : "";
-                                    } else if (root.activeTop && root.activeTop.address) {
-                                        activeAddr = String(root.activeTop.address);
-                                    }
-
-                                    for (let i = 0; i < modelData.toplevels.length; i++) {
-                                        let top = modelData.toplevels[i];
-                                        let topAddr = String(top.address);
-                                        let isMinimized = top.minimized || false;
-                                        if (!isMinimized && (top.focused || (activeAddr !== "" && activeAddr === topAddr))) {
-                                            activeIdx = i;
-                                            break;
-                                        }
-                                    }
-
-                                    const isKWin = (Kwin.windowList.length > 0);
-
-                                    if (modelData.toplevels.length === 1) {
-                                        let addr = String(modelData.toplevels[0].address);
-                                        if (activeIdx === 0) {
-                                            if (isKWin) {
-                                                Kwin.minimizeWindow(addr);
-                                            }
-                                        } else {
-                                            if (isKWin) {
-                                                Kwin.focusWindow(addr);
-                                            } else {
-                                                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
-                                            }
-                                        }
-                                    } else {
-                                        let nextIdx = activeIdx !== -1 ? (activeIdx + 1) % modelData.toplevels.length : 0;
-                                        let addr = String(modelData.toplevels[nextIdx].address);
-                                        if (isKWin) {
-                                            Kwin.focusWindow(addr);
-                                        } else {
-                                            Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
-                                        }
-                                    }
-                                } else if (modelData.entry) {
-                                    let newLaunching = Object.assign({}, root.launchingApps);
-                                    newLaunching[modelData.appClass || modelData.id] = true;
-                                    root.launchingApps = newLaunching;
-
-                                    Launch.launchEntry(modelData.entry);
-                                }
+                                root.activateEntry(modelData);
                             } else if (mouse.button === Qt.RightButton) {
                                 bar.popouts.currentName = "dockcontext";
                                 bar.popouts.currentCenter = bar.isHorizontal ? delegateItem.mapToItem(null, delegateItem.width / 2, 0).x : (delegateItem.mapToItem(null, 0, delegateItem.height / 2).y ?? 0);
@@ -600,13 +648,12 @@ Item {
 
 
 
-                    IconImage {
+                    CachingIconImage {
                         id: icon
 
                         anchors.centerIn: parent
-                        implicitSize: Math.round(((delegateItem.width || 0) * 0.7) / 2) * 2 || 0
+                        implicitSize: root.iconSize
                         source: modelData ? WinIcons.sourceFor(modelData.entry, modelData.appClass, modelData.iconName, modelData.pid ?? 0) : ""
-                        asynchronous: true
                         visible: !(Config.bar.dock.recolourIcons ?? false)
 
                         SequentialAnimation {
@@ -618,7 +665,8 @@ Item {
                     }
 
                     ColouredIcon {
-                        anchors.fill: icon
+                        anchors.centerIn: parent
+                        implicitSize: root.iconSize
                         source: icon.source
                         colour: Colours.palette.m3secondary
                         layer.enabled: true
@@ -637,7 +685,7 @@ Item {
                     StyledRect {
                         id: countBadge
 
-                        readonly property int badgeHeight: Math.max(12, Math.round((icon.implicitSize || 0) * 0.55))
+                        readonly property int badgeHeight: Math.max(12, Math.round(root.iconSize * 0.55))
                         readonly property int dotSize: Math.max(6, Math.round(badgeHeight * 0.75))
                         readonly property bool asDot: (delegateItem.badge?.count ?? 0) <= 0
 
@@ -676,7 +724,7 @@ Item {
                         anchors.top: icon.bottom
                         anchors.topMargin: 1
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: icon.implicitSize
+                        width: root.iconSize
                         height: 3
                         radius: Tokens.rounding.full
                         color: Qt.alpha(Colours.palette.m3onSurface, 0.15)
@@ -820,27 +868,45 @@ Item {
 
             if (appClass.toLowerCase().includes("xwaylandvideobridge")) continue;
 
+            // Ungrouped keeps every window on its own icon (pinned entries stay
+            // launchers); PinnedFirst caps a pinned entry at its first window and
+            // lets the rest stand alone. Per-window ids carry the address (or pid)
+            // so they stay stable for the window's lifetime.
+            const grouping = GlobalConfig.bar.dock.windowGrouping;
+            const ungrouped = grouping === DockWindowGrouping.Ungrouped;
+            const pinnedFirst = grouping === DockWindowGrouping.PinnedFirst;
             let found = false;
-            for (const app of apps) {
-                const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
+            let pinnedCapped = false;
+            if (!ungrouped) {
+                for (const app of apps) {
+                    const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
 
-                if (isToplevelSteamGame) {
-                    if (app.appClass.toLowerCase() === appClass.toLowerCase()) {
-                        app.toplevels.push(toplevel);
-                        found = true;
-                        break;
-                    }
-                } else {
-                    const isAppSteamGame = app.id.toLowerCase().startsWith("steam_app_") || app.appClass.toLowerCase().startsWith("steam_app_");
-                    if (isAppSteamGame) continue;
+                    if (isToplevelSteamGame) {
+                        if (app.appClass.toLowerCase() === appClass.toLowerCase()) {
+                            if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
+                                pinnedCapped = true;
+                            else {
+                                app.toplevels.push(toplevel);
+                                found = true;
+                            }
+                            break;
+                        }
+                    } else {
+                        const isAppSteamGame = app.id.toLowerCase().startsWith("steam_app_") || app.appClass.toLowerCase().startsWith("steam_app_");
+                        if (isAppSteamGame) continue;
 
-                    const baseId = app.id.toLowerCase().replace(".desktop", "");
-                    if (app.appClass.toLowerCase() === appClass.toLowerCase() ||
-                        app.id.toLowerCase().includes(appClass.toLowerCase()) ||
-                        appClass.toLowerCase().includes(baseId)) {
-                        app.toplevels.push(toplevel);
-                        found = true;
-                        break;
+                        const baseId = app.id.toLowerCase().replace(".desktop", "");
+                        if (app.appClass.toLowerCase() === appClass.toLowerCase() ||
+                            app.id.toLowerCase().includes(appClass.toLowerCase()) ||
+                            appClass.toLowerCase().includes(baseId)) {
+                            if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
+                                pinnedCapped = true;
+                            else {
+                                app.toplevels.push(toplevel);
+                                found = true;
+                            }
+                            break;
+                        }
                     }
                 }
             }
@@ -873,7 +939,7 @@ Item {
                     WinIcons.request(appClass, ipc.title || "", pid, ipc.address ? String(ipc.address) : "");
 
                 apps.push({
-                    id: appClass,
+                    id: ungrouped || pinnedCapped ? `${appClass}#${ipc.address || pid}` : appClass,
                     isPinned: false,
                     entry: entry,
                     toplevels: [toplevel],
@@ -1045,7 +1111,20 @@ Item {
         function onCurrentDesktopOnlyChanged(): void {
             root.rebuildModel();
         }
+
+        function onWindowGroupingChanged(): void {
+            root.rebuildModel();
+        }
     }
 
-    Component.onCompleted: root.rebuildModel()
+    Component.onCompleted: {
+        root.rebuildModel();
+        if (root.bar && root.bar.screen)
+            Visibilities.registerDock(root.bar.screen, root);
+    }
+
+    Component.onDestruction: {
+        if (root.bar && root.bar.screen)
+            Visibilities.unregisterDock(root.bar.screen);
+    }
 }

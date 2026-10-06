@@ -6,6 +6,7 @@ import Quickshell.Wayland
 import Caelestia.Config
 import qs.components
 import qs.services
+import qs.utils
 import qs.modules.nexus
 
 Singleton {
@@ -21,11 +22,18 @@ Singleton {
                 win.nexus.nState.goToSubPage(props.initialPageIdx, props.initialSubPageIdx ?? -1);
             win.visible = true;
             win.raise();
+            Logger.mark("nexus=reused");
             return win;
         }
         const win = nexusComp.createObject(parent ?? dummy, props);
         root.openWindow = win;
+        Logger.mark("nexus=created");
         return win;
+    }
+
+    function close(): void {
+        if (root.openWindow)
+            root.openWindow.destroy();
     }
 
     QtObject {
@@ -51,6 +59,7 @@ Singleton {
             }
 
             Component.onDestruction: {
+                Logger.mark("nexus=destroyed");
                 if (root.openWindow === win)
                     root.openWindow = null;
             }
@@ -67,12 +76,6 @@ Singleton {
             }
 
             onVisibleChanged: {
-                if (!visible && UpdateChecker.updateRunning) {
-                    visible = true;
-                    nexus.requestClose();
-                    return;
-                }
-
                 if (!visible)
                     destroy();
             }

@@ -14,14 +14,13 @@ Singleton {
     readonly property int minutes: clock.minutes
     readonly property int seconds: clock.seconds
 
-    readonly property string timeStr: format(Units.twelveHourClock ? "hh:mm:A" : "hh:mm")
-    readonly property list<string> timeComponents: timeStr.split(":")
+    readonly property list<string> timeComponents: format(Units.twelveHourClock ? "hh:mm:A" : "hh:mm").split(":")
     readonly property string hourStr: timeComponents[0] ?? ""
     readonly property string minuteStr: timeComponents[1] ?? ""
     readonly property string amPmStr: timeComponents[2] ?? ""
 
     function format(fmt: string): string {
-        return Qt.formatDateTime(clock.date, fmt);
+        return clock.date.toLocaleString(Qt.locale(), fmt);
     }
 
     SystemClock {

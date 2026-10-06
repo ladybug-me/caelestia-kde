@@ -14,8 +14,14 @@ Item {
     signal notificationRepeated()
 
     onViewVisibleChanged: {
+        if (!viewVisible) {
+            root.clearPassword();
+            return;
+        }
         if (viewVisible && lockScreenUi && typeof lockScreenUi.ensureAuthenticating === "function") {
             lockScreenUi.ensureAuthenticating();
+            if (lockScreenUi.activePasswordPill)
+                lockScreenUi.activePasswordPill.forceActiveFocus();
         }
     }
 

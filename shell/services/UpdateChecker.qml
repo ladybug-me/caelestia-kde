@@ -8,7 +8,6 @@ import Quickshell.Io
 import Caelestia
 import Caelestia.Config
 import qs.services
-import qs.utils
 
 Singleton {
     id: root
@@ -22,7 +21,6 @@ Singleton {
     property bool versionSummaryMode: false
     property string currentVersion: "unknown"
     property string previousVersion: "unknown"
-    property string targetVersion: ""
     property string installedCommitHash: ""
 
     property string _localCommit: ""
@@ -38,23 +36,17 @@ Singleton {
     property bool hasMoreCommits: false
     property bool loadingMoreCommits: false
 
-    property string updateLogs: ""
-    property bool updateRunning: false
-    property bool updateCancelled: false
-    property real updateProgress: 0.0
-    property string updateStatus: ""
-    property bool logsExpanded: false
-    property double lastUpdateOutputMs: 0
-    property bool stallNoticeShown: false
-    property string processLineBuffer: ""
-
     function clampBranch(branch: string): string {
         return (branch === "dev" || branch === "main") ? branch : "main";
     }
 
-    function checkUpdates(branch) {
+    function checkUpdates(branch, persistBranch) {
         if (branch === undefined) branch = "";
         if (!GlobalConfig.general.checkUpdates) return;
+        // Only an explicit branch pick re-points the tracked update channel;
+        // background checks must not fight the channel the updater recorded
+        // from the tree it actually installed (issue #565).
+        if (persistBranch === undefined) persistBranch = branch !== "";
         if (branch !== "") currentBranch = clampBranch(branch);
         else currentBranch = clampBranch(currentBranch);
         checkingUpdates = true;
@@ -87,8 +79,22 @@ if ! echo ",main,dev," | grep -q ",$CURRENT_BRANCH,"; then
     CURRENT_BRANCH="main"
 fi
 
-mkdir -p "$HOME/.config/quickshell/caelestia"
-echo "$CURRENT_BRANCH" > "$HOME/.config/quickshell/caelestia/.update_branch"
+STATE_HELPER=""
+for candidate in \
+    "\${CAELESTIA_LIB_DIR:-}/update-state.sh" \
+    "$HOME/.local/lib/caelestia/update-state.sh" \
+    "/usr/share/caelestia/scripts/lib/update-state.sh"; do
+    if [ -r "$candidate" ]; then
+        STATE_HELPER="$candidate"
+        break
+    fi
+done
+if [ -n "$STATE_HELPER" ]; then
+    . "$STATE_HELPER"
+fi
+if [ "$2" = "1" ] && command -v update_state_set_branch >/dev/null 2>&1; then
+    update_state_set_branch "$HOME/.config/quickshell/caelestia" "$CURRENT_BRANCH" || true
+fi
 REPO="$HOME/.cache/caelestia-update-repo"
 if [ ! -d "$REPO" ]; then
     git clone --bare --filter=blob:none https://github.com/ladybug-me/caelestia-kde.git "$REPO" >/dev/null 2>&1
@@ -144,9 +150,7 @@ if [ "$CURRENT_BRANCH" = "main" ]; then
     # Both of its forms are syntax to the QML template literal they live in:
     # dollar-brace interpolation is evaluated as QML before bash is handed the script, and
     # an unescaped backtick ends the literal, which stops the file parsing and takes every
-    # singleton that imports this service down with it. Each has broken this file once,
-    # the backtick in a comment that named a command in backticks, the interpolation in
-    # the comment that replaced it.
+    # singleton that imports this service down with it.
     VER_HELPER_DIR="$CAELESTIA_LIB_DIR"
     if [ -z "$VER_HELPER_DIR" ]; then
         VER_HELPER_DIR=/usr/lib/caelestia
@@ -203,7 +207,6 @@ import urllib.request
 def parse_whats_changed(text: str) -> str:
     txt = (text or "").replace("\\r", "")
 
-    # Keep only the "What's Changed" section when present.
     m = re.search(r"^#{2,3}\\s*What's Changed\\s*$", txt, flags=re.IGNORECASE | re.MULTILINE)
     if m:
         rest = txt[m.end():]
@@ -215,7 +218,6 @@ def parse_whats_changed(text: str) -> str:
     else:
         return ""
 
-    # Normalize spacing and keep it compact for list rows.
     txt = txt.strip()
     txt = re.sub(r"\\n{3,}", "\\n\\n", txt)
     txt = re.sub(r"[ \\t]+\\n", "\\n", txt)
@@ -321,7 +323,7 @@ else
     echo "LOCAL|$LOCAL_COMMIT"
 fi
 `
-    gitProcess.command = ["bash", "-c", bashCmd, "update-check", currentBranch];
+    gitProcess.command = ["bash", "-c", bashCmd, "update-check", currentBranch, persistBranch ? "1" : "0"];
         gitProcess.running = true;
     }
 
@@ -376,7 +378,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
             return;
         }
 
-        // Fallback: mark deploy stage as finished when deploy script confirms completion.
         if (line.indexOf("Config deployment complete") !== -1 && root.updateProgress < 0.8) {
             root.updateProgress = 0.7;
             root.updateStatus = qsTr("Preparing shell build...");
@@ -433,7 +434,27 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
         id: localCommitProcess
 
         running: GlobalConfig.general.checkUpdates
-        command: ["bash", "-c", "echo \"$(cat ~/.config/quickshell/caelestia/.current_commit 2>/dev/null)|$(cat ~/.config/quickshell/caelestia/.update_branch 2>/dev/null)\""]
+        command: ["bash", "-c", `
+CONFIG="$HOME/.config/quickshell/caelestia"
+STATE_HELPER=""
+for candidate in \
+    "\${CAELESTIA_LIB_DIR:-}/update-state.sh" \
+    "$HOME/.local/lib/caelestia/update-state.sh" \
+    "/usr/share/caelestia/scripts/lib/update-state.sh"; do
+    if [ -r "$candidate" ]; then
+        STATE_HELPER="$candidate"
+        break
+    fi
+done
+if [ -n "$STATE_HELPER" ]; then
+    . "$STATE_HELPER"
+fi
+if command -v update_state_read_commit >/dev/null 2>&1; then
+    printf '%s|%s\\n' "$(update_state_read_commit "$CONFIG")" "$(update_state_read_branch "$CONFIG")"
+else
+    printf '|main\\n'
+fi
+`]
         stdout: StdioCollector {
             onStreamFinished: {
                 const parts = text.trim().split("|");
@@ -454,8 +475,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
         onExited: _code => { // qmllint disable signal-handler-parameters
             root.checkingUpdates = false;
             root.lastCheckMs = Date.now();
-            if (autoCheckTimer.running)
-                autoCheckTimer.restart();
         }
         stdout: StdioCollector {
             onStreamFinished: {
@@ -618,9 +637,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
                     }
                     root.availableVersions = parsedVersionSummaryMode ? uniqueVersions : [];
                     if (parsedVersionSummaryMode) {
-                        if (!root.availableVersions.includes(root.targetVersion)) {
-                            root.targetVersion = root.availableVersions.length > 0 ? root.availableVersions[0] : "";
-                        }
                         if (root.previousVersion === "unknown" && root.availableVersions.length > 1) {
                             root.previousVersion = root.availableVersions[1];
                         }
@@ -692,20 +708,6 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
         }
     }
 
-    Settings {
-        id: updaterSettings
-
-        category: "Updater"
-
-        property bool deployConfigs: true
-
-        property bool buildShell: true
-    }
-
-    property alias deployConfigs: updaterSettings.deployConfigs
-
-    property alias buildShell: updaterSettings.buildShell
-
     property string claudeCodeVersion: ""
 
     property string claudeCodeLatestVersion: ""
@@ -750,70 +752,14 @@ echo "$INSTALLED|$LATEST"
     }
 
     Timer {
-        interval: 30000
-        repeat: true
-        running: root.updateRunning
-        onTriggered: {
-            if (!root.updateRunning) return;
-            if (root.lastUpdateOutputMs <= 0) return;
-            const idleMs = Date.now() - root.lastUpdateOutputMs;
-            if (idleMs >= 120000 && !root.stallNoticeShown) {
-                root.stallNoticeShown = true;
-                root.updateLogs += "[WARN] No updater output for 120s. If this persists, stop and retry.\n";
-            }
-        }
-    }
-
-    Timer {
         id: autoCheckTimer
 
         interval: root.checkIntervalMs
-        repeat: false
+        repeat: true
         running: GlobalConfig.general.checkUpdates && root.loaded
         onTriggered: {
-            if (!root.checkingUpdates && !root.updateRunning)
+            if (!root.checkingUpdates)
                 root.checkUpdates();
-        }
-    }
-
-    Process {
-        id: updateProcess
-
-        command: [Paths.bin("caelestia-update"), root.currentBranch]
-            .concat(root.targetVersion !== "" ? [root.targetVersion] : [])
-        environment: ({
-            CAELESTIA_SKIP_DEPLOY: updaterSettings.deployConfigs ? "0" : "1",
-            CAELESTIA_SKIP_BUILD: updaterSettings.buildShell ? "0" : "1"
-        })
-        stdout: SplitParser {
-            onRead: function(text) {
-                root.ingestProcessText(text);
-            }
-        }
-        stderr: SplitParser {
-            onRead: function(text) {
-                root.ingestProcessText(text);
-            }
-        }
-        onExited: function(code) {
-            if (root.processLineBuffer !== "") {
-                root.handleProgressLine(root.processLineBuffer);
-                root.processLineBuffer = "";
-            }
-            root.updateRunning = false;
-            root.lastUpdateOutputMs = 0;
-            if (root.updateCancelled) {
-                root.updateCancelled = false;
-                root.updateStatus = qsTr("Canceled");
-                return;
-            }
-            if (code === 0) {
-                Toaster.toast(qsTr("Update Successful"), qsTr("The update is complete. Please log out to apply changes."), "done");
-                root.reload();
-            } else {
-                root.updateStatus = qsTr("Update failed (exit code %1)").arg(code);
-                Toaster.toast(qsTr("Update Failed"), qsTr("The update script returned error code %1").arg(code), "error");
-            }
         }
     }
 }

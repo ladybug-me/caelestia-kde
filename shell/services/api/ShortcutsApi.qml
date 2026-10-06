@@ -9,9 +9,9 @@ QtObject {
             import qs.components.misc
 
             CustomShortcut {
-                name: "${name}"
-                description: "${description}"
-                key: "${key}"
+                name: ${JSON.stringify(name)}
+                description: ${JSON.stringify(description)}
+                key: ${JSON.stringify(key)}
             }
         `;
         let shortcut = Qt.createQmlObject(qml, root, "dynamicShortcut_" + name);

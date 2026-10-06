@@ -22,8 +22,8 @@ BASH   ?= bash
 
 .DEFAULT_GOAL := help
 
-.PHONY: help install update uninstall build-shell installer \
-        test test-bash test-repo validate hygiene \
+.PHONY: help install update uninstall build-shell fetch-dependencies installer \
+        test test-bash test-fast test-isolated test-artifacts test-repo validate hygiene \
         check check-shell check-python check-qml search-coverage \
         sync-fetch sync-report translations clean
 
@@ -48,6 +48,9 @@ uninstall: ## Remove the shell, its configs and the lockscreen plugin
 build-shell: ## Build and install the C++ QML plugin (needs Qt6 + CMake; Linux only)
 	$(BASH) $(STEPS_DIR)/08-build-shell.sh
 
+fetch-dependencies: ## Fetch pinned build dependencies for offline builds
+	$(BASH) $(STEPS_DIR)/fetch-dependencies.sh
+
 installer: ## Compile the TUI installer to installer/build/caelestia-install
 	cmake -B $(BUILD_DIR) -S $(TUI_DIR) -DCMAKE_BUILD_TYPE=Release
 	cmake --build $(BUILD_DIR)
@@ -59,7 +62,16 @@ test: test-bash test-repo validate ## Run every test CI runs
 test-bash: ## Run the bash helper and step-unit tests
 	$(BASH) $(TESTS_DIR)/run-tests.sh
 
-test-repo: ## Check cross-cutting invariants (paths, versions, workflows, submodules)
+test-fast: ## Run fast Bash tests only
+	$(BASH) $(TESTS_DIR)/run-tests.sh --suite fast
+
+test-isolated: ## Run isolated workflow Bash tests only
+	$(BASH) $(TESTS_DIR)/run-tests.sh --suite isolated
+
+test-artifacts: ## Run the artifact parity and provenance tests on their own (test-repo runs them too)
+	$(PYTHON) -m unittest discover -s $(CI_DIR) -p 'test_artifact_parity.py'
+
+test-repo: ## Check cross-cutting invariants (paths, versions, workflows, submodules, artifact checks)
 	$(PYTHON) -m unittest discover -s $(CI_DIR) -p 'test_*.py'
 
 validate: ## Validate the installer's menu.json and theme.json

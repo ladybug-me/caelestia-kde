@@ -38,6 +38,8 @@ Singleton {
     property bool disconnectExited
 
     property bool autoConnectPending
+    property bool registerSent: false
+    property int statusGen: 0
 
     readonly property var selected: root.providers.find(p => p.id === root.selectedProvider) ?? null
 
@@ -73,7 +75,6 @@ Singleton {
 
     readonly property list<string> optionalKeys: ["displayName", "interface", "connectCmd", "disconnectCmd"]
 
-    // Generate a stable, opaque internal id for a provider entry.
     function generateId(): string {
         return `vpn-${Date.now().toString(36)}-${Math.floor(Math.random() * 0x1000000).toString(36)}`;
     }
@@ -196,12 +197,14 @@ Singleton {
             return;
         const iface = active.interface;
         if (iface.length > 0) {
-            statsProc.command = ["sh", "-c", `cat /sys/class/net/${iface}/statistics/rx_bytes /sys/class/net/${iface}/statistics/tx_bytes 2>/dev/null`];
+            // The interface name is user config, so it travels as a positional
+            // argument instead of being interpolated into the shell string.
+            statsProc.command = ["sh", "-c", 'cat "/sys/class/net/$1/statistics/rx_bytes" "/sys/class/net/$1/statistics/tx_bytes" 2>/dev/null', "--", iface];
             statsProc.running = true;
             // Measure latency over the tunnel by binding the ping to the VPN
             // interface (-I), so the result reflects the VPN path, not the LAN.
             if (!pingProc.running) {
-                pingProc.command = ["sh", "-c", `ping -c1 -W2 -I ${iface} 1.1.1.1 2>/dev/null || ping -c1 -W2 1.1.1.1 2>/dev/null`];
+                pingProc.command = ["sh", "-c", 'ping -c1 -W2 -I "$1" 1.1.1.1 2>/dev/null || ping -c1 -W2 1.1.1.1 2>/dev/null', "--", iface];
                 pingProc.running = true;
             }
         }
@@ -249,13 +252,13 @@ Singleton {
                 status.state = "connecting";
             } else if (backendState === "NeedsLogin" || backendState === "NeedsMachineAuth") {
                 status.state = "needs-auth";
-                status.reason = backendState === "NeedsLogin" ? "Login required" : "Machine authorization required";
+                status.reason = backendState === "NeedsLogin" ? qsTr("Login required") : qsTr("Machine authorization required");
                 status.authUrl = data.AuthURL || "";
             }
         } catch (e) {
             if (output.includes("error") || output.includes("Error") || output.includes("failed")) {
                 status.state = "disconnected";
-                status.reason = "Tailscale may not be running";
+                status.reason = qsTr("Tailscale may not be running");
             } else {
                 status.state = "disconnected";
             }
@@ -286,7 +289,7 @@ Singleton {
                 const error = data.management.error;
                 if (error.includes("auth") || error.includes("login")) {
                     status.state = "needs-auth";
-                    status.reason = "Authentication required";
+                    status.reason = qsTr("Authentication required");
                 } else {
                     status.reason = error;
                 }
@@ -359,7 +362,7 @@ Singleton {
         return {
             connected: false,
             state: "needs-auth",
-            reason: "Authentication required",
+            reason: qsTr("Authentication required"),
             authUrl: authUrl,
             server: ""
         };
@@ -405,7 +408,7 @@ Singleton {
             Toaster.toast(qsTr("VPN disconnected"), qsTr("Disconnected from %1").arg(displayName), "vpn_key_off");
             break;
         case "needs-auth":
-            const authMsg = statusObj.reason || "Authentication required";
+            const authMsg = statusObj.reason || qsTr("Authentication required");
             Toaster.toast(qsTr("VPN authentication required"), qsTr("%1: %2").arg(displayName).arg(authMsg), "vpn_lock");
             break;
         case "error":
@@ -449,8 +452,12 @@ Singleton {
     }
 
     onStatusChanged: {
-        if (status.state === "needs-auth" && active.registerCmd)
+        if (status.state === "needs-auth" && !registerSent && active.registerCmd) {
+            registerSent = true;
             registerProc.exec(active.registerCmd);
+        } else if (status.state !== "needs-auth") {
+            registerSent = false;
+        }
     }
 
     onProvidersChanged: {
@@ -552,7 +559,13 @@ Singleton {
     Process {
         id: statusProc
 
+        property int gen: 0
+
         command: root.active.statusCmd
+        onRunningChanged: {
+            if (running)
+                gen = ++root.statusGen;
+        }
         // qmllint disable incompatible-type
         environment: ({
                 // qmllint enable incompatible-type
@@ -561,6 +574,8 @@ Singleton {
             })
         stdout: StdioCollector {
             onStreamFinished: {
+                if (statusProc.gen !== root.statusGen)
+                    return; // stale output from a provider that is no longer selected
                 const newStatus = root.active.parse(text);
                 root.updateStatus(newStatus);
             }

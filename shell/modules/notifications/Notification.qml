@@ -301,7 +301,7 @@ StyledRect {
             TextMetrics {
                 id: summaryMetrics
 
-                text: root.modelData.summary
+                text: root.modelData.summaryPlain
                 font: summary.font
                 elide: Text.ElideRight
                 elideWidth: expandBtn.x - time.width - timeSep.width - summary.x - root.Tokens.spacing.small * 3
@@ -391,7 +391,6 @@ StyledRect {
                 anchors.rightMargin: Tokens.spacing.small
 
                 animate: true
-                textFormat: root.bodyTextFormat
                 text: bodyPreviewMetrics.elidedText
                 color: Colours.palette.m3onSurfaceVariant
                 font: Tokens.font.body.small
@@ -408,7 +407,7 @@ StyledRect {
             TextMetrics {
                 id: bodyPreviewMetrics
 
-                text: root.modelData.body
+                text: root.modelData.bodyPlain
                 font: bodyPreview.font
                 elide: Text.ElideRight
                 elideWidth: bodyPreview.width

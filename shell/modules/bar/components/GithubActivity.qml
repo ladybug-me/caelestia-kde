@@ -67,7 +67,7 @@ StyledRect {
         console.error("[GitHubWidget] " + msg);
     }
 
-    // No credential stored yet. Say so once in the UI, pointing at the page that
+    // Say so once in the UI, pointing at the page that
     // fixes it, instead of leaving the user to find it in the log.
     function setTokenMissing(): void {
         root.lastError = "";
@@ -93,7 +93,19 @@ StyledRect {
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.github.background ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
 
-
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        cursorShape: Qt.PointingHandCursor
+        onClicked: mouse => {
+            if (!root.popouts)
+                return;
+            root.popouts.currentName = "githubcontext";
+            root.popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+            root.popouts.hasCurrent = true;
+            mouse.accepted = true;
+        }
+    }
 
     Grid {
         id: cells
@@ -123,17 +135,6 @@ StyledRect {
                 }
             }
         }
-
-        /* Uncomment for total count beside the widget
-        StyledText {
-            id: text
-            verticalAlignment: StyledText.AlignVCenter
-            text: root.total
-            font.pointSize: Appearance.font.size.smaller
-            font.family: Appearance.font.family.mono
-            color: root.colour
-        }
-        */
     }
 
 

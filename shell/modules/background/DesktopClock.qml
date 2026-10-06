@@ -28,6 +28,9 @@ Item {
     implicitWidth: layout.implicitWidth + (Tokens.padding.large * 4 * root.clockScale)
     implicitHeight: layout.implicitHeight + (Tokens.padding.extraLargeIncreased * root.clockScale)
 
+    x: (wallpaper ? wallpaper.width : 0) * Config.background.desktopClock.offsetX
+    y: (wallpaper ? wallpaper.height : 0) * Config.background.desktopClock.offsetY
+
     Item {
         id: clockContainer
 

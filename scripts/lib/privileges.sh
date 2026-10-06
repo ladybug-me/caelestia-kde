@@ -32,9 +32,6 @@ caelestia_have_askpass() {
     [[ -n "${SUDO_ASKPASS:-}" && -x "${SUDO_ASKPASS}" ]]
 }
 
-# Which way this shell can elevate: root, cached, askpass, terminal or pkexec.
-# Prints the one it would use, in that order, and fails when there is none. Nothing
-# runs here, so callers that must not prompt can reject the last two and stop.
 caelestia_sudo_method() {
     if [[ "$EUID" -eq 0 ]]; then
         printf 'root\n'
@@ -68,8 +65,11 @@ caelestia_prime_sudo() {
         return 0
     fi
 
-    # A GUI askpass helper beats pkexec here, and the export has to happen in this
-    # shell rather than inside the lookup that runs in a subshell.
+    if caelestia_real_sudo -n true 2>/dev/null; then
+        export CAELESTIA_SUDO_PRIMED=1
+        return 0
+    fi
+
     if [[ ! -t 0 ]] && ! caelestia_have_askpass; then
         local found
         if found="$(caelestia_find_askpass)"; then
@@ -82,7 +82,6 @@ caelestia_prime_sudo() {
         return 1
     fi
     if [[ "$method" == pkexec ]]; then
-        # pkexec asks for itself when the real command runs.
         return 0
     fi
     if ! caelestia_sudo_run "$method" -v; then

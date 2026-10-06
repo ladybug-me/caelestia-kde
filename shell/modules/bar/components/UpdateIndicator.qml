@@ -18,8 +18,6 @@ Item {
 
     readonly property bool checking: UpdateChecker.checkingUpdates
 
-    readonly property bool updateRunning: UpdateChecker.updateRunning
-
     // Index of the Nexus "Updates" page, resolved by page key so this
     // indicator can't drift out of sync if the page registry is reordered.
     readonly property int updatesPageIdx: {
@@ -35,8 +33,8 @@ Item {
 
         anchors.centerIn: parent
         anchors.horizontalCenterOffset: Centering.pixelAlign(parent.width, width)
-        text: root.updateRunning ? "progress_activity" : root.checking ? "sync" : root.hasUpdate ? "update" : "check_circle"
-        color: (root.hasUpdate || root.updateRunning) ? Colours.palette.m3primary : Colours.palette.m3secondary
+        text: root.checking ? "sync" : root.hasUpdate ? "update" : "check_circle"
+        color: root.hasUpdate ? Colours.palette.m3primary : Colours.palette.m3secondary
     }
 
     StateLayer {

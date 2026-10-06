@@ -10,10 +10,11 @@ LazyLoader {
     id: loader
 
     property list<string> cwd: ["Home"]
-    property string filterLabel: "All files"
+    property string filterLabel: qsTr("All files")
     property list<string> filters: ["*"]
     property bool selectFolder: false
     property string title: selectFolder ? qsTr("Select a folder") : qsTr("Select a file")
+    property bool countedOpen: false
 
     signal accepted(path: string)
     signal rejected
@@ -28,6 +29,17 @@ LazyLoader {
 
     onAccepted: activeAsync = false
     onRejected: activeAsync = false
+
+    onActiveAsyncChanged: {
+        if (activeAsync !== countedOpen) {
+            Visibilities.openDialogs += activeAsync ? 1 : -1;
+            countedOpen = activeAsync;
+        }
+    }
+    Component.onDestruction: {
+        if (countedOpen)
+            Visibilities.openDialogs -= 1;
+    }
 
     FloatingWindow {
         id: root

@@ -23,7 +23,7 @@ Item {
     readonly property int textSize: Math.round(effectiveThickness * 0.32)
 
     readonly property string windowTitle: {
-        const username = Quickshell.env("USER") || "User";
+        const username = Quickshell.env("USER") || qsTr("User");
         const formattedUser = username.charAt(0).toUpperCase() + username.slice(1);
 
         const mode = Config.bar.greeter.mode;
@@ -41,15 +41,15 @@ Item {
         const eStart = Config.bar.greeter.eveningStart;
         const nStart = Config.bar.greeter.nightStart;
 
-        let msg = Config.bar.greeter.nightText || "Good Night";
+        let msg = Config.bar.greeter.nightText || qsTr("Good Night");
         if (hr >= mStart && hr < aStart) {
-            msg = Config.bar.greeter.morningText || "Good Morning";
+            msg = Config.bar.greeter.morningText || qsTr("Good Morning");
         } else if (hr >= aStart && hr < eStart) {
-            msg = Config.bar.greeter.afternoonText || "Good Afternoon";
+            msg = Config.bar.greeter.afternoonText || qsTr("Good Afternoon");
         } else if (hr >= eStart && hr < nStart) {
-            msg = Config.bar.greeter.eveningText || "Good Evening";
+            msg = Config.bar.greeter.eveningText || qsTr("Good Evening");
         } else {
-            msg = Config.bar.greeter.nightText || "Good Night";
+            msg = Config.bar.greeter.nightText || qsTr("Good Night");
         }
 
         if (msg.includes("{user}")) {

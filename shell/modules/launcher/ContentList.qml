@@ -66,7 +66,7 @@ Item {
             PropertyChanges {
                 target: root
                 implicitWidth: root.showAppsBrowser ? browser.implicitWidth : root.Tokens.sizes.launcher.itemWidth
-                implicitHeight: root.showAppsBrowser ? Math.min(root.maxHeight, Math.max(root.Tokens.sizes.launcher.browseMinHeight, Math.min(browser.implicitHeight, root.Tokens.sizes.launcher.browseHeight))) : Math.min(root.maxHeight, appList.implicitHeight > 0 ? appList.implicitHeight : empty.implicitHeight)
+                implicitHeight: root.showAppsBrowser ? (Config.launcher.browseLayout === LauncherBrowseLayout.Compact ? Math.min(root.maxHeight, browser.implicitHeight) : Math.min(root.maxHeight, Math.max(root.Tokens.sizes.launcher.browseMinHeight, Math.min(browser.implicitHeight, root.Tokens.sizes.launcher.browseHeight)))) : Math.min(root.maxHeight, appList.implicitHeight > 0 ? appList.implicitHeight : empty.implicitHeight)
             }
         },
         State {
@@ -390,6 +390,7 @@ Item {
     Loader {
         id: windowSwitcherList
 
+        asynchronous: true
         active: root.state === "windowSwitcher"
 
         anchors.top: parent.top
@@ -407,6 +408,7 @@ Item {
     Loader {
         id: keybindsList
 
+        asynchronous: true
         active: root.state === "keybinds"
 
         anchors.fill: parent
@@ -420,6 +422,7 @@ Item {
     Loader {
         id: animationsList
 
+        asynchronous: true
         active: root.state === "animations"
 
         anchors.fill: parent

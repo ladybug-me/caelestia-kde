@@ -41,16 +41,16 @@ Rectangle {
     }
 
     function formatNotifTime(timeStr) {
-        if (!timeStr) return "now";
+        if (!timeStr) return qsTr("now");
         try {
             var t = new Date(timeStr);
             var diff = Math.floor((new Date() - t) / 1000);
-            if (isNaN(diff) || diff < 60) return "now";
-            if (diff < 3600) return Math.floor(diff / 60) + "m";
-            if (diff < 86400) return Math.floor(diff / 3600) + "h";
-            return Math.floor(diff / 86400) + "d";
+            if (isNaN(diff) || diff < 60) return qsTr("now");
+            if (diff < 3600) return Math.floor(diff / 60) + qsTr("m");
+            if (diff < 86400) return Math.floor(diff / 3600) + qsTr("h");
+            return Math.floor(diff / 86400) + qsTr("d");
         } catch(e) {
-            return "now";
+            return qsTr("now");
         }
     }
 
@@ -65,7 +65,7 @@ Rectangle {
         for (var i = 0; i < list.length; i++) {
             var n = list[i];
             if (n.closed) continue;
-            var app = n.appName || "Notifications";
+            var app = n.appName || qsTr("Notifications");
             if (!map[app]) {
                 map[app] = {
                     appName: app,
@@ -118,10 +118,10 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 text: root.hideNotifs
-                      ? "Unlock for Notifications"
+                      ? qsTr("Unlock for Notifications")
                       : (root.liveNotifs.length > 0
-                          ? (root.liveNotifs.length + (root.liveNotifs.length === 1 ? " notification" : " notifications"))
-                          : "Notifications")
+                          ? (root.liveNotifs.length + (root.liveNotifs.length === 1 ? qsTr(" notification") : qsTr(" notifications")))
+                          : qsTr("Notifications"))
                 font { pixelSize: LockScreenConfig.sizeSmall; family: LockScreenConfig.fontBody; weight: Font.Medium }
                 color: root.clOutline
                 elide: Text.ElideRight

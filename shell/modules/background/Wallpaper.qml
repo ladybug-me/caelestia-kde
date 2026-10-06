@@ -21,9 +21,6 @@ Item {
     property bool skipTransition: false
     property var screen: null
 
-    // True once this wallpaper has something to show, or has nothing to load at
-    // all. Background.qml keeps its fallback black until then, so a shell that is
-    // still starting does not paint the desktop black while the image decodes.
     readonly property bool shown: root.current ? (root.current.shown || root.source === "") : false
 
     function isVideo(path: string): bool {
@@ -31,6 +28,14 @@ Item {
             return false;
         const ext = path.split('.').pop().toLowerCase();
         return ["mp4", "webm", "mkv", "avi", "mov", "wmv", "flv"].includes(ext);
+    }
+
+    function releaseHidden(): void {
+        if (!current || (current.videoPath !== source && current.imagePath !== source))
+            return;
+        for (const img of [one, two])
+            if (img !== current)
+                img.videoPath = "";
     }
 
     onSourceChanged: {
@@ -50,6 +55,7 @@ Item {
                 one.screen = screen;
                 Qt.callLater(() => one.update());
                 completed = true;
+                Logger.mark("wallpaper-ready");
             });
     }
 
@@ -152,7 +158,9 @@ Item {
 
         property string imagePath: ""
         property string videoPath: ""
-        property bool isVideoImage: root.isVideo(root.source)
+        // Follows what this layer holds, not root.source: the hidden layer keeps
+        // its old content and must not start decoding a new video as well.
+        readonly property bool isVideoImage: videoPath !== ""
         property var screen: null
         readonly property bool shown: {
             if (root.source === "")
@@ -197,18 +205,7 @@ Item {
                 }
             }
         }
-        function updateContent(): void {
-            const isVideoImage = root.isVideo(root.source);
-            if (isVideoImage) {
-                imagePath = "";
-                videoPath = root.source;
-            } else {
-                videoPath = "";
-                imagePath = root.source;
-            }
-        }
 
-        onIsVideoImageChanged: updateContent()
         anchors.fill: parent
         opacity: 1
         scale: 1
@@ -218,6 +215,7 @@ Item {
             if (z === 1) {
                 if (root.skipTransition) {
                     maskRadius = maxRadius;
+                    Qt.callLater(root.releaseHidden);
                 } else {
                     maskRadius = 0;
                     maskAnim.restart();
@@ -323,6 +321,7 @@ Item {
                 to: img.maxRadius
                 type: Anim.Emphasized
                 duration: 2500
+                onFinished: root.releaseHidden()
             }
     }
 }

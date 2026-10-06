@@ -5,12 +5,31 @@ import QtQuick.Layouts
 import Quickshell.Io
 import Caelestia.Config
 import qs.components
+import qs.components.controls
 import qs.components.filedialog
 import qs.utils
 import qs.modules.nexus.common
 
 PageBase {
     id: root
+
+    readonly property list<MenuItem> browseLayoutItems: [
+        MenuItem {
+            property int value: LauncherBrowseLayout.Default
+
+            text: qsTr("Default")
+        },
+        MenuItem {
+            property int value: LauncherBrowseLayout.Simple
+
+            text: qsTr("Simple")
+        },
+        MenuItem {
+            property int value: LauncherBrowseLayout.Compact
+
+            text: qsTr("Compact")
+        }
+    ]
 
     title: qsTr("Launcher")
     isSubPage: true
@@ -127,6 +146,14 @@ PageBase {
             onToggled: GlobalConfig.launcher.showBrowseOnEmpty = checked
         }
 
+        SelectRow {
+            label: qsTr("App browser layout")
+            subtext: qsTr("Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results")
+            active: root.browseLayoutItems.find(item => item.value === Config.launcher.browseLayout) ?? root.browseLayoutItems[0]
+            menuItems: root.browseLayoutItems
+            onSelected: item => GlobalConfig.launcher.browseLayout = item.value
+        }
+
         ToggleRow {
             text: qsTr("Show power menu")
             subtext: qsTr("Show the quick session controls (shutdown, sleep, logout) at the bottom")
@@ -193,7 +220,7 @@ PageBase {
             subtext: qsTr("Number of copied items kept in history")
             value: Config.launcher.clipboardMaxEntries
             from: 1
-            to: 100
+            to: 2048
             stepSize: 1
             onMoved: v => GlobalConfig.launcher.clipboardMaxEntries = v
         }

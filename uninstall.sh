@@ -4,13 +4,13 @@ set -uo pipefail
 
 BUNDLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-LIB_DIR="$(dirname "${BASH_SOURCE[0]}")/scripts/lib"
+LIB_DIR="$BUNDLE_DIR/scripts/lib"
 
 source "$LIB_DIR/log.sh"
-# shellcheck source=scripts/lib/packages.sh
 source "$LIB_DIR/packages.sh"
-# shellcheck source=scripts/lib/privileges.sh
+source "$LIB_DIR/panels.sh"
 source "$LIB_DIR/privileges.sh"
+source "$LIB_DIR/selection.sh"
 
 section() {
     local title="$1"
@@ -101,13 +101,14 @@ if [[ -d "$BUNDLE_DIR/backups" ]]; then
             if [[ "$_bsel" == "0" ]]; then
                 SELECTED_BACKUP=""
                 break
-            elif [[ "$_bsel" -ge 1 ]] && [[ "$_bsel" -le "${#backups[@]}" ]]; then
+            elif [[ "$_bsel" =~ ^[0-9]+$ ]] && [[ "$_bsel" -ge 1 ]] && [[ "$_bsel" -le "${#backups[@]}" ]]; then
                 SELECTED_BACKUP="${backups[$((_bsel-1))]}"
                 SELECTED_KNSV="$(find "$SELECTED_BACKUP" -maxdepth 1 -type f -name '*.knsv' | head -n 1)"
-                if [[ -n "$SELECTED_KNSV" ]]; then
-                    break
-                fi
 
+                # A konsave archive restores the KDE profile but is not a clean
+                # desktop either, so the warning has to run for both kinds of
+                # backup - breaking out early here skipped it whenever a .knsv
+                # happened to be present.
                 if [[ -f "$SELECTED_BACKUP/.config/quickshell/caelestia/shell.qml" ]]; then
                     echo
                     warn "The selected backup contains Caelestia configurations."
@@ -154,20 +155,36 @@ ensure_konsave() {
 }
 
 restore_or_remove() {
-    local name="$1"           # e.g. "fish"
-    local target="$2"         # full destination path
-    local backup_subdir="$3"  # "config" or "local"
+    local name="$1"
+    local target="$2"
+    local backup_subdir="$3"
     local backup_dir="$SELECTED_BACKUP"
+    local backup_path=""
+
+    if [[ -n "$backup_dir" ]] && [[ -e "$backup_dir/$backup_subdir/$name" ]]; then
+        backup_path="$backup_dir/$backup_subdir/$name"
+    fi
+
+    # A single item the installer owned can be dropped; a whole directory cannot,
+    # because these are shared user configs (fish, kitty, thunar) the user keeps
+    # editing after install - deleting one because no backup exists destroys work
+    # that has nothing to do with Caelestia.
+    if [[ -z "$backup_path" && -d "$target" ]]; then
+        skip "No backup for $name - left in place (remove $target manually if you want it gone)"
+        return 0
+    fi
 
     rm -rf "$target"
 
-    if [[ -n "$backup_dir" ]] && [[ -e "$backup_dir/$backup_subdir/$name" ]]; then
-        if cp -r "$backup_dir/$backup_subdir/$name" "$target"; then
+    if [[ -n "$backup_path" ]]; then
+        if cp -r "$backup_path" "$target"; then
             ok "Restored $name from backup"
         else
             warn "Failed to restore $name from backup - $target is now missing"
         fi
     else
+        # No backup and no directory: a file the installer created itself, so
+        # there is nothing of the user's to lose.
         skip "No backup for $name - removed without restore"
     fi
 }
@@ -200,7 +217,7 @@ else
 fi
 
 pkill -f "caelestia shell" 2>/dev/null || true
-pkill -f "quickshell"      2>/dev/null || true
+pkill -f "quickshell.*caelestia" 2>/dev/null || true
 ok "Stopped any running shell processes"
 
 section "Step 2 - Remove Service and Autostart Files"
@@ -254,6 +271,14 @@ if [[ -d "$HOME/.local/lib/caelestia" ]]; then
     ok "Removed ~/.local/lib/caelestia"
 fi
 
+for desktop_file in quickshell.desktop org.quickshell.desktop; do
+    _df="$HOME/.local/share/applications/$desktop_file"
+    if [[ -f "$_df" ]] && grep -qE '^[[:space:]]*X-KDE-Wayland-Interfaces=' "$_df"; then
+        rm -f "$_df"
+        ok "Removed ~/.local/share/applications/$desktop_file"
+    fi
+done
+
 for qml_mod in Caelestia M3Shapes; do
     if [[ -d "$HOME/.local/lib/qt6/qml/$qml_mod" ]]; then
         rm -rf "$HOME/.local/lib/qt6/qml/$qml_mod"
@@ -263,7 +288,35 @@ done
 
 if [[ -d "$HOME/.local/share/caelestia-shell" ]]; then
     rm -rf "$HOME/.local/share/caelestia-shell"
-    ok "Removed ~/.local/share/caelestia-shell"
+    ok "Removed legacy ~/.local/share/caelestia-shell"
+fi
+
+if [[ -d "$HOME/.local/share/caelestia" ]]; then
+    rm -rf "$HOME/.local/share/caelestia"
+    ok "Removed ~/.local/share/caelestia"
+fi
+
+section "Step 3b - Remove Shell State"
+
+for stolen_file in stolen-shortcuts.json stolen-screen-edges.json; do
+    if [[ -f "$HOME/.config/caelestia/$stolen_file" ]]; then
+        rm -f "$HOME/.config/caelestia/$stolen_file"
+        ok "Removed stranded recovery file: ~/.config/caelestia/$stolen_file"
+    fi
+done
+
+rm -f "$HOME/.config/caelestia/status_icons_order.txt"
+
+for shell_cache in "$HOME/.cache/Caelestia" "$HOME/.cache/caelestia-shell"; do
+    if [[ -d "$shell_cache" ]]; then
+        rm -rf "$shell_cache"
+        ok "Removed $shell_cache"
+    fi
+done
+
+if [[ -d "$HOME/.config/Caelestia" ]]; then
+    rm -rf "$HOME/.config/Caelestia"
+    ok "Removed legacy ~/.config/Caelestia"
 fi
 
 if [[ -d "$HOME/.local/share/plasma/shells/caelestia.desktop" ]]; then
@@ -282,8 +335,6 @@ rm -f "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde/wallpaper-plugin-installed"
 
 section "Step 4 - Remove Bridge Scripts"
 
-# Derived from src/bin, which is what 03-deploy-configs.sh and 08-build-shell.sh copy into
-# ~/.local/bin: a hand-written list here has already drifted from theirs twice.
 for source_file in "$BUNDLE_DIR"/src/bin/*; do
     [[ -f "$source_file" ]] || continue
     bin_target="$HOME/.local/bin/$(basename -- "$source_file")"
@@ -293,7 +344,6 @@ for source_file in "$BUNDLE_DIR"/src/bin/*; do
     fi
 done
 
-# Names no version installs any more.
 for name in kcolorpicker qs-kwin-bridge.py caelestia-shortcuts caelestia-keyd-run ydotoold-wrapper caelestia-autostart.sh; do
     bin_target="$HOME/.local/bin/$name"
     if [[ -f "$bin_target" ]]; then
@@ -307,12 +357,8 @@ if [[ -d "$HOME/.local/share/kwin/scripts/quickshell-kde-bridge" ]]; then
     ok "Removed KWin script: quickshell-kde-bridge"
 fi
 
-
 section "Step 5 - Restore or Remove Config Directories"
 
-# hypr is deliberately absent: nothing here deploys ~/.config/hypr any more (compare the
-# deploy and backup lists in 03-deploy-configs.sh), so removing it deleted a Hyprland
-# user's own configuration with no backup to restore it from.
 for cfg in btop fastfetch fish foot kitty micro thunar; do
     if [[ -e "$HOME/.config/$cfg" ]]; then
         restore_or_remove "$cfg" "$HOME/.config/$cfg" ".config"
@@ -355,8 +401,6 @@ if [[ -z "$SELECTED_KNSV" ]]; then
     MANUAL_KDE_RESTORE_COUNT=0
     if [[ -n "$SELECTED_BACKUP" ]]; then
         info "Restoring core KDE configuration files from backup..."
-        # kwinrulesrc belongs in this list because 00-backup-themes.sh saves it with
-        # the other KDE configuration files, so the fallback has to put it back.
         for kde_cfg in \
             kdeglobals ksplashrc plasmarc kwinrc kwinrulesrc kcminputrc \
             plasma-org.kde.plasma.desktop-appletsrc; do
@@ -386,16 +430,22 @@ if [[ -z "$SELECTED_KNSV" ]]; then
     fi
 fi
 
+if [[ "$THEME_RESTORED_FROM_BACKUP" != "true" ]] && pgrep -x plasmashell >/dev/null 2>&1; then
+    _qdbus="$(command -v qdbus6 || command -v qdbus || true)"
+    if [[ -n "$_qdbus" ]]; then
+        if "$_qdbus" org.kde.plasmashell /PlasmaShell evaluateScript "$(stock_panel_script)" 2>/dev/null; then
+            ok "Created a default bottom panel (no backup was available)"
+        else
+            warn "Could not create a default panel. Add one via Edit Mode if the desktop is empty."
+        fi
+    fi
+fi
+
 kwriteconfig6 --file kwinrc --group "Plugins" --key "quickshell-kde-bridgeEnabled" "false" 2>/dev/null || true
 kwriteconfig6 --file kwinrc --group "Plugins" --key "krohnkiteEnabled"             "false" 2>/dev/null || true
 kwriteconfig6 --file kwinrc --group "Plugins" --key "kwin_workspace_trackerEnabled" "false" 2>/dev/null || true
 ok "Disabled KWin plugins: quickshell-kde-bridge, krohnkite, kwin_workspace_tracker"
 
-# The three rule groups the installer writes are removed one key at a time. The
-# list is explicit rather than a file-wide reset because kwinrulesrc also holds the
-# user's own rules, and kwriteconfig6 can only delete a key, never a whole group.
-# A group leaves the file once no keys are left in it. scripts/04a-window-rules.sh
-# owns this key list: changing one means changing the other.
 kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "Description"         --delete 2>/dev/null || true
 kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "types"               --delete 2>/dev/null || true
 kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "opacityinactive"     --delete 2>/dev/null || true
@@ -410,13 +460,6 @@ kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "titlematch" 
 kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "above"               --delete 2>/dev/null || true
 kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "aboverule"           --delete 2>/dev/null || true
 
-# [General] rules= is the index of the rule groups: KWin loads the groups that list
-# names and nothing else, so our names have to leave it as well, or the file keeps
-# an index entry for three groups that are no longer there. The user's own names are
-# kept, in their order, and count= is rewritten to the number that is left. Both
-# keys go only once no name is left, which is the shape the file had before the
-# install. scripts/04a-window-rules.sh owns this index: changing one means changing
-# the other.
 KEPT_RULE_NAMES=()
 KEPT_RULE_COUNT=0
 while IFS= read -r rule_name; do
@@ -449,12 +492,14 @@ kwriteconfig6 --file kscreenlockerrc --group Greeter --group LnF --group General
 kwriteconfig6 --file kscreenlockerrc --group Greeter --group LnF --group General --key showMediaControls --delete 2>/dev/null || true
 ok "Restored stock KDE lock screen configuration."
 
-kwriteconfig6 --file kwinrc --group "Desktops" --key "Number" "1" 2>/dev/null || true
-kwriteconfig6 --file kwinrc --group "Desktops" --key "Rows"   "1" 2>/dev/null || true
-for i in $(seq 1 5); do
-    kwriteconfig6 --file kwinrc --group "Desktops" --key "Name_$i" "Desktop $i" 2>/dev/null || true
-done
-ok "Restored desktop count to 1"
+if [[ "$THEME_RESTORED_FROM_BACKUP" != "true" ]]; then
+    kwriteconfig6 --file kwinrc --group "Desktops" --key "Number" "1" 2>/dev/null || true
+    kwriteconfig6 --file kwinrc --group "Desktops" --key "Rows"   "1" 2>/dev/null || true
+    for i in $(seq 1 5); do
+        kwriteconfig6 --file kwinrc --group "Desktops" --key "Name_$i" "Desktop $i" 2>/dev/null || true
+    done
+    ok "Restored desktop count to 1"
+fi
 
 for i in $(seq 1 5); do
     kwriteconfig6 --file kglobalshortcutsrc --group "kwin" \
@@ -468,12 +513,6 @@ _bk_dir="$SELECTED_BACKUP"
 if [[ -n "$_bk_dir" ]] && [[ -f "$_bk_dir/.config/kglobalshortcutsrc" ]]; then
     cp "$_bk_dir/.config/kglobalshortcutsrc" "$HOME/.config/kglobalshortcutsrc"
     ok "Restored kglobalshortcutsrc from backup"
-elif ls "$BUNDLE_DIR/backups/kglobalshortcutsrc_"* >/dev/null 2>&1; then
-    _bk_file="$(ls -t "$BUNDLE_DIR/backups/kglobalshortcutsrc_"* 2>/dev/null | head -1)"
-    if [[ -f "$_bk_file" ]]; then
-        cp "$_bk_file" "$HOME/.config/kglobalshortcutsrc"
-        ok "Restored kglobalshortcutsrc from $( basename "$_bk_file")"
-    fi
 fi
 
 rm -f "$HOME/.local/share/konsole/MaterialYou.colorscheme"
@@ -486,8 +525,7 @@ ok "Removed Konsole profiles generated by Caelestia"
 _DARKLY_GTK_THEME="${XDG_DATA_HOME:-$HOME/.local/share}/themes/Darkly"
 _GTK4_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0"
 if [[ -d "$_DARKLY_GTK_THEME" ]]; then
-    rm -rf "$_DARKLY_GTK_THEME"
-    ok "Removed Darkly GTK theme"
+    info "Leaving $_DARKLY_GTK_THEME in place (delete manually if you want)."
 fi
 rm -f "${XDG_DATA_HOME:-$HOME/.local/share}/plasma/desktoptheme/Darkly" 2>/dev/null || true
 rm -f "${XDG_DATA_HOME:-$HOME/.local/share}/plasma/desktoptheme/darkly" 2>/dev/null || true
@@ -567,7 +605,12 @@ if [[ -n "$SELECTED_BACKUP" ]] && [[ -f "$SELECTED_BACKUP/previous_shell.txt" ]]
     fi
 fi
 
-if [[ -z "$_RESTORE_SHELL" ]]; then
+if [[ -z "$SELECTED_BACKUP" ]] || [[ ! -f "$SELECTED_BACKUP/previous_shell.txt" ]]; then
+    current_shell="$(getent passwd "$(id -un)" | cut -d: -f7)"
+    if [[ -n "$current_shell" && "$current_shell" != "$(command -v bash 2>/dev/null || echo /bin/bash)" ]]; then
+        info "No shell backup was recorded, so the login shell ($current_shell) is left as it is."
+    fi
+elif [[ -z "$_RESTORE_SHELL" ]]; then
     if command -v bash >/dev/null 2>&1; then
         _RESTORE_SHELL="$(command -v bash)"
     else
@@ -584,31 +627,39 @@ fi
 if [[ "$SHELL_RC_RESTORED" == "true" ]]; then
     info "Skipped shell rc line cleanup because original rc files were restored exactly from backup."
 else
-    if [[ -f "$HOME/.bashrc" ]]; then
-        sed -i '/export QML2_IMPORT_PATH=.*caelestia\|export CAELESTIA_LIB_DIR=/d' "$HOME/.bashrc" 2>/dev/null || true
-        ok "Removed Caelestia env vars from ~/.bashrc"
-    fi
+    strip_caelestia_env() {
+        local rc="$1"
+        shift
+        local -a patterns=()
+        local prefix
+        for prefix in "$@"; do
+            patterns+=(-e "/^[[:space:]]*${prefix}[[:space:]]+QML2_IMPORT_PATH.*caelestia/d")
+            patterns+=(-e "/^[[:space:]]*${prefix}[[:space:]]+CAELESTIA_LIB_DIR.*caelestia/d")
+        done
+        sed -i -E "${patterns[@]}" "$rc" 2>/dev/null || true
+    }
 
-    if [[ -f "$HOME/.config/environment.d/caelestia.conf" ]]; then
-        rm -f "$HOME/.config/environment.d/caelestia.conf"
-        ok "Removed the Caelestia environment file"
-    fi
+    for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.config/fish/config.fish"; do
+        [[ -f "$rc" ]] || continue
 
-    if [[ -f "$HOME/.config/plasma-workspace/env/caelestia.sh" ]]; then
-        rm -f "$HOME/.config/plasma-workspace/env/caelestia.sh"
-        rmdir "$HOME/.config/plasma-workspace/env" 2>/dev/null || true
-        ok "Removed the Caelestia Plasma session environment script"
-    fi
+        case "$rc" in
+            */config.fish) strip_caelestia_env "$rc" "set -gx" "set -x" ;;
+            *)             strip_caelestia_env "$rc" "export" ;;
+        esac
 
-    if [[ -f "$HOME/.config/fish/config.fish" ]]; then
-        sed -i '/QML2_IMPORT_PATH\|CAELESTIA_LIB_DIR/d' "$HOME/.config/fish/config.fish" 2>/dev/null || true
-        ok "Removed Caelestia env vars from fish config"
-    fi
+        ok "Removed Caelestia env vars from $rc"
+    done
+fi
 
-    if [[ -f "$HOME/.zshrc" ]]; then
-        sed -i '/QML2_IMPORT_PATH\|CAELESTIA_LIB_DIR/d' "$HOME/.zshrc" 2>/dev/null || true
-        ok "Removed Caelestia env vars from ~/.zshrc"
-    fi
+if [[ -f "$HOME/.config/environment.d/caelestia.conf" ]]; then
+    rm -f "$HOME/.config/environment.d/caelestia.conf"
+    ok "Removed the Caelestia environment file"
+fi
+
+if [[ -f "$HOME/.config/plasma-workspace/env/caelestia.sh" ]]; then
+    rm -f "$HOME/.config/plasma-workspace/env/caelestia.sh"
+    rmdir "$HOME/.config/plasma-workspace/env" 2>/dev/null || true
+    ok "Removed the Caelestia Plasma session environment script"
 fi
 
 section "Step 8 - Remove System-level Files"
@@ -708,8 +759,6 @@ if not os.path.exists(cli_path):
 with open(cli_path) as f:
     config = json.load(f)
 changed = False
-# Both helpers are ours, and an install that moved between display managers could have
-# left either behind, so both spellings are recognised.
 ours = re.compile(
     r'\s*&&\s*sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook'
     r'|sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook\s*&&\s*'
@@ -736,7 +785,7 @@ fi
 rm -f "$HOME/.config/caelestia/templates/sddm-theme.conf"
 
 for link in /usr/local/bin/sass /usr/local/bin/qdbus6 /usr/local/bin/caelestia /usr/local/bin/wl-clip-persist /usr/local/bin/gpu-screen-recorder; do
-    if [[ -L "$link" || -f "$link" ]]; then
+    if [[ -L "$link" ]]; then
         caelestia_sudo rm -f "$link"
         ok "Removed: $link"
     fi
@@ -749,26 +798,15 @@ for effect_lib in /usr/lib/qt6/plugins/kwin/effects/plugins/kwin_workspace_track
     fi
 done
 
-if [[ -f "$HOME/.cargo/bin/satty" ]]; then
-    rm -f "$HOME/.cargo/bin/satty"
-    ok "Removed: satty (cargo)"
-fi
-
 if groups "$(id -un)" | grep -q '\binput\b'; then
     caelestia_sudo gpasswd -d "$(id -un)" input 2>/dev/null || \
         warn "Could not remove the user from input group. Run: sudo gpasswd -d $(id -un) input"
-    ok "Removed $USER from 'input' group (takes effect on next login)"
+    ok "Removed $(id -un) from 'input' group (takes effect on next login)"
 fi
 
 if [[ "$REMOVE_PACKAGES" == "true" ]]; then
     section "Step 9 - Remove Packages (Optional)"
 
-    # Only user-level utilities, standalone apps, custom fonts, and shell tools.
-    # NEVER include core libraries, development headers, compiler toolchains,
-    # desktop environment services, or base system components (e.g. pipewire,
-    # networkmanager, qt6-*, kf6-*, cmake, python, bash).
-    # fish is absent on purpose even though the installer offers it: it may be the
-    # user's login shell, and removing it locks them out of the machine.
     ARCH_PACKAGES=(
         quickshell matugen
         foot eza fastfetch starship btop
@@ -805,9 +843,6 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
         adw-gtk3 adw-gtk3-theme papirus-icon-theme darkly
     )
 
-    # One flow for all three: the distro only decides which list to walk and which
-    # remover to call. What is not installed is filtered out first, because a single
-    # unknown name makes dnf and apt refuse the whole batch.
     case "$BASE_DISTRO" in
         arch)
             _pkg_list=("${ARCH_PACKAGES[@]}")
@@ -828,21 +863,38 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
     esac
 
     if [[ ${#_pkg_list[@]} -gt 0 ]]; then
-        warn "The following packages will be removed:"
-        printf '  %s\n' "${_pkg_list[@]}"
-        echo
-        read -r -p "Proceed? [y/N]: " _pkg_confirm
-        if [[ "${_pkg_confirm,,}" == "y" || "${_pkg_confirm,,}" == "yes" ]]; then
-            mapfile -t _installed < <(filter_installed "${_pkg_list[@]}")
-            if [[ ${#_installed[@]} -gt 0 ]]; then
-                "${_remove_cmd[@]}" "${_installed[@]}" 2>/dev/null || \
-                    warn "Some packages could not be removed automatically. Check manually."
-                ok "$BASE_DISTRO packages removed"
-            else
-                skip "None of the listed packages are installed"
-            fi
+        mapfile -t _installed < <(filter_installed "${_pkg_list[@]}")
+        if [[ ${#_installed[@]} -eq 0 ]]; then
+            skip "None of the listed packages are installed"
         else
-            skip "Package removal skipped"
+            warn "Packages installed by caelestia that are also common desktop tools:"
+            for _i in "${!_installed[@]}"; do
+                printf '  %2d) %s\n' "$((_i + 1))" "${_installed[_i]}"
+            done
+            echo "  Enter the numbers to remove (e.g. 1 3 5-9), 'all' for every package,"
+            echo "  or press Enter to keep them all."
+
+            _selected=()
+            read -r -p "Selection [keep all]: " _pkg_choice || _pkg_choice=""
+            case "${_pkg_choice,,}" in
+                all|a)
+                    _selected=("${_installed[@]}")
+                ;;
+                *)
+                    mapfile -t _idx < <(select_indices "${#_installed[@]}" "$_pkg_choice")
+                    for _n in "${_idx[@]}"; do
+                        _selected+=("${_installed[_n]}")
+                    done
+                ;;
+            esac
+
+            if [[ ${#_selected[@]} -gt 0 ]]; then
+                "${_remove_cmd[@]}" "${_selected[@]}" 2>/dev/null || \
+                    warn "Some packages could not be removed automatically. Check manually."
+                ok "Removed ${#_selected[@]} package(s)"
+            else
+                skip "Package removal skipped"
+            fi
         fi
     fi
 
@@ -854,8 +906,7 @@ if [[ "$REMOVE_PACKAGES" == "true" ]]; then
 
     if command -v uv >/dev/null 2>&1; then
         uv tool uninstall kde-material-you-colors 2>/dev/null || true
-        uv tool uninstall konsave 2>/dev/null || true
-        ok "Removed uv tools: kde-material-you-colors, konsave"
+        ok "Removed uv tools: kde-material-you-colors"
     fi
 
     if command -v kpackagetool6 >/dev/null 2>&1; then
@@ -888,10 +939,14 @@ if [[ -d "$CACHE_DIR" ]]; then
     fi
 fi
 
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/caelestia"
+if [[ -d "$STATE_DIR" ]]; then
+    rm -rf "$STATE_DIR"
+    ok "Removed $STATE_DIR"
+fi
+
 section "Step 11 - Reload KDE"
 
-# KWin does not watch kwinrulesrc, so this reload is what applies the rule deletions
-# made in Step 6. The call needs the exact bus name KWin owns, org.kde.KWin.
 qdbus6 org.kde.KWin /KWin reconfigure                    2>/dev/null || true
 systemctl --user restart plasma-kglobalaccel.service      2>/dev/null || true
 kbuildsycoca6 --noincremental                             2>/dev/null || true

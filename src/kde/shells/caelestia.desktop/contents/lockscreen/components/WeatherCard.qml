@@ -102,7 +102,7 @@ Rectangle {
             Text {
                 Layout.fillWidth: true
                 Layout.maximumWidth: detailsSection.Layout.maximumWidth
-                text: Weather.hasWeather ? ("Feels like " + Weather.feelsLike) : "Feels like --°C"
+                text: qsTr("Feels like %1").arg(Weather.hasWeather ? Weather.feelsLike : "--°C")
                 font {
                     pixelSize: Math.max(10, Math.round(12 * root.centerScale))
                     family: LockScreenConfig.fontBody
@@ -116,7 +116,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.maximumWidth: detailsSection.Layout.maximumWidth
                 text: (Weather.hasWeather && Weather.maxTemp.length > 0 && Weather.minTemp.length > 0)
-                      ? ("High " + Weather.maxTemp + " • Low " + Weather.minTemp)
+                      ? qsTr("High %1 • Low %2").arg(Weather.maxTemp).arg(Weather.minTemp)
                       : ""
                 font {
                     pixelSize: Math.max(10, Math.round(11 * root.centerScale))

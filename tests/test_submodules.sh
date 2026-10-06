@@ -183,7 +183,7 @@ test_ensure_submodule_content_recovers_from_a_stale_registration() {
         "the content should come from the URL .gitmodules records"
 }
 
-test_fetch_submodule_by_clone_works_without_submodule_machinery() {
+test_fetch_submodule_by_clone_needs_an_explicit_opt_in() {
     require_git || return 0
     local tmp source repo
     tmp="$(new_tmpdir)"
@@ -192,12 +192,26 @@ test_fetch_submodule_by_clone_works_without_submodule_machinery() {
     make_submodule_source "$source"
     repo="$tmp/repo"
     mkdir -p "$repo"
+    git init -q "$repo"
     printf '[submodule "caelestia"]\n\tpath = src/dots\n\turl = file://%s\n' "$source" \
         > "$repo/.gitmodules"
     mkdir -p "$repo/src/dots"
 
+    # A pin that the source cannot deliver: only the explicit opt-in may fetch it.
+    pinned="$(git -C "$source" rev-parse HEAD)"
+    case "$pinned" in
+        *0) fake="${pinned%?}1" ;;
+        *)  fake="${pinned%?}0" ;;
+    esac
+    assert_ne "$pinned" "$fake" "the fake pin must name a different commit"
+    git -C "$repo" update-index --add --cacheinfo 160000,"$fake",src/dots
+    git -C "$repo" -c user.email=t@t -c user.name=t commit -qm pin
+
     fetch_submodule_by_clone "$repo" "src/dots"
-    assert_status 0 "$?" "the clone fallback should succeed with a usable URL"
+    assert_status 1 "$?" "a clone that misses the pinned commit must be refused"
+
+    CAELESTIA_ALLOW_UNPINNED_SUBMODULES=1 fetch_submodule_by_clone "$repo" "src/dots"
+    assert_status 0 "$?" "the clone fallback should succeed behind the explicit opt-in"
     assert_eq "deployed" "$(cat "$repo/src/dots/deployed.conf")" "the content should be there"
     assert_file_missing "$repo/src/dots/.git" \
         "the clone's own repository must not be left inside the parent's working tree"

@@ -71,14 +71,14 @@ void VisualiserBars::drawSide(QPainter* painter, bool rightSide) {
     if (count == 0)
         return;
 
-    const qreal sideWidth = w * 0.4;
+    const qreal sideWidth = w * m_sideWidth;
     const qreal slotWidth = sideWidth / static_cast<qreal>(count);
     const qreal barWidth = slotWidth - m_spacing;
 
     if (barWidth <= 0)
         return;
 
-    const qreal sideOffset = rightSide ? w * 0.6 : 0;
+    const qreal sideOffset = rightSide ? w * (1.0 - m_sideWidth) : 0;
     const qreal maxBarHeight = h * 0.4;
 
     for (qsizetype i = 0; i < count; ++i) {
@@ -186,6 +186,18 @@ void VisualiserBars::setSpacing(qreal spacing) {
         return;
     m_spacing = spacing;
     emit spacingChanged();
+    update();
+}
+
+qreal VisualiserBars::sideWidth() const {
+    return m_sideWidth;
+}
+
+void VisualiserBars::setSideWidth(qreal sideWidth) {
+    if (qFuzzyCompare(m_sideWidth, sideWidth))
+        return;
+    m_sideWidth = sideWidth;
+    emit sideWidthChanged();
     update();
 }
 

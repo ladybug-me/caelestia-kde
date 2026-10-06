@@ -1,0 +1,28 @@
+# Readiness markers the installed shell has to log in every smoke run, and how
+# many times each one has to appear: <minimum>|<marker>. Blank lines and lines
+# starting with # are ignored; everything else is a literal substring match
+# against a log line, so the marker has to be exactly what the emitter logs
+# (see Logger.mark and its call sites under shell/).
+#
+# One declaration, two readers: tests/runtime-smoke.sh asserts against this file
+# and tests/test_runtime_smoke.sh builds its fixture from it.
+#
+# The IPC sequence in tests/runtime-smoke.sh toggles every drawer twice and
+# opens and closes the nexus, so those markers show up twice; the rest only have
+# to show up once.
+1|Configuration Loaded
+1|[caelestia] bar-ready
+1|[caelestia] wallpaper-ready
+1|[caelestia] shortcuts-ready
+1|[Preload] Utilities loaded successfully
+1|[perf][ContextMenuStore] load disk
+1|[perf][DesktopContextMenu] build model
+1|[caelestia] nexus=created
+1|[caelestia] nexus=reused
+1|[caelestia] nexus=destroyed
+2|[caelestia] drawer=launcher toggled
+2|[caelestia] drawer=sidebar toggled
+2|[caelestia] drawer=dashboard toggled
+2|[caelestia] drawer=utilities toggled
+2|[caelestia] drawer=overview toggled
+2|[caelestia] drawer=session toggled

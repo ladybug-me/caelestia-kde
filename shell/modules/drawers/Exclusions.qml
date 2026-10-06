@@ -3,7 +3,9 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 import Caelestia.Config
+import qs.components
 import qs.components.containers
+import qs.services
 import qs.modules.bar as Bar
 
 Scope {
@@ -11,10 +13,17 @@ Scope {
 
     required property ShellScreen screen
     required property Bar.BarWrapper bar
+    required property DrawerVisibilities visibilities
+    // A pinned sidebar reserves its width so maximised windows sit beside it
+    // rather than under it. It stays reserved while hidden for a fullscreen window
+    // so the other windows are not resized back and forth.
+    readonly property bool reserveSidebar: Visibilities.sidebarPinned && Config.sidebar.enabled
+        && (visibilities.sidebar || visibilities.sidebarSuspended)
 
     ExclusionZone {
         anchors.left: true
-        exclusiveZone: root.bar.position === "left" ? root.bar.exclusiveZone : Config.border.thickness
+        exclusiveZone: (root.bar.position === "left" ? root.bar.exclusiveZone : Config.border.thickness)
+            + (root.reserveSidebar && root.bar.position === "right" ? Tokens.sizes.sidebar.width : 0)
         Config.screen: root.screen.name
     }
 
@@ -26,7 +35,8 @@ Scope {
 
     ExclusionZone {
         anchors.right: true
-        exclusiveZone: root.bar.position === "right" ? root.bar.exclusiveZone : Config.border.thickness
+        exclusiveZone: (root.bar.position === "right" ? root.bar.exclusiveZone : Config.border.thickness)
+            + (root.reserveSidebar && root.bar.position !== "right" ? Tokens.sizes.sidebar.width : 0)
         Config.screen: root.screen.name
     }
 

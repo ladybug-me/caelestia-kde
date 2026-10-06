@@ -167,6 +167,10 @@ jobs:
     needs: version-release
     runs-on: ubuntu-latest
     container: archlinux:base-devel
+    env:
+      http_proxy: http://127.0.0.1:9
+      https_proxy: http://127.0.0.1:9
+      all_proxy: http://127.0.0.1:9
     permissions:
       contents: write
     steps:
@@ -188,6 +192,13 @@ jobs:
           source scripts/lib/toolchain.sh
           install_cava_sdk arch
 
+      - name: Prepare Pinned Build Dependencies
+        run: |
+          set -euo pipefail
+          rm -rf shell/build
+          rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/caelestia-kde"
+          bash scripts/fetch-dependencies.sh
+
       - name: Load Release Tag
         run: |
           set -euo pipefail
@@ -198,10 +209,14 @@ jobs:
         run: |
           set -euo pipefail
           cmake -G Ninja -B shell/build -S shell -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCAELESTIA_CACHE_DEPS=ON \
+            -DCAELESTIA_OFFLINE=ON \
+            -DCMAKE_INSTALL_PREFIX=/ \
+            -DINSTALL_BINDIR=usr/bin \
+            -DINSTALL_DATADIR=usr/lib/caelestia \
             -DINSTALL_QSCONFDIR=etc/xdg/quickshell/caelestia \
-            -DINSTALL_LIBDIR=lib/caelestia \
-            -DINSTALL_QMLDIR=lib/qt6/qml
+            -DINSTALL_LIBDIR=usr/lib/caelestia \
+            -DINSTALL_QMLDIR=usr/lib/qt6/qml
 
       - name: Build Shell
         run: |
@@ -213,12 +228,14 @@ jobs:
           set -euo pipefail
           QT_ABI="$(pkg-config --modversion Qt6Core | grep -oE '^[0-9]+\.[0-9]+')"
           DESTDIR="$PWD/stage" cmake --install shell/build
-          mkdir -p dist/root/lib/qt6/qml dist/root/lib/caelestia dist/root/quickshell
+          mkdir -p dist/root/bin dist/root/lib/qt6/qml dist/root/lib/caelestia dist/root/quickshell
+          cp -a stage/usr/bin/. dist/root/bin/
           cp -a stage/usr/lib/qt6/qml/Caelestia stage/usr/lib/qt6/qml/M3Shapes dist/root/lib/qt6/qml/
-          cp -a stage/usr/lib/caelestia/version dist/root/lib/caelestia/
+          cp -a stage/usr/lib/caelestia/. dist/root/lib/caelestia/
           cp -a stage/usr/etc/xdg/quickshell/caelestia dist/root/quickshell/
           ARTIFACT="dist/caelestia-kde-x86_64-qt${QT_ABI}.tar.gz"
-          tar -C dist/root -czf "$ARTIFACT" lib quickshell
+          tar -C dist/root -czf "$ARTIFACT" bin lib quickshell
+          python3 .github/scripts/check_release_archive.py "$ARTIFACT" dist/root
           echo "ARTIFACT=$ARTIFACT" >> "$GITHUB_ENV"
           CHECKSUM="${ARTIFACT}.sha256"
           sha256sum "$ARTIFACT" | sed "s|$(dirname "$ARTIFACT")/||" > "$CHECKSUM"

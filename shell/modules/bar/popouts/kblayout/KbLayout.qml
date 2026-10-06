@@ -98,7 +98,7 @@ ColumnLayout {
             width: list.width
             height: Math.max(36, rowText.implicitHeight + Tokens.padding.small)
             ToolTip.visible: isDisabled && layer.containsMouse
-            ToolTip.text: "XKB supports only 4 layouts at a time"
+            ToolTip.text: qsTr("XKB supports only 4 layouts at a time")
 
             StateLayer {
                 id: layer

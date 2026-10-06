@@ -27,13 +27,33 @@ jobs:
   branch-name:
     runs-on: ubuntu-latest
     steps:
-      - name: Check branch name
+      - name: Check the base branch
         env:
-          BRANCH_NAME: ${{ github.head_ref }}
+          BASE_BRANCH: ${{ github.base_ref }}
+          HEAD_BRANCH: ${{ github.head_ref }}
         run: |
-          if [[ "$BRANCH_NAME" == "main" || "$BRANCH_NAME" == "dev" ]]; then
-            echo "::warning::Branch '$BRANCH_NAME' as source - consider using a feature branch instead."
+          set -euo pipefail
+
+          # Feature work targets dev. main moves only through a release promotion,
+          # and the protection ruleset there requires a pull request to do it, so
+          # that one case has to stay open.
+          is_release_branch=false
+          case "$HEAD_BRANCH" in
+            [Rr]elease/*) is_release_branch=true ;;
+          esac
+
+          if [[ "$BASE_BRANCH" == "dev" ]]; then
+            echo "Pull request targets dev."
+            exit 0
           fi
+
+          if [[ "$BASE_BRANCH" == "main" && "$is_release_branch" == "true" ]]; then
+            echo "Release promotion '$HEAD_BRANCH' targets main."
+            exit 0
+          fi
+
+          echo "::error::Pull requests must target dev, except a Release/* branch promoting a release to main (this one is '${HEAD_BRANCH:-<none>}' onto '${BASE_BRANCH:-<none>}')."
+          exit 1
 
   changed-files:
     runs-on: ubuntu-latest
@@ -65,7 +85,7 @@ jobs:
             echo "QML files outside shell/: $NON_SHELL_QML" >> $GITHUB_STEP_SUMMARY
           fi
 
-          if grep -q '^installer/tui/.*\.(cpp|hpp|h)$' /tmp/changed_files.txt; then
+          if grep -qE '^installer/tui/.*\.(cpp|hpp|h)$' /tmp/changed_files.txt; then
             echo "Installer C++ changes - compilation will be verified by validate workflow." >> $GITHUB_STEP_SUMMARY
           fi
 
@@ -154,7 +174,8 @@ jobs:
             if [[ "$result" == "success" ]]; then
               echo "- [PASS] **${job}**" >> $GITHUB_STEP_SUMMARY
             elif [[ "$result" == "skipped" ]]; then
-              echo "- [SKIP] **${job}**" >> $GITHUB_STEP_SUMMARY
+              echo "- [FAIL] **${job}** - required PR job was skipped" >> $GITHUB_STEP_SUMMARY
+              all_passed=false
             else
               echo "- [FAIL] **${job}** - ${result}" >> $GITHUB_STEP_SUMMARY
               all_passed=false

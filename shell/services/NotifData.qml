@@ -32,6 +32,10 @@ QtObject {
     property string appIcon
     property string appName
     property string image
+    // Body with markup stripped, for single-line previews (eliding raw markup cuts tags in half)
+    readonly property string bodyPlain: body.replace(/<[^>]*>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&#39;|&apos;/g, "'").replace(/&amp;/g, "&").trim()
+    // Summary is always shown on a single line, so collapse any whitespace too
+    readonly property string summaryPlain: summary.replace(/<[^>]*>/g, "").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&#39;|&apos;/g, "'").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim()
     property var hints
     property real expireTimeout: GlobalConfig.notifs.defaultExpireTimeout
     property int urgency: NotificationUrgency.Normal
@@ -185,6 +189,9 @@ QtObject {
     }
 
     function maybeTriggerDummyImageLoader(): void {
+        // Absolute image-path hints (e.g. Chromium) arrive as image://icon//abs/path, which renders as a missing icon
+        if (image.startsWith("image://icon//"))
+            image = "file://" + image.slice("image://icon/".length);
         if (image && !image.startsWith("image://icon/") && !image.startsWith(Paths.notifimagecache))
             dummyImageLoader.active = true;
     }

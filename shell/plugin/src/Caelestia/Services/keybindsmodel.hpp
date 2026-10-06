@@ -3,6 +3,7 @@
 
 #include <QAbstractListModel>
 #include <QHash>
+#include <QJsonObject>
 #include <QList>
 #include <QObject>
 #include <QQmlEngine>
@@ -62,9 +63,12 @@ private:
     QHash<QString, QString> m_keybinds;
     QTimer* m_saveTimer = nullptr;
     QTimer* m_loadTimer = nullptr;
+    QJsonObject m_defaults;
+    QHash<QString, QString> m_lowerCache;
 
     QString keybindsPath() const;
     void saveKeybinds();
+    void updateLowerCache(GlobalShortcut* sc);
 };
 
 } // namespace caelestia::services

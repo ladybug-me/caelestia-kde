@@ -406,7 +406,7 @@ PageBase {
                         StyledText {
                             Layout.fillWidth: true
                             Layout.alignment: Qt.AlignVCenter
-                            text: "Steam App ID: " + blacklistDelegateRect.modelData
+                            text: qsTr("Steam App ID: %1").arg(blacklistDelegateRect.modelData)
                             font: Tokens.font.body.small
                             elide: Text.ElideRight
                         }
@@ -468,7 +468,7 @@ PageBase {
                     spacing: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
 
-                    StyledText { text: "App/game name"; color: Colours.palette.m3onSurface }
+                    StyledText { text: qsTr("App/game name"); color: Colours.palette.m3onSurface }
                     StyledInputField {
                         id: manualAppName
                         Layout.fillWidth: true
@@ -482,7 +482,7 @@ PageBase {
                     spacing: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
 
-                    StyledText { text: "Details"; color: Colours.palette.m3onSurface }
+                    StyledText { text: qsTr("Details"); color: Colours.palette.m3onSurface }
                     StyledInputField {
                         id: manualDetails
                         Layout.fillWidth: true
@@ -496,7 +496,7 @@ PageBase {
                     spacing: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
 
-                    StyledText { text: "State"; color: Colours.palette.m3onSurface }
+                    StyledText { text: qsTr("State"); color: Colours.palette.m3onSurface }
                     StyledInputField {
                         id: manualState
                         Layout.fillWidth: true
@@ -510,7 +510,7 @@ PageBase {
                     spacing: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
 
-                    StyledText { text: "Large image key/URL"; color: Colours.palette.m3onSurface }
+                    StyledText { text: qsTr("Large image key/URL"); color: Colours.palette.m3onSurface }
                     StyledInputField {
                         id: manualLargeImage
                         Layout.fillWidth: true
@@ -524,7 +524,7 @@ PageBase {
                     spacing: Tokens.spacing.extraSmall
                     Layout.fillWidth: true
 
-                    StyledText { text: "Small image key/URL"; color: Colours.palette.m3onSurface }
+                    StyledText { text: qsTr("Small image key/URL"); color: Colours.palette.m3onSurface }
                     StyledInputField {
                         id: manualSmallImage
                         Layout.fillWidth: true

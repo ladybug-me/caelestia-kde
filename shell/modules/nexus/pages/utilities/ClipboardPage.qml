@@ -28,7 +28,7 @@ PageBase {
             value: GlobalConfig.launcher.clipboardMaxEntries
             from: 1
             to: 2048
-            stepSize: 10
+            stepSize: 1
             onMoved: value => GlobalConfig.launcher.clipboardMaxEntries = value
         }
     }

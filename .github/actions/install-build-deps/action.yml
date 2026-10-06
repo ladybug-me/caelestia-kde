@@ -1,0 +1,28 @@
+name: Install shell build dependencies
+description: >-
+  Install the Arch packages the shell build and its QML runtime expect. Every
+  container job that builds the shell needs the same list, and keeping it in one
+  place is what stops one job from silently missing a Qt module.
+
+inputs:
+  extra-packages:
+    description: Space separated pacman packages that only the caller needs
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Install packages
+      shell: bash
+      run: |
+        set -euo pipefail
+        pacman -Syu --noconfirm --needed \
+          git cmake ninja python extra-cmake-modules \
+          qt6-base qt6-declarative qt6-shadertools qt6-wayland qt6-tools \
+          qt6-multimedia qt6-5compat \
+          kwindowsystem kguiaddons kglobalaccel kconfig kcoreaddons \
+          kpipewire networkmanager-qt pulseaudio-qt libqalculate \
+          pipewire libpipewire aubio lm_sensors fftw ncurses alsa-lib \
+          iniparser libglvnd sdl2 portaudio sndio libpulse \
+          ${{ inputs.extra-packages }}

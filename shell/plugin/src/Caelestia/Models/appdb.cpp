@@ -202,7 +202,13 @@ QString AppDb::regexifyString(const QString& original) const {
 }
 
 QQmlListProperty<AppEntry> AppDb::apps() {
-    return QQmlListProperty<AppEntry>(this, &getSortedApps());
+    auto sorted = getSortedApps();
+    m_cachedSorted = std::move(sorted);
+    return QQmlListProperty<AppEntry>(this, &m_cachedSorted);
+}
+
+QVariantList AppDb::alphaApps() const {
+    return m_cachedAlphaApps;
 }
 
 void AppDb::incrementFrequency(const QString& id) {
@@ -217,37 +223,37 @@ void AppDb::incrementFrequency(const QString& id) {
 
     auto* app = m_apps.value(id);
     if (app) {
-        const auto before = getSortedApps();
+        m_rankTree.erase(makeKey(app));
         app->incrementFrequency();
-        getSortedApps();
-        if (before != m_sortedApps) {
-            emit appsChanged();
-        }
+        m_rankTree.insert({ makeKey(app), app });
+        emit appsChanged();
     } else {
         qCWarning(lcAppDb) << "incrementFrequency: could not find app with id" << id;
     }
 }
 
-QList<AppEntry*>& AppDb::getSortedApps() const {
-    m_sortedApps = m_apps.values();
+AppRankKey AppDb::makeKey(const AppEntry* app) const {
+    return AppRankKey{
+        isFavourite(app) ? 0 : 1,
+        -static_cast<int>(app->frequency()),
+        app->name(),
+    };
+}
 
-    QSet<QString> favSet;
-    favSet.reserve(m_sortedApps.size());
-    for (const auto* app : std::as_const(m_sortedApps)) {
-        if (isFavourite(app))
-            favSet.insert(app->id());
+void AppDb::rebuildRankTree() {
+    m_rankTree.clear();
+    for (auto* app : std::as_const(m_apps)) {
+        m_rankTree.insert({ makeKey(app), app });
     }
+}
 
-    std::sort(m_sortedApps.begin(), m_sortedApps.end(), [&favSet](AppEntry* a, AppEntry* b) {
-        const bool aIsFav = favSet.contains(a->id());
-        const bool bIsFav = favSet.contains(b->id());
-        if (aIsFav != bIsFav)
-            return aIsFav;
-        if (a->frequency() != b->frequency())
-            return a->frequency() > b->frequency();
-        return a->name().localeAwareCompare(b->name()) < 0;
-    });
-    return m_sortedApps;
+QList<AppEntry*> AppDb::getSortedApps() const {
+    QList<AppEntry*> result;
+    result.reserve(static_cast<qsizetype>(m_rankTree.size()));
+    for (const auto& [key, entry] : m_rankTree) {
+        result.append(entry);
+    }
+    return result;
 }
 
 bool AppDb::isFavourite(const AppEntry* app) const {
@@ -274,16 +280,11 @@ quint32 AppDb::getFrequency(const QString& id) const {
 }
 
 void AppDb::updateAppFrequencies() {
-    const auto before = getSortedApps();
-
     for (auto* app : std::as_const(m_apps)) {
         app->setFrequency(getFrequency(app->id()));
     }
-
-    getSortedApps();
-    if (before != m_sortedApps) {
-        emit appsChanged();
-    }
+    rebuildRankTree();
+    emit appsChanged();
 }
 
 void AppDb::updateApps() {
@@ -295,6 +296,9 @@ void AppDb::updateApps() {
             dirty = true;
             auto* const newEntry = new AppEntry(entry, getFrequency(id), this);
             QObject::connect(newEntry, &AppEntry::removed, this, [id, this]() {
+                if (auto* a = m_apps.value(id)) {
+                    m_rankTree.erase(makeKey(a));
+                }
                 if (m_apps.remove(id)) {
                     emit appsChanged();
                 }
@@ -319,6 +323,19 @@ void AppDb::updateApps() {
     }
 
     if (dirty) {
+        rebuildRankTree();
+
+        QList<AppEntry*> alphaList = m_apps.values();
+        std::sort(alphaList.begin(), alphaList.end(), [](AppEntry* a, AppEntry* b) {
+            return a->name().localeAwareCompare(b->name()) < 0;
+        });
+
+        m_cachedAlphaApps.clear();
+        m_cachedAlphaApps.reserve(alphaList.size());
+        for (auto* a : alphaList) {
+            m_cachedAlphaApps.append(QVariant::fromValue(a->entry()));
+        }
+
         emit appsChanged();
     }
 }

@@ -74,7 +74,7 @@ The Caelestia lock screen brings the Quickshell lock screen design into native K
 ## 4. Deployment, Testing, and Uninstallation
 
 ### Deployment
-The lock screen greeter is deployed automatically by the installer in Step 5 ([`scripts/02-packages.sh`](../../scripts/02-packages.sh)) and updated during shell builds ([`scripts/08-build-shell.sh`](../../scripts/08-build-shell.sh)):
+The lock screen greeter is deployed during the shell build ([`scripts/08-build-shell.sh`](../../scripts/08-build-shell.sh)); `scripts/02-packages.sh` only sets up the Python tooling and matugen the build needs:
 
 ```bash
 # Manual installation / deployment:

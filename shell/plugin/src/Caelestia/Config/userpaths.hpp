@@ -17,6 +17,10 @@ class UserPaths : public settings::ObjectNode {
 
     CONFIG_GLOBAL_PROPERTY(
         QString, wallpaperDir, QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + u"/Wallpapers"_s)
+    CONFIG_GLOBAL_PROPERTY(
+        QString, screenshotsDir, QStandardPaths::writableLocation(QStandardPaths::PicturesLocation) + u"/Screenshots"_s)
+    CONFIG_GLOBAL_PROPERTY(
+        QString, recordingsDir, QStandardPaths::writableLocation(QStandardPaths::MoviesLocation) + u"/Recordings"_s)
     CONFIG_PROPERTY(
         QString, cacheDir, QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + u"/caelestia"_s)
     CONFIG_GLOBAL_PROPERTY(

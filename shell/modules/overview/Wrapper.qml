@@ -12,11 +12,17 @@ Item {
     required property DrawerVisibilities visibilities
     required property var panels
     property var animConfig
+    property bool keepAlive: false
     readonly property bool shouldBeActive: visibilities.overview
     property var windowGrid: content.item ? content.item.windowGrid : null
 
-    width: (shouldBeActive || opacity > 0) ? (root.panels ? root.panels.parent.width : parent.width) : 0
-    height: (shouldBeActive || opacity > 0) ? (root.panels ? root.panels.parent.height : parent.height) : 0
+    onShouldBeActiveChanged: {
+        if (shouldBeActive)
+            keepAlive = true;
+    }
+
+    width: root.panels ? root.panels.parent.width : parent.width
+    height: root.panels ? root.panels.parent.height : parent.height
     x: root.panels ? -root.panels.leftMargin : 0
     y: root.panels ? -root.panels.topMargin : 0
     visible: shouldBeActive || opacity > 0
@@ -25,11 +31,16 @@ Item {
     Behavior on opacity {
         NumberAnimation { duration: root.animConfig ? root.animConfig.gridDuration : 1500; easing.type: root.animConfig ? root.animConfig.easingType : Easing.OutCubic }
     }
+    Timer {
+        running: !root.keepAlive && !root.shouldBeActive
+        interval: 3000
+        onTriggered: root.keepAlive = true
+    }
     Loader {
         id: content
 
         anchors.fill: parent
-        active: root.shouldBeActive || root.visible
+        active: root.shouldBeActive || root.visible || root.keepAlive
         sourceComponent: Component {
             Content {
                 screen: root.screen

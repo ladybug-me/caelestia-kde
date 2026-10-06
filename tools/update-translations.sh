@@ -12,19 +12,36 @@ SOURCES=(
     "$SHELL_DIR/modules"
     "$SHELL_DIR/services"
     "$SHELL_DIR/utils"
+    "$REPO_DIR/shell/plugin/src"
+    "$REPO_DIR/src/kde/shells/caelestia.desktop/contents/lockscreen"
+    "$REPO_DIR/src/sddm/themes"
 )
 
 find_tool() {
     local name="$1"
-    local candidate
-    for candidate in "$name" "${name}-qt6" "${name}6" \
-        "/usr/lib/qt6/bin/$name" "/usr/lib64/qt6/bin/$name" \
-        "/usr/lib/qt/bin/$name" "/usr/lib/x86_64-linux-gnu/qt6/bin/$name"; do
-        if command -v "$candidate" >/dev/null 2>&1; then
+    local candidates=(
+        "/usr/lib/qt6/bin/$name"
+        "/usr/lib64/qt6/bin/$name"
+        "/usr/lib/x86_64-linux-gnu/qt6/bin/$name"
+        "${name}-qt6"
+        "${name}6"
+        "$name"
+        "/usr/lib/qt/bin/$name"
+    )
+    local candidate found="" version
+    for candidate in "${candidates[@]}"; do
+        command -v "$candidate" >/dev/null 2>&1 || continue
+        [[ -z "$found" ]] && found="$candidate"
+        version="$("$candidate" -version 2>&1 | head -n1 || true)"
+        if [[ "$version" == *"version 6"* ]]; then
             echo "$candidate"
             return 0
         fi
     done
+    if [[ -n "$found" ]]; then
+        echo "$found"
+        return 0
+    fi
     return 1
 }
 

@@ -21,6 +21,7 @@ using Qt::StringLiterals::operator""_ba;
 namespace {
 
 constexpr int kLoadDebounceMs = 50;
+constexpr int kTransferTimeoutMs = 10000;
 constexpr qreal kIndexFudge = 0.1;
 
 [[nodiscard]] const QHash<QByteArray, QByteArray>& netEaseHeaders() {
@@ -307,7 +308,10 @@ void Lyrics::clearLines() {
         return;
     }
 
+    m_lines.clear();
+    m_lyrics.clear();
     m_hasLyrics = false;
+    emit lyricsChanged();
     emit hasLyricsChanged();
 }
 
@@ -761,6 +765,7 @@ void Lyrics::fetchNetEaseLyricsById(const QString& id, int reqId) {
 QNetworkReply* Lyrics::getJson(const QUrl& url, const QHash<QByteArray, QByteArray>& headers) {
     QNetworkRequest req(url);
     req.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QNetworkRequest::AlwaysNetwork);
+    req.setTransferTimeout(kTransferTimeoutMs);
     req.setRawHeader("Cache-Control"_ba, "no-cache, no-store"_ba);
     req.setRawHeader("Pragma"_ba, "no-cache"_ba);
     req.setRawHeader("Connection"_ba, "close"_ba);
@@ -977,8 +982,7 @@ QString Lyrics::findLocalLrcRecursive(const QString& dir, const QString& artist,
         return {};
     }
 
-    QDirIterator it(dir, QStringList{ u"*.lrc"_s }, QDir::Files | QDir::NoDotAndDotDot,
-        QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
+    QDirIterator it(dir, QStringList{ u"*.lrc"_s }, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
 
     while (it.hasNext()) {
         const QString path = it.next();

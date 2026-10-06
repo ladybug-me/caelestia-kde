@@ -140,7 +140,7 @@ deploy_config() {
 }
 
 info "Deploying Caelestia configs..."
-for config in btop fastfetch foot kitty micro; do
+for config in btop foot kitty micro; do
     deploy_config "$config" "$DOTS_DIR/$config"
 done
 

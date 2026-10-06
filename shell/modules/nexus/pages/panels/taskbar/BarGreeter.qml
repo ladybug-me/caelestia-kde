@@ -25,7 +25,7 @@ PageBase {
 
     function formatHour(h: int): string {
         if (Units.twelveHourClock) {
-            const period = h >= 12 ? "PM" : "AM";
+            const period = h >= 12 ? qsTr("PM") : qsTr("AM");
             const hour12 = (h % 12 === 0) ? 12 : (h % 12);
             return `${hour12}:00 ${period}`;
         }
@@ -90,16 +90,6 @@ PageBase {
                 }
 
                 GlobalConfig.bar.entries = newEntries;
-                GlobalConfig.save();
-            }
-        }
-
-        ToggleRow {
-            Layout.fillWidth: true
-            text: qsTr("Compact")
-            checked: Config.bar.greeter?.compact ?? false
-            onToggled: {
-                GlobalConfig.bar.greeter.compact = checked;
                 GlobalConfig.save();
             }
         }
@@ -194,7 +184,7 @@ PageBase {
         TextFieldRow {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             label: qsTr("Morning Greeting Text")
-            placeholderText: "Good Morning"
+            placeholderText: qsTr("Good Morning")
             value: Config.bar.greeter?.morningText || ""
             onEditingFinished: text => {
                 GlobalConfig.bar.greeter.morningText = text;
@@ -239,7 +229,7 @@ PageBase {
         TextFieldRow {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             label: qsTr("Afternoon Greeting Text")
-            placeholderText: "Good Afternoon"
+            placeholderText: qsTr("Good Afternoon")
             value: Config.bar.greeter?.afternoonText || ""
             onEditingFinished: text => {
                 GlobalConfig.bar.greeter.afternoonText = text;
@@ -284,7 +274,7 @@ PageBase {
         TextFieldRow {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             label: qsTr("Evening Greeting Text")
-            placeholderText: "Good Evening"
+            placeholderText: qsTr("Good Evening")
             value: Config.bar.greeter?.eveningText || ""
             onEditingFinished: text => {
                 GlobalConfig.bar.greeter.eveningText = text;
@@ -330,7 +320,7 @@ PageBase {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") !== "slideshow"
             last: true
             label: qsTr("Night Greeting Text")
-            placeholderText: "Good Night"
+            placeholderText: qsTr("Good Night")
             value: Config.bar.greeter?.nightText || ""
             onEditingFinished: text => {
                 GlobalConfig.bar.greeter.nightText = text;
@@ -373,7 +363,7 @@ PageBase {
             visible: (Config.bar.greeter?.mode ?? "timeOfDay") === "slideshow"
             label: qsTr("Slideshow Greeting Text")
             subtext: qsTr("Optional custom text on bar, supports {user}")
-            placeholderText: "Blank for defaults"
+            placeholderText: qsTr("Blank for defaults")
             value: Config.bar.greeter?.slideshowText || ""
             onEditingFinished: text => {
                 GlobalConfig.bar.greeter.slideshowText = text;
@@ -386,7 +376,7 @@ PageBase {
             last: true
             label: qsTr("Slideshow Greeting Icon")
             subtext: qsTr("Material icon name for the bar widget")
-            placeholderText: "Blank for defaults"
+            placeholderText: qsTr("Blank for defaults")
             value: Config.bar.greeter?.slideshowIcon || ""
             onEditingFinished: text => {
                 GlobalConfig.bar.greeter.slideshowIcon = text;

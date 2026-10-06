@@ -210,6 +210,22 @@ PageBase {
                 onSelected: item => GlobalConfig.background.desktopClock.position = item.value
             }
 
+            SliderRow {
+                Layout.fillWidth: true
+                label: qsTr("Horizontal offset")
+                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
+                value: Config.background.desktopClock.offsetX / 0.2 + 0.5
+                onMoved: v => GlobalConfig.background.desktopClock.offsetX = v * 0.2 - 0.1
+            }
+
+            SliderRow {
+                Layout.fillWidth: true
+                label: qsTr("Vertical offset")
+                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
+                value: Config.background.desktopClock.offsetY / 0.2 + 0.5
+                onMoved: v => GlobalConfig.background.desktopClock.offsetY = v * 0.2 - 0.1
+            }
+
             ToggleRow {
                 last: true
                 Layout.fillWidth: true
@@ -305,6 +321,22 @@ PageBase {
                 onSelected: item => GlobalConfig.background.desktopLyrics.alignment = item.value
             }
 
+            SliderRow {
+                Layout.fillWidth: true
+                label: qsTr("Horizontal offset")
+                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
+                value: Config.background.desktopLyrics.offsetX / 0.2 + 0.5
+                onMoved: v => GlobalConfig.background.desktopLyrics.offsetX = v * 0.2 - 0.1
+            }
+
+            SliderRow {
+                Layout.fillWidth: true
+                label: qsTr("Vertical offset")
+                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
+                value: Config.background.desktopLyrics.offsetY / 0.2 + 0.5
+                onMoved: v => GlobalConfig.background.desktopLyrics.offsetY = v * 0.2 - 0.1
+            }
+
             ToggleRow {
                 last: true
                 Layout.fillWidth: true
@@ -341,7 +373,6 @@ PageBase {
             }
 
             StepperRow {
-                last: true
                 Layout.fillWidth: true
                 label: qsTr("Spacing")
                 value: Config.background.visualiser.spacing
@@ -349,6 +380,18 @@ PageBase {
                 to: 3
                 stepSize: 0.1
                 onMoved: v => GlobalConfig.background.visualiser.spacing = v
+            }
+
+            StepperRow {
+                last: true
+                Layout.fillWidth: true
+                label: qsTr("Size")
+                subtext: qsTr("Column width multiplier, lower values leave more room in the middle")
+                value: Config.background.visualiser.size
+                from: 0.25
+                to: 1.25
+                stepSize: 0.05
+                onMoved: v => GlobalConfig.background.visualiser.size = v
             }
         }
     }

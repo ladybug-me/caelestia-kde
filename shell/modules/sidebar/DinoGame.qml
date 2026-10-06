@@ -333,7 +333,7 @@ Item {
     
     StyledText {
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) < 99999
-        text: "G A M E   O V E R\nClick to restart"
+        text: qsTr("G A M E   O V E R\nClick to restart")
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -40
@@ -343,7 +343,7 @@ Item {
     
     StyledText {
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) >= 99999
-        text: "Y O U   W I N !\nNow go touch grass"
+        text: qsTr("Y O U   W I N !\nNow go touch grass")
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -40

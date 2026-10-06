@@ -2,11 +2,30 @@ pragma ComponentBehavior: Bound
 
 import QtQuick.Layouts
 import Caelestia.Config
+import qs.components.controls
 import qs.utils
 import qs.modules.nexus.common
 
 PageBase {
     id: root
+
+    readonly property list<MenuItem> windowGroupingItems: [
+        MenuItem {
+            property int value: DockWindowGrouping.Combined
+
+            text: qsTr("Group all windows")
+        },
+        MenuItem {
+            property int value: DockWindowGrouping.PinnedFirst
+
+            text: qsTr("Pinned icon holds first window")
+        },
+        MenuItem {
+            property int value: DockWindowGrouping.Ungrouped
+
+            text: qsTr("No grouping")
+        }
+    ]
 
     title: qsTr("Dock")
     isSubPage: true
@@ -49,8 +68,6 @@ PageBase {
             }
         }
 
-
-
         StepperRow {
             Layout.fillWidth: true
             label: qsTr("Icon size")
@@ -61,8 +78,6 @@ PageBase {
             stepSize: 2
             onMoved: v => GlobalConfig.bar.dock.iconSize = v
         }
-
-
 
         ToggleRow {
             Layout.fillWidth: true
@@ -86,6 +101,15 @@ PageBase {
             subtext: qsTr("Only show applications and windows belonging to the active virtual desktop")
             checked: Config.bar.dock.currentDesktopOnly
             onToggled: GlobalConfig.bar.dock.currentDesktopOnly = checked
+        }
+
+        SelectRow {
+            Layout.fillWidth: true
+            label: qsTr("Window grouping")
+            subtext: qsTr("How windows of one app share a dock icon: grouped, pinned icon holds the first window only, or every window on its own icon")
+            active: Config.bar.dock.windowGrouping === DockWindowGrouping.Ungrouped ? root.windowGroupingItems[2] : Config.bar.dock.windowGrouping === DockWindowGrouping.PinnedFirst ? root.windowGroupingItems[1] : root.windowGroupingItems[0]
+            menuItems: root.windowGroupingItems
+            onSelected: item => GlobalConfig.bar.dock.windowGrouping = item.value
         }
 
         ToggleRow {

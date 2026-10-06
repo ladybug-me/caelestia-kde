@@ -213,7 +213,7 @@ Item {
         anchors.leftMargin: Tokens.spacing.small
         anchors.verticalCenterOffset: Math.round(fontInfo.pointSize * 0.1)
 
-        text: "up " + SysInfo.uptime.split(",").slice(0, 2).join(",")
+        text: qsTr("up %1").arg(SysInfo.uptime.split(",").slice(0, 2).join(","))
         width: Tokens.sizes.dashboard.userWidth - x - Tokens.padding.extraLarge
         elide: Text.ElideRight
     }

@@ -404,6 +404,17 @@ try_download_prebuilt_shell() {
         rm -f "$tmp_archive"
         return 1
     fi
+    if ! tar -tzf "$tmp_archive" bin/ >/dev/null 2>&1 \
+        || ! tar -tzf "$tmp_archive" lib/caelestia/ >/dev/null 2>&1; then
+        warn "Prebuilt shell artifact has no CMake-owned CLI/data tree - falling back to a local build."
+        rm -f "$tmp_archive"
+        return 1
+    fi
+    if ! tar -C "$HOME/.local" -xzf "$tmp_archive" bin; then
+        warn "Failed to extract CMake-owned CLI files"
+        rm -f "$tmp_archive"
+        return 1
+    fi
     rm -f "$tmp_archive"
     return 0
 }
@@ -449,7 +460,7 @@ else
 
     info "Configuring CMake..."
     prepare_build_dir build
-    cmake -G "$CMAKE_GENERATOR" -B build -DCMAKE_BUILD_TYPE=Release -DCAELESTIA_CACHE_DEPS=ON -DCMAKE_INSTALL_PREFIX="$HOME/.local" -DINSTALL_QSCONFDIR="$HOME/.config/quickshell/caelestia" -DINSTALL_LIBDIR="lib/caelestia" -DINSTALL_QMLDIR="lib/qt6/qml" || {
+    cmake -G "$CMAKE_GENERATOR" -B build -DCMAKE_BUILD_TYPE=Release -DCAELESTIA_CACHE_DEPS=ON -DCAELESTIA_OFFLINE="${CAELESTIA_OFFLINE:-OFF}" -DCMAKE_INSTALL_PREFIX="$HOME/.local" -DINSTALL_BINDIR="bin" -DINSTALL_DATADIR="lib/caelestia" -DINSTALL_QSCONFDIR="$HOME/.config/quickshell/caelestia" -DINSTALL_LIBDIR="lib/caelestia" -DINSTALL_QMLDIR="lib/qt6/qml" || {
         err "CMake configuration failed."
         exit 1
     }
@@ -588,43 +599,13 @@ write_shell_environment
 
 mkdir -p ~/.local/bin ~/.config/systemd/user
 
-info "Installing Caelestia bin wrappers..."
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia-record" ~/.local/bin/caelestia-record
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia-screenshot" ~/.local/bin/caelestia-screenshot
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia-shell-ipc" ~/.local/bin/caelestia-shell-ipc
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia" ~/.local/bin/caelestia
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia-color" ~/.local/bin/caelestia-color
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia-update" ~/.local/bin/caelestia-update
-install -m 755 "$BUNDLE_DIR/src/bin/caelestia-check-updates" ~/.local/bin/caelestia-check-updates
-ok "Caelestia bin wrappers installed to ~/.local/bin"
-
+install -m 644 "$BUNDLE_DIR/scripts/lib/update-state.sh" "$(install_lib_dir)/update-state.sh"
 info "Installing the update-checker units..."
 install -m 644 "$BUNDLE_DIR/src/systemd/caelestia-update-checker.service" ~/.config/systemd/user/caelestia-update-checker.service
 install -m 644 "$BUNDLE_DIR/src/systemd/caelestia-update-checker.timer" ~/.config/systemd/user/caelestia-update-checker.timer
 systemctl --user daemon-reload
 systemctl --user enable --now caelestia-update-checker.timer
 ok "Update-checker timer enabled"
-
-CAELESTIA_SHARE="$HOME/.local/lib/caelestia"
-if [[ -d "$BUNDLE_DIR/src/matugen" && -d "$BUNDLE_DIR/src/schemes" ]]; then
-    info "Installing the color pipeline data..."
-    rm -rf "$CAELESTIA_SHARE/matugen.old"
-    [[ -d "$CAELESTIA_SHARE/matugen" ]] && mv "$CAELESTIA_SHARE/matugen" "$CAELESTIA_SHARE/matugen.old"
-    mkdir -p "$CAELESTIA_SHARE"
-    cp -r "$BUNDLE_DIR/src/matugen" "$CAELESTIA_SHARE/matugen"
-    rm -rf "$CAELESTIA_SHARE/schemes"
-    cp -r "$BUNDLE_DIR/src/schemes" "$CAELESTIA_SHARE/schemes"
-    rm -rf "$CAELESTIA_SHARE/matugen.old"
-    find "$CAELESTIA_SHARE/matugen" "$CAELESTIA_SHARE/schemes" -type d -exec chmod 755 {} +
-    find "$CAELESTIA_SHARE/matugen" "$CAELESTIA_SHARE/schemes" -type f -exec chmod 644 {} +
-    ok "Color pipeline data installed to $CAELESTIA_SHARE"
-    if ! command -v matugen >/dev/null 2>&1; then
-        warn "matugen binary is missing from PATH; dynamic wallpaper color schemes require matugen."
-    fi
-else
-    warn "Color pipeline data missing from the checkout; wallpaper and scheme will not work."
-fi
-
 
 DEST_DIR="$HOME/.config/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set"
 TMP_DIR="${DEST_DIR}.tmp"

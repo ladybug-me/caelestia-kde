@@ -27,8 +27,10 @@ KeybindsModel::KeybindsModel(QObject* parent)
     bool shouldSave = false;
 
     QJsonObject defaults = caelestia::config::defaultKeybinds();
+    m_defaults = defaults;
     bool krohnkiteEnabled = caelestia::config::ConfigSingleton::instance()->general()->krohnkiteEnabled();
 
+    m_keybinds.reserve(defaults.size());
     for (auto it = defaults.begin(); it != defaults.end(); ++it) {
         if (it.key().startsWith(QStringLiteral("krohnkite")) && !krohnkiteEnabled) {
             continue;
@@ -116,8 +118,7 @@ QVariant KeybindsModel::data(const QModelIndex& index, int role) const {
     case DescriptionRole:
         return sc->description();
     case IsOverriddenRole: {
-        QJsonObject defaults = caelestia::config::defaultKeybinds();
-        return defaults.value(sc->name()).toString() != sc->key();
+        return m_defaults.value(sc->name()).toString() != sc->key();
     }
     }
     return QVariant();
@@ -146,10 +147,30 @@ void KeybindsModel::setKey(const QString& name, const QString& newKey) {
 
 void KeybindsModel::resetKey(const QString& name) {
     QJsonObject defaults = caelestia::config::defaultKeybinds();
+    QString defaultKey;
     if (defaults.contains(name)) {
-        setKey(name, defaults.value(name).toString());
-    } else {
-        setKey(name, QStringLiteral(""));
+        defaultKey = defaults.value(name).toString();
+    }
+    setKey(name, defaultKey);
+    if (defaultKey.isEmpty()) {
+        return;
+    }
+    // Like Replace: take the default back, clearing it from whoever holds it.
+    for (GlobalShortcut* sc : GlobalShortcut::allShortcuts()) {
+        if (sc->name() == name) {
+            continue;
+        }
+        QStringList parts = sc->key().split(QStringLiteral(";"));
+        bool changed = false;
+        for (int i = parts.size() - 1; i >= 0; --i) {
+            if (parts[i].trimmed() == defaultKey) {
+                parts.removeAt(i);
+                changed = true;
+            }
+        }
+        if (changed) {
+            setKey(sc->name(), parts.join(QStringLiteral("; ")));
+        }
     }
 }
 
@@ -165,20 +186,39 @@ QString KeybindsModel::getKey(const QString& name) const {
 }
 
 QVariantList KeybindsModel::query(const QString& searchText) const {
-    QVariantList result;
+    QList<GlobalShortcut*> matches;
     const auto lower = searchText.toLower();
 
     for (GlobalShortcut* sc : m_rows) {
-        if (searchText.isEmpty() || sc->key().toLower().contains(lower) ||
-            sc->description().toLower().contains(lower) || sc->name().toLower().contains(lower)) {
-
-            QJsonObject defaults = caelestia::config::defaultKeybinds();
-            result.append(QVariantMap{ { QStringLiteral("bind"), sc->key() }, { QStringLiteral("action"), sc->name() },
-                { QStringLiteral("name"), sc->name() }, { QStringLiteral("description"), sc->description() },
-                { QStringLiteral("isOverridden"), defaults.value(sc->name()).toString() != sc->key() } });
+        if (searchText.isEmpty()) {
+            matches.append(sc);
+        } else {
+            const QString& cached = m_lowerCache.value(sc->name());
+            if (cached.contains(lower)) {
+                matches.append(sc);
+            }
         }
     }
+
+    std::sort(matches.begin(), matches.end(), [](GlobalShortcut* a, GlobalShortcut* b) {
+        const QString strA = a->description().isEmpty() ? a->name() : a->description();
+        const QString strB = b->description().isEmpty() ? b->name() : b->description();
+        return strA.localeAwareCompare(strB) < 0;
+    });
+
+    QVariantList result;
+    result.reserve(matches.size());
+    for (GlobalShortcut* sc : std::as_const(matches)) {
+        result.append(QVariantMap{ { QStringLiteral("bind"), sc->key() }, { QStringLiteral("action"), sc->name() },
+            { QStringLiteral("name"), sc->name() }, { QStringLiteral("description"), sc->description() },
+            { QStringLiteral("isOverridden"), m_defaults.value(sc->name()).toString() != sc->key() } });
+    }
+
     return result;
+}
+
+void KeybindsModel::updateLowerCache(GlobalShortcut* sc) {
+    m_lowerCache.insert(sc->name(), (sc->key() + u' ' + sc->description() + u' ' + sc->name()).toLower());
 }
 
 void KeybindsModel::onShortcutRegistered(GlobalShortcut* sc) {
@@ -193,6 +233,7 @@ void KeybindsModel::onShortcutRegistered(GlobalShortcut* sc) {
     beginInsertRows(QModelIndex(), row, row);
     m_rows.append(sc);
     endInsertRows();
+    updateLowerCache(sc);
 
     if (QCoreApplication::instance()) {
         m_loadTimer->start();
@@ -201,6 +242,7 @@ void KeybindsModel::onShortcutRegistered(GlobalShortcut* sc) {
     connect(sc, &GlobalShortcut::keyChanged, this, [this, sc] {
         int idx = m_rows.indexOf(sc);
         if (idx >= 0) {
+            updateLowerCache(sc);
             emit dataChanged(index(idx), index(idx), { KeyRole, IsOverriddenRole });
             if (QCoreApplication::instance()) {
                 m_loadTimer->start();
@@ -244,6 +286,7 @@ void KeybindsModel::onShortcutUnregistered(GlobalShortcut* sc) {
         beginRemoveRows(QModelIndex(), idx, idx);
         m_rows.removeAt(idx);
         endRemoveRows();
+        m_lowerCache.remove(sc->name());
         if (QCoreApplication::instance()) {
             m_loadTimer->start();
         }

@@ -4,7 +4,7 @@
   <context>
     <name>AboutPage</name>
     <message>
-      <location filename="../modules/nexus/pages/AboutPage.qml" line="+21"/>
+      <location filename="../modules/nexus/pages/AboutPage.qml" line="+20"/>
       <source>About</source>
       <translation>Про програму</translation>
     </message>
@@ -69,12 +69,12 @@
       <translation>Плагіни</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+7"/>
       <source>Enabled plugins</source>
       <translation>Увімкнені плагіни</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+10"/>
       <source>Advanced</source>
       <translation>Додатково</translation>
     </message>
@@ -88,11 +88,231 @@
       <source>Enable verbose debug logging for troubleshooting. Run &apos;caelestia shell -l&apos; to view.</source>
       <translation>Увімкнути детальне логування для усунення неполадок. Запустіть &apos;celestia -l&apos; для перегляду.</translation>
     </message>
+    <message>
+      <location line="+6"/>
+      <source>Uninstall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Uninstall Caelestia</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Checking for the uninstaller…</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Remove the shell, its configs and its services</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>This install belongs to a package. Remove it with: %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>No uninstaller was found. Remove the install with your package manager.</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>Actions</name>
     <message>
-      <location filename="../modules/launcher/services/Actions.qml" line="+34"/>
+      <location filename="../modules/launcher/services/Actions.qml" line="+15"/>
+      <source>Calculator</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Scheme</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Variant</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Random</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Light</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Dark</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Shutdown</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Reboot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Logout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Sleep</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>What&apos;s New</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Emoji</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Clipboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Windows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keybinds</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Animations</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Do simple math equations (powered by Qalc)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the current color scheme</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the current wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the current scheme variant</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to a random wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the scheme to light mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Change the scheme to dark mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Shutdown the system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Reboot the system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Log out of the current session</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lock the current session</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Suspend then hibernate</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Configure the shell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Read the Caelestia release notes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Pick an emoji to copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>View clipboard history</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to another window</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>View all keybinds</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch your animation style</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+23"/>
       <source>Unnamed</source>
       <translation>Без імені</translation>
     </message>
@@ -454,13 +674,23 @@
   <context>
     <name>AiAssistant</name>
     <message>
-      <location filename="../modules/sidebar/AiAssistant.qml" line="+701"/>
+      <location filename="../modules/sidebar/AiAssistant.qml" line="+713"/>
       <location line="+1280"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>Ставка обмежена - повторна спроба в %1s…</translation>
     </message>
     <message>
-      <location line="+282"/>
+      <location line="+208"/>
+      <source>Chat</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+36"/>
+      <source>History</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+38"/>
       <source>Provider</source>
       <translation>Постачальник</translation>
     </message>
@@ -495,14 +725,15 @@
       <translation>Запитати помічника...</translation>
     </message>
     <message>
-      <location line="+241"/>
-      <source>Clear All</source>
-      <translation>Очистити все</translation>
-    </message>
-    <message>
-      <location line="+34"/>
+      <location line="+170"/>
+      <location line="+105"/>
       <source>New Chat</source>
       <translation>Новий чат</translation>
+    </message>
+    <message>
+      <location line="-34"/>
+      <source>Clear All</source>
+      <translation>Очистити все</translation>
     </message>
   </context>
   <context>
@@ -791,7 +1022,7 @@
   <context>
     <name>AllApps</name>
     <message>
-      <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+16"/>
+      <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+17"/>
       <source>All apps</source>
       <translation>Всі програми</translation>
     </message>
@@ -843,11 +1074,11 @@
     </message>
   </context>
   <context>
-    <name>AppBrowser</name>
+    <name>AppBrowserGrid</name>
     <message>
-      <location filename="../modules/launcher/AppBrowser.qml" line="+213"/>
+      <location filename="../modules/launcher/AppBrowserGrid.qml" line="+235"/>
       <source>No apps in this category</source>
-      <translation>Немає додатків у цій категорії</translation>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -977,7 +1208,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+143"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Збігаються регулярними виразами в обраних додатках - редагування файлу конфігурації для зміни</translation>
     </message>
@@ -1033,7 +1264,17 @@
       <translation>Перезапустити оболонку</translation>
     </message>
     <message>
-      <location line="+20"/>
+      <location line="+14"/>
+      <source>Sure?</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Reset settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+38"/>
       <source>Font</source>
       <translation type="unfinished"/>
     </message>
@@ -1043,7 +1284,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+19"/>
       <source>Bezel mode (Pitch black)</source>
       <translation>Режим Безеля (темрява)</translation>
     </message>
@@ -1053,7 +1294,7 @@
       <translation>Зробити фігурку чорним, щоби змішувати з зубами екрану</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Islands</source>
       <translation>Острови</translation>
     </message>
@@ -1063,7 +1304,7 @@
       <translation>Все виглядає як власний плаваючий віджет (дуже експериментально)</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Border thickness</source>
       <translation>Товщина рамки</translation>
     </message>
@@ -1073,7 +1314,7 @@
       <translation>Товщина лінії оболонки в пікселях. Встановіть 0 для безмежного вигляду</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Corner radius scale</source>
       <translation>Кут радіусу</translation>
     </message>
@@ -1083,7 +1324,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Transparency</source>
       <translation>Прозорість</translation>
     </message>
@@ -1093,12 +1334,12 @@
       <translation>Увімкнути прозорість в оболонці</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+14"/>
       <source>Base opacity</source>
       <translation>Базова непрозорість</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Layers opacity</source>
       <translation>Непрозорість шарів</translation>
     </message>
@@ -1108,7 +1349,7 @@
       <translation>Потрібно перезавантажити консоль</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Ambient color mode</source>
       <translation type="unfinished"/>
     </message>
@@ -1123,12 +1364,12 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+10"/>
       <source>Ambient glow opacity</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Background Blur</source>
       <translation>Розмиття фону</translation>
     </message>
@@ -1143,7 +1384,7 @@
       <translation>Вмикає ефект замороженого скла за розмиванням фону</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>High Quality Blur Masks</source>
       <translation>Маски розмиття високої якості</translation>
     </message>
@@ -1153,7 +1394,7 @@
       <translation>Вимкніть це, щоб використовувати високопродуктивне Wayland/KWin</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+21"/>
       <source>Blur Corner Quality</source>
       <translation>Якість розмиття кутів</translation>
     </message>
@@ -1168,22 +1409,22 @@
       <translation>Масштабування</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Font scale</source>
       <translation>Масштаб шрифту</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Spacing scale</source>
       <translation>Шкала відступів</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Padding scale</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Animation speed scale</source>
       <translation>Шкала швидкості анімації</translation>
     </message>
@@ -1193,17 +1434,17 @@
       <translation>Кути і ефекти</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Border rounding</source>
       <translation>Граничне округлення</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Border smoothing</source>
       <translation>Згладжування рамки</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Blur deform</source>
       <translation>Розмиття вигляд</translation>
     </message>
@@ -1274,29 +1515,6 @@
       <location line="+7"/>
       <source>Uses xdg-open (KDE Default)</source>
       <translation>Використовує xdg-open (KDE за замовчуванням)</translation>
-    </message>
-  </context>
-  <context>
-    <name>AreaPicker</name>
-    <message>
-      <location filename="../modules/areapicker/AreaPicker.qml" line="+99"/>
-      <source>Open screenshot tool</source>
-      <translation>Відкрити інструмент знімку екрану</translation>
-    </message>
-    <message>
-      <location line="+13"/>
-      <source>Open screenshot tool (freeze mode)</source>
-      <translation>Відкрити інструмент знімку екрану (режим заморожування)</translation>
-    </message>
-    <message>
-      <location line="+13"/>
-      <source>Open screenshot tool (clipboard)</source>
-      <translation>Відкрити інструмент знімку екрану (буфер обміну)</translation>
-    </message>
-    <message>
-      <location line="+13"/>
-      <source>Open screenshot tool (freeze mode, clipboard)</source>
-      <translation>Відкрити інструмент знімку екрану (режим заморозки, буфер обміну)</translation>
     </message>
   </context>
   <context>
@@ -1412,7 +1630,12 @@
       <translation>Виберіть відкриту гру Steam, щоб запобігти трансляції</translation>
     </message>
     <message>
-      <location line="+93"/>
+      <location line="+60"/>
+      <source>Steam App ID: %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+33"/>
       <source>Manual custom presence</source>
       <translation>Особлива присутність вручну</translation>
     </message>
@@ -1427,7 +1650,32 @@
       <translation>Примусово транслювати цю присутність і ігнорувати всі інші додатки</translation>
     </message>
     <message>
-      <location line="+95"/>
+      <location line="+22"/>
+      <source>App/game name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Details</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>State</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Large image key/URL</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Small image key/URL</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+17"/>
       <source>Save presence</source>
       <translation>Зберегти присутність</translation>
     </message>
@@ -1654,6 +1902,14 @@
       <location line="+31"/>
       <source>Open settings</source>
       <translation>Відкрити налаштування</translation>
+    </message>
+  </context>
+  <context>
+    <name>AuthHandler</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/AuthHandler.qml" line="+26"/>
+      <source>%1 min left</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -1900,7 +2156,22 @@
   <context>
     <name>BarDock</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/taskbar/BarDock.qml" line="+11"/>
+      <location filename="../modules/nexus/pages/panels/taskbar/BarDock.qml" line="+16"/>
+      <source>Group all windows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Pinned icon holds first window</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>No grouping</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Dock</source>
       <translation>Нижня панель</translation>
     </message>
@@ -1910,7 +2181,7 @@
       <translation>Увімкнути компонент</translation>
     </message>
     <message>
-      <location line="+33"/>
+      <location line="+31"/>
       <source>Icon size</source>
       <translation>Розмір піктограм</translation>
     </message>
@@ -1920,7 +2191,7 @@
       <translation>Розмір іконок програм у нижній панелі</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+10"/>
       <source>Recolor icons</source>
       <translation>Запускати піктограми</translation>
     </message>
@@ -1950,7 +2221,17 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+7"/>
+      <source>Window grouping</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How windows of one app share a dock icon: grouped, pinned icon holds the first window only, or every window on its own icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Preview window on desktop</source>
       <translation>Попередній перегляд вікна на робочому столі</translation>
     </message>
@@ -2036,7 +2317,17 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+8"/>
+      <source>PM</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>AM</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
       <source>Greeter</source>
       <translation>Гретер</translation>
     </message>
@@ -2056,12 +2347,7 @@
       <translation>Увімкнути компонент</translation>
     </message>
     <message>
-      <location line="+31"/>
-      <source>Compact</source>
-      <translation>Компактний</translation>
-    </message>
-    <message>
-      <location line="+9"/>
+      <location line="+30"/>
       <source>Inverted</source>
       <translation>Інвертований</translation>
     </message>
@@ -2143,7 +2429,12 @@
       <translation>Ранковий текст</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <source>Good Morning</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Afternoon Media</source>
       <translation>Afternoon медіа</translation>
     </message>
@@ -2163,7 +2454,12 @@
       <translation>Вечірній текст</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <source>Good Afternoon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Evening Media</source>
       <translation>Вечірні ЗМІ</translation>
     </message>
@@ -2183,7 +2479,12 @@
       <translation>Привітання вечір</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <source>Good Evening</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Night Media</source>
       <translation>Нічні засоби масової інформації</translation>
     </message>
@@ -2203,7 +2504,12 @@
       <translation>Текст нічного привітання</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+1"/>
+      <source>Good Night</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
       <source>Slideshow Timing &amp; Order</source>
       <translation>Час і порядок слайдів</translation>
     </message>
@@ -2238,7 +2544,13 @@
       <translation>Необов&apos;язковий користувацький текст в панелі, підтримує {user}</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+1"/>
+      <location line="+13"/>
+      <source>Blank for defaults</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-2"/>
       <source>Slideshow Greeting Icon</source>
       <translation>Значок привітання слайд-шоу</translation>
     </message>
@@ -2563,7 +2875,7 @@
   <context>
     <name>BarWorkspaces</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/taskbar/BarWorkspaces.qml" line="+16"/>
+      <location filename="../modules/nexus/pages/panels/taskbar/BarWorkspaces.qml" line="+18"/>
       <source>Shape</source>
       <translation>Форма</translation>
     </message>
@@ -2578,7 +2890,7 @@
       <translation>Робочі області</translation>
     </message>
     <message>
-      <location line="+30"/>
+      <location line="+29"/>
       <source>Shown</source>
       <translation>Показано</translation>
     </message>
@@ -2588,7 +2900,7 @@
       <translation>Кількість відображених робочих областей</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+21"/>
       <source>Active indicator</source>
       <translation>Активний індикатор</translation>
     </message>
@@ -2643,7 +2955,7 @@
       <translation>Максимальна кількість іконок вікна</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+10"/>
       <source>Per monitor</source>
       <translation type="unfinished"/>
     </message>
@@ -3045,6 +3357,137 @@
     </message>
   </context>
   <context>
+    <name>CaptureCard</name>
+    <message>
+      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+63"/>
+      <source>Screen Capture</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Capture, OCR and image search</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Paused</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Running...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Ready</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <location line="+149"/>
+      <source>Record</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-148"/>
+      <location line="+9"/>
+      <location line="+9"/>
+      <location line="+9"/>
+      <location line="+10"/>
+      <source>Start</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-29"/>
+      <source>Record with Sound</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Record with Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Both Sound &amp; Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Record GIF</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <location line="+82"/>
+      <source>Use Spectacle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-81"/>
+      <location line="+82"/>
+      <source>Spectacle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-62"/>
+      <source>Capture region</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <location line="+90"/>
+      <source>Capture</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-80"/>
+      <source>Capture fullscreen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Fullscreen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>Capture active window</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Window</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>Recognize text</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Recognize</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Search image</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Search</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+171"/>
+      <source>Recording %1</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>Categories</name>
     <message>
       <location filename="../modules/launcher/services/Categories.qml" line="+12"/>
@@ -3159,14 +3602,6 @@
     </message>
   </context>
   <context>
-    <name>ClockContext</name>
-    <message>
-      <location filename="../modules/bar/popouts/ClockContext.qml" line="+79"/>
-      <source>Clock settings</source>
-      <translation type="unfinished"/>
-    </message>
-  </context>
-  <context>
     <name>ColourSelect</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/ColourSelect.qml" line="+39"/>
@@ -3200,38 +3635,47 @@
     </message>
   </context>
   <context>
-    <name>ConnectionInfoSection</name>
-    <message>
-      <location filename="../components/ConnectionInfoSection.qml" line="+15"/>
-      <source>IP Address</source>
-      <translation>IP-адреса</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <source>Not available</source>
-      <translation>Недоступний</translation>
-    </message>
-    <message>
-      <location line="-26"/>
-      <source>Subnet Mask</source>
-      <translation>Маска підмережі</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Gateway</source>
-      <translation>Шлюз</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>DNS Servers</source>
-      <translation>DNS-сервери</translation>
-    </message>
-  </context>
-  <context>
     <name>Content</name>
+    <message>
+      <location filename="../modules/bar/popouts/Content.qml" line="+59"/>
+      <source>Greeter settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+63"/>
+      <source>Clock settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Launcher settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Status icons settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+89"/>
+      <source>Workspaces settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Tray settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>GitHub settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Dock settings</source>
+      <translation type="unfinished"/>
+    </message>
     <message>
       <location filename="../modules/dashboard/Content.qml" line="+25"/>
       <source>Dashboard</source>
@@ -3251,6 +3695,11 @@
       <location line="+6"/>
       <source>Weather</source>
       <translation>Погода</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Notes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
@@ -3313,7 +3762,7 @@
       <translation>Очистити</translation>
     </message>
     <message>
-      <location filename="../modules/sidebar/Content.qml" line="+99"/>
+      <location filename="../modules/sidebar/Content.qml" line="+110"/>
       <source>Notifications</source>
       <translation>Сповіщення</translation>
     </message>
@@ -3346,7 +3795,7 @@
       <translation>Відео</translation>
     </message>
     <message>
-      <location line="+236"/>
+      <location line="+239"/>
       <source>cliphist not found</source>
       <translation>кліферіст не знайдено</translation>
     </message>
@@ -3665,6 +4114,11 @@
     </message>
     <message>
       <location line="+7"/>
+      <source>Notes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Terminal</source>
       <translation>Термінал</translation>
     </message>
@@ -3830,12 +4284,12 @@
     </message>
     <message>
       <location line="-79"/>
-      <location line="+123"/>
+      <location line="+139"/>
       <source>Desktop media shapes</source>
       <translation>Форми стільниці</translation>
     </message>
     <message>
-      <location line="-110"/>
+      <location line="-126"/>
       <source>Auto-hide media shapes</source>
       <translation>Автоматично приховувати фігури медіа</translation>
     </message>
@@ -3846,12 +4300,12 @@
     </message>
     <message>
       <location line="+8"/>
-      <location line="+138"/>
+      <location line="+154"/>
       <source>Desktop lyrics</source>
       <translation>Стільничний текст</translation>
     </message>
     <message>
-      <location line="-125"/>
+      <location line="-141"/>
       <source>Auto-hide lyrics</source>
       <translation>Автоматично приховувати тексти пісень</translation>
     </message>
@@ -3892,31 +4346,43 @@
     </message>
     <message>
       <location line="+18"/>
-      <location line="+44"/>
+      <location line="+60"/>
       <location line="+37"/>
       <source>Scale</source>
       <translation>Масштаб</translation>
     </message>
     <message>
-      <location line="-71"/>
-      <location line="+45"/>
+      <location line="-87"/>
+      <location line="+61"/>
       <location line="+36"/>
       <source>Position</source>
       <translation>Позиція</translation>
     </message>
     <message>
-      <location line="-64"/>
-      <location line="+95"/>
+      <location line="-81"/>
+      <location line="+111"/>
+      <source>Horizontal offset</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-103"/>
+      <location line="+111"/>
+      <source>Vertical offset</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-102"/>
+      <location line="+111"/>
       <source>Invert colors</source>
       <translation>Інвертувати кольори</translation>
     </message>
     <message>
-      <location line="-15"/>
+      <location line="-31"/>
       <source>Alignment</source>
       <translation>Вирівнювання</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+38"/>
       <source>Visualiser</source>
       <translation>Візуалізер</translation>
     </message>
@@ -3931,9 +4397,19 @@
       <translation>Округлення</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
       <source>Spacing</source>
       <translation>Інтервал</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Column width multiplier, lower values leave more room in the middle</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -3985,7 +4461,7 @@
   <context>
     <name>DesktopLyrics</name>
     <message>
-      <location filename="../modules/background/DesktopLyrics.qml" line="+285"/>
+      <location filename="../modules/background/DesktopLyrics.qml" line="+291"/>
       <source>Loading lyrics...</source>
       <translation>Завантаження тексту...</translation>
     </message>
@@ -4177,8 +4653,76 @@
     <name>DinoGame</name>
     <message>
       <location filename="../modules/sidebar/DinoGame.qml" line="+251"/>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/DinoGame.qml" line="+162"/>
       <source>All up to date!</source>
       <translation>Все найновіше!</translation>
+    </message>
+    <message>
+      <location line="+85"/>
+      <source>G A M E   O V E R
+Click to restart</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Y O U   W I N !
+Now go touch grass</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/DinoGame.qml" line="+8"/>
+      <source>Click or press Space to play</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+86"/>
+      <source>G A M E   O V E R</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Click to restart</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Y O U   W I N !</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Now go touch grass</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>DiscordRPC</name>
+    <message>
+      <location filename="../services/DiscordRPC.qml" line="+218"/>
+      <location line="+74"/>
+      <location line="+51"/>
+      <source>Playing via Steam</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-85"/>
+      <source>Light Mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Dark Mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Website</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>GitHub</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4216,82 +4760,52 @@
     <name>Entries</name>
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
-      <source>Window Rules Out of the Box</source>
+      <source>Desktop Context Menus</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>The installer now writes three KWin rules: unfocused windows and dialogs dim to 95 percent, dialogs open centered, and picture-in-picture windows stay above others. Only Caelestia&apos;s own groups are written, so your rules keep their names and their order. Edit or remove them under System Settings -&gt; Window Rules, or let uninstall.sh take them out again.</source>
+      <source>Desktop icons now feature a dedicated right-click context menu. You can rename the icon directly or send it to the trash right from the desktop.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Right-Click Any App</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>An app in the launcher or its app browser now opens a context menu on right click: pin it to the dock, add it to the desktop, hide it from the launcher, or open it in the menu editor. The dock&apos;s pinned list is its own setting now (bar.dock.pinnedApps) instead of borrowing the launcher&apos;s favorites, and an existing list is carried over.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Status Icons You Can Arrange</source>
+      <source>Calendar Popout</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>The bar&apos;s status icons are an ordered list now instead of a wall of switches: add one, switch it off, or drag it into place under Settings -&gt; Panels -&gt; Taskbar -&gt; Status icons, and the bar draws them in that order. The clock can show seconds, and the workspace indicator can hide the ones that are empty and inactive.</source>
+      <source>Hovering the clock now shows a mini calendar with a month grid, today highlighted, and month navigation. Click the title to jump back to today. Enable this feature in Settings -&gt; Panels -&gt; Taskbar -&gt; Clock.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Game Mode at a Tap</source>
+      <source>Status Icons Context Menu</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>The utilities panel has a game mode toggle: it stops window animations and blur, pauses a video wallpaper and stops the desktop media shapes while it is on, then puts everything back afterwards. Game mode can still switch itself on when one of your target windows opens, under Settings -&gt; Utilities -&gt; Game mode.</source>
+      <source>Right-clicking the status icons block in the bar now opens a context menu popout with a shortcut to the Status Icons configuration page, where you can reorder or toggle them.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Color Intensity</source>
+      <source>Multiple Wi-Fi Profiles</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Advanced color settings gained a slider that scales how saturated the palette derived from your wallpaper is: 0 percent leaves the same palette in grey, 100 percent is what the color engine produces, and 200 percent is the most the accents take. It is kept with the scheme, so it survives a wallpaper change and a reboot, and &apos;caelestia scheme set -i&apos; sets it from the command line.</source>
+      <source>You can now manage multiple saved profiles (e.g. DHCP and static IP) for the same Wi-Fi network (SSID). The Saved Networks page lists one row per profile, allowing you to edit, autoconnect, or forget them individually.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Dock App Badges</source>
+      <source>Manual Light/Dark Mode</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Dock icons can now display the count, progress, and urgency published by running applications. Configure it under Settings -&gt; Panels -&gt; Taskbar -&gt; Dock.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Ambient Glow</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Shell surfaces and window previews can now cast a subtle, dynamic ambient glow derived from the window content. Enable it under Settings -&gt; Appearance.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Lock Screen Password Reveal</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Click or tap the lock icon inside the greeter&apos;s password pill to reveal your typed password before unlocking.</source>
+      <source>A manual light/dark mode selector has been added to the colors page, allowing you to override the automatic theme switching. Open Settings -&gt; Appearance -&gt; Colors -&gt; Advanced Settings to manually set the light/dark mode. Alternatively, you can open launcher -&gt; Type &gt; -&gt; Select light/dark mode.</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -4420,7 +4934,12 @@
   <context>
     <name>FileDialog</name>
     <message>
-      <location filename="../components/filedialog/FileDialog.qml" line="+16"/>
+      <location filename="../components/filedialog/FileDialog.qml" line="+13"/>
+      <source>All files</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
       <source>Select a folder</source>
       <translation>Виберіть теку</translation>
     </message>
@@ -4639,11 +5158,46 @@
     </message>
   </context>
   <context>
-    <name>GreeterContext</name>
+    <name>Greeter</name>
     <message>
-      <location filename="../modules/bar/popouts/GreeterContext.qml" line="+79"/>
-      <source>Greeter settings</source>
-      <translation>Налаштування Гретера</translation>
+      <location filename="../modules/bar/components/Greeter.qml" line="+26"/>
+      <source>User</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <location line="+8"/>
+      <source>Good Night</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-6"/>
+      <source>Good Morning</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Good Afternoon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Good Evening</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>GreetingPill</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/GreetingPill.qml" line="+9"/>
+      <source>Good day</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <location line="+36"/>
+      <source>User</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4652,6 +5206,94 @@
       <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
       <source>Usage</source>
       <translation>Використання</translation>
+    </message>
+  </context>
+  <context>
+    <name>HotspotPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/network/HotspotPage.qml" line="+20"/>
+      <source>The hotspot could not be started</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+37"/>
+      <location line="+36"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-19"/>
+      <source>Share this machine&apos;s connection over Wi-Fi. The hotspot is saved as a connection named &quot;%1&quot;, so Plasma&apos;s own network applet can see it too.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>No wireless device on this machine can run an access point.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Sharing as &quot;%1&quot;</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Off</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Hotspot name (SSID)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Leave empty to use this machine&apos;s name, %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Password</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>At least %1 characters. Leave empty to share an open network.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>A password is either empty or at least %1 characters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+28"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+21"/>
+      <source>Save</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>HotspotSwitch</name>
+    <message>
+      <location filename="../services/HotspotSwitch.qml" line="+27"/>
+      <location line="+14"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-14"/>
+      <source>Give it a name and a password in Settings &gt; Network &gt; Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>The hotspot could not be started</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4767,6 +5409,11 @@
       <source>Keyboard Layouts</source>
       <translation>Розкладки клавіатури</translation>
     </message>
+    <message>
+      <location line="+64"/>
+      <source>XKB supports only 4 layouts at a time</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>KbLayoutModel</name>
@@ -4784,22 +5431,32 @@
   <context>
     <name>KeyCaptureDialog</name>
     <message>
-      <location filename="../modules/nexus/common/KeyCaptureDialog.qml" line="+85"/>
+      <location filename="../modules/nexus/common/KeyCaptureDialog.qml" line="+156"/>
       <source>Record Keybind</source>
       <translation>Призначити</translation>
     </message>
     <message>
-      <location line="+68"/>
+      <location line="+69"/>
       <source>Press keys now...</source>
       <translation>Натисніть клавіші...</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+50"/>
+      <source>Already used by %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Cancel</source>
       <translation>Скасувати</translation>
     </message>
     <message>
       <location line="+7"/>
+      <source>Replace</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Confirm</source>
       <translation>Підтвердити</translation>
     </message>
@@ -5077,7 +5734,7 @@
   <context>
     <name>Kwin</name>
     <message>
-      <location filename="../services/Kwin.qml" line="+477"/>
+      <location filename="../services/Kwin.qml" line="+484"/>
       <source>Caps lock enabled</source>
       <translation>Caps блокування увімкнено</translation>
     </message>
@@ -5127,7 +5784,7 @@
       <translation>Макет змінено на: %1</translation>
     </message>
     <message>
-      <location line="+56"/>
+      <location line="+57"/>
       <source>Reload devices</source>
       <translation>Перезавантажити пристрої</translation>
     </message>
@@ -5305,7 +5962,22 @@
   <context>
     <name>LauncherPanel</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/LauncherPanel.qml" line="+15"/>
+      <location filename="../modules/nexus/pages/panels/LauncherPanel.qml" line="+20"/>
+      <source>Default</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Simple</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Compact</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Launcher</source>
       <translation>Лаунчер</translation>
     </message>
@@ -5401,6 +6073,16 @@
     </message>
     <message>
       <location line="+6"/>
+      <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Show power menu</source>
       <translation>Показати меню вимкнення</translation>
     </message>
@@ -5820,6 +6502,29 @@
     </message>
   </context>
   <context>
+    <name>LockScreenUi</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/LockScreenUi.qml" line="+113"/>
+      <source>Good morning</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Good afternoon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Good evening</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Good night</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>LockStatus</name>
     <message>
       <location filename="../modules/bar/popouts/LockStatus.qml" line="+21"/>
@@ -6024,6 +6729,19 @@
     </message>
   </context>
   <context>
+    <name>MediaCard</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/MediaCard.qml" line="+72"/>
+      <source>Nothing playing</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Try playing some music!</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>MemoryCard</name>
     <message>
       <location filename="../modules/dashboard/performance/MemoryCard.qml" line="+42"/>
@@ -6082,12 +6800,7 @@
       <translation>Бездротовий</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <source>Enabled</source>
-      <translation>Увімкнено</translation>
-    </message>
-    <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>%1 networks available</source>
       <translation>Доступно %1 мереж</translation>
     </message>
@@ -6097,7 +6810,7 @@
       <translation>Повторне сканування мереж</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+26"/>
       <source>VPN</source>
       <translation>Мережа VPN</translation>
     </message>
@@ -6107,7 +6820,7 @@
       <translation>Доступні %1 профілі</translation>
     </message>
     <message>
-      <location line="+85"/>
+      <location line="+133"/>
       <source>No VPN profiles found</source>
       <translation>Не знайдено профілів VPN</translation>
     </message>
@@ -6298,22 +7011,27 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+50"/>
+      <location line="+25"/>
       <source>Show all networks (%1)</source>
       <translation>Показати всі мережі (%1)</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+13"/>
       <source>Saved networks</source>
       <translation>Збережені мережі</translation>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+6"/>
       <source>Add network</source>
       <translation>Додати мережу</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>VPN connections</source>
       <translation>VPN з’єднань</translation>
     </message>
@@ -6324,17 +7042,17 @@
     </message>
     <message>
       <location line="+80"/>
-      <location line="+145"/>
+      <location line="+146"/>
       <source>Connected</source>
       <translation>Підключено</translation>
     </message>
     <message>
-      <location line="-145"/>
+      <location line="-146"/>
       <source>Available</source>
       <translation>Доступно</translation>
     </message>
     <message>
-      <location line="+43"/>
+      <location line="+44"/>
       <source>VPN providers</source>
       <translation>VPN провайдери</translation>
     </message>
@@ -6423,29 +7141,6 @@
     </message>
   </context>
   <context>
-    <name>Nexus</name>
-    <message>
-      <location filename="../modules/nexus/Nexus.qml" line="+162"/>
-      <source>Update in progress</source>
-      <translation>Оновлення в процесі</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Closing now will let the update keep running in the background, or you can cancel it first.</source>
-      <translation>Закриття тепер дозволить оновити працювати у фоновому режимі, або ви можете скасувати його спочатку.</translation>
-    </message>
-    <message>
-      <location line="+14"/>
-      <source>Cancel Update</source>
-      <translation>Скасувати оновлення</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Keep Running</source>
-      <translation>Виконуйте</translation>
-    </message>
-  </context>
-  <context>
     <name>NightLight</name>
     <message>
       <location filename="../modules/bar/popouts/NightLight.qml" line="+26"/>
@@ -6481,7 +7176,7 @@
   <context>
     <name>Nmcli</name>
     <message>
-      <location filename="../services/Nmcli.qml" line="+409"/>
+      <location filename="../services/Nmcli.qml" line="+212"/>
       <source>Open</source>
       <translation>Відкриті</translation>
     </message>
@@ -6497,6 +7192,50 @@
     </message>
   </context>
   <context>
+    <name>NotesTab</name>
+    <message>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+22"/>
+      <location line="+204"/>
+      <source>Untitled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-118"/>
+      <source>Notes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+164"/>
+      <source>No additional text</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+37"/>
+      <source>No notes yet. Tap + to add one.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+73"/>
+      <source>Title</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+45"/>
+      <source>Start writing...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Edited %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+42"/>
+      <source>Select a note or create one</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>Notif</name>
     <message>
       <location filename="../modules/sidebar/Notif.qml" line="+138"/>
@@ -6508,7 +7247,7 @@
     <name>NotifData</name>
     <message>
       <location filename="../services/NotifData.qml" line="+19"/>
-      <location line="+149"/>
+      <location line="+153"/>
       <source>now</source>
       <translation>зараз</translation>
     </message>
@@ -6522,12 +7261,61 @@
     </message>
     <message>
       <location line="+0"/>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/NotifDock.qml" line="+68"/>
+      <location line="+56"/>
       <source>Notifications</source>
       <translation>Сповіщення</translation>
     </message>
     <message>
       <location line="+112"/>
       <source>Caelestia Mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Spinning kurukuru activated</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Classic dinosaur character</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/NotifDock.qml" line="-80"/>
+      <location line="+4"/>
+      <location line="+5"/>
+      <source>now</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-4"/>
+      <source>m</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>h</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>d</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+70"/>
+      <source>Unlock for Notifications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source> notification</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source> notifications</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -6860,7 +7648,7 @@
       <translation>Спливаючі сповіщення тепер ввімкнені</translation>
     </message>
     <message>
-      <location line="+97"/>
+      <location line="+107"/>
       <source>Clear all notifications</source>
       <translation>Очистити всі сповіщення</translation>
     </message>
@@ -7224,7 +8012,7 @@
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+325"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+328"/>
       <source>Page under construction</source>
       <translation>Сторінка в процесі будівництва</translation>
     </message>
@@ -7398,6 +8186,11 @@
     </message>
     <message>
       <location line="+1"/>
+      <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Sidebar</source>
       <translation type="unfinished"/>
     </message>
@@ -7545,6 +8338,11 @@
       <location line="+1"/>
       <source>Saved networks</source>
       <translation>Збережені мережі</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+4"/>
@@ -7858,7 +8656,12 @@
       <translation>Версія ОС</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+1"/>
+      <source>Uninstall Caelestia</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>AI Assistant</source>
       <translation>Помічник AI</translation>
     </message>
@@ -7984,6 +8787,24 @@
     </message>
   </context>
   <context>
+    <name>PasswordPill</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/PasswordPill.qml" line="+81"/>
+      <source>Loading...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Please wait...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Enter your password</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>PerfBattery</name>
     <message>
       <location filename="../modules/bar/components/performance/PerfBattery.qml" line="+12"/>
@@ -8046,6 +8867,16 @@
       <source>Stop media playback</source>
       <translation>Зупинити відтворення медіа</translation>
     </message>
+    <message>
+      <location line="+7"/>
+      <source>Invalid property</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>No active player</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>PluginSettingsPopup</name>
@@ -8058,6 +8889,29 @@
       <location line="+51"/>
       <source>Done</source>
       <translation>Виконано</translation>
+    </message>
+  </context>
+  <context>
+    <name>PluginStore</name>
+    <message>
+      <location filename="../services/PluginStore.qml" line="+64"/>
+      <source>Plugin update available</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>1 plugin can be updated</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Plugin updates available</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 plugins can be updated</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -8130,22 +8984,9 @@
     </message>
   </context>
   <context>
-    <name>PolkitDialog</name>
-    <message>
-      <location filename="../components/PolkitDialog.qml" line="+122"/>
-      <source>Enter your password</source>
-      <translation>Введіть пароль</translation>
-    </message>
-    <message>
-      <location line="+96"/>
-      <source>Authentication Required</source>
-      <translation>Потрібна аутентифікація</translation>
-    </message>
-  </context>
-  <context>
     <name>Power</name>
     <message>
-      <location filename="../modules/bar/components/Power.qml" line="+22"/>
+      <location filename="../modules/bar/components/Power.qml" line="+25"/>
       <source>Power and session menu</source>
       <translation>Меню живлення і сеансу</translation>
     </message>
@@ -8173,6 +9014,11 @@
     <message>
       <location filename="../modules/nexus/pages/utilities/QuickTogglesPage.qml" line="+13"/>
       <source>Wi-Fi</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hotspot</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -8241,96 +9087,44 @@
       <translation>Перезапустити оболонку</translation>
     </message>
     <message>
-      <location line="+3"/>
+      <location line="+36"/>
       <source>Quick toggles</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+11"/>
+      <source>Custom order</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Rearrange toggles with drag handles</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Toggles per page</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Entries shown on each page of the drawer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+51"/>
       <source>Connectivity</source>
       <translation>Підключення</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+17"/>
       <source>Tools</source>
       <translation>Інструменти</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+17"/>
       <source>System</source>
       <translation>Система</translation>
-    </message>
-  </context>
-  <context>
-    <name>Record</name>
-    <message>
-      <location filename="../modules/utilities/cards/Record.qml" line="+61"/>
-      <source>Screen Recorder</source>
-      <translation>Запис екрану</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Paused</source>
-      <translation>Призупинено</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Running...</source>
-      <translation>Працює...</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Ready</source>
-      <translation>Готовий</translation>
-    </message>
-    <message>
-      <location line="+17"/>
-      <source>Record</source>
-      <translation>Запис</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <location line="+9"/>
-      <location line="+9"/>
-      <location line="+9"/>
-      <location line="+10"/>
-      <source>Start</source>
-      <translation>Старт</translation>
-    </message>
-    <message>
-      <location line="-29"/>
-      <source>Record with Sound</source>
-      <translation>Запис із звуком</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Record with Microphone</source>
-      <translation>Запис через мікрофон</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Both Sound &amp; Microphone</source>
-      <translation>Звук і мікрофон обидва</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Record GIF</source>
-      <translation>Запис GIF</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Use Spectacle</source>
-      <translation>Використовувати Spectacle</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Spectacle</source>
-      <translation>Спектакль</translation>
-    </message>
-    <message>
-      <location line="+124"/>
-      <source>Recording %1</source>
-      <translation>Запис %1</translation>
     </message>
   </context>
   <context>
@@ -8397,7 +9191,7 @@
       <translation>Запис на %1</translation>
     </message>
     <message>
-      <location line="+126"/>
+      <location line="+128"/>
       <source>No recordings found</source>
       <translation>Записів не знайдено</translation>
     </message>
@@ -8405,7 +9199,7 @@
   <context>
     <name>RegionSelection</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+543"/>
+      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+544"/>
       <source>Full Screen Screenshot</source>
       <translation>Повноекранний знімок екрану</translation>
     </message>
@@ -8487,6 +9281,39 @@
     </message>
   </context>
   <context>
+    <name>ScreenshotList</name>
+    <message>
+      <location filename="../modules/utilities/cards/ScreenshotList.qml" line="+46"/>
+      <source>Screenshots</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+57"/>
+      <source>Screenshot at %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+42"/>
+      <source>Delete this screenshot?</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Delete</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+100"/>
+      <source>No screenshots found</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>SearchResults</name>
     <message>
       <location filename="../modules/nexus/navpane/SearchResults.qml" line="+148"/>
@@ -8504,7 +9331,12 @@
       <translation>Авто</translation>
     </message>
     <message>
-      <location line="-99"/>
+      <location line="-117"/>
+      <source>Local</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
       <source>Generic</source>
       <translation type="unfinished"/>
     </message>
@@ -8655,6 +9487,39 @@
     </message>
   </context>
   <context>
+    <name>Session</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/Session.qml" line="+55"/>
+      <source>Sleep</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Hibernate</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Switch User</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Log Out</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Restart</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Shut Down</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>SessionPage</name>
     <message>
       <location filename="../modules/nexus/pages/SessionPage.qml" line="+22"/>
@@ -8780,12 +9645,192 @@
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+28"/>
+      <location filename="../modules/Shortcuts.qml" line="+26"/>
+      <source>Focus the window above</source>
+      <translation>Сфокусувати вікно вище</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Focus the window below</source>
+      <translation>Сфокусуватися на вікні нижче</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Focus the window to the left</source>
+      <translation>Сфокусуватися на вікні ліворуч</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Focus the window to the right</source>
+      <translation>Сфокусуватися на вікні праворуч</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Move window up</source>
+      <translation>Перемістити вікно вгору</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Move window down</source>
+      <translation>Перемістити вікно вниз</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Move window left</source>
+      <translation>Перенести вікно ліворуч</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Move window right</source>
+      <translation>Перенести вікно праворуч</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Close current window</source>
+      <translation>Закрити поточне вікно</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Focus next window</source>
+      <translation>Сфокусуватися на наступному вікні</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Focus previous window</source>
+      <translation>Фокусувати попереднє вікно</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Set active window as Master</source>
+      <translation>Активне вікно головною</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to next layout</source>
+      <translation>Перейти до наступної розкладки</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to previous layout</source>
+      <translation>Перемкнутися на попередню розкладку</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to BTree layout</source>
+      <translation>Перейти до розкладки BTree</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Monocle layout</source>
+      <translation>Перейти на макет Monocle</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Floating layout</source>
+      <translation>Перейти на плаваючий макет</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Quarter layout</source>
+      <translation>Перемкнутися на макет Quarter</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Spread layout</source>
+      <translation>Перейти на макет Поширення</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Stacked layout</source>
+      <translation>Перейти до розкладки в стеку</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Stair layout</source>
+      <translation>Перейти на макет контуру</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Columns layout</source>
+      <translation>Перемкнутися на макет стовпців</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Three Column layout</source>
+      <translation>Перейти до трьох стовпців</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Spiral layout</source>
+      <translation>Перейти на спіральний макет</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Switch to Tile layout</source>
+      <translation>Переключити на макет плиток</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Increase window height</source>
+      <translation>Збільшити висоту вікна</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Decrease window height</source>
+      <translation>Зменшити висоту вікна</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Increase window width</source>
+      <translation>Збільшити ширину вікна</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Decrease window width</source>
+      <translation>Зменшити ширину вікна</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Increase master area size</source>
+      <translation>Збільшити розмір області майстра</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Decrease master area size</source>
+      <translation>Зменшити розмір області головного екрану</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Toggle floating state</source>
+      <translation>Перемкнути плаваючий стан</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Toggle floating state for all</source>
+      <translation>Перемкнути плаваючий стан для всіх</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Rotate the window layout</source>
+      <translation>Повернути розташування вікна</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Rotate windows within a part</source>
+      <translation>Обертайте вікна у межах частини</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Toggle dock support</source>
+      <translation>Перемкнути підтримку док-станції</translation>
+    </message>
+    <message>
+      <location line="+50"/>
       <source>Open nexus</source>
       <translation>Відкрити</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Toggle launcher, dashboard and osd</source>
       <translation>Ввімкнути/вимкнути launcher, панель навігації і osd</translation>
     </message>
@@ -8805,7 +9850,7 @@
       <translation>Увімкнути накладання екрану</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Toggle Google Lens search</source>
       <translation>Увімкнути або вимкнути пошук Google Lens</translation>
     </message>
@@ -8820,7 +9865,7 @@
       <translation>Увімкнути або вимкнути запис екрану</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+18"/>
       <source>Toggle session menu</source>
       <translation>Відкрити меню сеансу</translation>
     </message>
@@ -8960,190 +10005,100 @@
       <translation>Перейти на робочу область 10</translation>
     </message>
     <message>
-      <location line="+89"/>
-      <source>Focus the window above</source>
-      <translation>Сфокусувати вікно вище</translation>
+      <location line="+112"/>
+      <source>Open dock entry 1</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Focus the window below</source>
-      <translation>Сфокусуватися на вікні нижче</translation>
+      <location line="+8"/>
+      <source>Open dock entry 2</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Focus the window to the left</source>
-      <translation>Сфокусуватися на вікні ліворуч</translation>
+      <location line="+8"/>
+      <source>Open dock entry 3</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Focus the window to the right</source>
-      <translation>Сфокусуватися на вікні праворуч</translation>
+      <location line="+8"/>
+      <source>Open dock entry 4</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Move window up</source>
-      <translation>Перемістити вікно вгору</translation>
+      <location line="+8"/>
+      <source>Open dock entry 5</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Move window down</source>
-      <translation>Перемістити вікно вниз</translation>
+      <location line="+8"/>
+      <source>Open dock entry 6</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Move window left</source>
-      <translation>Перенести вікно ліворуч</translation>
+      <location line="+8"/>
+      <source>Open dock entry 7</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Move window right</source>
-      <translation>Перенести вікно праворуч</translation>
+      <location line="+8"/>
+      <source>Open dock entry 8</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Close current window</source>
-      <translation>Закрити поточне вікно</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Focus next window</source>
-      <translation>Сфокусуватися на наступному вікні</translation>
+      <location line="+8"/>
+      <source>Open dock entry 9</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
-      <source>Focus previous window</source>
-      <translation>Фокусувати попереднє вікно</translation>
+      <source>Open new window of dock entry 1</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Set active window as Master</source>
-      <translation>Активне вікно головною</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 2</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to next layout</source>
-      <translation>Перейти до наступної розкладки</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 3</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to previous layout</source>
-      <translation>Перемкнутися на попередню розкладку</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 4</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to BTree layout</source>
-      <translation>Перейти до розкладки BTree</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 5</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to Monocle layout</source>
-      <translation>Перейти на макет Monocle</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 6</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to Floating layout</source>
-      <translation>Перейти на плаваючий макет</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 7</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to Quarter layout</source>
-      <translation>Перемкнутися на макет Quarter</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 8</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Switch to Spread layout</source>
-      <translation>Перейти на макет Поширення</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Switch to Stacked layout</source>
-      <translation>Перейти до розкладки в стеку</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Switch to Stair layout</source>
-      <translation>Перейти на макет контуру</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Switch to Columns layout</source>
-      <translation>Перемкнутися на макет стовпців</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Switch to Three Column layout</source>
-      <translation>Перейти до трьох стовпців</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Switch to Spiral layout</source>
-      <translation>Перейти на спіральний макет</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Switch to Tile layout</source>
-      <translation>Переключити на макет плиток</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Increase window height</source>
-      <translation>Збільшити висоту вікна</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Decrease window height</source>
-      <translation>Зменшити висоту вікна</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Increase window width</source>
-      <translation>Збільшити ширину вікна</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Decrease window width</source>
-      <translation>Зменшити ширину вікна</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Increase master area size</source>
-      <translation>Збільшити розмір області майстра</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Decrease master area size</source>
-      <translation>Зменшити розмір області головного екрану</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Toggle floating state</source>
-      <translation>Перемкнути плаваючий стан</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Toggle floating state for all</source>
-      <translation>Перемкнути плаваючий стан для всіх</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Rotate the window layout</source>
-      <translation>Повернути розташування вікна</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Rotate windows within a part</source>
-      <translation>Обертайте вікна у межах частини</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Toggle dock support</source>
-      <translation>Перемкнути підтримку док-станції</translation>
+      <location line="+8"/>
+      <source>Open new window of dock entry 9</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>ShowDesktop</name>
     <message>
-      <location filename="../modules/bar/components/ShowDesktop.qml" line="+20"/>
+      <location filename="../modules/bar/components/ShowDesktop.qml" line="+23"/>
       <source>Show desktop</source>
       <translation>Показати робочий стіл</translation>
     </message>
@@ -9164,7 +10119,27 @@
   <context>
     <name>SidebarPanel</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+15"/>
+      <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+16"/>
+      <source>Last used</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Notifications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>AI Assistant</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>News</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Sidebar</source>
       <translation type="unfinished"/>
     </message>
@@ -9204,7 +10179,17 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
+      <source>Open on</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Tab shown when the sidebar opens</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
       <source>Show News tab</source>
       <translation>Показати вкладку Новини</translation>
     </message>
@@ -9323,14 +10308,6 @@
       <location line="+8"/>
       <source>Screen recording</source>
       <translation>Запис з екрану</translation>
-    </message>
-  </context>
-  <context>
-    <name>StatusIconsContext</name>
-    <message>
-      <location filename="../modules/bar/popouts/StatusIconsContext.qml" line="+83"/>
-      <source>Status icons settings</source>
-      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -9944,7 +10921,7 @@
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+95"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+279"/>
       <source>Quick Toggles</source>
       <translation type="unfinished"/>
     </message>
@@ -9968,6 +10945,46 @@
       <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
       <source>Back</source>
       <translation>Відмінити</translation>
+    </message>
+  </context>
+  <context>
+    <name>UninstallDialog</name>
+    <message>
+      <location filename="../modules/nexus/common/UninstallDialog.qml" line="+75"/>
+      <source>Uninstall Caelestia?</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Still looking for the uninstaller. Try again in a moment.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>This opens the uninstaller in a terminal, where it asks for confirmation of its own. It removes the shell, its config files and its services, and can restore your pre-install configuration from a backup.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>This install belongs to a package, so the package manager owns its files. Remove it with:
+
+%1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>No uninstaller script was found and no known package manager owns this install. Remove it the same way you installed it.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Uninstall</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10116,16 +11133,61 @@
       <comment>used / total amount</comment>
       <translation type="unfinished"/>
     </message>
+    <message>
+      <location line="+30"/>
+      <source>%1d</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1h</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1m</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>%1 day</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1 hour</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 hours</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1 minute</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 minutes</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>UpdateChecker</name>
     <message>
-      <location filename="../services/UpdateChecker.qml" line="+363"/>
+      <location filename="../services/UpdateChecker.qml" line="+365"/>
       <source>Done!</source>
       <translation>Виконано!</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+18"/>
       <source>Preparing shell build...</source>
       <translation>Підготовка збірки оболонки...</translation>
     </message>
@@ -10136,12 +11198,11 @@
     </message>
     <message>
       <location line="+15"/>
-      <location line="+379"/>
       <source>Canceled</source>
       <translation>Скасовано</translation>
     </message>
     <message>
-      <location line="-294"/>
+      <location line="+103"/>
       <location line="+21"/>
       <source>Release</source>
       <translation>Звільнити</translation>
@@ -10156,36 +11217,11 @@
       <source>Tag</source>
       <translation>Тег</translation>
     </message>
-    <message>
-      <location line="+275"/>
-      <source>Update Successful</source>
-      <translation>Оновлення успішне</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>The update is complete. Please log out to apply changes.</source>
-      <translation>Оновлення завершено. Будь ласка, вийдіть, щоб застосувати зміни.</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Update failed (exit code %1)</source>
-      <translation>Оновлення не вдалося (код виходу %1)</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Update Failed</source>
-      <translation>Оновлення не вдалося</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>The update script returned error code %1</source>
-      <translation>Скрипт оновлення повернув код помилки %1</translation>
-    </message>
   </context>
   <context>
     <name>UpdateIndicator</name>
     <message>
-      <location filename="../modules/bar/components/UpdateIndicator.qml" line="+49"/>
+      <location filename="../modules/bar/components/UpdateIndicator.qml" line="+47"/>
       <source>Caelestia updates</source>
       <translation type="unfinished"/>
     </message>
@@ -10261,12 +11297,7 @@
   <context>
     <name>Updates</name>
     <message>
-      <location filename="../modules/bar/popouts/Updates.qml" line="+34"/>
-      <source>Updating…</source>
-      <translation>Оновлення…</translation>
-    </message>
-    <message>
-      <location line="+2"/>
+      <location filename="../modules/bar/popouts/Updates.qml" line="+32"/>
       <source>Checking for updates…</source>
       <translation type="unfinished"/>
     </message>
@@ -10335,7 +11366,7 @@
   <context>
     <name>UpdatesPage</name>
     <message>
-      <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+136"/>
+      <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+138"/>
       <source>Updates</source>
       <translation>Оновлення</translation>
     </message>
@@ -10345,17 +11376,7 @@
       <translation>Довідка</translation>
     </message>
     <message>
-      <location line="+97"/>
-      <source>Update complete - log out to apply</source>
-      <translation>Оновлення завершено - вийдіть і подайте заявку</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Updating…</source>
-      <translation>Оновлення…</translation>
-    </message>
-    <message>
-      <location line="+1"/>
+      <location line="+95"/>
       <source>Restore to %1?</source>
       <translation>Відновити %1?</translation>
     </message>
@@ -10400,12 +11421,7 @@
       <translation>Канал: %1</translation>
     </message>
     <message>
-      <location line="+22"/>
-      <source>Log Out</source>
-      <translation>Вийти з системи</translation>
-    </message>
-    <message>
-      <location line="+1"/>
+      <location line="+14"/>
       <source>Restore</source>
       <translation>Відновити</translation>
     </message>
@@ -10425,12 +11441,7 @@
       <translation>Встановити оновлення</translation>
     </message>
     <message>
-      <location line="+40"/>
-      <source>Stop</source>
-      <translation>Зупинити</translation>
-    </message>
-    <message>
-      <location line="+1"/>
+      <location line="+22"/>
       <source>Cancel</source>
       <translation>Скасувати</translation>
     </message>
@@ -10445,7 +11456,7 @@
       <translation>Перевірити</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+29"/>
       <source>General</source>
       <translation>Загальні налаштування</translation>
     </message>
@@ -10475,12 +11486,7 @@
       <translation>Показувати значок сповіщення на панелі завдань, коли оновлення доступні</translation>
     </message>
     <message>
-      <location line="+63"/>
-      <source>Customize Installation</source>
-      <translation>Налаштування установки</translation>
-    </message>
-    <message>
-      <location line="+15"/>
+      <location line="+39"/>
       <source>Open Backup Folder</source>
       <translation>Відкрити теку резервних копій</translation>
     </message>
@@ -10490,27 +11496,7 @@
       <translation>Перегляд Ваших раніше резервних копій конфігурації</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <source>Deploy Configurations</source>
-      <translation>Налаштування розгортання</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Update your custom dotfiles in ~/.config</source>
-      <translation>Оновлення ваших dotfiles в ~/.config</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Build Shell UI</source>
-      <translation>Створити оболонку для продажу</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Compile and install Quickshell UI updates</source>
-      <translation>Скомпілювати та встановити оновлення Quickshell UI</translation>
-    </message>
-    <message>
-      <location line="+33"/>
+      <location line="+34"/>
       <source>Switching to %1…</source>
       <translation>Перемикання на %1…</translation>
     </message>
@@ -10525,7 +11511,7 @@
       <translation>Історія комітів</translation>
     </message>
     <message>
-      <location line="+54"/>
+      <location line="+53"/>
       <source>Loading…</source>
       <translation>Завантаження…</translation>
     </message>
@@ -10534,10 +11520,13 @@
       <source>Load 10 More</source>
       <translation>Завантажити ще 10</translation>
     </message>
+  </context>
+  <context>
+    <name>User</name>
     <message>
-      <location line="+11"/>
-      <source>Update Log</source>
-      <translation>Журнал оновлень</translation>
+      <location filename="../modules/dashboard/dash/User.qml" line="+216"/>
+      <source>up %1</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10690,13 +11679,13 @@
     </message>
     <message>
       <location line="+6"/>
-      <source>Screen Recorder</source>
-      <translation>Запис екрану</translation>
+      <source>Screen Capture</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the Screen Recorder card</source>
-      <translation>Показати карту запису з екрану</translation>
+      <source>Show the screen capture card</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
@@ -10722,7 +11711,7 @@
   <context>
     <name>VPN</name>
     <message>
-      <location filename="../services/VPN.qml" line="+174"/>
+      <location filename="../services/VPN.qml" line="+175"/>
       <source>VPN connection failed</source>
       <translation>Помилка з’єднання з VPN</translation>
     </message>
@@ -10732,7 +11721,29 @@
       <translation>Помилка від&apos;єднання VPN</translation>
     </message>
     <message>
-      <location line="+221"/>
+      <location line="+73"/>
+      <source>Login required</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Machine authorization required</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Tailscale may not be running</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+31"/>
+      <location line="+73"/>
+      <location line="+46"/>
+      <source>Authentication required</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-6"/>
       <source>VPN connected</source>
       <translation>VPN підключено</translation>
     </message>
@@ -10768,7 +11779,7 @@
       <translation>Помилка VPN</translation>
     </message>
     <message>
-      <location line="+184"/>
+      <location line="+196"/>
       <location line="+68"/>
       <source>Could not start %1. Is it installed?</source>
       <translation>Не вдалося запустити %1. Це встановлено?</translation>
@@ -10893,7 +11904,7 @@
   <context>
     <name>Wallpaper</name>
     <message>
-      <location filename="../modules/background/Wallpaper.qml" line="+103"/>
+      <location filename="../modules/background/Wallpaper.qml" line="+108"/>
       <source>Wallpaper missing?</source>
       <translation>Не вистачає шпалер?</translation>
     </message>
@@ -11154,9 +12165,22 @@
     </message>
   </context>
   <context>
+    <name>WeatherCard</name>
+    <message>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/WeatherCard.qml" line="+105"/>
+      <source>Feels like %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>High %1 • Low %2</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>WeatherTab</name>
     <message>
-      <location filename="../modules/dashboard/WeatherTab.qml" line="+31"/>
+      <location filename="../modules/dashboard/WeatherTab.qml" line="+58"/>
       <source>Loading...</source>
       <translation>Завантажується...</translation>
     </message>
@@ -11177,8 +12201,9 @@
     </message>
     <message>
       <location line="+6"/>
-      <source>Feels Like</source>
-      <translation>Відчувається як</translation>
+      <source>Feels like</source>
+      <comment>apparent temperature</comment>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
@@ -11186,14 +12211,55 @@
       <translation>Вітер</translation>
     </message>
     <message>
-      <location line="+10"/>
-      <source>7-Day Forecast</source>
-      <translation>7-Денний прогноз погоди</translation>
+      <location line="+1"/>
+      <source>%1 km/h</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+19"/>
+      <source>Hourly forecast</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+62"/>
+      <source>7-day forecast</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+34"/>
       <source>Today</source>
-      <translation>Сьогодні</translation>
+      <comment>forecast column</comment>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+26"/>
+      <source>%1 / %2</source>
+      <comment>min/max temperature</comment>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+252"/>
+      <source>Now</source>
+      <comment>hourly forecast, current hour</comment>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WelcomeText</name>
+    <message>
+      <location filename="../../src/sddm/themes/full/widgets/WelcomeText.qml" line="+13"/>
+      <source>Good night</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Good morning</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Good afternoon</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11289,6 +12355,132 @@
       <location line="+1"/>
       <source>Image files</source>
       <translation>Файли зображень</translation>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Profile picture changed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Profile picture changed to %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Unable to change profile picture</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Failed to change profile picture to %1</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>caelestia::services::SessionManager</name>
+    <message>
+      <location filename="../plugin/src/Caelestia/Services/sessionmanager.cpp" line="+121"/>
+      <source>Hibernate failed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Enable hibernation to use this feature.</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>caelestia::services::Weather</name>
+    <message>
+      <location filename="../plugin/src/Caelestia/Services/weather.cpp" line="+93"/>
+      <source>No weather</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+153"/>
+      <source>Clear</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Partly cloudy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Overcast</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Fog</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Drizzle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Freezing drizzle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Light rain</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Rain</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Heavy rain</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Light snow</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Snow</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Heavy snow</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Light snow showers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Heavy snow showers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Thunderstorm</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Thunderstorm with hail</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Unknown</source>
+      <translation type="unfinished"/>
     </message>
   </context>
 </TS>

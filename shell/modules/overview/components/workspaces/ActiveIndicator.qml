@@ -66,8 +66,8 @@ StyledRect {
         }
         return s;
     }
-    property int cWs
-    property int lastWs
+    property int cWs: currentWsIdx
+    property int lastWs: currentWsIdx
 
     onCurrentWsIdxChanged: {
         lastWs = cWs;

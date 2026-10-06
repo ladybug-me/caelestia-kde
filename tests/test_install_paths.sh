@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# suite: isolated
 
 set -uo pipefail
 

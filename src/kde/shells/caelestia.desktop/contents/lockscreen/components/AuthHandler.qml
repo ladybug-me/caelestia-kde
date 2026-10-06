@@ -23,7 +23,7 @@ Item {
     property int lockoutSecondsRemaining: 0
     readonly property int lockoutMinutesRemaining: Math.ceil(lockoutSecondsRemaining / 60)
     readonly property bool lockoutActive: lockoutSecondsRemaining > 0
-    readonly property string lockoutText: lockoutMinutesRemaining > 0 ? (lockoutMinutesRemaining + " min left") : ""
+    readonly property string lockoutText: lockoutMinutesRemaining > 0 ? qsTr("%1 min left").arg(lockoutMinutesRemaining) : ""
 
     property int fprintTries: 0
     property int maxFprintTries: 3

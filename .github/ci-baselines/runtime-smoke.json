@@ -1,0 +1,5 @@
+{
+  "max_startup_ms": 30000,
+  "max_rss_kb": 2000000,
+  "max_ipc_ms": 5000
+}

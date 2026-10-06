@@ -54,6 +54,7 @@ void BlobShape::setGroup(BlobGroup* g) {
     emit groupChanged();
     if (m_group)
         m_group->markDirty();
+    update();
 }
 
 void BlobShape::setRadius(qreal r) {

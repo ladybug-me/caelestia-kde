@@ -56,7 +56,7 @@ ColumnLayout {
         id: list
 
         model: FolderListModel {
-            folder: "file://" + Paths.recsdir
+            folder: "file://" + GlobalConfig.paths.recordingsDir
             nameFilters: ["recording_*.mp4", "recording_*.gif"]
             sortField: FolderListModel.Time
             sortReversed: false
@@ -106,7 +106,8 @@ ColumnLayout {
                 type: IconButton.Text
                 onClicked: {
                     root.visibilities.utilities = false;
-                    root.visibilities.sidebar = false;
+                    if (!Visibilities.sidebarPinned)
+                        root.visibilities.sidebar = false;
                     Quickshell.execDetached([...GlobalConfig.general.apps.playback, recording.path]);
                 }
             }
@@ -116,8 +117,9 @@ ColumnLayout {
                 type: IconButton.Text
                 onClicked: {
                     root.visibilities.utilities = false;
-                    root.visibilities.sidebar = false;
-                    Quickshell.execDetached([...GlobalConfig.general.apps.explorer, Paths.recsdir]);
+                    if (!Visibilities.sidebarPinned)
+                        root.visibilities.sidebar = false;
+                    Quickshell.execDetached([...GlobalConfig.general.apps.explorer, GlobalConfig.paths.recordingsDir]);
                 }
             }
 

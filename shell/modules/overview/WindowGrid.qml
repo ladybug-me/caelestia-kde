@@ -102,8 +102,9 @@ Item {
             if (wId === activeWsId) {
                 if (listView.currentIndex !== i) {
                     listView.currentIndex = i;
-                    if (!root._initialized) listView.positionViewAtIndex(i, ListView.SnapPosition);
                 }
+                if (!root._initialized || root.opacity <= 0.01)
+                    listView.positionViewAtIndex(i, ListView.SnapPosition);
                 break;
             }
         }
@@ -117,6 +118,7 @@ Item {
             selectedIndex = -1;
             root.isDragging = false;
         } else {
+            root.syncPage();
             if (Visibilities.preOverviewActiveWindowAddress !== "") {
                 const targetAddress = Visibilities.preOverviewActiveWindowAddress;
                 let foundIndex = -1;
@@ -236,7 +238,9 @@ Item {
                 let changed = arr.length !== wsWindows.length;
                 if (!changed) {
                     for (let i = 0; i < arr.length; ++i) {
-                        if (arr[i].address !== wsWindows[i].address) {
+                        const a = arr[i];
+                        const b = wsWindows[i];
+                        if (a.address !== b.address || a.width !== b.width || a.height !== b.height || a.x !== b.x || a.y !== b.y || a.title !== b.title) {
                             changed = true;
                             break;
                         }
@@ -443,9 +447,8 @@ Item {
                                 }
                             }
 
-                            IconImage {
+                            CachingIconImage {
                                 anchors.centerIn: parent
-                                asynchronous: true
                                 implicitSize: Math.round(Math.min(activeWin.width, activeWin.height) * 0.62)
                                 opacity: activeWin.morphed ? 1 : 0
                                 source: WinIcons.sourceForClient(modelData)

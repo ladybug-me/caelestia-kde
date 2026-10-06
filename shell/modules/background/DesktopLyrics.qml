@@ -21,6 +21,7 @@ Item {
     required property real absY
 
     property real lyricsScale: Config.background.desktopLyrics.scale
+
     readonly property bool bgEnabled: Config.background.desktopLyrics.background.enabled
     readonly property bool blurEnabled: bgEnabled && Config.background.desktopLyrics.background.blur && !GameMode.enabled
     readonly property bool invertColors: Config.background.desktopLyrics.invertColors
@@ -101,6 +102,11 @@ Item {
 
     Component.onCompleted: {
         root.reloadTrack();
+    }
+
+    transform: Translate {
+        x: (root.screen ? root.screen.width : 0) * Config.background.desktopLyrics.offsetX
+        y: (root.screen ? root.screen.height : 0) * Config.background.desktopLyrics.offsetY
     }
 
     implicitWidth: 350 * root.lyricsScale

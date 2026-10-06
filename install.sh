@@ -41,11 +41,15 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
-if [ -f "./scripts/setup.sh" ]; then
+# Run the setup from this checkout, never whatever scripts/setup.sh
+# happens to sit in the current directory.
+unset CDPATH
+SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
+if [ -f "$SCRIPT_DIR/scripts/setup.sh" ]; then
     if [ ! -t 0 ] && [ -c /dev/tty ]; then
-        exec bash "$(pwd)/scripts/setup.sh" </dev/tty
+        exec bash "$SCRIPT_DIR/scripts/setup.sh" </dev/tty
     fi
-    exec bash "$(pwd)/scripts/setup.sh"
+    exec bash "$SCRIPT_DIR/scripts/setup.sh"
 fi
 
 if [ -d "$DEST/.git" ]; then

@@ -326,7 +326,7 @@ ls -la ~/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen/LockSc
 | Symptom | Cause | Solution |
 |---|---|---|
 | Stock Breeze lock screen appears | `ShellPackage` reset after KDE update or theme switch. | Caelestia autostart (`caelestia-autostart.sh`) automatically self-heals this at next login if `caelestia.desktop` is present. To restore immediately in session: `kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelestia.desktop" && kwriteconfig6 --file kscreenlockerrc --group "Greeter" --key "Theme" --delete`. |
-| Lock screen fails or crashes | Greeter files missing or corrupted in `~/.local/share/plasma/shells/`. | Re-deploy via `BUNDLE_DIR=. ./scripts/02-packages.sh` or `cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/`. |
+| Lock screen fails or crashes | Greeter files missing or corrupted in `~/.local/share/plasma/shells/`. | Re-deploy via `BUNDLE_DIR=. ./scripts/08-build-shell.sh` or `cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/`. |
 | Lock screen shows wallpaper error | Legacy `PlasmaApplicationWallpaper` left in `kscreenlockerrc`. | Reset WallpaperPlugin: `kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin "org.kde.image"`. |
 | Profile picture missing | `~/.face` does not exist and no system user avatar set. | Place your avatar image at `~/.face` or configure an avatar in KDE System Settings → Users. |
 
@@ -381,30 +381,11 @@ systemctl --user status plasma-kglobalaccel.service
 
 If `keyd` is active and manages Meta+1..5, the tweak script skips KWin bindings for those combos to avoid conflicts.
 
-### 5.5 Terminal Sequence Bleeding (Garbled Output)
-
-If ANSI escape sequences leak from the `caelestia` CLI into your terminal:
-
-```bash
-cat $XDG_CACHE_HOME/caelestia-kde/failed_patches.txt
-```
-
-If `Caelestia CLI Theme Sequence Patch` appears in the failed list, re-run:
-```bash
-bash scripts/09-system-tweaks.sh
-```
-
----
-
 ## 6. Network & Proxy Issues
 
-### 6.1 Pacman Mirror Ranking Fails
+### 6.1 Package Repository Problems
 
-On CachyOS, the installer uses the native `cachyos-rate-mirrors` command, which ranks both Arch and CachyOS repositories. Other Arch-based systems use `reflector` as a fallback. Fedora refreshes its configured DNF metadata and Debian-based systems refresh their configured APT indexes; neither needs mirror-list rewriting during installation. Failure modes:
-- **Offline:** Mirror ranking fails and the existing mirror lists are kept
-- **cachyos-rate-mirrors unavailable:** CachyOS mirror ranking is skipped and the existing mirror lists are kept
-- **reflector not installed:** On non-Cachy Arch systems, it is auto-installed via `pacman -Sy reflector`; if that fails, ranking is skipped
-- **DNF or APT refresh fails:** Fedora/Debian package installation continues and reports the package-manager error later if the configured sources remain unavailable
+The installer does not change mirror lists or refresh package repositories as a separate step. If package installation fails, check that your distribution's configured repositories are reachable and refresh them using the distribution's normal tools before retrying.
 
 ### 6.2 Git / Submodule Failures
 
@@ -696,11 +677,33 @@ told apart from that release, so it is installed as the release its `version.env
 
 ## 9. Uninstall Issues
 
-### 9.1 No Backups Available
+### 9.1 Uninstalling from the Shell
+
+Settings > About > Uninstall Caelestia opens the uninstaller in a terminal, where it
+asks for confirmation of its own. The button finds the script by looking where a
+checkout is expected, in this order:
+
+1. `$CAELESTIA_DIR/uninstall.sh`
+2. `~/caelestia-kde/uninstall.sh`
+3. `$(cat ~/.config/quickshell/caelestia/.checkout)/uninstall.sh`
+4. `~/.config/caelestia-update/repo/uninstall.sh`
+5. `~/.cache/caelestia-update-repo/uninstall.sh`
+
+The third is the checkout the running shell was installed from, recorded by the
+installer. It is what makes a clone that is not named `~/caelestia-kde` - a manual
+`git clone` anywhere else - still uninstallable from here; reinstall or update once
+for an install that predates that recording. It is tried after `~/caelestia-kde`
+because that is where an install's backups live, and the uninstaller restores from
+its own checkout's `backups/`.
+
+A packaged install has no script, so the row names the command that removes it instead
+(`sudo pacman -Rns caelestia-kde`, or the `dnf`/`apt-get` equivalent).
+
+### 9.2 No Backups Available
 
 Backups are stored in `$BUNDLE_DIR/backups/YYYYMMDD_HHMMSS/`. If you moved or deleted the repository, backups are gone.
 
-### 9.2 konsave Restore Fails
+### 9.3 konsave Restore Fails
 
 If the `.knsv` archive is corrupted or konsave can't be installed:
 - Falls back to manual restore of individual config files
@@ -709,37 +712,42 @@ If the `.knsv` archive is corrupted or konsave can't be installed:
 **Expected warning when restoring a Caelestia backup:**
 > *"The selected backup contains Caelestia configurations. Restoring this backup will NOT revert to a clean KDE desktop!"*
 
-### 9.3 Shell RC Files Not Cleaned
+### 9.4 Shell RC Files Not Cleaned
 
 The uninstaller uses state files (`shellrc/bashrc.state`, etc.) to determine whether to restore or remove shell config files. If these are missing (older installer version), a fallback `sed` cleanup removes `QML2_IMPORT_PATH` and `CAELESTIA_LIB_DIR` lines.
 
-### 9.4 Package Removal Leaves Dependencies
+### 9.5 The Login Shell Is Not Changed Back
+
+The installer only changes the login shell to `fish` when it can record the previous one in `backups/YYYYMMDD_HHMMSS/previous_shell.txt`. The uninstaller only reverses that with the same file. With no backup there is no record that the shell was ever changed, so it is left exactly as it is and the run reports:
+
+> *"No shell backup was recorded, so the login shell (/usr/bin/fish) is left as it is."*
+
+### 9.6 Package Removal Leaves Dependencies
 
 Package removal is optional. It uses `yay -Rns` / `dnf remove` which does NOT remove:
-- Dependencies pulled in automatically (unless `-s` handles it)
+- Dependencies pulled in automatically (unless `-s` handles them)
 - Packages installed outside the defined lists
 - `base-devel` or build tools that existed before install
 
-### 9.5 Legacy Input Group Membership
+### 9.6 Legacy Input Group Membership
 
 Installs from before the `/dev/uinput` rule moved to `TAG+="uaccess"` added the
 user to the `input` group. The installer removes that membership when it finds the
 old `/etc/udev/rules.d/80-uinput.rules`, and the uninstaller runs
 `sudo gpasswd -d $USER input`. Either way it takes effect on next login.
 
-### 9.6 Failed Patches Tracking
+### 9.7 What the Uninstaller Keeps
 
-Failed patches are logged to:
-```text
-$XDG_CACHE_HOME/caelestia-kde/failed_patches.txt
-```
+The uninstaller removes the install and its last traces, but keeps what is the
+user's own:
 
-Possible entries:
-- `Caelestia CLI Hyprctl Mock Patch`
-- `Caelestia CLI Record/Dolphin Patch`
-- `Caelestia CLI Theme Sequence Patch`
-
-These are **cosmetic** — the shell works without them, but certain features (screenshot, recording, terminal colors) may be degraded.
+- `~/.config/caelestia/shell.json`, `keybinds.json` and `cli.json` - the shell's
+  settings, so a reinstall keeps them. `stolen-shortcuts.json` and
+  `stolen-screen-edges.json` are removed: they are crash recovery that only the
+  running shell can act on, and with the shell gone they would strand the KDE
+  shortcuts it took.
+- `~/.config/caelestia-update/` and `~/.cache/caelestia-update-repo` - the updater's
+  checkout and cache. Remove them yourself with the command in [10.1](#101-fixing-caelestia-updater-recommended).
 
 ---
 
@@ -802,9 +810,6 @@ kreadconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin
 
 # View failed packages log
 cat $XDG_CACHE_HOME/caelestia-kde/failed_packages.txt 2>/dev/null
-
-# View failed patches log
-cat $XDG_CACHE_HOME/caelestia-kde/failed_patches.txt 2>/dev/null
 
 # View installer build log
 cat /tmp/caelestia_build.log 2>/dev/null | tail -60

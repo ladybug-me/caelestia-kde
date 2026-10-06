@@ -109,6 +109,10 @@ Item {
 
     function suspend(): void {
         root.actionTriggered("suspend");
+        Qt.callLater(root.requestSuspend);
+    }
+
+    function requestSuspend(): void {
         if (activeSessionManagement && activeSessionManagement.canSuspend) {
             try {
                 activeSessionManagement.suspend();

@@ -42,8 +42,8 @@ Item {
     function loadPlugin(meta) {
         let id = meta.id || meta.name;
         if (pluginInstances[id]) return;
-        // Quickshell plugins load main.qml; other types (a kwineffect that ships
-        // a settings front-end) opt in through the manifest's `ui` field.
+        // Other types (a kwineffect that ships a settings front-end) opt in
+        // through the manifest's `ui` field.
         let ui = meta.ui || (meta.type === "quickshell" ? "main.qml" : "");
         if (!ui) return;
 
@@ -150,20 +150,19 @@ Item {
     function readMetadata(pluginInfo) {
         let metaPath = pluginInfo.path + "/metadata.json";
         pendingMeta++;
-        console.log("readMetadata called for", pluginInfo.id, "at", metaPath);
 
         let proc = Qt.createQmlObject(`
             import Quickshell.Io
             Process {
-                command: ["cat", "${metaPath}"]
+                command: ["cat", ${JSON.stringify(metaPath)}]
                 stdout: StdioCollector { id: out }
                 stderr: StdioCollector { id: err }
                 onExited: (code) => {
                     if (code === 0) {
                         try {
                             let meta = JSON.parse(out.text);
-                            meta.path = "${pluginInfo.path}";
-                            meta.source = "${pluginInfo.source}";
+                            meta.path = ${JSON.stringify(pluginInfo.path)};
+                            meta.source = ${JSON.stringify(pluginInfo.source)};
 
                             let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
                             meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
@@ -201,7 +200,7 @@ Item {
         let proc = Qt.createQmlObject(`
             import Quickshell.Io
             Process {
-                command: ["bash", "${script}", "${bundledPlugins}"]
+                command: ["bash", ${JSON.stringify(script)}, ${JSON.stringify(bundledPlugins)}]
                 stdout: StdioCollector { id: out }
                 stderr: StdioCollector { id: err }
                 onExited: (code) => {
@@ -307,6 +306,22 @@ Item {
                     }
 
                     console.log("addPluginToAvailable: adding", meta.id, "to available list. mediaurl:", meta.mediaurl);
+                    // Updating an already listed plugin replaces the stale entry instead of
+                    // duplicating it, so the row reflects the fresh version right away.
+                    let replacedKey = meta.id || meta.name;
+                    for (let j = 0; j < pluginLoader.discovered.length; j++) {
+                        if ((pluginLoader.discovered[j].id || pluginLoader.discovered[j].name) === replacedKey) {
+                            pluginLoader.discovered.splice(j, 1);
+                            break;
+                        }
+                    }
+                    for (let i = 0; i < CaelestiaApi.plugins.available.count; i++) {
+                        let existing = CaelestiaApi.plugins.available.get(i);
+                        if ((existing.id || existing.name) === replacedKey) {
+                            CaelestiaApi.plugins.available.remove(i);
+                            break;
+                        }
+                    }
                     pluginLoader.discovered.push(meta);
                     CaelestiaApi.plugins.available.append(meta);
                     pluginsReloaded();

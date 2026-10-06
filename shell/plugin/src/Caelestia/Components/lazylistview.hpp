@@ -96,7 +96,6 @@ class LazyListView : public QQuickItem {
     Q_PROPERTY(int readyDelay READ readyDelay WRITE setReadyDelay NOTIFY readyDelayChanged)
 
     Q_PROPERTY(int count READ count NOTIFY countChanged)
-    Q_PROPERTY(bool itemsDirty READ itemsDirty NOTIFY itemsDirtyChanged)
 
 public:
     explicit LazyListView(QQuickItem* parent = nullptr);
@@ -144,7 +143,6 @@ public:
     void setReadyDelay(int delay);
 
     [[nodiscard]] int count() const;
-    [[nodiscard]] static bool itemsDirty();
 
     Q_INVOKABLE [[nodiscard]] QQuickItem* itemAtIndex(int index) const;
     Q_INVOKABLE [[nodiscard]] QQuickItem* itemAt(qreal x, qreal y) const;
@@ -165,7 +163,6 @@ signals:
     void removeDurationChanged();
     void readyDelayChanged();
     void countChanged();
-    void itemsDirtyChanged();
     void viewportAdjustNeeded(qreal delta);
 
 protected:

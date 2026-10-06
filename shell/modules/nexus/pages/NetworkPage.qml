@@ -78,120 +78,43 @@ PageBase {
             }
         }
 
-        ConnectedRect {
-            Layout.fillWidth: true
-            Layout.preferredHeight: Nmcli.wifiEnabled && Nmcli.networks.length > GlobalConfig.nexus.maxNetworksShown ? showAllLayout.implicitHeight + Tokens.padding.medium * 2 : 0
+        // All networks button, only when > max networks
+        NavRow {
+            Layout.preferredHeight: Nmcli.wifiEnabled && Nmcli.networks.length > GlobalConfig.nexus.maxNetworksShown ? implicitHeight : 0
             clip: true
+
+            icon: "expand_content"
+            label: qsTr("Show all networks (%1)").arg(Nmcli.networks.length)
+            onClicked: root.nState.openSubPage(5) // All networks sub-page
 
             Behavior on Layout.preferredHeight {
                 Anim {
                     type: Anim.DefaultEffects
                 }
             }
-
-            StateLayer {
-                onClicked: root.nState.openSubPage(5)
-            }
-
-            RowLayout {
-                id: showAllLayout
-
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.margins: Tokens.padding.largeIncreased
-                spacing: Tokens.spacing.medium
-
-                MaterialIcon {
-                    text: "expand_content"
-                    fontStyle: Tokens.font.icon.medium
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: qsTr("Show all networks (%1)").arg(Nmcli.networks.length)
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                }
-
-                MaterialIcon {
-                    text: "chevron_right"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle: Tokens.font.icon.medium
-                }
-            }
         }
 
-        ConnectedRect {
-            Layout.fillWidth: true
-            implicitHeight: savedNetworksLayout.implicitHeight + savedNetworksLayout.anchors.margins * 2
-
-            StateLayer {
-                onClicked: root.nState.openSubPage(6)
-            }
-
-            RowLayout {
-                id: savedNetworksLayout
-
-                anchors.fill: parent
-                anchors.margins: Tokens.padding.medium
-                anchors.leftMargin: Tokens.padding.largeIncreased
-                anchors.rightMargin: Tokens.padding.largeIncreased
-                spacing: Tokens.spacing.medium
-
-                MaterialIcon {
-                    text: "bookmark"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle: Tokens.font.icon.medium
-                    fill: 1
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: qsTr("Saved networks")
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                }
-
-                MaterialIcon {
-                    text: "chevron_right"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle: Tokens.font.icon.medium
-                }
-            }
+        // Saved networks button
+        NavRow {
+            icon: "bookmark"
+            label: qsTr("Saved networks")
+            onClicked: root.nState.openSubPage(6) // Saved networks sub-page
         }
 
-        ConnectedRect {
-            Layout.fillWidth: true
-            implicitHeight: addNetworkLayout.implicitHeight + addNetworkLayout.anchors.margins * 2
+        NavRow {
+            icon: "add"
+            label: qsTr("Add network")
+            onClicked: root.nState.openSubPage(2) // Add network sub-page
+        }
+
+        // Sits with the Wi-Fi controls rather than with the saved-network rows:
+        // it is a per-machine switch, not a profile.
+        NavRow {
             last: true
-
-            StateLayer {
-                onClicked: root.nState.openSubPage(2)
-            }
-
-            RowLayout {
-                id: addNetworkLayout
-
-                anchors.fill: parent
-                anchors.margins: Tokens.padding.medium
-                anchors.leftMargin: Tokens.padding.largeIncreased
-                anchors.rightMargin: Tokens.padding.largeIncreased
-
-                spacing: Tokens.spacing.medium
-
-                MaterialIcon {
-                    text: "add"
-                    fontStyle: Tokens.font.icon.medium
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: qsTr("Add network")
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                }
-            }
+            icon: "wifi_tethering"
+            label: qsTr("Hotspot")
+            status: Nmcli.hotspot.enabled ? Nmcli.hotspot.ssid : ""
+            onClicked: root.nState.openSubPage(7) // Hotspot sub-page
         }
 
         SectionHeader {
@@ -323,6 +246,7 @@ PageBase {
             }
         }
 
+        // VPN providers (WireGuard, WARP, NetBird, Tailscale)
         ToggleRow {
             Layout.topMargin: Tokens.spacing.large
             first: true
@@ -541,7 +465,7 @@ PageBase {
                         icon: "edit"
                         onClicked: {
                             root.nState.editingVpnIndex = provider.index;
-                            root.nState.openSubPage(4);
+                            root.nState.openSubPage(4); // Add/edit provider sub-page
                         }
                     }
                 }
@@ -554,7 +478,7 @@ PageBase {
             text: qsTr("Add provider")
             onClicked: {
                 root.nState.editingVpnIndex = -1;
-                root.nState.openSubPage(4);
+                root.nState.openSubPage(4); // Add/edit provider sub-page
             }
         }
     }

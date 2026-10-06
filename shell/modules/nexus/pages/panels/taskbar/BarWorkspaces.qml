@@ -4,6 +4,8 @@ import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.components.controls
+import qs.services
+import qs.utils
 import qs.modules.nexus.common
 
 PageBase {
@@ -31,23 +33,22 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        Connections {
-            target: Kwin
+        Component.onCompleted: {
+            let len = Kwin.workspaces.length;
+            if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
+                GlobalConfig.bar.workspaces.shown = len;
+            }
+        }
 
-            function onWorkspacesChanged() {
+        Connections {
+            function onWorkspacesChanged(): void {
                 let len = Kwin.workspaces.length;
                 if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
                     GlobalConfig.bar.workspaces.shown = len;
                 }
             }
-        }
 
-        Component.onCompleted: {
-let len = Kwin.workspaces.length;
-if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
-    GlobalConfig.bar.workspaces.shown = len;
-}
-
+            target: Kwin
         }
 
         StepperRow {
@@ -60,17 +61,16 @@ if (len > 0 && GlobalConfig.bar.workspaces.shown !== len) {
             stepSize: 1
             onMoved: v => {
                 GlobalConfig.bar.workspaces.shown = v;
-let d = Kwin.workspaces;
-let count = d.length;
-while (count < v) {
-    Kwin.createWorkspace("Desktop " + (count + 1));
-    count++;
-}
-while (count > v) {
-    Kwin.removeWorkspace(d[count - 1].id);
-    count--;
-}
-
+                let d = Kwin.workspaces;
+                let count = d.length;
+                while (count < v) {
+                    Kwin.createWorkspace("Desktop " + (count + 1));
+                    count++;
+                }
+                while (count > v) {
+                    Kwin.removeWorkspace(d[count - 1].id);
+                    count--;
+                }
             }
         }
 
@@ -132,8 +132,6 @@ while (count > v) {
             onMoved: v => GlobalConfig.bar.workspaces.maxWindowIcons = v
         }
 
-
-
         ToggleRow {
             last: true
             text: qsTr("Per monitor")
@@ -143,3 +141,4 @@ while (count > v) {
         }
     }
 }
+

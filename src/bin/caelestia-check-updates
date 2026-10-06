@@ -2,7 +2,6 @@
 # caelestia-check-updates - run by a systemd timer: count pending updates and notify.
 export PATH="$HOME/.local/bin:$PATH"
 
-# No git, nothing to check.
 if ! command -v git &> /dev/null; then
     exit 0
 fi
@@ -15,10 +14,25 @@ if command -v jq >/dev/null && [ -f "$HOME/.config/caelestia/shell.json" ]; then
     fi
 fi
 
-# UI updates (GitHub)
-REPO="$HOME/.cache/caelestia-update-repo"
-BRANCH=$(cat "$HOME/.config/quickshell/caelestia/.update_branch" 2>/dev/null || echo "main")
-if [ "$BRANCH" != "main" ] && [ "$BRANCH" != "dev" ]; then
+STATE_CONFIG="$HOME/.config/quickshell/caelestia"
+STATE_HELPER=""
+for candidate in \
+    "${CAELESTIA_LIB_DIR:-}/update-state.sh" \
+    "$HOME/.local/lib/caelestia/update-state.sh" \
+    "/usr/share/caelestia/scripts/lib/update-state.sh"; do
+    if [ -r "$candidate" ]; then
+        STATE_HELPER="$candidate"
+        break
+    fi
+done
+if [ -n "$STATE_HELPER" ]; then
+    # shellcheck disable=SC1090
+    . "$STATE_HELPER"
+fi
+
+if command -v update_state_read_branch >/dev/null 2>&1; then
+    BRANCH="$(update_state_read_branch "$STATE_CONFIG")"
+else
     BRANCH="main"
 fi
 
@@ -34,11 +48,16 @@ timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads https://github.com/lady
 if [ "$ls_status" -eq 2 ]; then
     echo "[WARN] Branch '$BRANCH' does not exist on the remote; falling back to main." >&2
     BRANCH="main"
-    mkdir -p "$HOME/.config/quickshell/caelestia"
-    echo "$BRANCH" > "$HOME/.config/quickshell/caelestia/.update_branch"
+    if command -v update_state_set_branch >/dev/null 2>&1; then
+        update_state_set_branch "$STATE_CONFIG" "$BRANCH" || true
+    fi
 fi
 
-_localCommit="$(cat "$HOME/.config/quickshell/caelestia/.current_commit" 2>/dev/null)"
+if command -v update_state_read_commit >/dev/null 2>&1; then
+    _localCommit="$(update_state_read_commit "$STATE_CONFIG")"
+else
+    _localCommit="$(cat "$STATE_CONFIG/.current_commit" 2>/dev/null)"
+fi
 CAELESTIA_PENDING=0
 
 if [ -n "$_localCommit" ]; then
@@ -48,15 +67,18 @@ if [ -n "$_localCommit" ]; then
         timeout ${GIT_TIMEOUT} git -C "$REPO" fetch --force origin "$BRANCH:$BRANCH" >/dev/null 2>&1 || true
     fi
 
-    LOCAL_DATE=$(git -C "$REPO" show -s --format=%cI ${_localCommit} 2>/dev/null)
-    if [ -n "$LOCAL_DATE" ]; then
-        CAELESTIA_PENDING=$(git -C "$REPO" log --oneline --since="$LOCAL_DATE" ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+    # Count exactly what the Nexus updates page counts (ancestor-gated
+    # rev-list): a commit-date filter made this timer disagree with the GUI
+    # whenever a commit's date did not match its position in the history
+    # (rebases, carried patches), and a diverged or unknown local commit
+    # must not make every branch commit look new either. Issue #565.
+    if git -C "$REPO" merge-base --is-ancestor "${_localCommit}" "${BRANCH}" 2>/dev/null; then
+        CAELESTIA_PENDING=$(git -C "$REPO" rev-list --count "${_localCommit}..${BRANCH}" 2>/dev/null || echo 0)
     else
-        CAELESTIA_PENDING=$(git -C "$REPO" log --oneline ${_localCommit}..${BRANCH} 2>/dev/null | wc -l)
+        CAELESTIA_PENDING=0
     fi
 fi
 
-# System updates
 SYSTEM_PENDING=0
 
 if command -v checkupdates >/dev/null; then

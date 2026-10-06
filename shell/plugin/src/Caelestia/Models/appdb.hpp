@@ -7,7 +7,30 @@
 #include <qregularexpression.h>
 #include <qtimer.h>
 
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
 namespace caelestia::models {
+
+// Sort key: favourites, descending frequency, ascending name.
+struct AppRankKey {
+    int notFav;  // 0 = fav, 1 = regular
+    int negFreq; // Negative frequency for descending order
+    QString name;
+
+    bool operator<(const AppRankKey& o) const {
+        if (notFav != o.notFav)
+            return notFav < o.notFav;
+        if (negFreq != o.negFreq)
+            return negFreq < o.negFreq;
+        return name.localeAwareCompare(o.name) < 0;
+    }
+};
+
+class AppEntry;
+
+using AppRankTree = __gnu_pbds::tree<AppRankKey, AppEntry*, std::less<AppRankKey>, __gnu_pbds::rb_tree_tag,
+    __gnu_pbds::tree_order_statistics_node_update>;
 
 class AppEntry : public QObject {
     Q_OBJECT
@@ -71,6 +94,7 @@ class AppDb : public QObject {
     Q_PROPERTY(QObjectList entries READ entries WRITE setEntries NOTIFY entriesChanged REQUIRED)
     Q_PROPERTY(QStringList favouriteApps READ favouriteApps WRITE setFavouriteApps NOTIFY favouriteAppsChanged REQUIRED)
     Q_PROPERTY(QQmlListProperty<caelestia::models::AppEntry> apps READ apps NOTIFY appsChanged)
+    Q_PROPERTY(QVariantList alphaApps READ alphaApps NOTIFY appsChanged)
 
 public:
     explicit AppDb(QObject* parent = nullptr);
@@ -87,6 +111,7 @@ public:
     void setFavouriteApps(const QStringList& favApps);
 
     [[nodiscard]] QQmlListProperty<AppEntry> apps();
+    [[nodiscard]] QVariantList alphaApps() const;
 
     Q_INVOKABLE void incrementFrequency(const QString& id);
 
@@ -105,10 +130,14 @@ private:
     QStringList m_favouriteApps;
     QList<QRegularExpression> m_favouriteAppsRegex;
     QHash<QString, AppEntry*> m_apps;
-    mutable QList<AppEntry*> m_sortedApps;
+    AppRankTree m_rankTree;
+    mutable QList<AppEntry*> m_cachedSorted;
+    QVariantList m_cachedAlphaApps;
 
     QString regexifyString(const QString& original) const;
-    QList<AppEntry*>& getSortedApps() const;
+    void rebuildRankTree();
+    [[nodiscard]] AppRankKey makeKey(const AppEntry* app) const;
+    QList<AppEntry*> getSortedApps() const;
     bool isFavourite(const AppEntry* app) const;
     quint32 getFrequency(const QString& id) const;
     void updateAppFrequencies();

@@ -6,8 +6,8 @@ import QtQuick.Layouts
 Rectangle {
     id: root
 
-    property var greetingInfo: ({ greeting: "Good day", icon: "sunny", iconColor: "#9bd0cc" })
-    property string userName: "User"
+    property var greetingInfo: ({ greeting: qsTr("Good day"), icon: "sunny", iconColor: "#9bd0cc" })
+    property string userName: qsTr("User")
     property real centerScale: 1.0
     property real centerWidth: 600 * centerScale
 
@@ -43,7 +43,7 @@ Rectangle {
                 elide: Text.ElideRight
             }
             Text {
-                text: root.userName || "User"
+                text: root.userName || qsTr("User")
                 color: root.clPrimary
                 font { pixelSize: Math.max(11, Math.round(13 * root.centerScale)); family: "Rubik"; weight: Font.Bold }
                 elide: Text.ElideRight

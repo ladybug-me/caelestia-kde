@@ -11,7 +11,6 @@ constexpr int k_asyncBatchCreate = 2;
 constexpr int k_asyncBatchDestroy = 4;
 constexpr qreal k_fallbackHeight = 40;
 
-// Clip a rect vertically to [top, bottom], empty if there is no overlap
 QRectF clipVertical(const QRectF& rect, qreal top, qreal bottom) {
     const qreal newTop = std::max(rect.y(), top);
     const qreal newBottom = std::min(rect.y() + rect.height(), bottom);
@@ -394,10 +393,6 @@ int LazyListView::count() const {
     return m_model ? m_model->rowCount() : 0;
 }
 
-bool LazyListView::itemsDirty() {
-    return false;
-}
-
 QQuickItem* LazyListView::itemAtIndex(int index) const {
     return m_delegates.value(index).item;
 }
@@ -682,9 +677,6 @@ void LazyListView::syncDelegates() {
                                                    created < static_cast<int>(toCreate.size()));
     if (created > 0 || workRemains)
         polish();
-
-    if (created > 0 || destroyed > 0)
-        emit itemsDirtyChanged();
 }
 
 QList<int> LazyListView::delegatesOutsideViewport(const QSet<int>& keep, const QRectF& viewport) const {
@@ -946,7 +938,6 @@ void LazyListView::remapDelegates(const std::function<int(int)>& mapIndex) {
     }
 
     m_delegates = std::move(remapped);
-    emit itemsDirtyChanged();
 }
 
 void LazyListView::connectModel() {
@@ -1000,7 +991,6 @@ void LazyListView::resetContent() {
         emit countChanged();
     }
 
-    emit itemsDirtyChanged();
     polish();
 }
 

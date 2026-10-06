@@ -1,14 +1,20 @@
 pragma Singleton
 
+import QtQuick
 import Quickshell
+import Caelestia.Config
 import qs.components
 import qs.services
 
 Singleton {
     property var screens: new Map()
     property var bars: new Map()
+    property var docks: new Map()
     property string launcherInitialSearch: ""
-    property string initialSidebarTab: "notifications"
+    property string initialSidebarTab: ""
+    property string lastSidebarTab: "notifications"
+    property int openDialogs: 0
+    readonly property bool sidebarPinned: GlobalConfig.sidebar.pinned
     property string preOverviewActiveWindowAddress: ""
     property string dragAddress: ""
     property string dragOriginScreen: ""
@@ -20,6 +26,9 @@ Singleton {
 
     signal cycleOverview(bool backwards)
 
+    function sidebarOpenTab(): string {
+        return GlobalConfig.sidebar.defaultTab === "last" ? lastSidebarTab : GlobalConfig.sidebar.defaultTab;
+    }
     function load(screen: ShellScreen, visibilities: DrawerVisibilities): void {
         screens.set(Kwin.monitorFor(screen), visibilities);
         screens = new Map(screens);
@@ -46,6 +55,14 @@ Singleton {
         bars.set(screen.name, barWrapper);
         bars = new Map(bars);
     }
+    function registerDock(screen: ShellScreen, dock: var): void {
+        docks.set(screen.name, dock);
+        docks = new Map(docks);
+    }
+    function unregisterDock(screen: ShellScreen): void {
+        docks.delete(screen.name);
+        docks = new Map(docks);
+    }
     function getForActive(): DrawerVisibilities {
         const monitor = Kwin.monitors[Kwin.cursorOutputName()] || Kwin.focusedMonitor;
         return screens.get(monitor) || screens.values().next().value;
@@ -65,5 +82,17 @@ Singleton {
     function setOverview(visible: bool): void {
         for (const visibilities of screens.values())
             visibilities.overview = visible;
+    }
+
+    Timer {
+        id: pinRestore
+
+        interval: 1500
+        running: GlobalConfig.sidebar.pinned
+        onTriggered: {
+            const v = getForActive();
+            if (v && GlobalConfig.sidebar.pinned)
+                v.sidebar = true;
+        }
     }
 }

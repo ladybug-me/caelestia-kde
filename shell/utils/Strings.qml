@@ -58,4 +58,8 @@ Singleton {
         }
         return -1;
     }
+
+    function percent(val: var): string {
+        return `${Math.round(val ?? 0)}%`;
+    }
 }

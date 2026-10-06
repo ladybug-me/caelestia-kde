@@ -35,12 +35,20 @@ Singleton {
             Quickshell.execDetached(root.wrap(command));
     }
 
+    function terminalCommand(command: list<string>): list<string> {
+        return [...GlobalConfig.general.apps.terminal, `${Quickshell.shellDir}/assets/wrap_term_launch.sh`, ...command];
+    }
+
+    function launchInTerminal(command: list<string>, workingDirectory: string): void {
+        Quickshell.execDetached({
+            command: root.wrap(root.terminalCommand(command)),
+            workingDirectory: workingDirectory
+        });
+    }
+
     function launchEntry(entry: DesktopEntry): void {
         if (entry.runInTerminal)
-            Quickshell.execDetached({
-                command: root.wrap([...GlobalConfig.general.apps.terminal, `${Quickshell.shellDir}/assets/wrap_term_launch.sh`, ...entry.command]),
-                workingDirectory: entry.workingDirectory
-            });
+            root.launchInTerminal(entry.command, entry.workingDirectory);
         else
             Quickshell.execDetached({
                 command: root.wrap(entry.command),

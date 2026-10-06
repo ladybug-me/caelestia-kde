@@ -20,13 +20,18 @@ StyledRect {
     property string authorNameText: ""
     property string iconText: "extension"
     property string iconImageUrl: ""
+    // Update indicator
+    property bool isUpdateAvailable: false
+    property string updateVersionText: ""
+    // true while this plugin is being installed (spinner state)
+    property bool updateBusy: false
 
     default property Component actionComponent
 
     property bool isExpanded: false
     property string mediaUrl: ""
 
-
+    signal updateRequested()
 
     function isVideo(url) {
         if (!url) return false;
@@ -127,20 +132,98 @@ StyledRect {
                         elide: Text.ElideRight
                     }
                     
-                    StyledRect {
-                        color: Qt.lighter(Colours.palette.m3surfaceVariant, 1.5)
-                        radius: Tokens.rounding.small
-                        implicitWidth: versionBadge.implicitWidth + Tokens.padding.small * 2
-                        implicitHeight: versionBadge.implicitHeight + Tokens.padding.extraSmall
-                        Layout.alignment: Qt.AlignVCenter
+                    RowLayout {
+                        spacing: Tokens.spacing.medium
                         
-                        StyledText {
-                            id: versionBadge
+                        StyledRect {
+                            color: Qt.lighter(Colours.palette.m3surfaceVariant, 1.5)
+                            radius: Tokens.rounding.small
+                            implicitWidth: versionBadge.implicitWidth + Tokens.padding.small * 2
+                            implicitHeight: versionBadge.implicitHeight + Tokens.padding.extraSmall
+                            Layout.alignment: Qt.AlignVCenter
+                            
+                            StyledText {
+                                id: versionBadge
 
-                            anchors.centerIn: parent
-                            text: "v" + root.versionText
-                            color: Colours.palette.m3onSurfaceVariant
-                            font: Tokens.font.label.small
+                                anchors.centerIn: parent
+                                text: "v" + root.versionText
+                                color: Colours.palette.m3onSurfaceVariant
+                                font: Tokens.font.label.small
+                            }
+                        }
+
+                        // Option 1: opacity pulse
+                        StyledRect {
+                            id: updateBadgeA
+
+                            visible: root.isUpdateAvailable
+                            color: Colours.palette.m3primary
+                            radius: Tokens.rounding.full
+                            implicitWidth: updateBadgeRowA.implicitWidth + Tokens.padding.small * 2
+                            implicitHeight: updateBadgeRowA.implicitHeight + Tokens.padding.extraSmall
+                            Layout.alignment: Qt.AlignVCenter
+
+                            SequentialAnimation on opacity {
+                                loops: Animation.Infinite
+                                running: root.isUpdateAvailable && !root.updateBusy
+
+                                Anim {
+                                    type: Anim.SlowEffects
+                                    duration: Tokens.anim.durations.extraLarge
+                                    from: 1
+                                    to: 0.55
+                                }
+                                Anim {
+                                    type: Anim.SlowEffects
+                                    duration: Tokens.anim.durations.extraLarge
+                                    from: 0.55
+                                    to: 1
+                                }
+                            }
+
+                            RowLayout {
+                                id: updateBadgeRowA
+
+                                anchors.centerIn: parent
+                                spacing: Tokens.spacing.extraSmall
+
+                                MaterialIcon {
+                                    id: updateBadgeIconA
+
+                                    visible: !root.updateBusy
+                                    text: "system_update_alt"
+                                    color: Colours.palette.m3onPrimary
+                                    fontStyle: Tokens.font.icon.builders.medium.weight(Font.Medium).build()
+                                    fill: 1
+                                }
+
+                                CircularIndicator {
+                                    id: updateSpinnerA
+
+                                    visible: root.updateBusy
+                                    running: root.updateBusy
+                                    implicitSize: updateBadgeIconA.implicitHeight
+                                    strokeWidth: Tokens.padding.extraSmall
+                                    fgColour: Colours.palette.m3onPrimary
+                                    bgColour: Qt.alpha(Colours.palette.m3onPrimary, 0.3)
+                                }
+
+                                StyledText {
+                                    visible: root.updateVersionText !== ""
+                                    text: root.updateVersionText
+                                    color: Colours.palette.m3onPrimary
+                                    font: Tokens.font.label.small
+                                }
+                            }
+
+                            // Clicking the badge updates the plugin in place
+                            MouseArea {
+                                anchors.fill: parent
+                                enabled: root.isUpdateAvailable && !root.updateBusy
+                                hoverEnabled: true
+                                cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                onClicked: root.updateRequested()
+                            }
                         }
                     }
 

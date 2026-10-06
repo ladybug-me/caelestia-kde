@@ -72,6 +72,9 @@ protected:
     void org_kde_plasma_window_app_id_changed(const QString& app_id) override;
     void org_kde_plasma_window_state_changed(uint32_t flags) override;
     void org_kde_plasma_window_geometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
+    void org_kde_plasma_window_client_geometry(int32_t x, int32_t y, uint32_t width, uint32_t height) override;
+    void org_kde_plasma_window_initial_state() override;
+    void org_kde_plasma_window_virtual_desktop_changed(int32_t number) override;
     void org_kde_plasma_window_pid_changed(uint32_t pid) override;
     void org_kde_plasma_window_virtual_desktop_entered(const QString& id) override;
     void org_kde_plasma_window_virtual_desktop_left(const QString& id) override;
@@ -102,6 +105,8 @@ class PlasmaWindowManagement : public QWaylandClientExtensionTemplate<PlasmaWind
 public:
     explicit PlasmaWindowManagement(QObject* parent = nullptr);
     ~PlasmaWindowManagement() override;
+
+    void requestStackingOrder();
 
 signals:
     void windowWithUuid(uint32_t id, const QString& uuid);
@@ -138,6 +143,7 @@ public:
     static PlasmaWindows* instance();
 
     bool available();
+    void refresh();
 
     /// The handle for @p uuid, or nullptr if the interface is unavailable or
     /// the connection is already gone. Uuids are normalised, so callers need

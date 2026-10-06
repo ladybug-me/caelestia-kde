@@ -15,10 +15,12 @@ StyledRect {
     property alias valueLabel: valueLabel.text
     property string subtext
     property real value
+    property var reset
     property bool first
     property bool last
     property bool iconClickable: false
     property bool spacious: false
+    property bool roomyHeader: false
 
     signal moved(value: real)
     signal interaction(value: real)
@@ -63,6 +65,7 @@ StyledRect {
 
             RowLayout {
                 Layout.fillWidth: true
+                Layout.minimumHeight: root.roomyHeader ? 40 : 0
                 spacing: Tokens.spacing.small
 
                 ColumnLayout {
@@ -92,6 +95,10 @@ StyledRect {
 
                     color: Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.body.small
+                }
+
+                SettingResetButton {
+                    options: root.reset
                 }
             }
 

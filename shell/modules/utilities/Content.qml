@@ -13,7 +13,7 @@ Item {
     required property BarPopouts.Wrapper popouts
     required property matrix4x4 deformMatrix
 
-    readonly property real nonAnimHeight: idleInhibit.nonAnimHeight + record.nonAnimHeight + toggles.implicitHeight + layout.spacing * 2
+    readonly property real nonAnimHeight: idleInhibit.nonAnimHeight + capture.nonAnimHeight + toggles.implicitHeight + layout.spacing * 2
 
     implicitWidth: layout.implicitWidth
     implicitHeight: layout.implicitHeight
@@ -30,8 +30,8 @@ Item {
             visible: Config.utilities.showKeepAwake
         }
 
-        Record {
-            id: record
+        CaptureCard {
+            id: capture
 
             visible: Config.utilities.showScreenRecorder
 

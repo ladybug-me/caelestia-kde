@@ -48,6 +48,9 @@ public:
 private:
     CONFIG_GLOBAL_PROPERTY(QString, gpuType, QString())
     CONFIG_GLOBAL_PROPERTY(int, visualiserBars, 60)
+    // What the audio visualisers (and the beat tracker sharing their capture
+    // stream) react to: the default output's monitor, or the default input.
+    CONFIG_GLOBAL_ENUM_PROPERTY(VisualiserInput, visualiserInput, VisualiserInput::Output)
     CONFIG_GLOBAL_PROPERTY(qreal, audioIncrement, 0.1)
     CONFIG_GLOBAL_PROPERTY(qreal, brightnessIncrement, 0.1)
     CONFIG_GLOBAL_PROPERTY(qreal, maxVolume, 1.0)
@@ -67,6 +70,9 @@ private:
         { vmap({ { u"from"_s, u"com.github.th_ch.youtube_music"_s }, { u"to"_s, u"YT Music"_s } }) })
     CONFIG_GLOBAL_PROPERTY(QString, lyricsBackend, u"Auto"_s)
     CONFIG_GLOBAL_PROPERTY(QStringList, bluetoothAutoReconnectDevices, QStringList())
+
+    CONFIG_GLOBAL_PROPERTY(QString, hotspotSsid, QString())
+    CONFIG_GLOBAL_PROPERTY(QString, hotspotPassword, QString())
 
     CONFIG_GLOBAL_PROPERTY(bool, arpcEnabled, false)
     CONFIG_GLOBAL_PROPERTY(QString, arpcClientId, u"1126685412586733678"_s)

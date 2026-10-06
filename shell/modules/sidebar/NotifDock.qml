@@ -184,7 +184,7 @@ Item {
                 
                 StyledText {
                     Layout.fillWidth: true
-                    text: GlobalConfig.general.caelestiaMode ? "Spinning kurukuru activated" : "Classic dinosaur character"
+                    text: GlobalConfig.general.caelestiaMode ? qsTr("Spinning kurukuru activated") : qsTr("Classic dinosaur character")
                     color: Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.body.small
                     elide: Text.ElideRight

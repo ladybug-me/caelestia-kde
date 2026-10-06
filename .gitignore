@@ -1,19 +1,7 @@
-/hypr/scheme/current.conf
-
-/spicetify/config-xpui.ini
-/spicetify/Themes/caelestia/color.ini
-
-/btop/btop.log
-/btop/themes/
-
-/fish/fish_variables
-/fish/conf.d/
-
 .SRCINFO
 backups/
 src/bin/build/
 
-# Python
 __pycache__/
 *.py[cod]
 
@@ -21,20 +9,16 @@ installer/build/
 caelestia-install
 build
 
-kdotool/
 run.sh
-kwin-effects-better-blur-dx/
-plasma-workspace/
-cava/
 
 /CONTEXT.md
 /CLAUDE.md
 /docs/agents/
 /docs/adr/
-# Generated for Crowdin before upload; never committed.
+.scratch/
+
 /shell/translations/caelestia_en.ts
 /shell/translations/caelestia_en.qm
 
-# caelestia-kde
 caelestia-kde-plugins/
 wallpaper-selector/

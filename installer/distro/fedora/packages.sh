@@ -64,7 +64,7 @@ SHELL_PACKAGES=(
 
 THEME_PACKAGES=(
     adw-gtk3-theme google-rubik-fonts google-noto-sans-fonts
-    google-noto-sans-cjk-fonts google-noto-emoji-fonts
+    google-noto-sans-cjk-ttc-fonts google-noto-emoji-fonts
 )
 
 UTILITY_PACKAGES=(

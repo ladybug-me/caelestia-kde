@@ -54,8 +54,10 @@ Item {
         Popout {
             name: "greetercontext"
             previewKey: "greeter"
-            sourceComponent: GreeterContext {
+            sourceComponent: BarComponentContext {
                 popouts: root.popouts
+                label: qsTr("Greeter settings")
+                subPageIdx: 8
             }
         }
 
@@ -115,15 +117,28 @@ Item {
         Popout {
             name: "clockcontext"
             previewKey: "clock"
-            sourceComponent: ClockContext {
+            sourceComponent: BarComponentContext {
                 popouts: root.popouts
+                label: qsTr("Clock settings")
+                subPageIdx: 11
+            }
+        }
+
+        Popout {
+            name: "osiconcontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Launcher settings")
+                subPageIdx: 3
             }
         }
 
         Popout {
             name: "statusiconscontext"
-            sourceComponent: StatusIconsContext {
+            sourceComponent: BarComponentContext {
                 popouts: root.popouts
+                label: qsTr("Status icons settings")
+                subPageIdx: 10
             }
         }
 
@@ -204,6 +219,42 @@ Item {
             previewKey: "dock"
             sourceComponent: DockContext {
                 popouts: root.popouts
+            }
+        }
+
+        Popout {
+            name: "workspacescontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Workspaces settings")
+                subPageIdx: 7
+            }
+        }
+
+        Popout {
+            name: "traycontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Tray settings")
+                subPageIdx: 9
+            }
+        }
+
+        Popout {
+            name: "githubcontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("GitHub settings")
+                subPageIdx: 13
+            }
+        }
+
+        Popout {
+            name: "dockbgcontext"
+            sourceComponent: BarComponentContext {
+                popouts: root.popouts
+                label: qsTr("Dock settings")
+                subPageIdx: 12
             }
         }
 

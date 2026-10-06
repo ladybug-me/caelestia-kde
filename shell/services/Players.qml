@@ -136,7 +136,7 @@ Singleton {
     IpcHandler {
         function getActive(prop: string): string {
             const active = root.active;
-            return active ? active[prop] ?? "Invalid property" : "No active player";
+            return active ? active[prop] ?? qsTr("Invalid property") : qsTr("No active player");
         }
 
         function list(): string {

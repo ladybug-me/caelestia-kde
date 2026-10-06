@@ -18,6 +18,8 @@ import sys
 import unittest
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -917,11 +919,6 @@ class WorkflowYamlTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("python3"), "python3 required for YAML parse")
     def test_workflow_files_parse(self) -> None:
         """All .yml files in .github/workflows/ should be valid YAML."""
-        try:
-            import yaml  # type: ignore[import-untyped]
-        except ImportError:
-            return
-
         workflows_dir = ROOT / ".github" / "workflows"
         if not workflows_dir.is_dir():
             return

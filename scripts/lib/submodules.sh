@@ -33,14 +33,25 @@ submodule_url() {
 }
 
 fetch_submodule_by_clone() {
-    local dir="$1" path="$2" url tmp
+    local dir="$1" path="$2" url tmp pinned="" cloned=""
 
     url="$(submodule_url "$dir" "$path")"
     [[ -n "$url" ]] || return 1
     command -v git >/dev/null 2>&1 || return 1
 
+    if [[ -d "$dir/.git" ]]; then
+        pinned="$(git -C "$dir" ls-tree HEAD -- "$path" 2>/dev/null | awk '{print $3}')"
+    fi
+
     tmp="$(mktemp -d "${TMPDIR:-/tmp}/caelestia-submodule.XXXXXX")" || return 1
     if ! git clone --quiet --depth 1 -- "$url" "$tmp" >/dev/null 2>&1; then
+        rm -rf "$tmp"
+        return 1
+    fi
+    cloned="$(git -C "$tmp" rev-parse HEAD 2>/dev/null)"
+
+    if [[ -n "$pinned" && "$cloned" != "$pinned" \
+        && "${CAELESTIA_ALLOW_UNPINNED_SUBMODULES:-0}" != "1" ]]; then
         rm -rf "$tmp"
         return 1
     fi

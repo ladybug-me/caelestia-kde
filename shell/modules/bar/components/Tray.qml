@@ -48,6 +48,23 @@ StyledRect {
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, (Config.bar.tray.background && items.count > 0) ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
 
+    // icon-level
+    // right-clicks stay with the icons themselves (their own handlers sit on top
+    // of this one, so they win first).
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        cursorShape: Qt.PointingHandCursor
+        onClicked: mouse => {
+            if (!root.popouts)
+                return;
+            root.popouts.currentName = "traycontext";
+            root.popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+            root.popouts.hasCurrent = true;
+            mouse.accepted = true;
+        }
+    }
+
     Grid {
         id: layout
 

@@ -11,9 +11,11 @@ Item {
     required property DrawerVisibilities visibilities
     property var popouts
     property var utilities
+    // Set while a popout pushes the sidebar; its height is already animated.
+    property bool followsPopout: false
     readonly property Props props: Props {}
     readonly property bool shouldBeActive: visibilities.sidebar && Config.sidebar.enabled && !visibilities.overview
-    property bool aiBusy: false
+    property bool keepLoaded: false
     property real offsetScale: shouldBeActive ? 0 : 1
 
     visible: offsetScale < 1
@@ -23,8 +25,8 @@ Item {
     opacity: 1 - offsetScale
 
     Connections {
-        function onAiBusyChanged(): void {
-            root.aiBusy = content.item ? content.item.aiBusy : false;
+        function onKeepLoadedChanged(): void {
+            root.keepLoaded = content.item ? content.item.keepLoaded : false;
         }
 
         target: content.item
@@ -33,7 +35,11 @@ Item {
     Behavior on offsetScale {
         Anim {}
     }
+    // Animating on top of the popout's own height animation makes the edge lag
+    // behind it, leaving a gap or an overlap while switching popouts.
     Behavior on anchors.bottomMargin {
+        enabled: !root.followsPopout
+
         Anim {}
     }
     Loader {
@@ -45,7 +51,7 @@ Item {
         anchors.leftMargin: Tokens.padding.large
         anchors.margins: CUtils.clamp(anchors.leftMargin - Config.border.thickness, 0, anchors.leftMargin)
         anchors.bottomMargin: 0
-        active: root.shouldBeActive || root.visible || root.aiBusy
+        active: root.shouldBeActive || root.visible || root.keepLoaded
         sourceComponent: Content {
             implicitWidth: Tokens.sizes.sidebar.width - content.anchors.leftMargin - content.anchors.margins
             props: root.props

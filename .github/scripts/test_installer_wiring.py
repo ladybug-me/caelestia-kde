@@ -202,6 +202,53 @@ class InstallStepSafetyTests(unittest.TestCase):
         )
 
 
+class TuiArgumentTests(unittest.TestCase):
+    def test_every_argument_is_read_for_a_mode_and_a_directory(self) -> None:
+        main_cpp = (ROOT / "installer" / "tui" / "main.cpp").read_text(encoding="utf-8")
+
+        self.assertIn("for (int argi = 1; argi < argc; ++argi)", main_cpp,
+                      "main.cpp should walk every argument, not just argv[1]")
+        self.assertIn('arg == "--update"', main_cpp, "the update mode should still be recognised")
+        self.assertIn('arg == "--uninstall"', main_cpp, "the uninstall mode should still be recognised")
+        self.assertIn("g_bundle_dir = arg", main_cpp, "a non-flag argument should set the bundle directory")
+
+    def test_a_mode_and_a_directory_can_both_be_given(self) -> None:
+        main_cpp = (ROOT / "installer" / "tui" / "main.cpp").read_text(encoding="utf-8")
+
+        self.assertNotIn(
+            "std::string first = argv[1];",
+            main_cpp,
+            "reading only argv[1] discards the second argument of a two-argument call",
+        )
+
+
+class TerminalHandoverTests(unittest.TestCase):
+    def test_the_raw_mode_is_tracked_apart_from_the_alt_screen(self) -> None:
+        term_hpp = (ROOT / "installer" / "tui" / "Term.hpp").read_text(encoding="utf-8")
+        term_cpp = (ROOT / "installer" / "tui" / "Term.cpp").read_text(encoding="utf-8")
+
+        self.assertIn("extern bool raw_mode;", term_hpp,
+                      "the tty attribute change needs its own flag")
+        restore_body = term_cpp.split("void restore()", 1)[1].split("void init()", 1)[0]
+        self.assertIn("if (raw_mode)", restore_body,
+                      "restore() should undo the tty attributes whenever they were changed")
+
+    def test_the_handover_restores_the_terminal_before_forking(self) -> None:
+        main_cpp = (ROOT / "installer" / "tui" / "main.cpp").read_text(encoding="utf-8")
+
+        run_external_body = main_cpp.split("void run_external(", 1)[1].split("\nint main(", 1)[0]
+        restore_at = run_external_body.find("Term::restore()")
+        fork_at = run_external_body.find("fork()")
+
+        self.assertNotEqual(restore_at, -1, "run_external should restore the terminal")
+        self.assertNotEqual(fork_at, -1, "run_external should still fork the script")
+        self.assertLess(
+            restore_at,
+            fork_at,
+            "the terminal has to be restored before the child inherits it",
+        )
+
+
 class ScriptNumberingTests(unittest.TestCase):
     def test_install_step_scripts_have_consistent_numbers(self) -> None:
         """Step numbers stay a two-digit base with an optional letter suffix.

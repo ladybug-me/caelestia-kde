@@ -12,7 +12,6 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-
     property string pluginCount
 
     property string quickshellVersion
@@ -148,9 +147,6 @@ PageBase {
             text: qsTr("Plugins")
         }
 
-        // Reports the count and links through to the plugin manager. A bare
-        // number with nothing behind it is a dead end: the page that lists the
-        // plugins is where anyone reading this number wants to go (#578).
         NavRow {
             first: true
             last: true
@@ -158,8 +154,6 @@ PageBase {
             label: qsTr("Enabled plugins")
             status: root.pluginCount || "…"
             onClicked: {
-                // Resolve by key rather than a literal index: PageDictionary is
-                // positional and entries must not be reordered independently.
                 const index = PageRegistry.indexForKey("plugins");
                 if (index >= 0)
                     root.nState.currentPageIdx = index;
@@ -177,6 +171,35 @@ PageBase {
             subtext: qsTr("Enable verbose debug logging for troubleshooting. Run 'caelestia shell -l' to view.")
             checked: GlobalConfig.general.debugLogs
             onClicked: GlobalConfig.general.debugLogs = !GlobalConfig.general.debugLogs
+        }
+
+        SectionHeader {
+            text: qsTr("Uninstall")
+        }
+
+        NavRow {
+            first: true
+            last: true
+            icon: "delete_forever"
+            label: qsTr("Uninstall Caelestia")
+            status: {
+                if (Uninstaller.state === "probing")
+                    return qsTr("Checking for the uninstaller…");
+                if (Uninstaller.state === "script")
+                    return qsTr("Remove the shell, its configs and its services");
+                if (Uninstaller.state === "package")
+                    return qsTr("This install belongs to a package. Remove it with: %1").arg(Uninstaller.manualCommand);
+                return qsTr("No uninstaller was found. Remove the install with your package manager.");
+            }
+            onClicked: uninstallDialog.open()
+        }
+
+        UninstallDialog {
+            id: uninstallDialog
+
+            state: Uninstaller.state
+            manualCommand: Uninstaller.manualCommand
+            onConfirmed: Uninstaller.launch()
         }
     }
 }

@@ -172,7 +172,23 @@ void EmojiDb::loadEmojis() {
         return;
     }
 
+    buildTrigramIndex();
     emit loadedChanged();
+}
+
+void EmojiDb::buildTrigramIndex() {
+    m_trigramIndex.clear();
+    m_trigramIndex.reserve(m_emojis.size() * 8);
+    for (int i = 0; i < m_emojis.size(); ++i) {
+        const QString& name = m_emojis[i].nameLower;
+        const int len = name.size();
+        for (int j = 0; j + 2 < len; ++j) {
+            const QString trigram = name.mid(j, 3);
+            m_trigramIndex[trigram].append(i);
+        }
+    }
+    qCInfo(lcEmojiDb) << "Trigram index built:" << m_trigramIndex.size() << "unique trigrams for" << m_emojis.size()
+                      << "emojis.";
 }
 
 void EmojiDb::loadFrequencies() {
@@ -265,11 +281,48 @@ QVariantList EmojiDb::search(const QString& text, int limit) const {
     if (text.isEmpty())
         return getSortedItems({});
 
-    const auto lower = text.toLower();
+    const QString lower = text.toLower();
+    const int queryLen = lower.size();
     QVariantList result;
     result.reserve(std::min(limit, static_cast<int>(m_emojis.size())));
 
-    for (const auto& e : m_emojis) {
+    if (queryLen < 3 || m_trigramIndex.isEmpty()) {
+        for (const auto& e : m_emojis) {
+            if (e.nameLower.contains(lower)) {
+                result.append(QVariantMap{
+                    { QStringLiteral("ch"), e.ch },
+                    { QStringLiteral("name"), e.name },
+                    { QStringLiteral("nameLower"), e.nameLower },
+                });
+                if (result.size() >= limit)
+                    break;
+            }
+        }
+        return result;
+    }
+
+    QSet<int> candidates;
+    bool first = true;
+    for (int i = 0; i + 2 < queryLen; ++i) {
+        const QString trigram = lower.mid(i, 3);
+        const auto it = m_trigramIndex.constFind(trigram);
+        if (it == m_trigramIndex.constEnd()) {
+            return {};
+        }
+        const QVector<int>& postings = it.value();
+        if (first) {
+            candidates = QSet<int>(postings.begin(), postings.end());
+            first = false;
+        } else {
+            QSet<int> posting_set(postings.begin(), postings.end());
+            candidates.intersect(posting_set);
+            if (candidates.isEmpty())
+                return {};
+        }
+    }
+
+    for (int idx : std::as_const(candidates)) {
+        const auto& e = m_emojis[idx];
         if (e.nameLower.contains(lower)) {
             result.append(QVariantMap{
                 { QStringLiteral("ch"), e.ch },

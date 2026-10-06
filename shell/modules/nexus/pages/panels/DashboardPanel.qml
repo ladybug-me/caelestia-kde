@@ -164,6 +164,13 @@ PageBase {
 
         ToggleRow {
             Layout.fillWidth: true
+            text: qsTr("Notes")
+            checked: Config.dashboard.showNotes
+            onToggled: GlobalConfig.dashboard.showNotes = checked
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
             text: qsTr("Terminal")
             checked: Config.dashboard.showTerminal
             onToggled: GlobalConfig.dashboard.showTerminal = checked

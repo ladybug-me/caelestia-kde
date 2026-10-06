@@ -7,8 +7,6 @@ blank-before-close-brace	modules/sidebar/AiAssistant.qml	no blank line expected 
 blank-before-close-brace	services/Audio.qml	no blank line expected before closing brace
 blank-before-close-brace	services/DiscordRPC.qml	no blank line expected before closing brace
 missing-section-separator	modules/screenshot/regionSelector/RegionSelection.qml	blank line expected between bindings and property declarations
-section-order	components/PolkitDialog.qml	bindings should appear before child objects (seen at line N)
-section-order	components/PolkitDialog.qml	property declarations should appear before bindings (seen at line N)
 section-order	components/controls/CustomSpinBox.qml	functions should appear before bindings (seen at line N)
 section-order	modules/background/BadAppleVideo.qml	property declarations should appear before functions (seen at line N)
 section-order	modules/background/DesktopIcons.qml	functions should appear before bindings (seen at line N)

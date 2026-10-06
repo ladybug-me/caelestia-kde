@@ -70,6 +70,7 @@ Item {
                     anchors.topMargin: Config.bar.position === "top" ? root.barExclusiveZone : Config.border.thickness
                     anchors.bottomMargin: Config.bar.position === "bottom" ? root.barExclusiveZone : Config.border.thickness
                     values: Audio.cava?.values ?? []
+                    sideWidth: Math.min(0.5, Math.max(0.05, 0.4 * Config.background.visualiser.size))
                     primaryColor: Qt.alpha(Colours.palette.m3primary, 0.7)
                     secondaryColor: Qt.alpha(Colours.palette.m3inversePrimary, 0.7)
                     rounding: Tokens.rounding.medium * Config.background.visualiser.rounding

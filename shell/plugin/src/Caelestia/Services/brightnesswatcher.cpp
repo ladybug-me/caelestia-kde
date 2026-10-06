@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 #include "brightnesswatcher.hpp"
 
+#include <QtGui/qguiapplication_platform.h>
 #include <qloggingcategory.h>
 #include <qpa/qplatformnativeinterface.h>
 
+#include <wayland-client.h>
+
 #include <QGuiApplication>
+#include <cstring>
 
 Q_LOGGING_CATEGORY(lcBrightnessWatcher, "caelestia.services.brightnesswatcher", QtInfoMsg)
 
@@ -12,6 +16,9 @@ namespace caelestia::services {
 
 KdeOutputDevice::KdeOutputDevice(struct ::kde_output_device_v2* object)
     : QtWayland::kde_output_device_v2(object) {}
+
+KdeOutputDevice::KdeOutputDevice(struct ::wl_registry* registry, uint32_t name, int version)
+    : QtWayland::kde_output_device_v2(registry, name, version) {}
 
 KdeOutputDevice::~KdeOutputDevice() {}
 
@@ -40,12 +47,60 @@ void KdeOutputDevice::kde_output_device_v2_removed() {
     emit removed();
 }
 
+void KdeOutputDevice::notifyRemoved() {
+    emit removed();
+}
+
 KdeOutputDeviceRegistry::KdeOutputDeviceRegistry(QObject* parent)
-    : QWaylandClientExtensionTemplate<KdeOutputDeviceRegistry>(23) {}
+    : QObject(parent) {
+    auto* wayland = qGuiApp->nativeInterface<QNativeInterface::QWaylandApplication>();
+    struct ::wl_display* display = wayland ? wayland->display() : nullptr;
+    if (!display) {
+        qCWarning(lcBrightnessWatcher) << "Cannot discover outputs: no Wayland display";
+        return;
+    }
+
+    m_registry = wl_display_get_registry(display);
+    static const struct ::wl_registry_listener listener = {
+        &KdeOutputDeviceRegistry::handleGlobal,
+        &KdeOutputDeviceRegistry::handleGlobalRemove,
+    };
+    wl_registry_add_listener(m_registry, &listener, this);
+}
+
+KdeOutputDeviceRegistry::~KdeOutputDeviceRegistry() {
+    for (auto* dev : m_globalDevices)
+        delete dev;
+    if (m_registry)
+        wl_registry_destroy(m_registry);
+}
+
+void KdeOutputDeviceRegistry::handleGlobal(
+    void* data, struct ::wl_registry* registry, uint32_t name, const char* interface, uint32_t version) {
+    auto* self = static_cast<KdeOutputDeviceRegistry*>(data);
+
+    if (std::strcmp(interface, "kde_output_device_v2") == 0) {
+        const auto v =
+            qMin<uint32_t>(version, static_cast<uint32_t>(QtWayland::kde_output_device_v2::interface()->version));
+        auto* dev = new KdeOutputDevice(registry, name, static_cast<int>(v));
+        self->m_globalDevices.insert(name, dev);
+        emit self->deviceAdded(dev);
+    } else if (std::strcmp(interface, "kde_output_device_registry_v2") == 0) {
+        const auto v = qMin<uint32_t>(
+            version, static_cast<uint32_t>(QtWayland::kde_output_device_registry_v2::interface()->version));
+        self->QtWayland::kde_output_device_registry_v2::init(registry, name, static_cast<int>(v));
+    }
+}
+
+void KdeOutputDeviceRegistry::handleGlobalRemove(void* data, struct ::wl_registry* registry, uint32_t name) {
+    Q_UNUSED(registry);
+    auto* self = static_cast<KdeOutputDeviceRegistry*>(data);
+    if (auto* dev = self->m_globalDevices.take(name))
+        dev->notifyRemoved();
+}
 
 void KdeOutputDeviceRegistry::kde_output_device_registry_v2_output(struct ::kde_output_device_v2* output) {
-    auto* dev = new KdeOutputDevice(output);
-    emit deviceAdded(dev);
+    emit deviceAdded(new KdeOutputDevice(output));
 }
 
 KdeOutputManagement::KdeOutputManagement(QObject* parent)

@@ -14,6 +14,7 @@ ListView {
 
     property alias values: valuesModel.values
     property bool first
+    property bool allowRemove: true
 
     signal itemMoved(from: int, to: int)
     signal itemRemoved(index: int)
@@ -311,6 +312,7 @@ ListView {
                 }
 
                 IconButton {
+                    visible: root.allowRemove
                     type: IconButton.Text
                     isRound: true
                     icon: "delete"

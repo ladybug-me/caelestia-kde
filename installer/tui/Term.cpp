@@ -11,6 +11,7 @@ using namespace std;
 namespace Term {
     termios initial_settings;
     bool initialized = false;
+    bool raw_mode = false;
 
     void get_size() {
         winsize wsize{};
@@ -30,24 +31,30 @@ namespace Term {
     }
 
     void restore() {
-        if (initialized) {
+        if (raw_mode) {
             tcsetattr(STDIN_FILENO, TCSANOW, &initial_settings);
-            cout << "\x1b[0m\x1b[?1049l\x1b[?25h" << flush; // reset, exit alt screen, show cursor
+            raw_mode = false;
+        }
+        if (initialized) {
+            cout << "\x1b[0m\x1b[?1049l\x1b[?25h" << flush;
             initialized = false;
         }
     }
 
     void init() {
-        if (!initialized && isatty(STDIN_FILENO)) {
+        if (!raw_mode && isatty(STDIN_FILENO)) {
             tcgetattr(STDIN_FILENO, &initial_settings);
             termios settings = initial_settings;
-            settings.c_lflag &= ~(ECHO | ICANON); // disable echo and canonical mode
+            settings.c_lflag &= ~(ECHO | ICANON);
             settings.c_cc[VMIN] = 0;
             settings.c_cc[VTIME] = 0;
             tcsetattr(STDIN_FILENO, TCSANOW, &settings);
+            raw_mode = true;
 
-            cout << "\x1b[?1049h\x1b[?25l" << flush; // enter alt screen, hide cursor
-            initialized = true;
+            if (!initialized) {
+                cout << "\x1b[?1049h\x1b[?25l" << flush;
+                initialized = true;
+            }
             atexit(restore);
         }
         get_size();

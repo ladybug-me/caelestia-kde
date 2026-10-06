@@ -1,7 +1,7 @@
 # Maintainer: ladybug-me <rajveer2027singh@gmail.com>
 
 pkgname=caelestia-kde
-pkgver=2.4.3
+pkgver=2.5.1
 pkgrel=1
 pkgdesc='The Caelestia desktop shell, ported to KDE Plasma'
 arch=('x86_64' 'aarch64')
@@ -58,6 +58,8 @@ conflicts=('caelestia-shell' 'caelestia-shell-git')
 
 _source_url="${_source_url:-$url/releases/download/v$pkgver/$pkgname-v$pkgver.tar.gz}"
 _source_sum="${_source_sum:-SKIP}"
+_build_dir="build"
+_effect_build_dir="effect-build"
 
 source=("$_source_url"
         'caelestia-autostart'
@@ -69,10 +71,6 @@ sha256sums=("$_source_sum"
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"
 
-    # makepkg accepts a SKIP hash and builds whatever the download produced, which is how
-    # this PKGBUILD ships before the release hash exists. Refuse instead: the staging
-    # script fills both _source_url and _source_sum, so a SKIP reaching here means the
-    # published hash was never put in, and the tarball is the whole shell.
     if [[ "$_source_sum" == "SKIP" && "${CAELESTIA_ALLOW_UNVERIFIED_SOURCE:-0}" != "1" ]]; then
         echo "No source checksum: put the release's sha256 in the first sha256sums entry." >&2
         echo "The release job prints it beside the size and attaches it as .sha256;" >&2
@@ -91,39 +89,27 @@ prepare() {
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
-    cmake -B build -S shell -G Ninja \
+    cmake -B "$_build_dir" -S shell -G Ninja \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/ \
         -DVERSION="$pkgver" \
+        -DINSTALL_DATADIR=usr/share/caelestia \
+        -DCAELESTIA_PACKAGE=ON \
         -DREQUIRE_CAVA=ON \
         -DDISTRIBUTOR="AUR (package: $pkgname)"
-    cmake --build build || exit 1
+    cmake --build "$_build_dir" || exit 1
 
-    cmake -B effect-build -S shell/kwin-effects/workspace-tracker -G Ninja \
+    cmake -B "$_effect_build_dir" -S shell/kwin-effects/workspace-tracker -G Ninja \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr
-    cmake --build effect-build || exit 1
+    cmake --build "$_effect_build_dir" || exit 1
 }
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
-    DESTDIR="$pkgdir" cmake --install build
-    DESTDIR="$pkgdir" cmake --install effect-build
+    DESTDIR="$pkgdir" cmake --install "$_build_dir"
+    DESTDIR="$pkgdir" cmake --install "$_effect_build_dir"
 
-    install -d "$pkgdir/usr/share/caelestia"
-    install -d "$pkgdir/usr/share/caelestia/scripts"
-    install -m755 scripts/[0-9]*.sh "$pkgdir/usr/share/caelestia/scripts/"
-    cp -r scripts/lib "$pkgdir/usr/share/caelestia/scripts/"
-    install -d "$pkgdir/usr/share/caelestia/src" "$pkgdir/usr/share/caelestia/assets" \
-        "$pkgdir/usr/share/caelestia/shell/assets"
-    cp -r src/dots src/dots-extra "$pkgdir/usr/share/caelestia/src/"
-    cp -r shell/assets/wallpaper.webp "$pkgdir/usr/share/caelestia/shell/assets/"
-    cp -r assets/org.quickshell.desktop "$pkgdir/usr/share/caelestia/assets/"
-    install -d "$pkgdir/usr/share/sddm/themes/caelestia/scripts"
-    cp -r src/sddm/themes/full/* "$pkgdir/usr/share/sddm/themes/caelestia/"
-    install -m755 src/sddm/sync.sh "$pkgdir/usr/share/sddm/themes/caelestia/scripts/sync.sh"
-    install -Dm644 src/kde/shells/caelestia.desktop/contents/fonts/GoogleSansFlex.ttf \
-        "$pkgdir/usr/share/sddm/themes/caelestia/assets/google-sans-flex/GoogleSansFlex.ttf"
     install -d "$pkgdir/etc/sddm.conf.d"
     cat > "$pkgdir/etc/sddm.conf.d/zz-caelestia.conf" <<'DROPIN'
 [General]
@@ -136,41 +122,16 @@ DROPIN
     install -d "$pkgdir/usr/lib/udev/rules.d"
     echo 'KERNEL=="uinput", MODE="0600", OPTIONS+="static_node=uinput", TAG+="uaccess"' > "$pkgdir/usr/lib/udev/rules.d/70-uinput.rules"
 
-    install -d "$pkgdir/etc/xdg/quickshell/caelestia/assets/icons"
-    cp -r src/yet-another-monochrome-icon-set \
-        "$pkgdir/etc/xdg/quickshell/caelestia/assets/icons/"
-
-    install -d "$pkgdir/usr/bin"
-    install -m755 src/bin/* "$pkgdir/usr/bin/"
-
-    install -d "$pkgdir/usr/share/caelestia"
-    cp -r src/matugen src/schemes "$pkgdir/usr/share/caelestia/"
-
-    install -d "$pkgdir/usr/share/plasma/shells"
-    cp -r src/kde/shells/caelestia.desktop "$pkgdir/usr/share/plasma/shells/"
-
     install -Dm755 "$srcdir/caelestia-autostart" "$pkgdir/usr/bin/caelestia-autostart"
     install -Dm644 "$srcdir/caelestia-shell.service" \
         "$pkgdir/usr/lib/systemd/user/caelestia-shell.service"
 
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
-    find "$pkgdir" \( -name '.git' -o -name '.github' -o -name '.gitignore' \) \
-        -prune -exec rm -rf {} + 2>/dev/null || true
-
     local required=(
-        usr/bin/caelestia
-        usr/share/caelestia/scripts/03-deploy-configs.sh
-        usr/share/caelestia/scripts/lib/install-kind.sh
-        usr/share/caelestia/src/dots
-        usr/share/caelestia/src/dots-extra
-        usr/share/caelestia/shell/assets/wallpaper.webp
-        usr/share/caelestia/assets/org.quickshell.desktop
-        usr/share/sddm/themes/caelestia/theme.conf
-        usr/share/sddm/themes/caelestia/scripts/sync.sh
         etc/sddm.conf.d/zz-caelestia.conf
         usr/lib/systemd/user/caelestia-shell.service
-        etc/xdg/quickshell/caelestia/assets/icons/yet-another-monochrome-icon-set
+        usr/share/licenses/$pkgname/LICENSE
     )
     local path
     for path in "${required[@]}"; do
@@ -180,5 +141,9 @@ DROPIN
         fi
     done
 
-    echo "package layout checked: ${#required[@]} paths"
+    source "$srcdir/$pkgname-$pkgver/scripts/lib/install-fs.sh"
+    validate_install_manifest "$srcdir/$pkgname-$pkgver/$_build_dir/install_manifest.txt" "$pkgdir" || exit 1
+    validate_install_manifest "$srcdir/$pkgname-$pkgver/$_effect_build_dir/install_manifest.txt" "$pkgdir" || exit 1
+
+    echo "package layout checked: ${#required[@]} package paths plus CMake's manifest"
 }

@@ -26,19 +26,9 @@ PageBase {
         return found || (branchItems.length > 0 ? branchItems[0] : null);
     }
 
-    readonly property bool updateRunning: UpdateChecker.updateRunning
-
-    readonly property real updateProgress: UpdateChecker.updateProgress
-
-    readonly property string updateStatus: UpdateChecker.updateStatus
-
-    readonly property string updateLogs: UpdateChecker.updateLogs
-
     property string selectedVersionId: ""
 
     property string pendingBranch: ""
-
-    property bool installOptionsExpanded: false
 
     readonly property bool branchDataLoading: root.pendingBranch !== "" && UpdateChecker.checkingUpdates
 
@@ -66,14 +56,7 @@ PageBase {
 
     readonly property bool selectionIsReinstall: root.timelineSelectionEnabled && root.selectedVersionState === "current"
 
-    readonly property bool primaryActionVisible: {
-        if (root.updateRunning) return false;
-        if (root.updateProgress === 1.0) return true;
-        if (root.selectionIsRevert) return true;
-        if (root.selectionIsReinstall) return true;
-        if (root.selectionIsFuture && root.selectedVersionId !== "") return true;
-        return UpdateChecker.hasUpdate;
-    }
+    readonly property bool primaryActionVisible: root.selectedVersionId !== "" || UpdateChecker.hasUpdate
 
     readonly property var timelineEntries: {
         if (UpdateChecker.versionSummaryMode && UpdateChecker.availableVersions.length > 0) {
@@ -131,6 +114,25 @@ PageBase {
             }
             return result.filter(e => !e.isMerge || e.state === "current");
         }
+    }
+
+    // The configured terminal is a bare command and may not be installed - the
+    // default is foot, which a KDE box often does not have - so resolve it once
+    // and fall back to konsole, KDE's own terminal, instead of launching nothing.
+    readonly property list<string> terminalCommand: root.configuredTerminalAvailable ? GlobalConfig.general.apps.terminal : ["konsole"]
+
+    property bool configuredTerminalAvailable: true
+
+    // Launch the updater in the user's terminal. The page only reports state now;
+    // the updater owns its own output, progress and escalation prompts.
+    function launchUpdater(): void {
+        if (UpdateChecker.checkingUpdates)
+            return;
+        const command = [UpdateChecker.currentBranch];
+        if (root.selectedVersionId !== "")
+            command.push(root.selectedVersionId);
+        root.selectedVersionId = "";
+        Launch.exec([...root.terminalCommand, "caelestia-update", ...command]);
     }
 
     title: qsTr("Updates")
@@ -210,14 +212,12 @@ PageBase {
                     Layout.alignment: Qt.AlignHCenter
                     fontStyle: Tokens.font.icon.extraLarge
                     text: {
-                        if (root.updateProgress === 1.0) return "done_all";
-                        if (root.updateRunning) return "sync";
                         if (root.selectionIsRevert) return "history";
                         if (root.selectionIsReinstall) return "replay";
                         if (UpdateChecker.currentVersion === "unknown" && !UpdateChecker.hasUpdate) return "help";
                         return UpdateChecker.hasUpdate ? "update" : "check_circle";
                     }
-                    color: (UpdateChecker.hasUpdate || root.updateRunning || root.updateProgress === 1.0 || root.selectedVersionId !== "")
+                    color: (UpdateChecker.hasUpdate || root.selectedVersionId !== "")
                         ? Colours.palette.m3primary
                         : Colours.palette.m3onSurfaceVariant
                 }
@@ -226,7 +226,7 @@ PageBase {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.fillWidth: true
                     font: Tokens.font.title.medium
-                    color: (UpdateChecker.hasUpdate || root.updateRunning || root.updateProgress === 1.0 || root.selectedVersionId !== "")
+                    color: (UpdateChecker.hasUpdate || root.selectedVersionId !== "")
                         ? Colours.palette.m3onSurface
                         : Colours.palette.m3onSurfaceVariant
                     horizontalAlignment: Text.AlignHCenter
@@ -234,8 +234,6 @@ PageBase {
                     maximumLineCount: 2
                     elide: Text.ElideRight
                     text: {
-                        if (root.updateProgress === 1.0) return qsTr("Update complete - log out to apply");
-                        if (root.updateRunning) return root.updateStatus || qsTr("Updating…");
                         if (root.selectionIsRevert) return qsTr("Restore to %1?").arg(root.selectedVersionId);
                         if (root.selectionIsReinstall) return qsTr("Reinstall %1?").arg(root.selectedVersionId);
                         if (root.selectionIsFuture && root.selectedVersionId !== "")
@@ -253,20 +251,12 @@ PageBase {
 
                 StyledText {
                     Layout.alignment: Qt.AlignHCenter
-                    visible: UpdateChecker.currentVersion !== "unknown" && !root.updateRunning && root.updateProgress !== 1.0 && root.selectedVersionId === ""
+                    visible: UpdateChecker.currentVersion !== "unknown" && root.selectedVersionId === ""
                     text: UpdateChecker.versionSummaryMode
                         ? qsTr("Installed: %1").arg(UpdateChecker.currentVersion)
                         : qsTr("Channel: %1").arg(UpdateChecker.currentBranch)
                     color: Colours.palette.m3onSurfaceVariant
                     font: Tokens.font.label.medium
-                }
-
-                StyledProgressBar {
-                    Layout.fillWidth: true
-                    Layout.topMargin: Tokens.spacing.extraSmall
-                    visible: root.updateRunning
-                    value: root.updateProgress
-                    indeterminate: root.updateProgress === 0.0 && root.updateRunning
                 }
 
                 RowLayout {
@@ -278,7 +268,6 @@ PageBase {
                         Layout.fillWidth: true
                         visible: root.primaryActionVisible
                         text: {
-                            if (root.updateProgress === 1.0) return qsTr("Log Out");
                             if (root.selectionIsRevert) return qsTr("Restore");
                             if (root.selectionIsReinstall) return qsTr("Reinstall");
                             if (root.selectionIsFuture && root.selectedVersionId !== "")
@@ -290,40 +279,21 @@ PageBase {
                         horizontalPadding: Tokens.padding.large
                         verticalPadding: Tokens.padding.medium
                         icon: {
-                            if (root.updateProgress === 1.0) return "logout";
                             if (root.selectionIsRevert) return "history";
                             if (root.selectionIsReinstall) return "replay";
                             return "system_update_alt";
                         }
-                        onClicked: {
-                            if (root.updateProgress === 1.0) {
-                                logoutProcess.running = true;
-                            } else {
-                                const target = root.selectedVersionId;
-                                root.selectedVersionId = "";
-                                if (!nState.isWindow) {
-                                    WindowFactory.create(null, {
-                                        initialPageIdx: root.updatesPageIdx
-                                    });
-                                    nState.close();
-                                    Qt.callLater(() => UpdateChecker.startUpdate(target));
-                                    return;
-                                }
-                                UpdateChecker.startUpdate(target);
-                            }
-                        }
+                        onClicked: root.launchUpdater()
                     }
 
                     IconTextButton {
                         id: secondaryActionButton
 
-                        readonly property bool isChecking: UpdateChecker.checkingUpdates && !root.updateRunning && root.selectedVersionId === ""
+                        readonly property bool isChecking: UpdateChecker.checkingUpdates && root.selectedVersionId === ""
 
                         Layout.fillWidth: !root.primaryActionVisible
-                        visible: root.updateProgress !== 1.0
                         disabled: isChecking
                         text: {
-                            if (root.updateRunning) return qsTr("Stop");
                             if (root.selectedVersionId !== "") return qsTr("Cancel");
                             if (isChecking) return qsTr("Checking…");
                             return qsTr("Check");
@@ -332,11 +302,9 @@ PageBase {
                         font: Tokens.font.body.medium
                         horizontalPadding: Tokens.padding.large
                         verticalPadding: Tokens.padding.medium
-                        icon: root.updateRunning ? "stop" : (root.selectedVersionId !== "" ? "close" : "refresh")
+                        icon: root.selectedVersionId !== "" ? "close" : "refresh"
                         onClicked: {
-                            if (root.updateRunning) {
-                                UpdateChecker.stopUpdate();
-                            } else if (root.selectedVersionId !== "") {
+                            if (root.selectedVersionId !== "") {
                                 root.selectedVersionId = "";
                             } else {
                                 UpdateChecker.checkUpdates();
@@ -416,70 +384,14 @@ PageBase {
             }
         }
 
-        ConnectedRect {
-            visible: !root.branchDataLoading
-            last: !root.installOptionsExpanded
-            Layout.fillWidth: true
-            implicitHeight: installHeaderRow.implicitHeight + Tokens.padding.medium * 2
-
-            StateLayer {
-                onClicked: root.installOptionsExpanded = !root.installOptionsExpanded
-            }
-
-            RowLayout {
-                id: installHeaderRow
-
-                anchors.fill: parent
-                anchors.margins: Tokens.padding.medium
-                anchors.leftMargin: Tokens.padding.largeIncreased
-                anchors.rightMargin: Tokens.padding.largeIncreased
-                spacing: Tokens.spacing.medium
-
-                MaterialIcon {
-                    text: "tune"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle: Tokens.font.icon.medium
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: qsTr("Customize Installation")
-                    font: Tokens.font.body.small
-                }
-
-                MaterialIcon {
-                    text: root.installOptionsExpanded ? "expand_less" : "expand_more"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle: Tokens.font.icon.medium
-                }
-            }
-        }
-
         NavRow {
-            visible: !root.branchDataLoading && root.installOptionsExpanded
+            visible: !root.branchDataLoading
             icon: "folder"
             label: qsTr("Open Backup Folder")
             status: qsTr("View your previously backed-up configuration files")
             onClicked: {
                 backupFolderProcess.running = true;
             }
-        }
-
-        ToggleRow {
-            visible: !root.branchDataLoading && root.installOptionsExpanded
-            text: qsTr("Deploy Configurations")
-            subtext: qsTr("Update your custom dotfiles in ~/.config")
-            checked: UpdateChecker.deployConfigs
-            onToggled: UpdateChecker.deployConfigs = checked
-        }
-
-        ToggleRow {
-            visible: !root.branchDataLoading && root.installOptionsExpanded
-            last: true
-            text: qsTr("Build Shell UI")
-            subtext: qsTr("Compile and install Quickshell UI updates")
-            checked: UpdateChecker.buildShell
-            onToggled: UpdateChecker.buildShell = checked
         }
 
         ConnectedRect {
@@ -558,9 +470,8 @@ PageBase {
                     entries: root.timelineEntries
                     selectedId: root.timelineSelectionEnabled ? root.selectedVersionId : ""
                     onEntryClicked: function(entryId, entryState) {
-                        if (root.updateRunning || !root.timelineSelectionEnabled) return;
+                        if (!root.timelineSelectionEnabled) return;
                         root.selectedVersionId = (root.selectedVersionId === entryId) ? "" : entryId;
-                        UpdateChecker.targetVersion = "";
                     }
                 }
             }
@@ -580,87 +491,13 @@ PageBase {
             onClicked: UpdateChecker.loadMoreCommits()
         }
 
-        SectionHeader {
-            visible: !root.branchDataLoading && (root.updateRunning || root.updateLogs !== "")
-            text: qsTr("Update Log")
-        }
-
-        ConnectedRect {
-            first: true
-            last: true
-            Layout.fillWidth: true
-            visible: !root.branchDataLoading && (root.updateRunning || root.updateLogs !== "")
-            implicitHeight: logContent.implicitHeight + Tokens.padding.medium * 2
-
-            ColumnLayout {
-                id: logContent
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    top: parent.top
-                    margins: Tokens.padding.medium
-                }
-
-                spacing: Tokens.spacing.small
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: Tokens.spacing.medium
-
-                    StyledText {
-                        Layout.fillWidth: true
-                        text: root.updateStatus
-                        color: Colours.palette.m3onSurfaceVariant
-                        font: Tokens.font.body.medium
-                        wrapMode: Text.NoWrap
-                        elide: Text.ElideRight
-                        maximumLineCount: 1
-                    }
-
-                    IconButton {
-                        icon: UpdateChecker.logsExpanded ? "expand_less" : "expand_more"
-                        onClicked: UpdateChecker.logsExpanded = !UpdateChecker.logsExpanded
-                    }
-                }
-
-                StyledRect {
-                    Layout.fillWidth: true
-                    implicitHeight: 240
-                    visible: UpdateChecker.logsExpanded && (root.updateLogs !== "" || root.updateRunning)
-                    color: Colours.tPalette.m3surfaceContainerLowest
-                    radius: Tokens.rounding.small
-                    clip: true
-
-                    Flickable {
-                        id: logFlickable
-
-                        anchors.fill: parent
-                        anchors.margins: Tokens.padding.medium
-                        contentHeight: logText.implicitHeight
-                        contentWidth: width
-                        flickableDirection: Flickable.VerticalFlick
-                        onContentHeightChanged: {
-                            if (contentHeight > height) contentY = contentHeight - height;
-                        }
-
-                        StyledText {
-                            id: logText
-
-                            width: logFlickable.width
-                            text: root.updateLogs
-                            color: Colours.palette.m3onSurfaceVariant
-                            font: Tokens.font.body.small
-                            wrapMode: Text.Wrap
-                        }
-                    }
-                }
-            }
-        }
-
         Process {
-            id: logoutProcess
+            id: terminalCheck
 
-            command: ["qdbus6", "org.kde.Shutdown", "/Shutdown", "org.kde.Shutdown.logout"]
+            // Only the first word is the program; the rest are its own arguments.
+            command: ["bash", "-c", "command -v \"$1\" >/dev/null 2>&1", "--", GlobalConfig.general.apps.terminal[0] || ""]
+            running: true
+            onExited: code => root.configuredTerminalAvailable = code === 0
         }
 
         Process {

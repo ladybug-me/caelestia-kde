@@ -6,6 +6,7 @@
 
 #include "../Settings/objectnode.hpp"
 #include "common.hpp"
+#include "enums.hpp"
 
 namespace caelestia::config {
 
@@ -50,6 +51,7 @@ class LauncherConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(int, dragThreshold, 50)
     CONFIG_PROPERTY(bool, showPowerMenu, true)
     CONFIG_PROPERTY(bool, showBrowseOnEmpty, true)
+    CONFIG_ENUM_PROPERTY(LauncherBrowseLayout, browseLayout, LauncherBrowseLayout::Default)
     CONFIG_PROPERTY(int, hoverThickness, 10)
     CONFIG_PROPERTY(int, hoverWidth, 50)
     CONFIG_GLOBAL_PROPERTY(bool, vimKeybinds, false)
@@ -62,22 +64,16 @@ class LauncherConfig : public settings::ObjectNode {
     CONFIG_GLOBAL_LIST(LauncherActionList, actions,
         DEFAULT_ARG({
             vmap({
-                { u"name"_s, u"Calculator"_s },
-                { u"icon"_s, u"calculate"_s },
-                { u"description"_s, u"Do simple math equations (powered by Qalc)"_s },
-                { u"command"_s, QStringList{ u"autocomplete"_s, u"calc"_s } },
+                { u"name"_s, u"Wallpaper"_s },
+                { u"icon"_s, u"image"_s },
+                { u"description"_s, u"Change the current wallpaper"_s },
+                { u"command"_s, QStringList{ u"autocomplete"_s, u"wallpaper"_s } },
             }),
             vmap({
                 { u"name"_s, u"Scheme"_s },
                 { u"icon"_s, u"palette"_s },
                 { u"description"_s, u"Change the current color scheme"_s },
                 { u"command"_s, QStringList{ u"autocomplete"_s, u"scheme"_s } },
-            }),
-            vmap({
-                { u"name"_s, u"Wallpaper"_s },
-                { u"icon"_s, u"image"_s },
-                { u"description"_s, u"Change the current wallpaper"_s },
-                { u"command"_s, QStringList{ u"autocomplete"_s, u"wallpaper"_s } },
             }),
             vmap({
                 { u"name"_s, u"Variant"_s },
@@ -104,6 +100,31 @@ class LauncherConfig : public settings::ObjectNode {
                 { u"command"_s, QStringList{ u"setMode"_s, u"dark"_s } },
             }),
             vmap({
+                { u"name"_s, u"Animations"_s },
+                { u"icon"_s, u"animation"_s },
+                { u"description"_s, u"Switch your animation style"_s },
+                { u"command"_s, QStringList{ u"autocomplete"_s, u"animations"_s } },
+            }),
+            vmap({
+                { u"name"_s, u"Lock"_s },
+                { u"icon"_s, u"lock"_s },
+                { u"description"_s, u"Lock the current session"_s },
+                { u"command"_s, QStringList{ u"loginctl"_s, u"lock-session"_s } },
+            }),
+            vmap({
+                { u"name"_s, u"Logout"_s },
+                { u"icon"_s, u"exit_to_app"_s },
+                { u"description"_s, u"Log out of the current session"_s },
+                { u"command"_s, QStringList{ u"logout"_s } },
+                { u"dangerous"_s, true },
+            }),
+            vmap({
+                { u"name"_s, u"Sleep"_s },
+                { u"icon"_s, u"bedtime"_s },
+                { u"description"_s, u"Suspend then hibernate"_s },
+                { u"command"_s, QStringList{ u"suspendThenHibernate"_s } },
+            }),
+            vmap({
                 { u"name"_s, u"Shutdown"_s },
                 { u"icon"_s, u"power_settings_new"_s },
                 { u"description"_s, u"Shutdown the system"_s },
@@ -118,35 +139,10 @@ class LauncherConfig : public settings::ObjectNode {
                 { u"dangerous"_s, true },
             }),
             vmap({
-                { u"name"_s, u"Logout"_s },
-                { u"icon"_s, u"exit_to_app"_s },
-                { u"description"_s, u"Log out of the current session"_s },
-                { u"command"_s, QStringList{ u"logout"_s } },
-                { u"dangerous"_s, true },
-            }),
-            vmap({
-                { u"name"_s, u"Lock"_s },
-                { u"icon"_s, u"lock"_s },
-                { u"description"_s, u"Lock the current session"_s },
-                { u"command"_s, QStringList{ u"loginctl"_s, u"lock-session"_s } },
-            }),
-            vmap({
-                { u"name"_s, u"Sleep"_s },
-                { u"icon"_s, u"bedtime"_s },
-                { u"description"_s, u"Suspend then hibernate"_s },
-                { u"command"_s, QStringList{ u"suspendThenHibernate"_s } },
-            }),
-            vmap({
-                { u"name"_s, u"Settings"_s },
-                { u"icon"_s, u"settings"_s },
-                { u"description"_s, u"Configure the shell"_s },
-                { u"command"_s, QStringList{ u"caelestia"_s, u"shell"_s, u"nexus"_s, u"open"_s } },
-            }),
-            vmap({
-                { u"name"_s, u"What's New"_s },
-                { u"icon"_s, u"new_releases"_s },
-                { u"description"_s, u"Read the Caelestia release notes"_s },
-                { u"command"_s, QStringList{ u"caelestia"_s, u"shell"_s, u"whatsnew"_s, u"open"_s } },
+                { u"name"_s, u"Calculator"_s },
+                { u"icon"_s, u"calculate"_s },
+                { u"description"_s, u"Do simple math equations (powered by Qalc)"_s },
+                { u"command"_s, QStringList{ u"autocomplete"_s, u"calc"_s } },
             }),
             vmap({
                 { u"name"_s, u"Emoji"_s },
@@ -174,11 +170,18 @@ class LauncherConfig : public settings::ObjectNode {
                 { u"command"_s, QStringList{ u"autocomplete"_s, u"keybinds"_s } },
             }),
             vmap({
-                { u"name"_s, u"Animations"_s },
-                { u"icon"_s, u"animation"_s },
-                { u"description"_s, u"Switch your animation style"_s },
-                { u"command"_s, QStringList{ u"autocomplete"_s, u"animations"_s } },
+                { u"name"_s, u"Settings"_s },
+                { u"icon"_s, u"settings"_s },
+                { u"description"_s, u"Configure the shell"_s },
+                { u"command"_s, QStringList{ u"caelestia"_s, u"shell"_s, u"nexus"_s, u"open"_s } },
             }),
+            vmap({
+                { u"name"_s, u"What's New"_s },
+                { u"icon"_s, u"new_releases"_s },
+                { u"description"_s, u"Read the Caelestia release notes"_s },
+                { u"command"_s, QStringList{ u"caelestia"_s, u"shell"_s, u"whatsnew"_s, u"open"_s } },
+            }),
+
         }))
 };
 

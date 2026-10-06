@@ -117,9 +117,12 @@ QtObject {
         const min = Math.floor(seconds / 60) % 60;
 
         let comps = [];
-        if (day > 0) comps.push(`${day}d`);
-        if (hr > 0) comps.push(`${hr}h`);
-        if (min > 0) comps.push(`${min}m`);
+        if (day > 0)
+            comps.push(qsTr("%1d").arg(day));
+        if (hr > 0)
+            comps.push(qsTr("%1h").arg(hr));
+        if (min > 0)
+            comps.push(qsTr("%1m").arg(min));
 
         return comps.join(" ") || fallback;
     }
@@ -129,13 +132,13 @@ QtObject {
         const hours = Math.floor((seconds % 86400) / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
 
-        let str = "";
+        const parts = [];
         if (days > 0)
-            str += `${days} day${days === 1 ? "" : "s"}`;
+            parts.push(days === 1 ? qsTr("%1 day").arg(days) : qsTr("%1 days").arg(days));
         if (hours > 0)
-            str += `${str ? ", " : ""}${hours} hour${hours === 1 ? "" : "s"}`;
-        if (minutes > 0 || !str)
-            str += `${str ? ", " : ""}${minutes} minute${minutes === 1 ? "" : "s"}`;
-        return str;
+            parts.push(hours === 1 ? qsTr("%1 hour").arg(hours) : qsTr("%1 hours").arg(hours));
+        if (minutes > 0 || parts.length === 0)
+            parts.push(minutes === 1 ? qsTr("%1 minute").arg(minutes) : qsTr("%1 minutes").arg(minutes));
+        return parts.join(", ");
     }
 }

@@ -160,7 +160,7 @@ Variants {
 
                     onClicked: {
                         Visibilities.getForActive().screenshot = false;
-                        Qt.openUrlExternally(`file://${Paths.recsdir}`);
+                        Qt.openUrlExternally(`file://${GlobalConfig.paths.recordingsDir}`);
                     }
                 }
             }

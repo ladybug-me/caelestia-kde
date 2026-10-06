@@ -99,6 +99,39 @@ void PlasmaWindowHandle::org_kde_plasma_window_geometry(int32_t x, int32_t y, ui
     }
 }
 
+void PlasmaWindowHandle::org_kde_plasma_window_client_geometry(int32_t x, int32_t y, uint32_t width, uint32_t height) {
+    if (m_x != x || m_y != y || m_width != width || m_height != height) {
+        m_x = x;
+        m_y = y;
+        m_width = width;
+        m_height = height;
+        emit geometryChanged();
+    }
+}
+
+void PlasmaWindowHandle::org_kde_plasma_window_initial_state() {
+    emit stateChanged();
+    emit geometryChanged();
+    emit desktopsChanged();
+}
+
+void PlasmaWindowHandle::org_kde_plasma_window_virtual_desktop_changed(int32_t number) {
+    if (number >= 0) {
+        const int oneBased = number + 1;
+        const QString numStr = QString::number(oneBased);
+        if (!m_desktops.contains(numStr)) {
+            m_desktops.clear();
+            m_desktops.append(numStr);
+            emit desktopsChanged();
+        }
+    } else {
+        if (!m_desktops.isEmpty()) {
+            m_desktops.clear();
+            emit desktopsChanged();
+        }
+    }
+}
+
 void PlasmaWindowHandle::org_kde_plasma_window_pid_changed(uint32_t pid) {
     if (m_pid != pid) {
         m_pid = pid;
@@ -126,33 +159,36 @@ void PlasmaWindowHandle::org_kde_plasma_window_unmapped() {
 PlasmaWindowManagement::PlasmaWindowManagement(QObject* parent)
     : QWaylandClientExtensionTemplate<PlasmaWindowManagement>(kRequiredVersion) {
     connect(this, &QWaylandClientExtension::activeChanged, this, [this]() {
-        // qDebug() << "PlasmaWindowManagement activeChanged. isActive:" << isActive() << "version:" <<
-        // this->QWaylandClientExtension::version();
+        if (isActive()) {
+            requestStackingOrder();
+        } else {
+            qCWarning(logPlasmaWindows) << "org_kde_plasma_window_management deactivated";
+        }
     });
     setParent(parent);
     initialize();
-    if (!isInitialized() || !isActive()) {
-        qCWarning(logPlasmaWindows) << "org_kde_plasma_window_management is not available (isInitialized:"
-                                    << isInitialized() << ", isActive:" << isActive() << ")."
-                                    << "The compositor may not support it at version" << kRequiredVersion
-                                    << "or this app is missing org_kde_plasma_window_management from"
-                                       " X-KDE-Wayland-Interfaces in its desktop file.";
-    } else {
-
-        if (this->QWaylandClientExtension::version() >= 17) {
-            auto* stacking_order_obj = get_stacking_order();
-            if (stacking_order_obj) {
-                auto* wrapper = new PlasmaStackingOrder(stacking_order_obj, this);
-                connect(wrapper, &PlasmaStackingOrder::window, this, [this](const QString& uuid) {
-                    emit windowWithUuid(0, uuid);
-                });
-                connect(wrapper, &PlasmaStackingOrder::done, wrapper, &QObject::deleteLater);
-            }
-        }
+    if (isActive()) {
+        requestStackingOrder();
     }
 }
 
 PlasmaWindowManagement::~PlasmaWindowManagement() = default;
+
+void PlasmaWindowManagement::requestStackingOrder() {
+    if (!isActive()) {
+        return;
+    }
+    if (this->QWaylandClientExtension::version() >= 17) {
+        auto* stacking_order_obj = get_stacking_order();
+        if (stacking_order_obj) {
+            auto* wrapper = new PlasmaStackingOrder(stacking_order_obj, this);
+            connect(wrapper, &PlasmaStackingOrder::window, this, [this](const QString& uuid) {
+                emit windowWithUuid(0, uuid);
+            });
+            connect(wrapper, &PlasmaStackingOrder::done, wrapper, &QObject::deleteLater);
+        }
+    }
+}
 
 void PlasmaWindowManagement::org_kde_plasma_window_management_window_with_uuid(uint32_t id, const QString& uuid) {
     emit windowWithUuid(id, uuid);
@@ -160,19 +196,17 @@ void PlasmaWindowManagement::org_kde_plasma_window_management_window_with_uuid(u
 
 void PlasmaWindowManagement::org_kde_plasma_window_management_window(uint32_t id) {}
 
-void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_uuid_changed(const QString& uuids) {}
+void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_uuid_changed(const QString& uuids) {
+    const auto list = uuids.split(QLatin1Char(';'), Qt::SkipEmptyParts);
+    for (const auto& uuid : list) {
+        emit windowWithUuid(0, uuid);
+    }
+}
 
 void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_changed(wl_array* ids) {}
 
 void PlasmaWindowManagement::org_kde_plasma_window_management_stacking_order_changed_2() {
-    auto* stacking_order_obj = get_stacking_order();
-    if (stacking_order_obj) {
-        auto* wrapper = new PlasmaStackingOrder(stacking_order_obj, this);
-        connect(wrapper, &PlasmaStackingOrder::window, this, [this](const QString& uuid) {
-            emit windowWithUuid(0, uuid);
-        });
-        connect(wrapper, &PlasmaStackingOrder::done, wrapper, &QObject::deleteLater);
-    }
+    requestStackingOrder();
 }
 
 PlasmaStackingOrder::PlasmaStackingOrder(struct ::org_kde_plasma_stacking_order* object, QObject* parent)
@@ -221,6 +255,12 @@ bool PlasmaWindows::available() {
     return active;
 }
 
+void PlasmaWindows::refresh() {
+    if (m_management) {
+        m_management->requestStackingOrder();
+    }
+}
+
 void PlasmaWindows::onWindowWithUuid(uint32_t id, const QString& raw_uuid) {
     const auto key = normaliseUuid(raw_uuid);
 
@@ -259,14 +299,16 @@ PlasmaWindowHandle* PlasmaWindows::handleFor(const QString& uuid) {
         forget(key);
     });
     m_handles.insert(key, handle);
+    emit windowAdded(key);
     return handle;
 }
 
 void PlasmaWindows::forget(const QString& uuid) {
-    if (auto* handle = m_handles.take(uuid)) {
+    const auto key = normaliseUuid(uuid);
+    if (auto* handle = m_handles.take(key)) {
         handle->deleteLater();
     }
-    emit handleLost(uuid);
+    emit handleLost(key);
 }
 
 void PlasmaWindows::shutdown() {

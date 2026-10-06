@@ -1,0 +1,44 @@
+name: Runtime Smoke
+
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+concurrency:
+  group: runtime-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  runtime-smoke:
+    name: Installed QML runtime smoke
+    runs-on: [self-hosted, linux, kde-wayland]
+    timeout-minutes: 20
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Verify runtime image
+        run: |
+          set -euo pipefail
+          command -v cmake
+          command -v ninja
+          command -v quickshell
+          command -v weston
+          command -v dbus-run-session
+          test -x /usr/lib/qt6/bin/qmllint
+          test -d /usr/lib/qt6/qml/Qt5Compat/GraphicalEffects
+          test -d /usr/lib/qt6/qml/org/kde/pipewire
+
+      - name: Fetch pinned build dependency
+        run: |
+          set -euo pipefail
+          export CAELESTIA_DEPS_DIR="$PWD/.ci-deps"
+          bash scripts/fetch-dependencies.sh
+
+      - name: Build and run the installed runtime smoke
+        uses: ./.github/actions/runtime-smoke
+        with:
+          deps-dir: .ci-deps
+          install-root: runtime-install
+          log-dir: runtime-smoke

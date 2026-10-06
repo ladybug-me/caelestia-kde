@@ -30,6 +30,8 @@
 #include <QSharedPointer>
 #include <algorithm>
 
+#include "HotspotController.hpp"
+
 Q_LOGGING_CATEGORY(lcNmQt, "caelestia.services.nmqt", QtInfoMsg)
 
 namespace caelestia::services {
@@ -43,6 +45,8 @@ bool isPhysicalInterface(const QString& name) {
     }
     return QFileInfo::exists(QStringLiteral("/sys/class/net/%1/device").arg(name));
 }
+
+constexpr int kScanWatchdogMs = 15000;
 
 QString keyMgmtToString(NetworkManager::WirelessSecuritySetting::KeyMgmt k) {
     switch (k) {
@@ -156,7 +160,24 @@ NetworkManager::WirelessDevice::Ptr findWirelessDevice() {
 } // namespace
 
 NmQt::NmQt(QObject* parent)
-    : QObject(parent) {
+    : QObject(parent)
+    , m_hotspot(new HotspotController(this)) {
+
+    connect(m_hotspot, &HotspotController::profileAdded, this, &NmQt::refreshSavedConnections);
+    connect(m_hotspot, &HotspotController::stateChanged, this, [this] {
+        emit isConnectedChanged();
+        emit activeChanged();
+    });
+
+    m_scanWatchdog = new QTimer(this);
+    m_scanWatchdog->setSingleShot(true);
+    connect(m_scanWatchdog, &QTimer::timeout, this, [this] {
+        if (!m_scanning)
+            return;
+        qCWarning(lcNmQt) << "rescanWifi: scan timed out, clearing stuck scanning state";
+        m_scanning = false;
+        emit scanningChanged();
+    });
 
     auto* notifier = NetworkManager::notifier();
     if (!notifier) {
@@ -197,10 +218,6 @@ NmQt::NmQt(QObject* parent)
 
 NmQt::~NmQt() = default;
 
-// ---
-//  Property accessors
-// ---
-
 bool NmQt::isConnected() const {
     return NetworkManager::status() == NetworkManager::Status::Connected ||
            NetworkManager::status() == NetworkManager::Status::ConnectedLinkLocal ||
@@ -233,6 +250,10 @@ QStringList NmQt::savedConnections() const {
 
 QStringList NmQt::savedConnectionSsids() const {
     return m_savedConnectionSsids;
+}
+
+HotspotController* NmQt::hotspot() const {
+    return m_hotspot;
 }
 
 QVariantList NmQt::savedConnectionProfiles() const {
@@ -307,6 +328,20 @@ void NmQt::connectToNetwork(const QString& ssid, const QString& password, const 
     if (existingConn && password.isEmpty()) {
         activateProfile(existingConn, wifiDev, callback);
         return;
+    }
+
+    if (existingConn && !password.isEmpty()) {
+        // Update the saved profile's PSK in place instead of duplicating it.
+        const auto securitySetting = existingConn->settings()
+                                         ->setting(NetworkManager::Setting::SettingType::WirelessSecurity)
+                                         .dynamicCast<NetworkManager::WirelessSecuritySetting>();
+        if (securitySetting) {
+            securitySetting->setPsk(password);
+            existingConn->update(existingConn->settings()->toMap());
+            activateProfile(existingConn, wifiDev, callback);
+            return;
+        }
+        // else: profile has no security section — fall through and create a fresh one.
     }
 
     if (password.isEmpty() && !apIsOpen) {
@@ -564,6 +599,7 @@ void NmQt::rescanWifi() {
 
     m_scanning = true;
     emit scanningChanged();
+    m_scanWatchdog->start(kScanWatchdogMs);
 
     connect(wifiDev.data(), &NetworkManager::WirelessDevice::lastScanChanged, this, &NmQt::onScanFinished,
         Qt::UniqueConnection);
@@ -1055,6 +1091,7 @@ QString NmQt::ethernetDataUsage(const QString& interfaceName) const {
 void NmQt::onWirelessEnabledChanged(bool enabled) {
     m_wifiEnabled = enabled;
     emit wifiEnabledChanged();
+    m_hotspot->refresh();
 }
 
 void NmQt::onWirelessHardwareEnabledChanged(bool enabled) {
@@ -1062,11 +1099,13 @@ void NmQt::onWirelessHardwareEnabledChanged(bool enabled) {
         m_wifiEnabled = false;
         emit wifiEnabledChanged();
     }
+    m_hotspot->refresh();
 }
 
 void NmQt::onNetworkDevicesChanged() {
     refreshDevices();
     refreshNetworks();
+    m_hotspot->refresh();
 }
 
 void NmQt::onActiveConnectionsChanged() {
@@ -1074,12 +1113,14 @@ void NmQt::onActiveConnectionsChanged() {
     refreshDevices();
     refreshVpnConnections();
     refreshSavedConnections();
+    m_hotspot->refresh();
     emit isConnectedChanged();
 }
 
 void NmQt::onConnectionsChanged() {
     refreshSavedConnections();
     refreshVpnConnections();
+    m_hotspot->refresh();
 }
 
 void NmQt::onDeviceStateChanged(NetworkManager::Device::State newState, NetworkManager::Device::State oldState,
@@ -1116,6 +1157,7 @@ void NmQt::onDeviceStateChanged(NetworkManager::Device::State newState, NetworkM
 }
 
 void NmQt::onScanFinished(const QDateTime& /*dateTime*/) {
+    m_scanWatchdog->stop();
     m_scanning = false;
     emit scanningChanged();
     refreshNetworks();
@@ -1241,6 +1283,16 @@ void NmQt::refreshNetworks() {
     }
 }
 
+void NmQt::onEthernetDeviceStateChanged() {
+    QMetaObject::invokeMethod(
+        this,
+        [this] {
+            refreshEthernetDevices();
+            emit isConnectedChanged();
+        },
+        Qt::QueuedConnection);
+}
+
 void NmQt::refreshDevices() {
     refreshEthernetDevices();
     refreshNetworks();
@@ -1259,6 +1311,9 @@ void NmQt::refreshEthernetDevices() {
 
         if (!isPhysicalInterface(dev->interfaceName()))
             continue;
+
+        connect(dev.data(), &NetworkManager::Device::stateChanged, this, &NmQt::onEthernetDeviceStateChanged,
+            Qt::UniqueConnection);
 
         QVariantMap info;
         info[QStringLiteral("interface")] = dev->interfaceName();

@@ -10,18 +10,14 @@
 #include <QJSValue>
 #include <QObject>
 #include <QStringList>
+#include <QTimer>
 #include <QVariantList>
 #include <QVariantMap>
 
 namespace caelestia::services {
 
-/**
- * NetworkManager Qt / D-Bus singleton replacing the nmcli-shelling-out
- * approach of the old Nmcli.qml.
- *
- * All properties reactively update via NetworkManagerQt signals — no
- * command-line parsing, no locale assumptions, no repeated process spawning.
- */
+class HotspotController;
+
 class NmQt : public QObject {
     Q_OBJECT
 
@@ -39,6 +35,8 @@ class NmQt : public QObject {
 
     Q_PROPERTY(QVariantMap activeEthernet READ activeEthernet NOTIFY activeEthernetChanged)
     Q_PROPERTY(QVariantList ethernetDevices READ ethernetDevices NOTIFY ethernetDevicesChanged)
+
+    Q_PROPERTY(caelestia::services::HotspotController* hotspot READ hotspot CONSTANT)
 
     Q_PROPERTY(QVariantList vpnConnections READ vpnConnections NOTIFY vpnConnectionsChanged)
     Q_PROPERTY(QVariantMap activeVpn READ activeVpn NOTIFY activeVpnChanged)
@@ -75,6 +73,8 @@ public:
 
     QVariantMap wirelessDeviceDetails() const;
     QVariantMap ethernetDeviceDetails() const;
+
+    HotspotController* hotspot() const;
 
     Q_INVOKABLE void getNetworks(QJSValue callback = {});
 
@@ -168,6 +168,8 @@ private slots:
     void onAccessPointAppeared(const QString& apPath);
     void onAccessPointDisappeared(const QString& apPath);
 
+    void onEthernetDeviceStateChanged();
+
     void onNetworkManagerReady();
 
 private:
@@ -208,6 +210,8 @@ private:
     bool m_scanning = false;
     bool m_initialised = false;
 
+    HotspotController* m_hotspot = nullptr;
+    QTimer* m_scanWatchdog = nullptr;
     QString m_wirelessDeviceUni;
     QString m_ethernetDeviceUni;
 };

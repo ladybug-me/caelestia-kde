@@ -25,21 +25,24 @@ Item {
         address: root.address
     }
 
-    IconImage {
+    CachingIconImage {
         anchors.centerIn: parent
-        asynchronous: true
         implicitSize: Math.min(root.width, root.height) * root.fallbackScale
         source: root.fallbackIcon
         visible: !root.hasStream
+        z: 0
     }
 
     Pipewire.PipeWireSourceItem {
+        id: pipewireItem
+
         readonly property real fitted: root.sourceAspect > (root.width / Math.max(1, root.height)) ? root.width / root.sourceAspect : root.height
 
         anchors.centerIn: parent
         height: fitted
         visible: root.hasStream
         width: fitted * root.sourceAspect
+        z: 1
 
         // objectSerial is the binding that works for an unprivileged client;
         // nodeId is deprecated upstream and needs PipeWire registry access this

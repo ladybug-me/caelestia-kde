@@ -6,6 +6,7 @@ import Qt.labs.synchronizer
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Caelestia.Config
 import Caelestia.Services
 import qs.services
 import qs.utils
@@ -304,7 +305,7 @@ root.snapshotWorkspaceUuid = Kwin.workspaces[snapIdx]
     function snipWindow(windowAddress) {
         root.screenshotConsumed = true;
 
-        const saveDir = `${Paths.absolutePath("~/Pictures/Screenshots")}`;
+        const saveDir = GlobalConfig.paths.screenshotsDir;
         const saveFile = `${saveDir}/screenshot-$(date +%Y-%m-%d_%H.%M.%S).png`;
 
         let spectacleFlags = "-b -a -n";

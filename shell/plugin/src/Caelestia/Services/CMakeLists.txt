@@ -42,8 +42,6 @@ qml_module(caelestia-services
         sessionmanager.hpp
         discordipc.cpp
         discordipc.hpp
-        hyprlandstate.cpp
-        hyprlandstate.hpp
         hyprdevices.cpp
         hyprdevices.hpp
         hyprextras.cpp
@@ -90,6 +88,8 @@ qml_module(caelestia-services
         screenedges.hpp
         NmQt.cpp
         NmQt.hpp
+        HotspotController.cpp
+        HotspotController.hpp
     LIBRARIES
         Qt::Concurrent
         Qt::DBus

@@ -44,6 +44,12 @@ Item {
                 enabled: Config.dashboard.showWeather
             },
             {
+                component: notesComponent,
+                iconName: "sticky_note_2",
+                text: qsTr("Notes"),
+                enabled: Config.dashboard.showNotes
+            },
+            {
                 component: terminalComponent,
                 iconName: "terminal",
                 text: qsTr("Terminal"),
@@ -53,15 +59,14 @@ Item {
         return allTabs.filter(tab => tab.enabled);
     }
 
+    readonly property real nonAnimWidth: view.implicitWidth + viewWrapper.anchors.margins * 2
+    readonly property real nonAnimHeight: tabs.implicitHeight + tabs.anchors.topMargin + view.implicitHeight + viewWrapper.anchors.margins * 2
+
     onDashboardTabsChanged: {
         if (dashboardTabs.length > 0 && screenState.dashboardTab >= dashboardTabs.length) {
             screenState.dashboardTab = dashboardTabs.length - 1;
         }
     }
-
-    readonly property real nonAnimWidth: view.implicitWidth + viewWrapper.anchors.margins * 2
-
-    readonly property real nonAnimHeight: tabs.implicitHeight + tabs.anchors.topMargin + view.implicitHeight + viewWrapper.anchors.margins * 2
 
     implicitWidth: nonAnimWidth
     implicitHeight: nonAnimHeight
@@ -198,6 +203,12 @@ Item {
                 WeatherTab {}
             }
 
+            Component {
+                id: notesComponent
+
+                NotesTab {}
+            }
+            
             Component {
                 id: terminalComponent
 

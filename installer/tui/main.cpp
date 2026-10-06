@@ -67,14 +67,14 @@ int main(int argc, char** argv) {
     }
 
     std::string preset_action;
-    if (argc > 1) {
-        std::string first = argv[1];
-        if (first == "--update") {
+    for (int argi = 1; argi < argc; ++argi) {
+        std::string arg = argv[argi];
+        if (arg == "--update") {
             preset_action = "update";
-        } else if (first == "--uninstall") {
+        } else if (arg == "--uninstall") {
             preset_action = "uninstall";
         } else {
-            g_bundle_dir = first;
+            g_bundle_dir = arg;
         }
     }
 

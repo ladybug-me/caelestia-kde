@@ -9,6 +9,7 @@ StyledSwitch {
     id: root
 
     property string subtext
+    property var reset
     property alias first: bg.first
     property alias last: bg.last
     readonly property alias bg: bg
@@ -25,7 +26,7 @@ StyledSwitch {
 
     indicator.anchors.verticalCenter: verticalCenter
     indicator.anchors.right: right
-    indicator.anchors.rightMargin: root.horizontalPadding
+    indicator.anchors.rightMargin: resetBtn.visible ? resetBtn.width + Tokens.spacing.small * 2 : root.horizontalPadding
 
     onPressed: stateLayer.press(stateLayer.mouseX, stateLayer.mouseY)
 
@@ -79,5 +80,14 @@ StyledSwitch {
                 elide: Text.ElideRight
             }
         }
+    }
+
+    SettingResetButton {
+        id: resetBtn
+
+        anchors.right: parent.right
+        anchors.rightMargin: Tokens.spacing.small
+        anchors.verticalCenter: parent.verticalCenter
+        options: root.reset
     }
 }

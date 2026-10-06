@@ -11,18 +11,31 @@ Item {
     property int lastPageIdx
     property int animOff
     property Item currentItem
+    property int loadGeneration: 0
 
     function loadPage(idx: int): void {
-        if (currentItem)
+        const generation = ++loadGeneration;
+
+        if (currentItem) {
+            currentItem.visible = false;
             currentItem.destroy();
+            currentItem = null;
+        }
 
         const comp = PageCompRegistry.pageComps[idx] ?? PageCompRegistry.placeholderComp;
         const incubator = comp.incubateObject(container, {
-            nState
+            nState,
+            visible: false
         });
 
         const attach = () => {
+            if (generation !== loadGeneration) {
+                incubator.object.destroy();
+                return;
+            }
+
             incubator.object.anchors.fill = container;
+            incubator.object.visible = true;
             currentItem = incubator.object;
         };
 
@@ -32,6 +45,8 @@ Item {
             incubator.onStatusChanged = status => {
                 if (status === Component.Ready)
                     attach();
+                else if (status === Component.Error && incubator.object)
+                    incubator.object.destroy();
             };
     }
 

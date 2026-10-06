@@ -159,7 +159,7 @@ Item {
 
         Text {
             Layout.alignment: Qt.AlignHCenter
-            text: "All up to date!"
+            text: qsTr("All up to date!")
             font { pixelSize: LockScreenConfig.sizeSmall; family: LockScreenConfig.fontBody; weight: Font.Medium }
             color: root.activeColor
             opacity: 0.8
@@ -167,7 +167,7 @@ Item {
 
         Text {
             Layout.alignment: Qt.AlignHCenter
-            text: "Click or press Space to play"
+            text: qsTr("Click or press Space to play")
             font { pixelSize: LockScreenConfig.sizeVerySmall; family: LockScreenConfig.fontBody }
             color: root.activeColor
             opacity: 0.5
@@ -253,13 +253,13 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "G A M E   O V E R"
+                text: qsTr("G A M E   O V E R")
                 font { pixelSize: LockScreenConfig.sizeSmall; family: LockScreenConfig.fontBody; weight: Font.Medium }
                 color: root.activeColor
             }
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Click to restart"
+                text: qsTr("Click to restart")
                 font { pixelSize: LockScreenConfig.sizeVerySmall; family: LockScreenConfig.fontBody }
                 color: root.activeColor
                 opacity: 0.6
@@ -274,13 +274,13 @@ Item {
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Y O U   W I N !"
+                text: qsTr("Y O U   W I N !")
                 font { pixelSize: LockScreenConfig.sizeSmall; family: LockScreenConfig.fontBody; weight: Font.Medium }
                 color: root.activeColor
             }
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: "Now go touch grass"
+                text: qsTr("Now go touch grass")
                 font { pixelSize: LockScreenConfig.sizeVerySmall; family: LockScreenConfig.fontBody }
                 color: root.activeColor
                 opacity: 0.6

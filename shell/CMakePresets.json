@@ -9,11 +9,9 @@
     {
       "name": "base",
       "hidden": true,
-      "description": "Everything the shell build shares: Ninja, the cached pinned dependency, the module set, and the runtime install layout.",
+      "description": "Everything the shell build shares: Ninja and the cached pinned dependency. The module set and the install layout stay at the shell/CMakeLists.txt defaults, so this file cannot freeze a stale copy of either; only `release` restates the layout, because it relocates it.",
       "generator": "Ninja",
       "cacheVariables": {
-        "ENABLE_MODULES": "extras;plugin;shell;m3shapes",
-        "INSTALL_DATADIR": "usr/share/caelestia",
         "CAELESTIA_CACHE_DEPS": "ON"
       }
     },

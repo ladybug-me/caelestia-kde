@@ -5,7 +5,8 @@ src/bin/build/
 __pycache__/
 *.py[cod]
 
-installer/build*/
+installer/build/
+installer/build-*/
 caelestia-install
 build
 CMakeUserPresets.json

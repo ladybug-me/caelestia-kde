@@ -466,6 +466,15 @@ Scope {
         description: qsTr("Switch to workspace 10")
         onPressed: Kwin.setDesktop(10)
     }
+    // Mimics the old upstream `caelestia toggle specialws` bind: enters (or
+    // leaves) the default special workspace, which is created on demand on KDE.
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "toggleSpecialWorkspace"
+        description: qsTr("Toggle special workspace")
+        onPressed: Kwin.toggleSpecialWorkspace("special")
+    }
     IpcHandler {
         function toggle(drawer: string): void {
             if (list().split("\n").includes(drawer)) {

@@ -87,7 +87,8 @@ inline QJsonObject defaultKeybinds() {
         { QStringLiteral("workspace7"), QStringLiteral("Meta+7") },
         { QStringLiteral("workspace8"), QStringLiteral("Meta+8") },
         { QStringLiteral("workspace9"), QStringLiteral("Meta+9") },
-        { QStringLiteral("workspace10"), QStringLiteral("Meta+0") } };
+        { QStringLiteral("workspace10"), QStringLiteral("Meta+0") },
+        { QStringLiteral("toggleSpecialWorkspace"), QStringLiteral("") } };
 }
 
 } // namespace caelestia::config

@@ -281,7 +281,7 @@ Item {
             if (Math.abs(currentPos - startPos) > drag.threshold)
                 return;
 
-            const ws = view.itemAt(event.x, event.y) as SpecialWsDelegate;
+            const ws = view.itemAt(event.x + view.contentX, event.y + view.contentY) as SpecialWsDelegate;
             // Plain workspace maps, not HyprlandWorkspace objects: pass the pill's
             // full special: name (or "" for the default one) straight to the bridge.
             Kwin.toggleSpecialWorkspace(String(ws?.modelData?.name ?? ""), root.screen.name);
@@ -299,18 +299,16 @@ Item {
         readonly property int wsIndex: Number(ws.modelData?.index ?? 0)
         // Counts bind through Kwin.windowList so they follow open/close events.
         readonly property int windowCount: wsUuid ? Kwin.filterWindows(Kwin.windowList, wsUuid, "", true).length : 0
-        readonly property bool hasWindows: root.Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.windowCount > 0
+        readonly property bool hasWindows: Config.bar.workspaces.showWindowsOnSpecialWorkspaces && ws.windowCount > 0
         readonly property int size: isHorizontal ? (label.Layout.preferredWidth + (hasWindows ? windows.implicitWidth + Tokens.padding.extraSmall : 0)) : (label.Layout.preferredHeight + (hasWindows ? windows.implicitHeight + Tokens.padding.extraSmall : 0))
         readonly property string icon: Icons.getSpecialWsIcon(ws.wsName)
+
+        implicitWidth: isHorizontal ? ws.size : view.width
+        implicitHeight: isHorizontal ? view.height : ws.size
 
         columns: isHorizontal ? -1 : 1
         rows: isHorizontal ? 1 : -1
         flow: isHorizontal ? GridLayout.LeftToRight : GridLayout.TopToBottom
-
-        anchors.left: isHorizontal ? undefined : view.contentItem.left
-        anchors.right: isHorizontal ? undefined : view.contentItem.right
-        anchors.top: isHorizontal ? view.contentItem.top : undefined
-        anchors.bottom: isHorizontal ? view.contentItem.bottom : undefined
 
         columnSpacing: 0
         rowSpacing: 0

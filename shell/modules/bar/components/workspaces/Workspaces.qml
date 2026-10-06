@@ -15,16 +15,17 @@ Item {
     required property var bar
     required property ShellScreen screen
     required property bool fullscreen
-    Config.screen: root.screen.name
     readonly property int barThickness: bar.thickness
+    readonly property var monitor: Kwin.monitorFor(screen)
 
+    Config.screen: root.screen.name
     implicitWidth: container.implicitWidth
     implicitHeight: container.implicitHeight
 
     StyledClippingRect {
         id: container
 
-        readonly property bool onSpecial: false
+        readonly property bool onSpecial: Boolean((Config.bar.workspaces.perMonitor ? root.monitor : Kwin.focusedMonitor)?.specialWorkspace?.name)
         readonly property bool isHorizontal: root.bar.isHorizontal
         property var kwinWindowList: Kwin.windowList
 

@@ -473,7 +473,7 @@ Scope {
         // qmllint enable unresolved-type
         name: "toggleSpecialWorkspace"
         description: qsTr("Toggle special workspace")
-        onPressed: Kwin.toggleSpecialWorkspace("special")
+        onPressed: Kwin.toggleSpecialWorkspace("special", Kwin.focusedMonitor?.name || "")
     }
     IpcHandler {
         function toggle(drawer: string): void {

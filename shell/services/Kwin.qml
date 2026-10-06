@@ -227,8 +227,9 @@ Singleton {
     }
 
     function switchToWorkspace(wsId: var, screenName: string): void {
-        if (screenName)
-            KWinWorkspaceState.switchTo(wsId, screenName);
+        const out = screenName || root.focusedMonitor?.name || root.activeOutputName || (Quickshell.screens.length > 0 ? Quickshell.screens[0].name : "");
+        if (out)
+            KWinWorkspaceState.switchTo(wsId, out);
         else
             KWinWorkspaceState.switchTo(wsId);
     }
@@ -249,8 +250,12 @@ Singleton {
         return KWinWorkspaceState.uuidForIndex(index);
     }
 
-    function setDesktop(index: int): void {
-        KWinWorkspaceState.setDesktop(index);
+    function setDesktop(index: int, outputName: string): void {
+        const out = outputName || root.focusedMonitor?.name || root.activeOutputName || (Quickshell.screens.length > 0 ? Quickshell.screens[0].name : "");
+        if (out)
+            KWinWorkspaceState.switchTo(String(index), out);
+        else
+            KWinWorkspaceState.setDesktop(index);
     }
 
     function nextDesktop(): void {
@@ -432,7 +437,7 @@ Singleton {
         // ordinary named desktops with a "special:" prefix, created on demand.
         const bare = String(name ?? "").trim();
         const target = bare.startsWith("special:") ? bare : `special:${bare || "special"}`;
-        const out = String(outputName ?? "");
+        const out = String(outputName || root.focusedMonitor?.name || root.activeOutputName || (Quickshell.screens.length > 0 ? Quickshell.screens[0].name : ""));
         const wss = root.workspaces || [];
         const ws = wss.find(w => w.name === target || w.id === target);
 
@@ -485,6 +490,12 @@ Singleton {
                 continue;
             if (root._lastNormalByOutput[out] !== idx)
                 root._lastNormalByOutput[out] = idx;
+        }
+        const fallbackOut = root.focusedMonitor?.name || root.activeOutputName || (Quickshell.screens.length > 0 ? Quickshell.screens[0].name : "");
+        if (fallbackOut && !root._lastNormalByOutput[fallbackOut] && root.activeWsId > 0 && root.activeWsId <= wss.length) {
+            const name = String(wss[root.activeWsId - 1]?.name ?? "");
+            if (!name.startsWith("special:"))
+                root._lastNormalByOutput[fallbackOut] = root.activeWsId;
         }
     }
 
@@ -625,6 +636,10 @@ Singleton {
     }
 
     onActiveByOutputChanged: {
+        root.trackLastNormalDesktops();
+        root.syncMonitorMocks();
+    }
+    onActiveWsIdChanged: {
         root.trackLastNormalDesktops();
         root.syncMonitorMocks();
     }

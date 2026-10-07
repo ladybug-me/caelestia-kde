@@ -586,7 +586,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Automatic light and dark</source>
       <translation type="unfinished"/>
     </message>
@@ -596,7 +596,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Schedule</source>
       <translation type="unfinished"/>
     </message>
@@ -621,7 +621,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Dark mode hour</source>
       <translation type="unfinished"/>
     </message>
@@ -631,7 +631,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Theme mode</source>
       <translation type="unfinished"/>
     </message>
@@ -674,7 +674,7 @@
   <context>
     <name>AiAssistant</name>
     <message>
-      <location filename="../modules/sidebar/AiAssistant.qml" line="+212"/>
+      <location filename="../modules/sidebar/AiAssistant.qml" line="+214"/>
       <source>Bypass</source>
       <translation type="unfinished"/>
     </message>
@@ -700,17 +700,17 @@
     </message>
     <message>
       <location line="+490"/>
-      <location line="+1090"/>
+      <location line="+1037"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>Tarief beperkt - opnieuw proberen in %1s…</translation>
     </message>
     <message>
-      <location line="-684"/>
+      <location line="-685"/>
       <source>(stopped)</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+892"/>
+      <location line="+893"/>
       <source>Chat</source>
       <translation type="unfinished"/>
     </message>
@@ -750,7 +750,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+458"/>
+      <location line="+456"/>
       <source>Suggestions</source>
       <translation>Suggesties</translation>
     </message>
@@ -1275,6 +1275,12 @@
     <name>AppearancePage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+21"/>
+      <location line="+6"/>
+      <source>Follow system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-5"/>
       <source>Google Sans Flex</source>
       <translation type="unfinished"/>
     </message>
@@ -1284,7 +1290,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>CaskaydiaCove NF</source>
       <translation type="unfinished"/>
     </message>
@@ -1965,17 +1971,17 @@
       <translation>Achtergrond</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show date</source>
       <translation>Datum weergeven</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show icon</source>
       <translation>Pictogram weergeven</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show seconds</source>
       <translation>Toon seconden</translation>
     </message>
@@ -1985,7 +1991,7 @@
       <translation>Voeg een seconden regel toe aan de klok</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Calendar popout</source>
       <translation type="unfinished"/>
     </message>
@@ -2221,7 +2227,7 @@
       <translation>Schakel component in</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+58"/>
       <source>Icon size</source>
       <translation>Pictogram grootte</translation>
     </message>
@@ -2231,7 +2237,7 @@
       <translation>Grootte van app-iconen in het dock</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Recolor icons</source>
       <translation>Herhaalde iconen</translation>
     </message>
@@ -2241,7 +2247,7 @@
       <translation>Herstellen applicatie pictogrammen met behulp van het systeemthema</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show app badges</source>
       <translation type="unfinished"/>
     </message>
@@ -2251,7 +2257,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Filter by current desktop</source>
       <translation>Filter op huidig bureaublad</translation>
     </message>
@@ -2261,7 +2267,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Window grouping</source>
       <translation type="unfinished"/>
     </message>
@@ -2334,7 +2340,7 @@
       <translation>Geef een solide achtergrond weer achter de GitHub activiteitenwidget</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+32"/>
       <source>Personal Access Token</source>
       <translation>Persoonlijke toegangstoken</translation>
     </message>
@@ -2387,12 +2393,12 @@
       <translation>Schakel component in</translation>
     </message>
     <message>
-      <location line="+30"/>
+      <location line="+56"/>
       <source>Inverted</source>
       <translation>Omgekeerd</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Show on hover</source>
       <translation>Toon bij zweven</translation>
     </message>
@@ -2402,7 +2408,7 @@
       <translation>Toon alleen de begroeter tijdens het zweven</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Popout on hover</source>
       <translation>Popout bij zweven</translation>
     </message>
@@ -2412,7 +2418,7 @@
       <translation>Toon een begroeter popout tijdens zweven</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Animation Mechanism</source>
       <translation>Animatie Mechanisme</translation>
     </message>
@@ -2438,33 +2444,33 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+46"/>
       <source>Not set</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Select Morning Media</source>
       <translation>Selecteer Morning Media</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+188"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+191"/>
       <source>Multimedia files (Images, GIFs, Videos)</source>
       <translation>Multimedia-bestanden (Images, GIFs, Video&apos;s)</translation>
     </message>
     <message>
-      <location line="-312"/>
+      <location line="-318"/>
       <source>Morning start time</source>
       <translation>Begintijd van ochtend</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Morning Greeting Text</source>
       <translation>Morgende Begroetingstekst</translation>
     </message>
@@ -2489,7 +2495,7 @@
       <translation>Begintijd van middernoon</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Afternoon Greeting Text</source>
       <translation>Middag Begroetingstekst</translation>
     </message>
@@ -2514,7 +2520,7 @@
       <translation>Begintijd &apos;s avonds</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Evening Greeting Text</source>
       <translation>Avond Wenstekst</translation>
     </message>
@@ -2539,7 +2545,7 @@
       <translation>Nacht starttijd</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Night Greeting Text</source>
       <translation>Nacht Wenstekst</translation>
     </message>
@@ -2564,7 +2570,7 @@
       <translation>%1 seconden</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Random shuffle</source>
       <translation>Willekeurige shuffle</translation>
     </message>
@@ -2574,7 +2580,7 @@
       <translation>Kies willekeurige media in plaats van achteraf te fietsen</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Slideshow Greeting Text</source>
       <translation>Slideshow Begroetingstekst</translation>
     </message>
@@ -2836,7 +2842,7 @@
       <translation>Wifi-pictogram naast het netwerkpictogram weergeven</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -2864,17 +2870,17 @@
       <translation>Achtergrond</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Recolor icons</source>
       <translation>Herhaalde iconen</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Compact</source>
       <translation>Compacte</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Popout on hover</source>
       <translation>Popout bij zweven</translation>
     </message>
@@ -2902,7 +2908,7 @@
       <translation>Altijd-zichtbare icoon in de taakbalk die verandert wanneer er een Caelestia update beschikbaar is</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+29"/>
       <source>Enable update checking</source>
       <translation>Updatecontrole inschakelen</translation>
     </message>
@@ -2940,22 +2946,22 @@
       <translation>Aantal weergegeven werkruimtes</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+22"/>
       <source>Active indicator</source>
       <translation>Actieve indicator</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Active trail</source>
       <translation>Actief spoor</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Occupied background</source>
       <translation>Achtergrond bezetten</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Indicator style</source>
       <translation>Indicator stijl</translation>
     </message>
@@ -2975,7 +2981,7 @@
       <translation>Toon pictogrammen van open vensters op elke werkruimte</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show unoccupied</source>
       <translation>Toon onbezet</translation>
     </message>
@@ -2985,17 +2991,17 @@
       <translation>Toon inactieve en lege werkruimtes</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Windows on special workspaces</source>
       <translation>Windows voor speciale werkruimtes</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Max window icons</source>
       <translation>Max vensterpictogrammen</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Per monitor</source>
       <translation type="unfinished"/>
     </message>
@@ -3899,7 +3905,27 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+36"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+195"/>
+      <source>Delete</source>
+      <translation>Verwijderen</translation>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Paste</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Arrange Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Bureaublad pictogrammen</translation>
     </message>
@@ -3925,7 +3951,7 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+233"/>
+      <location line="+238"/>
       <source>Add Shortcut...</source>
       <translation>Snelkoppeling toevoegen...</translation>
     </message>
@@ -3969,16 +3995,26 @@
       <source>Empty</source>
       <translation>Leeg</translation>
     </message>
-    <message>
-      <location line="+191"/>
-      <source>Delete</source>
-      <translation>Verwijderen</translation>
-    </message>
   </context>
   <context>
     <name>ContextMenuStore</name>
     <message>
-      <location filename="../services/ContextMenuStore.qml" line="+26"/>
+      <location filename="../services/ContextMenuStore.qml" line="+27"/>
+      <source>Paste</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Arrange Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Bureaublad pictogrammen</translation>
     </message>
@@ -4045,12 +4081,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+84"/>
+      <location line="+86"/>
       <source>Pill</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-79"/>
+      <location line="-81"/>
       <source>Diamond</source>
       <translation>Diamant</translation>
     </message>
@@ -4096,12 +4132,12 @@
     </message>
     <message>
       <location line="+4"/>
-      <location line="+62"/>
+      <location line="+65"/>
       <source>Dashboard</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-51"/>
+      <location line="-54"/>
       <source>General</source>
       <translation>Algemeen</translation>
     </message>
@@ -4111,7 +4147,7 @@
       <translation>Ingeschakeld</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show on hover</source>
       <translation>Toon bij zweven</translation>
     </message>
@@ -4121,7 +4157,7 @@
       <translation>Onthullen wanneer de cursor de schermrand bereikt</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Dashboard profile picture shape</source>
       <translation>Vorm dashboard profiel</translation>
     </message>
@@ -4141,37 +4177,37 @@
       <translation>Seconden onder de klok weergeven in het dashboard</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Tabs</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Media</source>
       <translation>Medium</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance</source>
       <translation>Prestaties</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Weather</source>
       <translation>Weer</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Notes</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Terminal</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Recolor media GIF</source>
       <translation>Herstellen van media GIF</translation>
     </message>
@@ -4181,7 +4217,7 @@
       <translation>Systeemkleuren toepassen op media GIF</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Use material shapes</source>
       <translation>Gebruik materiaalvormen</translation>
     </message>
@@ -4191,7 +4227,7 @@
       <translation>Vervang de media GIF door audio-reactieve materiaal vormen</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Welcome splash</source>
       <translation>Welkom splash</translation>
     </message>
@@ -4201,7 +4237,7 @@
       <translation>Toon een welkomstbericht op het dashboard</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance widgets</source>
       <translation>Prestatie widgets</translation>
     </message>
@@ -4211,32 +4247,32 @@
       <translation>Accu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>GPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>CPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Memory</source>
       <translation>Geheugen</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Storage</source>
       <translation>Opslagruimte</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Network</source>
       <translation>Netwerk</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -4251,7 +4287,7 @@
       <translation>Afstand tussen de rand van het scherm die het dashboard opent</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger width</source>
       <translation type="unfinished"/>
     </message>
@@ -4261,7 +4297,7 @@
       <translation>Hoeveel van de bovenste rand opent het dashboard, als percentage van de breedte</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>Sleep drempelwaarde</translation>
     </message>
@@ -4326,18 +4362,18 @@
     </message>
     <message>
       <location line="+20"/>
-      <location line="+87"/>
+      <location line="+95"/>
       <source>Desktop clock</source>
       <translation>Bureaublad klok</translation>
     </message>
     <message>
-      <location line="-79"/>
-      <location line="+139"/>
+      <location line="-86"/>
+      <location line="+150"/>
       <source>Desktop media shapes</source>
       <translation>Bureaublad mediavormen</translation>
     </message>
     <message>
-      <location line="-126"/>
+      <location line="-136"/>
       <source>Auto-hide media shapes</source>
       <translation>Mediavormen automatisch verbergen</translation>
     </message>
@@ -4347,13 +4383,13 @@
       <translation>Mediavormen verbergen wanneer een venster open is</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+154"/>
+      <location line="+9"/>
+      <location line="+164"/>
       <source>Desktop lyrics</source>
       <translation>Desktop songteksten</translation>
     </message>
     <message>
-      <location line="-141"/>
+      <location line="-150"/>
       <source>Auto-hide lyrics</source>
       <translation>Automatisch songteksten verbergen</translation>
     </message>
@@ -4363,7 +4399,7 @@
       <translation>Songtekst verbergen wanneer een venster open is</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Background visualiser</source>
       <translation>Achtergrond visualiser</translation>
     </message>
@@ -4373,7 +4409,7 @@
       <translation>Toon muziek visualiser op achtergrond (kan meer stroom verbruiken)</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Auto-hide visualiser</source>
       <translation>visualiser automatisch verbergen</translation>
     </message>
@@ -4383,7 +4419,7 @@
       <translation>visualiser verbergen wanneer een venster vol scherm is</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hide on all monitors</source>
       <translation>Verberg op alle monitoren</translation>
     </message>
@@ -4393,44 +4429,44 @@
       <translation>Verbergen op alle andere monitoren indien uitgeschakeld door een venster</translation>
     </message>
     <message>
-      <location line="+18"/>
-      <location line="+60"/>
-      <location line="+37"/>
+      <location line="+19"/>
+      <location line="+64"/>
+      <location line="+38"/>
       <source>Scale</source>
       <translation>Schaal</translation>
     </message>
     <message>
-      <location line="-87"/>
-      <location line="+61"/>
-      <location line="+36"/>
+      <location line="-91"/>
+      <location line="+65"/>
+      <location line="+37"/>
       <source>Position</source>
       <translation>Positie</translation>
     </message>
     <message>
-      <location line="-81"/>
-      <location line="+111"/>
+      <location line="-86"/>
+      <location line="+116"/>
       <source>Horizontal offset</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-103"/>
-      <location line="+111"/>
+      <location line="-107"/>
+      <location line="+116"/>
       <source>Vertical offset</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-102"/>
-      <location line="+111"/>
+      <location line="-106"/>
+      <location line="+116"/>
       <source>Invert colors</source>
       <translation>Kleuren omkeren</translation>
     </message>
     <message>
-      <location line="-31"/>
+      <location line="-33"/>
       <source>Alignment</source>
       <translation>Uitlijning</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+41"/>
       <source>Visualiser</source>
       <translation>Visualiseerder</translation>
     </message>
@@ -4440,17 +4476,17 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Rounding</source>
       <translation>Afronding</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Spacing</source>
       <translation>Afstand</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4461,19 +4497,42 @@
     </message>
   </context>
   <context>
+    <name>DesktopContextMenu</name>
+    <message>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+99"/>
+      <source>Hide Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>DesktopIconContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+75"/>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+69"/>
+      <source>Open %1 Items</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Open Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Open</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
       <source>Show in File Manager</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Unpin from dock</source>
       <translation type="unfinished"/>
     </message>
@@ -4483,26 +4542,105 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+6"/>
       <source>Rename</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
+      <source>Show as Icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show as Large Folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Change Folder...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Open in File Manager</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Group Items</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Ungroup</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Remove from Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Cut</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Move Contents to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Remove Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Remove Widget</source>
       <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+157"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+579"/>
+      <location line="+3"/>
+      <source>Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+295"/>
+      <location line="+10"/>
+      <source>Rename failed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-10"/>
+      <source>Could not save desktop entry</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+34"/>
+      <location line="+26"/>
+      <location line="+4"/>
       <source>File operation failed</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>kioclient could not complete the request</source>
+      <location line="+441"/>
+      <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -4517,7 +4655,27 @@
   <context>
     <name>DesktopPage</name>
     <message>
-      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+13"/>
+      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+17"/>
+      <source>Small</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Medium</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Large</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Huge</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Desktop &amp; Tiling</source>
       <translation>Bureaublad &amp; Filteren</translation>
     </message>
@@ -4563,6 +4721,26 @@
     </message>
     <message>
       <location line="+16"/>
+      <source>Desktop Icon Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Ctrl+scroll on the desktop also changes it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Arrange Icons Automatically</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep desktop icons packed; dragging one reorders the rest</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Magic Lamp Minimize</source>
       <translation>Magische Lamp minimaliseren</translation>
     </message>
@@ -4797,6 +4975,29 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>DropMenu</name>
+    <message>
+      <location filename="../modules/background/desktopicons/DropMenu.qml" line="+45"/>
+      <source>Move Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Copy Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Link Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>EmojiItem</name>
     <message>
       <location filename="../modules/launcher/items/EmojiItem.qml" line="+22"/>
@@ -5003,6 +5204,44 @@ Now go touch grass</source>
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
       <source>This folder is empty</source>
       <translation>Deze map is leeg</translation>
+    </message>
+  </context>
+  <context>
+    <name>FolderWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+46"/>
+      <source>Choose a folder to show</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+170"/>
+      <source>Empty folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+31"/>
+      <source>Open</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Cut</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>File operation failed</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6040,7 +6279,7 @@ Now go touch grass</source>
       <translation>Ingeschakeld</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Use alternative logo</source>
       <translation>Alternatief logo gebruiken</translation>
     </message>
@@ -6050,7 +6289,7 @@ Now go touch grass</source>
       <translation>Gebruik het Caelestia-logo of een aangepaste afbeelding in plaats van uw distributie&apos;s-logo</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+22"/>
       <source>Pick custom logo</source>
       <translation>Kies aangepast logo</translation>
     </message>
@@ -6090,12 +6329,12 @@ Now go touch grass</source>
       <translation>Pas de Material You accentkleur toe op uw aangepast logo</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+13"/>
       <source>Logo size (%)</source>
       <translation>Logo grootte (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+16"/>
       <source>Show on hover</source>
       <translation>Toon bij zweven</translation>
     </message>
@@ -6105,7 +6344,7 @@ Now go touch grass</source>
       <translation>Onthullen wanneer de cursor de schermrand bereikt</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Display</source>
       <translation>Weergeven</translation>
     </message>
@@ -6120,7 +6359,7 @@ Now go touch grass</source>
       <translation>Toon het gecategoriseerde app raster in de launcher wanneer het zoekveld leeg is</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>App browser layout</source>
       <translation type="unfinished"/>
     </message>
@@ -6140,17 +6379,17 @@ Now go touch grass</source>
       <translation>Toon de snelle sessie besturing (Afsluiting, slaapstand, uitloggen) onderaan</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Max items shown</source>
       <translation>Max items weergegeven</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max wallpapers</source>
       <translation>Max. aantal achtergronden</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger depth</source>
       <translation type="unfinished"/>
     </message>
@@ -6160,7 +6399,7 @@ Now go touch grass</source>
       <translation>Afstand van de schermrand die de launcher opent</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger width</source>
       <translation type="unfinished"/>
     </message>
@@ -6170,7 +6409,7 @@ Now go touch grass</source>
       <translation>Hoeveel van de onderrand opent de launcher, als percentage van de breedte</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>Sleep drempelwaarde</translation>
     </message>
@@ -6180,7 +6419,7 @@ Now go touch grass</source>
       <translation>Pixels gesleept voor de launcher opent</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clipboard</source>
       <translation>Klembord</translation>
     </message>
@@ -6195,7 +6434,7 @@ Now go touch grass</source>
       <translation>Aantal gekopieerde items in de geschiedenis bewaard</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Confirm clear</source>
       <translation>Bevestig wissen</translation>
     </message>
@@ -6205,7 +6444,7 @@ Now go touch grass</source>
       <translation>Vraag voor het wissen van de klembord geschiedenis</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -6220,7 +6459,7 @@ Now go touch grass</source>
       <translation>Resultaten navigeren met Ctrl+hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Enable dangerous actions</source>
       <translation>gevaarlijke acties inschakelen</translation>
     </message>
@@ -6230,7 +6469,7 @@ Now go touch grass</source>
       <translation>Acties toestaan die afsluiten of uitloggen</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Fuzzy search</source>
       <translation>Fuzzy zoeken</translation>
     </message>
@@ -6240,22 +6479,22 @@ Now go touch grass</source>
       <translation>Applicaties</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Actions</source>
       <translation>acties</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Schemes</source>
       <translation>Schema&apos;s</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Variants</source>
       <translation>Varianten</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Wallpapers</source>
       <translation>Achtergronden</translation>
     </message>
@@ -6319,12 +6558,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+157"/>
+      <location line="+160"/>
       <source>Pentagon</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-152"/>
+      <location line="-155"/>
       <source>Gem</source>
       <translation>Edelsteen</translation>
     </message>
@@ -6374,7 +6613,7 @@ Now go touch grass</source>
       <translation>Vergrendelscherm achtergrond synchroniseren met de bureaublad achtergrond</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Lock screen wallpaper</source>
       <translation>Vergrendelscherm achtergrond</translation>
     </message>
@@ -6404,7 +6643,7 @@ Now go touch grass</source>
       <translation>Vervaag de hele achtergrond, niet alleen achter de widgets</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Authentication</source>
       <translation>Authenticatie</translation>
     </message>
@@ -6419,7 +6658,7 @@ Now go touch grass</source>
       <translation>Vingerafdrukverificatie toestaan op het vergrendelingsscherm</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Fingerprint attempts</source>
       <translation>Vingerafdruk pogingen</translation>
     </message>
@@ -6454,7 +6693,7 @@ Now go touch grass</source>
       <translation>De profielfoto wordt continu gedraaid</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Lock on startup</source>
       <translation>Vergrendel bij opstarten</translation>
     </message>
@@ -6464,7 +6703,7 @@ Now go touch grass</source>
       <translation>Sessie vergrendelen kort na het inloggen</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hide notifications</source>
       <translation>Verberg meldingen</translation>
     </message>
@@ -6474,7 +6713,7 @@ Now go touch grass</source>
       <translation>Voorvertoning van meldingen verbergen totdat u ontgrendelt</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Recolor logo</source>
       <translation>Logo recolor</translation>
     </message>
@@ -6484,7 +6723,7 @@ Now go touch grass</source>
       <translation>Tint het vergrendelingsscherm samen met het palet</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Session icons</source>
       <translation>Sessie pictogrammen</translation>
     </message>
@@ -6499,7 +6738,7 @@ Now go touch grass</source>
       <translation>Toon slaapstand op het vergrendelscherm</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hibernate</source>
       <translation type="unfinished"/>
     </message>
@@ -6509,7 +6748,7 @@ Now go touch grass</source>
       <translation>Laat sluimeractie op het vergrendelscherm zien</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Switch user</source>
       <translation>Gebruiker wijzigen</translation>
     </message>
@@ -6519,7 +6758,7 @@ Now go touch grass</source>
       <translation>Toon schakelaar van gebruiker op het vergrendelscherm</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Log out</source>
       <translation>Log uit</translation>
     </message>
@@ -6529,7 +6768,7 @@ Now go touch grass</source>
       <translation>Toon uitlog-actie op het vergrendelingsscherm</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Restart</source>
       <translation>Herstarten</translation>
     </message>
@@ -6539,7 +6778,7 @@ Now go touch grass</source>
       <translation>Toon herstart actie op het vergrendelscherm</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Shut down</source>
       <translation>Afsluiten</translation>
     </message>
@@ -6786,6 +7025,19 @@ Now go touch grass</source>
     <message>
       <location line="+9"/>
       <source>Try playing some music!</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>MediaWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+31"/>
+      <source>Nothing playing</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+48"/>
+      <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -7237,6 +7489,14 @@ Now go touch grass</source>
       <location line="+2"/>
       <source>Enhanced Open</source>
       <translation>Verbeterde open</translation>
+    </message>
+  </context>
+  <context>
+    <name>NoteWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+49"/>
+      <source>Write something…</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -7826,12 +8086,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+155"/>
+      <location line="+163"/>
       <source>GNOME Grid</source>
       <translation>GNOME raster</translation>
     </message>
     <message>
-      <location line="-147"/>
+      <location line="-155"/>
       <source>Linear</source>
       <translation>Lineaire</translation>
     </message>
@@ -7882,12 +8142,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+131"/>
+      <location line="+141"/>
       <source>Back In</source>
       <translation>Terug naar binnen</translation>
     </message>
     <message>
-      <location line="-126"/>
+      <location line="-136"/>
       <source>Back Out</source>
       <translation>Terug Uit</translation>
     </message>
@@ -7912,7 +8172,7 @@ Now go touch grass</source>
       <translation>Overzicht inschakelen</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Show on hover</source>
       <translation>Toon bij zweven</translation>
     </message>
@@ -7922,7 +8182,7 @@ Now go touch grass</source>
       <translation>Open overzicht door over een hoek te zweven in plaats van te slepen</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Trigger area size</source>
       <translation>Grootte activeringsgebied</translation>
     </message>
@@ -7932,7 +8192,7 @@ Now go touch grass</source>
       <translation>Grootte van de hoek activeringsgebieden in pixels</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>Sleep drempelwaarde</translation>
     </message>
@@ -7942,7 +8202,7 @@ Now go touch grass</source>
       <translation>Afstand om van de hoek te slepen naar een overzicht te openen</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Corners</source>
       <translation>Hoeken</translation>
     </message>
@@ -7952,22 +8212,22 @@ Now go touch grass</source>
       <translation>Linkerbovenhoek</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Top-Right corner</source>
       <translation>Rechtsbovenhoek</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Bottom-Left corner</source>
       <translation>Linker onderhoek</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Bottom-Right corner</source>
       <translation>Rechtsonder hoek</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Behavior</source>
       <translation>Gedrag</translation>
     </message>
@@ -7992,7 +8252,7 @@ Now go touch grass</source>
       <translation>Achtergrond niet vervagen bij het openen van het overzicht</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Enable overview blur</source>
       <translation>Schakel overzichtsvervaging in</translation>
     </message>
@@ -8002,7 +8262,7 @@ Now go touch grass</source>
       <translation>QuickShell-gebaseerde vervaging effect inschakelen op achtergrond overzicht</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Animations</source>
       <translation>Animaties</translation>
     </message>
@@ -8027,7 +8287,7 @@ Now go touch grass</source>
       <translation>Basisduur voor overzicht openen/sluiten in milliseconden</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Blob scale speed</source>
       <translation>Blob schaal snelheid</translation>
     </message>
@@ -8037,7 +8297,7 @@ Now go touch grass</source>
       <translation>Schaalsnelheid modifier voor achtergrond blobs</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Wallpaper fade speed</source>
       <translation>Achtergrond fade-snelheid</translation>
     </message>
@@ -8047,7 +8307,7 @@ Now go touch grass</source>
       <translation>Fade-snelheidsaanpassing voor de achtergrond</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Grid fade speed</source>
       <translation>Rooster fade-snelheid</translation>
     </message>
@@ -10254,7 +10514,7 @@ Now go touch grass</source>
       <translation>Ingeschakeld</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Drag threshold</source>
       <translation>Sleep drempelwaarde</translation>
     </message>
@@ -10264,7 +10524,7 @@ Now go touch grass</source>
       <translation>Pixels gesleept voor de zijbalk opent</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Grab width</source>
       <translation type="unfinished"/>
     </message>
@@ -10274,7 +10534,7 @@ Now go touch grass</source>
       <translation>Pixels van schermrand gereserveerd voor het oppakken van de zijbalk</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Sidebar Tabs</source>
       <translation type="unfinished"/>
     </message>
@@ -10299,7 +10559,7 @@ Now go touch grass</source>
       <translation>Toon het nieuws tabblad in de zijbalk</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Show Caelestia Mode</source>
       <translation type="unfinished"/>
     </message>
@@ -10327,12 +10587,12 @@ Now go touch grass</source>
       <translation>Achtergrond automatisch op timer wijzigen</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Slideshow interval</source>
       <translation>Interval diashow</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Random order</source>
       <translation>Willekeurige volgorde</translation>
     </message>
@@ -10434,6 +10694,33 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>SystemWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+66"/>
+      <location line="+36"/>
+      <source>CPU</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-30"/>
+      <location line="+40"/>
+      <source>GPU</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-35"/>
+      <location line="+45"/>
+      <source>Memory</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-40"/>
+      <location line="+50"/>
+      <source>Disk</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>TabSwitcherPanel</name>
     <message>
       <location filename="../modules/nexus/pages/panels/TabSwitcherPanel.qml" line="+31"/>
@@ -10456,7 +10743,7 @@ Now go touch grass</source>
       <translation>Gebruik Caelestia&apos;s vensterschakelaar voor Alt+Tab</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Forward</source>
       <translation>Doorsturen</translation>
     </message>
@@ -10481,7 +10768,7 @@ Now go touch grass</source>
       <translation>Vensters die behoren tot het actieve virtuele bureaublad tonen</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Preview window on desktop</source>
       <translation>Voorbeeld venster op het bureaublad</translation>
     </message>
@@ -10491,7 +10778,7 @@ Now go touch grass</source>
       <translation>Markeer en toon het venster zelf op de werkruimte tijdens het fietsen van Alt+Tab</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Display</source>
       <translation>Weergeven</translation>
     </message>
@@ -10506,7 +10793,7 @@ Now go touch grass</source>
       <translation>Inclusief geminimaliseerde vensters in de vensterselectie</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Show windows from all screens</source>
       <translation>Vensters van alle schermen weergeven</translation>
     </message>
@@ -10657,7 +10944,7 @@ Now go touch grass</source>
       <translation>Houd de balk altijd zichtbaar</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Dodge windows</source>
       <translation>Vensters ontwijken</translation>
     </message>
@@ -10667,7 +10954,7 @@ Now go touch grass</source>
       <translation>Trek de balk in als er een raam bedekt is, en laat ramen onder de tafel zitten</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Dodge focused window only</source>
       <translation>Alleen ontwijken gefocust venster</translation>
     </message>
@@ -10677,7 +10964,7 @@ Now go touch grass</source>
       <translation>Negeer achtergrond vensters over de balk, en wijzig alleen wat u gebruikt</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Position</source>
       <translation>Positie</translation>
     </message>
@@ -10697,7 +10984,7 @@ Now go touch grass</source>
       <translation>Laat de balk zien wanneer de cursor de schermrand bereikt</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Sleep drempelwaarde</translation>
     </message>
@@ -10707,7 +10994,7 @@ Now go touch grass</source>
       <translation>Pixels gesleept voordat de balk onthult</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Per-monitor position</source>
       <translation>Positie per monitor</translation>
     </message>
@@ -10737,7 +11024,7 @@ Now go touch grass</source>
       <translation>Schaalt taakbalk dikte en component grootte</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Preview scale</source>
       <translation>Voorbeeld schaal</translation>
     </message>
@@ -10747,7 +11034,7 @@ Now go touch grass</source>
       <translation>Schubben taakbalk zwevend previews</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Live window previews</source>
       <translation>Voorbeelden van live venster</translation>
     </message>
@@ -10757,7 +11044,7 @@ Now go touch grass</source>
       <translation>Live miniaturen in hover/overview/alt-tab. Uitschakelen als scherm delen of camera in andere apps (bijv. Vesktop) is geblokkeerd</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Scale with bar size</source>
       <translation>Schaal met staafgrootte</translation>
     </message>
@@ -10767,7 +11054,7 @@ Now go touch grass</source>
       <translation>Vermenigvuldig de voorbeeldschaal met de schaal van de balk</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Font scaling offset</source>
       <translation>Font schalen verschuiving</translation>
     </message>
@@ -10777,7 +11064,7 @@ Now go touch grass</source>
       <translation>Schaalt de tekstgrootte over de taakbalk popouts</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Per-element scaling offsets</source>
       <translation>Per-element schalen compensaties</translation>
     </message>
@@ -10827,7 +11114,7 @@ Now go touch grass</source>
       <translation>Scroll over de indicator van de werkruimte om van werkruimtes te wisselen</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation type="unfinished"/>
     </message>
@@ -10837,7 +11124,7 @@ Now go touch grass</source>
       <translation>Scroll naar de bovenste helft van de balk om volume aan te passen</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Helderheid</translation>
     </message>
@@ -11723,7 +12010,7 @@ Now go touch grass</source>
       <translation>Ingeschakeld</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show on hover</source>
       <translation>Toon bij zweven</translation>
     </message>
@@ -11733,7 +12020,7 @@ Now go touch grass</source>
       <translation>Onthullen wanneer de cursor de schermrand bereikt</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Hover trigger depth</source>
       <translation type="unfinished"/>
     </message>
@@ -11743,7 +12030,7 @@ Now go touch grass</source>
       <translation>Afstand tussen de rand van het scherm die de snelle schakelaar opent</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Hover trigger width</source>
       <translation type="unfinished"/>
     </message>
@@ -11753,7 +12040,7 @@ Now go touch grass</source>
       <translation>Hoeveel van die rand opent de snelle schakelaars, als percentage van hun breedte</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Drag threshold</source>
       <translation>Sleep drempelwaarde</translation>
     </message>
@@ -11911,29 +12198,102 @@ Now go touch grass</source>
       <translation>Videoachtergronden pauzeren</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Enable video audio</source>
       <translation>Video audio inschakelen</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Pause video on fullscreen</source>
       <translation>Video pauzeren op volledig scherm</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Pause video on tiled windows</source>
       <translation>Video pauzeren bij tegelen vensters</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Pause video on all displays</source>
       <translation>Video pauzeren bij alle schermen</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Mute video when media plays</source>
       <translation>Video dempen als media afspelen</translation>
+    </message>
+  </context>
+  <context>
+    <name>ViewOptions</name>
+    <message>
+      <location filename="../modules/background/desktopicons/ViewOptions.qml" line="+78"/>
+      <source>Sort by</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Type</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Date modified</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+24"/>
+      <source>Arrange automatically</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Keep icons packed; dragging reorders them</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Rounded icon corners</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Icon size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Small</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Medium</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Large</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Huge</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Tip: Ctrl+scroll on the desktop also resizes icons</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -12254,7 +12614,7 @@ Now go touch grass</source>
       <translation>Tint de achtergrond af op basis van statische kleurschema&apos;s</translation>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+19"/>
       <source>Recolor strength</source>
       <translation>Herstellen van sterkte</translation>
     </message>
@@ -12386,6 +12746,57 @@ Now go touch grass</source>
     <message>
       <location line="+421"/>
       <source>Open in Settings</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetCatalog</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+7"/>
+      <source>Clock &amp; Weather</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Media</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>System Monitor</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Note</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Folder View</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Large Folder</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetGallery</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+78"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+64"/>
+      <source>Drag a widget&apos;s corner to resize it; right-click for more</source>
       <translation type="unfinished"/>
     </message>
   </context>

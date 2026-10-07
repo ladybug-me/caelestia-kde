@@ -586,7 +586,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Automatic light and dark</source>
       <translation>自動淺色與深色</translation>
     </message>
@@ -596,7 +596,7 @@
       <translation>按計劃切換主題模式</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Schedule</source>
       <translation>計劃安排</translation>
     </message>
@@ -621,7 +621,7 @@
       <translation>在 %1 時切換</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Dark mode hour</source>
       <translation>深色模式時段</translation>
     </message>
@@ -631,7 +631,7 @@
       <translation>在 %1 時切換；不可用日出日落時也使用此時間</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Theme mode</source>
       <translation type="unfinished"/>
     </message>
@@ -674,7 +674,7 @@
   <context>
     <name>AiAssistant</name>
     <message>
-      <location filename="../modules/sidebar/AiAssistant.qml" line="+212"/>
+      <location filename="../modules/sidebar/AiAssistant.qml" line="+214"/>
       <source>Bypass</source>
       <translation type="unfinished"/>
     </message>
@@ -700,17 +700,17 @@
     </message>
     <message>
       <location line="+490"/>
-      <location line="+1090"/>
+      <location line="+1037"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>觸發限流——%1 秒後重試…</translation>
     </message>
     <message>
-      <location line="-684"/>
+      <location line="-685"/>
       <source>(stopped)</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+892"/>
+      <location line="+893"/>
       <source>Chat</source>
       <translation type="unfinished"/>
     </message>
@@ -750,7 +750,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+458"/>
+      <location line="+456"/>
       <source>Suggestions</source>
       <translation>建議</translation>
     </message>
@@ -1275,6 +1275,12 @@
     <name>AppearancePage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+21"/>
+      <location line="+6"/>
+      <source>Follow system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-5"/>
       <source>Google Sans Flex</source>
       <translation type="unfinished"/>
     </message>
@@ -1284,7 +1290,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>CaskaydiaCove NF</source>
       <translation type="unfinished"/>
     </message>
@@ -1965,17 +1971,17 @@
       <translation>背景</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show date</source>
       <translation>顯示日期</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show icon</source>
       <translation>顯示圖示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show seconds</source>
       <translation type="unfinished"/>
     </message>
@@ -1985,7 +1991,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Calendar popout</source>
       <translation type="unfinished"/>
     </message>
@@ -2221,7 +2227,7 @@
       <translation>啟用元件</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+58"/>
       <source>Icon size</source>
       <translation>圖示大小</translation>
     </message>
@@ -2231,7 +2237,7 @@
       <translation>底座中應用圖示的大小</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Recolor icons</source>
       <translation>重新著色圖示</translation>
     </message>
@@ -2241,7 +2247,7 @@
       <translation>使用系統主題重新著色應用圖示</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show app badges</source>
       <translation type="unfinished"/>
     </message>
@@ -2251,7 +2257,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Filter by current desktop</source>
       <translation type="unfinished"/>
     </message>
@@ -2261,7 +2267,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Window grouping</source>
       <translation type="unfinished"/>
     </message>
@@ -2334,7 +2340,7 @@
       <translation>在 GitHub 活動元件後繪製純色背景</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+32"/>
       <source>Personal Access Token</source>
       <translation>個人訪問令牌</translation>
     </message>
@@ -2387,12 +2393,12 @@
       <translation>啟用元件</translation>
     </message>
     <message>
-      <location line="+30"/>
+      <location line="+56"/>
       <source>Inverted</source>
       <translation>反轉</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Show on hover</source>
       <translation>懸停顯示</translation>
     </message>
@@ -2402,7 +2408,7 @@
       <translation>僅懸停時顯示歡迎器</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Popout on hover</source>
       <translation>懸停彈出</translation>
     </message>
@@ -2412,7 +2418,7 @@
       <translation>懸停時顯示歡迎器彈出框</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Animation Mechanism</source>
       <translation>動畫機制</translation>
     </message>
@@ -2438,33 +2444,33 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+46"/>
       <source>Not set</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Select Morning Media</source>
       <translation>選擇早晨媒體</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+188"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+191"/>
       <source>Multimedia files (Images, GIFs, Videos)</source>
       <translation>多媒體檔案（圖片、GIF、影片）</translation>
     </message>
     <message>
-      <location line="-312"/>
+      <location line="-318"/>
       <source>Morning start time</source>
       <translation>早晨開始時間</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Morning Greeting Text</source>
       <translation>早晨問候語</translation>
     </message>
@@ -2489,7 +2495,7 @@
       <translation>下午開始時間</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Afternoon Greeting Text</source>
       <translation>下午問候語</translation>
     </message>
@@ -2514,7 +2520,7 @@
       <translation>晚間開始時間</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Evening Greeting Text</source>
       <translation>晚間問候語</translation>
     </message>
@@ -2539,7 +2545,7 @@
       <translation>夜間開始時間</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Night Greeting Text</source>
       <translation>夜間問候語</translation>
     </message>
@@ -2564,7 +2570,7 @@
       <translation>%1 秒</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Random shuffle</source>
       <translation>隨機洗牌</translation>
     </message>
@@ -2574,7 +2580,7 @@
       <translation>隨機選取媒體而非順序迴圈</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Slideshow Greeting Text</source>
       <translation>幻燈片問候語</translation>
     </message>
@@ -2836,7 +2842,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -2864,17 +2870,17 @@
       <translation>背景</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Recolor icons</source>
       <translation>重新著色圖示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Compact</source>
       <translation>緊湊模式</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Popout on hover</source>
       <translation>懸停彈出</translation>
     </message>
@@ -2902,7 +2908,7 @@
       <translation>工作列中常駐圖示，有 Caelestia 更新時變化</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+29"/>
       <source>Enable update checking</source>
       <translation>啟用更新檢查</translation>
     </message>
@@ -2940,22 +2946,22 @@
       <translation>顯示的工作區數量</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+22"/>
       <source>Active indicator</source>
       <translation>活動指示器</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Active trail</source>
       <translation>活動軌跡</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Occupied background</source>
       <translation>已佔用背景</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Indicator style</source>
       <translation type="unfinished"/>
     </message>
@@ -2975,7 +2981,7 @@
       <translation>在每個工作區顯示已開啟視窗的圖示</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show unoccupied</source>
       <translation type="unfinished"/>
     </message>
@@ -2985,17 +2991,17 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Windows on special workspaces</source>
       <translation>特殊工作區上的視窗</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Max window icons</source>
       <translation>最大視窗圖示數</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Per monitor</source>
       <translation type="unfinished"/>
     </message>
@@ -3899,7 +3905,27 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+36"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+195"/>
+      <source>Delete</source>
+      <translation>刪除</translation>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Paste</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Arrange Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>桌面圖示</translation>
     </message>
@@ -3925,7 +3951,7 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+233"/>
+      <location line="+238"/>
       <source>Add Shortcut...</source>
       <translation>新增快捷方式…</translation>
     </message>
@@ -3969,16 +3995,26 @@
       <source>Empty</source>
       <translation>空</translation>
     </message>
-    <message>
-      <location line="+191"/>
-      <source>Delete</source>
-      <translation>刪除</translation>
-    </message>
   </context>
   <context>
     <name>ContextMenuStore</name>
     <message>
-      <location filename="../services/ContextMenuStore.qml" line="+26"/>
+      <location filename="../services/ContextMenuStore.qml" line="+27"/>
+      <source>Paste</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Arrange Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>桌面圖示</translation>
     </message>
@@ -4045,12 +4081,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+84"/>
+      <location line="+86"/>
       <source>Pill</source>
       <translation>藥丸形</translation>
     </message>
     <message>
-      <location line="-79"/>
+      <location line="-81"/>
       <source>Diamond</source>
       <translation>菱形</translation>
     </message>
@@ -4096,12 +4132,12 @@
     </message>
     <message>
       <location line="+4"/>
-      <location line="+62"/>
+      <location line="+65"/>
       <source>Dashboard</source>
       <translation>儀表盤</translation>
     </message>
     <message>
-      <location line="-51"/>
+      <location line="-54"/>
       <source>General</source>
       <translation>常規</translation>
     </message>
@@ -4111,7 +4147,7 @@
       <translation>已啟用</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show on hover</source>
       <translation>懸停顯示</translation>
     </message>
@@ -4121,7 +4157,7 @@
       <translation>游標到達螢幕邊緣時顯示</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Dashboard profile picture shape</source>
       <translation>儀表盤個人資料圖片形狀</translation>
     </message>
@@ -4141,37 +4177,37 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Tabs</source>
       <translation>標籤頁</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Media</source>
       <translation>媒體</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance</source>
       <translation>效能</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Weather</source>
       <translation>天氣</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Notes</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Terminal</source>
       <translation>終端</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Recolor media GIF</source>
       <translation>重新著色媒體 GIF</translation>
     </message>
@@ -4181,7 +4217,7 @@
       <translation>將系統主題色應用到媒體 GIF</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Use material shapes</source>
       <translation>使用 Material 形狀</translation>
     </message>
@@ -4191,7 +4227,7 @@
       <translation>用音訊響應的 Material 形狀替換媒體 GIF</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Welcome splash</source>
       <translation>歡迎啟動畫面</translation>
     </message>
@@ -4201,7 +4237,7 @@
       <translation>在儀表盤顯示歡迎訊息</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance widgets</source>
       <translation>效能元件</translation>
     </message>
@@ -4211,32 +4247,32 @@
       <translation>電池</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>GPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>CPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Memory</source>
       <translation>記憶體</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Storage</source>
       <translation>儲存</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Network</source>
       <translation>網路</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -4251,7 +4287,7 @@
       <translation>觸發儀表盤的螢幕邊緣內滑距離</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger width</source>
       <translation>懸停觸發寬度</translation>
     </message>
@@ -4261,7 +4297,7 @@
       <translation>頂部邊緣多大比例（以自身寬度百分比計）觸發儀表盤</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>拖拽閾值</translation>
     </message>
@@ -4326,18 +4362,18 @@
     </message>
     <message>
       <location line="+20"/>
-      <location line="+87"/>
+      <location line="+95"/>
       <source>Desktop clock</source>
       <translation>桌面時鐘</translation>
     </message>
     <message>
-      <location line="-79"/>
-      <location line="+139"/>
+      <location line="-86"/>
+      <location line="+150"/>
       <source>Desktop media shapes</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-126"/>
+      <location line="-136"/>
       <source>Auto-hide media shapes</source>
       <translation type="unfinished"/>
     </message>
@@ -4347,13 +4383,13 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+154"/>
+      <location line="+9"/>
+      <location line="+164"/>
       <source>Desktop lyrics</source>
       <translation>桌面歌詞</translation>
     </message>
     <message>
-      <location line="-141"/>
+      <location line="-150"/>
       <source>Auto-hide lyrics</source>
       <translation>自動隱藏歌詞</translation>
     </message>
@@ -4363,7 +4399,7 @@
       <translation>有視窗開啟時隱藏歌詞</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Background visualiser</source>
       <translation>背景視覺化器</translation>
     </message>
@@ -4373,7 +4409,7 @@
       <translation>在桌布上顯示音樂視覺化（可能更耗電）</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Auto-hide visualiser</source>
       <translation>自動隱藏視覺化</translation>
     </message>
@@ -4383,7 +4419,7 @@
       <translation>視窗全屏時隱藏視覺化器</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hide on all monitors</source>
       <translation>在所有顯示器上隱藏</translation>
     </message>
@@ -4393,44 +4429,44 @@
       <translation>若被視窗遮擋，在其他所有顯示器上也隱藏</translation>
     </message>
     <message>
-      <location line="+18"/>
-      <location line="+60"/>
-      <location line="+37"/>
+      <location line="+19"/>
+      <location line="+64"/>
+      <location line="+38"/>
       <source>Scale</source>
       <translation>縮放</translation>
     </message>
     <message>
-      <location line="-87"/>
-      <location line="+61"/>
-      <location line="+36"/>
+      <location line="-91"/>
+      <location line="+65"/>
+      <location line="+37"/>
       <source>Position</source>
       <translation>位置</translation>
     </message>
     <message>
-      <location line="-81"/>
-      <location line="+111"/>
+      <location line="-86"/>
+      <location line="+116"/>
       <source>Horizontal offset</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-103"/>
-      <location line="+111"/>
+      <location line="-107"/>
+      <location line="+116"/>
       <source>Vertical offset</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-102"/>
-      <location line="+111"/>
+      <location line="-106"/>
+      <location line="+116"/>
       <source>Invert colors</source>
       <translation>反色</translation>
     </message>
     <message>
-      <location line="-31"/>
+      <location line="-33"/>
       <source>Alignment</source>
       <translation>對齊方式</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+41"/>
       <source>Visualiser</source>
       <translation>視覺化器</translation>
     </message>
@@ -4440,17 +4476,17 @@
       <translation>模糊</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Rounding</source>
       <translation>圓角</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Spacing</source>
       <translation>間距</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4461,19 +4497,42 @@
     </message>
   </context>
   <context>
+    <name>DesktopContextMenu</name>
+    <message>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+99"/>
+      <source>Hide Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>DesktopIconContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+75"/>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+69"/>
+      <source>Open %1 Items</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Open Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Open</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
       <source>Show in File Manager</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Unpin from dock</source>
       <translation type="unfinished"/>
     </message>
@@ -4483,26 +4542,105 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+6"/>
       <source>Rename</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
+      <source>Show as Icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show as Large Folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Change Folder...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Open in File Manager</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Group Items</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Ungroup</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Remove from Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Cut</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Move Contents to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Remove Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Remove Widget</source>
       <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+157"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+579"/>
+      <location line="+3"/>
+      <source>Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+295"/>
+      <location line="+10"/>
+      <source>Rename failed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-10"/>
+      <source>Could not save desktop entry</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+34"/>
+      <location line="+26"/>
+      <location line="+4"/>
       <source>File operation failed</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>kioclient could not complete the request</source>
+      <location line="+441"/>
+      <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -4517,7 +4655,27 @@
   <context>
     <name>DesktopPage</name>
     <message>
-      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+13"/>
+      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+17"/>
+      <source>Small</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Medium</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Large</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Huge</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Desktop &amp; Tiling</source>
       <translation>桌面與平鋪</translation>
     </message>
@@ -4563,6 +4721,26 @@
     </message>
     <message>
       <location line="+16"/>
+      <source>Desktop Icon Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Ctrl+scroll on the desktop also changes it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Arrange Icons Automatically</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep desktop icons packed; dragging one reorders the rest</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Magic Lamp Minimize</source>
       <translation>神燈最小化</translation>
     </message>
@@ -4797,6 +4975,29 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>DropMenu</name>
+    <message>
+      <location filename="../modules/background/desktopicons/DropMenu.qml" line="+45"/>
+      <source>Move Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Copy Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Link Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>EmojiItem</name>
     <message>
       <location filename="../modules/launcher/items/EmojiItem.qml" line="+22"/>
@@ -5003,6 +5204,44 @@ Now go touch grass</source>
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
       <source>This folder is empty</source>
       <translation>此資料夾為空</translation>
+    </message>
+  </context>
+  <context>
+    <name>FolderWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+46"/>
+      <source>Choose a folder to show</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+170"/>
+      <source>Empty folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+31"/>
+      <source>Open</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Cut</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>File operation failed</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6040,7 +6279,7 @@ Now go touch grass</source>
       <translation>已啟用</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Use alternative logo</source>
       <translation>使用備用標誌</translation>
     </message>
@@ -6050,7 +6289,7 @@ Now go touch grass</source>
       <translation>使用 Caelestia 標誌或自定義圖片代替發行版標誌</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+22"/>
       <source>Pick custom logo</source>
       <translation>選擇自定義標誌</translation>
     </message>
@@ -6090,12 +6329,12 @@ Now go touch grass</source>
       <translation>將 Material You 強調色應用到你的自定義標誌</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+13"/>
       <source>Logo size (%)</source>
       <translation>標誌大小（%）</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+16"/>
       <source>Show on hover</source>
       <translation>懸停顯示</translation>
     </message>
@@ -6105,7 +6344,7 @@ Now go touch grass</source>
       <translation>游標到達螢幕邊緣時顯示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Display</source>
       <translation>顯示</translation>
     </message>
@@ -6120,7 +6359,7 @@ Now go touch grass</source>
       <translation>搜尋框為空時在啟動器顯示分類應用網格</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>App browser layout</source>
       <translation type="unfinished"/>
     </message>
@@ -6140,17 +6379,17 @@ Now go touch grass</source>
       <translation>在底部顯示快速會話控制（關機、睡眠、登出）</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Max items shown</source>
       <translation>最大顯示數</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max wallpapers</source>
       <translation>最大桌布數</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger depth</source>
       <translation>懸停觸發深度</translation>
     </message>
@@ -6160,7 +6399,7 @@ Now go touch grass</source>
       <translation>觸發啟動器的螢幕邊緣內滑距離</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger width</source>
       <translation>懸停觸發寬度</translation>
     </message>
@@ -6170,7 +6409,7 @@ Now go touch grass</source>
       <translation>底部邊緣多大比例（以自身寬度百分比計）觸發啟動器</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>拖拽閾值</translation>
     </message>
@@ -6180,7 +6419,7 @@ Now go touch grass</source>
       <translation>啟動器開啟前需拖拽的畫素數</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clipboard</source>
       <translation>剪貼簿</translation>
     </message>
@@ -6195,7 +6434,7 @@ Now go touch grass</source>
       <translation>歷史中保留的複製條目數</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Confirm clear</source>
       <translation>確認清除</translation>
     </message>
@@ -6205,7 +6444,7 @@ Now go touch grass</source>
       <translation>清空剪貼簿歷史前詢問</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -6220,7 +6459,7 @@ Now go touch grass</source>
       <translation>使用 Ctrl+hjkl 導航結果</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Enable dangerous actions</source>
       <translation>啟用危險操作</translation>
     </message>
@@ -6230,7 +6469,7 @@ Now go touch grass</source>
       <translation>允許關機和登出操作</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Fuzzy search</source>
       <translation>模糊搜尋</translation>
     </message>
@@ -6240,22 +6479,22 @@ Now go touch grass</source>
       <translation>應用</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Actions</source>
       <translation>操作</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Schemes</source>
       <translation>配色方案</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Variants</source>
       <translation>變體</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Wallpapers</source>
       <translation>桌布</translation>
     </message>
@@ -6319,12 +6558,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+157"/>
+      <location line="+160"/>
       <source>Pentagon</source>
       <translation>五邊形</translation>
     </message>
     <message>
-      <location line="-152"/>
+      <location line="-155"/>
       <source>Gem</source>
       <translation>寶石形</translation>
     </message>
@@ -6374,7 +6613,7 @@ Now go touch grass</source>
       <translation>保持鎖屏桌布與桌面桌布同步</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Lock screen wallpaper</source>
       <translation>鎖屏桌布</translation>
     </message>
@@ -6404,7 +6643,7 @@ Now go touch grass</source>
       <translation>模糊整張桌布，而非僅元件背後</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Authentication</source>
       <translation>認證</translation>
     </message>
@@ -6419,7 +6658,7 @@ Now go touch grass</source>
       <translation>允許在鎖屏上使用指紋認證</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Fingerprint attempts</source>
       <translation>指紋嘗試次數</translation>
     </message>
@@ -6454,7 +6693,7 @@ Now go touch grass</source>
       <translation>持續旋轉個人資料圖片形狀</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Lock on startup</source>
       <translation>啟動時鎖定</translation>
     </message>
@@ -6464,7 +6703,7 @@ Now go touch grass</source>
       <translation>登入後立即鎖定會話</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hide notifications</source>
       <translation>隱藏通知</translation>
     </message>
@@ -6474,7 +6713,7 @@ Now go touch grass</source>
       <translation>解鎖前隱藏通知預覽</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Recolor logo</source>
       <translation>重新著色標誌</translation>
     </message>
@@ -6484,7 +6723,7 @@ Now go touch grass</source>
       <translation>給鎖屏藝術圖著色以匹配調色盤</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Session icons</source>
       <translation>會話圖示</translation>
     </message>
@@ -6499,7 +6738,7 @@ Now go touch grass</source>
       <translation>在鎖屏顯示睡眠操作</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hibernate</source>
       <translation>休眠</translation>
     </message>
@@ -6509,7 +6748,7 @@ Now go touch grass</source>
       <translation>在鎖屏顯示休眠操作</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Switch user</source>
       <translation>切換使用者</translation>
     </message>
@@ -6519,7 +6758,7 @@ Now go touch grass</source>
       <translation>在鎖屏顯示切換使用者操作</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Log out</source>
       <translation>登出</translation>
     </message>
@@ -6529,7 +6768,7 @@ Now go touch grass</source>
       <translation>在鎖屏顯示登出操作</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Restart</source>
       <translation>重啟</translation>
     </message>
@@ -6539,7 +6778,7 @@ Now go touch grass</source>
       <translation>在鎖屏顯示重啟操作</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Shut down</source>
       <translation>關機</translation>
     </message>
@@ -6786,6 +7025,19 @@ Now go touch grass</source>
     <message>
       <location line="+9"/>
       <source>Try playing some music!</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>MediaWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+31"/>
+      <source>Nothing playing</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+48"/>
+      <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -7237,6 +7489,14 @@ Now go touch grass</source>
       <location line="+2"/>
       <source>Enhanced Open</source>
       <translation>增強開啟</translation>
+    </message>
+  </context>
+  <context>
+    <name>NoteWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+49"/>
+      <source>Write something…</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -7826,12 +8086,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+155"/>
+      <location line="+163"/>
       <source>GNOME Grid</source>
       <translation>GNOME 網格</translation>
     </message>
     <message>
-      <location line="-147"/>
+      <location line="-155"/>
       <source>Linear</source>
       <translation>線性</translation>
     </message>
@@ -7882,12 +8142,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+131"/>
+      <location line="+141"/>
       <source>Back In</source>
       <translation>返回進入</translation>
     </message>
     <message>
-      <location line="-126"/>
+      <location line="-136"/>
       <source>Back Out</source>
       <translation>返回退出</translation>
     </message>
@@ -7912,7 +8172,7 @@ Now go touch grass</source>
       <translation>啟用概覽</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Show on hover</source>
       <translation>懸停顯示</translation>
     </message>
@@ -7922,7 +8182,7 @@ Now go touch grass</source>
       <translation>通過懸停角落而非拖動來開啟概覽</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Trigger area size</source>
       <translation>觸發區域大小</translation>
     </message>
@@ -7932,7 +8192,7 @@ Now go touch grass</source>
       <translation>角落啟用區域的大小（畫素）</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>拖拽閾值</translation>
     </message>
@@ -7942,7 +8202,7 @@ Now go touch grass</source>
       <translation>從角落拖動的距離以開啟概覽</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Corners</source>
       <translation>圓角</translation>
     </message>
@@ -7952,22 +8212,22 @@ Now go touch grass</source>
       <translation>左上角</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Top-Right corner</source>
       <translation>右上角</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Bottom-Left corner</source>
       <translation>左下角</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Bottom-Right corner</source>
       <translation>右下角</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Behavior</source>
       <translation>行為</translation>
     </message>
@@ -7992,7 +8252,7 @@ Now go touch grass</source>
       <translation>開啟概覽時不模糊背景桌布</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Enable overview blur</source>
       <translation>啟用概覽模糊</translation>
     </message>
@@ -8002,7 +8262,7 @@ Now go touch grass</source>
       <translation>在概覽桌布啟用基於 Quickshell 的模糊效果</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Animations</source>
       <translation>動畫</translation>
     </message>
@@ -8027,7 +8287,7 @@ Now go touch grass</source>
       <translation>概覽開啟/關閉的基礎時長（毫秒）</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Blob scale speed</source>
       <translation>氣泡縮放速度</translation>
     </message>
@@ -8037,7 +8297,7 @@ Now go touch grass</source>
       <translation>背景氣泡的縮放速度係數</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Wallpaper fade speed</source>
       <translation>桌布淡入淡出速度</translation>
     </message>
@@ -8047,7 +8307,7 @@ Now go touch grass</source>
       <translation>桌布的淡入淡出速度係數</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Grid fade speed</source>
       <translation>網格淡入淡出速度</translation>
     </message>
@@ -10254,7 +10514,7 @@ Now go touch grass</source>
       <translation>已啟用</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Drag threshold</source>
       <translation>拖拽閾值</translation>
     </message>
@@ -10264,7 +10524,7 @@ Now go touch grass</source>
       <translation>側邊欄開啟前需拖拽的畫素數</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Grab width</source>
       <translation>抓取寬度</translation>
     </message>
@@ -10274,7 +10534,7 @@ Now go touch grass</source>
       <translation>為抓取側邊欄保留的螢幕邊緣畫素</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Sidebar Tabs</source>
       <translation>側邊欄標籤頁</translation>
     </message>
@@ -10299,7 +10559,7 @@ Now go touch grass</source>
       <translation>在側邊欄顯示新聞標籤頁</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Show Caelestia Mode</source>
       <translation>顯示 Caelestia 模式</translation>
     </message>
@@ -10327,12 +10587,12 @@ Now go touch grass</source>
       <translation>按定時器自動更換桌布</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Slideshow interval</source>
       <translation>幻燈片間隔</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Random order</source>
       <translation>隨機順序</translation>
     </message>
@@ -10434,6 +10694,33 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>SystemWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+66"/>
+      <location line="+36"/>
+      <source>CPU</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-30"/>
+      <location line="+40"/>
+      <source>GPU</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-35"/>
+      <location line="+45"/>
+      <source>Memory</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-40"/>
+      <location line="+50"/>
+      <source>Disk</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>TabSwitcherPanel</name>
     <message>
       <location filename="../modules/nexus/pages/panels/TabSwitcherPanel.qml" line="+31"/>
@@ -10456,7 +10743,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Forward</source>
       <translation type="unfinished"/>
     </message>
@@ -10481,7 +10768,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Preview window on desktop</source>
       <translation type="unfinished"/>
     </message>
@@ -10491,7 +10778,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Display</source>
       <translation>顯示</translation>
     </message>
@@ -10506,7 +10793,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Show windows from all screens</source>
       <translation type="unfinished"/>
     </message>
@@ -10657,7 +10944,7 @@ Now go touch grass</source>
       <translation>始終保持工作列可見</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Dodge windows</source>
       <translation>避開視窗</translation>
     </message>
@@ -10667,7 +10954,7 @@ Now go touch grass</source>
       <translation>視窗覆蓋頂欄時收起，讓視窗位於其下</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Dodge focused window only</source>
       <translation>僅避開聚焦的視窗</translation>
     </message>
@@ -10677,7 +10964,7 @@ Now go touch grass</source>
       <translation>忽略頂欄上方的後臺視窗，只避開正在使用的視窗</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Position</source>
       <translation>位置</translation>
     </message>
@@ -10697,7 +10984,7 @@ Now go touch grass</source>
       <translation>游標到達螢幕邊緣時顯示工作列</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>拖拽閾值</translation>
     </message>
@@ -10707,7 +10994,7 @@ Now go touch grass</source>
       <translation>工作列顯示前需拖拽的畫素數</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Per-monitor position</source>
       <translation type="unfinished"/>
     </message>
@@ -10737,7 +11024,7 @@ Now go touch grass</source>
       <translation>縮放工作列厚度與元件尺寸</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Preview scale</source>
       <translation>預覽縮放</translation>
     </message>
@@ -10747,7 +11034,7 @@ Now go touch grass</source>
       <translation>縮放工作列懸停預覽</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Live window previews</source>
       <translation>即時視窗預覽</translation>
     </message>
@@ -10757,7 +11044,7 @@ Now go touch grass</source>
       <translation>懸停/概覽/Alt-Tab 中的即時縮圖。若其他應用（如 Vesktop）中的投屏或攝像頭卡頓，請關閉</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Scale with bar size</source>
       <translation>隨頂欄大小縮放</translation>
     </message>
@@ -10767,7 +11054,7 @@ Now go touch grass</source>
       <translation>預覽比例與頂欄比例相乘</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Font scaling offset</source>
       <translation>字型縮放偏移</translation>
     </message>
@@ -10777,7 +11064,7 @@ Now go touch grass</source>
       <translation>縮放工作列彈出視窗的文本大小</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Per-element scaling offsets</source>
       <translation>逐元素縮放偏移</translation>
     </message>
@@ -10827,7 +11114,7 @@ Now go touch grass</source>
       <translation>在工作區指示器上滾動以切換工作區</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>音量</translation>
     </message>
@@ -10837,7 +11124,7 @@ Now go touch grass</source>
       <translation>在工作列上半部分滾動以調整音量</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>亮度</translation>
     </message>
@@ -11723,7 +12010,7 @@ Now go touch grass</source>
       <translation>已啟用</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show on hover</source>
       <translation>懸停顯示</translation>
     </message>
@@ -11733,7 +12020,7 @@ Now go touch grass</source>
       <translation>游標到達螢幕邊緣時顯示</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Hover trigger depth</source>
       <translation>懸停觸發深度</translation>
     </message>
@@ -11743,7 +12030,7 @@ Now go touch grass</source>
       <translation>觸發快速切換的螢幕邊緣內滑距離</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Hover trigger width</source>
       <translation>懸停觸發寬度</translation>
     </message>
@@ -11753,7 +12040,7 @@ Now go touch grass</source>
       <translation>該邊緣多大比例（以自身寬度百分比計）觸發快速切換</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Drag threshold</source>
       <translation>拖拽閾值</translation>
     </message>
@@ -11911,29 +12198,102 @@ Now go touch grass</source>
       <translation>暫停影片桌布</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Enable video audio</source>
       <translation>啟用影片音訊</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Pause video on fullscreen</source>
       <translation>全屏時暫停影片</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Pause video on tiled windows</source>
       <translation>平鋪視窗時暫停影片</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Pause video on all displays</source>
       <translation>暫停所有顯示器上的影片</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Mute video when media plays</source>
       <translation>媒體播放時靜音影片</translation>
+    </message>
+  </context>
+  <context>
+    <name>ViewOptions</name>
+    <message>
+      <location filename="../modules/background/desktopicons/ViewOptions.qml" line="+78"/>
+      <source>Sort by</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Type</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Date modified</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+24"/>
+      <source>Arrange automatically</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Keep icons packed; dragging reorders them</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Rounded icon corners</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Icon size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Small</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Medium</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Large</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Huge</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Tip: Ctrl+scroll on the desktop also resizes icons</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -12254,7 +12614,7 @@ Now go touch grass</source>
       <translation>給桌布著色以匹配靜態配色</translation>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+19"/>
       <source>Recolor strength</source>
       <translation>重新著色強度</translation>
     </message>
@@ -12386,6 +12746,57 @@ Now go touch grass</source>
     <message>
       <location line="+421"/>
       <source>Open in Settings</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetCatalog</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+7"/>
+      <source>Clock &amp; Weather</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Media</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>System Monitor</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Note</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Folder View</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Large Folder</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetGallery</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+78"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+64"/>
+      <source>Drag a widget&apos;s corner to resize it; right-click for more</source>
       <translation type="unfinished"/>
     </message>
   </context>

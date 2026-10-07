@@ -586,7 +586,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Automatic light and dark</source>
       <translation type="unfinished"/>
     </message>
@@ -596,7 +596,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Schedule</source>
       <translation type="unfinished"/>
     </message>
@@ -621,7 +621,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Dark mode hour</source>
       <translation type="unfinished"/>
     </message>
@@ -631,7 +631,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Theme mode</source>
       <translation type="unfinished"/>
     </message>
@@ -674,7 +674,7 @@
   <context>
     <name>AiAssistant</name>
     <message>
-      <location filename="../modules/sidebar/AiAssistant.qml" line="+212"/>
+      <location filename="../modules/sidebar/AiAssistant.qml" line="+214"/>
       <source>Bypass</source>
       <translation type="unfinished"/>
     </message>
@@ -700,17 +700,17 @@
     </message>
     <message>
       <location line="+490"/>
-      <location line="+1090"/>
+      <location line="+1037"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>Omezená sazba - opakované pokusy v %1s…</translation>
     </message>
     <message>
-      <location line="-684"/>
+      <location line="-685"/>
       <source>(stopped)</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+892"/>
+      <location line="+893"/>
       <source>Chat</source>
       <translation type="unfinished"/>
     </message>
@@ -750,7 +750,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+458"/>
+      <location line="+456"/>
       <source>Suggestions</source>
       <translation>Návrhy</translation>
     </message>
@@ -1275,6 +1275,12 @@
     <name>AppearancePage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+21"/>
+      <location line="+6"/>
+      <source>Follow system</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-5"/>
       <source>Google Sans Flex</source>
       <translation type="unfinished"/>
     </message>
@@ -1284,7 +1290,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+5"/>
       <source>CaskaydiaCove NF</source>
       <translation type="unfinished"/>
     </message>
@@ -1965,17 +1971,17 @@
       <translation>Pozadí</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show date</source>
       <translation>Zobrazit datum</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show icon</source>
       <translation>Zobrazit ikonu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Show seconds</source>
       <translation>Zobrazit sekundy</translation>
     </message>
@@ -1985,7 +1991,7 @@
       <translation>Přidat řádek vteřin do hodin</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Calendar popout</source>
       <translation type="unfinished"/>
     </message>
@@ -2221,7 +2227,7 @@
       <translation>Povolit komponentu</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+58"/>
       <source>Icon size</source>
       <translation>Velikost ikony</translation>
     </message>
@@ -2231,7 +2237,7 @@
       <translation>Velikost ikon aplikací v doku</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Recolor icons</source>
       <translation>Ikony reproduktorů</translation>
     </message>
@@ -2241,7 +2247,7 @@
       <translation>Přečíst ikony aplikací pomocí systémového motivu</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show app badges</source>
       <translation type="unfinished"/>
     </message>
@@ -2251,7 +2257,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Filter by current desktop</source>
       <translation>Filtrovat podle aktuální plochy</translation>
     </message>
@@ -2261,7 +2267,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Window grouping</source>
       <translation type="unfinished"/>
     </message>
@@ -2334,7 +2340,7 @@
       <translation>Vykreslit pevné pozadí za widgetem aktivity GitHub</translation>
     </message>
     <message>
-      <location line="+31"/>
+      <location line="+32"/>
       <source>Personal Access Token</source>
       <translation>Osobní přístupový token</translation>
     </message>
@@ -2387,12 +2393,12 @@
       <translation>Povolit komponentu</translation>
     </message>
     <message>
-      <location line="+30"/>
+      <location line="+56"/>
       <source>Inverted</source>
       <translation>Obrácené</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Show on hover</source>
       <translation>Zobrazit při přejetí</translation>
     </message>
@@ -2402,7 +2408,7 @@
       <translation>Zobrazit pozdravníka pouze při najímání</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Popout on hover</source>
       <translation>Kopat při přejetí</translation>
     </message>
@@ -2412,7 +2418,7 @@
       <translation>Zobrazit pozdravný popout při převrácení</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Animation Mechanism</source>
       <translation>Mechanismus animace</translation>
     </message>
@@ -2438,33 +2444,33 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+46"/>
       <source>Not set</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Select Morning Media</source>
       <translation>Vyberte ranní média</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+45"/>
-      <location line="+188"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+46"/>
+      <location line="+191"/>
       <source>Multimedia files (Images, GIFs, Videos)</source>
       <translation>Multimediální soubory (obrázky, GIFy, videa)</translation>
     </message>
     <message>
-      <location line="-312"/>
+      <location line="-318"/>
       <source>Morning start time</source>
       <translation>Počáteční čas ráno</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Morning Greeting Text</source>
       <translation>Text ranního pozdravu</translation>
     </message>
@@ -2489,7 +2495,7 @@
       <translation>Čas zahájení odpoledne</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Afternoon Greeting Text</source>
       <translation>Pozastavit text</translation>
     </message>
@@ -2514,7 +2520,7 @@
       <translation>Čas zahájení večera</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Evening Greeting Text</source>
       <translation>Večer uvítací text</translation>
     </message>
@@ -2539,7 +2545,7 @@
       <translation>Čas zahájení noci</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Night Greeting Text</source>
       <translation>Text nočního pozdravu</translation>
     </message>
@@ -2564,7 +2570,7 @@
       <translation>%1 sekund</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Random shuffle</source>
       <translation>Náhodné zamíchání</translation>
     </message>
@@ -2574,7 +2580,7 @@
       <translation>Vyberte náhodné médium namísto cyklování postupně</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Slideshow Greeting Text</source>
       <translation>Text pozdravu prezentace</translation>
     </message>
@@ -2836,7 +2842,7 @@
       <translation>Zobrazit ikonu Wi-Fi vedle ikony sítě</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>Chování</translation>
     </message>
@@ -2864,17 +2870,17 @@
       <translation>Pozadí</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Recolor icons</source>
       <translation>Ikony reproduktorů</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Compact</source>
       <translation>Kompaktní</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Popout on hover</source>
       <translation>Kopat při přejetí</translation>
     </message>
@@ -2902,7 +2908,7 @@
       <translation>Ikona viditelná vždy v hlavním panelu, která se mění, když je dostupná aktualizace Caelestia</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+29"/>
       <source>Enable update checking</source>
       <translation>Povolit kontrolu aktualizací</translation>
     </message>
@@ -2940,22 +2946,22 @@
       <translation>Počet zobrazených pracovních ploch</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+22"/>
       <source>Active indicator</source>
       <translation>Aktivní indikátor</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Active trail</source>
       <translation>Aktivní stopa</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Occupied background</source>
       <translation>Obsazené pozadí</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Indicator style</source>
       <translation>Styl indikátoru</translation>
     </message>
@@ -2975,7 +2981,7 @@
       <translation>Zobrazit ikony otevřených oken v každém pracovním prostoru</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show unoccupied</source>
       <translation>Zobrazit neobsazené</translation>
     </message>
@@ -2985,17 +2991,17 @@
       <translation>Zobrazit pracovní prostory, které jsou neaktivní a prázdné</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Windows on special workspaces</source>
       <translation>Okna na speciálních pracovních prostorách</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Max window icons</source>
       <translation>Maximální počet ikon okna</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Per monitor</source>
       <translation type="unfinished"/>
     </message>
@@ -3899,7 +3905,27 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+36"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+195"/>
+      <source>Delete</source>
+      <translation>Vymazat</translation>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Paste</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Arrange Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Ikony plochy</translation>
     </message>
@@ -3925,7 +3951,7 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+233"/>
+      <location line="+238"/>
       <source>Add Shortcut...</source>
       <translation>Přidat zkratku...</translation>
     </message>
@@ -3969,16 +3995,26 @@
       <source>Empty</source>
       <translation>Prázdné</translation>
     </message>
-    <message>
-      <location line="+191"/>
-      <source>Delete</source>
-      <translation>Vymazat</translation>
-    </message>
   </context>
   <context>
     <name>ContextMenuStore</name>
     <message>
-      <location filename="../services/ContextMenuStore.qml" line="+26"/>
+      <location filename="../services/ContextMenuStore.qml" line="+27"/>
+      <source>Paste</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Arrange Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Ikony plochy</translation>
     </message>
@@ -4045,12 +4081,12 @@
     </message>
     <message>
       <location line="+5"/>
-      <location line="+84"/>
+      <location line="+86"/>
       <source>Pill</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-79"/>
+      <location line="-81"/>
       <source>Diamond</source>
       <translation>Diamantový</translation>
     </message>
@@ -4096,12 +4132,12 @@
     </message>
     <message>
       <location line="+4"/>
-      <location line="+62"/>
+      <location line="+65"/>
       <source>Dashboard</source>
       <translation>Nástěnka</translation>
     </message>
     <message>
-      <location line="-51"/>
+      <location line="-54"/>
       <source>General</source>
       <translation>Obecná ustanovení</translation>
     </message>
@@ -4111,7 +4147,7 @@
       <translation>Povoleno</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show on hover</source>
       <translation>Zobrazit při přejetí</translation>
     </message>
@@ -4121,7 +4157,7 @@
       <translation>Odhalit, když kurzor dosáhne okraje obrazovky</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Dashboard profile picture shape</source>
       <translation>Tvar obrazu hlavního panelu</translation>
     </message>
@@ -4141,37 +4177,37 @@
       <translation>Zobrazit sekundy pod hodinami na řídicím panelu</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Tabs</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Media</source>
       <translation>Média</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance</source>
       <translation>Výkon</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Weather</source>
       <translation>Počasí</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Notes</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Terminal</source>
       <translation>Terminál</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Recolor media GIF</source>
       <translation>Přečíst GIF médií</translation>
     </message>
@@ -4181,7 +4217,7 @@
       <translation>Použít barvy systémového motivu na mediální GIF</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Use material shapes</source>
       <translation>Použít tvary materiálu</translation>
     </message>
@@ -4191,7 +4227,7 @@
       <translation>Nahradit mediální GIF obrazy audiovizuálně reaktivních materiálů</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Welcome splash</source>
       <translation>Vítejte v útržku</translation>
     </message>
@@ -4201,7 +4237,7 @@
       <translation>Zobrazit uvítací zprávu na nástěnce</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Performance widgets</source>
       <translation>Widgety výkonu</translation>
     </message>
@@ -4211,32 +4247,32 @@
       <translation>Baterie</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>GPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>CPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Memory</source>
       <translation>Paměť</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Storage</source>
       <translation>Úložiště</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Network</source>
       <translation>Síť</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>Chování</translation>
     </message>
@@ -4251,7 +4287,7 @@
       <translation>Vzdálenost od okraje obrazovky, která otevírá dashboard</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger width</source>
       <translation type="unfinished"/>
     </message>
@@ -4261,7 +4297,7 @@
       <translation>Kolik horního okraje otevírá dashboard, jako procentní podíl jeho šířky</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -4326,18 +4362,18 @@
     </message>
     <message>
       <location line="+20"/>
-      <location line="+87"/>
+      <location line="+95"/>
       <source>Desktop clock</source>
       <translation>Hodiny stolního počítače</translation>
     </message>
     <message>
-      <location line="-79"/>
-      <location line="+139"/>
+      <location line="-86"/>
+      <location line="+150"/>
       <source>Desktop media shapes</source>
       <translation>Tvary médií pro stolní počítače</translation>
     </message>
     <message>
-      <location line="-126"/>
+      <location line="-136"/>
       <source>Auto-hide media shapes</source>
       <translation>Automaticky skrýt tvary médií</translation>
     </message>
@@ -4347,13 +4383,13 @@
       <translation>Skrýt tvary médií při otevření okna</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+154"/>
+      <location line="+9"/>
+      <location line="+164"/>
       <source>Desktop lyrics</source>
       <translation>Texty na ploše</translation>
     </message>
     <message>
-      <location line="-141"/>
+      <location line="-150"/>
       <source>Auto-hide lyrics</source>
       <translation>Automaticky skrýt texty</translation>
     </message>
@@ -4363,7 +4399,7 @@
       <translation>Skrýt texty při otevření okna</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Background visualiser</source>
       <translation>Vizualizér pozadí</translation>
     </message>
@@ -4373,7 +4409,7 @@
       <translation>Zobrazit hudební vizualizér na tapetě (může spotřebovávat více energii)</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Auto-hide visualiser</source>
       <translation>Automaticky skrýt vizualizér</translation>
     </message>
@@ -4383,7 +4419,7 @@
       <translation>Skrýt vizualizátor, když je okno v režimu celé obrazovky</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hide on all monitors</source>
       <translation>Skrýt na všech monitorech</translation>
     </message>
@@ -4393,44 +4429,44 @@
       <translation>Pokud je okno vypnuto, skryje také na všech ostatních monitorech</translation>
     </message>
     <message>
-      <location line="+18"/>
-      <location line="+60"/>
-      <location line="+37"/>
+      <location line="+19"/>
+      <location line="+64"/>
+      <location line="+38"/>
       <source>Scale</source>
       <translation>Měřítko</translation>
     </message>
     <message>
-      <location line="-87"/>
-      <location line="+61"/>
-      <location line="+36"/>
+      <location line="-91"/>
+      <location line="+65"/>
+      <location line="+37"/>
       <source>Position</source>
       <translation>Pozice</translation>
     </message>
     <message>
-      <location line="-81"/>
-      <location line="+111"/>
+      <location line="-86"/>
+      <location line="+116"/>
       <source>Horizontal offset</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-103"/>
-      <location line="+111"/>
+      <location line="-107"/>
+      <location line="+116"/>
       <source>Vertical offset</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-102"/>
-      <location line="+111"/>
+      <location line="-106"/>
+      <location line="+116"/>
       <source>Invert colors</source>
       <translation>Invertovat barvy</translation>
     </message>
     <message>
-      <location line="-31"/>
+      <location line="-33"/>
       <source>Alignment</source>
       <translation>Zarovnání</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+41"/>
       <source>Visualiser</source>
       <translation>Vizualizér</translation>
     </message>
@@ -4440,17 +4476,17 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Rounding</source>
       <translation>Zaokrouhlení</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Spacing</source>
       <translation>Mezera</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4461,19 +4497,42 @@
     </message>
   </context>
   <context>
+    <name>DesktopContextMenu</name>
+    <message>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+99"/>
+      <source>Hide Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>DesktopIconContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+75"/>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+69"/>
+      <source>Open %1 Items</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Open Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Open</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
       <source>Show in File Manager</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Unpin from dock</source>
       <translation type="unfinished"/>
     </message>
@@ -4483,26 +4542,105 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+6"/>
       <source>Rename</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
+      <source>Show as Icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show as Large Folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Change Folder...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Open in File Manager</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Group Items</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Ungroup</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Remove from Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Cut</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Move Contents to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
       <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Remove Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Remove Widget</source>
       <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+157"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+579"/>
+      <location line="+3"/>
+      <source>Group</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+295"/>
+      <location line="+10"/>
+      <source>Rename failed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-10"/>
+      <source>Could not save desktop entry</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+34"/>
+      <location line="+26"/>
+      <location line="+4"/>
       <source>File operation failed</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>kioclient could not complete the request</source>
+      <location line="+441"/>
+      <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -4517,7 +4655,27 @@
   <context>
     <name>DesktopPage</name>
     <message>
-      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+13"/>
+      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+17"/>
+      <source>Small</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Medium</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Large</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Huge</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Desktop &amp; Tiling</source>
       <translation>Stolní počítač a strom</translation>
     </message>
@@ -4563,6 +4721,26 @@
     </message>
     <message>
       <location line="+16"/>
+      <source>Desktop Icon Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Ctrl+scroll on the desktop also changes it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Arrange Icons Automatically</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep desktop icons packed; dragging one reorders the rest</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Magic Lamp Minimize</source>
       <translation>Magická lampa minimalizovat</translation>
     </message>
@@ -4797,6 +4975,29 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>DropMenu</name>
+    <message>
+      <location filename="../modules/background/desktopicons/DropMenu.qml" line="+45"/>
+      <source>Move Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Copy Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Link Here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>EmojiItem</name>
     <message>
       <location filename="../modules/launcher/items/EmojiItem.qml" line="+22"/>
@@ -5003,6 +5204,44 @@ Now go touch grass</source>
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
       <source>This folder is empty</source>
       <translation>Tato složka je prázdná</translation>
+    </message>
+  </context>
+  <context>
+    <name>FolderWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+46"/>
+      <source>Choose a folder to show</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+170"/>
+      <source>Empty folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+31"/>
+      <source>Open</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Copy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Cut</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Move to Trash</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>File operation failed</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6040,7 +6279,7 @@ Now go touch grass</source>
       <translation>Povoleno</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Use alternative logo</source>
       <translation>Použít alternativní logo</translation>
     </message>
@@ -6050,7 +6289,7 @@ Now go touch grass</source>
       <translation>Použít logo Caelestia nebo vlastní obrázek namísto loga distribuce&apos;s</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+22"/>
       <source>Pick custom logo</source>
       <translation>Vybrat vlastní logo</translation>
     </message>
@@ -6090,12 +6329,12 @@ Now go touch grass</source>
       <translation>Použít barvu zvýraznění materiálu na vlastní logo</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+13"/>
       <source>Logo size (%)</source>
       <translation>Velikost loga (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+16"/>
       <source>Show on hover</source>
       <translation>Zobrazit při přejetí</translation>
     </message>
@@ -6105,7 +6344,7 @@ Now go touch grass</source>
       <translation>Odhalit, když kurzor dosáhne okraje obrazovky</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Display</source>
       <translation>Zobrazení</translation>
     </message>
@@ -6120,7 +6359,7 @@ Now go touch grass</source>
       <translation>Zobrazit kategorizovanou mřížku aplikací v launcheru pokud je pole hledání prázdné</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>App browser layout</source>
       <translation type="unfinished"/>
     </message>
@@ -6140,17 +6379,17 @@ Now go touch grass</source>
       <translation>Zobrazit ovládání rychlé relace (vypnutí, spánek, odhlášení) dole</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Max items shown</source>
       <translation>Maximální počet zobrazených položek</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max wallpapers</source>
       <translation>Maximální počet tapet</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger depth</source>
       <translation type="unfinished"/>
     </message>
@@ -6160,7 +6399,7 @@ Now go touch grass</source>
       <translation>Vzdálenost od okraje obrazovky, která otevírá spouštěč</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Hover trigger width</source>
       <translation type="unfinished"/>
     </message>
@@ -6170,7 +6409,7 @@ Now go touch grass</source>
       <translation>Kolik spodního okraje otevírá spouštěč jako procento jeho šířky</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -6180,7 +6419,7 @@ Now go touch grass</source>
       <translation>Pixely přetaženy před otevřením spouštěče</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clipboard</source>
       <translation>Schránka</translation>
     </message>
@@ -6195,7 +6434,7 @@ Now go touch grass</source>
       <translation>Počet zkopírovaných položek uchovávaných v historii</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Confirm clear</source>
       <translation>Potvrdit vymazání</translation>
     </message>
@@ -6205,7 +6444,7 @@ Now go touch grass</source>
       <translation>Zeptat se před vymazáním historie schránky</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Behavior</source>
       <translation>Chování</translation>
     </message>
@@ -6220,7 +6459,7 @@ Now go touch grass</source>
       <translation>Navigovat výsledky pomocí Ctrl+hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Enable dangerous actions</source>
       <translation>Povolit nebezpečné akce</translation>
     </message>
@@ -6230,7 +6469,7 @@ Now go touch grass</source>
       <translation>Povolit akce, které jsou vypnuty nebo odhlášeny</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Fuzzy search</source>
       <translation>Fuzzy vyhledávání</translation>
     </message>
@@ -6240,22 +6479,22 @@ Now go touch grass</source>
       <translation>Aplikace</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Actions</source>
       <translation>Akce</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Schemes</source>
       <translation>Programy</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Variants</source>
       <translation>Varianty</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Wallpapers</source>
       <translation>Tapety</translation>
     </message>
@@ -6319,12 +6558,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+157"/>
+      <location line="+160"/>
       <source>Pentagon</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-152"/>
+      <location line="-155"/>
       <source>Gem</source>
       <translation type="unfinished"/>
     </message>
@@ -6374,7 +6613,7 @@ Now go touch grass</source>
       <translation>Ponechat tapetu zámku obrazovky synchronizovanou s tapetou</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Lock screen wallpaper</source>
       <translation>Tapeta zamykací obrazovky</translation>
     </message>
@@ -6404,7 +6643,7 @@ Now go touch grass</source>
       <translation>Rozostřit celou tapetu a ne jen za widgety</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Authentication</source>
       <translation>Ověření</translation>
     </message>
@@ -6419,7 +6658,7 @@ Now go touch grass</source>
       <translation>Povolit ověření otiskem prstu na zamykací obrazovce</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Fingerprint attempts</source>
       <translation>Pokusy otisku prstu</translation>
     </message>
@@ -6454,7 +6693,7 @@ Now go touch grass</source>
       <translation>Průběžné otáčení profilu obrazu</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Lock on startup</source>
       <translation>Zamknout při spuštění</translation>
     </message>
@@ -6464,7 +6703,7 @@ Now go touch grass</source>
       <translation>Zamknout relaci krátce po přihlášení</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hide notifications</source>
       <translation>Skrýt oznámení</translation>
     </message>
@@ -6474,7 +6713,7 @@ Now go touch grass</source>
       <translation>Skrýt náhledy upozornění, dokud se neodemknete</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Recolor logo</source>
       <translation>Logo reproduktoru</translation>
     </message>
@@ -6484,7 +6723,7 @@ Now go touch grass</source>
       <translation>Tipněte obrázek zamykací obrazovky tak, aby odpovídal paletě</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Session icons</source>
       <translation>Ikony relace</translation>
     </message>
@@ -6499,7 +6738,7 @@ Now go touch grass</source>
       <translation>Zobrazit akci spánku na zamykací obrazovce</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Hibernate</source>
       <translation type="unfinished"/>
     </message>
@@ -6509,7 +6748,7 @@ Now go touch grass</source>
       <translation>Zobrazit hibernaci na zamykací obrazovce</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Switch user</source>
       <translation>Přepnout uživatele</translation>
     </message>
@@ -6519,7 +6758,7 @@ Now go touch grass</source>
       <translation>Zobrazit funkci přepínače na zamykací obrazovce</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Log out</source>
       <translation>Odhlásit se</translation>
     </message>
@@ -6529,7 +6768,7 @@ Now go touch grass</source>
       <translation>Zobrazit akci odhlášení na zamykací obrazovce</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Restart</source>
       <translation>Restartovat</translation>
     </message>
@@ -6539,7 +6778,7 @@ Now go touch grass</source>
       <translation>Zobrazit restart na zamykací obrazovce</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Shut down</source>
       <translation>Vypnout</translation>
     </message>
@@ -6786,6 +7025,19 @@ Now go touch grass</source>
     <message>
       <location line="+9"/>
       <source>Try playing some music!</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>MediaWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+31"/>
+      <source>Nothing playing</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+48"/>
+      <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -7237,6 +7489,14 @@ Now go touch grass</source>
       <location line="+2"/>
       <source>Enhanced Open</source>
       <translation>Vylepšený otevřený</translation>
+    </message>
+  </context>
+  <context>
+    <name>NoteWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+49"/>
+      <source>Write something…</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -7826,12 +8086,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+155"/>
+      <location line="+163"/>
       <source>GNOME Grid</source>
       <translation>mřížka GNOME</translation>
     </message>
     <message>
-      <location line="-147"/>
+      <location line="-155"/>
       <source>Linear</source>
       <translation>Lineární</translation>
     </message>
@@ -7882,12 +8142,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+131"/>
+      <location line="+141"/>
       <source>Back In</source>
       <translation>Zpět za</translation>
     </message>
     <message>
-      <location line="-126"/>
+      <location line="-136"/>
       <source>Back Out</source>
       <translation>Zpět</translation>
     </message>
@@ -7912,7 +8172,7 @@ Now go touch grass</source>
       <translation>Povolit přehled</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Show on hover</source>
       <translation>Zobrazit při přejetí</translation>
     </message>
@@ -7922,7 +8182,7 @@ Now go touch grass</source>
       <translation>Otevřete přehled přejetím rohu namísto přetažení</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Trigger area size</source>
       <translation>Velikost aktivační oblasti</translation>
     </message>
@@ -7932,7 +8192,7 @@ Now go touch grass</source>
       <translation>Velikost oblastí aktivace rohů v pixelech</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -7942,7 +8202,7 @@ Now go touch grass</source>
       <translation>Vzdálenost pro přetažení z rohu pro otevření přehledu</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Corners</source>
       <translation>Rohy</translation>
     </message>
@@ -7952,22 +8212,22 @@ Now go touch grass</source>
       <translation>Vlevo nahoře</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Top-Right corner</source>
       <translation>Pravý horní roh</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Bottom-Left corner</source>
       <translation>Levý dolní roh</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Bottom-Right corner</source>
       <translation>Pravý dolní roh</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Behavior</source>
       <translation>Chování</translation>
     </message>
@@ -7992,7 +8252,7 @@ Now go touch grass</source>
       <translation>Při otevírání přehledu nerozostřit pozadí</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Enable overview blur</source>
       <translation>Povolit rozostření přehledu</translation>
     </message>
@@ -8002,7 +8262,7 @@ Now go touch grass</source>
       <translation>Povolit efekt rozostření na základě rychlého spuštění na přehledu tapety</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Animations</source>
       <translation>Animace</translation>
     </message>
@@ -8027,7 +8287,7 @@ Now go touch grass</source>
       <translation>Základní doba pro otevření / uzavření v milisekundách</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Blob scale speed</source>
       <translation>Rychlost stupnice bloku</translation>
     </message>
@@ -8037,7 +8297,7 @@ Now go touch grass</source>
       <translation>Modifikátor rychlosti skalování pro bloky pozadí</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Wallpaper fade speed</source>
       <translation>Rychlost prolínání tapety</translation>
     </message>
@@ -8047,7 +8307,7 @@ Now go touch grass</source>
       <translation>Modifikátor rychlosti prolínání tapety</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Grid fade speed</source>
       <translation>Rychlost prolínání mřížky</translation>
     </message>
@@ -10254,7 +10514,7 @@ Now go touch grass</source>
       <translation>Povoleno</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -10264,7 +10524,7 @@ Now go touch grass</source>
       <translation>Pixely přetaženy před otevřením postranního panelu</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Grab width</source>
       <translation type="unfinished"/>
     </message>
@@ -10274,7 +10534,7 @@ Now go touch grass</source>
       <translation>Pixely okraje obrazovky vyhrazené pro uchopení postranního panelu</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Sidebar Tabs</source>
       <translation type="unfinished"/>
     </message>
@@ -10299,7 +10559,7 @@ Now go touch grass</source>
       <translation>Zobrazit kartu Novinky v postranním panelu</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Show Caelestia Mode</source>
       <translation type="unfinished"/>
     </message>
@@ -10327,12 +10587,12 @@ Now go touch grass</source>
       <translation>Automaticky změnit tapetu na časovače</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Slideshow interval</source>
       <translation>Interval prezentace</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Random order</source>
       <translation>Náhodné pořadí</translation>
     </message>
@@ -10434,6 +10694,33 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>SystemWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+66"/>
+      <location line="+36"/>
+      <source>CPU</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-30"/>
+      <location line="+40"/>
+      <source>GPU</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-35"/>
+      <location line="+45"/>
+      <source>Memory</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-40"/>
+      <location line="+50"/>
+      <source>Disk</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>TabSwitcherPanel</name>
     <message>
       <location filename="../modules/nexus/pages/panels/TabSwitcherPanel.qml" line="+31"/>
@@ -10456,7 +10743,7 @@ Now go touch grass</source>
       <translation>Použít přepínač oken Caelestia&apos;s pro Alt+Tab</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Forward</source>
       <translation>Přeposlat</translation>
     </message>
@@ -10481,7 +10768,7 @@ Now go touch grass</source>
       <translation>Zobrazit pouze okna patřící k aktivní virtuální ploše</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Preview window on desktop</source>
       <translation>Náhled okna na ploše</translation>
     </message>
@@ -10491,7 +10778,7 @@ Now go touch grass</source>
       <translation>Zvýraznit a zobrazit okno samotné na pracovním prostoru při cyklování Alt+Tab</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+14"/>
       <source>Display</source>
       <translation>Zobrazení</translation>
     </message>
@@ -10506,7 +10793,7 @@ Now go touch grass</source>
       <translation>Zahrnout minimalizovaná okna do přepínače oken</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+15"/>
       <source>Show windows from all screens</source>
       <translation>Zobrazit okna ze všech obrazovek</translation>
     </message>
@@ -10657,7 +10944,7 @@ Now go touch grass</source>
       <translation>Udržovat lištu viditelnou vždy</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Dodge windows</source>
       <translation>Okna</translation>
     </message>
@@ -10667,7 +10954,7 @@ Now go touch grass</source>
       <translation>Opětovné zapnutí pruhu při zakrytí okna a nechat okna sedět pod ním</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Dodge focused window only</source>
       <translation>Pouze okno zvýrazněné Dodge</translation>
     </message>
@@ -10677,7 +10964,7 @@ Now go touch grass</source>
       <translation>Ignorovat okna pozadí nad lištou a vyhnout se pouze tomu, co používáte</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Position</source>
       <translation>Pozice</translation>
     </message>
@@ -10697,7 +10984,7 @@ Now go touch grass</source>
       <translation>Otočit lištu, když kurzor dosáhne okraje obrazovky</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -10707,7 +10994,7 @@ Now go touch grass</source>
       <translation>Pixely přetažené před odhalením pruhu</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Per-monitor position</source>
       <translation>Pozice monitorování</translation>
     </message>
@@ -10737,7 +11024,7 @@ Now go touch grass</source>
       <translation>Škála tloušťky a velikosti komponent</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Preview scale</source>
       <translation>Měřítko náhledu</translation>
     </message>
@@ -10747,7 +11034,7 @@ Now go touch grass</source>
       <translation>Náhled náhledů na hlavní liště</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Live window previews</source>
       <translation>Náhled živého okna</translation>
     </message>
@@ -10757,7 +11044,7 @@ Now go touch grass</source>
       <translation>Živé náhledy v okně/přehledu/záložce alt-tab. Zakažte pokud se zamrzne sdílení obrazovky nebo fotoaparát v jiných aplikacích (např. Vesktop)</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Scale with bar size</source>
       <translation>Měřítko s velikostí pruhu</translation>
     </message>
@@ -10767,7 +11054,7 @@ Now go touch grass</source>
       <translation>Násobit měřítko náhledu s stupnicí pruhu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Font scaling offset</source>
       <translation>Odsazení velikosti písma</translation>
     </message>
@@ -10777,7 +11064,7 @@ Now go touch grass</source>
       <translation>Škáluje velikost textu přes pulty</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Per-element scaling offsets</source>
       <translation>Procento škálování jednotlivých prvků</translation>
     </message>
@@ -10827,7 +11114,7 @@ Now go touch grass</source>
       <translation>Posunutím přes ukazatel pracovního prostoru přepnete pracovní prostor</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>Objem</translation>
     </message>
@@ -10837,7 +11124,7 @@ Now go touch grass</source>
       <translation>Posuňte na horní polovinu pruhu pro nastavení hlasitosti</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Jas</translation>
     </message>
@@ -11723,7 +12010,7 @@ Now go touch grass</source>
       <translation>Povoleno</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Show on hover</source>
       <translation>Zobrazit při přejetí</translation>
     </message>
@@ -11733,7 +12020,7 @@ Now go touch grass</source>
       <translation>Odhalit, když kurzor dosáhne okraje obrazovky</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Hover trigger depth</source>
       <translation type="unfinished"/>
     </message>
@@ -11743,7 +12030,7 @@ Now go touch grass</source>
       <translation>Vzdálenost od okraje obrazovky, která otevírá rychlé přepínače</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Hover trigger width</source>
       <translation type="unfinished"/>
     </message>
@@ -11753,7 +12040,7 @@ Now go touch grass</source>
       <translation>Kolik z tohoto okraje otevře rychlé přepínače v procentech jejich šířky</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -11911,29 +12198,102 @@ Now go touch grass</source>
       <translation>Pozastavit tapety videa</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Enable video audio</source>
       <translation>Povolit video</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Pause video on fullscreen</source>
       <translation>Pozastavit video na celou obrazovku</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Pause video on tiled windows</source>
       <translation>Pozastavit video v tažených oknech</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Pause video on all displays</source>
       <translation>Pozastavit video na všech obrazovkách</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Mute video when media plays</source>
       <translation>Ztlumit video při přehrávání médií</translation>
+    </message>
+  </context>
+  <context>
+    <name>ViewOptions</name>
+    <message>
+      <location filename="../modules/background/desktopicons/ViewOptions.qml" line="+78"/>
+      <source>Sort by</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Type</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Date modified</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+24"/>
+      <source>Arrange automatically</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Keep icons packed; dragging reorders them</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Rounded icon corners</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Icon size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Small</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Medium</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Large</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Huge</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Tip: Ctrl+scroll on the desktop also resizes icons</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -12254,7 +12614,7 @@ Now go touch grass</source>
       <translation>Tipnout tapetu pro shodu statických barevných schémat</translation>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+19"/>
       <source>Recolor strength</source>
       <translation>Pevnost rekuperace</translation>
     </message>
@@ -12386,6 +12746,57 @@ Now go touch grass</source>
     <message>
       <location line="+421"/>
       <source>Open in Settings</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetCatalog</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+7"/>
+      <source>Clock &amp; Weather</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Media</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>System Monitor</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Note</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Folder View</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Large Folder</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetGallery</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+78"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+64"/>
+      <source>Drag a widget&apos;s corner to resize it; right-click for more</source>
       <translation type="unfinished"/>
     </message>
   </context>

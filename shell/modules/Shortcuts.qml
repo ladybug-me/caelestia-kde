@@ -287,12 +287,11 @@ Scope {
 
     Connections {
         function onModifierReleased(): void {
-            const visibilities = Visibilities.getForActive();
-            if (visibilities.launcher && root.lastAction === "windows") {
+            if (Visibilities.launcherOpenVisibilities() && root.lastAction === "windows") {
                 const switcherKey = (typeof KeybindsModel !== "undefined" && KeybindsModel.getKey("windowSwitcher")) || "Alt+Tab";
                 if (!CUtils.isShortcutModifierPressed(switcherKey)) {
                     Windows.focusSelectedWindow();
-                    visibilities.launcher = false;
+                    Visibilities.closeLauncher();
                     root.lastAction = "";
                 }
             }
@@ -309,8 +308,7 @@ Scope {
         description: qsTr("Open window switcher")
         enabled: Config.tabSwitch.enabled
         onPressed: {
-            const visibilities = Visibilities.getForActive();
-            if (visibilities.launcher && root.lastAction === "windows") {
+            if (Visibilities.launcherOpenVisibilities() && root.lastAction === "windows") {
                 Windows.triggerCycleNext();
             } else {
                 root.lastAction = "windows";
@@ -318,8 +316,7 @@ Scope {
                 Windows.updateItems();
                 Windows.selectedIndex = (Windows.items.length > 1) ? 1 : 0;
                 Windows.refreshHighlight();
-                Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}windows `;
-                visibilities.launcher = true;
+                Visibilities.openLauncher("windows");
             }
         }
     }
@@ -330,8 +327,7 @@ Scope {
         description: qsTr("Open window switcher (reverse)")
         enabled: Config.tabSwitch.enabled
         onPressed: {
-            const visibilities = Visibilities.getForActive();
-            if (visibilities.launcher && root.lastAction === "windows") {
+            if (Visibilities.launcherOpenVisibilities() && root.lastAction === "windows") {
                 Windows.triggerCyclePrev();
             } else {
                 root.lastAction = "windows";
@@ -339,8 +335,7 @@ Scope {
                 Windows.updateItems();
                 Windows.selectedIndex = (Windows.items.length > 1) ? Windows.items.length - 1 : 0;
                 Windows.refreshHighlight();
-                Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}windows `;
-                visibilities.launcher = true;
+                Visibilities.openLauncher("windows");
             }
         }
     }

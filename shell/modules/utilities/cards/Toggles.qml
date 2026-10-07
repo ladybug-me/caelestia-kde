@@ -546,11 +546,7 @@ StyledRect {
                         icon: "wallpaper"
                         isToggle: false
                         inactiveOnColour: Colours.palette.m3onSurfaceVariant
-                        onClicked: {
-                            Visibilities.launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}wallpaper `;
-                            const visibilities = Visibilities.getForActive();
-                            visibilities.launcher = true;
-                        }
+                        onClicked: Visibilities.openLauncher("wallpaper")
                     }
                 }
                 DelegateChoice {

@@ -1,0 +1,2807 @@
+{
+ "how": "grammar-template paraphrase candidates; feed through eval grow's quarantine, never auto-promote",
+ "items": [
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you turn off session general",
+   "tool": "setSessionEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please transparency layers appearance should be 0.5",
+   "tool": "setTransparencyLayers"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "decrease network rescan interval",
+   "tool": "setNetworkRescanInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please move greeter mode bar slideshow",
+   "tool": "setGreeterMode"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make launcher shown smaller",
+   "tool": "setLauncherMaxShown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on bar hover",
+   "tool": "setBarShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn on scroll actions volume",
+   "tool": "setScrollActionsVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "enable expire notifs notifications",
+   "tool": "setExpire"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn on dodge windows bar",
+   "tool": "setDodgeWindows"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you raise slideshow interval background to 0.5",
+   "tool": "setSlideshowInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you decrease rounding border",
+   "tool": "setRounding"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "lower wallpaper fade speed to 2.55",
+   "tool": "setWallpaperFadeSpeed"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop osd",
+   "tool": "setOsdEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please hide lock startup lockscreen",
+   "tool": "setLockOnStartup"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide workspaces windows special",
+   "tool": "setWorkspacesShowWindowsOnSpecialWorkspaces"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate preview desktop tab",
+   "tool": "setPreviewOnDesktop"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make launcher shown bigger",
+   "tool": "setLauncherMaxShown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "make clipboard entries launcher bigger",
+   "tool": "setClipboardMaxEntries"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make notifs popups notifications smaller",
+   "tool": "setNotifsMaxPopups"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide colorize media gif",
+   "tool": "setColorizeMediaGif"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please lower desktop clock scale to 1.75",
+   "tool": "setDesktopClockScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "data units services binary please",
+   "tool": "setDataUnits"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "ambient opacity appearance should be 0.5",
+   "tool": "setAmbientOpacity"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make workspaces shown bar smaller",
+   "tool": "setWorkspacesShown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "hide bar persistent",
+   "tool": "setBarPersistent"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "make preview scales greeter bigger",
+   "tool": "setPreviewScalesGreeter"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you greeter night start should be 11.5",
+   "tool": "setGreeterNightStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please enable overview hover",
+   "tool": "setOverviewShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please no more hover bottom right",
+   "tool": "setHoverBottomRight"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show dock preview desktop",
+   "tool": "setDockPreviewOnDesktop"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate visualiser auto background",
+   "tool": "setVisualiserAutoHide"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable game mode shell",
+   "tool": "setGameModeDisableShellTransparency"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on game mode shell",
+   "tool": "setGameModeDisableShellTransparency"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you wallpaper fill mode 1 please",
+   "tool": "setWallpaperFillMode"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you decrease deform scale appearance",
+   "tool": "setDeformScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn on performance dashboard",
+   "tool": "setShowPerformance"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on utilities",
+   "tool": "setUtilitiesEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "increase fullscreen expire timeout",
+   "tool": "setFullscreenExpireTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want overview blur on",
+   "tool": "setEnableOverviewBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on clock seconds bar",
+   "tool": "setClockShowSeconds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on video wallpaper pause",
+   "tool": "setVideoWallpaperPauseOnTiled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you stop performance memory dashboard",
+   "tool": "setPerformanceShowMemory"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you disable workspaces per monitor",
+   "tool": "setWorkspacesPerMonitor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want performance network dashboard on",
+   "tool": "setPerformanceShowNetwork"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you arpc idle timeout should be 1800.0",
+   "tool": "setArpcIdleTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want check updates general on",
+   "tool": "setCheckUpdates"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want colorize media gif on",
+   "tool": "setColorizeMediaGif"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want game mode window on",
+   "tool": "setGameModeDisableWindowTransparency"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you clock format services auto please",
+   "tool": "setClockFormat"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "raise osd hover width to 55.0",
+   "tool": "setOsdHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please disable desktop shapes background",
+   "tool": "setDesktopShapesEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you set sensor units services to auto",
+   "tool": "setSensorUnits"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you increase visualiser spacing background",
+   "tool": "setVisualiserSpacing"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show transparency appearance effects",
+   "tool": "setTransparencyEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide desktop shapes auto",
+   "tool": "setDesktopShapesAutoHide"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you resource update interval should be 5250.0",
+   "tool": "setResourceUpdateInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you lower preview scales dock to 0.0",
+   "tool": "setPreviewScalesDock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop desktop lyrics invert",
+   "tool": "setDesktopLyricsInvertColors"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please no more github background bar",
+   "tool": "setGithubBackground"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable islands appearance effects",
+   "tool": "setIslands"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you session drag threshold should be 105.0",
+   "tool": "setSessionDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "increase volume services",
+   "tool": "setMaxVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn on rotate profile pic",
+   "tool": "setRotateProfilePic"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate sounds charging started",
+   "tool": "setSoundsChargingStarted"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you decrease greeter evening start",
+   "tool": "setGreeterEveningStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you increase default expire timeout",
+   "tool": "setDefaultExpireTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate scroll actions workspaces",
+   "tool": "setScrollActionsWorkspaces"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "preview scales greeter should be 0.0",
+   "tool": "setPreviewScalesGreeter"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn off dock preview desktop",
+   "tool": "setDockPreviewOnDesktop"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable auto scheme services",
+   "tool": "setAutoSchemeEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you turn off preview scale with",
+   "tool": "setPreviewScaleWithBar"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn on performance memory dashboard",
+   "tool": "setPerformanceShowMemory"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop scroll actions volume",
+   "tool": "setScrollActionsVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show recolour logo lock",
+   "tool": "setRecolourLogo"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make launcher hover width bigger",
+   "tool": "setLauncherHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please move position notifs notifications top left",
+   "tool": "setPosition"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate open expanded notifs",
+   "tool": "setOpenExpanded"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please hide clock date bar",
+   "tool": "setClockShowDate"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you raise greeter afternoon start to 11.5",
+   "tool": "setGreeterAfternoonStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more volume osd",
+   "tool": "setEnableVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "no more clock icon bar",
+   "tool": "setClockShowIcon"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please raise grid fade speed to 2.55",
+   "tool": "setGridFadeSpeed"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop desktop icons background",
+   "tool": "setDesktopIconsEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "hide visualiser blur background",
+   "tool": "setVisualiserBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "disable game mode desktop",
+   "tool": "setGameModeDisableDesktopLyrics"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you desktop clock scale should be 1.75",
+   "tool": "setDesktopClockScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "activate game mode auto",
+   "tool": "setGameModeAutoEnable"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more clock background bar",
+   "tool": "setClockBackground"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please raise launcher drag threshold to 100.0",
+   "tool": "setLauncherDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you show arpc manual override",
+   "tool": "setArpcManualOverride"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable desktop clock invert",
+   "tool": "setDesktopClockInvertColors"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please utilities drag threshold should be 100.0",
+   "tool": "setUtilitiesDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable sounds charging started",
+   "tool": "setSoundsChargingStarted"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you greeter afternoon start should be 11.5",
+   "tool": "setGreeterAfternoonStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please raise grab width sidebar to 50.5",
+   "tool": "setGrabWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop scroll actions workspaces",
+   "tool": "setScrollActionsWorkspaces"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn on desktop clock invert",
+   "tool": "setDesktopClockInvertColors"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please raise fprint tries lock to 3.0",
+   "tool": "setMaxFprintTries"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "raise rounding scale appearance to 1.25",
+   "tool": "setRoundingScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please no more notifs lock lockscreen",
+   "tool": "setHideNotifs"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make preview scale bar bigger",
+   "tool": "setPreviewScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you activate hover bottom right",
+   "tool": "setHoverBottomRight"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make layout type overview smaller",
+   "tool": "setLayoutType"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop clock seconds bar",
+   "tool": "setClockShowSeconds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want performance dashboard on",
+   "tool": "setShowPerformance"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "decrease preview scales lock",
+   "tool": "setPreviewScalesLockStatus"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more logout lock lockscreen",
+   "tool": "setShowLogout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make dashboard hover width smaller",
+   "tool": "setDashboardHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you disable dashboard hover",
+   "tool": "setDashboardShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you increase desktop lyrics alignment",
+   "tool": "setDesktopLyricsAlignment"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "default expire timeout should be 30500.0",
+   "tool": "setDefaultExpireTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable fprint lock lockscreen",
+   "tool": "setEnableFprint"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you increase grid fade speed",
+   "tool": "setGridFadeSpeed"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you utilities hover thickness should be 50.5",
+   "tool": "setUtilitiesHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more toasts night light",
+   "tool": "setToastsNightLightChanged"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show scroll actions workspaces",
+   "tool": "setScrollActionsWorkspaces"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate overview blur",
+   "tool": "setEnableOverviewBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please utilities hover width should be 55.0",
+   "tool": "setUtilitiesHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide greeter compact bar",
+   "tool": "setGreeterCompact"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please disable sounds camera click",
+   "tool": "setSoundsCameraClick"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make notifs notifications smaller",
+   "tool": "setNotifsMaxNotifs"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more toasts transparency utilities",
+   "tool": "setToastsTransparency"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want greeter hover bar on",
+   "tool": "setGreeterShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable game mode desktop",
+   "tool": "setGameModeDisableDesktopLyrics"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you put sensor units services auto",
+   "tool": "setSensorUnits"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you activate fuzzy actions launcher",
+   "tool": "setUseFuzzyActions"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make dashboard hover width bigger",
+   "tool": "setDashboardHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop toasts config loaded",
+   "tool": "setToastsConfigLoaded"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make fullscreen expire timeout smaller",
+   "tool": "setFullscreenExpireTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want action click notifs on",
+   "tool": "setActionOnClick"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "disable sleep lock lockscreen",
+   "tool": "setShowSleep"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please move easing type overview 0",
+   "tool": "setEasingType"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want blur wallpaper lock on",
+   "tool": "setBlurWallpaper"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "raise fullscreen expire timeout to 15500.0",
+   "tool": "setFullscreenExpireTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show lock startup lockscreen",
+   "tool": "setLockOnStartup"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you turn off desktop clock background",
+   "tool": "setDesktopClockEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please base duration overview should be 550.0",
+   "tool": "setBaseDuration"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want game mode hyprland on",
+   "tool": "setGameModeDisableHyprlandAnimations"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show greeter inverted bar",
+   "tool": "setGreeterInverted"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "no more sounds unlock audio",
+   "tool": "setSoundsUnlock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please show status wifi bar",
+   "tool": "setStatusShowWifi"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make preview scales battery bigger",
+   "tool": "setPreviewScalesBattery"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable overview blur",
+   "tool": "setEnableOverviewBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "activate ambient color appearance",
+   "tool": "setAmbientColor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable fuzzy apps launcher",
+   "tool": "setUseFuzzyApps"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please stop islands appearance effects",
+   "tool": "setIslands"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide desktop lyrics invert",
+   "tool": "setDesktopLyricsInvertColors"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "preview scales dock should be 0.0",
+   "tool": "setPreviewScalesDock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable osd",
+   "tool": "setOsdEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you decrease sounds sfx volume",
+   "tool": "setSoundsSfxVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more popouts status icons",
+   "tool": "setPopoutsStatusIcons"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable keep awake utilities",
+   "tool": "setShowKeepAwake"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please stop overview hover",
+   "tool": "setOverviewShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable launcher vim keybinds",
+   "tool": "setLauncherVimKeybinds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate arpc caelestia info",
+   "tool": "setArpcCaelestiaInfo"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show sounds audio",
+   "tool": "setSoundsEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please decrease expand threshold notifs",
+   "tool": "setExpandThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you lower greeter evening start to 11.5",
+   "tool": "setGreeterEveningStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn off dodge focused only",
+   "tool": "setDodgeFocusedOnly"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn on game mode desktop",
+   "tool": "setGameModeDisableDesktopLyrics"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please show hover bottom right",
+   "tool": "setHoverBottomRight"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on overview blur",
+   "tool": "setEnableOverviewBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please disable transparency appearance effects",
+   "tool": "setTransparencyEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you move auto scheme mode fixed",
+   "tool": "setAutoSchemeMode"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "raise resource update interval to 5250.0",
+   "tool": "setResourceUpdateInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more all screens tab",
+   "tool": "setAllScreens"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on clock icon bar",
+   "tool": "setClockShowIcon"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want fuzzy schemes launcher on",
+   "tool": "setUseFuzzySchemes"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please decrease visualiser spacing background",
+   "tool": "setVisualiserSpacing"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more dock recolour icons",
+   "tool": "setDockRecolourIcons"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "increase brightness increment services",
+   "tool": "setBrightnessIncrement"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide performance gpu dashboard",
+   "tool": "setPerformanceShowGpu"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "lower font scale appearance to 1.25",
+   "tool": "setFontScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you show material you icons",
+   "tool": "setMaterialYouIconsEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop launcher",
+   "tool": "setLauncherEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop workspaces windows bar",
+   "tool": "setWorkspacesShowWindows"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you visualiser rounding background should be 0.5",
+   "tool": "setVisualiserRounding"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn on sidebar",
+   "tool": "setSidebarEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you activate video wallpaper paused",
+   "tool": "setVideoWallpaperPaused"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "lower deform scale appearance to 0.75",
+   "tool": "setDeformScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn on wallpaper blur overview",
+   "tool": "setDisableWallpaperBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "overview hover thickness should be 50.5",
+   "tool": "setOverviewHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate wallpaper recolor background",
+   "tool": "setWallpaperRecolor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you lower brightness increment services to 0.26",
+   "tool": "setBrightnessIncrement"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn off clock seconds dashboard",
+   "tool": "setShowClockSeconds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please show video wallpaper mute",
+   "tool": "setVideoWallpaperMuteOnMedia"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please no more fuzzy apps launcher",
+   "tool": "setUseFuzzyApps"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you lower default expire timeout to 30500.0",
+   "tool": "setDefaultExpireTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make brightness increment services bigger",
+   "tool": "setBrightnessIncrement"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "hide popouts tray bar",
+   "tool": "setPopoutsTray"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn off video wallpaper sound",
+   "tool": "setVideoWallpaperSoundEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want clock seconds bar on",
+   "tool": "setClockShowSeconds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide hover top left",
+   "tool": "setHoverTopLeft"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please increase preview scales tray",
+   "tool": "setPreviewScalesTrayMenu"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide game mode window",
+   "tool": "setGameModeDisableWindowTransparency"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make clipboard entries launcher smaller",
+   "tool": "setClipboardMaxEntries"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop clock icon bar",
+   "tool": "setClockShowIcon"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please hide slideshow background wallpaper-scheme",
+   "tool": "setSlideshowEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate performance memory dashboard",
+   "tool": "setPerformanceShowMemory"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please lower animation speed appearance to 2.12",
+   "tool": "setAnimationSpeed"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more hover bottom left",
+   "tool": "setHoverBottomLeft"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want visualiser blur background on",
+   "tool": "setVisualiserBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want desktop shapes background on",
+   "tool": "setDesktopShapesEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you decrease arpc idle timeout",
+   "tool": "setArpcIdleTimeout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop fprint lock lockscreen",
+   "tool": "setEnableFprint"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop visualiser auto background",
+   "tool": "setVisualiserAutoHide"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "set greeter mode bar to time of day",
+   "tool": "setGreeterMode"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "decrease volume services",
+   "tool": "setMaxVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on status wifi bar",
+   "tool": "setStatusShowWifi"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you expand threshold notifs should be 52.5",
+   "tool": "setExpandThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "hide clock seconds bar",
+   "tool": "setClockShowSeconds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide clock icon bar",
+   "tool": "setClockShowIcon"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make group preview num smaller",
+   "tool": "setGroupPreviewNum"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "spacing scale appearance should be 1.25",
+   "tool": "setSpacingScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop scroll actions brightness",
+   "tool": "setScrollActionsBrightness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop launcher hover",
+   "tool": "setLauncherShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate game mode hyprland",
+   "tool": "setGameModeDisableHyprlandShadows"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make wallpaper recolor strength bigger",
+   "tool": "setWallpaperRecolorStrength"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable video wallpaper mute",
+   "tool": "setVideoWallpaperMuteOnMedia"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more tray recolour bar",
+   "tool": "setTrayRecolour"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn on fuzzy schemes launcher",
+   "tool": "setUseFuzzySchemes"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please show workspaces unoccupied bar",
+   "tool": "setWorkspacesShowUnoccupied"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide session vim keybinds",
+   "tool": "setSessionVimKeybinds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more launcher hover",
+   "tool": "setLauncherShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "disable browse empty launcher",
+   "tool": "setShowBrowseOnEmpty"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you dashboard drag threshold should be 100.0",
+   "tool": "setDashboardDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you activate wallpaper blur overview",
+   "tool": "setDisableWallpaperBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "disable sounds lock audio",
+   "tool": "setSoundsLock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn off hover bottom left",
+   "tool": "setHoverBottomLeft"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "workspaces display type shapes please",
+   "tool": "setWorkspacesDisplayType"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make font scale appearance smaller",
+   "tool": "setFontScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you animation speed appearance should be 2.12",
+   "tool": "setAnimationSpeed"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "enable workspaces windows bar",
+   "tool": "setWorkspacesShowWindows"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you raise utilities hover width to 55.0",
+   "tool": "setUtilitiesHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable greeter compact bar",
+   "tool": "setGreeterCompact"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you raise desktop lyrics scale to 1.75",
+   "tool": "setDesktopLyricsScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you increase network rescan interval",
+   "tool": "setNetworkRescanInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want clock icon bar on",
+   "tool": "setClockShowIcon"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want recolour logo lock on",
+   "tool": "setRecolourLogo"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "preview scales battery should be 0.0",
+   "tool": "setPreviewScalesBattery"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make expand threshold notifs bigger",
+   "tool": "setExpandThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you activate clock seconds bar",
+   "tool": "setClockShowSeconds"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make layout type overview bigger",
+   "tool": "setLayoutType"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on dashboard",
+   "tool": "setDashboardEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate sounds audio",
+   "tool": "setSoundsEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show fuzzy actions launcher",
+   "tool": "setUseFuzzyActions"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate video wallpaper pause",
+   "tool": "setVideoWallpaperPauseOnFullscreen"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable workspaces per monitor",
+   "tool": "setWorkspacesPerMonitor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make preview scales battery smaller",
+   "tool": "setPreviewScalesBattery"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please workspaces shown bar should be 10.5",
+   "tool": "setWorkspacesShown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn off video wallpaper paused",
+   "tool": "setVideoWallpaperPaused"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you show fuzzy apps launcher",
+   "tool": "setUseFuzzyApps"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn on toasts game mode",
+   "tool": "setToastsGameModeChanged"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please disable video wallpaper pause",
+   "tool": "setVideoWallpaperPauseOnAllDisplays"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn off game mode desktop",
+   "tool": "setGameModeDisableDesktopLyrics"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want dock recolour icons on",
+   "tool": "setDockRecolourIcons"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you stop microphone osd",
+   "tool": "setEnableMicrophone"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you decrease visualiser bars services",
+   "tool": "setVisualiserBars"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "put wallpaper fill mode 1",
+   "tool": "setWallpaperFillMode"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "raise brightness increment services to 0.26",
+   "tool": "setBrightnessIncrement"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you decrease greeter night start",
+   "tool": "setGreeterNightStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make workspaces shown bar bigger",
+   "tool": "setWorkspacesShown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn off scroll actions volume",
+   "tool": "setScrollActionsVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate gif recorder utilities",
+   "tool": "setShowGifRecorder"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you dashboard hover width should be 55.0",
+   "tool": "setDashboardHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you font scale appearance should be 1.25",
+   "tool": "setFontScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you launcher shown should be 10.5",
+   "tool": "setLauncherMaxShown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop popouts status icons",
+   "tool": "setPopoutsStatusIcons"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please increase launcher hover thickness",
+   "tool": "setLauncherHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please lower media update interval to 1050.0",
+   "tool": "setMediaUpdateInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please preview scales wireless should be 0.0",
+   "tool": "setPreviewScalesWirelessPassword"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "spacing scale appearance should be 1.25",
+   "tool": "setSpacingScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you increase preview scales dock",
+   "tool": "setPreviewScalesDock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you put fullscreen notifs notifications off",
+   "tool": "setFullscreen"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you hide scroll actions volume",
+   "tool": "setScrollActionsVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you lower utilities drag threshold to 100.0",
+   "tool": "setUtilitiesDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you stop hover bottom right",
+   "tool": "setHoverBottomRight"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide blur mask appearance",
+   "tool": "setBlurMask"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you dashboard hover thickness should be 50.5",
+   "tool": "setDashboardHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn off greeter slideshow random",
+   "tool": "setGreeterSlideshowRandom"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show fuzzy variants launcher",
+   "tool": "setUseFuzzyVariants"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please raise greeter slideshow interval to 1802.5",
+   "tool": "setGreeterSlideshowInterval"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please increase osd hover thickness",
+   "tool": "setOsdHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you raise overview hover thickness to 50.5",
+   "tool": "setOverviewHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable sleep lock lockscreen",
+   "tool": "setShowSleep"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "activate popouts tray bar",
+   "tool": "setPopoutsTray"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "disable action click notifs",
+   "tool": "setActionOnClick"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you move workspaces display type text",
+   "tool": "setWorkspacesDisplayType"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want desktop icons background on",
+   "tool": "setDesktopIconsEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "no more arpc manual override",
+   "tool": "setArpcManualOverride"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn off wallpaper background wallpaper-scheme",
+   "tool": "setWallpaperEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want dock preview desktop on",
+   "tool": "setDockPreviewOnDesktop"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "ambient opacity appearance should be 0.5",
+   "tool": "setAmbientOpacity"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want sounds camera click on",
+   "tool": "setSoundsCameraClick"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want blur appearance effects on",
+   "tool": "setBlurEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show performance network dashboard",
+   "tool": "setPerformanceShowNetwork"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please increase dashboard hover thickness",
+   "tool": "setDashboardHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want quick toggles utilities on",
+   "tool": "setShowQuickToggles"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on browse empty launcher",
+   "tool": "setShowBrowseOnEmpty"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate dock badges bar",
+   "tool": "setDockBadges"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show greeter slideshow random",
+   "tool": "setGreeterSlideshowRandom"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please increase visualiser rounding background",
+   "tool": "setVisualiserRounding"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "increase clear threshold notifs",
+   "tool": "setClearThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "put desktop lyrics position top left",
+   "tool": "setDesktopLyricsPosition"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you audio increment services should be 0.26",
+   "tool": "setAudioIncrement"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want weather dashboard on",
+   "tool": "setShowWeather"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate game mode hyprland",
+   "tool": "setGameModeDisableHyprlandAnimations"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn off dock current desktop",
+   "tool": "setDockCurrentDesktopOnly"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please stop colorize media gif",
+   "tool": "setColorizeMediaGif"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on media shapes dashboard",
+   "tool": "setUseMediaShapes"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide wallpaper blur overview",
+   "tool": "setDisableWallpaperBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you dock icon size should be 56.0",
+   "tool": "setDockIconSize"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make launcher hover width smaller",
+   "tool": "setLauncherHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you turn on confirm clear clipboard",
+   "tool": "setConfirmClearClipboard"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate lock startup lockscreen",
+   "tool": "setLockOnStartup"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you greeter evening start should be 11.5",
+   "tool": "setGreeterEveningStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please show media dashboard",
+   "tool": "setShowMedia"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn off power menu launcher",
+   "tool": "setShowPowerMenu"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you greeter morning start should be 11.5",
+   "tool": "setGreeterMorningStart"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "turn off utilities hover",
+   "tool": "setUtilitiesShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on minimized tab switch",
+   "tool": "setShowMinimized"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you set clock format services to twelve hour",
+   "tool": "setClockFormat"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "make base duration overview bigger",
+   "tool": "setBaseDuration"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate toasts game mode",
+   "tool": "setToastsGameModeChanged"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you make rounding border bigger",
+   "tool": "setRounding"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "no more quick toggles utilities",
+   "tool": "setShowQuickToggles"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you disable weather dashboard",
+   "tool": "setShowWeather"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please hide shutdown lock lockscreen",
+   "tool": "setShowShutdown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you raise group preview num to 5.5",
+   "tool": "setGroupPreviewNum"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more dock preview desktop",
+   "tool": "setDockPreviewOnDesktop"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "toasts utilities should be 5.5",
+   "tool": "setMaxToasts"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you lower overview drag threshold to 105.0",
+   "tool": "setOverviewDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please disable media dashboard",
+   "tool": "setShowMedia"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you show workspaces windows special",
+   "tool": "setWorkspacesShowWindowsOnSpecialWorkspaces"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please no more smart scheme services",
+   "tool": "setSmartScheme"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you hide status wifi bar",
+   "tool": "setStatusShowWifi"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please stop minimized tab switch",
+   "tool": "setShowMinimized"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more check updates general",
+   "tool": "setCheckUpdates"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you raise utilities drag threshold to 100.0",
+   "tool": "setUtilitiesDragThreshold"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please make dashboard hover thickness smaller",
+   "tool": "setDashboardHoverThickness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you no more workspaces occupied bg",
+   "tool": "setWorkspacesOccupiedBg"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show sounds lock audio",
+   "tool": "setSoundsLock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you i want ambient color appearance on",
+   "tool": "setAmbientColor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "enable arpc caelestia info",
+   "tool": "setArpcCaelestiaInfo"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate workspaces per monitor",
+   "tool": "setWorkspacesPerMonitor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "smoothing border should be 50.0",
+   "tool": "setSmoothing"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on shutdown lock lockscreen",
+   "tool": "setShowShutdown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you stop arpc caelestia info",
+   "tool": "setArpcCaelestiaInfo"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please no more desktop lyrics background",
+   "tool": "setDesktopLyricsEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you i want workspaces unoccupied bar on",
+   "tool": "setWorkspacesShowUnoccupied"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please turn on quick toggles utilities",
+   "tool": "setShowQuickToggles"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please i want toasts config loaded on",
+   "tool": "setToastsConfigLoaded"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "move desktop clock position top center",
+   "tool": "setDesktopClockPosition"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "activate visualiser blur background",
+   "tool": "setVisualiserBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you disable greeter inverted bar",
+   "tool": "setGreeterInverted"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you stop workspaces per monitor",
+   "tool": "setWorkspacesPerMonitor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "increase font scale appearance",
+   "tool": "setFontScale"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop game mode hyprland",
+   "tool": "setGameModeDisableHyprlandGaps"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "stop utilities",
+   "tool": "setUtilitiesEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want media dashboard on",
+   "tool": "setShowMedia"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you lower preview scales notifications to 0.0",
+   "tool": "setPreviewScalesNotifications"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable media shapes dashboard",
+   "tool": "setUseMediaShapes"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you activate slideshow random background",
+   "tool": "setSlideshowRandom"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you raise notifs notifications to 1010.0",
+   "tool": "setNotifsMaxNotifs"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please grab width sidebar should be 50.5",
+   "tool": "setGrabWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you make wallpapers launcher bigger",
+   "tool": "setMaxWallpapers"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable wallpaper recolor background",
+   "tool": "setWallpaperRecolor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn on material you icons",
+   "tool": "setMaterialYouIconsVibrant"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more osd",
+   "tool": "setOsdEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "activate shutdown lock lockscreen",
+   "tool": "setShowShutdown"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show toasts transparency utilities",
+   "tool": "setToastsTransparency"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable sounds lock audio",
+   "tool": "setSoundsLock"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you enable fuzzy variants launcher",
+   "tool": "setUseFuzzyVariants"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please activate weather dashboard",
+   "tool": "setShowWeather"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you turn off overview blur",
+   "tool": "setEnableOverviewBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show scroll actions brightness",
+   "tool": "setScrollActionsBrightness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "position notifs notifications top left please",
+   "tool": "setPosition"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you show logout lock lockscreen",
+   "tool": "setShowLogout"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you stop bar hover",
+   "tool": "setBarShowOnHover"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please hide toasts game mode",
+   "tool": "setToastsGameModeChanged"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you enable scroll actions brightness",
+   "tool": "setScrollActionsBrightness"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want desktop lyrics auto on",
+   "tool": "setDesktopLyricsAutoHide"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you no more ambient color appearance",
+   "tool": "setAmbientColor"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you activate quick toggles utilities",
+   "tool": "setShowQuickToggles"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "disable toasts game mode",
+   "tool": "setToastsGameModeChanged"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "raise volume services to 1.25",
+   "tool": "setMaxVolume"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "show colorize media gif",
+   "tool": "setColorizeMediaGif"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please hide terminal dashboard",
+   "tool": "setShowTerminal"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "enum",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you set wallpaper fill mode to 1",
+   "tool": "setWallpaperFillMode"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "lower wallpaper recolor strength to 0.5",
+   "tool": "setWallpaperRecolorStrength"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you show material you icons",
+   "tool": "setMaterialYouIconsVibrant"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "please show wallpaper background wallpaper-scheme",
+   "tool": "setWallpaperEnabled"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you disable islands appearance effects",
+   "tool": "setIslands"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "no more browse empty launcher",
+   "tool": "setShowBrowseOnEmpty"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want power menu launcher on",
+   "tool": "setShowPowerMenu"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "hide overview blur",
+   "tool": "setEnableOverviewBlur"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you turn on reboot lock lockscreen",
+   "tool": "setShowReboot"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "can you show sounds charging started",
+   "tool": "setSoundsChargingStarted"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "numeric",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "could you lower dashboard hover width to 55.0",
+   "tool": "setDashboardHoverWidth"
+  },
+  {
+   "expect": "ROUTED",
+   "kind": "bool",
+   "provenance": "grammar-template candidate (review before promotion into a dev set)",
+   "text": "i want game mode auto on",
+   "tool": "setGameModeAutoEnable"
+  }
+ ],
+ "n": 400,
+ "seed": 120
+}

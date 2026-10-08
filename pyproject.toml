@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "caelestia-assistant"
+# ONE version source: assistant/__init__.__version__ (0.1.0). pyproject
+# no longer carries its own copy — the two disagreed (0.2.0 vs 0.1.0)
+# and the package attribute wins.
+dynamic = ["version"]
+description = "Offline-first, no-LLM intelligence core for caelestia-kde — deterministic diagnostics, learned routing, natural-language settings (issue #120), stream scanning, and a consent-gated agent, in Python stdlib only. Also ships the optional in-shell AI sidebar (shell/), an opt-in, user-keyed cloud chat tier used strictly as a fallback for requests outside the local ontology — every state-changing tool call it can trigger goes through a validated allow-list, preview-and-confirm gate."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "GPL-3.0-or-later" }
+authors = [{ name = "0x0nYx" }]
+keywords = ["kde", "quickshell", "caelestia", "assistant", "offline", "agent"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+# the extras tier: never required, every accelerator has an identical-
+# result pure-Python fallback (pinned by tests)
+accelerate = ["numpy>=1.26"]
+encode = ["onnxruntime>=1.17"]
+all = ["numpy>=1.26", "onnxruntime>=1.17"]
+
+[project.scripts]
+caelestia-assist = "assistant.hub:_run"
+
+[tool.setuptools.dynamic]
+version = { attr = "assistant.__version__" }
+
+[tool.setuptools.packages.find]
+include = ["assistant*"]
+exclude = ["assistant/data/corpus", "assistant/data/index"]

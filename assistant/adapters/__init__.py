@@ -1,0 +1,2 @@
+"""Adapters to host environments."""
+

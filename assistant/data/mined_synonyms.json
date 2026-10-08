@@ -1,0 +1,644 @@
+{
+ "how": "PMI-mined synonym hints (this script); hints only, never replacements; reload happens at import",
+ "min_freq": 4,
+ "min_pmi": 1.5,
+ "mined": {
+  "setActionOnClick": [
+   "escape"
+  ],
+  "setAmbientColor": [
+   "color",
+   "engine",
+   "intensity",
+   "mode"
+  ],
+  "setAmbientOpacity": [
+   "color",
+   "mode"
+  ],
+  "setArpcCaelestiaInfo": [
+   "caelestia-dots",
+   "found"
+  ],
+  "setAudioIncrement": [
+   "camera",
+   "stream"
+  ],
+  "setAutoSchemeEnabled": [
+   "dark",
+   "material"
+  ],
+  "setAutoSchemeMode": [
+   "ambient",
+   "dark",
+   "material"
+  ],
+  "setBaseDuration": [
+   "window"
+  ],
+  "setBlobScaleSpeed": [
+   "window"
+  ],
+  "setBlurWallpaper": [
+   "audio",
+   "breeze",
+   "built-in",
+   "video"
+  ],
+  "setBrightnessIncrement": [
+   "moon",
+   "night"
+  ],
+  "setCheckUpdates": [
+   "install",
+   "nexus"
+  ],
+  "setClearThreshold": [
+   "escape"
+  ],
+  "setClockShowDate": [
+   "legend",
+   "repos"
+  ],
+  "setClockShowIcon": [
+   "brightness",
+   "side"
+  ],
+  "setCurrentDesktopOnly": [
+   "switches",
+   "virtual"
+  ],
+  "setDefaultExpireTimeout": [
+   "escape"
+  ],
+  "setDesktopClockEnabled": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopClockInvertColors": [
+   "intensity",
+   "switches",
+   "vibrant",
+   "virtual"
+  ],
+  "setDesktopClockPosition": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopClockScale": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopIconsEnabled": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopLyricsAlignment": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopLyricsAutoHide": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopLyricsEnabled": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopLyricsInvertColors": [
+   "intensity",
+   "switches",
+   "vibrant",
+   "virtual"
+  ],
+  "setDesktopLyricsPosition": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopLyricsScale": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopShapesAutoHide": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopShapesEnabled": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopShapesPosition": [
+   "switches",
+   "virtual"
+  ],
+  "setDesktopShapesScale": [
+   "switches",
+   "virtual"
+  ],
+  "setDisableWallpaperBlur": [
+   "audio",
+   "video",
+   "window"
+  ],
+  "setDockBadges": [
+   "badge",
+   "badges",
+   "count",
+   "dock"
+  ],
+  "setDockCurrentDesktopOnly": [
+   "badge",
+   "badges",
+   "switches",
+   "virtual"
+  ],
+  "setDockIconSize": [
+   "badge",
+   "badges",
+   "brightness",
+   "side"
+  ],
+  "setDockPreviewOnDesktop": [
+   "badge",
+   "badges",
+   "switches",
+   "virtual"
+  ],
+  "setDockRecolourIcons": [
+   "badge",
+   "badges"
+  ],
+  "setDodgeWindows": [
+   "window"
+  ],
+  "setEasingType": [
+   "legend",
+   "repos",
+   "window"
+  ],
+  "setEnableBrightness": [
+   "moon",
+   "night"
+  ],
+  "setEnableFprint": [
+   "breeze",
+   "built-in"
+  ],
+  "setEnableOverviewBlur": [
+   "window"
+  ],
+  "setExpandThreshold": [
+   "escape"
+  ],
+  "setExpire": [
+   "escape"
+  ],
+  "setFullscreen": [
+   "escape"
+  ],
+  "setFullscreenExpireTimeout": [
+   "escape"
+  ],
+  "setGameModeAutoEnable": [
+   "ambient"
+  ],
+  "setGameModeDisableDesktopLyrics": [
+   "ambient",
+   "switches",
+   "virtual"
+  ],
+  "setGameModeDisableHyprlandAnimations": [
+   "ambient"
+  ],
+  "setGameModeDisableHyprlandBlur": [
+   "ambient"
+  ],
+  "setGameModeDisableHyprlandGaps": [
+   "ambient"
+  ],
+  "setGameModeDisableHyprlandShadows": [
+   "ambient"
+  ],
+  "setGameModeDisableShellTransparency": [
+   "ambient",
+   "caelestia-dots",
+   "start"
+  ],
+  "setGameModeDisableToastTransparency": [
+   "ambient"
+  ],
+  "setGameModeDisableVisualizer": [
+   "ambient"
+  ],
+  "setGameModeDisableWindowTransparency": [
+   "ambient",
+   "rules",
+   "switcher"
+  ],
+  "setGithubBackground": [
+   "caelestia-dots",
+   "caelestia-kde"
+  ],
+  "setGpuType": [
+   "legend",
+   "repos",
+   "usage",
+   "widget"
+  ],
+  "setGreeterAfternoonStart": [
+   "lock",
+   "screen",
+   "shell"
+  ],
+  "setGreeterCompact": [
+   "lock",
+   "screen"
+  ],
+  "setGreeterEveningStart": [
+   "lock",
+   "screen",
+   "shell"
+  ],
+  "setGreeterInverted": [
+   "lock",
+   "screen"
+  ],
+  "setGreeterMode": [
+   "ambient",
+   "lock",
+   "screen"
+  ],
+  "setGreeterMorningStart": [
+   "lock",
+   "screen",
+   "shell"
+  ],
+  "setGreeterNightStart": [
+   "brightness",
+   "light",
+   "lock",
+   "screen",
+   "shell"
+  ],
+  "setGreeterShowOnHover": [
+   "lock",
+   "screen"
+  ],
+  "setGreeterSlideshowInterval": [
+   "lock",
+   "screen"
+  ],
+  "setGreeterSlideshowRandom": [
+   "lock",
+   "screen"
+  ],
+  "setGridFadeSpeed": [
+   "window"
+  ],
+  "setGroupPreviewNum": [
+   "escape"
+  ],
+  "setHideNotifs": [
+   "breeze",
+   "built-in"
+  ],
+  "setHoverBottomLeft": [
+   "window"
+  ],
+  "setHoverBottomRight": [
+   "icon",
+   "window"
+  ],
+  "setHoverTopLeft": [
+   "window"
+  ],
+  "setHoverTopRight": [
+   "icon",
+   "window"
+  ],
+  "setLauncherVimKeybinds": [
+   "shortcuts"
+  ],
+  "setLayoutType": [
+   "legend",
+   "repos",
+   "window"
+  ],
+  "setLivePreviews": [
+   "video",
+   "wallpaper",
+   "window"
+  ],
+  "setLockOnStartup": [
+   "breeze",
+   "built-in"
+  ],
+  "setMaterialYouIconsEnabled": [
+   "colour",
+   "dark",
+   "material"
+  ],
+  "setMaterialYouIconsVibrant": [
+   "color",
+   "colors",
+   "colour",
+   "dark",
+   "material"
+  ],
+  "setMaxFprintTries": [
+   "breeze",
+   "built-in"
+  ],
+  "setMediaUpdateInterval": [
+   "cache",
+   "updater"
+  ],
+  "setMonitor": [
+   "escape",
+   "fullscreened",
+   "video"
+  ],
+  "setNetworkRescanInterval": [
+   "install",
+   "updates"
+  ],
+  "setNotifsMaxNotifs": [
+   "escape"
+  ],
+  "setNotifsMaxPopups": [
+   "escape"
+  ],
+  "setOpenExpanded": [
+   "escape",
+   "issue"
+  ],
+  "setOverviewDragThreshold": [
+   "window"
+  ],
+  "setOverviewEnabled": [
+   "window"
+  ],
+  "setOverviewHoverThickness": [
+   "window"
+  ],
+  "setOverviewShowOnHover": [
+   "window"
+  ],
+  "setPerformanceShowGpu": [
+   "usage",
+   "widget"
+  ],
+  "setPopoutsGreeter": [
+   "lock",
+   "screen"
+  ],
+  "setPosition": [
+   "escape"
+  ],
+  "setPreviewOnDesktop": [
+   "switches",
+   "virtual"
+  ],
+  "setPreviewScaleWithBar": [
+   "audio",
+   "camera"
+  ],
+  "setPreviewScalesAudio": [
+   "camera",
+   "stream"
+  ],
+  "setPreviewScalesDock": [
+   "badge",
+   "badges"
+  ],
+  "setPreviewScalesGithub": [
+   "caelestia-dots",
+   "caelestia-kde"
+  ],
+  "setPreviewScalesGreeter": [
+   "lock",
+   "screen"
+  ],
+  "setPreviewScalesLockStatus": [
+   "breeze",
+   "built-in"
+  ],
+  "setPreviewScalesNotifications": [
+   "escape"
+  ],
+  "setRecolourLogo": [
+   "breeze",
+   "built-in",
+   "logocolor",
+   "white"
+  ],
+  "setResourceUpdateInterval": [
+   "cache",
+   "updater"
+  ],
+  "setRotateProfilePic": [
+   "breeze",
+   "built-in"
+  ],
+  "setScrollActionsBrightness": [
+   "moon",
+   "night"
+  ],
+  "setSessionDragThreshold": [
+   "plasma"
+  ],
+  "setSessionEnabled": [
+   "plasma"
+  ],
+  "setSessionVimKeybinds": [
+   "plasma",
+   "shortcuts"
+  ],
+  "setShowHibernate": [
+   "breeze",
+   "built-in"
+  ],
+  "setShowLogout": [
+   "breeze",
+   "built-in"
+  ],
+  "setShowReboot": [
+   "breeze",
+   "built-in",
+   "color"
+  ],
+  "setShowScreenRecorder": [
+   "breeze",
+   "lock"
+  ],
+  "setShowShutdown": [
+   "breeze",
+   "built-in"
+  ],
+  "setShowSleep": [
+   "breeze",
+   "built-in"
+  ],
+  "setShowSwitchUser": [
+   "breeze",
+   "built-in",
+   "systemd"
+  ],
+  "setShowTerminal": [
+   "sequences"
+  ],
+  "setSmartScheme": [
+   "dark",
+   "material"
+  ],
+  "setSoundsCameraClick": [
+   "audio",
+   "camera",
+   "stream",
+   "vesktop"
+  ],
+  "setSoundsChargingStarted": [
+   "camera",
+   "stream"
+  ],
+  "setSoundsEffectTick": [
+   "camera",
+   "stream"
+  ],
+  "setSoundsEnabled": [
+   "camera",
+   "stream"
+  ],
+  "setSoundsLock": [
+   "breeze",
+   "built-in",
+   "camera",
+   "stream"
+  ],
+  "setSoundsLowBattery": [
+   "camera",
+   "stream"
+  ],
+  "setSoundsNotificationVolume": [
+   "camera",
+   "stream"
+  ],
+  "setSoundsScreenRecord": [
+   "breeze",
+   "camera",
+   "lock",
+   "stream"
+  ],
+  "setSoundsSfxVolume": [
+   "camera",
+   "stream"
+  ],
+  "setSoundsUnlock": [
+   "camera",
+   "stream"
+  ],
+  "setSyncWallpaper": [
+   "audio",
+   "breeze",
+   "built-in",
+   "video"
+  ],
+  "setToastsConfigLoaded": [
+   "install"
+  ],
+  "setToastsGameModeChanged": [
+   "ambient"
+  ],
+  "setToastsNightLightChanged": [
+   "brightness",
+   "light",
+   "night"
+  ],
+  "setUseFuzzyApps": [
+   "crash"
+  ],
+  "setVideoWallpaperMuteOnMedia": [
+   "audio",
+   "live",
+   "video",
+   "wallpaper"
+  ],
+  "setVideoWallpaperPauseOnAllDisplays": [
+   "audio",
+   "live",
+   "video",
+   "wallpaper"
+  ],
+  "setVideoWallpaperPauseOnFullscreen": [
+   "audio",
+   "live",
+   "video",
+   "wallpaper"
+  ],
+  "setVideoWallpaperPauseOnTiled": [
+   "audio",
+   "live",
+   "video",
+   "wallpaper"
+  ],
+  "setVideoWallpaperPaused": [
+   "audio",
+   "live",
+   "video",
+   "wallpaper"
+  ],
+  "setVideoWallpaperSoundEnabled": [
+   "audio",
+   "live",
+   "video",
+   "wallpaper"
+  ],
+  "setWallpaperEnabled": [
+   "audio",
+   "video"
+  ],
+  "setWallpaperFadeSpeed": [
+   "audio",
+   "video",
+   "window"
+  ],
+  "setWallpaperFillMode": [
+   "ambient",
+   "audio",
+   "video"
+  ],
+  "setWallpaperRecolor": [
+   "audio",
+   "video"
+  ],
+  "setWallpaperRecolorStrength": [
+   "audio",
+   "video"
+  ],
+  "setWorkspacesActiveIndicator": [
+   "window"
+  ],
+  "setWorkspacesActiveTrail": [
+   "window"
+  ],
+  "setWorkspacesDisplayType": [
+   "legend",
+   "repos"
+  ],
+  "setWorkspacesMaxWindowIcons": [
+   "rules",
+   "switcher"
+  ],
+  "setWorkspacesPerMonitor": [
+   "fullscreened",
+   "video"
+  ],
+  "setWorkspacesShowWindows": [
+   "window"
+  ],
+  "setWorkspacesShowWindowsOnSpecialWorkspaces": [
+   "window"
+  ]
+ },
+ "window": 8
+}

@@ -56,6 +56,9 @@ Item {
                 root.browser.launch(root.modelData);
             }
         }
+
+        ToolTip.visible: tileArea.containsMouse && !favArea.containsMouse && name.truncated
+        ToolTip.text: root.modelData?.name ?? ""
     }
 
     Column {

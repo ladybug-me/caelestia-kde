@@ -52,6 +52,7 @@ class LauncherConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, showPowerMenu, true)
     CONFIG_PROPERTY(bool, showBrowseOnEmpty, true)
     CONFIG_ENUM_PROPERTY(LauncherBrowseLayout, browseLayout, LauncherBrowseLayout::Default)
+    CONFIG_ENUM_PROPERTY(LauncherNameOverflow, nameOverflow, LauncherNameOverflow::Tooltip)
     CONFIG_PROPERTY(int, hoverThickness, 10)
     CONFIG_PROPERTY(int, hoverWidth, 50)
     CONFIG_GLOBAL_PROPERTY(bool, vimKeybinds, false)

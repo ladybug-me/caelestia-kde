@@ -23,6 +23,13 @@ Item {
     }
     property real offsetScale: shouldBeActive ? 0 : 1
 
+    signal closeAnimationFinished()
+
+    onOffsetScaleChanged: {
+        if (offsetScale >= 1)
+            root.closeAnimationFinished();
+    }
+
     onShouldBeActiveChanged: {
         if (shouldBeActive) {
             implicitHeight = Qt.binding(() => content.implicitHeight);
@@ -53,6 +60,7 @@ Item {
             Content {
                 visibilities: root.visibilities
                 panels: root.panels
+                wrapper: root
                 maxWidth: root.maxWidth
                 maxHeight: root.maxHeight
             }

@@ -13,8 +13,6 @@ Singleton {
 
     property alias enabled: props.enabled
 
-    readonly property bool onHyprland: !!Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")
-
     property bool restoreVideoWallpaper: false
 
     property bool autoEnabled: false
@@ -58,19 +56,6 @@ Singleton {
         }
     }
 
-    function setDynamicConfs(): void {
-        Kwin.extras.applyOptions({
-            "animations:enabled": 0,
-            "decoration:shadow:enabled": 0,
-            "decoration:blur:enabled": 0,
-            "general:gaps_in": 0,
-            "general:gaps_out": 0,
-            "general:border_size": 1,
-            "decoration:rounding": 0,
-            "general:allow_tearing": 1
-        });
-    }
-
     function applyKwin(enable: bool): void {
         const stateFile = `${Paths.cache}/gamemode-state`;
         if (enable) {
@@ -87,6 +72,7 @@ Singleton {
             Quickshell.execDetached(["sh", "-c",
                 `p="${stateFile}"; ` +
                 'blur="$(sed -n 1p "$p" 2>/dev/null)"; anim="$(sed -n 2p "$p" 2>/dev/null)"; ' +
+                '[ -e \"$p\" ] || exit 0; ' +
                 '[ -n "$blur" ] || blur=true; [ -n "$anim" ] || anim=1; ' +
                 'kwriteconfig6 --file kwinrc --group Plugins --key blurEnabled "$blur"; ' +
                 'kwriteconfig6 --file kdeglobals --group KDE --key AnimationDurationFactor --notify "$anim"; ' +
@@ -104,29 +90,22 @@ Singleton {
             if (root.restoreVideoWallpaper)
                 GlobalConfig.background.videoWallpaperPaused = true;
 
-            if (root.onHyprland)
-                setDynamicConfs();
-            else
-                applyKwin(true);
+            applyKwin(true);
 
             if (GlobalConfig.utilities.toasts.gameModeChanged)
                 Toaster.toast(qsTr("Game mode enabled"),
-                    root.onHyprland ? qsTr("Disabled Hyprland animations, blur, gaps and shadows")
-                                    : qsTr("Paused video wallpaper, disabled blur and animations"), "gamepad");
+                    qsTr("Paused video wallpaper, disabled blur and animations"), "gamepad");
         } else {
             if (root.restoreVideoWallpaper) {
                 GlobalConfig.background.videoWallpaperPaused = false;
                 root.restoreVideoWallpaper = false;
             }
 
-            if (root.onHyprland)
-                Kwin.extras.message("reload");
-            else
-                applyKwin(false);
+            applyKwin(false);
 
             if (GlobalConfig.utilities.toasts.gameModeChanged)
                 Toaster.toast(qsTr("Game mode disabled"),
-                    root.onHyprland ? qsTr("Hyprland settings restored") : qsTr("Desktop effects restored"), "gamepad");
+                    qsTr("Desktop effects restored"), "gamepad");
         }
     }
 
@@ -138,28 +117,14 @@ Singleton {
         reloadableId: "gameMode"
     }
 
-
     FileView {
         path: `${Paths.cache}/gamemode-state`
         printErrors: false
         onLoaded: {
             if (props.enabled)
                 return;
-            if (root.onHyprland) {
-                Quickshell.execDetached(["rm", "-f", `${Paths.cache}/gamemode-state`]);
-            } else {
-                root.applyKwin(false);
-            }
+            root.applyKwin(false);
         }
-    }
-
-    Connections {
-        function onConfigReloaded(): void {
-            if (props.enabled)
-                root.setDynamicConfs();
-        }
-
-        target: Kwin
     }
 
     IpcHandler {

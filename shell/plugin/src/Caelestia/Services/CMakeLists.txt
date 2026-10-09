@@ -42,10 +42,6 @@ qml_module(caelestia-services
         sessionmanager.hpp
         discordipc.cpp
         discordipc.hpp
-        hyprdevices.cpp
-        hyprdevices.hpp
-        hyprextras.cpp
-        hyprextras.hpp
         keybindsmodel.cpp
         keybindsmodel.hpp
         emojidb.cpp

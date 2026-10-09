@@ -30,13 +30,8 @@ Singleton {
     readonly property var focusedWorkspace: ({ id: root.activeWsId, name: root.activeWsId.toString() })
     readonly property bool capsLock: CUtils.capsLock
     readonly property bool numLock: CUtils.numLock
-    readonly property string defaultKbLayout: ""
     readonly property string kbLayoutFull: KbLayout.activeLabel
     readonly property string kbLayout: KbLayout.activeShortLabel
-    readonly property bool usingLua: false
-    readonly property alias extras: extras
-    readonly property alias options: extras.options
-    readonly property alias devices: extras.devices
     property var monitorState: []
     property var _monitorCache: ({})
     property bool hadKeyboard: false
@@ -85,8 +80,6 @@ Singleton {
         const keys = Object.keys(root._monitorCache);
         return keys.length > 0 ? root._monitorCache[keys[0]] : null;
     }
-
-    signal configReloaded
 
     function focusWindow(address: string): void {
         KWinActiveWindowBridge.focusWindow(address);
@@ -361,53 +354,6 @@ Singleton {
         return wins.some(w => (screenName === "" || w.output === screenName) && isMaximizedOnWs(w, screenName));
     }
 
-    function dispatch(request: string): void {
-        if (request.startsWith("workspace ")) {
-            const ws = request.split(" ").slice(1).join(" ");
-            if (/^r[+-]\d+$/.test(ws)) {
-                if (ws.charAt(1) === "+")
-                    root.nextDesktop();
-                else
-                    root.previousDesktop();
-            } else {
-                root.switchToWorkspace(ws);
-            }
-            return;
-        }
-
-        if (request.startsWith("focuswindow address:0x")) {
-            root.focusWindow(request.slice("focuswindow address:0x".length).trim());
-            return;
-        }
-
-        if (request.startsWith("closewindow address:0x")) {
-            root.closeWindow(request.slice("closewindow address:0x".length).trim());
-            return;
-        }
-
-        const moveMatch = request.match(/^movetoworkspace\s+(\S+),address:0x/);
-        if (moveMatch) {
-            const desktopId = parseInt(moveMatch[1], 10);
-            const addr = request.slice(moveMatch[0].length).trim();
-            if (!isNaN(desktopId))
-                root.setWindowDesktop(addr, desktopId);
-            return;
-        }
-
-        if (request === "dpms off" || request === "dpms on") {
-            const method = (request === "dpms on") ? "turnOn" : "turnOff";
-            Quickshell.execDetached([
-                "qdbus6", "org.kde.Solid.PowerManagement",
-                "/org/kde/Solid/PowerManagement/Actions/DPMSControl",
-                "org.kde.Solid.PowerManagement.Actions.DPMSControl." + method
-            ]);
-            return;
-        }
-
-        if (request.startsWith("togglespecialworkspace"))
-            return;
-    }
-
     function cycleSpecialWorkspace(direction: string): void {
         const openSpecials = root.workspaces.filter(w => (w.name ?? "").startsWith("special:") && (w.windows ?? 0) > 0);
         if (openSpecials.length === 0)
@@ -418,11 +364,11 @@ Singleton {
             if (root.lastSpecialWorkspace) {
                 const ws = openSpecials.find(w => w.name === root.lastSpecialWorkspace);
                 if (ws) {
-                    root.dispatch(`workspace ${root.lastSpecialWorkspace}`);
+                    root.switchToWorkspace(root.lastSpecialWorkspace);
                     return;
                 }
             }
-            root.dispatch(`workspace ${openSpecials[0].name}`);
+            root.switchToWorkspace(openSpecials[0].name);
             return;
         }
 
@@ -431,7 +377,7 @@ Singleton {
             : (direction === "next")
                 ? (currentIndex + 1) % openSpecials.length
                 : (currentIndex - 1 + openSpecials.length) % openSpecials.length;
-        root.dispatch(`workspace ${openSpecials[nextIndex].name}`);
+        root.switchToWorkspace(openSpecials[nextIndex].name);
     }
 
     function monitorNames(): list<string> {
@@ -445,10 +391,6 @@ Singleton {
             root._monitorCache[screen.name] = cached;
         }
         return cached;
-    }
-
-    function refreshDevices(): void {
-        extras.refreshDevices();
     }
 
     function listSpecialWorkspaces(): string {
@@ -494,10 +436,6 @@ Singleton {
     onWorkspacesChanged: root.refreshWindows()
 
     IpcHandler {
-        function refreshDevices(): void {
-            root.refreshDevices();
-        }
-
         function cycleSpecialWorkspace(direction: string): void {
             root.cycleSpecialWorkspace(direction);
         }
@@ -515,44 +453,5 @@ Singleton {
         }
 
         target: "kwin"
-    }
-
-    IpcHandler {
-        function refreshDevices(): void {
-            root.refreshDevices();
-        }
-
-        function cycleSpecialWorkspace(direction: string): void {
-            root.cycleSpecialWorkspace(direction);
-        }
-
-        function listSpecialWorkspaces(): string {
-            return root.listSpecialWorkspaces();
-        }
-
-        function getFocusedMonitor(): string {
-            return root.getFocusedMonitor();
-        }
-
-        function listMonitors(): string {
-            return root.listMonitors();
-        }
-
-        target: "hypr"
-    }
-
-    // qmllint disable unresolved-type
-    CustomShortcut {
-        // qmllint enable unresolved-type
-        name: "refreshDevices"
-        description: qsTr("Reload devices")
-        onPressed: extras.refreshDevices()
-        onReleased: extras.refreshDevices()
-    }
-
-    HyprExtras {
-        id: extras
-
-        usingLua: false
     }
 }

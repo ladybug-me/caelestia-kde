@@ -149,13 +149,10 @@ ColumnLayout {
 
         onClicked: {
             for (const toplevel of model.toplevels) {
-                if (toplevel.pid) {
+                if (toplevel.pid)
                     Quickshell.execDetached({ command: ["kill", "-15", String(toplevel.pid)] });
-                } else if (Kwin.windowList.length > 0) {
+                else
                     Kwin.closeWindow(toplevel.address);
-                } else {
-                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.window.close({ window = "address:0x${toplevel.address}" })` : `closewindow address:0x${toplevel.address}`);
-                }
             }
             root.popouts.hasCurrent = false;
         }

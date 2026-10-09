@@ -282,12 +282,16 @@ Item {
         if (ch?.id === "workspaces" && Config.bar.scrollActions.workspaces) {
             const mon = (Config.bar.workspaces.perMonitor ? Kwin.monitorFor(screen) : Kwin.focusedMonitor);
             const specialWs = mon?.lastIpcObject.specialWorkspace.name;
-            if (specialWs?.length > 0)
-                Kwin.dispatch(Kwin.usingLua ? `hl.dsp.workspace.toggle_special("${specialWs.slice(8)}")` : `togglespecialworkspace ${specialWs.slice(8)}`);
-            else {
+            // Nothing to scroll while a special workspace is shown; KWin has no
+            // toggle for it, so swallow the event instead of leaving the strip.
+            if (!(specialWs?.length > 0)) {
                 const activeId = Kwin.activeWsId;
-                if (angleDelta.y < 0 || activeId > 1)
-                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ workspace = "r${angleDelta.y > 0 ? "-" : "+"}1" })` : `workspace r${angleDelta.y > 0 ? "-" : "+"}1`);
+                if (angleDelta.y < 0 || activeId > 1) {
+                    if (angleDelta.y > 0)
+                        Kwin.previousDesktop();
+                    else
+                        Kwin.nextDesktop();
+                }
             }
         } else if ((isHorizontal ? pos < screen.width / 2 : pos < screen.height / 2) && Config.bar.scrollActions.volume) {
             if (angleDelta.y > 0)

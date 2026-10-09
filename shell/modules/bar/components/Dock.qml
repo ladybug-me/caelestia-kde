@@ -125,29 +125,17 @@ Item {
                 }
             }
 
-            const isKWin = (Kwin.windowList.length > 0);
-
             if (entry.toplevels.length === 1) {
                 let addr = String(entry.toplevels[0].address);
                 if (activeIdx === 0) {
-                    if (isKWin) {
-                        Kwin.minimizeWindow(addr);
-                    }
+                    Kwin.minimizeWindow(addr);
                 } else {
-                    if (isKWin) {
-                        Kwin.focusWindow(addr);
-                    } else {
-                        Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
-                    }
+                    Kwin.focusWindow(addr);
                 }
             } else {
                 let nextIdx = activeIdx !== -1 ? (activeIdx + 1) % entry.toplevels.length : 0;
                 let addr = String(entry.toplevels[nextIdx].address);
-                if (isKWin) {
-                    Kwin.focusWindow(addr);
-                } else {
-                    Kwin.dispatch(Kwin.usingLua ? `hl.dsp.focus({ window = "address:0x${addr}" })` : `focuswindow address:0x${addr}`);
-                }
+                Kwin.focusWindow(addr);
             }
         } else if (entry.entry) {
             let newLaunching = Object.assign({}, root.launchingApps);

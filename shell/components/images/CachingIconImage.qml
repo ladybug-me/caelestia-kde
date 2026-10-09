@@ -41,6 +41,7 @@ Item {
 
         IconImage {
             source: root.source
+            implicitSize: root.implicitSize
             asynchronous: true
         }
     }

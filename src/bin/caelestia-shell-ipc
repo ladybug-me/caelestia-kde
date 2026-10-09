@@ -66,13 +66,34 @@ _export_shell_env() {
 # A transient user service returns immediately with stdio on the journal instead.
 _start_shell() {
     if command -v systemd-run >/dev/null 2>&1; then
+        local unit="caelestia-shell-start.service" state i
+        for i in {1..100}; do
+            state="$(systemctl --user is-active "$unit" 2>/dev/null || true)"
+            case "$state" in
+                activating|reloading)
+                    echo "Shell is starting."
+                    return 0
+                    ;;
+                active)
+                    echo "Shell is already running."
+                    return 0
+                    ;;
+                deactivating)
+                    sleep 0.2
+                    ;;
+                *)
+                    break
+                    ;;
+            esac
+        done
+        systemctl --user reset-failed "$unit" 2>/dev/null || true
         # Deliberately not `caelestia-shell`: that name is the login unit, and systemd refuses a
         # transient unit colliding with a loaded one.
-        systemctl --user reset-failed caelestia-shell-start.service 2>/dev/null || true
-        exec systemd-run --user --quiet --collect \
+        systemd-run --user --quiet --collect \
             --unit="caelestia-shell-start" \
             --description="Caelestia Shell" \
             -- "$QS" -n -p "$SHELL_CONFIG"
+        return $?
     fi
 
     exec stdbuf -oL -eL "$QS" -d -n -p "$SHELL_CONFIG"
@@ -145,7 +166,21 @@ case "${1:-}" in
     restart)
         if _is_running; then
             _qs_ipc quit 2>/dev/null || _qs_direct kill 2>/dev/null || true
-            sleep 2
+            for _ in {1..100}; do
+                _is_running || break
+                sleep 0.2
+            done
+            if _is_running; then
+                _qs_direct kill 2>/dev/null || true
+                for _ in {1..50}; do
+                    _is_running || break
+                    sleep 0.2
+                done
+            fi
+            if _is_running; then
+                echo "[ERR] the running shell did not stop" >&2
+                exit 1
+            fi
         fi
         _export_shell_env
         _start_shell

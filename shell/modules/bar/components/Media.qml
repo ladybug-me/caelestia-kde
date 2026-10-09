@@ -16,7 +16,7 @@ StyledRect {
     required property var popouts
 
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
-    readonly property MprisPlayer player: Players.active
+    readonly property MprisPlayer player: Players.sourcePlayer(Config.bar.media.sources)
 
     readonly property int maxLen: Config.bar.media.maxTitleLength
     readonly property string rawTitle: player?.trackTitle || qsTr("Nothing playing")
@@ -24,8 +24,11 @@ StyledRect {
     readonly property bool isPlaying: player?.isPlaying ?? false
     readonly property bool available: player !== null
     readonly property bool showTitle: Config.bar.media.showTitle
-    readonly property real contentWidth: root.showTitle ? contentLayout.implicitWidth : modeIcon.implicitWidth
-    readonly property real contentHeight: root.showTitle ? contentLayout.implicitHeight : modeIcon.implicitHeight
+    // Text mode only while actually playing; paused, stopped or missing
+    // players fall back to the icon.
+    readonly property bool showText: root.showTitle && root.isPlaying
+    readonly property real contentWidth: root.showText ? contentLayout.implicitWidth : modeIcon.implicitWidth
+    readonly property real contentHeight: root.showText ? contentLayout.implicitHeight : modeIcon.implicitHeight
 
     // Stream-aware volume: MPRIS app volume first, then the matching
     // PipeWire stream, then the global sink. Driven by mouse scroll.
@@ -79,7 +82,7 @@ StyledRect {
         Item {
             id: textContainer
 
-            visible: root.showTitle
+            visible: root.showText
 
             Layout.alignment: Qt.AlignCenter
             Layout.row: root.isHorizontal ? 0 : (Config.bar.media.inverted ? 1 : 0)
@@ -109,7 +112,7 @@ StyledRect {
             Layout.row: root.isHorizontal ? 0 : (Config.bar.media.inverted ? 0 : 1)
             Layout.column: root.isHorizontal ? 1 : 0
 
-            visible: Config.bar.media.showVisualiser && root.showTitle
+            visible: Config.bar.media.showVisualiser && root.showText
             implicitWidth: root.isHorizontal ? (visible ? 23 : 0) : 20
             implicitHeight: root.isHorizontal ? 20 : (visible ? 23 : 0)
 
@@ -154,10 +157,24 @@ StyledRect {
         id: modeIcon
 
         anchors.centerIn: parent
-        visible: !root.showTitle
+        visible: !root.showText
         text: "graphic_eq"
         color: Colours.palette.m3onSurface
         fontStyle: Tokens.font.icon.builders.medium.build()
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        cursorShape: Qt.PointingHandCursor
+        onClicked: mouse => {
+            if (!root.popouts)
+                return;
+            root.popouts.currentName = "mediacontext";
+            root.popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+            root.popouts.hasCurrent = true;
+            mouse.accepted = true;
+        }
     }
 
     WheelHandler {

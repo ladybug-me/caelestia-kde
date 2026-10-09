@@ -15,11 +15,12 @@ StyledRect {
     required property color accent
     required property real usage
     required property real temperature
+    property real cardWidth: Tokens.sizes.dashboard.perfHeroCardWidth
 
     color: Colours.tPalette.m3surfaceContainer
     radius: Tokens.rounding.extraLarge
 
-    implicitWidth: Tokens.sizes.dashboard.perfHeroCardWidth
+    implicitWidth: root.cardWidth
     implicitHeight: Math.max(tempProg.implicitHeight + detailsRow.implicitHeight + Tokens.spacing.large, usageShape.implicitHeight + usageLabel.implicitHeight) + Tokens.padding.large * 2
 
     CircularProgress {

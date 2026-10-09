@@ -22,6 +22,9 @@ Item {
     required property DrawerVisibilities visibilities
     required property BarPopouts.Wrapper popouts
     required property bool fullscreen
+    // Bar definition for overlay bars (null = legacy primary bar). When set,
+    // entries and orientation come from it, falling back to global keys.
+    property var barDef: null
     property Item currentHoveredItem: null
 
     readonly property int vPadding: Tokens.padding.large
@@ -30,26 +33,22 @@ Item {
     readonly property real barScale: rawScale < 1.0 ? Math.sqrt(Math.max(0.1, rawScale)) : rawScale
     readonly property int thickness: Math.round(Tokens.sizes.bar.innerWidth * barScale)
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    readonly property string effectivePosition: (root.barDef && root.barDef.position) ? root.barDef.position : Config.bar.position
+    readonly property bool isHorizontal: root.effectivePosition === "top" || root.effectivePosition === "bottom"
 
     readonly property real leftZoneSize: isHorizontal ? leftLayout.implicitWidth : leftLayout.implicitHeight
     readonly property real middleZoneSize: isHorizontal ? middleLayout.implicitWidth : middleLayout.implicitHeight
     readonly property real rightZoneSize: isHorizontal ? rightLayout.implicitWidth : rightLayout.implicitHeight
 
-    property var leftEntries: {
-        let entries = Config.bar.entries || [];
-        return entries.filter(e => e.enabled && (!e.zone || e.zone === "left") && e.id !== "spacer");
-    }
+    // Overlay entries: each bar uses its own list (empty means empty).
+    // Only the legacy primary bar (no barDef) uses the global list.
+    readonly property var effEntries: (root.barDef ? root.barDef.entries : null) ?? (Config.bar.entries || [])
 
-    property var middleEntries: {
-        let entries = Config.bar.entries || [];
-        return entries.filter(e => e.enabled && e.zone === "middle" && e.id !== "spacer");
-    }
+    property var leftEntries: effEntries.filter(e => e.enabled && (!e.zone || e.zone === "left") && e.id !== "spacer")
 
-    property var rightEntries: {
-        let entries = Config.bar.entries || [];
-        return entries.filter(e => e.enabled && e.zone === "right" && e.id !== "spacer");
-    }
+    property var middleEntries: effEntries.filter(e => e.enabled && e.zone === "middle" && e.id !== "spacer")
+
+    property var rightEntries: effEntries.filter(e => e.enabled && e.zone === "right" && e.id !== "spacer")
 
     function resetHover(): void {
         if (currentHoveredItem) {
@@ -93,7 +92,20 @@ Item {
     }
 
     function checkPopout(pos: real): void {
-        if (popouts.hasCurrent && (popouts.currentName === "clockcontext" || popouts.currentName === "dockcontext" || popouts.currentName === "greetercontext" || popouts.currentName === "statusiconscontext" || popouts.currentName === "workspacescontext" || popouts.currentName === "traycontext" || popouts.currentName === "githubcontext" || popouts.currentName === "osiconcontext" || popouts.currentName === "dockbgcontext"))
+<<<<<<< HEAD
+        // A context menu stays open while the pointer moves over the bar, so
+        // the hover routing below must not take it over or close it.
+        if (popouts.hasCurrent && (popouts.currentName === "clockcontext" || popouts.currentName === "dockcontext" || popouts.currentName === "greetercontext" || popouts.currentName === "statusiconscontext" || popouts.currentName === "workspacescontext" || popouts.currentName === "traycontext" || popouts.currentName === "githubcontext" || popouts.currentName === "weathercontext" || popouts.currentName === "mediacontext" || popouts.currentName === "performancecontext" || popouts.currentName === "osiconcontext" || popouts.currentName === "dockbgcontext"))
+=======
+        // Placement follows the hovered bar: a top overlay panel opens its
+        // popouts downward. The primary bar always clears the flags.
+        const isTopOverlay = (root.barDef && ((root.barDef.position || "bottom") === "top")) ?? false;
+        popouts.fromTopPanel = isTopOverlay;
+        popouts.fromTopDock = isTopOverlay && ((root.barDef.lengthPercent ?? 100) < 100);
+        // A context menu stays open while the pointer moves over the bar, so
+        // the hover routing below must not take it over or close it.
+        if (popouts.hasCurrent && (popouts.currentName === "clockcontext" || popouts.currentName === "dockcontext" || popouts.currentName === "greetercontext" || popouts.currentName === "statusiconscontext" || popouts.currentName === "workspacescontext" || popouts.currentName === "traycontext" || popouts.currentName === "githubcontext" || popouts.currentName === "weathercontext" || popouts.currentName === "mediacontext" || popouts.currentName === "performancecontext" || popouts.currentName === "shortcutscontext" || popouts.currentName === "screencapturecontext" || popouts.currentName === "keepawakecontext" || popouts.currentName === "osiconcontext" || popouts.currentName === "dockbgcontext"))
+>>>>>>> integration/multi-bar-widgets
             return;
 
         const ch = getLoaderAt(isHorizontal ? pos : width / 2, isHorizontal ? height / 2 : pos) as WrappedLoader;
@@ -207,6 +219,25 @@ Item {
                 const inside = isHorizontal ? (relPos >= 0 && relPos <= item.implicitWidth) : (relPos >= 0 && relPos <= item.implicitHeight);
                 if (inside) {
                     popouts.currentName = "github";
+                    popouts.currentCenter = isHorizontal ? item.mapToItem(null, item.implicitWidth / 2, 0).x : (item.mapToItem(null, 0, item.implicitHeight / 2).y ?? 0);
+                    popouts.hasCurrent = true;
+                } else {
+                    popouts.hasCurrent = false;
+                }
+            } else {
+                popouts.hasCurrent = false;
+            }
+<<<<<<< HEAD
+        } else if (id === "notes" || id === "weather" || id === "performance") {
+=======
+        } else if (id === "notes" || id === "weather" || id === "performance" || id === "shortcuts" || id === "screencapture" || id === "keepawake") {
+>>>>>>> integration/multi-bar-widgets
+            const item = ch.item as Item;
+            if (item) {
+                const relPos = pos - top;
+                const inside = isHorizontal ? (relPos >= 0 && relPos <= item.implicitWidth) : (relPos >= 0 && relPos <= item.implicitHeight);
+                if (inside) {
+                    popouts.currentName = id;
                     popouts.currentCenter = isHorizontal ? item.mapToItem(null, item.implicitWidth / 2, 0).x : (item.mapToItem(null, 0, item.implicitHeight / 2).y ?? 0);
                     popouts.hasCurrent = true;
                 } else {
@@ -407,6 +438,22 @@ Item {
                 }
             }
             DelegateChoice {
+                roleValue: "dashboardButton"
+                delegate: WrappedLoader {
+                    sourceComponent: DashboardButton {
+                        bar: root
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "utilitiesButton"
+                delegate: WrappedLoader {
+                    sourceComponent: UtilitiesButton {
+                        bar: root
+                    }
+                }
+            }
+            DelegateChoice {
                 roleValue: "workspaces"
                 delegate: WrappedLoader {
                     sourceComponent: Workspaces {
@@ -531,6 +578,54 @@ Item {
                 roleValue: "media"
                 delegate: WrappedLoader {
                     sourceComponent: Media {
+                        popouts: root.popouts
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "notes"
+                delegate: WrappedLoader {
+                    sourceComponent: Notes {
+                        popouts: root.popouts
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "weather"
+                delegate: WrappedLoader {
+                    sourceComponent: WeatherWidget {
+                        popouts: root.popouts
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "performance"
+                delegate: WrappedLoader {
+                    sourceComponent: PerformanceWidget {
+                        popouts: root.popouts
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "shortcuts"
+                delegate: WrappedLoader {
+                    sourceComponent: ShortcutsWidget {
+                        popouts: root.popouts
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "screencapture"
+                delegate: WrappedLoader {
+                    sourceComponent: ScreenCaptureWidget {
+                        popouts: root.popouts
+                    }
+                }
+            }
+            DelegateChoice {
+                roleValue: "keepawake"
+                delegate: WrappedLoader {
+                    sourceComponent: KeepAwakeWidget {
                         popouts: root.popouts
                     }
                 }

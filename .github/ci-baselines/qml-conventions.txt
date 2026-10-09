@@ -149,3 +149,4 @@ section-order	shell.qml	functions should appear before bindings (seen at line N)
 section-order	shell.qml	property declarations should appear before bindings (seen at line N)
 section-order	shell.qml	property declarations should appear before child objects (seen at line N)
 section-order	utils/Paths.qml	property declarations should appear before functions (seen at line N)
+missing-section-separator	modules/bar/components/Notes.qml	blank line expected between id and bindings

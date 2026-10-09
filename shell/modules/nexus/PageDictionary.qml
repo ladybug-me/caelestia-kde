@@ -72,6 +72,13 @@ QtObject {
                 { label: qsTr("Dock"), keywords: ["dock", "pinned", "apps", "grouping", "ungroup", "combine"], pagePath: "panels/taskbar/BarDock.qml", subPageIdx: 12 },
                 { label: qsTr("GitHub"), keywords: ["github", "contributions", "token"], pagePath: "panels/taskbar/BarGithub.qml", subPageIdx: 13 },
                 { label: qsTr("Media"), keywords: ["media", "music", "player", "spotify", "youtube", "now playing", "volume", "visualiser"], pagePath: "panels/taskbar/BarMedia.qml", subPageIdx: 19 },
+                { label: qsTr("Weather"), keywords: ["weather", "temperature", "units", "celsius", "fahrenheit", "city"], pagePath: "panels/taskbar/BarWeather.qml", subPageIdx: 20 },
+                { label: qsTr("Performance"), keywords: ["performance", "cpu", "gpu", "ram", "memory", "storage", "network", "battery", "pills", "stats"], pagePath: "panels/taskbar/BarPerformance.qml", subPageIdx: 21 },
+                { label: qsTr("Panel editor"), keywords: ["panel", "extra panel", "overlay", "edit panel", "rename", "move"], pagePath: "panels/taskbar/BarPanelEditor.qml", subPageIdx: 22 },
+                { label: qsTr("Activar y reorganizar"), keywords: ["components", "widgets", "toggle", "rearrange", "panel"], pagePath: "panels/taskbar/ActivateAndRearrange.qml", subPageIdx: 23 },
+                { label: qsTr("Shortcuts"), keywords: ["shortcuts", "keybinds", "hotkeys", "quick launch"], pagePath: "panels/taskbar/BarShortcuts.qml", subPageIdx: 24 },
+                { label: qsTr("Screen Capture"), keywords: ["screenshot", "recording", "region", "spectacle", "gif"], pagePath: "panels/taskbar/BarScreenCapture.qml", subPageIdx: 25 },
+                { label: qsTr("Keep Awake"), keywords: ["idle", "inhibit", "sleep", "caffeine", "coffee"], pagePath: "panels/taskbar/BarKeepAwake.qml", subPageIdx: 26 },
                 { label: qsTr("Per-element scaling offsets"), keywords: ["scale", "font scale", "preview"], pagePath: "panels/taskbar/BarPreviewScales.qml", subPageIdx: 14 },
                 { label: qsTr("Elements & Modules"), keywords: ["workspaces", "tray", "clock", "modules"], pagePath: "panels/taskbar/TaskbarElements.qml", subPageIdx: 15 },
                 { label: qsTr("Update indicator"), keywords: ["updates", "indicator"], pagePath: "panels/taskbar/BarUpdates.qml", subPageIdx: 17 },
@@ -261,4 +268,19 @@ QtObject {
             ]
         }
     ]
+
+    // Sub page index of the first entry pointing at the given page, or -1 when
+    // no entry does. Callers that jump to a sub page should look it up instead
+    // of hardcoding the number: inserting a sub page anywhere in the registry
+    // shifts every index after it, which silently repoints shortcuts.
+    function subPageIdxFor(pagePath: string): int {
+        for (let i = 0; i < pages.length; i++) {
+            const settings = pages[i].settings || [];
+            for (let j = 0; j < settings.length; j++) {
+                if (settings[j].pagePath === pagePath)
+                    return settings[j].subPageIdx;
+            }
+        }
+        return -1;
+    }
 }

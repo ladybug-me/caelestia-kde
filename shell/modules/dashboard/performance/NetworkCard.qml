@@ -9,10 +9,12 @@ import qs.services
 StyledRect {
     id: root
 
+    property real cardWidth: Tokens.sizes.dashboard.perfNetworkCardWidth
+
     color: Colours.tPalette.m3surfaceContainer
     radius: Tokens.rounding.extraLarge
 
-    implicitWidth: Tokens.sizes.dashboard.perfNetworkCardWidth
+    implicitWidth: root.cardWidth
     implicitHeight: Tokens.sizes.dashboard.perfNetworkCardHeight
 
     ServiceRef {

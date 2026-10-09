@@ -80,5 +80,18 @@ ColumnLayout {
 
         contentHeight: root.scrollable ? (root.contentChild?.implicitHeight ?? 0) : height
         contentItem.children: [root.contentChild]
+
+        // Forward wheel events from inner scrollables to this flickable
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: false
+            propagateComposedEvents: true
+            onWheel: wheel => {
+                if (flickable.interactive && (flickable.contentHeight > flickable.height || flickable.contentWidth > flickable.width)) {
+                    wheel.accepted = true
+                    flickable.contentY += wheel.angleDelta.y / 120 * 40
+                }
+            }
+        }
     }
 }

@@ -32,6 +32,8 @@ Item {
     readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "dockbgcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "clockcontext" || currentName === "statusiconscontext" || currentName === "workspacescontext" || currentName === "traycontext" || currentName === "githubcontext"
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
+    property alias fromTopPanel: popoutState.fromTopPanel
+    property alias fromTopDock: popoutState.fromTopDock
     property alias dockModel: popoutState.dockModel
     property alias tasksModel: popoutState.tasksModel
     property real currentCenter

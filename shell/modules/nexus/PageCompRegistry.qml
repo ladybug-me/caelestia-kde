@@ -140,6 +140,30 @@ QtObject {
                 Component {
                     BarMedia {}
                 }
+                Component {
+                    BarWeather {}
+                }
+                Component {
+                    BarPerformance {}
+                }
+<<<<<<< HEAD
+=======
+                Component {
+                    BarShortcuts {}
+                }
+                Component {
+                    BarScreenCapture {}
+                }
+                Component {
+                    BarKeepAwake {}
+                }
+                Component {
+                    BarPanelEditor {}
+                }
+                Component {
+                    ActivateAndRearrange {}
+                }
+>>>>>>> integration/multi-bar-widgets
             }
         },
         Component {

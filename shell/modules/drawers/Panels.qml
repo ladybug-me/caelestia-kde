@@ -24,6 +24,9 @@ Item {
     required property DrawerVisibilities visibilities
     required property Bar.BarWrapper bar
     required property real borderThickness
+    // Grown top edge (0 when no overlay panel sits on the top border). Drawers
+    // born at the top start at its lower edge instead of the screen edge.
+    property real topExtent: 0
     required property real overviewBorderThickness
     property var overviewAnimConfig
     readonly property alias osd: osd
@@ -107,7 +110,7 @@ Item {
     anchors.fill: parent
     anchors.leftMargin: (bar.position === "left" ? bar.implicitWidth + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
     anchors.rightMargin: (bar.position === "right" ? bar.implicitWidth + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
-    anchors.topMargin: (bar.position === "top" ? bar.implicitHeight + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
+    anchors.topMargin: (bar.position === "top" ? bar.implicitHeight + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : Math.max(borderThickness, root.topExtent) + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
     anchors.bottomMargin: (bar.position === "bottom" ? bar.implicitHeight + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
     states: [
         State {

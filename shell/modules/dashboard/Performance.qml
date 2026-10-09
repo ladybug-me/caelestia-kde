@@ -10,6 +10,10 @@ import qs.services
 Item {
     id: root
 
+    // Compact mode for embedding (e.g. bar popout): tighter fixed cards.
+    // Defaults to false, so the dashboard is untouched.
+    property bool compact: false
+
     implicitWidth: placeholder.active ? Tokens.sizes.dashboard.perfPlaceholderWidth : content.implicitWidth
     implicitHeight: placeholder.active ? placeholder.implicitHeight + Tokens.padding.extraLarge * 2 : content.implicitHeight
 
@@ -71,6 +75,7 @@ Item {
                     active: Config.dashboard.performance.showCpu
 
                     sourceComponent: HeroCard {
+                        cardWidth: root.compact ? 340 : Tokens.sizes.dashboard.perfHeroCardWidth
                         icon: "memory"
                         label: qsTr("CPU")
                         subLabel: Cpu.name
@@ -90,6 +95,7 @@ Item {
                     active: Config.dashboard.performance.showGpu && Gpu.type !== Gpu.None
 
                     sourceComponent: HeroCard {
+                        cardWidth: root.compact ? 340 : Tokens.sizes.dashboard.perfHeroCardWidth
                         icon: "desktop_windows"
                         label: qsTr("GPU")
                         subLabel: Gpu.name
@@ -119,7 +125,9 @@ Item {
                     id: networkCard
 
                     active: Config.dashboard.performance.showNetwork
-                    sourceComponent: NetworkCard {}
+                    sourceComponent: NetworkCard {
+                        cardWidth: root.compact ? 300 : Tokens.sizes.dashboard.perfNetworkCardWidth
+                    }
                 }
 
                 WrappedLoader {

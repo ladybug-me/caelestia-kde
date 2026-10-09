@@ -79,7 +79,6 @@ PageBase {
 
         StepperRow {
             first: true
-            last: true
             label: qsTr("Max title length")
             subtext: qsTr("Character count before the track title is cut off")
             value: Config.bar.media.maxTitleLength
@@ -88,6 +87,17 @@ PageBase {
             stepSize: 1
             onMoved: v => {
                 GlobalConfig.bar.media.maxTitleLength = Math.round(v);
+                GlobalConfig.save();
+            }
+        }
+
+        TextFieldRow {
+            last: true
+            label: qsTr("Sources")
+            subtext: qsTr("Player names to follow, comma-separated; empty follows anything")
+            value: (Config.bar.media.sources || []).join(", ")
+            onEditingFinished: value => {
+                GlobalConfig.bar.media.sources = value.split(",").map(s => s.trim()).filter(s => s.length > 0);
                 GlobalConfig.save();
             }
         }

@@ -33,6 +33,23 @@ Singleton {
         return root.appVolumePlayers.some(n => identity.includes(n.toLowerCase()));
     }
 
+    // First player whose identity matches one of the given source names
+    // (empty list follows the active player), or null when none matches.
+    function sourcePlayer(names: var): MprisPlayer {
+        const sources = names || [];
+        if (sources.length === 0)
+            return root.active;
+        const list = root.list || [];
+        for (let i = 0; i < list.length; i++) {
+            const identity = root.getIdentity(list[i]).toLowerCase();
+            for (let j = 0; j < sources.length; j++) {
+                if (identity.includes(String(sources[j]).toLowerCase()))
+                    return list[i];
+            }
+        }
+        return null;
+    }
+
     function getArtUrl(player: MprisPlayer): string {
         if (!player)
             return "";

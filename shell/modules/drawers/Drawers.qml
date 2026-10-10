@@ -16,6 +16,8 @@ Variants {
             screen: scope.modelData
             bar: content.bar
             visibilities: content.visibilities
+            overlayExtents: content.overlayExtents
+            exclusiveExtents: content.exclusiveExtents
         }
 
         ContentWindow {

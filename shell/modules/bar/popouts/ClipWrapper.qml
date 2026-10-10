@@ -52,8 +52,14 @@ Item {
         if (content.isDetached)
             return (parent.height - content.nonAnimHeight) / 2;
         if (isHorizontal) {
-            if (bar.position === "bottom")
+            if (bar.position === "bottom" && !content.fromTopPanel)
                 return parent.height - implicitHeight;
+            if (content.fromTopDock) {
+                // Below a floating dock card: dock height plus the islands
+                // gap, in parent coordinates.
+                const gap = GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0;
+                return bar.contentWidth + gap - parent.topMargin;
+            }
             return 0;
         }
 
@@ -96,8 +102,8 @@ Item {
 
         anchors.leftMargin: bar.position === "left" ? (-implicitWidth - 5) * root.offsetScale : 0
         anchors.rightMargin: bar.position === "right" ? (-implicitWidth - 5) * root.offsetScale : 0
-        anchors.topMargin: bar.position === "top" ? (-implicitHeight - 5) * root.offsetScale : 0
-        anchors.bottomMargin: bar.position === "bottom" ? (-implicitHeight - 5) * root.offsetScale : 0
+        anchors.topMargin: (bar.position === "top" || content.fromTopPanel) ? (-implicitHeight - 5) * root.offsetScale : 0
+        anchors.bottomMargin: (bar.position === "bottom" && !content.fromTopPanel) ? (-implicitHeight - 5) * root.offsetScale : 0
 
         states: [
             State {

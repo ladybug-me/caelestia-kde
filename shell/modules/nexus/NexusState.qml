@@ -16,6 +16,7 @@ QtObject {
     property BluetoothDevice selectedBtDevice
     property DesktopEntry selectedApp
     property int editingVpnIndex: -1
+    property int editingPanelIndex: -1
     property string selectedNetworkSsid
     property string selectedNetworkUuid
     property string selectedEthernetInterface

@@ -67,9 +67,14 @@ Singleton {
                 Kwin.clearHighlight();
         });
     }
-
-    function registerBar(screen: ShellScreen, barWrapper: var): void {
-        bars.set(screen.name, barWrapper);
+    function registerBar(screen: ShellScreen, name: string, barWrapper: var, isPrimary: bool): void {
+        if (isPrimary)
+            bars.set(screen.name, barWrapper);
+        bars.set(screen.name + "/" + name, barWrapper);
+        bars = new Map(bars);
+    }
+    function unregisterBar(screen: ShellScreen, name: string): void {
+        bars.delete(screen.name + "/" + name);
         bars = new Map(bars);
     }
     function registerDock(screen: ShellScreen, dock: var): void {

@@ -218,8 +218,29 @@ class BarPreviewFontScales : public settings::ObjectNode {
     CONFIG_PROPERTY(qreal, wirelessPassword, 0.0)
 };
 
+class BarDefinition : public settings::ObjectNode {
+    CONFIG_NODE(BarDefinition, settings::ObjectNode)
+
+    CONFIG_PROPERTY(QString, name, u"bar"_s)
+    CONFIG_PROPERTY(bool, enabled, true)
+    // Empty means every screen.
+    CONFIG_PROPERTY(QStringList, screens, QStringList())
+    CONFIG_PROPERTY(QString, position, u"bottom"_s)
+    CONFIG_PROPERTY(bool, persistent, true)
+    CONFIG_PROPERTY(bool, showOnHover, true)
+    // 100 = full edge, less = centered dock occupying this % of the edge.
+    CONFIG_PROPERTY(int, lengthPercent, 100)
+    // Empty means an empty panel; only the primary bar inherits `entries`.
+    CONFIG_PROPERTY(QVariantList, entries, QVariantList())
+};
+CONFIG_LIST_TYPE(BarDefinition, BarDefinitionList)
+
 class BarConfig : public settings::ObjectNode {
     CONFIG_NODE(BarConfig, settings::ObjectNode)
+
+    // When empty, a single bar is built from the legacy keys below.
+    // Global so all screens share the same extra panels list.
+    CONFIG_GLOBAL_LIST(BarDefinitionList, bars, DEFAULT_ARG({}))
 
     CONFIG_PROPERTY(qreal, scale, 1.0)
     CONFIG_PROPERTY(qreal, previewScale, 1.0)

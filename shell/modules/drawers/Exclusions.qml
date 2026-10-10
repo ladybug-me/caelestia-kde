@@ -14,6 +14,10 @@ Scope {
     required property ShellScreen screen
     required property Bar.BarWrapper bar
     required property DrawerVisibilities visibilities
+    required property var overlayExtents
+    // Adds the docks, which don't cut the frame but still reserve their
+    // thickness so maximised windows stop at the panel edge.
+    required property var exclusiveExtents
     // A pinned sidebar reserves its width so maximised windows sit beside it
     // rather than under it. It stays reserved while hidden for a fullscreen window
     // so the other windows are not resized back and forth.
@@ -32,27 +36,27 @@ Scope {
 
     ExclusionZone {
         anchors.left: true
-        exclusiveZone: (root.bar.position === "left" ? root.bar.exclusiveZone : Config.border.thickness)
+        exclusiveZone: (root.bar.position === "left" ? root.bar.exclusiveZone + root.exclusiveExtents.left : Math.max(Config.border.thickness, root.exclusiveExtents.left))
             + (root.reserveSidebar && root.bar.position === "right" ? root.sidebarWidth : 0)
         Config.screen: root.screen.name
     }
 
     ExclusionZone {
         anchors.top: true
-        exclusiveZone: root.bar.position === "top" ? root.bar.exclusiveZone : Config.border.thickness
+        exclusiveZone: root.bar.position === "top" ? root.bar.exclusiveZone + root.exclusiveExtents.top : Math.max(Config.border.thickness, root.exclusiveExtents.top)
         Config.screen: root.screen.name
     }
 
     ExclusionZone {
         anchors.right: true
-        exclusiveZone: (root.bar.position === "right" ? root.bar.exclusiveZone : Config.border.thickness)
+        exclusiveZone: (root.bar.position === "right" ? root.bar.exclusiveZone + root.exclusiveExtents.right : Math.max(Config.border.thickness, root.exclusiveExtents.right))
             + (root.reserveSidebar && root.bar.position !== "right" ? root.sidebarWidth : 0)
         Config.screen: root.screen.name
     }
 
     ExclusionZone {
         anchors.bottom: true
-        exclusiveZone: root.bar.position === "bottom" ? root.bar.exclusiveZone : Config.border.thickness
+        exclusiveZone: root.bar.position === "bottom" ? root.bar.exclusiveZone + root.exclusiveExtents.bottom : Math.max(Config.border.thickness, root.exclusiveExtents.bottom)
         Config.screen: root.screen.name
     }
 

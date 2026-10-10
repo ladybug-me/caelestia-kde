@@ -15,10 +15,12 @@ ListView {
     property alias values: valuesModel.values
     property bool first
     property bool allowRemove: true
+    property bool allowEdit: false
 
     signal itemMoved(from: int, to: int)
     signal itemRemoved(index: int)
     signal itemToggled(index: int, checked: bool)
+    signal itemClicked(index: int)
 
     function labelFor(item: var): string {
         return item.label;
@@ -309,6 +311,17 @@ ListView {
                     checked: root.toggledFor(item.modelData)
                     font: Tokens.font.icon.medium
                     onToggled: root.itemToggled(item.DelegateModel.itemsIndex, checked)
+                }
+
+                IconButton {
+                    visible: root.allowEdit
+                    type: IconButton.Text
+                    isRound: true
+                    icon: "edit"
+                    font: Tokens.font.icon.medium
+                    label.fill: 0
+
+                    onClicked: root.itemClicked(item.DelegateModel.itemsIndex)
                 }
 
                 IconButton {

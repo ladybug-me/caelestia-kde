@@ -17,6 +17,7 @@ Item {
 
     required property DrawerVisibilities visibilities
     required property var panels
+    required property Wrapper wrapper
     required property real maxWidth
     required property real maxHeight
 
@@ -27,6 +28,11 @@ Item {
 
     function clearClipboardHistory(): void {
         Clipboard.clearHistory();
+    }
+
+    function clearSearch(): void {
+        if (!root.visibilities.launcher && search.text !== "")
+            search.text = "";
     }
 
     function triggerSessionCommand(command: list<string>): void {
@@ -73,6 +79,14 @@ Item {
             padding: root.padding
             rounding: root.rounding
         }
+    }
+
+    Connections {
+        function onCloseAnimationFinished(): void {
+            root.clearSearch();
+        }
+
+        target: root.wrapper
     }
 
     StyledRect {

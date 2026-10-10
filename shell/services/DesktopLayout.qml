@@ -36,7 +36,6 @@ Singleton {
     property bool clipboardHasFiles: false
     // Screen name -> DesktopIcons controller instance
     property var controllers: ({})
-    property bool pendingWallpaperSyncState: false
 
     signal pasteRequested(string screenName, real x, real y)
     signal viewOptionsRequested(string screenName, real x, real y)
@@ -205,23 +204,6 @@ Singleton {
         });
     }
 
-    function syncKdeWallpaperLayout(iconsEnabled: bool): void {
-        pendingWallpaperSyncState = iconsEnabled;
-        syncDebounceTimer.restart();
-    }
-
-    Component.onCompleted: {
-        root.syncKdeWallpaperLayout(Config.background.desktopIconsEnabled);
-    }
-
-    Connections {
-        function onDesktopIconsEnabledChanged(): void {
-            root.syncKdeWallpaperLayout(Config.background.desktopIconsEnabled);
-        }
-
-        target: Config.background
-    }
-
     Process {
         id: clipboardProc
 
@@ -240,14 +222,6 @@ Singleton {
 
         interval: 400
         onTriggered: layoutFile.setText(root.serialise())
-    }
-
-    Timer {
-        id: syncDebounceTimer
-
-        interval: 350
-        repeat: false
-        onTriggered: Launch.exec(["bash", Quickshell.shellDir + "/scripts/sync-kde-wallpaper-layout.sh", root.pendingWallpaperSyncState ? "desktop" : "folder"])
     }
 
     FileView {

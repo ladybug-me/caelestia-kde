@@ -71,7 +71,6 @@ PageBase {
                     if (sConf) sConf.background.resetOption("desktopIconsEnabled");
                 }
                 GlobalConfig.save(); 
-                DesktopLayout.syncKdeWallpaperLayout(checked);
             }
         }
 

@@ -5,6 +5,9 @@
 
 set -euo pipefail
 
+exec 200>/tmp/sync-kde-wallpaper-layout.lock
+flock -n 200 || exit 0
+
 MODE="${1:-}"
 case "$MODE" in
     desktop|true|1|enable)
@@ -82,9 +85,19 @@ for fname in candidate_files:
                 modified = True
 
 if modified:
-    if subprocess.run(["systemctl", "--user", "is-active", "--quiet", "plasma-plasmashell"]).returncode == 0:
-        subprocess.run(["systemctl", "--user", "restart", "plasma-plasmashell"], check=False)
-    elif subprocess.run(["pgrep", "-x", "plasmashell"], stdout=subprocess.DEVNULL).returncode == 0:
-        subprocess.run(["kquitapp6", "plasmashell"], check=False)
-        subprocess.Popen(["plasmashell", "--replace"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["systemctl", "--user", "reset-failed", "plasma-plasmashell"], check=False)
+    res = subprocess.run(["systemctl", "--user", "restart", "plasma-plasmashell"])
+    if res.returncode != 0:
+        subprocess.run(["systemctl", "--user", "reset-failed", "plasma-plasmashell"], check=False)
+        res = subprocess.run(["systemctl", "--user", "start", "plasma-plasmashell"])
+    if subprocess.run(["systemctl", "--user", "is-active", "--quiet", "plasma-plasmashell"]).returncode != 0:
+        if subprocess.run(["pgrep", "-x", "plasmashell"], stdout=subprocess.DEVNULL).returncode != 0:
+            cmd = ["kstart", "plasmashell"] if os.path.exists("/usr/bin/kstart") else ["plasmashell"]
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+        else:
+            subprocess.run(["kquitapp6", "plasmashell"], check=False)
+            cmd = ["kstart", "plasmashell", "--replace"] if os.path.exists("/usr/bin/kstart") else ["plasmashell", "--replace"]
+            subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
 EOF
+
+

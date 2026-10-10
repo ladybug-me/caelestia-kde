@@ -50,7 +50,6 @@ Singleton {
         for (const screen of Quickshell.screens)
             GlobalConfig.forScreen(screen.name)?.background.resetOption("desktopIconsEnabled");
         GlobalConfig.save();
-        DesktopLayout.syncKdeWallpaperLayout(nextState);
     }
 
     function cloneEntries(value) {

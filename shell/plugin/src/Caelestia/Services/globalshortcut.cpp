@@ -12,6 +12,7 @@
 #include <QKeySequence>
 #include <QProcess>
 #include <QStringList>
+#include <QStandardPaths>
 #include <QTextStream>
 #include <cstdlib>
 
@@ -30,7 +31,8 @@ QString escapeGVariantString(const QString& value) {
 }
 
 QString stolenShortcutsPath() {
-    return QDir::homePath() + QStringLiteral("/.config/caelestia/stolen-shortcuts.json");
+    return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)
+        + QStringLiteral("/caelestia/stolen-shortcuts.json");
 }
 
 QStringList buildRestoreArgs(const QString& component, const QString& action, const QList<QKeySequence>& keys) {

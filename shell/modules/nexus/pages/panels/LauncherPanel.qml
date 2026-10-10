@@ -31,6 +31,24 @@ PageBase {
         }
     ]
 
+    readonly property list<MenuItem> nameOverflowItems: [
+        MenuItem {
+            property int value: LauncherNameOverflow.Tooltip
+
+            text: qsTr("Tooltip")
+        },
+        MenuItem {
+            property int value: LauncherNameOverflow.Shrink
+
+            text: qsTr("Shrink icon")
+        },
+        MenuItem {
+            property int value: LauncherNameOverflow.Flip
+
+            text: qsTr("Flip icon")
+        }
+    ]
+
     title: qsTr("Launcher")
     isSubPage: true
 
@@ -173,6 +191,14 @@ PageBase {
             active: root.browseLayoutItems.find(item => item.value === Config.launcher.browseLayout) ?? root.browseLayoutItems[0]
             menuItems: root.browseLayoutItems
             onSelected: item => GlobalConfig.launcher.browseLayout = item.value
+        }
+
+        SelectRow {
+            label: qsTr("Truncated app names")
+            subtext: qsTr("How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name")
+            active: root.nameOverflowItems.find(item => item.value === Config.launcher.nameOverflow) ?? root.nameOverflowItems[0]
+            menuItems: root.nameOverflowItems
+            onSelected: item => GlobalConfig.launcher.nameOverflow = item.value
         }
 
         ToggleRow {

@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Widgets
 import Caelestia
@@ -39,6 +40,9 @@ Item {
                 root.visibilities.launcher = false;
             }
         }
+
+        ToolTip.visible: stateLayer.containsMouse && name.truncated
+        ToolTip.text: root.modelData?.name ?? ""
     }
 
     Item {
@@ -70,6 +74,8 @@ Item {
 
                 text: root.modelData?.name ?? ""
                 font: Tokens.font.body.medium
+                elide: Text.ElideRight
+                width: parent.width
             }
 
             StyledText {

@@ -46,7 +46,8 @@ Item {
 
             Anim on rotation {
                 running: true
-                paused: !Players.active?.isPlaying
+                // Hidden covers (a closed dashboard) hold still instead of redrawing.
+                paused: !Players.active?.isPlaying || !root.visible
                 from: 360
                 to: 0
                 duration: 23500

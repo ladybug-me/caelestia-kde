@@ -115,6 +115,8 @@ ProgressBar {
                 color: root.fgColour
 
                 Behavior on implicitSize {
+                    enabled: root.visible
+
                     Anim {
                         type: Anim.FastSpatial
                     }
@@ -128,6 +130,8 @@ ProgressBar {
                 Component.onCompleted: implicitWidth = Qt.binding(() => parent.width * root.visualPosition)
 
                 Behavior on implicitWidth {
+                    enabled: root.visible
+
                     Anim {}
                 }
             }
@@ -224,7 +228,7 @@ ProgressBar {
 
         Anim on waveProgress {
             running: true
-            paused: wave.amplitudeMultiplier === 0 || root.wavePaused
+            paused: wave.amplitudeMultiplier === 0 || root.wavePaused || !root.visible
             from: 0
             to: 1
             duration: root.waveDuration

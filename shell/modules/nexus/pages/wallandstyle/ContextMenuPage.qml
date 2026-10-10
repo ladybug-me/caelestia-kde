@@ -216,6 +216,7 @@ PageBase {
         "add_widget": { icon: "widgets", name: qsTr("Add Widget") },
         "arrange_icons": { icon: "sort", name: qsTr("Arrange Icons") },
         "toggle_desktop_icons": { icon: "desktop_windows", name: qsTr("Desktop Icons") },
+        "enter_edit_mode": { icon: "edit", name: qsTr("Enter edit mode") },
         "wallpaper_style": { icon: "wallpaper", name: qsTr("Wallpaper & style") },
         "next_wallpaper": { icon: "skip_next", name: qsTr("Next Wallpaper") },
         "system_settings": { icon: "settings", name: qsTr("System Settings") },

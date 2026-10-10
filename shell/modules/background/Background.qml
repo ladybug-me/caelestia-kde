@@ -31,9 +31,9 @@ Variants {
         screen: modelData
         name: "background"
         isDesktopWidget: true
-        color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp) ? "black" : "transparent"
+        color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp && !ContextMenuStore.editMode) ? "black" : "transparent"
         surfaceFormat.opaque: false
-        mask: (Config.background.wallpaperEnabled || Config.background.desktopIconsEnabled) ? null : emptyRegion
+        mask: ((Config.background.wallpaperEnabled || Config.background.desktopIconsEnabled) && !ContextMenuStore.editMode) ? null : emptyRegion
         anchors.top: true
         anchors.bottom: true
         anchors.left: true
@@ -50,7 +50,7 @@ Variants {
             onTapped: (eventPoint, button) => {
                 if (desktopIcons.renameActive)
                     desktopIcons.renamingDelegate?.commitRename();
-                const onEmptyDesktop = (Config.background.wallpaperEnabled || Config.background.desktopIconsEnabled) && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y);
+                const onEmptyDesktop = (Config.background.wallpaperEnabled || Config.background.desktopIconsEnabled) && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y) && !ContextMenuStore.editMode;
                 if (button === Qt.RightButton && onEmptyDesktop) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.MiddleButton && onEmptyDesktop) {
@@ -73,7 +73,8 @@ Variants {
 
                 asynchronous: true
                 anchors.fill: parent
-                active: Config.background.wallpaperEnabled
+                active: Config.background.wallpaperEnabled && !ContextMenuStore.editMode
+                visible: !ContextMenuStore.editMode
                 sourceComponent: Wallpaper {
                     screen: win.modelData
                 }

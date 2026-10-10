@@ -45,6 +45,10 @@ Controls.Menu {
             ContextMenuStore.toggleIcons(root.screenName);
             return;
         }
+        if (entry.action === "EnterEditMode") {
+            ContextMenuStore.editMode = true;
+            return;
+        }
         if (entry.action === "Wallpapers.next()") {
             Wallpapers.next();
             return;

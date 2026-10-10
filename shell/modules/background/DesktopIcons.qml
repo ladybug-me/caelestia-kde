@@ -1289,7 +1289,7 @@ Item {
     }
 
     anchors.fill: parent
-    visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.desktopIconsEnabled
+    visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.desktopIconsEnabled && !ContextMenuStore.editMode
     focus: true
     Keys.onPressed: event => handleKey(event)
 

@@ -17,6 +17,7 @@ Singleton {
     property bool loading: false
     property bool cacheValid: false
     property bool writeQueued: false
+    property bool editMode: false
     property real loadStartedAt: 0
     property real saveStartedAt: 0
 
@@ -28,6 +29,7 @@ Singleton {
             { id: "add_widget", label: qsTr("Add Widget"), icon: "widgets", action: "AddWidget", enabled: true, type: "default" },
             { id: "arrange_icons", label: qsTr("Arrange Icons"), icon: "sort", action: "ArrangeIcons", enabled: true, type: "default" },
             { id: "toggle_desktop_icons", label: qsTr("Desktop Icons"), icon: "desktop_windows", action: "ToggleDesktopIcons", enabled: true, type: "default" },
+            { id: "enter_edit_mode", label: qsTr("Enter edit mode"), icon: "edit", action: "EnterEditMode", enabled: true, type: "default" },
             { id: "next_wallpaper", label: qsTr("Next Wallpaper"), icon: "skip_next", action: "Wallpapers.next()", enabled: true, type: "default" },
             { id: "wallpaper_style", label: qsTr("Wallpaper & style"), icon: "wallpaper", action: "WindowFactory.create()", enabled: true, type: "default" },
             { id: "system_settings", label: qsTr("System Settings"), icon: "settings", command: "systemsettings", enabled: true, type: "default" },

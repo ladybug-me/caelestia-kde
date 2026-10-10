@@ -26,15 +26,21 @@ Item {
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
+            Layout.fillHeight: !root.wide
+            Layout.alignment: root.wide ? Qt.AlignVCenter : Qt.AlignTop
             spacing: 0
 
+            // Stacked above the weather, the time only gets the height the
+            // weather leaves, so it shrinks to fit both ways there.
             StyledText {
                 Layout.fillWidth: true
+                Layout.fillHeight: !root.wide
+                Layout.maximumHeight: implicitHeight
                 text: Time.format(Units.twelveHourClock ? "h:mm AP" : "hh:mm")
                 font: Tokens.font.headline.builders.medium.scale(Math.min(2.2, Math.max(1, root.height / 110))).weight(Font.DemiBold).build()
                 color: Colours.palette.m3primary
-                fontSizeMode: Text.HorizontalFit
+                verticalAlignment: Text.AlignBottom
+                fontSizeMode: root.wide ? Text.HorizontalFit : Text.Fit
                 minimumPointSize: 12
             }
 
@@ -49,11 +55,12 @@ Item {
 
         ColumnLayout {
             Layout.fillWidth: true
-            Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: root.wide ? Qt.AlignVCenter : Qt.AlignBottom
             spacing: Tokens.spacing.small
             visible: Weather.hasWeather
 
             RowLayout {
+                Layout.fillWidth: true
                 spacing: Tokens.spacing.medium
 
                 MaterialIcon {
@@ -63,15 +70,18 @@ Item {
                 }
 
                 ColumnLayout {
+                    Layout.fillWidth: true
                     spacing: 0
 
                     StyledText {
+                        Layout.fillWidth: true
                         text: Weather.temp
                         font: Tokens.font.title.medium
+                        elide: Text.ElideRight
                     }
 
                     StyledText {
-                        Layout.maximumWidth: root.width / (root.wide ? 2.4 : 1.2)
+                        Layout.fillWidth: true
                         text: Weather.city ? `${Weather.description} · ${Weather.city}` : Weather.description
                         color: Colours.palette.m3onSurfaceVariant
                         elide: Text.ElideRight

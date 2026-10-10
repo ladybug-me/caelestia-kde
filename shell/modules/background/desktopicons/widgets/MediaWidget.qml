@@ -60,6 +60,7 @@ Item {
                 source: root.artUrl
                 fillMode: Image.PreserveAspectCrop
                 asynchronous: true
+                retainWhileLoading: true
                 sourceSize.width: width
                 sourceSize.height: height
             }

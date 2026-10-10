@@ -188,8 +188,27 @@ function planInsert(positions, moving, target, rows, spans) {
     return compact(rest, rows, spans);
 }
 
-// Pulls items that fell off a shrunken grid, or overlap, back onto it.
+function overflowCount(positions, cols, rows, spans) {
+    let n = 0;
+    for (const key in positions)
+        if (!inGrid(positions[key], cols, rows, spanOf(spans, key)))
+            n++;
+    return n;
+}
+
+// Pulls items that fell off a shrunken grid, or overlap, back onto it. When the
+// gaps left between the items that stayed are too scattered for the rest, packs
+// everything again in fill order instead, which keeps more of it on screen.
 function fitIntoGrid(positions, cols, rows, spans) {
+    const kept = keepAndPlace(positions, cols, rows, spans);
+    const keptOver = overflowCount(kept, cols, rows, spans);
+    if (keptOver === 0)
+        return kept;
+    const packed = compact(orderedKeys(positions, rows), rows, spans);
+    return overflowCount(packed, cols, rows, spans) < keptOver ? packed : kept;
+}
+
+function keepAndPlace(positions, cols, rows, spans) {
     const out = {};
     const outside = [];
     const occ = {};

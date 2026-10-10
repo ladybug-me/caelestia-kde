@@ -175,12 +175,12 @@ Singleton {
         return harmonizeWith(designColor, root.palette.m3primary);
     }
 
-    function load(data: string, isPreview: bool): void {
+    function load(data: string, isPreview: bool): bool {
         const raw = (data || "").trim();
         if (raw === "") {
             if (!isPreview)
                 scheduleSchemeReload();
-            return;
+            return false;
         }
 
         const colours = isPreview ? preview : current;
@@ -190,13 +190,13 @@ Singleton {
         } catch (e) {
             if (!isPreview)
                 scheduleSchemeReload();
-            return;
+            return false;
         }
 
         if (!scheme || !scheme.colours) {
             if (!isPreview)
                 scheduleSchemeReload();
-            return;
+            return false;
         }
 
         if (!isPreview) {
@@ -225,6 +225,7 @@ Singleton {
             root.schemeLoaded = true;
             root.schemeRetryCount = 0;
         }
+        return true;
     }
 
     function scheduleSchemeReload(): void {

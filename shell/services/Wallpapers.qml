@@ -20,8 +20,7 @@ Searcher {
     readonly property string current: showPreview ? previewPath : actualCurrent
     property string previewPath
     property string actualCurrent
-    property bool previewColourLock
-    property bool pendingPreviewClear
+    property alias previewColours: previewColoursState
     property var videoThumbs: ({})
     property var videoThumbsPending: ({})
 
@@ -146,15 +145,18 @@ Searcher {
         showPreview = true;
 
         if (Colours.scheme === "dynamic")
-            getPreviewColoursProc.running = true;
+            previewColourOf(path);
+    }
+
+    // matugen cannot read a video, so a video is previewed through its first frame. While the
+    // frame is not ready the video stays highlighted and the preview runs once it is.
+    function previewColourOf(path: string): void {
+        previewColoursState.show(thumbFor(path));
     }
 
     function stopPreview(): void {
         showPreview = false;
-        if (previewColourLock)
-            pendingPreviewClear = true;
-        else
-            Colours.showPreview = false;
+        previewColoursState.stop();
     }
 
     function getThumbnailPath(path: string): string {
@@ -210,17 +212,14 @@ Searcher {
                 Quickshell.execDetached(["sh", "-c", script, "--", out, path, root.currentNamePath]);
                 syncPlasmaWallpaper(out);
             }
+            if (path === root.previewPath && root.showPreview && Colours.scheme === "dynamic")
+                root.previewColourOf(path);
         }
         const pending = root.videoThumbsPending;
         delete pending[path];
         root.videoThumbsPending = pending;
         if (proc)
             proc.destroy();
-    }
-
-    onPreviewColourLockChanged: {
-        if (!previewColourLock && pendingPreviewClear)
-            Colours.showPreview = false;
     }
 
     list: filteredList
@@ -261,13 +260,13 @@ Searcher {
                 return;
             }
             root.actualCurrent = wall;
-            root.previewColourLock = false;
+            previewColoursState.release();
             if (!Images.isVideo(wall))
                 syncPlasmaWallpaper(wall);
         }
         onLoadFailed: {
             root.actualCurrent = root.fallback;
-            root.previewColourLock = false;
+            previewColoursState.release();
             Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...Colours.smartArg]);
             syncPlasmaWallpaper(root.fallback);
         }
@@ -282,15 +281,9 @@ Searcher {
         nameFilters: Images.validImageExtensions.concat(Images.validVideoExtensions).map(e => `*.${e}`)
     }
 
-    Process {
-        id: getPreviewColoursProc
+    PreviewColours {
+        id: previewColoursState
 
-        command: ["caelestia", "wallpaper", "-p", root.previewPath, ...Colours.smartArg]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                Colours.load(text, true);
-                Colours.showPreview = true;
-            }
-        }
+        extraArgs: Colours.smartArg
     }
 }

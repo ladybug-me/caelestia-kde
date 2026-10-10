@@ -92,22 +92,19 @@ Item {
         id: hover
     }
 
-    // Frosted glass: the wallpaper behind the card, blurred and clipped to it.
+    // Frosted glass: the part of the controller's blurred wallpaper behind
+    // the card, clipped to it.
     Loader {
         anchors.fill: card
-        active: !!root.controller.wallpaper && !GameMode.enabled
-        asynchronous: true
+        active: !!root.controller.glass
 
         sourceComponent: MultiEffect {
             source: ShaderEffectSource {
-                sourceItem: root.controller.wallpaper
+                sourceItem: root.controller.glass
                 sourceRect: Qt.rect(root.controller.gridOrigin.x + root.x + card.x, root.controller.gridOrigin.y + root.y + card.y, card.width, card.height)
             }
             maskSource: cardMask
             maskEnabled: true
-            blurEnabled: true
-            blur: 1
-            blurMax: 48
             autoPaddingEnabled: false
         }
     }

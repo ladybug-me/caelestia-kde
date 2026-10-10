@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import "desktopicons"
 import "desktopicons/LayoutEngine.js" as Engine
 import QtQuick
+import QtQuick.Effects
 import Qt.labs.folderlistmodel
 import Quickshell
 import Quickshell.Io
@@ -20,6 +21,8 @@ Item {
     // Wallpaper layer, sampled for the frosted cards of large items.
     property Item wallpaper: null
     readonly property point gridOrigin: Qt.point(gridItem.x, gridItem.y)
+    // The wallpaper blurred once for all frosted cards, null when unused.
+    readonly property Item glass: glassLoader.item
 
     readonly property var screenConfig: GlobalConfig.forScreen(screenData.name).background
     readonly property bool materialYou: screenConfig.materialYouIconsEnabled
@@ -53,6 +56,10 @@ Item {
     property var previewPositions: null
     property var dropCells: []
     property string mergeKey: ""
+    // The drop plan the preview was last built for. Drag moves arrive for
+    // every pointer motion, and rebuilding the preview re-lays out every tile
+    // and recreates the drop cells, so it only happens when the plan changes.
+    property string previewPlanKey: ""
     property bool dragImageReady: false
     property string dragImageKey: ""
 
@@ -758,6 +765,9 @@ Item {
     function previewResize(key: string, w: int, h: int): void {
         if (!DesktopLayout.positions[key])
             return;
+        const span = previewSpans?.[key];
+        if (span && span.w === w && span.h === h)
+            return;
         const next = resizePlan(key, w, h);
         previewSpans = spansWith(key, w, h);
         previewPositions = Object.assign({}, DesktopLayout.positions, next);
@@ -1050,6 +1060,7 @@ Item {
     }
 
     function clearDropPreview(): void {
+        previewPlanKey = "";
         previewPositions = null;
         dropCells = [];
         mergeKey = "";
@@ -1120,6 +1131,10 @@ Item {
 
     function updateDropPreview(x: real, y: real, internal: bool): void {
         const plan = dropPlan(x, y, internal);
+        const planKey = [internal, plan.mode, plan.target, plan.cell.col, plan.cell.row, plan.place.col, plan.place.row].join(",");
+        if (planKey === previewPlanKey)
+            return;
+        previewPlanKey = planKey;
         mergeKey = plan.mode === "place" || plan.mode === "none" ? "" : plan.target;
         if (plan.mode !== "place") {
             previewPositions = null;
@@ -1508,6 +1523,28 @@ wl-paste --no-newline --type text/uri-list`]
         onPositionChanged: drag => root.updateDropPreview(drag.x, drag.y, root.isInternal(drag))
         onExited: root.clearDropPreview()
         onDropped: drop => root.commitDrop(drop)
+    }
+
+    // Frosted glass for the cards of large items: the wallpaper is blurred
+    // once here and each card shows its own part of it. The blur starts at
+    // half size anyway, so the wallpaper is taken at half size too.
+    Loader {
+        id: glassLoader
+
+        anchors.fill: parent
+        visible: false
+        active: !!root.wallpaper && !GameMode.enabled && bigModel.count > 0
+
+        sourceComponent: MultiEffect {
+            source: ShaderEffectSource {
+                sourceItem: root.wallpaper
+                textureSize: Qt.size(Math.ceil(root.width / 2), Math.ceil(root.height / 2))
+            }
+            blurEnabled: true
+            blur: 1
+            blurMax: 48
+            autoPaddingEnabled: false
+        }
     }
 
     Item {

@@ -54,161 +54,160 @@ Item {
         service: NetworkUsage
     }
 
-    // Small: one ring per resource.
-    GridLayout {
+    // Small: one ring per resource. Each layout only exists while it is the
+    // one shown, so the hidden one does not keep redrawing the desktop.
+    Loader {
         anchors.fill: parent
-        visible: root.tier === 0
-        columns: 2
-        rowSpacing: Tokens.spacing.small
-        columnSpacing: Tokens.spacing.small
+        active: root.tier === 0
 
-        Ring {
-            label: qsTr("CPU")
-            value: Cpu.percentage
-        }
+        sourceComponent: GridLayout {
+            columns: 2
+            rowSpacing: Tokens.spacing.small
+            columnSpacing: Tokens.spacing.small
 
-        Ring {
-            visible: root.hasGpu
-            label: qsTr("GPU")
-            value: Gpu.percentage
-        }
+            Ring {
+                label: qsTr("CPU")
+                value: Cpu.percentage
+            }
 
-        Ring {
-            label: qsTr("Memory")
-            value: Memory.percentage
-        }
+            Ring {
+                visible: root.hasGpu
+                label: qsTr("GPU")
+                value: Gpu.percentage
+            }
 
-        Ring {
-            label: qsTr("Disk")
-            value: Storage.percentage
+            Ring {
+                label: qsTr("Memory")
+                value: Memory.percentage
+            }
+
+            Ring {
+                label: qsTr("Disk")
+                value: Storage.percentage
+            }
         }
     }
 
     // Medium and large: meters, plus network.
-    RowLayout {
+    Loader {
         anchors.fill: parent
-        visible: root.tier > 0
-        spacing: Tokens.spacing.large
+        active: root.tier > 0
 
-        // Nothing fills the height, so the rows share the spare room evenly
-        // and the top and bottom gaps match.
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            spacing: Tokens.spacing.small
+        sourceComponent: RowLayout {
+            spacing: Tokens.spacing.large
 
-            Meter {
-                icon: "memory"
-                label: qsTr("CPU")
-                value: Cpu.percentage
-                extra: root.temp(Cpu.temperature)
-                // Drop the "8-Core Processor" tail; the model says enough.
-                detail: Cpu.name.replace(/\s*(\d+-Core\s*)?Processor\s*$/i, "")
-            }
-
-            Meter {
-                visible: root.hasGpu
-                icon: "developer_board"
-                label: qsTr("GPU")
-                value: Gpu.percentage
-                extra: root.temp(Gpu.temperature)
-                detail: Gpu.name
-            }
-
-            Meter {
-                readonly property string usage: Memory.total > 0 ? Units.formatKibUsage(Memory.used, Memory.total) : ""
-
-                icon: "memory_alt"
-                label: qsTr("Memory")
-                value: Memory.percentage
-                extra: root.tier === 2 && !root.tall ? usage : ""
-                detail: usage
-            }
-
-            Meter {
-                readonly property string usage: Storage.primaryDisk ? Units.formatKibUsage(Storage.primaryDisk.used, Storage.primaryDisk.total) : ""
-
-                icon: "hard_disk"
-                label: qsTr("Disk")
-                value: Storage.percentage
-                extra: root.tier === 2 && !root.tall ? usage : ""
-                detail: usage
-            }
-
-            // Medium widgets show the speeds under the meters when there is room.
-            Speeds {
-                Layout.fillWidth: true
-                visible: root.tier === 1 && root.tall
-            }
-        }
-
-        // Large widgets give the network a column of its own.
-        ColumnLayout {
-            Layout.fillHeight: true
-            Layout.preferredWidth: root.width * 0.4
-            Layout.maximumWidth: root.width * 0.4
-            visible: root.tier === 2
-            spacing: Tokens.spacing.small
-
-            Item {
+            // Nothing fills the height, so the rows share the spare room evenly
+            // and the top and bottom gaps match.
+            ColumnLayout {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                spacing: Tokens.spacing.small
 
-                SparklineItem {
-                    id: sparkline
+                Meter {
+                    icon: "memory"
+                    label: qsTr("CPU")
+                    value: Cpu.percentage
+                    extra: root.temp(Cpu.temperature)
+                    // Drop the "8-Core Processor" tail; the model says enough.
+                    detail: Cpu.name.replace(/\s*(\d+-Core\s*)?Processor\s*$/i, "")
+                }
 
-                    property real targetMax: 1024
-                    property real smoothMax: targetMax
+                Meter {
+                    visible: root.hasGpu
+                    icon: "developer_board"
+                    label: qsTr("GPU")
+                    value: Gpu.percentage
+                    extra: root.temp(Gpu.temperature)
+                    detail: Gpu.name
+                }
 
-                    anchors.fill: parent
-                    visible: parent.height > 40
-                    line1: NetworkUsage.uploadBuffer // qmllint disable missing-type
-                    line1Color: Colours.palette.m3tertiary
-                    line1FillAlpha: 0.15
-                    line2: NetworkUsage.downloadBuffer // qmllint disable missing-type
-                    line2Color: Colours.palette.m3secondary
-                    line2FillAlpha: 0.2
-                    maxValue: smoothMax
-                    historyLength: NetworkUsage.historyLength
+                Meter {
+                    icon: "memory_alt"
+                    label: qsTr("Memory")
+                    value: Memory.percentage
+                    extra: root.tier === 2 && !root.tall ? usage : ""
+                    detail: usage
 
-                    Connections {
-                        function onValuesChanged(): void {
-                            sparkline.targetMax = Math.max(NetworkUsage.downloadBuffer.maximum, NetworkUsage.uploadBuffer.maximum, 1024);
-                            slideAnim.restart();
-                        }
+                    readonly property string usage: Memory.total > 0 ? Units.formatKibUsage(Memory.used, Memory.total) : ""
+                }
 
-                        target: NetworkUsage.downloadBuffer
-                    }
+                Meter {
+                    icon: "hard_disk"
+                    label: qsTr("Disk")
+                    value: Storage.percentage
+                    extra: root.tier === 2 && !root.tall ? usage : ""
+                    detail: usage
 
-                    NumberAnimation {
-                        id: slideAnim
+                    readonly property string usage: Storage.primaryDisk ? Units.formatKibUsage(Storage.primaryDisk.used, Storage.primaryDisk.total) : ""
+                }
 
-                        target: sparkline
-                        property: "slideProgress"
-                        from: 0
-                        to: 1
-                        easing.type: Easing.Linear
-                        duration: GlobalConfig.dashboard.resourceUpdateInterval
-                    }
-
-                    Behavior on smoothMax {
-                        Anim {}
-                    }
+                // Medium widgets show the speeds under the meters when there is room.
+                Speeds {
+                    Layout.fillWidth: true
+                    visible: root.tier === 1 && root.tall
                 }
             }
 
-            Speeds {
-                Layout.fillWidth: true
-                stacked: true
-            }
+            // Large widgets give the network a column of its own.
+            ColumnLayout {
+                Layout.fillHeight: true
+                Layout.preferredWidth: root.width * 0.4
+                Layout.maximumWidth: root.width * 0.4
+                visible: root.tier === 2
+                spacing: Tokens.spacing.small
 
-            StyledText {
-                Layout.fillWidth: true
-                visible: root.tall
-                elide: Text.ElideRight
-                text: `↓${Units.formatBytes(NetworkUsage.downloadTotal ?? 0)} ↑${Units.formatBytes(NetworkUsage.uploadTotal ?? 0)}`
-                color: Colours.palette.m3outline
-                font: Tokens.font.label.small
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    SparklineItem {
+                        id: sparkline
+
+                        property real targetMax: 1024
+                        property real smoothMax: targetMax
+
+                        anchors.fill: parent
+                        visible: parent.height > 40
+                        line1: NetworkUsage.uploadBuffer // qmllint disable missing-type
+                        line1Color: Colours.palette.m3tertiary
+                        line1FillAlpha: 0.15
+                        line2: NetworkUsage.downloadBuffer // qmllint disable missing-type
+                        line2Color: Colours.palette.m3secondary
+                        line2FillAlpha: 0.2
+                        maxValue: smoothMax
+                        historyLength: NetworkUsage.historyLength
+
+                        // No sliding between samples: on the desktop it would
+                        // never stop and redraw the whole background window.
+                        slideProgress: 1
+
+                        Connections {
+                            function onValuesChanged(): void {
+                                sparkline.targetMax = Math.max(NetworkUsage.downloadBuffer.maximum, NetworkUsage.uploadBuffer.maximum, 1024);
+                            }
+
+                            target: NetworkUsage.downloadBuffer
+                        }
+
+                        Behavior on smoothMax {
+                            Anim {}
+                        }
+                    }
+                }
+
+                Speeds {
+                    Layout.fillWidth: true
+                    stacked: true
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    visible: root.tall
+                    elide: Text.ElideRight
+                    text: `↓${Units.formatBytes(NetworkUsage.downloadTotal ?? 0)} ↑${Units.formatBytes(NetworkUsage.uploadTotal ?? 0)}`
+                    color: Colours.palette.m3outline
+                    font: Tokens.font.label.small
+                }
             }
         }
     }
@@ -237,10 +236,6 @@ Item {
                 strokeWidth: Math.max(3, Math.round(width / 14))
                 fgColour: ring.value > 0.85 ? Colours.palette.m3error : Colours.palette.m3primary
                 bgColour: Qt.alpha(Colours.palette.m3onSurface, 0.15)
-
-                Behavior on clampedVal {
-                    Anim {}
-                }
 
                 StyledText {
                     anchors.centerIn: parent
@@ -322,10 +317,6 @@ Item {
                     height: parent.height
                     radius: parent.radius
                     color: meter.value > 0.85 ? Colours.palette.m3error : Colours.palette.m3primary
-
-                    Behavior on width {
-                        Anim {}
-                    }
                 }
             }
         }

@@ -27,6 +27,9 @@ Singleton {
     property real dragWidth: 0
     property real dragHeight: 0
     property string streamClaim: ""
+    property bool launcherOpenAnywhere: false
+    property string launcherMode: ""
+    property DrawerVisibilities launcherInitialSearchTarget: null
 
     signal cycleOverview(bool backwards)
 
@@ -51,12 +54,14 @@ Singleton {
         visibilities.launcherChanged.connect(() => {
             if (!visibilities.launcher) {
                 Kwin.clearHighlight();
+                _syncLauncherState();
                 return;
             }
             for (const other of screens.values()) {
                 if (other !== visibilities)
                     other.launcher = false;
             }
+            _syncLauncherState();
         });
         visibilities.overviewChanged.connect(() => {
             if (visibilities.overview)
@@ -66,6 +71,7 @@ Singleton {
             if (visibilities.session)
                 Kwin.clearHighlight();
         });
+        _syncLauncherState();
     }
 
     function registerBar(screen: ShellScreen, barWrapper: var): void {
@@ -84,7 +90,64 @@ Singleton {
         const monitor = Kwin.monitors.find(m => m.name === Kwin.cursorOutputName()) || Kwin.focusedMonitor;
         return screens.get(monitor) || screens.values().next().value;
     }
-
+    function launcherOpenVisibilities(): DrawerVisibilities {
+        for (const v of screens.values())
+            if (v.launcher)
+                return v;
+        return null;
+    }
+    function launcherTarget(): DrawerVisibilities {
+        return launcherOpenVisibilities() ?? getForActive();
+    }
+    function openLauncher(mode: string): void {
+        const v = launcherTarget();
+        if (!v)
+            return;
+        if (mode) {
+            launcherInitialSearchTarget = v;
+            launcherInitialSearch = `${GlobalConfig.launcher.actionPrefix}${mode} `;
+        } else {
+            launcherInitialSearchTarget = null;
+            launcherInitialSearch = "";
+        }
+        launcherMode = mode;
+        v.launcher = true;
+    }
+    function closeLauncher(): void {
+        const v = launcherOpenVisibilities();
+        if (v)
+            v.launcher = false;
+        launcherMode = "";
+    }
+    function toggleLauncher(mode: string): void {
+        const open = launcherOpenVisibilities();
+        if (open && launcherMode === mode) {
+            open.launcher = false;
+            launcherMode = "";
+            return;
+        }
+        openLauncher(mode);
+    }
+    function modeForText(text: string): string {
+        const prefix = GlobalConfig.launcher.actionPrefix;
+        if (!text.startsWith(prefix))
+            return "";
+        const rest = text.slice(prefix.length);
+        const space = rest.indexOf(" ");
+        return space < 0 ? "" : rest.slice(0, space);
+    }
+    function _syncLauncherState(): void {
+        let any = false;
+        for (const v of screens.values()) {
+            if (v.launcher) {
+                any = true;
+                break;
+            }
+        }
+        launcherOpenAnywhere = any;
+        if (!any)
+            launcherMode = "";
+    }
     function setDrag(address: string, x: real, y: real, w: real, h: real, originScreen: string): void {
         dragAddress = address;
         dragX = x;

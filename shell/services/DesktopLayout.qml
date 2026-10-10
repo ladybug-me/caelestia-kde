@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Caelestia.Config
 import qs.utils
 
 // Persistent state of the desktop icons: where each icon sits, the virtual
@@ -201,6 +202,22 @@ Singleton {
             groups: groupList,
             widgets: widgetList
         });
+    }
+
+    function syncKdeWallpaperLayout(iconsEnabled: bool): void {
+        Quickshell.execDetached(["bash", Quickshell.shellDir + "/scripts/sync-kde-wallpaper-layout.sh", iconsEnabled ? "desktop" : "folder"]);
+    }
+
+    Component.onCompleted: {
+        root.syncKdeWallpaperLayout(Config.background.desktopIconsEnabled);
+    }
+
+    Connections {
+        function onDesktopIconsEnabledChanged(): void {
+            root.syncKdeWallpaperLayout(Config.background.desktopIconsEnabled);
+        }
+
+        target: Config.background
     }
 
     Process {

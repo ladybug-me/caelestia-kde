@@ -43,10 +43,12 @@ Singleton {
     // Flips the icons as seen on the given screen and applies the result to
     // every screen, dropping per-screen overrides so they stay in step.
     function toggleIcons(screenName: string): void {
-        GlobalConfig.background.desktopIconsEnabled = !iconsShownOn(screenName);
+        const nextState = !iconsShownOn(screenName);
+        GlobalConfig.background.desktopIconsEnabled = nextState;
         for (const screen of Quickshell.screens)
             GlobalConfig.forScreen(screen.name)?.background.resetOption("desktopIconsEnabled");
         GlobalConfig.save();
+        DesktopLayout.syncKdeWallpaperLayout(nextState);
     }
 
     function cloneEntries(value) {

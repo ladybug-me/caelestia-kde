@@ -19,6 +19,7 @@ class UtilitiesToasts : public settings::ObjectNode {
     CONFIG_GLOBAL_PROPERTY(bool, chargingChanged, true)
     CONFIG_GLOBAL_PROPERTY(bool, gameModeChanged, true)
     CONFIG_GLOBAL_PROPERTY(bool, dndChanged, true)
+    CONFIG_GLOBAL_PROPERTY(bool, dndWhileStreaming, true)
     CONFIG_GLOBAL_PROPERTY(bool, audioOutputChanged, true)
     CONFIG_GLOBAL_PROPERTY(bool, audioInputChanged, true)
     CONFIG_GLOBAL_PROPERTY(bool, capsLockChanged, true)

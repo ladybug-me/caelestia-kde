@@ -34,6 +34,7 @@ ShellRoot {
 
     property var _arpcInit: null
     property var _gameModeInit: null
+    property var _streamMonitorInit: null
     property var _updateCheckerInit: null
     property var _autoSchemeInit: null
     property var _quickShareInit: null
@@ -121,6 +122,7 @@ ShellRoot {
             bbdxCheckProcess.running = true;
             root._arpcInit = DiscordRPC;
             root._gameModeInit = GameMode;
+            root._streamMonitorInit = StreamMonitor;
             root._updateCheckerInit = UpdateChecker;
             root._autoSchemeInit = AutoScheme;
             root._quickShareInit = QuickShare;

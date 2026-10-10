@@ -111,7 +111,22 @@ PageBase {
             text: qsTr("Open expanded")
             subtext: qsTr("Show notifications expanded by default")
             checked: GlobalConfig.notifs.openExpanded
+            reset: ({
+                node: GlobalConfig.notifs,
+                setting: "openExpanded"
+            })
             onToggled: GlobalConfig.notifs.openExpanded = checked
+        }
+
+        ToggleRow {
+            text: qsTr("Do not disturb while sharing")
+            subtext: qsTr("Mute notifications while the screen is being shared or recorded")
+            checked: GlobalConfig.utilities.toasts.dndWhileStreaming
+            reset: ({
+                node: GlobalConfig.utilities.toasts,
+                setting: "dndWhileStreaming"
+            })
+            onToggled: GlobalConfig.utilities.toasts.dndWhileStreaming = checked
         }
 
         StepperRow {

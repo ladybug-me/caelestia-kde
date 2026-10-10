@@ -263,6 +263,9 @@ Singleton {
             if (sub.id === id)
                 return sub.image ? Qt.resolvedUrl(sub.image) : Quickshell.iconPath(sub.icon);
 
+        if (icon.startsWith("image://icon/"))
+            return icon;
+
         if (icon.includes("?path=")) {
             const [name, path] = icon.split("?path=");
             icon = Qt.resolvedUrl(`${path}/${name.slice(name.lastIndexOf("/") + 1)}`);

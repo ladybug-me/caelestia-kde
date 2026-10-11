@@ -5211,26 +5211,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+6"/>
-      <source>Desktop Context Menus</source>
-      <translation>Menús contextuales del escritorio</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Multiple context menus have been added for Desktop, Icons, Folders &amp; Widgets. You can also do a quick Middle-click action on desktop to toggle desktop icon visibility.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Git Plugins &amp; Updates</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The Plugin Manager now supports installing plugins directly from Git URLs. It also checks for updates, displaying notification badges and allowing in-place updates.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
       <source>Wi-Fi Hotspot</source>
       <translation type="unfinished"/>
     </message>
@@ -5281,16 +5261,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+6"/>
-      <source>Launcher Pre-warming</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The launcher drawer is now pre-warmed in the background, eliminating open latency and preventing visual flicker when displaying the app grid.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
       <source>App Browser Layouts</source>
       <translation type="unfinished"/>
     </message>
@@ -5307,26 +5277,6 @@ Ahora salir a tocar el pasto</translation>
     <message>
       <location line="+1"/>
       <source>The Weather tab in the dashboard now includes an hourly forecast alongside the existing daily weather predictions.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Claude Code Assistant</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The AI assistant now integrates with Claude Code. Background subagents are fully supported with live streaming, and tool invocations are rendered inline where they were called. Code blocks feature syntax highlighting and copy buttons.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>AI Chat Persistence</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>AI chats are now persistent. You can switch between active chats, and your Claude Code sessions and chat history are safely stored and managed across shell reloads.</source>
       <translation type="unfinished"/>
     </message>
     <message>

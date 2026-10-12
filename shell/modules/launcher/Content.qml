@@ -358,9 +358,12 @@ Item {
             Connections {
                 function onLauncherChanged(): void {
                     if (root.visibilities.launcher) {
-                        // Every open decides the field: the requested prefix, or the app grid.
-                        search.text = Visibilities.launcherInitialSearch;
-                        Visibilities.launcherInitialSearch = "";
+                        if (Visibilities.launcherInitialSearch) {
+                            search.text = Visibilities.launcherInitialSearch;
+                            Visibilities.launcherInitialSearch = "";
+                        } else if (!Visibilities.launcherMode) {
+                            search.text = "";
+                        }
                         search.forceActiveFocus();
                     } else {
                         Windows.isSwitching = false;

@@ -1309,12 +1309,28 @@ Item {
         }
     }
 
-    onColsChanged: refitTimer.restart()
-    onRowsChanged: refitTimer.restart()
+    onColsChanged: {
+        if (gridReady)
+            DesktopLayout.seedDefaults(cols, rows);
+        refitTimer.restart();
+    }
+    onRowsChanged: {
+        if (gridReady)
+            DesktopLayout.seedDefaults(cols, rows);
+        refitTimer.restart();
+    }
     onFolderReadyChanged: Qt.callLater(syncEntries)
-    onGridReadyChanged: Qt.callLater(syncEntries)
+    onGridReadyChanged: {
+        if (gridReady)
+            DesktopLayout.seedDefaults(cols, rows);
+        Qt.callLater(syncEntries);
+    }
 
-    Component.onCompleted: DesktopLayout.registerController(screenData.name, root)
+    Component.onCompleted: {
+        DesktopLayout.registerController(screenData.name, root);
+        if (gridReady)
+            DesktopLayout.seedDefaults(cols, rows);
+    }
     Component.onDestruction: DesktopLayout.unregisterController(screenData.name)
 
     Connections {

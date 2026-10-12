@@ -15,8 +15,10 @@ Item {
     property Item wallpaper: controller?.wallpaper ?? null
     property real absX: (controller?.gridOrigin.x ?? 0) + (frame?.x ?? 0)
     property real absY: (controller?.gridOrigin.y ?? 0) + (frame?.y ?? 0)
-    property real gridScale: frame ? Math.min(frame.width / 340, frame.height / 140) : 1
-    property real clockScale: Math.max(0.4, gridScale * Config.background.desktopClock.scale)
+    readonly property real availableWidth: Math.max(0, (frame ? frame.width : width) - Tokens.padding.large * 2)
+    readonly property real availableHeight: Math.max(0, (frame ? frame.height : height) - Tokens.padding.medium * 2)
+    property real gridScale: frame ? Math.min(availableWidth / 620, availableHeight / 150) : 1
+    property real clockScale: Math.max(0.25, gridScale)
 
     readonly property bool bgEnabled: Config.background.desktopClock.background.enabled
     readonly property bool blurEnabled: bgEnabled && Config.background.desktopClock.background.blur && !GameMode.enabled
@@ -30,13 +32,12 @@ Item {
 
     implicitWidth: layout.implicitWidth + (Tokens.padding.large * 4 * root.clockScale)
     implicitHeight: layout.implicitHeight + (Tokens.padding.extraLargeIncreased * root.clockScale)
-    x: frame ? 0 : ((wallpaper ? wallpaper.width : 0) * Config.background.desktopClock.offsetX)
-    y: frame ? 0 : ((wallpaper ? wallpaper.height : 0) * Config.background.desktopClock.offsetY)
 
     Item {
         id: clockContainer
 
         anchors.fill: parent
+        clip: true
 
         layer.enabled: Config.background.desktopClock.shadow.enabled
         layer.effect: MultiEffect {

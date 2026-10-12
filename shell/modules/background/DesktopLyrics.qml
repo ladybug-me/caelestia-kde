@@ -22,7 +22,7 @@ Item {
     property real absX: (controller?.gridOrigin.x ?? 0) + (frame?.x ?? 0)
     property real absY: (controller?.gridOrigin.y ?? 0) + (frame?.y ?? 0)
     property real gridScale: frame ? Math.min(frame.width / 350, frame.height / 180) : 1
-    property real lyricsScale: Math.max(0.5, gridScale * Config.background.desktopLyrics.scale)
+    property real lyricsScale: Math.max(0.5, gridScale)
 
     readonly property bool bgEnabled: Config.background.desktopLyrics.background.enabled
     readonly property bool blurEnabled: bgEnabled && Config.background.desktopLyrics.background.blur && !GameMode.enabled
@@ -104,11 +104,6 @@ Item {
 
     Component.onCompleted: {
         root.reloadTrack();
-    }
-
-    transform: Translate {
-        x: frame ? 0 : ((root.screen ? root.screen.width : 0) * Config.background.desktopLyrics.offsetX)
-        y: frame ? 0 : ((root.screen ? root.screen.height : 0) * Config.background.desktopLyrics.offsetY)
     }
 
     implicitWidth: 350 * root.lyricsScale

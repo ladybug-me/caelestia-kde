@@ -28,6 +28,8 @@ Singleton {
     property bool roundIcons: true
     // "" keeps the manual order; otherwise name, type, modified or size.
     property string sortKey: ""
+    property bool defaultsSeeded: false
+    property bool defaultsNeeded: false
 
     // Follows KDE's "single click to open files" setting.
     property bool singleClick: false
@@ -177,11 +179,52 @@ Singleton {
             autoArrange = prefs.autoArrange === true;
             roundIcons = prefs.roundIcons !== false;
             sortKey = typeof prefs.sortKey === "string" ? prefs.sortKey : "";
+            defaultsSeeded = prefs.defaultsSeeded === true;
         }
+        if (data === null || (!defaultsSeeded && Object.keys(nextWidgets).length === 0))
+            defaultsNeeded = true;
         positions = nextPositions;
         groups = nextGroups;
         widgets = nextWidgets;
         loaded = true;
+    }
+
+    function seedDefaults(cols: int, rows: int): void {
+        if (!defaultsNeeded || cols <= 0 || rows <= 0)
+            return;
+        defaultsNeeded = false;
+        defaultsSeeded = true;
+
+        const nextWidgets = Object.assign({}, widgets);
+        const nextPositions = Object.assign({}, positions);
+
+        const clockId = newGroupId();
+        const clockKey = widgetKey(clockId);
+        nextWidgets[clockId] = {
+            type: "desktopClock",
+            size: { w: 4, h: 2 },
+            config: {}
+        };
+        nextPositions[clockKey] = {
+            col: Math.max(0, cols - 4),
+            row: Math.max(0, rows - 2)
+        };
+
+        const shapesId = newGroupId();
+        const shapesKey = widgetKey(shapesId);
+        nextWidgets[shapesId] = {
+            type: "shapes",
+            size: { w: 3, h: 3 },
+            config: {}
+        };
+        nextPositions[shapesKey] = {
+            col: Math.max(0, Math.floor((cols - 3) / 2)),
+            row: Math.max(0, rows - 3)
+        };
+
+        widgets = nextWidgets;
+        positions = nextPositions;
+        scheduleSave();
     }
 
     function serialise(): string {
@@ -196,7 +239,7 @@ Singleton {
             widgetList.push({ id, type: widgets[id].type, size: widgets[id].size, config: widgets[id].config });
         return JSON.stringify({
             version: 2,
-            prefs: { iconSize, autoArrange, sortKey, roundIcons },
+            prefs: { iconSize, autoArrange, sortKey, roundIcons, defaultsSeeded },
             items,
             groups: groupList,
             widgets: widgetList

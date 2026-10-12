@@ -19,7 +19,7 @@ Item {
     property real absX: (controller?.gridOrigin.x ?? 0) + (frame?.x ?? 0)
     property real absY: (controller?.gridOrigin.y ?? 0) + (frame?.y ?? 0)
 
-    property real shapesScale: Config.background.desktopShapes.scale
+    property real shapesScale: frame ? Math.min(frame.width / 220, frame.height / 220) : 1
     readonly property bool autoHide: Config.background.desktopShapes.autoHide
     readonly property bool windowHidesShapes: Kwin.windowHidesDesktopWidgets(root.screen ? root.screen.name : "", Config.background.visualiser.hideOnAllMonitors)
     readonly property bool shouldHide: autoHide && windowHidesShapes

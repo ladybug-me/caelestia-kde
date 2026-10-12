@@ -164,7 +164,7 @@ PageBase {
         NavRow {
             icon: "extension"
             label: qsTr("Desktop Addons")
-            status: qsTr("Clock, Shapes, Lyrics, Visualiser")
+            status: qsTr("Visualiser, auto-hide, styling")
             onClicked: root.nState.openSubPage(1)
         }
 

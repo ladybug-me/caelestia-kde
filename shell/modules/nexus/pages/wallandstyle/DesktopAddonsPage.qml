@@ -12,44 +12,6 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    readonly property list<MenuItem> positionItems: [
-        MenuItem {
-            property string value: "top-left"
-
-            text: qsTr("Top left")
-        },
-        MenuItem {
-            property string value: "top-center"
-
-            text: qsTr("Top center")
-        },
-        MenuItem {
-            property string value: "top-right"
-
-            text: qsTr("Top right")
-        },
-        MenuItem {
-            property string value: "center"
-
-            text: qsTr("Center")
-        },
-        MenuItem {
-            property string value: "bottom-left"
-
-            text: qsTr("Bottom left")
-        },
-        MenuItem {
-            property string value: "bottom-center"
-
-            text: qsTr("Bottom center")
-        },
-        MenuItem {
-            property string value: "bottom-right"
-
-            text: qsTr("Bottom right")
-        }
-    ]
-
     readonly property list<MenuItem> alignmentItems: [
         MenuItem {
             property int value: 0
@@ -89,29 +51,6 @@ PageBase {
             ToggleRow {
                 Layout.fillWidth: true
                 first: true
-                text: qsTr("Desktop clock")
-                reset: ({ node: GlobalConfig.background.desktopClock, setting: "enabled" })
-                checked: Config.background.desktopClock.enabled
-                onToggled: GlobalConfig.background.desktopClock.enabled = checked
-            }
-
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                text: qsTr("Desktop media shapes")
-                reset: ({ node: GlobalConfig.background.desktopShapes, setting: "enabled" })
-                checked: Config.background.desktopShapes.enabled
-                onToggled: {
-                    GlobalConfig.background.desktopShapes.enabled = checked;
-                    if (!checked)
-                        GlobalConfig.background.desktopShapes.autoHide = false;
-                }
-            }
-
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                visible: Config.background.desktopShapes.enabled
                 text: qsTr("Auto-hide media shapes")
                 subtext: qsTr("Hide media shapes when a window is open")
                 reset: ({ node: GlobalConfig.background.desktopShapes, setting: "autoHide" })
@@ -122,20 +61,6 @@ PageBase {
             ToggleRow {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
-                text: qsTr("Desktop lyrics")
-                reset: ({ node: GlobalConfig.background.desktopLyrics, setting: "enabled" })
-                checked: Config.background.desktopLyrics.enabled
-                onToggled: {
-                    GlobalConfig.background.desktopLyrics.enabled = checked;
-                    if (!checked)
-                        GlobalConfig.background.desktopLyrics.autoHide = false;
-                }
-            }
-
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                visible: Config.background.desktopLyrics.enabled
                 text: qsTr("Auto-hide lyrics")
                 subtext: qsTr("Hide lyrics when a window is open")
                 reset: ({ node: GlobalConfig.background.desktopLyrics, setting: "autoHide" })
@@ -191,97 +116,14 @@ PageBase {
             Layout.fillWidth: true
             spacing: 0
 
-            StepperRow {
-                first: true
-                Layout.fillWidth: true
-                label: qsTr("Scale")
-                reset: ({ node: GlobalConfig.background.desktopClock, setting: "scale" })
-                value: Config.background.desktopClock.scale
-                from: 0.5
-                to: 3
-                stepSize: 0.1
-                onMoved: v => GlobalConfig.background.desktopClock.scale = v
-            }
-
-            SelectRow {
-                Layout.fillWidth: true
-                label: qsTr("Position")
-                active: {
-                    const pos = Config.background.desktopClock.position;
-                    const normPos = pos === "middle-center" ? "center" : pos;
-                    for (let i = 0; i < root.positionItems.length; i++) {
-                        if (root.positionItems[i].value === normPos)
-                            return root.positionItems[i];
-                    }
-                    return root.positionItems[6];
-                }
-                menuItems: root.positionItems
-                onSelected: item => GlobalConfig.background.desktopClock.position = item.value
-            }
-
-            SliderRow {
-                Layout.fillWidth: true
-                label: qsTr("Horizontal offset")
-                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
-                reset: ({ node: GlobalConfig.background.desktopClock, setting: "offsetX" })
-                value: Config.background.desktopClock.offsetX / 0.2 + 0.5
-                onMoved: v => GlobalConfig.background.desktopClock.offsetX = v * 0.2 - 0.1
-            }
-
-            SliderRow {
-                Layout.fillWidth: true
-                label: qsTr("Vertical offset")
-                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
-                reset: ({ node: GlobalConfig.background.desktopClock, setting: "offsetY" })
-                value: Config.background.desktopClock.offsetY / 0.2 + 0.5
-                onMoved: v => GlobalConfig.background.desktopClock.offsetY = v * 0.2 - 0.1
-            }
-
             ToggleRow {
+                first: true
                 last: true
                 Layout.fillWidth: true
                 text: qsTr("Invert colors")
                 reset: ({ node: GlobalConfig.background.desktopClock, setting: "invertColors" })
                 checked: Config.background.desktopClock.invertColors
                 onToggled: GlobalConfig.background.desktopClock.invertColors = checked
-            }
-        }
-
-        SectionHeader {
-            text: qsTr("Desktop media shapes")
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 0
-
-            StepperRow {
-                first: true
-                Layout.fillWidth: true
-                label: qsTr("Scale")
-                reset: ({ node: GlobalConfig.background.desktopShapes, setting: "scale" })
-                value: Config.background.desktopShapes.scale
-                from: 0.5
-                to: 3
-                stepSize: 0.1
-                onMoved: v => GlobalConfig.background.desktopShapes.scale = v
-            }
-
-            SelectRow {
-                last: true
-                Layout.fillWidth: true
-                label: qsTr("Position")
-                active: {
-                    const pos = Config.background.desktopShapes.position;
-                    const normPos = pos === "middle-center" ? "center" : pos;
-                    for (let i = 0; i < root.positionItems.length; i++) {
-                        if (root.positionItems[i].value === normPos)
-                            return root.positionItems[i];
-                    }
-                    return root.positionItems[5];
-                }
-                menuItems: root.positionItems
-                onSelected: item => GlobalConfig.background.desktopShapes.position = item.value
             }
         }
 
@@ -293,35 +135,8 @@ PageBase {
             Layout.fillWidth: true
             spacing: 0
 
-            StepperRow {
+            SelectRow {
                 first: true
-                Layout.fillWidth: true
-                label: qsTr("Scale")
-                reset: ({ node: GlobalConfig.background.desktopLyrics, setting: "scale" })
-                value: Config.background.desktopLyrics.scale
-                from: 0.5
-                to: 3
-                stepSize: 0.1
-                onMoved: v => GlobalConfig.background.desktopLyrics.scale = v
-            }
-
-            SelectRow {
-                Layout.fillWidth: true
-                label: qsTr("Position")
-                active: {
-                    const pos = Config.background.desktopLyrics.position;
-                    const normPos = pos === "middle-center" ? "center" : pos;
-                    for (let i = 0; i < root.positionItems.length; i++) {
-                        if (root.positionItems[i].value === normPos)
-                            return root.positionItems[i];
-                    }
-                    return root.positionItems[5];
-                }
-                menuItems: root.positionItems
-                onSelected: item => GlobalConfig.background.desktopLyrics.position = item.value
-            }
-
-            SelectRow {
                 Layout.fillWidth: true
                 label: qsTr("Alignment")
                 active: {
@@ -333,24 +148,6 @@ PageBase {
                 }
                 menuItems: root.alignmentItems
                 onSelected: item => GlobalConfig.background.desktopLyrics.alignment = item.value
-            }
-
-            SliderRow {
-                Layout.fillWidth: true
-                label: qsTr("Horizontal offset")
-                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
-                reset: ({ node: GlobalConfig.background.desktopLyrics, setting: "offsetX" })
-                value: Config.background.desktopLyrics.offsetX / 0.2 + 0.5
-                onMoved: v => GlobalConfig.background.desktopLyrics.offsetX = v * 0.2 - 0.1
-            }
-
-            SliderRow {
-                Layout.fillWidth: true
-                label: qsTr("Vertical offset")
-                valueLabel: Math.round((value * 0.2 - 0.1) * 100) + "%"
-                reset: ({ node: GlobalConfig.background.desktopLyrics, setting: "offsetY" })
-                value: Config.background.desktopLyrics.offsetY / 0.2 + 0.5
-                onMoved: v => GlobalConfig.background.desktopLyrics.offsetY = v * 0.2 - 0.1
             }
 
             ToggleRow {

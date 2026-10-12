@@ -198,28 +198,40 @@ Singleton {
         const nextWidgets = Object.assign({}, widgets);
         const nextPositions = Object.assign({}, positions);
 
+        const lyricsId = newGroupId();
+        const lyricsKey = widgetKey(lyricsId);
+        nextWidgets[lyricsId] = {
+            type: "lyrics",
+            size: { w: 3, h: 2 },
+            config: {}
+        };
+        nextPositions[lyricsKey] = {
+            col: 0,
+            row: 0
+        };
+
         const clockId = newGroupId();
         const clockKey = widgetKey(clockId);
         nextWidgets[clockId] = {
             type: "desktopClock",
-            size: { w: 4, h: 2 },
+            size: { w: 2, h: 2 },
             config: {}
         };
         nextPositions[clockKey] = {
-            col: Math.max(0, cols - 4),
-            row: Math.max(0, rows - 2)
+            col: Math.max(0, cols - 2),
+            row: 0
         };
 
         const shapesId = newGroupId();
         const shapesKey = widgetKey(shapesId);
         nextWidgets[shapesId] = {
             type: "shapes",
-            size: { w: 3, h: 3 },
+            size: { w: 2, h: 2 },
             config: {}
         };
         nextPositions[shapesKey] = {
-            col: Math.max(0, Math.floor((cols - 3) / 2)),
-            row: Math.max(0, rows - 3)
+            col: Math.max(0, Math.floor((cols - 2) / 2)),
+            row: Math.max(0, rows - 2)
         };
 
         widgets = nextWidgets;

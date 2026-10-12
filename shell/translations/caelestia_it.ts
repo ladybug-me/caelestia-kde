@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation>Controllo…</translation>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>Non installato</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>Demone non in esecuzione - inizialo con: sudo systemctl start ollama</translation>
     </message>
@@ -887,42 +887,42 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation>Stato</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation>Scarica Ollama</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>Installazione Di…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation>Codice Claude</translation>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Utilizza Claude CLI e il tuo login Claude</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation type="unfinished"/>
     </message>
@@ -932,7 +932,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>Pay-per-token API con chiave antropica</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>Altri fornitori</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>Pay-per-token API con chiave OpenAI</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>Endpoint compatibile con Google&apos;s OpenAI</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation type="unfinished"/>
     </message>
@@ -977,7 +977,7 @@
       <translation>Una chiave per i modelli da più venditori</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>Modelli di codifica curati, paga come vai</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -997,7 +997,7 @@
       <translation>Sottoscrizione mensile; chiave azioni Zen&apos;s</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>Chiavi API</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Corrispondente a un regex nelle applicazioni preferite - modifica il file di configurazione per cambiare</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>Trasmetti una presenza personalizzata a Ves&lt;unk&gt;</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>Rilevamento automatico dei giochi Steam</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>Trasmetti automaticamente i giochi di Steam in esecuzione</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation type="unfinished"/>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>Trasmissione shell uptime e informazioni di sistema</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>Cancella quando inattivo</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>Non nascondere mai la presenza (minuti)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation>Integrazione con SteamGridDB</translation>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>Forza la trasmissione di questa presenza personalizzata e ignorare tutte le altre applicazioni</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>Digita &quot;%1&quot; per i comandi</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>Cancellare la cronologia degli appunti?</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>Disabilita il desktop Caelestia e usa invece il desktop nativo Plasma 6</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>Mostra Icone Desktop</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>Abilita le icone per il desktop Caelestia</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation>Icone Material You</translation>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>Ignora solo il tema delle icone di KDE per le icone del desktop</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>Icone Vibranti</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>Aumenta la saturazione delle icone Material You per una vibrazione extra</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>Abilita l&apos;effetto lampada magica quando si minimizzano le finestre</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>Finestra Di Piastrellatura</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>Attiva la modalità di gioco quando una finestra di destinazione è focalizzata o in esecuzione</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>Finestre di destinazione</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>Disabilita animazioni</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>Disabilita sfocatura</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>Disabilita le lacune e arrotondamento</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>Disabilita ombre</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>Disabilita trasparenza finestra</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>Caelestia sovrascrive le funzionalità</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>Disabilita trasparenza shell</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>Disabilita la trasparenza delle notifiche toast</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>Disabilita il testo del desktop</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>Disabilita visualizzatore</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>Utilizzo</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation type="unfinished"/>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>Ignora le notifiche dopo il timeout</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>Apri espanso</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>Mostra le notifiche espanse di default</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>Timeout predefinito</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>Secondi prima di una notifica respinge</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>Conteggio anteprima gruppo</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>Notifiche mostrate prima del collasso di un gruppo</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>Massima notifiche popup</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>Vengono mostrati solo i popup più recenti; il resto rimane nella barra laterale</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>Notifiche salvate max</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>Le notifiche più vecchie vengono eliminate quando viene raggiunto il limite</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>Interazione</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>Attiva l&apos;azione di notifica al clic</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>Soglia di espansione</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>Hover pixel prima che una notifica agganciata si espande</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>Timeout schermo intero</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>Millisecondi di una notifica rimane su un&apos;applicazione a schermo intero</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>Cancella soglia</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>Mostra i cursori sullo schermo</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation type="unfinished"/>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>Mostra il cursore del volume</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>Microfono</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>Mostra il cursore del microfono</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Luminosità</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>Mostra il cursore della luminosità</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>Attivazione bordo</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>Distanza dal bordo dello schermo</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>Altezza</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>Parte del bordo che risponde</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>Comportamento</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>Automatico</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>Quante volte gli aggiornamenti della posizione media (ms)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>Aggiornamento statistiche di sistema</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>Intervallo di aggiornamento CPU, memoria e GPU (secondi)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>Riscansiona Wi-Fi</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>Quante volte le reti disponibili vengono riscritte (secondi)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>Media &amp; testi</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>Quantità delle variazioni di volume per scorrimento (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>Passo luminosità</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>Ammontare le variazioni di luminosità per scorrimento (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>Volume massimo</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>Limite superiore per il volume di uscita (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation type="unfinished"/>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>Numero di barre nei visualizzatori audio</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>Mostra il menu sessione (power)</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation>Associazioni di tasti Vim</translation>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>Naviga nel menu di sessione con hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Soglia di trascinamento</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>Pixel da trascinare prima che il menu si muova</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>Icone</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>Abilita effetti sonori</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>Volume effetto sonoro</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>Clic fotocamera</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>Tic volume</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation>Sistema</translation>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>Ricarica avviata</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>Blocco schermo</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>Sblocco schermo</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>Batteria scarica</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>Registrazione schermo</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>Modifiche di ricarica</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>Modalità di gioco cambia</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>Cambiamenti di luce notturna</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>Configurazione caricata</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation type="unfinished"/>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>Modifiche all&apos;uscita audio</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>Modifiche all&apos;ingresso audio</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>In riproduzione</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation type="unfinished"/>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation>Modifiche blocco maiuscole</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>Modifiche della disposizione della tastiera</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>Limite layout tastiera</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>Altro</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>Non disturbare le modifiche</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>Modifiche VPN</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>Modifiche appunti</translation>
     </message>

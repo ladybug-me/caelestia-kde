@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation>Denetleniyor…</translation>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>Kurulu değil</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation type="unfinished"/>
     </message>
@@ -887,42 +887,42 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation>Durum</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>Kuruluyor…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Claude CLI&apos;yi ve Claude oturumunuzu kullanır</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation type="unfinished"/>
     </message>
@@ -932,7 +932,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>Anthropic anahtarıyla belirteç başına ücretlendirilen API</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>Diğer sağlayıcılar</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>OpenAI anahtarıyla belirteç başına ücretlendirilen API</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>Google&apos;ın OpenAI uyumlu uç noktası</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation type="unfinished"/>
     </message>
@@ -977,7 +977,7 @@
       <translation>Birden çok sağlayıcının modelleri için tek anahtar</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>Seçilmiş kodlama modelleri, kullandıkça öde</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -997,7 +997,7 @@
       <translation>Aylık abonelik; Zen&apos;in anahtarını paylaşır</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>API anahtarları</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>favouriteApps içindeki bir düzenli ifadeyle eşleşti - değiştirmek için yapılandırma dosyasını düzenleyin</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>Vesktop&apos;a özel durum bilgisi yayınla</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>Steam oyunlarını otomatik algıla</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>Çalışan Steam oyunlarını otomatik olarak yayınlar</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation>Caelestia bilgilerini yayınla</translation>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>Kabuk çalışma süresini ve sistem bilgilerini yayınlar</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>Boştayken temizle</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>Durumu asla gizleme (dakika)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation>SteamGridDB tümleşimi</translation>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>Bu özel durumu zorla yayınlar ve diğer tüm uygulamaları yok sayar</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>Komutlar için &quot;%1&quot; yazın</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>Pano geçmişi temizlensin mi?</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>Caelestia masaüstünü kapatır ve yerine Plasma 6 masaüstünü kullanır</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>Masaüstü Simgelerini Göster</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>Caelestia masaüstü için simgeleri etkinleştirir</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation>Material You Simgeleri</translation>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>KDE simge temasını yalnızca masaüstü simgeleri için geçersiz kılar</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>Canlı Simgeler</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>Material You simgelerinin doygunluğunu artırarak daha canlı gösterir</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>Pencereleri küçültürken sihirli lamba efektini etkinleştirir</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>Pencere Döşeme</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>Bir hedef pencere odaklandığında veya çalışırken oyun kipini açar</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>Hedef pencereler</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>Animasyonları kapat</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>Bulanıklığı kapat</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>Boşlukları ve yuvarlatmayı kapat</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>Gölgeleri kapat</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>Pencere şeffaflığını kapat</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>Caelestia özellik geçersiz kılmaları</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>Kabuk şeffaflığını kapat</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>Bildirim balonu şeffaflığını kapat</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>Masaüstü şarkı sözlerini kapat</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>Görselleştiriciyi kapat</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>Kullanım</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation>Başlatıcı</translation>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>Bildirimleri zaman aşımından sonra kapatır</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>Genişletilmiş aç</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>Bildirimleri varsayılan olarak genişletilmiş gösterir</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>Varsayılan zaman aşımı</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>Bir bildirim kapanmadan önceki saniye sayısı</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>Grup önizleme sayısı</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>Bir grup katlanmadan önce gösterilen bildirim sayısı</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>En fazla açılır bildirim</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>Yalnızca en yeni açılır bildirimler gösterilir; geri kalanı kenar çubuğunda kalır</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>En fazla saklanan bildirim</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>Sınıra ulaşıldığında eski bildirimler silinir</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>Etkileşim</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>Tıklandığında bildirim eylemini çalıştırır</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>Genişletme eşiği</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>Yerleşik bildirim genişlemeden önce üzerinde gezinilecek piksel</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>Tam ekran zaman aşımı</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>Bildirimin tam ekran uygulamanın üzerinde kalacağı milisaniye</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>Temizleme eşiği</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>Ekran üstü kaydırıcıları gösterir</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>Ses düzeyi</translation>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>Ses düzeyi kaydırıcısını gösterir</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>Mikrofon</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>Mikrofon kaydırıcısını gösterir</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Parlaklık</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>Parlaklık kaydırıcısını gösterir</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>Kenar tetikleyicisi</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>Ekran kenarına olan uzaklık</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>Yükseklik</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>Kenarın yanıt veren bölümü</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>Davranış</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>Otomatik</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>Ortam konumunun ne sıklıkta güncelleneceği (ms)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>Sistem istatistikleri yenileme</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>İşlemci, bellek ve ekran kartı güncelleme aralığı (saniye)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>Wi-Fi yeniden tarama</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>Kullanılabilir ağların ne sıklıkta yeniden taranacağı (saniye)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>Ortam ve şarkı sözleri</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>Her kaydırmada ses düzeyinin değişme miktarı (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>Parlaklık adımı</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>Her kaydırmada parlaklığın değişme miktarı (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>En yüksek ses düzeyi</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>Çıkış ses düzeyinin üst sınırı (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>Hizmet ince ayarı</translation>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>Ses görselleştiricilerindeki çubuk sayısı</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>Oturum (güç) menüsünü gösterir</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation>Vim tuş atamaları</translation>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>Oturum menüsünde hjkl ile gezinin</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Sürükleme eşiği</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>Menü hareket etmeden önce sürüklenecek piksel</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>Simgeler</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>Ses efektlerini etkinleştir</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>Ses efekti düzeyi</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>Deklanşör sesi</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>Ses düzeyi tıkırtısı</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation>Sistem</translation>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>Şarj başladı</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>Ekran kilidi</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>Ekran kilidi açma</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>Düşük pil</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>Ekran kaydı</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>Şarj değişiklikleri</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>Oyun kipi değişiklikleri</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>Gece ışığı değişiklikleri</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>Yapılandırma yüklendi</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation>Ses</translation>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>Ses çıkışı değişiklikleri</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>Ses girişi değişiklikleri</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>Şimdi çalıyor</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation>Giriş</translation>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation>Caps Lock değişiklikleri</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation>Num Lock değişiklikleri</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>Klavye düzeni değişiklikleri</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>Klavye düzeni sınırı</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>Diğer</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>Rahatsız etmeyin değişiklikleri</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>VPN değişiklikleri</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>Pano değişiklikleri</translation>
     </message>

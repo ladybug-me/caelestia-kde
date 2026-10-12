@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation>Kontrollerar…</translation>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>Inte installerad</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>Daemon inte körs - starta den med: sudo systemctl start ollama</translation>
     </message>
@@ -887,42 +887,42 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation>Ladda ner Ollama</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>Installerar…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation>Klaud</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation>Claude kod</translation>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Använder Claude CLI och din Claude inloggning</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation type="unfinished"/>
     </message>
@@ -932,7 +932,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>Pay-per-token API med en antropisk nyckel</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>Andra leverantörer</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>Pay-per-token API med en OpenAI-nyckel</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>Google&apos;s OpenAI-kompatibel slutpunkt</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation type="unfinished"/>
     </message>
@@ -977,7 +977,7 @@
       <translation>En nyckel för modeller från flera leverantörer</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>Kurerade kodningsmodeller, betala medan du går</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -997,7 +997,7 @@
       <translation>Månatligt abonnemang; aktier Zen&apos;s nyckel</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>API nycklar</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Matchas av en regex i favoritApps - redigera konfigurationsfilen för att ändra</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>Sänd anpassad närvaro till Vesktop</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>Identifiera Steam-spel automatiskt</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>Sänd automatiskt igång Steam-spel</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation>Sänd Caelestia info</translation>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>Sänd upptid och systeminformation</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>Rensa när inaktiv</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>Dölj aldrig närvaron (minuter)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation type="unfinished"/>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>Tvinga att sända denna anpassade närvaro och ignorera alla andra appar</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>Skriv &quot;%1&quot; för kommandon</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>Rensa urklipp historik?</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>Inaktivera Caelestia skrivbordet och använd Plasma 6 skrivbordet istället</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>Visa skrivbordsikoner</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>Aktivera ikoner för Caelestia skrivbord</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation>Material du ikoner</translation>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>Åsidosätt temat KDE-ikonen för skrivbordsikoner endast</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>Levande ikoner</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>Öka mättnaden av material du ikoner för extra livskraft</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>Aktivera den magiska lampeffekten vid minimering av fönster</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>Fönster kakel</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>Slå på spelläge när ett målfönster är fokuserat eller körs</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>Målfönster</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>Inaktivera animationer</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>Inaktivera oskärpa</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>Inaktivera luckor och avrundning</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>Inaktivera skuggor</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>Inaktivera fönstertransparens</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>Caelestia funktionen åsidosätter</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>Inaktivera skaltransparens</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>Inaktivera genomskinlighet för skålaviseringar</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>Inaktivera skrivbordslåtter</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>Inaktivera visualiserare</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>Användning</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation>Lansering</translation>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>Avfärda aviseringar efter deras timeout</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>Öppna utökad</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>Visa aviseringar utökade som standard</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>Standard timeout</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>Sekunder innan en avisering avfärdar</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>Antal förhandsgranskningsgrupper</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>Aviseringar som visas innan en grupp kollapsar</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>Max antal popup-aviseringar</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>Bara de nyaste popuperna visas; resten stannar i sidofältet</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>Max sparade aviseringar</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>Äldre aviseringar släpps när gränsen är nådd</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>Interaktion</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>Aktivera aviseringsåtgärden vid klick</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>Expandera tröskel</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>Hover pixlar innan en dockad avisering expanderar</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>Helskärms tidsgräns</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>Millisekunder en avisering stannar över en fullskärmsapp</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>Rensa tröskel</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>Visa reglagen på skärmen</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>Volym</translation>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>Visa volymreglage</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>Mikrofon</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>Visa reglaget för mikrofon</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Ljusstyrka</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>Visa reglaget för ljusstyrka</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>Kant utlösare</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>Avstånd från skärmkanten</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>Höjd</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>Del av kanten som svarar</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>Beteende</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>Automatiskt</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>Hur ofta uppdateringar media position (ms)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>Systemstatistik uppdateras</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>CPU-, minnes- och GPU-uppdateringsintervall (sekunder)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>Wi-Fi omskanning</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>Hur ofta tillgängliga nätverk återupptas (sekunder)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>Media &amp; låttext</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>Belopp volymändringarna per rullning (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>Steg för ljusstyrka</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>Belopp ljusstyrkans förändringar per rullning (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>Max volym</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>Övre gräns för produktionsvolymen (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>Justering av tjänster</translation>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>Antal barer i audio-visualiserare</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>Visa sessionsmenyn (ström)</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation type="unfinished"/>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>Navigera i sessionsmenyn med hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Dra tröskelvärde</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>Pixlar att dra innan menyn flyttas</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>Ikoner</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>Aktivera ljudeffekter</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>Ljudeffekt volym</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>Klicka på kameran</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>Volym bock</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation type="unfinished"/>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>Laddning startad</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>Skärmlås</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>Skärm upplåsning</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>Lågt batteri</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>Skärminspelning</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>Laddar ändringar</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>Spelläge ändras</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>Nattljus ändras</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>Konfigurationen laddad</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation>Ljud</translation>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>Ändring av ljudutdata</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>Ändring av ljudindata</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>Nu spelas</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation type="unfinished"/>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation>Caps lock ändringar</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation>Ändring av antal lås</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>Ändring av tangentbordslayout</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>Gräns för tangentbordslayout</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>Annat</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>Stör ej ändringar</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>VPN-ändringar</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>Ändring av urklipp</translation>
     </message>

@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation>Kontrola…</translation>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>Není nainstalováno</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>Daemon není spuštěn - spusťte s: sudo systemctl start ollama</translation>
     </message>
@@ -887,42 +887,42 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation>Stav</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation>Stáhnout Ollama</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>Instalace…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation>Pohledávka</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation>Kód Claude</translation>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Používá Claude CLI a vaše Claude přihlášení</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation type="unfinished"/>
     </message>
@@ -932,7 +932,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>Pay-per-token API s Anthropickým klíčem</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>Ostatní poskytovatelé</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>Pay-per-token API s OpenAI klíčem</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>Google&apos;s OpenAI-kompatibilní koncový bod</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation type="unfinished"/>
     </message>
@@ -977,7 +977,7 @@
       <translation>Jeden klíč pro modely od více prodejců</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>Upravené modely kódování, platíte</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -997,7 +997,7 @@
       <translation>Měsíční upisování; akcie Zen&apos;s klíč</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>API klíče</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Odpovídá regex v oblíbených aplikacích - upravte konfigurační soubor pro změnu</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>Vysílat vlastní přítomnost do Vesktop</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>Automaticky detekovat Steam hry</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>Automaticky vysílat spuštěné Steam hry</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation type="unfinished"/>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>Vysílání času shell a systémové informace</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>Vyčistit při nečinnosti</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>Nikdy neskrýt přítomnost (minuty)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation>Integrace SteamGridDB</translation>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>Vynutit vysílání této vlastní přítomnosti a ignorovat všechny ostatní aplikace</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>Zadejte &quot;%1&quot; pro příkazy</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>Vymazat historii schránky?</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>Vypněte plochu Caelestia a použijte místo toho nativní plochu Plasma 6</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>Zobrazit ikony plochy</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>Povolit ikony pro plochu Caelestia</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation>Materiál Ikony</translation>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>Přepsat ikonu KDE pouze u ikon plochy</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>Vibrace ikon</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>Zesílit sytost Material ikon pro další vibrace</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>Povolit efekt kouzelné lampy při minimalizaci oken</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>Podložka oken</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>Zapnout herní režim, když je cílové okno zaostřeno nebo spuštěno</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>Cílová okna</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>Zakázat animace</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>Zakázat rozostření</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>Zakázat mezery a zaokrouhlování</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>Zakázat stíny</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>Zakázat průhlednost okna</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>Přepsání funkce Caelestia</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>Zakázat průhlednost shell</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>Zakázat průhlednost oznámení toastu</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>Zakázat text na ploše</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>Zakázat vizualizér</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>Využití</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation>Spouštěč</translation>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>Zrušit oznámení po vypršení časového limitu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>Otevřít rozšířené</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>Zobrazit oznámení rozšířená ve výchozím nastavení</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>Výchozí časový limit</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>Vteřiny před odstraněním oznámení</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>Počet náhledu skupiny</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>Oznámení zobrazená před zhroucením skupiny</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>Maximální počet vyskakovacích oznámení</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>Zobrazují se pouze nejnovější vyskakovací okna; zbytek zůstane v postranním panelu</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>Maximální počet uložených oznámení</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>Starší oznámení jsou zahozena, když je dosaženo limitu</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>Interakce</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>Aktivovat akci oznámení po kliknutí</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>Rozšířit práh</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>Přejeďte pixely před rozšířením oznámení v doku</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>Časový limit celé obrazovky</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>Milisekund zůstane oznámení přes celou obrazovku</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>Vymazat práh</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>Zobrazit posuvníky na obrazovce</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>Objem</translation>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>Zobrazit posuvník hlasitosti</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>Mikrofon</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>Zobrazit posuvník mikrofonu</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Jas</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>Zobrazit posuvník jasu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>Spouštěč hrany</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>Vzdálenost od okraje obrazovky</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>Výška</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>Část hrany, která odpovídá</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>Chování</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>Automaticky</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>Jak často jsou aktualizace pozice médií (ms)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>Obnovení systémových statistik</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>Interval aktualizace CPU, paměti a GPU (sekundy)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>Znovu skenovat Wi-Fi</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>Jak často jsou dostupné sítě znovu skenovány (sekundy)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>Média a texty</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>Množství změn hlasitosti na posun (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>Krok jasu</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>Částka změny jasu na posun (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>Maximální hlasitost</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>Horní mez pro objem výstupu (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>Ladění služby</translation>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>Počet sloupců zvukových vizualizérů</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>Zobrazit relaci (výkon) menu</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation>Vim klávesové zkratky</translation>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>Přejděte do menu relace hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Práh přetáhnutí</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>Pixely pro tažení před menu</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>Ikony</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>Povolit zvukové efekty</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>Hlasitost zvukového efektu</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>Kliknutí kamery</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>Stisknutí hlasitosti</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation>Systém</translation>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>Nabíjení zahájeno</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>Zámek obrazovky</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>Odemknutí obrazovky</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>Nízká baterie</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>Nahrávání obrazovky</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>Změny nabíjení</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>Změny herního režimu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>Změny nočního světla</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>Konfigurace načtena</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation>Zvuk</translation>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>Změny zvukového výstupu</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>Změny zvukového vstupu</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>Právě hraje</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation type="unfinished"/>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation>Kopat změny zámku</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation>Počet změn zámku</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>Změny rozložení klávesnice</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>Limit rozložení klávesnice</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>Ostatní</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>Změny Nerušit</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>Změny VPN</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>Změny schránky</translation>
     </message>

@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>Δεν έχει εγκατασταθεί</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>Daemon δεν τρέχει - ξεκινήστε το με: sudo systemctl start ollama</translation>
     </message>
@@ -887,42 +887,42 @@
       <translation>Ολάμα</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation>Κατάσταση</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation>Κατεβάστε Το Ollama</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>Εγκατάσταση…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation>Ισχυρή</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation>Κωδικός Claude</translation>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Χρησιμοποιεί το Claude CLI και σας Claude σύνδεση</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation type="unfinished"/>
     </message>
@@ -932,7 +932,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>◆ token API με ένα ανθρωποειδές κλειδί</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>Άλλοι πάροχοι</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>◆ token API με κλειδί OpenAI</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>Τελικό σημείο συμβατό με το Google&apos;s</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation type="unfinished"/>
     </message>
@@ -977,7 +977,7 @@
       <translation>Ένα κλειδί για μοντέλα από πολλούς προμηθευτές</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>Επιμελημένα μοντέλα κωδικοποίησης, πληρώστε καθώς πηγαίνετε</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -997,7 +997,7 @@
       <translation>Μηνιαία συνδρομή; μετοχές Zen&apos;s κλειδί</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>API κλειδιά</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Ταίριαξε από ένα regex στα favouriteApps - επεξεργαστείτε το αρχείο ρυθμίσεων για να αλλάξετε</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>Μετάδοση προσαρμοσμένης παρουσίας στο Vesktop</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>Αυτόματος εντοπισμός παιχνιδιών Steam</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>Αυτόματη μετάδοση με εκτέλεση παιχνιδιών Steam</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation>Μετάδοση πληροφοριών Καιλεσίας</translation>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>Μετάδοση uptime κέλυφος και πληροφορίες συστήματος</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>Εκκαθάριση όταν είναι αδρανής</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>Ποτέ μην αποκρύψετε την παρουσία (λεπτά)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation>SteamGridDB ενσωμάτωση</translation>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>Εξαναγκασμός μετάδοσης αυτής της προσαρμοσμένης παρουσίας και αγνόηση όλων των άλλων εφαρμογών</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>Πληκτρολογήστε &quot;%1&quot; για εντολές</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>Εκκαθάριση ιστορικού προχείρου?</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>Απενεργοποίηση επιφάνειας εργασίας Caelestia και χρήση μητρικής επιφάνειας εργασίας Plasma 6 αντ&apos; αυτού</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>Εμφάνιση Εικονιδίων Επιφάνειας Εργασίας</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>Ενεργοποίηση εικονιδίων για την επιφάνεια εργασίας του Caelestia</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation>Υλικό Που Εικονίδια</translation>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>Παράκαμψη του θέματος εικονιδίων του KDE μόνο για εικονίδια επιφάνειας εργασίας</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>Ζωντανά Εικονίδια</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>Ενισχύστε τον κορεσμό του υλικού που εικονίδια για επιπλέον ζωντάνια</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>Ενεργοποίηση του εφέ μαγικής λάμπας κατά την ελαχιστοποίηση των παραθύρων</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>Βάμμα Παραθύρου</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>Ενεργοποιήστε τη λειτουργία παιχνιδιού όταν ένα παράθυρο προορισμού είναι εστιασμένο ή εκτελείται</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>Προορισμός παραθύρων</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>Απενεργοποίηση εφέ</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>Απενεργοποίηση θολώματος</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>Απενεργοποίηση κενών και στρογγυλοποίησης</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>Απενεργοποίηση σκιών</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>Απενεργοποίηση διαφάνειας παραθύρου</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>Παράκαμψη χαρακτηριστικού Caelestia</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>Απενεργοποίηση διαφάνειας κελύφους</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>Απενεργοποίηση διαφάνειας αναδυόμενων ειδοποιήσεων</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>Απενεργοποίηση στίχων επιφάνειας εργασίας</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>Απενεργοποίηση οπτικού εφέ</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>Χρήση</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation>Εκκινητής</translation>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>Απόρριψη ειδοποιήσεων μετά το χρονικό όριο τους</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>Άνοιγμα επεκταμένου</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>Εμφάνιση ειδοποιήσεων που επεκτάθηκαν από προεπιλογή</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>Προεπιλεγμένο χρονικό όριο</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>Δευτερόλεπτα πριν από τις απορρίψεις ειδοποίησης</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>Αριθμός προεπισκόπησης ομάδας</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>Ειδοποιήσεις που εμφανίζονται πριν από την σύμπτυξη μιας ομάδας</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>Μέγιστες αναδυόμενες ειδοποιήσεις</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>Εμφανίζονται μόνο τα νεότερα αναδυόμενα παράθυρα· η υπόλοιπη διαμονή στην πλαϊνή μπάρα</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>Μέγιστες αποθηκευμένες ειδοποιήσεις</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>Οι παλαιότερες ειδοποιήσεις απορρίπτονται όταν φτάσει το όριο</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>Αλληλεπίδραση</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>Ενεργοποιήστε την ενέργεια ειδοποίησης με το κλικ</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>Ανάπτυξη κατώτατου ορίου</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>Hover pixel πριν επεκταθεί μια συνδεδεμένη ειδοποίηση</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>Χρονικό όριο πλήρους οθόνης</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>Milliseconds μια ειδοποίηση παραμένει πάνω από μια εφαρμογή πλήρους οθόνης</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>Καθαρισμός κατωφλίου</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>Εμφάνιση των ρυθμιστικών στην οθόνη</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>Όγκος</translation>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>Εμφάνιση κύλισης έντασης</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>Μικρόφωνο</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>Εμφάνιση του ρυθμιστικού μικροφώνου</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>Φωτεινότητα</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>Εμφάνιση ρυθμιστικού φωτεινότητας</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>Σκανδάλη άκρης</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>Απόσταση από την άκρη της οθόνης</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>Ύψος</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>Τμήμα της ακμής που ανταποκρίνεται</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>Συμπεριφορά</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>Αυτόματο</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>Πόσο συχνά ενημερώνονται οι ενημερώσεις θέσης στα μέσα ενημέρωσης (ms)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>Ανανέωση στατιστικών συστήματος</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>Διάστημα ενημέρωσης CPU, μνήμης και GPU (δευτερόλεπτα)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>Επανασάρωση Wi-Fi</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>Πόσο συχνά είναι διαθέσιμα δίκτυα επανακυρώνεται (δευτερόλεπτα)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>&amp; Στίχοι πολυμέσων</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>Ποσό των μεταβολών της έντασης ανά κύλιση (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>Βήμα φωτεινότητας</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>Ποσό των αλλαγών φωτεινότητας ανά κύλιση (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>Μέγιστη ένταση ήχου</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>Ανώτατο όριο για τον όγκο εξόδου (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>Συντονισμός υπηρεσίας</translation>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>Αριθμός των γραμμών στα οπτικά προγράμματα ήχου</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>Εμφάνιση μενού συνεδρίας (Power)</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation>Συντομεύσεις πλήκτρων Vim</translation>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>Πλοηγηθείτε στο μενού συνεδρίας με hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>Όριο συρσίματος</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>Πίξελ για μεταφορά πριν από τις κινήσεις του μενού</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>Εικονίδια</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>Ενεργοποίηση ηχητικών εφέ</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>Ένταση ήχου εφέ</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>Κάμερα κλικ</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>Έλεγχος έντασης</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation>Σύστημα</translation>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>Η φόρτιση ξεκίνησε</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>Κλείδωμα οθόνης</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>Ξεκλείδωμα οθόνης</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>Χαμηλή μπαταρία</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>Εγγραφή οθόνης</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>Αλλαγές φόρτισης</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>Αλλαγές λειτουργίας παιχνιδιού</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>Αλλαγές νυχτερινού φωτός</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>Η διαμόρφωση φορτώθηκε</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation>Ήχος</translation>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>Αλλαγές εξόδου ήχου</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>Αλλαγές εισόδου ήχου</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>Παίζεται τώρα</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation type="unfinished"/>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation>Αλλαγές κλειδώματος Caps</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation>Αριθμός αλλαγών κλειδώματος</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>Αλλαγές διάταξης πληκτρολογίου</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>Όριο διάταξης πληκτρολογίου</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>Άλλο</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>Μην ενοχλείτε αλλαγές</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>Αλλαγή VPN</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>Αλλαγές πρόχειρου</translation>
     </message>

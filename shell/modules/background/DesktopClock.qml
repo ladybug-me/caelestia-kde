@@ -10,11 +10,14 @@ import qs.services
 Item {
     id: root
 
-    required property Item wallpaper
-    required property real absX
-    required property real absY
+    property var frame: null
+    property var controller: null
+    property Item wallpaper: controller?.wallpaper ?? null
+    property real absX: (controller?.gridOrigin.x ?? 0) + (frame?.x ?? 0)
+    property real absY: (controller?.gridOrigin.y ?? 0) + (frame?.y ?? 0)
+    property real gridScale: frame ? Math.min(frame.width / 340, frame.height / 140) : 1
+    property real clockScale: Math.max(0.4, gridScale * Config.background.desktopClock.scale)
 
-    property real clockScale: Config.background.desktopClock.scale
     readonly property bool bgEnabled: Config.background.desktopClock.background.enabled
     readonly property bool blurEnabled: bgEnabled && Config.background.desktopClock.background.blur && !GameMode.enabled
     readonly property bool invertColors: Config.background.desktopClock.invertColors
@@ -27,9 +30,8 @@ Item {
 
     implicitWidth: layout.implicitWidth + (Tokens.padding.large * 4 * root.clockScale)
     implicitHeight: layout.implicitHeight + (Tokens.padding.extraLargeIncreased * root.clockScale)
-
-    x: (wallpaper ? wallpaper.width : 0) * Config.background.desktopClock.offsetX
-    y: (wallpaper ? wallpaper.height : 0) * Config.background.desktopClock.offsetY
+    x: frame ? 0 : ((wallpaper ? wallpaper.width : 0) * Config.background.desktopClock.offsetX)
+    y: frame ? 0 : ((wallpaper ? wallpaper.height : 0) * Config.background.desktopClock.offsetY)
 
     Item {
         id: clockContainer

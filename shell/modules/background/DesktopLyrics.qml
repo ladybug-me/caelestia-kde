@@ -15,12 +15,14 @@ import qs.services
 Item {
     id: root
 
-    required property ShellScreen screen
-    required property Item wallpaper
-    required property real absX
-    required property real absY
-
-    property real lyricsScale: Config.background.desktopLyrics.scale
+    property var frame: null
+    property var controller: null
+    property ShellScreen screen: controller?.screenData ?? null
+    property Item wallpaper: controller?.wallpaper ?? null
+    property real absX: (controller?.gridOrigin.x ?? 0) + (frame?.x ?? 0)
+    property real absY: (controller?.gridOrigin.y ?? 0) + (frame?.y ?? 0)
+    property real gridScale: frame ? Math.min(frame.width / 350, frame.height / 180) : 1
+    property real lyricsScale: Math.max(0.5, gridScale * Config.background.desktopLyrics.scale)
 
     readonly property bool bgEnabled: Config.background.desktopLyrics.background.enabled
     readonly property bool blurEnabled: bgEnabled && Config.background.desktopLyrics.background.blur && !GameMode.enabled
@@ -105,12 +107,14 @@ Item {
     }
 
     transform: Translate {
-        x: (root.screen ? root.screen.width : 0) * Config.background.desktopLyrics.offsetX
-        y: (root.screen ? root.screen.height : 0) * Config.background.desktopLyrics.offsetY
+        x: frame ? 0 : ((root.screen ? root.screen.width : 0) * Config.background.desktopLyrics.offsetX)
+        y: frame ? 0 : ((root.screen ? root.screen.height : 0) * Config.background.desktopLyrics.offsetY)
     }
 
     implicitWidth: 350 * root.lyricsScale
     implicitHeight: 180 * root.lyricsScale
+    width: frame ? frame.width : implicitWidth
+    height: frame ? frame.height : implicitHeight
 
     opacity: ((root.hasLyrics || Lyrics.loading) && !root.shouldHide) ? 1 : 0
     visible: opacity > 0

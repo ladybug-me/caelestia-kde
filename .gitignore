@@ -16,6 +16,7 @@ run.sh
 /docs/agents/
 /docs/adr/
 .scratch/
+.agents
 
 /shell/translations/caelestia_en.ts
 /shell/translations/caelestia_en.qm

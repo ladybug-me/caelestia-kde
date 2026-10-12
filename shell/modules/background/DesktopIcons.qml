@@ -22,6 +22,7 @@ Item {
     readonly property point gridOrigin: Qt.point(gridItem.x, gridItem.y)
 
     readonly property var screenConfig: GlobalConfig.forScreen(screenData.name).background
+    readonly property bool iconsEnabled: screenConfig.desktopIconsEnabled
     readonly property bool materialYou: screenConfig.materialYouIconsEnabled
     readonly property bool vibrant: screenConfig.materialYouIconsVibrant
     readonly property string desktopDir: Paths.home + "/Desktop"
@@ -174,7 +175,7 @@ Item {
             return groupPopup.memberPositions();
         const out = {};
         for (const key of topLevelKeys())
-            if (DesktopLayout.positions[key])
+            if (DesktopLayout.positions[key] && (iconsEnabled || isWidgetKey(key)))
                 out[key] = DesktopLayout.positions[key];
         return out;
     }
@@ -186,7 +187,12 @@ Item {
             return true;
         const c = Math.floor((x - gridItem.x) / cellWidth);
         const r = Math.floor((y - gridItem.y) / cellHeight);
-        return cellOccupant(c, r, []) !== "";
+        const occ = cellOccupant(c, r, []);
+        if (occ === "")
+            return false;
+        if (!iconsEnabled && !isWidgetKey(occ))
+            return false;
+        return true;
     }
 
     function cellOccupant(col: int, row: int, exclude: var): string {
@@ -1289,9 +1295,19 @@ Item {
     }
 
     anchors.fill: parent
-    visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.wallpaperEnabled && GlobalConfig.forScreen(screenData.name).background.desktopIconsEnabled
+    visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.wallpaperEnabled
     focus: true
     Keys.onPressed: event => handleKey(event)
+
+    onIconsEnabledChanged: {
+        if (!iconsEnabled) {
+            if (openGroupId !== "")
+                closeGroup();
+            if (renameActive && !isWidgetKey(renamingDelegate.key))
+                renamingDelegate.cancelRename();
+            clearSelection();
+        }
+    }
 
     onColsChanged: refitTimer.restart()
     onRowsChanged: refitTimer.restart()
@@ -1454,7 +1470,8 @@ wl-paste --no-newline --type text/uri-list`]
                 const hit = Engine.keysInRect(root.contextPositionsTopLevel(), Qt.rect(r.x - gridItem.x, r.y - gridItem.y, r.width, r.height), root.cellWidth, root.cellHeight, Tokens.padding.small, root.spans);
                 const next = Object.assign({}, bandArea.base);
                 for (const k of hit)
-                    next[k] = true;
+                    if (root.iconsEnabled || root.isWidgetKey(k))
+                        next[k] = true;
                 root.selection = next;
             }
         }
@@ -1556,7 +1573,7 @@ wl-paste --no-newline --type text/uri-list`]
                 readonly property var pos: root.displayPositions[key] ?? DesktopLayout.positions[key] ?? null
 
                 controller: root
-                visible: pos !== null
+                visible: (!isGroup || root.iconsEnabled) && pos !== null
                 width: span.w * root.cellWidth
                 height: span.h * root.cellHeight
                 x: (pos?.col ?? 0) * root.cellWidth
@@ -1619,7 +1636,7 @@ wl-paste --no-newline --type text/uri-list`]
                 entry: root.entryOf(key)
                 groupName: root.groupOf(key)?.name ?? ""
                 groupMembers: isGroup ? root.groupEntries(root.nameOf(key)) : []
-                visible: pos !== null
+                visible: root.iconsEnabled && pos !== null
                 width: root.cellWidth
                 height: root.cellHeight
                 x: (pos?.col ?? 0) * root.cellWidth

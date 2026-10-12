@@ -21,6 +21,7 @@ Item {
     readonly property var config: widget?.config ?? ({})
     readonly property var info: controller.widgetCatalog.info(isGroup ? "group" : (widget?.type ?? ""))
     readonly property var span: controller.displaySpans[key] ?? info.size
+    readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true)
 
     property bool selected: false
     property bool focusVisible: false
@@ -95,7 +96,7 @@ Item {
     // Frosted glass: the wallpaper behind the card, blurred and clipped to it.
     Loader {
         anchors.fill: card
-        active: !!root.controller.wallpaper && !GameMode.enabled
+        active: !root.frameless && !!root.controller.wallpaper && !GameMode.enabled
         asynchronous: true
 
         sourceComponent: MultiEffect {
@@ -125,13 +126,13 @@ Item {
         id: card
 
         anchors.fill: parent
-        anchors.leftMargin: root.sideGap
-        anchors.rightMargin: root.sideGap
-        anchors.topMargin: root.topGap
-        anchors.bottomMargin: root.labelHeight
-        radius: Tokens.rounding.extraLarge
-        color: GlobalConfig.appearance.pitchBlack ? Qt.alpha("#000000", 0.7) : Qt.alpha(Colours.palette.m3surfaceContainer, 0.4)
-        border.width: root.selected || root.mergeTarget || root.focusVisible ? 2 : 1
+        anchors.leftMargin: root.frameless ? 0 : root.sideGap
+        anchors.rightMargin: root.frameless ? 0 : root.sideGap
+        anchors.topMargin: root.frameless ? 0 : root.topGap
+        anchors.bottomMargin: root.frameless ? 0 : root.labelHeight
+        radius: root.frameless ? Tokens.rounding.medium : Tokens.rounding.extraLarge
+        color: root.frameless ? "transparent" : (GlobalConfig.appearance.pitchBlack ? Qt.alpha("#000000", 0.7) : Qt.alpha(Colours.palette.m3surfaceContainer, 0.4))
+        border.width: root.selected || root.mergeTarget || root.focusVisible ? 2 : (root.frameless ? 0 : 1)
         border.color: root.selected || root.mergeTarget || root.focusVisible ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, 0.12)
 
         // Background of the card: selects, opens, drags and resizes the item.
@@ -194,7 +195,7 @@ Item {
             }
 
             anchors.fill: parent
-            anchors.margins: root.isGroup ? Tokens.padding.small : Tokens.padding.large
+            anchors.margins: root.frameless ? 0 : (root.isGroup ? Tokens.padding.small : Tokens.padding.large)
             asynchronous: true
 
             onWantedChanged: load()
@@ -205,6 +206,7 @@ Item {
     // Centred in the gap down to the next row's card (its top gap included), so
     // names in different scripts line up.
     StyledRect {
+        visible: !root.frameless
         anchors.horizontalCenter: card.horizontalCenter
         anchors.verticalCenter: card.bottom
         anchors.verticalCenterOffset: (root.labelHeight + root.topGap) / 2 - 1

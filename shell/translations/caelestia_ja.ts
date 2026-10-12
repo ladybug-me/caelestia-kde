@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>インストールされていません</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>デーモンが実行されていません - 起動時：sudo systemctl start olama</translation>
     </message>
@@ -887,42 +887,42 @@
       <translation>Orlama</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation>ステータス</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation>Ollamaをダウンロード</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation>クロード語</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation>クロードコード</translation>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Claude CLI とあなたのClaude ログインを使用</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation type="unfinished"/>
     </message>
@@ -932,7 +932,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>Anthropic キーを持つトークンごとのペイ・パー・トークン API</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>その他のプロバイダー</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>OpenAIキーを使用したペイパートークンAPI。</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>Google&apos;s OpenAI 互換エンドポイント</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation type="unfinished"/>
     </message>
@@ -977,7 +977,7 @@
       <translation>複数のベンダーからのモデルのための1つのキー</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>キュレーションされたコーディングモデル、あなたが行くように支払います</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -997,7 +997,7 @@
       <translation>月間サブスクリプション; Zen&apos;s キーを共有</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>API キー</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>favoriteAppsに正規表現が一致しました - 設定ファイルを編集して変更します</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>カスタムプレゼンスをVesktopにブロードキャストする</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>Steamゲームを自動検出</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>Steamゲームを自動的にブロードキャストする</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation>Caelestia情報を配信する</translation>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>シェルの稼働時間とシステム情報をブロードキャストする</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>アイドル時に消去</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>プレゼンスを非表示にしない (分)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation>SteamGridDB 統合</translation>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>このカスタムプレゼンスを強制的にブロードキャストし、他のすべてのアプリを無視する</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>コマンドには &quot;%1&quot; と入力してください</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>クリップボードの履歴を消去しますか？</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>Caelestiaデスクトップを無効にし、代わりにネイティブのPlasma 6デスクトップを使用してください</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>デスクトップアイコンを表示</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>Caelestiaデスクトップのアイコンを有効にする</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation type="unfinished"/>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>デスクトップアイコンのみKDE アイコンのテーマを上書きする</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>バイブラントアイコン</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>材料の彩度を上げて余分な活力を得られるようにする</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>窓を最小化するときに魔法のランプ効果を有効にする</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>ウィンドウのタイル</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>ターゲットウィンドウがフォーカスされているとき、または実行中にゲームモードをオンにします</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>ターゲットウィンドウ</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>アニメーションを無効にする</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>ぼかしを無効化</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>ギャップと丸めを無効にする</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>影を無効にする</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>ウィンドウの透明度を無効にする</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>Caelestia機能の上書き</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>シェルの透明度を無効にする</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>トースト通知の透明度を無効にする</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>デスクトップの歌詞を無効にする</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>ビジュアライザーを無効にする</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>使用法</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation>ランチャー</translation>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>タイムアウト後に通知を却下する</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>展開を開く</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>デフォルトで通知を展開する</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>デフォルトのタイムアウト</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>通知を閉じるまでの秒</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>グループプレビュー数</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>グループが折りたたまれる前に表示される通知</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>ポップアップ通知の上限</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>最新のポップアップのみ表示されます。残りはサイドバーに残ります</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>最大保存された通知数</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>上限に達した場合、古い通知が削除されます</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>相互作用</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>クリック時に通知アクションを有効にする</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>しきい値を展開</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>ドッキング通知が展開される前にピクセルをホバーします</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>フルスクリーンタイムアウト</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>通知が全画面表示のままミリ秒です。</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>閾値をクリア</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>画面上のスライダーを表示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>音量</translation>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>音量スライダーを表示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>マイク</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>マイクスライダーを表示</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>画面の明るさ</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>明るさスライダーを表示</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>エッジトリガー</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>画面の端からの距離</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>高さ</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>応答するエッジの部分</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>動作</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>自動</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>メディア位置の更新頻度（ミリ秒）</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>システム統計を更新</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>CPU、メモリ、GPU の更新間隔 (秒)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>Wi-Fi 再スキャン</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>利用可能なネットワークが再スキャンされる頻度（秒）</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>メディア &amp; 歌詞</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>スクロールごとの音量変更量(%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>明るさのステップ</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>スクロールごとの明るさの変更量(%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>最大音量</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>出力音量の上限(%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>サービスチューニング</translation>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>オーディオビジュアライザー内のバー数</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>セッション（パワー）メニューを表示</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation type="unfinished"/>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>hjklでセッションメニューを移動します</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>ドラッグのしきい値</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>メニューが動く前にドラッグするピクセル</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>アイコン</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>効果音を有効にする</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>効果音の音量</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>カメラのクリック</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>音量チェック</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation>システム</translation>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>充電を開始しました</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>画面ロック</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>画面のロック解除</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>バッテリー残量低下</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>画面の録画</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>充電中の変更</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>ゲームモードの変更</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>夜間の電球の変更</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>設定を読み込みました</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation>オーディオ</translation>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>オーディオ出力の変更</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>音声入力の変更</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>再生中</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation type="unfinished"/>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>キーボードレイアウトの変更</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>キーボードレイアウトの制限</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>その他</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>邪魔しないでください</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>VPN の変更</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>クリップボードの変更</translation>
     </message>

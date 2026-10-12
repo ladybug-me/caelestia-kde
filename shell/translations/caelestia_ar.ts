@@ -829,18 +829,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+520"/>
+      <location line="+529"/>
       <source>Checking…</source>
       <translation>التحقق…</translation>
     </message>
     <message>
-      <location line="-518"/>
-      <location line="+497"/>
+      <location line="-527"/>
+      <location line="+506"/>
       <source>Not installed</source>
       <translation>لم يتم تثبيته</translation>
     </message>
     <message>
-      <location line="-488"/>
+      <location line="-497"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>دايمون لا يعمل - ابدأ ب : sudo systemctl يبدأ فلاما</translation>
     </message>
@@ -887,42 +887,42 @@
       <translation>أولاما</translation>
     </message>
     <message>
-      <location line="+8"/>
-      <location line="+142"/>
+      <location line="+9"/>
+      <location line="+150"/>
       <source>Status</source>
       <translation>الحالة</translation>
     </message>
     <message>
-      <location line="-133"/>
+      <location line="-141"/>
       <source>Download Ollama</source>
       <translation>تحميل أولاما</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+149"/>
+      <location line="+157"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>تثبيت…</translation>
     </message>
     <message>
-      <location line="-161"/>
+      <location line="-169"/>
       <source>Claude</source>
       <translation>كلود</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+110"/>
+      <location line="+118"/>
       <source>Claude Code</source>
       <translation>كود كلود</translation>
     </message>
     <message>
-      <location line="-109"/>
+      <location line="-117"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>يستخدم كلود CLI ودخل كلود الخاص بك</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Let the CLI run its own tools</source>
       <translation>السماح لـ CLI بتشغيل أدواته الخاصة</translation>
     </message>
@@ -932,7 +932,7 @@
       <translation>مغلق افتراضياً؛ أدوات المساعد الخاصة لا تحتاجه</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Claude API</source>
       <translation type="unfinished"/>
     </message>
@@ -942,7 +942,7 @@
       <translation>باي-لكل توكين API مع مفتاح أنثروبيك</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other providers</source>
       <translation>مقدمو خدمات آخرون</translation>
     </message>
@@ -957,7 +957,7 @@
       <translation>باي-لكل توكين API مع مفتاح OpenAI</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Gemini</source>
       <translation type="unfinished"/>
     </message>
@@ -967,7 +967,7 @@
       <translation>جوجل&apos;نقطة نهاية متوافقة مع OpenAI-</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>OpenRouter</source>
       <translation>أوبن روث</translation>
     </message>
@@ -977,7 +977,7 @@
       <translation>مفتاح واحد للنماذج من بائعين متعددين</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>opencode Zen</source>
       <translation type="unfinished"/>
     </message>
@@ -987,7 +987,7 @@
       <translation>نماذج البرمجة المعالجة، دفع عند الذهاب</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>opencode Go</source>
       <translation>اذهب إلى رمز opencode</translation>
     </message>
@@ -997,7 +997,7 @@
       <translation>الاشتراك الشهري؛ مشاركة Zen&apos;s</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+13"/>
       <source>API keys</source>
       <translation>مفاتيح API</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+146"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>تطابق مع regex في المفضلة - تحرير ملف التكوين لتغيير</translation>
     </message>
@@ -1600,7 +1600,7 @@
       <translation>بث وجود مخصص إلى Vesktop</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Auto-detect Steam games</source>
       <translation>الكشف التلقائي عن ألعاب البخار</translation>
     </message>
@@ -1610,7 +1610,7 @@
       <translation>بث تلقائي لألعاب الستيم</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Broadcast Caelestia info</source>
       <translation>بث معلومات Caelestia</translation>
     </message>
@@ -1620,7 +1620,7 @@
       <translation>بث قذيفة وقت التشغيل ومعلومات النظام</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Clear when idle</source>
       <translation>مسح عند الخمول</translation>
     </message>
@@ -1635,7 +1635,7 @@
       <translation>لا تخفي أبدا وجود (دقائق)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>SteamGridDB integration</source>
       <translation>تكامل SteamGridDB</translation>
     </message>
@@ -1710,7 +1710,7 @@
       <translation>فرض بث هذا الوجود المخصص وتجاهل جميع التطبيقات الأخرى</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>App/game name</source>
       <translation type="unfinished"/>
     </message>
@@ -3898,7 +3898,7 @@
       <translation>اكتب &quot;%1&quot; للأوامر</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+331"/>
       <source>Clear clipboard history?</source>
       <translation>مسح سجل الحافظة؟</translation>
     </message>
@@ -4792,7 +4792,7 @@
       <translation>تعطيل سطح المكتب Caelestia واستخدام Plasma 6 المحلية بدلاً من سطح المكتب</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+16"/>
       <source>Show Desktop Icons</source>
       <translation>إظهار أيقونات سطح المكتب</translation>
     </message>
@@ -4802,7 +4802,7 @@
       <translation>تمكين الرموز لسطح المكتب Caelestia</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Material You Icons</source>
       <translation>أيقونات المواد</translation>
     </message>
@@ -4812,7 +4812,7 @@
       <translation>تجاوز موضوع رمز KDE لأيقونات سطح المكتب فقط</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Vibrant Icons</source>
       <translation>أيقونات حيوية</translation>
     </message>
@@ -4822,7 +4822,7 @@
       <translation>تعزيز تشبع أيقونات المواد الخاصة بك من أجل حيوية إضافية</translation>
     </message>
     <message>
-      <location line="+16"/>
+      <location line="+17"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,7 +4852,7 @@
       <translation>تمكين تأثير المصباح السحري عند تصغير النوافذ</translation>
     </message>
     <message>
-      <location line="+22"/>
+      <location line="+23"/>
       <source>Window Tiling</source>
       <translation>سقف النافذة</translation>
     </message>
@@ -5590,7 +5590,7 @@ Now go touch grass</source>
       <translation>تشغيل وضع اللعبة عند تركيز أو تشغيل النافذة المستهدفة</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Target windows</source>
       <translation>النوافذ المستهدفة</translation>
     </message>
@@ -5610,27 +5610,27 @@ Now go touch grass</source>
       <translation>تعطيل الرسوم المتحركة</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable blur</source>
       <translation>تعطيل الضبابية</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable gaps and rounding</source>
       <translation>تعطيل الفجوات والتقريب</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable shadows</source>
       <translation>تعطيل الظلال</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Disable window transparency</source>
       <translation>تعطيل شفافية النافذة</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Caelestia feature overrides</source>
       <translation>تجاوز ميزة الكايلستيا</translation>
     </message>
@@ -5640,17 +5640,17 @@ Now go touch grass</source>
       <translation>تعطيل شفافية القذيفة</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable toast notifications transparency</source>
       <translation>تعطيل شفافية التنبيهات المنبثقة</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable desktop lyrics</source>
       <translation>تعطيل كلمات سطح المكتب</translation>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+6"/>
       <source>Disable visualizer</source>
       <translation>تعطيل المرئيات</translation>
     </message>
@@ -5780,7 +5780,7 @@ Now go touch grass</source>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+136"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+157"/>
       <source>Usage</source>
       <translation>الاستخدام</translation>
     </message>
@@ -6712,6 +6712,21 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
+      <location line="+8"/>
+      <source>Tooltip</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Shrink icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Flip icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Launcher</source>
       <translation>المشغل</translation>
@@ -6814,6 +6829,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Truncated app names</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -7485,7 +7510,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+48"/>
+      <location line="+49"/>
       <source>Unknown title</source>
       <translation type="unfinished"/>
     </message>
@@ -7951,7 +7976,7 @@ Now go touch grass</source>
   <context>
     <name>NotesTab</name>
     <message>
-      <location filename="../modules/dashboard/NotesTab.qml" line="+30"/>
+      <location filename="../modules/dashboard/NotesTab.qml" line="+32"/>
       <location line="+248"/>
       <source>Untitled</source>
       <translation type="unfinished"/>
@@ -8260,7 +8285,7 @@ Now go touch grass</source>
       <translation>تجاهل الإشعارات بعد انتهاء المهلة</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Open expanded</source>
       <translation>فتح موسع</translation>
     </message>
@@ -8270,7 +8295,7 @@ Now go touch grass</source>
       <translation>إظهار الإشعارات الموسعة بشكل افتراضي</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Default timeout</source>
       <translation>المهلة الافتراضية</translation>
     </message>
@@ -8280,7 +8305,7 @@ Now go touch grass</source>
       <translation>ثواني قبل رفض الإشعار</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Group preview count</source>
       <translation>عدد معاينة المجموعة</translation>
     </message>
@@ -8290,7 +8315,7 @@ Now go touch grass</source>
       <translation>إشعارات تظهر قبل انهيار مجموعة</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Max popup notifications</source>
       <translation>الحد الأقصى للإشعارات المنبثقة</translation>
     </message>
@@ -8300,7 +8325,7 @@ Now go touch grass</source>
       <translation>يظهر فقط أحدث النوافذ المنبثقة؛ تبقى البقية في الشريط الجانبي</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max stored notifications</source>
       <translation>الحد الأقصى للإشعارات المخزنة</translation>
     </message>
@@ -8310,7 +8335,7 @@ Now go touch grass</source>
       <translation>يتم إسقاط الإشعارات القديمة عند بلوغ الحد الأقصى</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Interaction</source>
       <translation>التفاعل</translation>
     </message>
@@ -8325,7 +8350,7 @@ Now go touch grass</source>
       <translation>تفعيل إجراء الإشعار بالنقر</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Expand threshold</source>
       <translation>توسيع العتبة</translation>
     </message>
@@ -8335,7 +8360,7 @@ Now go touch grass</source>
       <translation>ضرب البكسل قبل توسيع الإشعار المربوط</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Fullscreen timeout</source>
       <translation>مهلة ملء الشاشة</translation>
     </message>
@@ -8345,7 +8370,7 @@ Now go touch grass</source>
       <translation>المللي ثواني الإشعارات تبقى على تطبيق ملء الشاشة</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Clear threshold</source>
       <translation>مسح العتبة</translation>
     </message>
@@ -8537,7 +8562,7 @@ Now go touch grass</source>
       <translation>إظهار الشرائح على الشاشة</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Volume</source>
       <translation>حجم</translation>
     </message>
@@ -8547,7 +8572,7 @@ Now go touch grass</source>
       <translation>إظهار شريط تمرير الصوت</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Microphone</source>
       <translation>الميكروفون</translation>
     </message>
@@ -8557,7 +8582,7 @@ Now go touch grass</source>
       <translation>إظهار شريط تمرير الميكروفون</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Brightness</source>
       <translation>السطوع</translation>
     </message>
@@ -8567,7 +8592,7 @@ Now go touch grass</source>
       <translation>إظهار شريط تمرير السطوع</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Edge trigger</source>
       <translation>مشغل الحافة</translation>
     </message>
@@ -8582,7 +8607,7 @@ Now go touch grass</source>
       <translation>المسافة من حافة الشاشة</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Height</source>
       <translation>الارتفاع</translation>
     </message>
@@ -8592,7 +8617,7 @@ Now go touch grass</source>
       <translation>الجزء من الحافة الذي يستجيب</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Behavior</source>
       <translation>السلوك</translation>
     </message>
@@ -9025,6 +9050,11 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>App browser layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Truncated app names</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10123,7 +10153,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -10518,12 +10548,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
       <location line="+15"/>
-      <location line="+117"/>
+      <location line="+120"/>
       <source>Auto</source>
       <translation>تلقائي</translation>
     </message>
     <message>
-      <location line="-129"/>
+      <location line="-132"/>
       <source>Local</source>
       <translation type="unfinished"/>
     </message>
@@ -10568,7 +10598,7 @@ PIN: %1</source>
       <translation>عدد مرات تحديث موقف وسائط الإعلام (مللي ثانية)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>System stats refresh</source>
       <translation>تحديث إحصائيات النظام</translation>
     </message>
@@ -10578,7 +10608,7 @@ PIN: %1</source>
       <translation>وحدة المعالجة المركزية، الذاكرة وفترة تحديث GPU (بالثواني)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Wi-Fi rescan</source>
       <translation>إعادة فحص Wi-Fi</translation>
     </message>
@@ -10588,7 +10618,7 @@ PIN: %1</source>
       <translation>كم عدد المرات التي يتم فيها إعادة فحص الشبكات المتاحة (بالثواني)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Media &amp; lyrics</source>
       <translation>الوسائط والكلمات</translation>
     </message>
@@ -10628,7 +10658,7 @@ PIN: %1</source>
       <translation>مقدار التغييرات في الحجم لكل تمرير (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Brightness step</source>
       <translation>خطوة السطوع</translation>
     </message>
@@ -10638,7 +10668,7 @@ PIN: %1</source>
       <translation>المبلغ يتغير السطوع لكل تمرير (%)</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Max volume</source>
       <translation>الحد الأقصى للصوت</translation>
     </message>
@@ -10648,7 +10678,7 @@ PIN: %1</source>
       <translation>الحد الأعلى لحجم الإخراج (%)</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Service tuning</source>
       <translation>ضبط الخدمة</translation>
     </message>
@@ -10673,7 +10703,7 @@ PIN: %1</source>
       <translation>عدد الحانات في المرئيات الصوتية</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Visualiser input</source>
       <translation type="unfinished"/>
     </message>
@@ -10754,7 +10784,7 @@ PIN: %1</source>
       <translation>إظهار قائمة الجلسة (القوة)</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Vim keybinds</source>
       <translation>ربط مفاتيح الفيم</translation>
     </message>
@@ -10764,7 +10794,7 @@ PIN: %1</source>
       <translation>التنقل في قائمة الجلسة باستخدام hjkl</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Drag threshold</source>
       <translation>عتبة السحب</translation>
     </message>
@@ -10774,7 +10804,7 @@ PIN: %1</source>
       <translation>بكسل للسحب قبل انتقال القائمة</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+10"/>
       <source>Icons</source>
       <translation>أيقونات</translation>
     </message>
@@ -11472,7 +11502,7 @@ PIN: %1</source>
       <translation>تمكين المؤثرات الصوتية</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Sound effect volume</source>
       <translation>حجم تأثير الصوت</translation>
     </message>
@@ -11487,12 +11517,12 @@ PIN: %1</source>
       <translation>انقر الكاميرا</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Volume tick</source>
       <translation>تحديد مستوى الصوت</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>System</source>
       <translation>النظام</translation>
     </message>
@@ -11502,22 +11532,22 @@ PIN: %1</source>
       <translation>بدأ الشحن</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen lock</source>
       <translation>قفل الشاشة</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Screen unlock</source>
       <translation>فتح قفل الشاشة</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Low battery</source>
       <translation>بطارية منخفضة</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Screen recording</source>
       <translation>تسجيل الشاشة</translation>
     </message>
@@ -12014,22 +12044,22 @@ PIN: %1</source>
       <translation>تغييرات الشحن</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Game mode changes</source>
       <translation>تغيير وضع اللعبة</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Night light changes</source>
       <translation>تغييرات الضوء الليلي</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Configuration loaded</source>
       <translation>تم تحميل الإعدادات</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio</source>
       <translation>الصوت</translation>
     </message>
@@ -12039,17 +12069,17 @@ PIN: %1</source>
       <translation>تغييرات إخراج الصوت</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Audio input changes</source>
       <translation>تغييرات إدخال الصوت</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Now playing</source>
       <translation>يلعب الآن</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Input</source>
       <translation type="unfinished"/>
     </message>
@@ -12059,22 +12089,22 @@ PIN: %1</source>
       <translation>الحد الاقصى لتغييرات القفل</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Num lock changes</source>
       <translation>تغيير قفل Num</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Keyboard layout changes</source>
       <translation>تغييرات تخطيط لوحة المفاتيح</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Keyboard layout limit</source>
       <translation>حد تخطيط لوحة المفاتيح</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>Other</source>
       <translation>اخرى</translation>
     </message>
@@ -12084,12 +12114,12 @@ PIN: %1</source>
       <translation>تغييرات عدم الإزعاج</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+7"/>
       <source>VPN changes</source>
       <translation>تغييرات VPN</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Clipboard changes</source>
       <translation>تغييرات الحافظة</translation>
     </message>

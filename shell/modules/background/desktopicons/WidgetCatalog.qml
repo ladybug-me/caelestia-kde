@@ -5,7 +5,7 @@ import qs.utils
 QtObject {
     readonly property var types: [
         { type: "clock", name: qsTr("Clock & Weather"), icon: "partly_cloudy_day", size: { w: 4, h: 2 }, min: { w: 2, h: 2 }, max: { w: 6, h: 3 }, source: "widgets/ClockWidget.qml" },
-        { type: "desktopClock", name: qsTr("Desktop Clock"), icon: "schedule", size: { w: 4, h: 2 }, min: { w: 3, h: 2 }, max: { w: 8, h: 4 }, frameless: true, source: "widgets/DesktopClockWidget.qml" },
+        { type: "desktopClock", name: qsTr("Desktop Clock"), icon: "schedule", size: { w: 4, h: 2 }, min: { w: 2, h: 2 }, max: { w: 8, h: 6 }, frameless: true, source: "widgets/DesktopClockWidget.qml" },
         { type: "media", name: qsTr("Media"), icon: "music_note", size: { w: 4, h: 2 }, min: { w: 3, h: 2 }, max: { w: 6, h: 3 }, source: "widgets/MediaWidget.qml" },
         { type: "shapes", name: qsTr("Media Shapes"), icon: "graphic_eq", size: { w: 3, h: 3 }, min: { w: 2, h: 2 }, max: { w: 6, h: 6 }, frameless: true, source: "widgets/ShapesWidget.qml" },
         { type: "lyrics", name: qsTr("Desktop Lyrics"), icon: "lyrics", size: { w: 4, h: 3 }, min: { w: 3, h: 2 }, max: { w: 8, h: 6 }, frameless: true, source: "widgets/LyricsWidget.qml" },

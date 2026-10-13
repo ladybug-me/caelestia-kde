@@ -43,7 +43,9 @@ Singleton {
     function checkUpdates(branch, persistBranch) {
         if (branch === undefined) branch = "";
         if (!GlobalConfig.general.checkUpdates) return;
+        // Only an explicit branch pick re-points the tracked update channel;
         // background checks must not fight the channel the updater recorded
+        // from the tree it actually installed (issue #565).
         if (persistBranch === undefined) persistBranch = branch !== "";
         if (branch !== "") currentBranch = clampBranch(branch);
         else currentBranch = clampBranch(currentBranch);
@@ -546,6 +548,7 @@ fi
                             if (tag === "")
                                 continue;
 
+                            // Fallback path when release JSON parsing is unavailable.
                             parsedCommits.push({
                                 hash: qsTr("Release"),
                                 subject: tag,

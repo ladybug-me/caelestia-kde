@@ -7,6 +7,8 @@ import qs.components
 import qs.components.controls
 import qs.services
 
+// Month view. Scroll or use the arrows to change month; click the title to
+// come back to today.
 Item {
     id: root
 
@@ -17,6 +19,7 @@ Item {
     property int year: today.getFullYear()
     property int month: today.getMonth()
     readonly property int firstDay: Qt.locale().firstDayOfWeek
+    // Index of the first cell: days of the previous month shown before the 1st.
     readonly property int lead: (new Date(year, month, 1).getDay() - firstDay + 7) % 7
 
     function shift(delta: int): void {

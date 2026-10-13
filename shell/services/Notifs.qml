@@ -52,8 +52,13 @@ Singleton {
         return Kwin.hasFullscreen();
     }
 
+    // Called only when an actual list of items is needed (serialisation, clear).
+    // Not used as a binding anywhere.
     function notClosed(): list<NotifData> { return list.filter(n => !n.closed) }
 
+    /// Files a freshly created notification: counts it, puts it at the top of the
+    /// list and evicts whatever the cap pushes out. Both the D-Bus path below and
+    /// the shell-authored path go through here so the cap policy lives once.
     function registerNotification(comp: NotifData): void {
         root.openCount++;
         if (comp.popup)
@@ -68,7 +73,13 @@ Singleton {
         root.list = next;
     }
 
+    /// Raises a notification the shell authored itself: there is no D-Bus
+    /// notification behind it, and its actions run shell callbacks rather than
+    /// the sender's. Kept out of the on-disk history, since those callbacks
+    /// cannot survive a restart (see NotifData.shellRaised).
     function addShellNotification(params: var): NotifData {
+        // The same bookkeeping the D-Bus path does: which screen a popup belongs to
+        // is settled before it is created, because shouldShowPopup() reads it.
         root.activeTargetOutput = root.getTargetOutput();
 
         const comp = notifComp.createObject(root, {

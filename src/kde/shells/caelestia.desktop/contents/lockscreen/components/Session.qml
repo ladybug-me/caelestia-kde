@@ -1,3 +1,4 @@
+
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasma5support as Plasma5Support
@@ -20,7 +21,7 @@ Item {
     property color clSurfaceFg: clPrimary
 
     property SessionManagement sessionManagement: null
-    property int confirmationMode: 0
+    property int confirmationMode: 0 // SessionManagement.ConfirmationMode.Skip
     property var customIcons: ({})
 
     property bool showSleep: true

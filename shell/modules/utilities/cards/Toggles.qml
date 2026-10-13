@@ -141,6 +141,10 @@ StyledRect {
             root.currentPage = clamped;
     }
 
+    // These guards also run during component init, when pageCount can still hold
+    // its default 0; without the lower clamp currentPage ends up -1, every page
+    // slice comes out empty and the card renders collapsed until a wheel event
+    // happens to call requestPage.
     function clampPage(): void {
         const clamped = Math.max(0, Math.min(root.pageCount - 1, root.currentPage));
         if (clamped !== root.currentPage)
@@ -163,6 +167,7 @@ StyledRect {
     function moveDrag(px: real, py: real): void {
         root.ghostX = px;
         root.ghostY = py;
+        // Drag to edge switches page (with cooldown so it doesn't flip rapidly).
         const now = Date.now();
         if (now - root.lastEdgeSwitch > 450) {
             if (px < 24 && root.currentPage > 0) {
@@ -353,6 +358,7 @@ StyledRect {
                 root.requestPage(root.currentPage - 1);
         }
     }
+
 
     MouseArea {
         id: rowOverlay
@@ -592,6 +598,16 @@ StyledRect {
                         icon: "graphic_eq"
                         onClicked: EasyEffects.toggle()
 
+                        // Right-click opens the application itself. Toggling the
+                        // service on is only half of what people want from
+                        // EasyEffects -- the other half is changing what it does,
+                        // and that lives in its own window.
+                        //
+                        // Only the right button is accepted here, so the left one
+                        // falls through to the button underneath and keeps working
+                        // as the toggle. Adding a second signal to ButtonBase would
+                        // have reached every button in the shell for the sake of
+                        // one.
                         MouseArea {
                             acceptedButtons: Qt.RightButton
                             anchors.fill: parent

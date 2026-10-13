@@ -25,6 +25,8 @@ fallback_rules() {
         sed '/^$/d'
 }
 
+# The release an install updating to this tree is coming from. The version being
+# released cannot be a tag yet, so the newest tag the branch carries is the one before it.
 previous_release() {
     local current
     current="$(sed -nE 's/^[[:space:]]*VERSION=//p' "$REPO_ROOT/.github/version.env" 2>/dev/null | tr -d '[:space:]')"
@@ -32,6 +34,8 @@ previous_release() {
         grep -vx "$current" | head -n 1
 }
 
+# The rules this release writes that the release before it did not: what an install still
+# on that release is missing from its checkout.
 new_rules() {
     local rule
     for rule in "${CURRENT_RULES[@]}"; do
@@ -86,6 +90,7 @@ elif [[ "${#CURRENT_RULES[@]}" -eq 0 || "${#FALLBACK_RULES[@]}" -eq 0 ]]; then
     exit 1
 fi
 
+# The tree the release ships, as the remote an update fetches from.
 ensure_fixture() {
     [[ -n "$FIXTURE_REMOTE" ]] && return 0
 
@@ -102,6 +107,8 @@ ensure_fixture() {
     FIXTURE_REMOTE="$remote"
 }
 
+# A checkout holding exactly what the rules passed in select, which is what the updater of
+# the release that wrote them leaves behind.
 seed_checkout() {
     local repo="$1"
     shift

@@ -12,6 +12,8 @@ ColumnLayout {
 
     required property NexusState nState
 
+    // Both result panes search the index and build a delegate per hit, so the
+    // query is published once typing pauses instead of on every keystroke.
     function publishQuery(): void {
         searchDebounce.stop();
         root.nState.searchQuery = searchField.text;

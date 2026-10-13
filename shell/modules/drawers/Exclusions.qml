@@ -14,8 +14,14 @@ Scope {
     required property ShellScreen screen
     required property Bar.BarWrapper bar
     required property DrawerVisibilities visibilities
+    // A pinned sidebar reserves its width so maximised windows sit beside it
+    // rather than under it. It stays reserved while hidden for a fullscreen window
+    // so the other windows are not resized back and forth.
     readonly property bool reserveSidebar: Visibilities.sidebarPinned && Config.sidebar.enabled
         && (visibilities.sidebar || visibilities.sidebarSuspended)
+    // Follows the sidebar width, but only once a resize drag ends: reserving every
+    // step of the drag would resize maximised windows on each frame. The default
+    // comes from the bar, which has the screen's tokens.
     property real sidebarWidth
 
     Binding on sidebarWidth {

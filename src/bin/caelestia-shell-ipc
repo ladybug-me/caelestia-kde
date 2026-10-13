@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
+# caelestia-shell-ipc - manage the shell by config *path*, not config name, which avoids
+# the ambiguity between ~/.config/quickshell/shell.qml and .../caelestia/shell.qml.
+#
+# Usage:
+#   caelestia-shell-ipc quit              # gracefully stop the shell
+#   caelestia-shell-ipc show              # list available IPC commands
+#   caelestia-shell-ipc log               # tail the shell log
+#   caelestia-shell-ipc call <cmd> [...]  # send a custom IPC call
+#   caelestia-shell-ipc status            # check whether the shell is running
 
 set -euo pipefail
 
@@ -19,6 +28,8 @@ _quickshell() {
 
 QS="$(_quickshell)"
 
+# CAELESTIA_SHELL_CONFIG wins when set; both autostart scripts set it. Otherwise try the
+# two install layouts, package first - both can exist on one machine.
 resolve_shell_config() {
     local candidate
     for candidate in \
@@ -35,6 +46,11 @@ resolve_shell_config() {
 
 SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$(resolve_shell_config)}"
 
+# The directories a shell gets when nothing has exported them already. A package keeps
+# them under /usr and /etc, a checkout under $HOME; the resolved config path decides,
+# which is the rule src/bin/caelestia applies from its own location. Exporting the
+# checkout paths on a package handed the shell - and every command it spawns - a
+# data directory that does not exist there.
 _export_shell_env() {
     if [[ "$SHELL_CONFIG" == /etc/xdg/* ]]; then
         export QML2_IMPORT_PATH="${QML2_IMPORT_PATH:-/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia}"
@@ -45,7 +61,9 @@ _export_shell_env() {
     fi
 }
 
+# Starts the shell without handing it, and everything it launches, a stdout that goes
 # nowhere: --daemonize points stdio at /dev/null, which deadlocks Vesktop (issue #402).
+# A transient user service returns immediately with stdio on the journal instead.
 _start_shell() {
     if command -v systemd-run >/dev/null 2>&1; then
         local unit="caelestia-shell-start.service" state i
@@ -69,6 +87,8 @@ _start_shell() {
             esac
         done
         systemctl --user reset-failed "$unit" 2>/dev/null || true
+        # Deliberately not `caelestia-shell`: that name is the login unit, and systemd refuses a
+        # transient unit colliding with a loaded one.
         systemd-run --user --quiet --collect \
             --unit="caelestia-shell-start" \
             --description="Caelestia Shell" \
@@ -93,6 +113,7 @@ _qs_direct() {
     "$QS" -p "$SHELL_CONFIG" "$@"
 }
 
+# Match the exact quickshell command line that launched our config.
 _is_running() {
     pgrep -f "quickshell.*$SHELL_CONFIG" >/dev/null 2>&1
 }
@@ -184,6 +205,7 @@ case "${1:-}" in
         ;;
 
     *)
+        # Unknown command: forward it as an IPC call.
         _qs_ipc call "$@"
         ;;
 esac

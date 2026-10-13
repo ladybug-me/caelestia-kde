@@ -36,8 +36,11 @@ Item {
 
     property var currentRequest: null
 
+    // The reply the current request writes to: { chatId, msgId }.
     property var activeReply: null
 
+    // Replying (in any chat), or running the tools of a reply; the sidebar stays
+    // loaded meanwhile.
     readonly property bool busy: isTyping || inAgentLoop || Object.keys(claudeCodeRuns).length > 0
 
     property real savedContentY: -1
@@ -61,6 +64,8 @@ Item {
         }
     }
 
+    // Ask every enabled provider what it offers, rather than shipping lists that
+    // go stale each time a vendor releases a model.
     function refreshAllModels() {
         fetchOllamaModels();
         fetchClaudeCodeModels();
@@ -181,14 +186,20 @@ Item {
 
     readonly property bool isClaudeCode: provider === "claude-code"
 
+    // Running Claude Code replies by chat id. They keep going while another chat
+    // is open.
     property var claudeCodeRuns: ({})
 
     readonly property var currentClaudeCodeProc: claudeCodeRuns[currentChatId] ?? null
 
+    // Working directory and permission mode of the current Claude Code chat. Both are
+    // stored per chat (a CLI session only resumes from the directory it was created
+    // in); a new chat inherits whatever was selected last.
     readonly property string claudeCodeChatCwd: chatStore.currentProp("claudeCodeCwd") || Quickshell.env("HOME") || "."
 
     readonly property string claudeCodePermissionMode: chatStore.currentProp("claudeCodePermissionMode") || defaultClaudeCodePermissionMode()
 
+    // Bypass is only offered once it has been allowed in the AI settings.
     readonly property var claudeCodePermissionModes: GlobalConfig.ai.claudeCodeSkipPermissions
         ? ["bypassPermissions", "acceptEdits", "auto", "plan", "default"]
         : ["acceptEdits", "auto", "plan", "default"]
@@ -214,6 +225,8 @@ Item {
         dir = (dir || "").replace(/\/+$/, "") || "/";
         if (dir === claudeCodeChatCwd)
             return;
+        // The old session lives under the previous directory's project, so --resume
+        // would fail; the next send seeds a fresh session with the transcript instead.
         chatStore.setChatProps(currentChatId, { "claudeCodeCwd": dir, "claudeCodeSessionId": "" });
     }
 
@@ -228,6 +241,8 @@ Item {
         return p;
     }
 
+    // Every path under the home directory written as ~/..., for tool summaries
+    // (file paths, shell commands).
     function shortPaths(text) {
         return ClaudeCode.shortPaths(text, Quickshell.env("HOME") || "");
     }
@@ -240,6 +255,7 @@ Item {
 
     readonly property bool canSend: inputArea.text.length > 0 || attachments.pending.length > 0
 
+    // Open the current Claude Code session in a terminal (`claude --resume`).
     function openClaudeCodeInTerminal() {
         var sid = claudeCodeSessionFor(currentChatId);
         var dir = activeClaudeConfigDir();
@@ -253,6 +269,8 @@ Item {
         Launch.exec([term, "-e", "sh", "-lc", inner]);
     }
 
+    // Live status for a running Claude Code reply, shown under it the way the CLI
+    // does: a rotating verb, elapsed time and output tokens.
     readonly property real claudeCodeStartedAt: currentClaudeCodeProc?.startedAt ?? 0
 
     property int claudeCodeElapsed: 0
@@ -290,6 +308,7 @@ Item {
         onTriggered: root.claudeCodeElapsed = Math.floor((Date.now() - root.claudeCodeStartedAt) / 1000)
     }
 
+    // A new verb every few seconds while nothing more specific (a tool) is shown.
     Timer {
         interval: 4000
         repeat: true
@@ -382,6 +401,7 @@ Item {
         }
     }
 
+    // The CLI session a chat resumes, if it was started with the active account.
     function claudeCodeSessionFor(chatId) {
         var s = chatStore.session(chatId);
         if (!s || (s.claudeCodeSessionAccount || "") !== (GlobalConfig.ai.activeClaudeAccount || ""))
@@ -399,6 +419,9 @@ Item {
 
     readonly property bool isOpenaiCompat: root.openaiCompatProviders.indexOf(provider) !== -1
 
+    // opencode is the exception: it is in the list above because it shares all of
+    // that, but only for part of its catalogue — the rest needs Anthropic Messages,
+    // and it authenticates with x-api-key. See opencodeWire() and setAuthHeader().
     readonly property bool isOpencode: provider === "opencode" || provider === "opencode-go"
 
     readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go"]
@@ -910,6 +933,7 @@ Item {
             proc.destroy();
     }
 
+    // Stops the Claude Code replies running in the given chats.
     function stopClaudeCode(chatIds) {
         for (var i = 0; i < chatIds.length; i++)
             if (claudeCodeRuns[chatIds[i]])
@@ -932,6 +956,9 @@ Item {
 
         var sid = claudeCodeSessionFor(reply.chatId);
 
+        // Fresh session (new chat, the active account changed, or the working
+        // directory changed) → seed it with the prior transcript so the conversation
+        // carries over.
         var promptToSend = promptText;
         if (sid === "") {
             var transcript = ClaudeCode.transcript(chatStore.session(reply.chatId).messages);
@@ -975,6 +1002,8 @@ Item {
         proc.running = true;
     }
 
+    // Updates from a running Claude Code session. They go to the session's own
+    // message; the live status line only follows the chat that is open.
     function onClaudeCodeText(proc, text) {
         chatStore.update(proc.chatId, proc.msgId, { "text": text });
         if (proc.chatId !== currentChatId)
@@ -1170,6 +1199,9 @@ Item {
         isHistoryTab = false;
     }
 
+    // Before another chat is opened. A Claude Code reply keeps running in the
+    // background; API replies, their tool loop and rate limit retries belong to
+    // the open chat and end with it.
     function leaveChat() {
         cancelRateLimitRetry();
         if (currentRequest) {
@@ -1183,6 +1215,7 @@ Item {
         currentThoughtText = "";
     }
 
+    // After a chat is opened: pick up the status of a reply still running in it.
     function enterChat() {
         const proc = currentClaudeCodeProc;
         if (!proc)
@@ -1202,11 +1235,14 @@ Item {
             createNewChat();
     }
 
+    // Ends whatever the current chat is waiting for: an API request, a rate
+    // limit retry or a Claude Code process.
     function stopReply() {
         stopClaudeCode([currentChatId]);
         leaveChat();
     }
 
+    // Starts an empty reply in the current chat for a request to write to.
     function startReply() {
         const msgs = chatStore.current().messages;
         const empty = msgs.filter(m => !m.isUser && !m.isFinished && m.text === "" && m.toolsJson === "");
@@ -1581,6 +1617,7 @@ Item {
 
                                     if (toolName === "take_screenshot" || toolName === "web_search" || toolName === "read_webpage" || toolName === "open_app" || toolName === "caelestia_command") {
                                         AiToolCalls.runningToolsCount++;
+
                                     }
 
                                     if (toolName === "take_screenshot") {
@@ -1629,6 +1666,7 @@ Item {
                                     } else {
                                         Logger.log("[AI] Unknown tool: " + toolName);
                                         AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
+
                                     }
                                 }
 
@@ -1865,6 +1903,7 @@ Item {
                          height: parent.height
                          width: !isHistoryTab ? 40 : chatContent.implicitWidth + Tokens.padding.medium * 2
 
+
                          Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
 
                          StateLayer {
@@ -1900,6 +1939,7 @@ Item {
                          height: parent.height
                          width: isHistoryTab ? 40 : historyContent.implicitWidth + Tokens.padding.medium * 2
 
+
                          Behavior on width { NumberAnimation { duration: 250; easing.type: Easing.OutCubic } }
 
                          StateLayer {
@@ -1930,6 +1970,7 @@ Item {
                      }
                  }
              }
+
          }
 
          Flow {
@@ -2083,6 +2124,7 @@ Item {
                  }
              }
 
+             // Permission mode for this chat (Claude Code).
              SplitButton {
                  id: permissionSelector
 
@@ -2112,6 +2154,7 @@ Item {
                  }
              }
 
+             // Working directory for this chat (Claude Code).
              StyledRect {
                  id: cwdButton
 
@@ -2159,6 +2202,7 @@ Item {
                  }
              }
 
+             // Continue this chat's session in a terminal (claude --resume).
              StyledRect {
                  visible: root.isClaudeCode
                  implicitWidth: permissionSelector.height
@@ -2179,6 +2223,7 @@ Item {
                      font: Tokens.font.icon.small
                  }
              }
+
          }
 
          Item {
@@ -2200,6 +2245,8 @@ Item {
                  VerticalFadeFlickable {
                      id: listView
 
+                     // Follows the end of the chat (new messages, a streaming reply)
+                     // until the user scrolls away from it.
                      property bool pinnedToEnd: false
                      property bool settingY: false
 
@@ -2221,6 +2268,10 @@ Item {
                      anchors.left: parent.left
                      anchors.right: parent.right
                      anchors.bottomMargin: Tokens.spacing.medium
+                     // Every message is laid out, not just the ones in view: with
+                     // messages of very different heights a ListView can only estimate
+                     // the ones it has not created, and the estimate (the scrollbar's
+                     // size and position) changes as they are created while scrolling.
                      contentWidth: width
                      contentHeight: messageColumn.implicitHeight
                      boundsBehavior: Flickable.StopAtBounds
@@ -2255,12 +2306,17 @@ Item {
                              }
                          }
 
+                         // Claude Code keeps its status line up for the whole reply,
+                         // below the text as it streams.
                          Item {
                              id: statusFooter
 
                              readonly property bool shown: isThinking || (root.isClaudeCode && root.isTyping)
                              readonly property real maxBubbleWidth: listView.width * 0.85
                              readonly property real naturalWidth: footerCol.implicitWidth + Tokens.padding.medium * 2 + 8
+                             // Widest the bubble has been during this reply. The verb, the
+                             // counters and the thoughts all change width as they update;
+                             // only growing keeps the bubble from wobbling.
                              property real stableWidth: 0
 
                              onNaturalWidthChanged: if (shown) stableWidth = Math.max(stableWidth, naturalWidth)
@@ -2305,6 +2361,7 @@ Item {
                                              color: Colours.palette.m3primary
                                          }
 
+                                         // Claude Code: the CLI's twinkling star.
                                          StyledText {
                                              id: starGlyph
 
@@ -2312,6 +2369,9 @@ Item {
                                              property int frame: 0
 
                                              visible: root.isClaudeCode
+                                             // The frames come from different fallback fonts with
+                                             // different line heights; a fixed box keeps the row
+                                             // (and the bubble) from bouncing with every frame.
                                              width: 20
                                              height: 20
                                              horizontalAlignment: Text.AlignHCenter
@@ -2421,6 +2481,7 @@ Item {
                                              }
                                          }
                                      }
+                                     // Claude Code: elapsed time and output tokens on their own line.
                                      StyledText {
                                          visible: root.isClaudeCode && root.isTyping
                                          width: Math.min(implicitWidth, statusFooter.maxBubbleWidth - Tokens.padding.medium * 2 - 8)
@@ -2657,6 +2718,7 @@ Item {
                      }
                  }
 
+                 // Files attached to the next message (Claude Code).
                  Flow {
                      id: attachmentStrip
 
@@ -2831,6 +2893,8 @@ Item {
                                              inputArea.clear();
                                          }
                                      } else if (root.isClaudeCode && event.matches(StandardKey.Paste)) {
+                                         // An image on the clipboard becomes an attachment;
+                                         // anything else is pasted as text as usual.
                                          event.accepted = true;
                                          attachments.pasteImage();
                                      }
@@ -2838,6 +2902,7 @@ Item {
                              }
                          }
 
+                         // Attach a file (Claude Code).
                          Item {
                              visible: root.isClaudeCode
                              Layout.preferredWidth: visible ? 32 : 0
@@ -2973,3 +3038,4 @@ Item {
         }
     }
 }
+

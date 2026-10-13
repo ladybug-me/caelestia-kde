@@ -14,6 +14,8 @@ Item {
 
     readonly property var today: Weather.forecast && Weather.forecast.length > 0 ? Weather.forecast[0] : null
 
+    // The card shows a window onto Weather.hourlyForecast. The arrows move hourOffset
+    // and scrollPos glides after it, so the whole strip scrolls as one piece.
     readonly property var allHourly: Weather.hourlyForecast ?? []
     readonly property int windowSize: 12
     readonly property int step: 6
@@ -300,6 +302,7 @@ Item {
         }
     }
 
+    // Every hour as one continuous strip. Only columns near the viewport are built.
     component HourStrip: ColumnLayout {
         id: strip
 
@@ -311,6 +314,7 @@ Item {
         readonly property int firstIdx: Math.max(0, Math.floor(scrollPos) - 1)
         readonly property int slotCount: Math.max(0, Math.min(windowSize + 3, entries.length - firstIdx))
 
+        // Temperature range of the dots currently in view.
         readonly property var visibleRange: {
             const n = entries.length;
             if (n === 0)
@@ -335,6 +339,7 @@ Item {
             };
         }
 
+        // The chart eases toward the visible range so the scale glides instead of jumping.
         property real viewMin: visibleRange.lo
         property real viewMax: visibleRange.hi
 
@@ -357,6 +362,7 @@ Item {
             return `${String(h).padStart(2, "0")}:00`;
         }
 
+        // Midnight shows the weekday instead of 00:00.
         function hourLabel(entry: var): string {
             if (entry.hour === 0) {
                 const d = new Date(entry.timestamp.replace("T", " ").replace(/-/g, "/"));
@@ -386,6 +392,7 @@ Item {
             readonly property real padBottom: 12
             readonly property real plotH: height - padTop - padBottom
 
+            // Smooth curve: cubic segments with horizontal handles.
             readonly property string curvePath: {
                 const n = strip.slotCount;
                 if (n < 2)
@@ -497,6 +504,7 @@ Item {
             }
         }
 
+        // Columns use strip.xAt so they line up with the dots.
         Item {
             id: hourRow
 
@@ -504,6 +512,7 @@ Item {
             Layout.topMargin: Tokens.spacing.small
             implicitHeight: sizer.implicitHeight
 
+            // Never shown. Gives the row the height of a real cell.
             HourCell {
                 id: sizer
 
@@ -568,6 +577,7 @@ Item {
             color: Colours.palette.m3secondary
         }
 
+        // Hidden under 20%, but keeps its space so columns don't shift.
         StyledRect {
             Layout.alignment: Qt.AlignHCenter
             implicitWidth: rainLabel.implicitWidth + Tokens.padding.small * 2

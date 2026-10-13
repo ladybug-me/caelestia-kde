@@ -160,6 +160,8 @@ test_the_uninstaller_keeps_shared_config_dirs_when_there_is_no_backup() {
     make_uninstall_sandbox "$tmp" >/dev/null
     home="$tmp/home"
 
+    # Configs the user keeps editing after install, with no backup to restore them
+    # from: they must survive, or the uninstaller destroys unrelated work.
     mkdir -p "$home/.config/btop" "$home/.config/fish" "$home/.config/kitty"
     printf 'user customisation\n' > "$home/.config/btop/btop.conf"
     printf 'user fish config\n'   > "$home/.config/fish/config.fish"
@@ -181,6 +183,9 @@ test_the_uninstaller_leaves_an_unrelated_qml_import_path_alone() {
     make_uninstall_sandbox "$tmp" >/dev/null
     home="$tmp/home"
 
+    # The same variable names, but one points somewhere that is not Caelestia and
+    # one is Caelestia's own (the exact value 08-build-shell.sh writes). All three
+    # shells must agree: drop ours, keep theirs.
     cat > "$home/.bashrc" <<'EOF'
 export PATH="$HOME/.local/bin:$PATH"
 export QML2_IMPORT_PATH=/opt/some-other-app/qml
@@ -224,6 +229,8 @@ test_the_uninstaller_survives_an_unset_user_variable() {
     make_uninstall_sandbox "$tmp" >/dev/null
     home="$tmp/home"
 
+    # `set -u` turns an unset $USER into an abort. The sandbox runs with env -i,
+    # so HOME/PATH are set but USER is not; the uninstaller must still finish.
     status="$(run_uninstall_in_sandbox "$tmp")"
     assert_status 0 "$status" "an uninstall without \$USER exported must complete"
 

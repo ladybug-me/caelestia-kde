@@ -16,20 +16,31 @@ namespace caelestia::services {
 
 namespace {
 
+/// The shell keeps its state under XDG_STATE_HOME (Paths.state in the QML), so the
+/// transfer history belongs there rather than in Qt's per-application data directory.
 QString historyFilePath() {
     const QString stateHome = qEnvironmentVariable("XDG_STATE_HOME", QDir::homePath() + u"/.local/state"_s);
     return stateHome + u"/caelestia/quickshare_history.json"_s;
 }
 
+/// The name to show for a peer that has not introduced itself yet.
 QString deviceLabel(const QuickShareConnection* connection) {
     const QString name = connection->deviceName();
     return name.isEmpty() ? u"Nearby Device"_s : name;
 }
 
+/// How long a finished connection is kept alive, so that anything still in the
+/// socket can reach the peer before it goes.
 constexpr int connectionLingerMs = 2000;
 
+/// The port the transfer listener binds. shell/scripts/quickshare-port is its one
+/// definition: CMake bakes it in here, the shell passes it to the setup helper when it
+/// opens the firewall, and the install step reads it to write that same rule. A
+/// listener on a random port could only be opened while the shell runs, which needs
+/// administrator rights on every start.
 constexpr quint16 quicksharePort = CAELESTIA_QUICKSHARE_PORT;
 
+/// Lets a connection go once it has reported its transfer.
 void retire(QuickShareConnection* connection) {
     QTimer::singleShot(connectionLingerMs, connection, &QObject::deleteLater);
 }
@@ -78,6 +89,8 @@ void QuickShareService::setEnabled(bool enabled) {
     }
 
     if (!m_discovery->startDiscovery()) {
+        // The condition only: where the user goes to fix it is the shell's to say, and
+        // it has a row for exactly this.
         emit errorOccurred(u"The Avahi daemon is not running, so Quick Share cannot announce "
                            u"itself to nearby devices."_s);
         return;
@@ -95,6 +108,8 @@ void QuickShareService::setEnabled(bool enabled) {
 
     m_bleScanner->startScanning();
 
+    // Turning Quick Share on is also what puts this shell on the network for
+    // nearby devices; hiding it again is setVisible(false).
     setVisible(true);
 }
 
@@ -150,6 +165,7 @@ void QuickShareService::sendFile(const QString& deviceId, const QString& filePat
     const QString deviceName = device->name;
     auto* connection = new QuickShareConnection(device->address, device->port, this);
 
+    // The file itself goes out once the handshake finishes.
     connect(connection, &QuickShareConnection::stateChanged, this,
         [connection, filePath](QuickShareConnection::State state) {
             if (state == QuickShareConnection::ConnectionAccepted)
@@ -180,6 +196,7 @@ void QuickShareService::rejectIncomingTransfer() {
     if (!connection)
         return;
 
+    // Rejecting reports itself through transferFinished, which drops the request.
     connection->rejectTransfer();
     retire(connection);
 }
@@ -249,6 +266,7 @@ void QuickShareService::onNewConnection() {
 
     connect(connection, &QuickShareConnection::transferRequested, this,
         [this, connection](const QString& fileName, qint64 fileSize) {
+            // The newest request is the one acceptIncomingTransfer() answers.
             m_pendingIncomingRequest = connection;
             emit incomingTransferRequested(deviceLabel(connection), fileName, fileSize);
         });
@@ -269,6 +287,8 @@ void QuickShareService::onNewConnection() {
         retire(connection);
     });
 
+    // A peer that walks away mid-request: drop the request so the prompt and the
+    // card stop offering to accept it.
     connect(connection, &QuickShareConnection::closed, this, [this, connection] {
         if (m_pendingIncomingRequest != connection)
             return;

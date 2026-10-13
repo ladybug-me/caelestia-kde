@@ -40,6 +40,7 @@ PageBase {
     property real intensityPosition: Colours.intensityFraction
     property bool draggingIntensity: false
 
+    /// The hour of an "HH:MM" config value, for the steppers.
     function schemeHour(time: string): int {
         const minutes = Solar.parseTime(time);
         return minutes < 0 ? 0 : Math.floor(minutes / 60);
@@ -166,6 +167,7 @@ PageBase {
             subtext: enabled ? qsTr("Chroma of the wallpaper-derived palette, at 100% by default") : qsTr("%1 keeps its own colors, so this does not apply").arg(Colours.scheme)
             valueLabel: Math.round(value * Colours.maxIntensity * 100) + "%"
             value: root.intensityPosition
+            // Custom reset: intensity lives in Colours, not in a config node
             reset: ({
                 customGet: () => root.intensityPosition,
                 customDef: 0.5,

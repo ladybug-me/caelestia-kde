@@ -377,6 +377,8 @@ test_the_generated_config_follows_the_user_config() {
     run_color scheme set -n catppuccin -f mocha -m dark
     assert_status 0 "$STATUS" "the switch should succeed with a config file"
 
+    # A named scheme is rendered from its own palette rather than derived from the wallpaper, so
+    # the config it is rendered through is the fan out one; the targets it lists are the point.
     local config="$XDG_STATE_HOME/caelestia/matugen/fanout.toml"
     assert_file_exists "$config"
     assert_contains "$(cat "$config")" "btop.theme" "an enabled target is in the config"
@@ -572,6 +574,10 @@ test_the_desktop_apply_does_not_hold_up_the_return() {
     setup_sandbox
     unset CAELESTIA_NO_DEFER
 
+    # The stub records only after its delay, so the record arriving after the command has already
+    # returned is what says the apply was left running behind it. An absolute millisecond budget
+    # would be a budget on the machine instead: this command's own cost is seconds here. A marker
+    # of its own keeps the other KDE calls, which are written straight away, out of the question.
     local apply_delay=2 applied="$SANDBOX/applied.log"
     cat > "$STUB_DIR/plasma-apply-colorscheme" <<STUB
 #!/usr/bin/env bash
@@ -584,6 +590,7 @@ STUB
     assert_status 0 "$STATUS" "the switch should succeed"
     assert_file_exists "$XDG_STATE_HOME/caelestia/scheme.json"
 
+    # Nothing has applied it yet: the command returned while the apply was still asleep.
     if [[ -s "$applied" ]]; then
         fail "the command waited for the desktop apply (${apply_delay}s) to finish"
     fi
@@ -768,10 +775,16 @@ test_turning_the_desktop_apply_off_leaves_it_alone() {
     assert_eq "" "$(cat "$KDE_CALLS")" "nothing was applied to the desktop"
 }
 
+# The intensity is a property of the scheme, like the variant: it is written beside
+# the name, read back when the palette is derived again, and read by the shell out of
+# the same file. It lives here rather than in the CLI config because every re-derive -
+# a wallpaper change, the login reseed - goes through these functions and none of them
+# pass a flag.
 intensity_of() {
     python3 -c 'import json, pathlib, sys; print(json.loads(pathlib.Path(sys.argv[1]).read_text())["intensity"])' "$1"
 }
 
+# A role's colour in the scheme the command wrote, as the shell reads it.
 colour_of() {
     python3 -c 'import json, pathlib, sys; print(json.loads(pathlib.Path(sys.argv[1]).read_text())["colours"][sys.argv[2]])' "$1" "$2"
 }
@@ -806,6 +819,9 @@ test_the_intensity_scales_the_chroma_of_a_generated_palette() {
     local scheme="$XDG_STATE_HOME/caelestia/scheme.json"
     assert_eq "1.5" "$(intensity_of "$scheme")" "the factor is recorded in the scheme"
 
+    # The render's own colors with their saturation scaled by 1.5 and their hue and tone held,
+    # worked out from the definitions rather than by running this command, so this checks it
+    # rather than echoing it. 92cef5 reaches full saturation on the way, which is the clamp.
     local described
     described="$(python3 - "$scheme" <<'PY' 2>&1
 import json, pathlib, sys

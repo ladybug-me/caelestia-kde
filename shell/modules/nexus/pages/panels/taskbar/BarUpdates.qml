@@ -24,6 +24,7 @@ PageBase {
             text: qsTr("Show update indicator")
             subtext: qsTr("Always-visible icon in the taskbar that changes when a Caelestia update is available")
             checked: root.indicatorEnabled
+            // Custom reset: enabled state lives in bar.entries, default is true
             reset: ({
                 customGet: () => root.indicatorEnabled,
                 customDef: true,

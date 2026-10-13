@@ -46,6 +46,7 @@ void destroyEntry(const QString& uuid) {
     streams().erase(it);
 }
 
+/// Drops idle streams whose grace period has expired.
 void sweep() {
     const qint64 now = clock().elapsed();
     const auto keys = streams().keys();
@@ -151,6 +152,9 @@ void WindowStream::acquire() {
     it->refCount++;
     m_held = m_address;
 
+    // Both signals land on streamChanged, so a consumer binds once and gets the
+    // serial whenever it arrives -- which is asynchronous, and may already have
+    // happened if this stream was shared or still in its grace period.
     connect(it->request, &WindowScreencastRequest::objectSerialChanged, this, &WindowStream::streamChanged);
     connect(it->request, &WindowScreencastRequest::nodeIdChanged, this, &WindowStream::streamChanged);
     Q_EMIT streamChanged();

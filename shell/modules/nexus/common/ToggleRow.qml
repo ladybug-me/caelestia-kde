@@ -85,6 +85,8 @@ StyledSwitch {
     SettingResetButton {
         id: resetBtn
 
+        // Same right inset as SliderRow/StepperRow so reset icons line up
+        // in one column across every row type.
         anchors.right: parent.right
         anchors.rightMargin: Tokens.padding.medium
         anchors.verticalCenter: parent.verticalCenter

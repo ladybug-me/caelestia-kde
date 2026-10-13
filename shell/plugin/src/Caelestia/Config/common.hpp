@@ -40,6 +40,9 @@ class ListEntry : public settings::ObjectNode {
 
 CONFIG_LIST_TYPE(ListEntry, EntryList)
 
+// An icon rule matched against a name: by exact name, or by a regex which takes priority.
+// Typed rather than a plain list so a rule the shell cannot read is reported at load
+// instead of silently never matching.
 class IconRule : public settings::ObjectNode {
     CONFIG_NODE(IconRule, settings::ObjectNode)
 

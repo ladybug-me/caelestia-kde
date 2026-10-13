@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Validate the path-independent fields required in build provenance metadata."""
 
 import json
 import re

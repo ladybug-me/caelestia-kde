@@ -8,6 +8,9 @@
 
 namespace caelestia {
 
+// Loads Qt translation catalogues (caelestia_<code>.qm) for the shell and
+// retranslates the QML engine when the language changes, so switching
+// languages takes effect without restarting the shell.
 class Translations : public QObject {
     Q_OBJECT
     QML_ELEMENT

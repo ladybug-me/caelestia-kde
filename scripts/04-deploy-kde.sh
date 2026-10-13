@@ -20,6 +20,8 @@ darkly_decoration_installed() {
 
 patch_breeze_login_wallpaper() {
     local image="$1"
+    # No sudo check here: caelestia_sudo has its own escalation paths (askpass, pkexec),
+    # and the edit is best-effort either way.
     if ! install_is_packaged &&
         [[ -f /usr/share/sddm/themes/breeze/theme.conf ]]; then
         caelestia_sudo sed -i "s|^background=.*|background=$image|" /usr/share/sddm/themes/breeze/theme.conf 2>/dev/null || true

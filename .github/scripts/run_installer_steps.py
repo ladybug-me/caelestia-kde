@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+"""Run and validate installer steps for CI dependency testing.
+
+Executes non-interactive installer scripts and verifies both exit codes and build output
+(CMake, Ninja, Make) while ignoring optional components like workspace-tracker.
+"""
 
 import os
 import re
@@ -19,6 +24,7 @@ INSTALLER_STEPS = [
 
 
 def detect_base_distro() -> str:
+    """Detect base distro family (arch, fedora, debian)."""
     if "BASE_DISTRO" in os.environ:
         return os.environ["BASE_DISTRO"]
 
@@ -52,6 +58,7 @@ def detect_base_distro() -> str:
 
 
 def get_ci_environment() -> dict[str, str]:
+    """Build environment dictionary with required defaults and distro configurations."""
     env = dict(os.environ)
     distro = detect_base_distro()
 

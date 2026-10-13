@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+"""Check repository file hygiene for files changed in this PR only.
+
+Checks:
+  1. No files > 500 KB (prevents accidental large binary commits)
+  2. No unresolved merge conflict markers (<<<<<<<, =======, >>>>>>>)
+  3. No trailing whitespace in code files
+  4. No tab indentation in QML / Python / CMake / C++ files
+  5. No binary files in text-only directories (docs/, scripts/)
+  6. .sh files have the correct extension and shebang
+  7. Scripts the repository runs by path carry the executable bit
+"""
 
 import os
 import re
@@ -44,6 +55,7 @@ def ok(msg: str) -> None:
 
 
 def is_text_file(filepath: Path) -> bool:
+    """Heuristic: try to read as UTF-8 text; if it fails, treat as binary."""
     try:
         filepath.read_text(encoding="utf-8")
         return True
@@ -52,6 +64,7 @@ def is_text_file(filepath: Path) -> bool:
 
 
 def should_skip(rel_path: str, patterns: list[str] | None = None) -> bool:
+    """Check if a path should be skipped based on patterns."""
     for pat in (patterns or SKIP_PATTERNS):
         if pat in rel_path.replace("\\", "/"):
             return True
@@ -59,6 +72,7 @@ def should_skip(rel_path: str, patterns: list[str] | None = None) -> bool:
 
 
 def get_changed_files() -> list[str]:
+    """Get list of files changed in this PR/push, or empty list if no diff available."""
     base_ref = os.environ.get("GITHUB_BASE_REF")
     if not base_ref:
         result = subprocess.run(
@@ -93,6 +107,7 @@ NON_TEXT_DIRS = {"assets", "wallpapers", "sounds", "icons", "images"}
 
 
 def check_large_files(changed_files: list[str]) -> None:
+    """Check for files larger than MAX_FILE_SIZE_KB in changed files."""
     for rel_path in changed_files:
         if should_skip(rel_path):
             continue
@@ -114,6 +129,7 @@ def check_large_files(changed_files: list[str]) -> None:
 
 
 def check_merge_conflicts(changed_files: list[str]) -> None:
+    """Check for unresolved merge conflict markers in changed files."""
     conflict_markers = (
         re.compile(rb"^<{7} "),
         re.compile(rb"^={7}$"),
@@ -143,6 +159,7 @@ def check_merge_conflicts(changed_files: list[str]) -> None:
 
 
 def check_trailing_whitespace(changed_files: list[str]) -> None:
+    """Check for trailing whitespace in changed code files."""
     for rel_path in changed_files:
         if should_skip(rel_path, SKIP_PATTERNS):
             continue
@@ -171,6 +188,7 @@ def check_trailing_whitespace(changed_files: list[str]) -> None:
 
 
 def check_tab_indentation(changed_files: list[str]) -> None:
+    """Check that code files use spaces, not tabs."""
     for rel_path in changed_files:
         if should_skip(rel_path, SKIP_PATTERNS):
             continue
@@ -199,6 +217,7 @@ def check_tab_indentation(changed_files: list[str]) -> None:
 
 
 def check_binary_in_text_dirs(changed_files: list[str]) -> None:
+    """Flag binary files in directories that should only contain text."""
     text_only_dirs = ["docs", "scripts", ".github/scripts"]
 
     for rel_path in changed_files:
@@ -211,6 +230,7 @@ def check_binary_in_text_dirs(changed_files: list[str]) -> None:
 
 
 def check_shell_extensions(changed_files: list[str]) -> None:
+    """Ensure .sh files are shell scripts with proper shebangs."""
     for rel_path in changed_files:
         if not rel_path.endswith(".sh"):
             continue
@@ -233,6 +253,7 @@ def check_shell_extensions(changed_files: list[str]) -> None:
 
 
 def git_mode(rel_path: str) -> str | None:
+    """Return the mode git records for a path, e.g. 100644 or 100755."""
     result = subprocess.run(
         ["git", "ls-files", "-s", "--", rel_path],
         capture_output=True, text=True, cwd=ROOT,
@@ -242,6 +263,12 @@ def git_mode(rel_path: str) -> str | None:
 
 
 def is_run_by_path(rel_path: str) -> bool:
+    """True for scripts something executes directly rather than through `bash <path>`.
+
+    The step scripts, the command and its helpers, the three entry points, and the
+    packaging helpers. Not scripts/lib, which is sourced, and not tests/, which run
+    under bash.
+    """
     if rel_path in ("install.sh", "update.sh", "uninstall.sh"):
         return True
     if rel_path.startswith("src/bin/"):
@@ -252,6 +279,14 @@ def is_run_by_path(rel_path: str) -> bool:
 
 
 def check_shell_executable(changed_files: list[str]) -> None:
+    """Ensure a script that is run by path is executable in git.
+
+    This is the one hygiene rule a Windows checkout cannot check by looking at the
+    files, because the working tree has no mode to look at. CI checks the repository
+    out with the mode git recorded, so a script committed as 100644 fails there with
+    exit 126, and a test that runs it reports "Permission denied" rather than anything
+    about the file it wanted.
+    """
     for rel_path in changed_files:
         if not is_run_by_path(rel_path):
             continue

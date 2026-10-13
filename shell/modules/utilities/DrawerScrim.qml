@@ -6,6 +6,10 @@ import Caelestia.Config
 import qs.components
 import qs.services
 
+/// The dimmed backdrop a utilities-drawer modal sits on. It sizes itself to the
+/// drawer's surface — over the padding and border the panel clips to, and softened
+/// on the two edges the drawer animation drags — so a modal only has to declare it
+/// and put its own card on top. Seeded from the block RecordingDeleteModal grew.
 Item {
     id: root
 

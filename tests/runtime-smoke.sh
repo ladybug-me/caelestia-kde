@@ -141,6 +141,8 @@ results_tsv="$runtime_dir/results.tsv"
 : >"$results_tsv"
 results_emitted=0
 
+# Built here rather than with printf so a log path containing a quote or a
+# backslash cannot produce a broken document.
 emit_results() {
     if ((results_emitted)); then
         return 0
@@ -215,6 +217,8 @@ now_ms() {
     date +%s%3N
 }
 
+# pgrep matches an extended regular expression, so a path cannot be
+# interpolated into the pattern as-is.
 ere_escape() {
     printf '%s' "$1" | sed 's/[][\\.^$*+?(){}|]/\\&/g'
 }
@@ -254,6 +258,9 @@ check_run_marks() {
         fi
     done <"$marks_file"
 
+    # Everything created has to be destroyed again. Only the balance is
+    # asserted: the engine may process the final close later than the last IPC
+    # reply, so the individual counts are not fixed.
     created=$(grep -Fc -- '[caelestia] nexus=created' "$log_file" || true)
     destroyed=$(grep -Fc -- '[caelestia] nexus=destroyed' "$log_file" || true)
     if ((created < 1 || created != destroyed)); then

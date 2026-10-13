@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+"""Installer wiring tests.
+
+The invariants the installer's step scripts have to keep: that the entrypoints exist,
+that every numbered scripts/*.sh is run by one of the step lists, that the sparse checkout
+the update path writes covers everything the shell build installs and sparsifies only
+paths src/bin/caelestia-update writes, and a few ordering guarantees inside those scripts.
+They read the same few installer files and change for their own reasons, which is why they
+are not in test_repo_integrity.py.
+"""
 
 import posixpath
 import re
@@ -31,6 +40,7 @@ class InstallerTests(unittest.TestCase):
             self.assertTrue(resolved.is_file(), f"Missing installer step referenced by Runner.cpp: {resolved.relative_to(ROOT).as_posix()}")
 
     def test_no_duplicate_step_names(self) -> None:
+        """Runner.cpp must not define two steps with the same display name."""
         runner_text = (ROOT / "installer/tui/Runner.cpp").read_text(encoding="utf-8")
         names = re.findall(r'\{"([^"]+)",\s*"(scripts/[^"]+)",\s*"[^"]+",\s*"[^"]+"\}', runner_text)
         display_names = [n[0] for n in names]
@@ -46,6 +56,17 @@ class InstallerTests(unittest.TestCase):
         )
 
     def test_every_step_script_is_wired_into_a_step_list(self) -> None:
+        """A numbered scripts/*.sh must be run by a step list, and every listed step must exist.
+
+        Three lists run step scripts: the full install (installer/tui/Runner.cpp), the
+        user's half of a packaged install (src/bin/caelestia), and the subset
+        08-build-shell.sh runs on its own when a checkout updates itself. A script in none
+        of them is dead weight that every other check still reports as covered; a list
+        entry with no file fails at install time instead of here. The step numbers are not
+        an order: the TUI runs 00-backup-themes after 02a-submodules, deliberately. The
+        lists differ in failure policy - the installer stops, the update path warns and
+        carries on - so only their membership is comparable, which is all this checks.
+        """
         runner_text = (ROOT / "installer" / "tui" / "Runner.cpp").read_text(encoding="utf-8")
         packaged_text = (ROOT / "src" / "bin" / "caelestia").read_text(encoding="utf-8")
         update_text = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
@@ -76,6 +97,13 @@ class InstallerTests(unittest.TestCase):
         )
 
     def test_the_update_fallback_sparsifies_only_paths_the_updater_writes(self) -> None:
+        """08-build-shell.sh adds to the sparse-checkout list src/bin/caelestia-update owns.
+
+        The updater writes that list before it checks the tree out, so a helper cannot
+        live in the tree and be called from there: the two name the same paths twice.
+        This is what stops the second copy from drifting to a rule nothing else writes,
+        which would leave the fallback silently doing nothing.
+        """
         updater = (ROOT / "src" / "bin" / "caelestia-update").read_text(encoding="utf-8")
         build = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
 
@@ -93,6 +121,18 @@ class InstallerTests(unittest.TestCase):
         )
 
     def test_the_sparse_checkout_covers_everything_the_shell_install_reads(self) -> None:
+        """#1039: cmake --install fails when an install rule's source is not sparsified.
+
+        shell/CMakeLists.txt installs files from outside shell/ - src/, scripts/ and
+        assets/ - and the update path checks the repository out sparse before it builds.
+        Configure and build only read shell/, so they succeed on a checkout that is
+        missing assets/org.quickshell.desktop; cmake --install is the first step to touch
+        it and it dies with "file INSTALL cannot find .../assets/org.quickshell.desktop",
+        aborting the update before the new revision is recorded. A full checkout has the
+        file, so only the sparse one in the update path reproduces it. Nothing else
+        compares the install rules against src/bin/caelestia-update's sparse-checkout
+        list, so an install rule added for a path nothing sparsifies is caught here.
+        """
         updater = (ROOT / "src" / "bin" / "caelestia-update").read_text(encoding="utf-8")
         entries = {
             entry.rstrip("/")
@@ -100,10 +140,14 @@ class InstallerTests(unittest.TestCase):
         }
         self.assertTrue(entries, "caelestia-update should still write the sparse-checkout list")
 
+        # ${CAELESTIA_ROOT_DIR} is the repository root and ${CMAKE_CURRENT_SOURCE_DIR} the
+        # directory of the CMakeLists.txt being read, both as shell/CMakeLists.txt spells
+        # them. Resolving the two is what tells an install rule for a path authored
+        # outside shell/ from one that sits inside it and travels with the tree.
         root_refs = re.compile(r"\$\{CAELESTIA_ROOT_DIR\}/([^\"\s)]+)")
         here_refs = re.compile(r"\$\{CMAKE_CURRENT_SOURCE_DIR\}/([^\"\s)]+)")
 
-        required = {"shell"}
+        required = {"shell"}  # the build configures from the shell/ tree itself
         for cmake_lists in sorted((ROOT / "shell").rglob("CMakeLists.txt")):
             relative = cmake_lists.relative_to(ROOT)
             if "build" in relative.parts:
@@ -133,6 +177,12 @@ class InstallerTests(unittest.TestCase):
 
 
 class InstallStepSafetyTests(unittest.TestCase):
+    """Ordering and wiring invariants for the install/update step scripts.
+
+    These are guarantees no single-file syntax or lint check can see, and that
+    the reports behind them describe as silent: the step reports success while
+    doing the wrong thing.
+    """
 
     def test_the_legacy_fonts_cleanup_is_called(self) -> None:
         script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
@@ -144,6 +194,7 @@ class InstallStepSafetyTests(unittest.TestCase):
         )
 
     def test_shell_config_backup_precedes_the_prebuilt_install(self) -> None:
+        """#663: the prebuilt path extracts over $HOME, so it must be backed up first."""
         script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
 
         backup_at = script.find("backup_shell_config ||")
@@ -158,6 +209,7 @@ class InstallStepSafetyTests(unittest.TestCase):
         )
 
     def test_privileged_package_installs_go_through_the_escalation_helper(self) -> None:
+        """#664: a GUI-triggered update has no terminal, so bare sudo fails silently."""
         script = (ROOT / "scripts" / "08-build-shell.sh").read_text(encoding="utf-8")
 
         self.assertIn(
@@ -172,6 +224,7 @@ class InstallStepSafetyTests(unittest.TestCase):
         )
 
     def test_scheme_wait_happens_after_the_shell_restart(self) -> None:
+        """#666: waiting before the restart polls for a file from a killed process."""
         script = (ROOT / "update.sh").read_text(encoding="utf-8")
 
         start_at = script.find('"$SHELL_IPC" start')
@@ -186,6 +239,14 @@ class InstallStepSafetyTests(unittest.TestCase):
         )
 
     def test_the_tui_build_configures_from_a_clean_directory(self) -> None:
+        """cmake refuses a CMakeCache.txt that names another source directory.
+
+        One checkout routinely has two names - ~/Desktop/caelestia-kwin and
+        /mnt/c/.../caelestia-kwin are the same tree - so a cache left behind by the other
+        name made the build fail with "the current CMakeCache.txt directory is different
+        than the directory where CMakeCache.txt was created", and the installer stopped
+        there. Nothing clears that cache, so the directory has to go before cmake runs.
+        """
         script = (ROOT / "scripts" / "setup.sh").read_text(encoding="utf-8")
 
         wipe_at = script.find('rm -rf "$BUILD_DIR"')
@@ -249,6 +310,12 @@ class TerminalHandoverTests(unittest.TestCase):
 
 class ScriptNumberingTests(unittest.TestCase):
     def test_install_step_scripts_have_consistent_numbers(self) -> None:
+        """Step numbers stay a two-digit base with an optional letter suffix.
+
+        The set is whatever `ls scripts/` shows; the guarantee is only the numbering
+        scheme, so a step added with a number that cannot sort next to its neighbours is
+        caught here. Use the existing names as the examples.
+        """
         scripts_dir = ROOT / "scripts"
         if not scripts_dir.is_dir():
             return
@@ -268,14 +335,29 @@ class ScriptNumberingTests(unittest.TestCase):
 
 
 class InstallerEnvironmentTests(unittest.TestCase):
+    """The TUI reads its directories from the environment, and HOME is optional here.
+
+    POSIX does not promise HOME. UI.cpp already treats it as optional for its state
+    directory, but three other call sites built a std::string straight from
+    getenv("HOME"), and libstdc++ throws std::logic_error ("basic_string: construction
+    from null is not valid") on a null pointer rather than yielding an empty string.
+    That aborts the installer: in Runner::execute before the first step runs, and again
+    on the success path in phase 5. Nothing executes the TUI at test time - the CI job
+    only compiles it - so reading the source is what catches it. Every caller now goes
+    through xdg_cache_dir() in Globals.cpp, which is where the checked form lives.
+    """
 
     TUI = ROOT / "installer" / "tui"
+    # A direct argument to string()/std::string(), with or without the "std::" prefix. A
+    # ternary whose condition is itself a getenv() call counts too: it is the false
+    # branch that decides what gets constructed.
     UNCHECKED_GETENV = re.compile(r"\bstring\(\s*(?:std::)?getenv\(")
 
     def tui_sources(self) -> list[Path]:
         return sorted(self.TUI.glob("*.cpp"))
 
     def test_the_tui_sources_are_where_this_expects_them(self) -> None:
+        """Keeps the check below from passing just because it read no files."""
         names = [path.name for path in self.tui_sources()]
         self.assertIn("main.cpp", names)
         self.assertIn("Runner.cpp", names)

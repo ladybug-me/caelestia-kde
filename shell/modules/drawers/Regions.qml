@@ -17,6 +17,8 @@ Region {
     readonly property real barRightWidth: bar.position === "right" ? bar.clampedThickness : clampedThickness
     readonly property real barTopHeight: bar.position === "top" ? bar.clampedThickness : clampedThickness
     readonly property real barBottomHeight: bar.position === "bottom" ? bar.clampedThickness : clampedThickness
+    // A closed panel's input region must be at least as deep as its hover trigger,
+    // otherwise the pointer never reaches the area Interactions tests against.
 
     function edgeExtent(hoverThickness: real): real {
         return Math.max(borderThickness, hoverThickness);

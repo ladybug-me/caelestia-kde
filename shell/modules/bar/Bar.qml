@@ -549,6 +549,14 @@ Item {
         asynchronous: false
         Layout.alignment: root.isHorizontal ? Qt.AlignVCenter : Qt.AlignHCenter
 
+
+
+
+
+
+
+
+
         Layout.preferredWidth: implicitWidth
         Layout.preferredHeight: implicitHeight
         Layout.maximumWidth: implicitWidth

@@ -9,6 +9,7 @@
 
 namespace caelestia::services {
 
+/// kwinrc group the Krohnkite KWin script keeps its settings in.
 static const QString KROHNKITE_GROUP = QStringLiteral("Script-krohnkite");
 
 static const QString DEFAULT_IGNORE_CLASS =
@@ -31,6 +32,9 @@ void KrohnkiteConfig::setKWinConfig(const QString& key, const QString& value) {
 }
 
 void KrohnkiteConfig::setKWinConfig(const QMap<QString, QString>& values) {
+    // kwinrc is read and written in-process. Forking kreadconfig6/kwriteconfig6
+    // blocks the QML thread for the lifetime of every child, and toggling one
+    // layout checkbox used to write all twelve order keys one process at a time.
     auto config = KSharedConfig::openConfig(QStringLiteral("kwinrc"), KConfig::NoGlobals);
     KConfigGroup group = config->group(KROHNKITE_GROUP);
     for (auto it = values.cbegin(); it != values.cend(); ++it) {
@@ -39,6 +43,8 @@ void KrohnkiteConfig::setKWinConfig(const QMap<QString, QString>& values) {
     config->sync();
 }
 
+// Table of all layout keys paired with their default order position.
+// -1 = disabled by default; 1..N = enabled at that position (no duplicates).
 struct LayoutDefault {
     const char* key;
     int defaultOrder;

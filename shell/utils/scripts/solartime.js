@@ -1,5 +1,9 @@
 .pragma library
 
+// Pure time arithmetic for the automatic light/dark schedule. Kept free of
+// config and service dependencies so it can be reasoned about on its own.
+
+/// "HH:MM" to minutes since local midnight, or -1 if unparseable.
 function parseTime(str) {
     const m = /^\s*(\d{1,2}):(\d{2})\s*$/.exec(str || "");
     if (!m)
@@ -11,6 +15,8 @@ function parseTime(str) {
     return h * 60 + min;
 }
 
+/// Parses the "lat,lon" string the weather service already stores. Null if it
+/// is empty or malformed.
 function parseCoords(raw) {
     const parts = String(raw || "").trim().split(",");
     if (parts.length !== 2)
@@ -22,6 +28,12 @@ function parseCoords(raw) {
     return { lat: lat, lon: lon };
 }
 
+/// Sunrise and sunset for `date` at `lat`/`lon`, as minutes since local
+/// midnight. Null during polar day or polar night, when there is no sunrise or
+/// sunset to switch on.
+///
+/// NOAA's low-precision solar position algorithm; accurate to about a minute,
+/// far tighter than this feature needs.
 function solarTimes(date, lat, lon) {
     const rad = Math.PI / 180;
     const epoch = Date.UTC(2000, 0, 1, 12);
@@ -38,6 +50,7 @@ function solarTimes(date, lat, lon) {
     const sinDecl = Math.sin(eclipticLon * rad) * Math.sin(23.44 * rad);
     const cosDecl = Math.cos(Math.asin(sinDecl));
 
+    // -0.833° accounts for atmospheric refraction and the solar disc radius.
     const cosHourAngle = (Math.sin(-0.833 * rad) - Math.sin(lat * rad) * sinDecl) / (Math.cos(lat * rad) * cosDecl);
     if (cosHourAngle > 1 || cosHourAngle < -1)
         return null;
@@ -55,6 +68,9 @@ function solarTimes(date, lat, lon) {
     };
 }
 
+/// Whether `minutes` falls in the light window. Handles a window that wraps
+/// past midnight, which a high latitude or a deliberately inverted pair of
+/// fixed times produces.
 function isLightAt(minutes, light, dark) {
     if (light < dark)
         return minutes >= light && minutes < dark;

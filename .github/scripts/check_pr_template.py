@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""Validate that a PR description is meaningful - not just placeholder text.
+
+Reads the PR body from the GitHub event payload and checks:
+  1. The description is not completely empty
+  2. The "What does this change?" section has been filled in
+"""
 
 import json
 import os
@@ -31,6 +37,7 @@ def ok(msg: str) -> None:
 
 
 def load_pr_body() -> str | None:
+    """Load PR body from the GitHub event file."""
     event_path = os.environ.get("GITHUB_EVENT_PATH")
     if not event_path:
         print("Warning: GITHUB_EVENT_PATH not set - running locally?")
@@ -48,6 +55,7 @@ def load_pr_body() -> str | None:
 
 
 def check_section_filled(body: str, section_header: str) -> bool:
+    """Verify that a section has real content, not just placeholder text."""
     header_pattern = re.escape(section_header)
     section_match = re.search(
         rf"#{1,3}\s+{header_pattern}.*?\n(.*?)(?=\n#{1,3}\s+|\Z)",  # noqa: E231
@@ -55,7 +63,7 @@ def check_section_filled(body: str, section_header: str) -> bool:
         re.DOTALL | re.IGNORECASE,
     )
     if not section_match:
-        return True
+        return True  # Section not present - the new template is lightweight
 
     section_text = section_match.group(1).strip()
 

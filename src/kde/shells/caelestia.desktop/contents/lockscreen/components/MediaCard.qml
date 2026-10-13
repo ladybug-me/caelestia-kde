@@ -1,3 +1,4 @@
+
 import QtQuick
 import ".."
 import QtQuick.Layouts
@@ -6,7 +7,7 @@ import Qt5Compat.GraphicalEffects
 Rectangle {
     id: root
 
-    property var mediaInfo: ({})
+    property var mediaInfo: ({})  // renamed from mediaInfo (review)
     readonly property bool hasMedia: Boolean(mediaInfo && mediaInfo.title)
     property real centerScale: 1.0
 

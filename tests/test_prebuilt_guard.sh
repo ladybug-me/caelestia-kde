@@ -7,6 +7,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_SHELL="$REPO_ROOT/scripts/08-build-shell.sh"
 
+# The guard decides from the checkout's own git state, so the test drives the
+# real functions against throwaway repositories rather than stubbing git.
 GUARD_SOURCE="$(extract_function "$BUILD_SHELL" shell_release_tag; extract_function "$BUILD_SHELL" checkout_may_use_prebuilt)"
 
 if [[ -z "$GUARD_SOURCE" ]]; then
@@ -15,6 +17,8 @@ if [[ -z "$GUARD_SOURCE" ]]; then
     exit 1
 fi
 
+# A checkout of main with origin/main pointing at the same commit, which is what
+# install.sh leaves behind, plus a version.env naming the released version.
 seed_checkout() {
     local dir="$1" revision="${2:-v1.0.0}"
     mkdir -p "$dir/.github"
@@ -61,6 +65,8 @@ test_main_behind_its_remote_builds_locally() {
     local repo
     repo="$(new_tmpdir)/repo"
     seed_checkout "$repo"
+    # The remote moves on while the checkout stays behind, as a stale local main
+    # does until something pulls it.
     git -C "$repo" commit -q --allow-empty -m "released later"
     git -C "$repo" update-ref refs/remotes/origin/main HEAD
     git -C "$repo" reset -q --hard HEAD~1
@@ -85,6 +91,7 @@ test_the_released_tag_may_use_the_prebuilt() {
     local repo
     repo="$(new_tmpdir)/repo"
     seed_checkout "$repo"
+    # An update pinned to a version: the checkout is the tag, not main's tip.
     git -C "$repo" commit -q --allow-empty -m "next release"
     git -C "$repo" tag v2.0.0
     printf 'VERSION=v2.0.0\n' > "$repo/.github/version.env"
@@ -98,6 +105,8 @@ test_a_version_that_is_not_the_tag_builds_locally() {
     seed_checkout "$repo"
     git -C "$repo" commit -q --allow-empty -m "next release"
     git -C "$repo" tag v2.0.0
+    # version.env still names the older release, so the prebuilt would be older
+    # than the tree it replaces.
     printf 'VERSION=v1.0.0\n' > "$repo/.github/version.env"
 
     if allows_prebuilt "$repo"; then

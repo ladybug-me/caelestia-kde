@@ -146,6 +146,9 @@ PageBase {
         SectionHeader {
             text: qsTr("Corners")
         }
+        // Enabling a corner takes it off KWin for as long as it stays enabled;
+        // whatever KDE had bound there comes back untouched when it's turned
+        // off, on shell exit, or on the next start after a crash.
         ToggleRow {
             first: true
             text: qsTr("Top-Left corner")

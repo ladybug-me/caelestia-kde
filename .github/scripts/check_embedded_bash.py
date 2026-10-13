@@ -1,4 +1,22 @@
 #!/usr/bin/env python3
+"""Check bash/sh scripts embedded inside QML Process.command arrays.
+
+Quickshell's `Process` element runs commands natively. Many components pass a
+whole script through `command: ["bash", "-c", `<script>`]` (or `sh -c`). Those
+strings are invisible to qmllint and to shellcheck (they aren't .sh files), so a
+typo or unbalanced quote inside one only surfaces at runtime as a silent
+`exit 127` / empty widget.
+
+This checker extracts every such embedded script and runs `bash -n` on it.
+
+Usage:
+    python3 check_embedded_bash.py            # check all shell/**/*.qml files
+    python3 check_embedded_bash.py <paths...> # check specific files/dirs
+
+Exit code is 1 if any embedded script fails to parse (or is extracted but the
+file can't be parsed). If `bash` is unavailable the check is skipped with a
+warning (CI always has bash, so this only matters for local runs).
+"""
 
 import re
 import shutil
@@ -32,6 +50,7 @@ def warn(msg: str) -> None:
 
 
 class _Element:
+    """One element parsed out of a `command: [...]` array literal."""
 
     __slots__ = ("is_script", "is_template", "line", "text")
 
@@ -43,6 +62,10 @@ class _Element:
 
 
 def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Element, int]:
+    """Parse a quoted string / template literal starting at src[pos].
+
+    Returns (element, next_pos). Handles `"..."`, `'...'` and `` `...` ``.
+    """
     i = pos + 1
     line = start_line
     out: list[str] = []
@@ -72,10 +95,11 @@ def _parse_string(src: str, pos: int, quote: str, start_line: int) -> tuple[_Ele
 
 
 def _extract_command_arrays(src: str) -> list[tuple[int, list[_Element]]]:
+    """Find `command: [ ... ]` literals and return (array_start_line, elements)."""
     results: list[tuple[int, list[_Element]]] = []
     for m in re.finditer(r"\bcommand\s*:\s*\[", src):
         start_line = src.count("\n", 0, m.start()) + 1
-        i = m.end()
+        i = m.end()  # position just after '['
         elements: list[_Element] = []
         line = start_line
         while i < len(src):
@@ -101,6 +125,7 @@ def _extract_command_arrays(src: str) -> list[tuple[int, list[_Element]]]:
 
 
 def _extract_scripts(elements: list[_Element]) -> list[_Element]:
+    """Return string elements that follow an `interp -c` sequence."""
     scripts: list[_Element] = []
     for idx, el in enumerate(elements):
         if INTERP_RE.match(el.text):
@@ -116,12 +141,14 @@ def _extract_scripts(elements: list[_Element]) -> list[_Element]:
 
 
 def _sanitize_script(text: str, is_template: bool) -> str:
+    """Remove JS-only constructs so the remainder is pure bash."""
     if is_template:
         text = JS_INTERP_RE.sub("true", text)
     return text
 
 
 def check_file(path: Path, bash_bin: str) -> list[str]:
+    """Return list of error strings for one QML file."""
     errors: list[str] = []
     try:
         src = path.read_text(encoding="utf-8")

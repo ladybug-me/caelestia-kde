@@ -1,3 +1,4 @@
+
 import QtQuick
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
@@ -916,6 +917,7 @@ Item {
             }
         }
 
+        // TODO: re-instantiates ClockWidget, ProfileAvatar, GreetingPill and PasswordPill
         Item {
             id: portraitContent
 

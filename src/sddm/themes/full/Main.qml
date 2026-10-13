@@ -382,7 +382,7 @@ Rectangle {
                     font.pointSize: 8
                     font.family: "Roboto"
                     color: config.text
-                    opacity: 0
+                    opacity: 0 // Its buggy rnm fix later
 
                     Behavior on opacity {
                         NumberAnimation {

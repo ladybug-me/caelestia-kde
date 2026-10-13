@@ -97,6 +97,8 @@ ScrollBar {
                 const contentLen = root.isVertical ? root.flickable.contentHeight : root.flickable.contentWidth;
                 const len = root.isVertical ? root.flickable.height : root.flickable.width;
                 if (contentLen > len) {
+                    // ListViews with delegates of varying size move their origin as
+                    // they estimate the content size; positions are relative to it.
                     const pos = root.isVertical ? root.flickable.contentY - root.flickable.originY : root.flickable.contentX - root.flickable.originX;
                     root.nonAnimPosition = Math.max(0, Math.min(1, pos / (contentLen - len)));
                 } else {

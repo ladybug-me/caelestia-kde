@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Create GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -27,7 +27,7 @@ jobs:
           permission-pull-requests: write
 
       - name: Checkout Repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           token: ${{ steps.app-token.outputs.token }}
           persist-credentials: true
@@ -171,7 +171,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install Shell Build Dependencies
         run: |
@@ -255,6 +255,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          # --repo: inside a container gh's git-based repo detection fails ("not a git
           gh release upload "$TAG" "$ARTIFACT" "$CHECKSUM" --repo "$GITHUB_REPOSITORY" --clobber
 
   build-source:
@@ -265,7 +266,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Materialize the Submodules the Tarball Inlines
         run: |
@@ -285,12 +286,20 @@ jobs:
 
           for path in "${submodules[@]}"; do
             echo "::group::submodule $path"
+            # A .gitmodules entry with no gitlink in this tree has nothing to inline:
+            # the path is either a real directory the tarball already carries or it is
+            # absent, which the PKGBUILD's prepare() reports by name.
             if ! git ls-files --stage -- "$path" | grep -q '^160000'; then
               echo "::warning::$path is declared in .gitmodules but is not a submodule in this tree"
               echo "::endgroup::"
               continue
             fi
+            # scripts/lib/submodules.sh is not reused here on purpose: the installer
+            # helper it exposes ends in a plain clone of the submodule's default
+            # branch, and a release tarball has to carry the commits the tag pins.
             if ! git submodule update --init --recursive --depth 1 --force "$path"; then
+              # A stale gitlink inside a submodule is not this repository's to fix, and
+              # the tarball only needs the submodule's own contents at its pinned commit.
               echo "::warning::$path does not check out recursively, retrying without it"
               git submodule update --init --depth 1 --force "$path"
             fi
@@ -313,6 +322,8 @@ jobs:
           set -euo pipefail
           ROOT="caelestia-kde-$PKGVER"
           mkdir -p "dist/$ROOT"
+          # /dist is anchored: the staging directory lives inside the tree being
+          # staged, and without this rsync copies it into itself.
           rsync -a --exclude '/dist' --exclude '.git' --exclude '.gitmodules' ./ "dist/$ROOT/"
           git rev-parse HEAD > "dist/$ROOT/REVISION"
 
@@ -356,7 +367,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Install Build Dependencies
         run: |

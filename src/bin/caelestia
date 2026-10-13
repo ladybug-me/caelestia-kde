@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
+# caelestia - the Caelestia command.
+#
+# One entry point for the session: start the shell, install, update, screenshot,
+# record, and manage the wallpaper and scheme. The subcommands and flags mirror
+# upstream's CLI; `wallpaper` and `scheme` are this port's own pipeline, in
+# caelestia-color.
+#
+# Environment:
+#   CAELESTIA_BIN_DIR  where the helper commands live (default: beside this file)
+#   CAELESTIA_DIR      the checkout `install` runs from (default: ~/caelestia-kde)
+#   CAELESTIA_INSTALL_KIND  package or source, when it cannot be told from where this is
 
 set -euo pipefail
 
@@ -6,7 +17,19 @@ SELF="$(realpath -- "${BASH_SOURCE[0]}" 2>/dev/null || printf '%s' "${BASH_SOURC
 BIN_DIR="${CAELESTIA_BIN_DIR:-$(dirname -- "$SELF")}"
 SELF_DIR="$(dirname -- "$SELF")"
 
+# Which install this command belongs to, and where it keeps its files.
+#
+# Everywhere else is told its install kind, but this command is reached by name with
+# nothing set and must answer before it can find install-kind.sh, so it decides from its
+# own location: /usr/bin is a package, anything else a checkout. Using the checkout paths
+# unconditionally put ~/.config/quickshell/caelestia ahead of the installed /etc/xdg tree.
+#
+# Only a checkout has a version.env to fall back to, so this stays empty for a package;
+# it is defined here because cmd_version tests it under `set -u`.
 VERSION_FILE=""
+# The checkout this command would install from, and the only definition of "there is one"
+# for a package: empty unless the user names one with CAELESTIA_DIR. cmd_install reads it
+# instead of re-deciding, so `install` cannot pick up a stray ~/caelestia-kde on a package.
 CHECKOUT="${CAELESTIA_DIR:-}"
 case "${CAELESTIA_INSTALL_KIND:-$( [[ "$BIN_DIR" == /usr/bin ]] && printf 'package' || printf 'source' )}" in
     package)
@@ -23,16 +46,22 @@ case "${CAELESTIA_INSTALL_KIND:-$( [[ "$BIN_DIR" == /usr/bin ]] && printf 'packa
         QML_IMPORT_DEFAULT="$HOME/.local/lib/qt6/qml:$HOME/.config/quickshell/caelestia"
         LIB_DIR_DEFAULT="$HOME/.local/lib/caelestia"
         SHELL_CONFIG_DEFAULT="$HOME/.config/quickshell/caelestia/shell.qml"
+        # The tree this copy runs from, else the checkout `install` would use.
         VERSION_FILE="$SELF_DIR/../../.github/version.env"
         [[ -f "$VERSION_FILE" ]] || VERSION_FILE="$CHECKOUT/.github/version.env"
         ;;
 esac
 SCRIPTS_DIR="$DATA_DIR/scripts"
 
+# CAELESTIA_DATA_DIR is read but not exported: for a checkout it names src/, not the
+# repo root.
 export QML2_IMPORT_PATH="$QML_IMPORT_DEFAULT${QML2_IMPORT_PATH:+:$QML2_IMPORT_PATH}"
 export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-$LIB_DIR_DEFAULT}"
 export CAELESTIA_SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$SHELL_CONFIG_DEFAULT}"
 
+# helper <name> [args...]
+#
+# Runs the command implementing a subcommand. They live beside this file in both installs.
 helper() {
     local name="$1"
     shift
@@ -202,10 +231,21 @@ cmd_screenshot() {
     helper caelestia-screenshot "${args[@]}"
 }
 
+# Step scripts: /usr/share/caelestia for a package, the checkout otherwise. The layout
+# above already answered this; an earlier version searched four candidate directories.
 has_step_scripts() {
     [[ -f "$SCRIPTS_DIR/03-deploy-configs.sh" ]]
 }
 
+# The user's half, from a package.
+#
+# A package owns /usr and /etc, so only the configuration the user's own files carry is
+# left. These are the checkout installer's own step scripts, told
+# CAELESTIA_INSTALL_KIND=package so the package-owned sections stay out (parity-6).
+#
+# The list is that half in installer order: steps that install packages or optional apps
+# belong to the package manager. 05-sddm-theme.sh is here because choosing a login screen
+# is the user's half - the package ships the theme and helper, leaving the posthook.
 packaged_install() {
     if ! has_step_scripts; then
         cat >&2 <<EOF
@@ -217,6 +257,8 @@ EOF
         return 1
     fi
 
+    # Only a package's install runs from here: a checkout has its own installer, which also
+    # does the machine's half, so running half of it would leave those files unwritten.
     if [[ "$KIND" != package ]]; then
         printf '[ERR] %s is a checkout, not a package install.\n\n  Run its installer instead: bash %s/install.sh\n' "$DATA_DIR" "$DATA_DIR" >&2
         return 1
@@ -250,6 +292,8 @@ EOF
     done
 
     echo "PROGRESS: done: User configuration applied"
+    # Not just "log out and back in": enabling a unit does not start it once
+    # graphical-session.target is reached, which it is for a user reading this in-session.
     echo "The shell starts at your next login. To start it now:"
     echo "  systemctl --user start caelestia-shell.service"
 }
@@ -275,10 +319,16 @@ EOF
         return 2
     fi
 
+    # A checkout's installer runs when there is a checkout: this command IS one (KIND
+    # above sets it), or the user named one. A package leaves CHECKOUT empty, which is what
+    # stops it from running ~/caelestia-kde's whole installer over a package-owned install
+    # (system packages, ~/.local/lib, a second local C++ build) just because a clone sits
+    # in the documented place.
     if [[ -n "$CHECKOUT" && -f "$CHECKOUT/install.sh" ]]; then
         exec sh "$CHECKOUT/install.sh"
     fi
 
+    # No checkout, so a package owns this command and what it installed.
     packaged_install
 }
 
@@ -315,13 +365,18 @@ EOF
 }
 
 cmd_version() {
+    # From the helper CMake installs into INSTALL_LIBDIR (what upstream's CLI reads too):
+    # compiled with the build's version, so it cannot go stale on a package. An unbuilt
+    # checkout falls back to version.env.
     local version=""
     if [[ -x "$CAELESTIA_LIB_DIR/version" ]]; then
+        # `caelestia-shell 2.4.3, revision <hash>, ...`: field 2 minus its trailing comma.
         version="$("$CAELESTIA_LIB_DIR/version" -s 2>/dev/null | awk '{ sub(/,/, "", $2); print $2 }')"
     fi
     if [[ -z "$version" && -f "$VERSION_FILE" ]]; then
         version="$(awk -F= '$1 == "VERSION" { print $2; exit }' "$VERSION_FILE")"
     fi
+    # The helper prints the bare number; the file carries the tag's `v`.
     if [[ -n "$version" && "$version" != v* ]]; then
         version="v$version"
     fi

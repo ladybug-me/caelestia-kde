@@ -9,6 +9,8 @@ DESKTOP="$REPO_ROOT/shell/modules/background/desktopicons"
 CLOCK_SRC="$(cat "$DESKTOP/widgets/ClockWidget.qml")"
 MEDIA_SRC="$(cat "$DESKTOP/widgets/MediaWidget.qml")"
 
+# LayoutEngine.js is a .pragma library with no Qt dependencies, so node can
+# load it directly. Prints "ok" when every assertion held.
 run_engine_js() {
     ENGINE="$DESKTOP/LayoutEngine.js" node -e '
 const fs = require("fs");
@@ -32,6 +34,10 @@ have_node() {
 
 test_a_smaller_grid_keeps_every_item_when_it_has_room_for_all_of_them() {
     have_node || { skip_test "node is not installed"; return 0; }
+    # Eight icons and a 2x2 widget scattered over a 6x5 grid, which then
+    # shrinks to 4x3: exactly 12 cells for 12 cells of items. Keeping each item
+    # where it was and filling the gaps leaves one icon without a cell, packing
+    # them all again does not.
     check_engine_js "fitIntoGrid must pack again when that leaves fewer items outside" '
 const spans = { w1: { w: 2, h: 2 } };
 const positions = {

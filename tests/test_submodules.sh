@@ -197,6 +197,7 @@ test_fetch_submodule_by_clone_needs_an_explicit_opt_in() {
         > "$repo/.gitmodules"
     mkdir -p "$repo/src/dots"
 
+    # A pin that the source cannot deliver: only the explicit opt-in may fetch it.
     pinned="$(git -C "$source" rev-parse HEAD)"
     case "$pinned" in
         *0) fake="${pinned%?}1" ;;

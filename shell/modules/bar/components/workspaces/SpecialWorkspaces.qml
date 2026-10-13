@@ -14,10 +14,13 @@ Item {
     id: root
 
     required property ShellScreen screen
+    // See ContentWindow.qml note: loosely typed because the KDE fallback
+    // bridge's monitorFor() returns a mock QtObject, not a real HyprlandMonitor.
     readonly property var monitor: Kwin.monitorFor(screen)
     readonly property string activeSpecial: (Config.bar.workspaces.perMonitor ? monitor : Kwin.focusedMonitor)?.lastIpcObject.specialWorkspace?.name ?? ""
 
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+
 
     layer.enabled: true
     layer.effect: Mask {
@@ -107,6 +110,8 @@ Item {
         onCurrentIndexChanged: currentIndex = Qt.binding(() => model.values.findIndex(w => w.name === root.activeSpecial))
 
         model: ScriptModel {
+            // Kwin.workspaces is a plain array (KWinWorkspaceState.workspaces): `.values` is
+            // Array.prototype.values, so the filter threw and the strip never rendered.
             values: Kwin.workspaces.filter(w => w.name.startsWith("special:") && (!Config.bar.workspaces.perMonitor || w.monitor === root.monitor))
         }
 
@@ -396,6 +401,7 @@ Item {
             }
         }
 
+        // MOVED COMPONENTS INSIDE DELEGATE: This fixes the "ws is not defined" error
         Component {
             id: columnComponent
 

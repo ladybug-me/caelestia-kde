@@ -9,12 +9,18 @@ import qs.components
 import qs.components.controls
 import qs.services
 
+// CPU, GPU, memory and disk use. Shows more the bigger it is: rings when
+// small, meters with temperatures in between, and usage details with a
+// network graph when wide.
 Item {
     id: root
 
     property var frame
     property var controller
 
+    // Size in cells. Width picks the layout: rings at 2, meters at 3,
+    // meters with usage and a network column from 4. A third row adds the
+    // speeds, a detail line under each meter and network totals.
     readonly property int cols: frame?.span.w ?? 3
     readonly property bool tall: (frame?.span.h ?? 2) >= 3
     readonly property int tier: cols <= 2 ? 0 : cols === 3 ? 1 : 2
@@ -48,6 +54,7 @@ Item {
         service: NetworkUsage
     }
 
+    // Small: one ring per resource.
     GridLayout {
         anchors.fill: parent
         visible: root.tier === 0
@@ -77,11 +84,14 @@ Item {
         }
     }
 
+    // Medium and large: meters, plus network.
     RowLayout {
         anchors.fill: parent
         visible: root.tier > 0
         spacing: Tokens.spacing.large
 
+        // Nothing fills the height, so the rows share the spare room evenly
+        // and the top and bottom gaps match.
         ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -92,6 +102,7 @@ Item {
                 label: qsTr("CPU")
                 value: Cpu.percentage
                 extra: root.temp(Cpu.temperature)
+                // Drop the "8-Core Processor" tail; the model says enough.
                 detail: Cpu.name.replace(/\s*(\d+-Core\s*)?Processor\s*$/i, "")
             }
 
@@ -124,12 +135,14 @@ Item {
                 detail: usage
             }
 
+            // Medium widgets show the speeds under the meters when there is room.
             Speeds {
                 Layout.fillWidth: true
                 visible: root.tier === 1 && root.tall
             }
         }
 
+        // Large widgets give the network a column of its own.
         ColumnLayout {
             Layout.fillHeight: true
             Layout.preferredWidth: root.width * 0.4
@@ -254,6 +267,7 @@ Item {
         required property string label
         required property real value
         property string extra
+        // Second line under the label, such as the CPU model; tall widgets only.
         property string detail
 
         Layout.fillWidth: true
@@ -317,6 +331,7 @@ Item {
         }
     }
 
+    // Download and upload speed, side by side or one per line.
     component Speeds: GridLayout {
         property bool stacked: false
 

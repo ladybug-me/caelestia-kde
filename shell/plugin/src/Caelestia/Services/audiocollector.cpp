@@ -46,6 +46,9 @@ PipeWireWorker::PipeWireWorker(
     }
     pw_loop_update_timer(pw_main_loop_get_loop(m_loop), m_timer, &timeout, &timeout, false);
 
+    // Output taps the default sink's monitor - everything the system is playing,
+    // and so the only case that is actually "Music". Input stays a plain capture
+    // stream, which PipeWire auto-connects to the default source.
     auto props = pw_properties_new(PW_KEY_MEDIA_TYPE, "Audio", PW_KEY_MEDIA_CATEGORY, "Capture", nullptr);
     if (captureMode == caelestia::config::VisualiserInput::Output) {
         pw_properties_set(props, PW_KEY_STREAM_CAPTURE_SINK, "true");
@@ -244,6 +247,8 @@ AudioCollector::AudioCollector(QObject* parent)
     , m_writeBuffer(&m_buffer2) {
     auto* services = caelestia::config::ConfigSingleton::instance()->services();
     QObject::connect(services, &caelestia::config::ServiceConfig::visualiserInputChanged, this, [this] {
+        // The worker builds its stream from the mode at start, so a running one
+        // has to be rebuilt; otherwise the next start() picks the change up.
         if (m_thread.joinable()) {
             stop();
             start();

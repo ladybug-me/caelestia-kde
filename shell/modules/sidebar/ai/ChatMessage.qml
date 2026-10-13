@@ -5,6 +5,9 @@ import qs.components
 import qs.services
 import "attachments.js" as AttachmentPaths
 
+// One message of the AI chat, as a row of ChatStore.messages: the bubble with
+// the thinking, the reply text with the tool cards placed where they were
+// called, attachments and the usage line.
 Item {
     id: root
 
@@ -18,8 +21,10 @@ Item {
     required property string attachments
     required property bool isNew
     required property bool thoughtExpanded
+    // Ids of the tool cards that are expanded, comma separated.
     required property string expandedTools
 
+    // A reply is being thought about (only its tool calls are shown meanwhile).
     property bool thinking: false
 
     readonly property var tools: {
@@ -31,6 +36,9 @@ Item {
             return [];
         }
     }
+    // The reply text split at the points where tool calls were made:
+    // each segment is the text written before its tool cards. Tools
+    // saved without a position are shown first.
     readonly property var segments: {
         var out = [{ text: "", tools: [] }];
         var pos = 0;
@@ -57,6 +65,8 @@ Item {
     readonly property var attachmentList: attachments ? attachments.split("\n") : []
     readonly property var expandedToolIds: expandedTools ? expandedTools.split(",") : []
 
+    // What is expanded, and whether the message has popped in yet, is kept in
+    // the model so the message looks the same when its delegate is recreated.
     signal viewStateEdited(patch: var)
 
     function toggleTool(id: string): void {
@@ -66,12 +76,15 @@ Item {
         viewStateEdited({ "expandedTools": ids.join(",") });
     }
 
+    // While a reply is still thinking only its tool calls are worth showing.
     visible: (!root.isFinished && root.thinking && root.tools.length === 0) ? false : (root.text !== "" || root.thoughtText !== "" || root.tools.length > 0 || root.attachmentList.length > 0)
     height: visible ? bubbleRect.height : 0
 
     scale: 0.0
     opacity: 0.0
 
+    // Only a message that was just added pops in, once; one being
+    // created again as it scrolls into view appears as is.
     Component.onCompleted: {
         if (isNew) {
             popInAnim.start();
@@ -205,6 +218,8 @@ Item {
                 }
             }
 
+            // Reply text with the tool calls made while producing it (Claude
+            // Code), each card placed after the text written before it.
             Repeater {
                 model: root.segments.length
 
@@ -219,6 +234,8 @@ Item {
                     spacing: bubbleLayout.spacing
 
                     ChatMarkdown {
+                        // Nothing to show yet (e.g. only tool calls so far): no
+                        // empty line with a lone blinking cursor.
                         visible: text !== ""
                         text: segmentItem.segment.text
                         showCursor: !root.isFinished && segmentItem.isLast

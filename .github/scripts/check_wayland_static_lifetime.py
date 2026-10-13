@@ -1,4 +1,31 @@
 #!/usr/bin/env python3
+"""Flag value-typed static/global instances of Wayland proxy-wrapping classes.
+
+A class that inherits QWaylandClientExtensionTemplate<T> or a QtWayland::*
+generated wrapper owns a live wl_proxy. If one of those classes is held as a
+function-local static (or other static/global storage duration) by value —
+e.g. `static PlasmaWindows instance;` — its destructor runs from an exit
+handler, long after Qt has torn down the Wayland display connection.
+Releasing a Wayland proxy is itself a protocol request, so marshalling one
+there writes into an already-closed connection and SIGSEGVs the shell on its
+way out.
+
+The established fix in this codebase is to leak the singleton instead:
+`static auto* s_instance = new PlasmaWindows(); return s_instance;` (see
+windowscreencast.cpp, plasmawindows.cpp) with early, explicit teardown of the
+Wayland handles from QCoreApplication::aboutToQuit while the connection is
+still live, if cleanup is needed at all.
+
+This checker: (1) scans shell/plugin/src/**/*.hpp for classes that directly
+inherit one of those sensitive base types, then (2) scans shell/plugin/src
+for `static <Type> <name>` declarations of those classes that are not
+pointers, and flags each as a violation.
+
+Usage:
+    python3 check_wayland_static_lifetime.py
+
+Exit code is 1 if any violation is found.
+"""
 
 import re
 import sys
@@ -26,6 +53,8 @@ def ok(msg: str) -> None:
 
 
 def find_sensitive_classes(headers: list[Path]) -> dict[str, Path]:
+    """Return {class_name: declaring_header} for classes that directly inherit
+    a Wayland proxy-wrapping base type."""
     sensitive: dict[str, Path] = {}
     for path in headers:
         try:

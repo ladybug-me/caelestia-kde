@@ -207,3 +207,4 @@ Singleton {
         target: GlobalConfig.tabSwitch
     }
 }
+

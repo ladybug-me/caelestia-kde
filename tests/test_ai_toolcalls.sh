@@ -10,6 +10,10 @@ AI_SRC="$(cat "$AI")"
 SVC="$REPO_ROOT/shell/services/AiToolCalls.qml"
 SVC_SRC="$(cat "$SVC")"
 
+# The protocol tags are assembled from pieces everywhere in this test, never
+# written as one literal: a formatter once stripped the contiguous literals
+# out of the assistant and the parsers froze the shell on every AI reply.
+
 test_the_tags_are_named_constants_that_formatters_cannot_strip() {
     assert_contains "$SVC_SRC" 'readonly property string toolCallStart: "<" + "tool_call" + ">"' \
         "the start tag must be a named constant assembled from pieces"

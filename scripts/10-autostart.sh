@@ -50,6 +50,12 @@ else
     echo "  Creating Caelestia Shell autostart entry..."
     cat > "$HOME/.local/bin/caelestia-autostart.sh" << EOF
 #!/bin/bash
+# Where this install's files are. environment.d carries the same values for a
+# session; they are repeated because the unit can start this outside one.
+#
+# The command the shell and its widgets call by name must be on PATH for everything
+# this spawns: 08-build-shell.sh installs it into ~/.local/bin, which a session started
+# by the display manager does not necessarily have on PATH.
 export PATH="$BIN_DIR:\$PATH"
 export QML2_IMPORT_PATH="$QML_IMPORT_PATH"
 export CAELESTIA_LIB_DIR="$LIB_DIR"
@@ -60,6 +66,7 @@ export QS_DROP_EXPENSIVE_FONTS=1
 export QS_DISABLE_CRASH_HANDLER=1
 export QSG_RENDER_LOOP=threaded
 export QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
+# Quickshell imports its Hyprland IPC module even on KDE for API compatibility.
 # Its missing-socket warning is expected when this KDE port has no Hyprland instance.
 if [[ -z "\${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
     if [[ -n "\${QT_LOGGING_RULES:-}" ]]; then
@@ -68,6 +75,7 @@ if [[ -z "\${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
         export QT_LOGGING_RULES="quickshell.hyprland.ipc.warning=false"
     fi
 fi
+# Self-heal Caelestia lock screen if KDE updates or kconf_update reset it
 if [ -f "\$HOME/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen/LockScreen.qml" ] || [ -f "/usr/share/plasma/shells/caelestia.desktop/contents/lockscreen/LockScreen.qml" ]; then
     if command -v kreadconfig6 >/dev/null 2>&1 && command -v kwriteconfig6 >/dev/null 2>&1; then
         current_shell="\$(kreadconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" 2>/dev/null || true)"
@@ -77,8 +85,16 @@ if [ -f "\$HOME/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen
         kwriteconfig6 --file kscreenlockerrc --group "Greeter" --key "Theme" --delete 2>/dev/null || true
     fi
 fi
+# No --daemonize: the unit supervises this process and sends its stdout/stderr to
+# the journal. Detaching would replace that with /dev/null, and every app launched
+# from the shell inherits those descriptors - which is how the shell was handing
 # apps a stdout that goes nowhere. Vesktop deadlocks in exactly that state when a
+# call starts (issue #402); reproducible outside the shell with
+# \`vesktop >/dev/null 2>&1\`.
+#
+# It also makes the old stdbuf wrapper unnecessary: journald stdio is what the
 # line-buffering hack worked around, and stdbuf leaked LD_PRELOAD=libstdbuf.so into
+# every launched app besides.
 exec "$QUICKSHELL_PATH" -n -p "$SHELL_CONFIG"
 EOF
     chmod +x "$HOME/.local/bin/caelestia-autostart.sh"
@@ -95,6 +111,9 @@ Before=xdg-desktop-autostart.target
 [Service]
 Type=exec
 ExecStart=%h/.local/bin/caelestia-autostart.sh
+# A shell that cannot start is retried, but not in a tight loop: systemd gives up on
+# a unit that starts five times in ten seconds, and clearing that state falls to an
+# install. Upstream's unit waits the same five seconds between attempts.
 Restart=on-failure
 RestartSec=5s
 TimeoutStopSec=5s

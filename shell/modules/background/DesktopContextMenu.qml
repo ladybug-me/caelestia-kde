@@ -27,6 +27,8 @@ Controls.Menu {
 
         root.expanded = false;
 
+        // In-shell state changes run right away; anything that opens a window
+        // or spawns a process waits for the menu to finish closing.
         if (entry.action === "Paste") {
             DesktopLayout.pasteRequested(root.screenName, root.attachTo.x, root.attachTo.y);
             return;
@@ -136,10 +138,13 @@ Controls.Menu {
         }
     }
 
+    // The model is rebuilt only when the store's entries change, so opening
+    // the menu does not recreate every row.
     function refresh() {
         ContextMenuStore.ensureLoaded(false);
     }
 
+    // Called when the menu is requested again while already open.
     function reopen() {
         refresh();
         replayReveal();

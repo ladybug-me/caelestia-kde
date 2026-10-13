@@ -11,6 +11,8 @@ Singleton {
     property bool hasSystemdCat: false
     property bool hasApp2Unit: false
 
+    /// Wraps a command so it does not run on the shell's stdio.
+    /// Returns the command unchanged when nothing is available to wrap it.
     function wrap(command: list<string>): list<string> {
         if (command.length === 0)
             return command;

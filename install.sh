@@ -41,6 +41,8 @@ if ! command -v git >/dev/null 2>&1; then
     exit 1
 fi
 
+# Run the setup from this checkout, never whatever scripts/setup.sh
+# happens to sit in the current directory.
 unset CDPATH
 SCRIPT_DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 if [ -f "$SCRIPT_DIR/scripts/setup.sh" ]; then

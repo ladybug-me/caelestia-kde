@@ -40,6 +40,7 @@ Singleton {
         return `${boardVendor} ${boardName}`;
     }
 
+    // Strips the placeholder strings OEMs commonly leave in DMI fields
     function sanitiseDmi(s: string): string {
         const t = s.trim();
         const junk = ["to be filled by o.e.m.", "system product name", "system manufacturer", "system version", "default string", "o.e.m.", "not specified", "not applicable", "unknown", "none", ""];

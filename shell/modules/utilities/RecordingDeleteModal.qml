@@ -18,6 +18,8 @@ Loader {
     active: opacity > 0
 
     sourceComponent: DrawerConfirmModal {
+        // The prop is cleared as soon as the modal is dismissed, but the card keeps
+        // naming the recording while it fades out.
         property string path
 
         deformMatrix: root.deformMatrix

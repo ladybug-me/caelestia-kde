@@ -34,11 +34,18 @@ test_an_older_entry_and_its_generated_unit_are_retired() {
 }
 
 test_the_ordering_the_entry_phase_provided_is_kept() {
+    # The shell registers org.freedesktop.Notifications, and apps decide once at
+    # startup whether a server exists. The entry bought that with
+    # X-KDE-AutostartPhase=1; the unit with an ordering against the target the
+    # generator puts app units in.
     assert_contains "$(cat "$AUTOSTART_SCRIPT")" 'Before=xdg-desktop-autostart.target' "the checkout's unit should keep the apps behind it"
     assert_contains "$(cat "$PACKAGED_UNIT")" 'Before=xdg-desktop-autostart.target' "and so should the package's"
 }
 
 test_the_wrapper_takes_its_paths_from_the_install_layout() {
+    # These paths used to be written out in three places, which is how the command
+    # came to name a checkout's directories on a packaged machine. They come from
+    # install-kind.sh now; test_install_paths.sh covers the values themselves.
     local script
     script="$(cat "$AUTOSTART_SCRIPT")"
 
@@ -48,12 +55,15 @@ test_the_wrapper_takes_its_paths_from_the_install_layout() {
     assert_not_contains "$script" '/etc/xdg/quickshell/caelestia' "the step must not name a path itself"
     assert_not_contains "$script" '/usr/lib/qt6/qml' "not even the package's"
 
+    # The wrapper is generated, so what it exports is text this script writes.
     assert_contains "$script" 'export QML2_IMPORT_PATH="$QML_IMPORT_PATH"' "the wrapper should carry the environment into everything the shell spawns"
     assert_contains "$script" 'exec "$QUICKSHELL_PATH" -n -p "$SHELL_CONFIG"' "and start the entrypoint the install named"
     assert_not_contains "$script" 'exec "$QUICKSHELL_PATH" -n -p "$HOME/.config/quickshell/caelestia/shell.qml"' "rather than a checkout's path on every machine"
 }
 
 test_the_environment_writer_uses_the_same_layout() {
+    # The environment the session reads and the wrapper the unit runs have to agree on
+    # where the install put things; they agree by both asking install-kind.sh.
     local script
     script="$(cat "$BUILD_SCRIPT")"
 
@@ -68,6 +78,10 @@ test_the_environment_writer_uses_the_same_layout() {
 }
 
 test_an_install_clears_a_failed_unit_before_using_it() {
+    # Removing the package leaves this unit enabled pointing at a gone tree: five failed
+    # starts, then `start-limit-hit`, after which systemd refuses to start it until it is
+    # reset. An install repairing the machine is what finds it that way, so it must clear
+    # it - otherwise the run reports success and the shell cannot start.
     local script
     script="$(cat "$AUTOSTART_SCRIPT")"
     assert_contains "$script" 'systemctl --user reset-failed caelestia-shell.service' "the autostart step should clear a failed unit"
@@ -82,6 +96,10 @@ test_restarting_goes_through_that_unit() {
 }
 
 test_a_dead_enable_link_does_not_survive_an_install() {
+    # Removing the user's copy leaves the enable link behind, and systemd counts a unit
+    # as enabled whenever a link of that name exists, however dead - so `enable` leaves it
+    # alone instead of repairing it. That link starts the unit at login, so it must be
+    # dropped and rewritten against the unit that survived.
     local script
     script="$(cat "$AUTOSTART_SCRIPT")"
 
@@ -97,6 +115,8 @@ test_uninstall_removes_and_disables_the_unit() {
     assert_contains "$script" 'rm -f "$USER_SYSTEMD/caelestia-shell.service"' "and removed"
     assert_contains "$script" 'disable app-caelestiashell@autostart.service' "the retired generated unit should be disabled too"
 
+    # Disabled by name, before the check for a user-owned copy: a package's unit belongs
+    # to pacman, so there is no copy to test for, while the enable link exists either way.
     local disable_line file_line
     disable_line="$(grep -n 'systemctl --user disable --now caelestia-shell.service' "$UNINSTALL_SCRIPT" | cut -d: -f1)"
     file_line="$(grep -n 'if \[\[ -f "\$USER_SYSTEMD/caelestia-shell.service" \]\]' "$UNINSTALL_SCRIPT" | cut -d: -f1)"
@@ -104,6 +124,8 @@ test_uninstall_removes_and_disables_the_unit() {
     assert_ne "" "$file_line" "and the copy is still removed when there is one"
     assert_eq "1" "$(( ${disable_line:-0} < ${file_line:-0} ))" "the disable has to come before that check, not inside it"
 
+    # And the link, for the case where the unit's file is already gone and `disable`
+    # cannot resolve it: a link with the unit's name is what systemd counts.
     assert_contains "$script" '"$HOME"/.config/systemd/user/*.wants/caelestia-shell.service' "uninstall should clear the enable link pacman does not own"
     assert_contains "$script" '[[ -e "$link" ]] && continue' "and only the ones whose file is gone"
 }
@@ -118,6 +140,7 @@ test_the_package_ships_the_unit_and_not_an_entry() {
 }
 
 test_the_ipc_start_helper_does_not_take_the_login_units_name() {
+    # A transient unit cannot take a name a loaded unit already has, so `caelestia shell`
     # must not use caelestia-shell while caelestia-shell.service exists.
     local ipc
     ipc="$(cat "$IPC")"

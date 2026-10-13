@@ -7,6 +7,7 @@ import qs.components
 import qs.components.effects
 import qs.services
 
+// "Add Widget" panel: pick a widget and it lands where the menu was opened.
 Item {
     id: root
 

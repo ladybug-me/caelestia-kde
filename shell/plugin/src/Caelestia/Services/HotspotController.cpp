@@ -20,7 +20,7 @@ namespace {
 
 constexpr QLatin1String hotspotProfileId("caelestia-hotspot");
 
-}
+} // namespace
 
 HotspotController::HotspotController(QObject* parent)
     : QObject(parent) {}

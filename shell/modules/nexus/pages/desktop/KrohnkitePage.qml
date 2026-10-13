@@ -20,6 +20,7 @@ PageBase {
     title: qsTr("Window Tiling")
     isSubPage: true
 
+
     property list<MenuItem> layoutItems: [
         MenuItem { text: qsTr("BTree"); visible: KrohnkiteConfig.binaryTreeLayoutEnabled },
         MenuItem { text: qsTr("Monocle"); visible: KrohnkiteConfig.monocleLayoutEnabled },

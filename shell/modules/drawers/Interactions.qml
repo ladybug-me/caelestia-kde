@@ -24,6 +24,8 @@ CustomMouseArea {
     property bool osdShortcutActive
     property bool utilitiesShortcutActive
     readonly property bool isBarHorizontal: bar.isHorizontal
+    // Uses clampedThickness rather than the raw implicit size so the bar stays
+    // reachable when the border thickness is set to 0 (the collapsed bar is 0px wide).
 
     function inBarArea(x: real, y: real): bool {
         if (bar.position === "left")
@@ -69,6 +71,8 @@ CustomMouseArea {
             return y > screen.height - panels.bottomMargin - panelHeight && (withinPanelWidth(panel, x, y) || abovePopoutItem(panel, x));
         return false;
     }
+    // Next to the open sidebar a popout doesn't always cover the bar item that
+    // opened it; keep the strip straight above the item so it can be reached.
     function abovePopoutItem(panel: Item, x: real): bool {
         return panel === panels.popoutsWrapper && !popouts.isDetached && Math.abs(x - popouts.currentCenter) <= Config.border.rounding;
     }

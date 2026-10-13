@@ -7,6 +7,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 GUARD="$REPO_ROOT/shell/scripts/check-workspace-tracker.sh"
 
+# The guard asks KWin and kwinrc through these two tools, so the test supplies
+# them and controls both answers.
 stub_tools() {
     local dir="$1" enabled="${2:-true}" probe_status="${3:-0}" with_kreadconfig="${4:-1}" with_qdbus="${5:-1}"
     mkdir -p "$dir"
@@ -18,7 +20,9 @@ stub_tools() {
     fi
 }
 
+# PATH holds the stubs alone: the script needs nothing but these tools, and a
 # developer machine's own copies must not answer for the stubs. Bash is named by
+# absolute path so its own lookup does not go through that PATH.
 run_guard() {
     local stubs="$1" status
     PATH="$stubs" "$BASH" "$GUARD" >/dev/null 2>&1

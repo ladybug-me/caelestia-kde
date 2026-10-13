@@ -17,6 +17,8 @@ class ScreenEdges : public QObject {
     QML_SINGLETON
 
 public:
+    /// KWin's ElectricBorder enum, corners only — the only edges Caelestia
+    /// ever asks for. Values match KWin so they can be written straight out.
     enum Corner {
         TopRight = 1,
         BottomRight = 3,
@@ -30,6 +32,7 @@ public:
 
     bool available() const;
 
+    /// Take @p corner from KWin, stashing whatever held it. Idempotent.
     Q_INVOKABLE void claim(int corner);
 
     Q_INVOKABLE void release(int corner);
@@ -39,6 +42,8 @@ public:
 private:
     struct StolenEdge {
         int corner = 0;
+        // group -> key -> original value as it appeared in kwinrc. A null
+        // QString means the key was absent and must be deleted on restore.
         QHash<QString, QHash<QString, QString>> entries;
     };
 

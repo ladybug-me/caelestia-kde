@@ -141,7 +141,7 @@ PageBase {
     component FilterButton: IconTextButton {
         id: filter
 
-        property int filterState
+        property int filterState // 0 = default, 1 = on, 2 = negate
 
         function filter(ap: Nmcli.AccessPoint): bool {
             if (filterState === 0)

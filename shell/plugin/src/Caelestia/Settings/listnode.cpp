@@ -86,6 +86,7 @@ void syncNodeRecursive(Node* node, const QVariantMap& props) {
 ListNode::ListNode(ListNode* fallback, QObject* parent, bool globalOnly)
     : Node(fallback, parent, globalOnly) {
     if (fallback) {
+        // Disconnect generic fallback notify, lists use a custom one
         QObject::disconnect(fallback, &ListNode::optionChanged, this, nullptr);
 
         // Global lists must not follow the overlay they were read through

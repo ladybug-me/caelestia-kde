@@ -6,6 +6,8 @@ import Caelestia
 import Caelestia.Config
 import qs.services
 
+// TODO: handle this better later
+
 Item {
     id: model
 

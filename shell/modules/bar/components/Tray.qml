@@ -48,6 +48,9 @@ StyledRect {
     color: Qt.alpha(Colours.tPalette.m3surfaceContainer, (Config.bar.tray.background && items.count > 0) ? Colours.tPalette.m3surfaceContainer.a : 0)
     radius: Tokens.rounding.full
 
+    // icon-level
+    // right-clicks stay with the icons themselves (their own handlers sit on top
+    // of this one, so they win first).
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
@@ -105,6 +108,9 @@ StyledRect {
             id: items
 
             model: ScriptModel {
+                // Passive items are hidden by the protocol and by upstream's bar; TrayItem's
+                // trayIndex and the popout names in popouts/Content.qml both come from this
+                // same filter, so it must match the one there exactly.
                 values: SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))
             }
 

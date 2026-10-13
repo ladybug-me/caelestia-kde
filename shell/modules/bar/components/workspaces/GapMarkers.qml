@@ -7,6 +7,8 @@ import Caelestia.Config
 import qs.components
 import qs.services
 
+/// Hairlines in the gaps of the workspaces strip, marking where it is hiding a
+/// desktop between two pills. One marker per pill, drawn in the gap before it.
 Item {
     id: root
 

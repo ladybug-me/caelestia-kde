@@ -23,6 +23,8 @@ Item {
     readonly property bool simple: Config.launcher.browseLayout === LauncherBrowseLayout.Simple
     readonly property int nameMode: Config.launcher.nameOverflow
 
+    // Measured rather than read back off the label: the label's own truncation depends on the
+    // line count these drive, so reading it would be circular.
     readonly property bool nameOverflows: nameMetrics.advanceWidth > name.width
     readonly property bool hovered: tileArea.containsMouse && !favArea.containsMouse && root.nameOverflows
     readonly property bool flipped: root.hovered && root.nameMode === LauncherNameOverflow.Flip
@@ -83,6 +85,7 @@ Item {
         anchors.fill: parent
         clip: true
 
+        // Two stacked pages: the icon with its one-line label, then the full name a flip reveals.
         Item {
             id: track
 

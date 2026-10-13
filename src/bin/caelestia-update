@@ -34,6 +34,7 @@ if [ -n "$TARGET_REF" ]; then
     if git ls-remote --exit-code --tags https://github.com/ladybug-me/caelestia-kde.git "$TARGET_REF" >/dev/null 2>&1; then
         TARGET_KIND="tag"
     elif [ "$BRANCH" = "dev" ] && [[ "$TARGET_REF" =~ ^[0-9a-f]{7,40}$ ]]; then
+        # Dev can also install or revert to a specific commit, not just a tag.
         TARGET_KIND="commit"
     else
         echo "Warning: Version tag '$TARGET_REF' not found on remote. Ignoring target and using branch head."
@@ -42,6 +43,7 @@ if [ -n "$TARGET_REF" ]; then
 fi
 UPD_DIR="$HOME/.config/caelestia-update"
 
+# Prevent concurrent update runs from racing on git/CMake/config writes.
 exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock"
 flock -n 9 || { echo "Another Caelestia update is already running."; exit 1; }
 
@@ -53,12 +55,15 @@ else
 fi
 echo "---------------------------------------------"
 
+# Which half owns this install: /usr/bin is a package, anything else a checkout. Nothing
+# is probed on disk, so it stays right whatever the package is called.
 SELF_DIR="$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd)"
 PACKAGED=0
 case "$SELF_DIR" in
     /usr/bin) PACKAGED=1 ;;
 esac
 
+# A package install needs none of these; its branch below hands off to the package manager.
 if [ "$PACKAGED" -eq 0 ]; then
     for cmd in git cmake make; do
         if ! command -v "$cmd" &> /dev/null; then
@@ -67,15 +72,18 @@ if [ "$PACKAGED" -eq 0 ]; then
     done
 fi
 
+# sudo wrapper: cached credentials first, interactive prompt only when expired.
 mkdir -p "$UPD_DIR/bin"
 cat << 'EOF' > "$UPD_DIR/bin/sudo"
 #!/usr/bin/env bash
 if [ "$EUID" -eq 0 ]; then
     exec "$@"
 fi
+# -n first: if the parent keepalive kept the timestamp fresh, no prompt at all.
 if /usr/bin/sudo -n true 2>/dev/null; then
     exec /usr/bin/sudo -n "$@"
 fi
+# Expired or never created: whichever interactive helper exists.
 if [ -t 1 ]; then
     exec /usr/bin/sudo "$@"
 elif command -v ksshaskpass &> /dev/null; then
@@ -90,11 +98,17 @@ EOF
 chmod +x "$UPD_DIR/bin/sudo"
 export PATH="$UPD_DIR/bin:$PATH"
 
+# Package-managed install.
+#
+# A package owns what it installed, so the update is the package manager, not the clone
+# and second build below: two shells with only one known to pacman breaks in ways nobody
+# can explain a year later, and needs a toolchain the package does not.
 if [ "$PACKAGED" -eq 1 ]; then
     echo "---------------------------------------------"
     echo "  Caelestia Update (this install came from a package)"
     echo "---------------------------------------------"
     echo
+    # $1 is the branch, $2 the version: only the latter means "a version was asked for".
     if [ -n "${TARGET_REF:-}" ]; then
         echo "  A single version cannot be selected from here; choose it where the"
         echo "  package was installed from."
@@ -111,6 +125,8 @@ if [ "$PACKAGED" -eq 1 ]; then
     echo "    AUR:     rebuild caelestia-kde with the helper it was installed with"
     echo
 
+    # All this can do is the user's half: the package's step scripts are its own copies, and
+    # `caelestia install` deploys from them idempotently (parity-6).
     if [[ -x "$SELF_DIR/caelestia" ]]; then
         info "Re-applying the user's configuration..."
         CAELESTIA_FRESH_INSTALL=0 "$SELF_DIR/caelestia" install || warn "Applying the user's configuration failed; see the output above."
@@ -121,15 +137,20 @@ if [ "$PACKAGED" -eq 1 ]; then
     exit 0
 fi
 
+# Primes escalation once and refreshes it in the background, so the root work below never
+# prompts again, even after a long build.
 if [ "$EUID" -ne 0 ]; then
+    # Determine the best interactive helper for the initial prompt.
     if [ -t 1 ]; then
         SUDO_ASK_CMD=(/usr/bin/sudo -v)
     elif command -v ksshaskpass &> /dev/null; then
         SUDO_ASK_CMD=(env SUDO_ASKPASS="$(command -v ksshaskpass)" /usr/bin/sudo -A -v)
     elif command -v pkexec &> /dev/null; then
+        # pkexec authorizes through PolicyKit, not sudo's timestamp cache, so there is nothing to
+        # prime: each elevation goes through pkexec, which does its own caching.
         info "Requesting administrator privileges via pkexec (PolicyKit)..."
         pkexec true || die "Failed to obtain administrator privileges."
-        SUDO_ASK_CMD=()
+        SUDO_ASK_CMD=()  # Skip the keepalive below: no sudo timestamp exists.
     else
         die "Cannot elevate privileges — no terminal, ksshaskpass, or pkexec available."
     fi
@@ -139,10 +160,13 @@ if [ "$EUID" -ne 0 ]; then
         "${SUDO_ASK_CMD[@]}" || die "Failed to obtain administrator privileges."
     fi
 
+    # So sub-scripts using raw `/usr/bin/sudo -A` do not have to rediscover it.
     if command -v ksshaskpass &> /dev/null; then
         export SUDO_ASKPASS="$(command -v ksshaskpass)"
     fi
 
+    # Keeps the sudo timestamp alive through long builds (-nv extends it, not just checks).
+    # Runs only when a timestamp exists; pkexec does its own caching.
     if [[ ${#SUDO_ASK_CMD[@]} -gt 0 ]]; then
         (
             while kill -0 "$$" 2>/dev/null; do
@@ -155,6 +179,7 @@ if [ "$EUID" -ne 0 ]; then
     fi
 fi
 
+# 1. Fetch from GitHub
 echo "PROGRESS: 1/5: Fetching updates from GitHub..."
 info "Checking for local repository cache..."
 
@@ -175,6 +200,7 @@ else
     git remote set-url origin https://github.com/ladybug-me/caelestia-kde.git
 fi
 
+# Always enforce sparse-checkout rules
 git config core.sparseCheckout true
 echo "shell/" > .git/info/sparse-checkout
 echo "src/" >> .git/info/sparse-checkout
@@ -185,7 +211,13 @@ echo ".github/version.env" >> .git/info/sparse-checkout
 echo ".gitmodules" >> .git/info/sparse-checkout
 echo "assets/" >> .git/info/sparse-checkout
 
+# Safer fetch and reset instead of pull
 if [ -n "$TARGET_REF" ] && [ "${TARGET_KIND:-}" = "commit" ]; then
+    # The clone is normally depth 1, and the target can be a commit behind the tip, so fetch
+    # a window of history rather than unshallowing; the window is also what bounds how far
+    # back a pinned commit stays reachable. The filter keeps the fetch to commits and trees:
+    # nothing here reads those revisions' blobs, and they include revisions that still
+    # carried the shell's font files, which a plain fetch pulls down again - about 300 MiB.
     git fetch -q --depth=50 --filter=blob:none origin "$BRANCH" || die "Failed to fetch repository"
     if git cat-file -e "$TARGET_REF^{commit}" 2>/dev/null; then
         git reset --hard -q "$TARGET_REF" || die "Failed to apply commit $TARGET_REF"
@@ -201,6 +233,7 @@ else
     git reset --hard -q origin/"$BRANCH" || die "Failed to apply updates"
 fi
 
+# Initialize submodules
 if [[ -f "$UPD_DIR/repo/.gitmodules" ]]; then
     info "Initializing all submodule..."
     # shellcheck source=/dev/null
@@ -210,6 +243,9 @@ if [[ -f "$UPD_DIR/repo/.gitmodules" ]]; then
     if declare -f prune_removed_submodules >/dev/null 2>&1; then
         prune_removed_submodules "$UPD_DIR/repo"
     else
+        # The helper ships in the same commit and the sparse checkout always pulls scripts/, so
+        # a missing lib means a damaged checkout - say so rather than keep a second copy of the
+        # prune that can drift from the tested one.
         warn "scripts/lib/submodules.sh is missing; skipping the submodule prune."
     fi
     git -C "$UPD_DIR/repo" submodule sync --recursive >/dev/null 2>&1 || true
@@ -218,6 +254,7 @@ fi
 
 [[ -f "$UPD_DIR/repo/src/dots/starship.toml" ]] || die "Missing src/dots content after update"
 
+# 2. System update via Polkit
 echo "PROGRESS: 2/5: Running system update..."
 echo
 echo "---------------------------------------------"
@@ -239,11 +276,14 @@ info "Executing build scripts (GUI prompts will appear if required)..."
 
 export BUNDLE_DIR="$UPD_DIR/repo"
 
+# Helpers come from the revision just checked out. A reverted target predating the helper
+# leaves the call unavailable, which is harmless: the recorded revision stays as it was.
 if [[ -f "$BUNDLE_DIR/scripts/lib/update-state.sh" ]]; then
     # shellcheck source=/dev/null
     source "$BUNDLE_DIR/scripts/lib/update-state.sh"
 fi
 
+# 4. Deploy Configs
 echo "PROGRESS: 3/5: Deploying configuration files..."
 echo
 echo "---------------------------------------------"
@@ -256,6 +296,7 @@ else
 fi
 echo "PROGRESS: 3/5: Configuration files deployed."
 
+# 5. Build Shell
 echo "PROGRESS: 4/5: Building the Caelestia shell UI..."
 echo
 echo "---------------------------------------------"
@@ -266,6 +307,8 @@ if [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
 else
     run_stage 3600 bash "$UPD_DIR/repo/scripts/08-build-shell.sh" || die "Shell build failed or timed out."
 
+    # Fail fast on an incomplete QML install, or the shell dies at startup with 'module
+    # "Caelestia.Config" is not installed'.
     QML_BASE="$HOME/.local/lib/qt6/qml"
     CONFIG_MODULE_DIR="$QML_BASE/Caelestia/Config"
     if [[ ! -f "$CONFIG_MODULE_DIR/qmldir" ]]; then
@@ -280,6 +323,11 @@ else
     fi
 fi
 
+# 6. Record which revision is actually installed.
+#
+# record_installed_revision() refuses under CAELESTIA_SKIP_BUILD=1: the checkout moved
+# but the shell was deliberately not rebuilt, so the new revision would describe a state
+# nobody can see (#651). The previous value stays, still naming the running shell.
 if record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia"; then
     info "Saved commit hash: $(cat "$HOME/.config/quickshell/caelestia/.current_commit" 2>/dev/null || true)"
 elif [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then

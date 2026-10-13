@@ -6,13 +6,20 @@ import qs.components
 import qs.services
 import "claudecode.js" as ClaudeCode
 
+// One tool call of a Claude Code reply: header with the tool and a one-line
+// summary, expandable to its input and result. A subagent card also lists
+// the subagent's own tool calls and its report.
 StyledRect {
     id: toolCard
 
+    // A tool card from ClaudeCodeSession: { id, name, summary, result, isError,
+    // done, ... } plus, for a subagent, agentType, progress, steps and totals.
     property var tool: ({})
+    // Kept by the owner, so it survives the card being created again.
     property bool expanded: false
     readonly property bool isAgent: ClaudeCode.isAgentTool(tool.name)
     readonly property var steps: tool.steps || []
+    // Collapsed running subagent: show just its latest steps.
     readonly property var visibleSteps: expanded ? steps : (!tool.done ? steps.slice(-3) : [])
     readonly property string home: Quickshell.env("HOME") || ""
 
@@ -26,6 +33,7 @@ StyledRect {
     radius: Tokens.rounding.small
     color: Colours.layer(Colours.tPalette.m3surfaceContainerHigh, 2)
 
+    // Subagent cards get an accent bar down the left edge.
     StyledRect {
         visible: toolCard.isAgent
         anchors.left: parent.left
@@ -65,6 +73,7 @@ StyledRect {
                     color: toolCard.tool.isError ? Colours.palette.m3error : (toolCard.tool.done ? Colours.palette.m3primary : (toolCard.isAgent ? Colours.palette.m3tertiary : Colours.palette.m3onSurfaceVariant))
                     font: Tokens.font.icon.small
 
+                    // A running subagent breathes so it reads as busy.
                     SequentialAnimation on opacity {
                         running: toolCard.isAgent && !toolCard.tool.done
                         loops: Animation.Infinite
@@ -108,6 +117,7 @@ StyledRect {
             }
         }
 
+        // Subagent: current step and running totals.
         StyledText {
             visible: toolCard.isAgent && text !== ""
             width: parent.width
@@ -121,6 +131,7 @@ StyledRect {
             elide: Text.ElideRight
         }
 
+        // Subagent: its own tool calls.
         Repeater {
             model: toolCard.visibleSteps
 
@@ -160,6 +171,7 @@ StyledRect {
             font: Tokens.font.label.small
         }
 
+        // Subagent report, rendered as Markdown.
         ChatMarkdown {
             visible: toolCard.isAgent && toolCard.expanded && text !== ""
             text: toolCard.tool.result || ""

@@ -34,6 +34,8 @@ QtObject {
         subPageOpened(idx);
     }
 
+    // Navigation that changes page, such as a search result. Landing on the
+    // page that is already showing still opens immediately: nothing to wait for.
     function goToSubPage(pageIdx: int, subPageIdx: int): void {
         if (pageIdx === currentPageIdx) {
             pendingSubPageIdx = -1;

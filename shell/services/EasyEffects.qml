@@ -62,6 +62,9 @@ Singleton {
             "pidof -q easyeffects || flatpak ps --columns=application 2>/dev/null | grep -qx com.github.wwmm.easyeffects"]
         onExited: code => root.active = code === 0
     }
+    // Starting and stopping are fire-and-forget, so the state is read back
+    // rather than assumed: a launch that fails, or a stop that does not take,
+    // would otherwise leave the toggle showing something that is not true.
     Timer {
         id: confirmTimer
 

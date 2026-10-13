@@ -26,6 +26,7 @@ inline bool isSupportedEnum(const QMetaType& type) {
     return metaEnum.isValid() && !metaEnum.is64Bit();
 }
 
+// Returns the enumerator name for a value, or nullptr if there is no such enumerator
 inline const char* enumKeyFor(const QMetaEnum& metaEnum, const QVariant& value) {
     return metaEnum.valueToKey(static_cast<quint64>(value.toLongLong()));
 }

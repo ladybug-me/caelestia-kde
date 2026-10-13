@@ -112,6 +112,9 @@ std::optional<double> gpuPciAverageTemp() {
         return std::nullopt;
     }
 
+    // On hybrid / multi-GPU systems, averaging yields misleading numbers.
+    // Prefer the maximum primary GPU temperature across all PCI GPU devices;
+    // if none found, fall back to the maximum fallback sensor.
     double maxPrimary = -1.0;
     double maxFallback = -1.0;
 

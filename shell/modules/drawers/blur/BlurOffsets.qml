@@ -20,6 +20,8 @@ Item {
 
         category: "Blur"
     }
+    // The centered deformMatrix from the BlobRect (identity by default)
+    // m11 = horizontal scale, m22 = vertical scale, applied around the center of the target
     property matrix4x4 deformMatrix
     property real animScale: 1 - offsetScale
     property real sTop: (vAnchor === "top" ? blurOffsetBottom : blurOffsetTop) * animScale

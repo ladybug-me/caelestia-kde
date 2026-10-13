@@ -27,6 +27,7 @@ QtObject {
         { id: "other", name: qsTr("Other"), icon: "category" }
     ]
 
+    /// The curated category a desktop entry belongs to, or "other".
     function categoryForApp(app): string {
         let cats = [];
         const raw = app.categories;

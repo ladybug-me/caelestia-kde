@@ -42,6 +42,7 @@ PageBase {
             first: true
             text: qsTr("Enable component")
             checked: BarWidgets.isEnabled(Config.bar, "dock")
+            // Custom reset: enabled state lives in bar.entries, default is true
             reset: ({
                 customGet: () => BarWidgets.isEnabled(GlobalConfig.bar, "dock"),
                 customDef: true,

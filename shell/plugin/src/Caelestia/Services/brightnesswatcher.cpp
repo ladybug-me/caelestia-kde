@@ -119,6 +119,9 @@ BrightnessWatcher::BrightnessWatcher(QObject* parent)
     connect(m_registry, &KdeOutputDeviceRegistry::deviceAdded, this, &BrightnessWatcher::onDeviceAdded);
 
     m_management = new KdeOutputManagement(this);
+
+    // QtWayland requires us to explicitly check if the extension was successfully bound.
+    // However, it binds asynchronously. If QGuiApplication is already running, it binds immediately.
 }
 
 qreal BrightnessWatcher::brightness(const QString& outputName) const {
@@ -153,6 +156,9 @@ void BrightnessWatcher::setBrightness(const QString& outputName, qreal value) {
 
     QtWayland::kde_output_configuration_v2 cfg(config);
     cfg.set_brightness(dev->object(), brightValue);
+    // Assert full dimming in the same configuration: asking for a brightness change is user
+    // activity, and a multiplier KWin left behind would otherwise swallow it while everything
+    // the shell can read still looks right (KDE bug 513809).
     cfg.set_dimming(dev->object(), 10000);
     cfg.apply();
     cfg.destroy();

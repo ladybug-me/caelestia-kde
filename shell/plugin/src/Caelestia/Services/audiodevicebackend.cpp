@@ -127,6 +127,7 @@ static QString getCardFriendlyName(PulseAudioQt::Card* card) {
         }
     }
 
+    // 4. Fallback to card's device.description
     const auto cardProps = card->properties();
     if (cardProps.contains(QStringLiteral("device.description"))) {
         QString desc = cardProps.value(QStringLiteral("device.description")).toString();

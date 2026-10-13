@@ -21,6 +21,7 @@ ConnectedRect {
 
     signal moved(value: real)
 
+
     Layout.fillWidth: true
     implicitHeight: rowLayout.implicitHeight + rowLayout.anchors.margins * 2
 
@@ -30,6 +31,7 @@ ConnectedRect {
         anchors.fill: parent
         anchors.margins: Tokens.padding.medium
         anchors.leftMargin: Tokens.padding.largeIncreased
+        // Match SliderRow/ToggleRow so reset icons line up in one column.
         anchors.rightMargin: Tokens.padding.medium
         spacing: Tokens.spacing.medium
 

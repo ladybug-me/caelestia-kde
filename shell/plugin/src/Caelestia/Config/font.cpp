@@ -18,6 +18,8 @@ QFont FontStyleBase::small() const {
 
 QFont FontStyleBase::buildFont(const FontConfigNode* cfg, const QString& fallbackFamily, qreal scale) {
     QFont font;
+    // Both empty: leave the default-constructed family alone so the font follows the
+    // system instead of carrying an empty family string around.
     const auto family = cfg->family().isEmpty() ? fallbackFamily : cfg->family();
     if (!family.isEmpty())
         font.setFamily(family);
@@ -73,6 +75,9 @@ void FontStyleBase::rebuild() {
         small = buildFont(m_cfg->small(), family, m_scale);
     }
 
+    // Emitting unconditionally invalidates every binding that reads a font (directly or
+    // through the builder chain), even when the built fonts are identical. Only notify
+    // when something actually changed; QFont::operator== compares the variable axes too.
     if (large == m_large && medium == m_medium && small == m_small)
         return;
 
@@ -138,6 +143,8 @@ void IconFontStyle::rebuild() {
         medium = buildFont(m_cfg->medium(), family, m_scale);
         small = buildFont(m_cfg->small(), family, m_scale);
 
+        // Only the icon node carries the fourth size; the cast is the one place the icon
+        // style needs more than FontStyleNode offers.
         const auto* icon = qobject_cast<FontStyleIconNode*>(m_cfg);
         extraLarge = icon ? buildFont(icon->extraLarge(), family, m_scale) : QFont();
     }

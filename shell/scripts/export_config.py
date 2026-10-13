@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Export the shell's config files to YAML (shell.yaml beside them)."""
 
 import json
 import os

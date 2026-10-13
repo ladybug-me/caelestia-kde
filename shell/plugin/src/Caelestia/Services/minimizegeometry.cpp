@@ -46,7 +46,9 @@ void MinimizeGeometry::setGeometry(QQuickItem* anchor, const QString& uuid, int 
 
     const auto key = PlasmaWindows::normaliseUuid(uuid);
     const QRect rect(x, y, width, height);
+    // Key by surface too: two monitors with mirrored docks can compute the
     // same rect for the same window, and the dedupe must not drop the second
+    // surface's publish.
     const quintptr surfaceKey = reinterpret_cast<quintptr>(surface);
     if (m_published.value(key).value(surfaceKey) == rect) {
         return;

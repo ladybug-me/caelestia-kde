@@ -11,6 +11,8 @@ namespace {
 
 Q_LOGGING_CATEGORY(logPlasmaWindows, "caelestia.services.plasmawindows");
 
+// get_window_by_uuid, which is what lets us address a window without mirroring
+// KWin's entire window list. get_icon needs 7, so 12 covers both.
 constexpr int kRequiredVersion = 20;
 
 bool s_connectionGone = false;

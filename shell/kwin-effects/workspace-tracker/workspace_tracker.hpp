@@ -32,6 +32,13 @@ public:
 public Q_SLOTS:
     void SetDesktop(const QString& output, int desktop);
 
+    /**
+     * Moves the window with EffectWindow::internalId() @p uuid to @p output.
+     *
+     * There is no unprivileged way to do this from outside: plasma-window-management
+     * can move a window between desktops but not between screens, and the D-Bus
+     * surface has nothing for it either. Inside the compositor it is one call.
+     */
     void SendToOutput(const QString& uuid, const QString& output);
 
 private Q_SLOTS:
@@ -48,4 +55,5 @@ private:
     QLocalSocket* m_socket;
     QPointer<KWin::LogicalOutput> m_lastChangingOutput;
 };
+
 }

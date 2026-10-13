@@ -11,6 +11,7 @@ Item {
 
     required property string address
     property bool active: true
+    /// Shown until the first frame arrives, and whenever there is no stream.
     property url fallbackIcon: ""
     property real fallbackScale: 0.5
     property real sourceAspect: 16 / 9
@@ -43,6 +44,10 @@ Item {
         width: fitted * root.sourceAspect
         z: 1
 
+        // objectSerial is the binding that works for an unprivileged client;
+        // nodeId is deprecated upstream and needs PipeWire registry access this
+        // shell does not have. Older KPipeWire only has the latter, so pick
+        // whichever the installed version actually exposes.
         Component.onCompleted: {
             if ("objectSerial" in this)
                 this.objectSerial = Qt.binding(() => stream.objectSerial);

@@ -12,6 +12,9 @@ Item {
     id: root
 
     required property DrawerVisibilities visibilities
+    // The dashboard's tab and the month its calendar shows are the screen's own
+    // state, not this widget's: that is where upstream keeps them, and it is what
+    // makes both survive the dashboard closing and a shell reload.
     required property ScreenState screenState
     readonly property FileDialog facePicker: FileDialog {
         title: qsTr("Select a profile picture")

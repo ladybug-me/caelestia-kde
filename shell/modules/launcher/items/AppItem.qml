@@ -18,6 +18,8 @@ Item {
     required property DrawerVisibilities visibilities
     required property var list
 
+    // Derived from the row height: the icon's container is still unlaid-out while the
+    // delegate is created, and the requested icon size is fixed at that moment.
     readonly property real iconSize: (Tokens.sizes.launcher.itemHeight - Tokens.padding.small * 2) * 0.8
 
     implicitHeight: Tokens.sizes.launcher.itemHeight

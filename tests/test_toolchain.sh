@@ -84,6 +84,7 @@ test_install_linguist_tools_reports_failure_when_the_install_fails() {
     assert_status 1 "$status" "a failed install should be reported to the caller"
 }
 
+# "Whichever manager is on PATH" answers for the wrong package universe, which is why
 # the distro is an argument: pacman here is reachable, and still must not be used.
 test_install_linguist_tools_uses_the_named_distro_not_path() {
     local tmp stub log status

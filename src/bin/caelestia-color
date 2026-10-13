@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
+# caelestia-color - the color pipeline behind `caelestia wallpaper` and `caelestia scheme`.
+# State: $XDG_STATE_HOME/caelestia/{scheme.json,wallpaper/,theme/}.
+# Config: $XDG_CONFIG_HOME/caelestia/cli.json; an absent key is on.
 
 set -euo pipefail
+
+# The python helper is one heredoc dispatched by argv. Column zero is required.
 
 SELF="$(realpath -- "${BASH_SOURCE[0]}" 2>/dev/null || printf '%s' "${BASH_SOURCE[0]}")"
 BIN_DIR="$(dirname -- "$SELF")"
@@ -99,6 +104,7 @@ import re
 import sys
 import tempfile
 
+
 def atomic_write(path: pathlib.Path, text: str) -> None:
     """Write through a temporary file, so a reader never sees half a file."""
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -113,20 +119,25 @@ def atomic_write(path: pathlib.Path, text: str) -> None:
         os.unlink(tmp)
         raise
 
+
 def schemes_dir(data_dir: str) -> pathlib.Path:
     return pathlib.Path(data_dir) / "schemes"
+
 
 def scheme_names(data_dir: str) -> list[str]:
     root = schemes_dir(data_dir)
     return sorted(p.name for p in root.iterdir() if p.is_dir()) if root.is_dir() else []
 
+
 def scheme_flavours(data_dir: str, name: str) -> list[str]:
     root = schemes_dir(data_dir) / name
     return sorted(p.name for p in root.iterdir() if p.is_dir()) if root.is_dir() else []
 
+
 def scheme_modes(data_dir: str, name: str, flavour: str) -> list[str]:
     root = schemes_dir(data_dir) / name / flavour
     return sorted(p.stem for p in root.glob("*.txt")) if root.is_dir() else []
+
 
 def read_colours(path: pathlib.Path) -> dict[str, str]:
     """Read a shipped scheme file: one `role hex` pair per line.
@@ -142,8 +153,10 @@ def read_colours(path: pathlib.Path) -> dict[str, str]:
         colours[parts[0]] = parts[1].lstrip("#").strip()
     return colours
 
+
 def colour_file(data_dir: str, name: str, flavour: str, mode: str) -> pathlib.Path:
     return schemes_dir(data_dir) / name / flavour / f"{mode}.txt"
+
 
 def role_map(data_dir: str) -> tuple[dict[str, str], dict[str, str]]:
     """The role names we speak against the ones matugen speaks.
@@ -164,11 +177,13 @@ def role_map(data_dir: str) -> tuple[dict[str, str], dict[str, str]]:
         terms[f"term{term}"] = base
     return roles, terms
 
+
 # What the intensity knob reaches: a saturation multiplier of 0 leaves a grey palette, 1 is
 # what the engine produced, and 2 is as far as a Material palette can be pushed before the
 # accents flatten into one hue.
 MIN_INTENSITY = 0.0
 MAX_INTENSITY = 2.0
+
 
 def as_intensity(value: str | float | int | None) -> float:
     """An intensity from the file or the command line, or the default when nothing usable.
@@ -187,9 +202,11 @@ def as_intensity(value: str | float | int | None) -> float:
         return 1.0
     return min(MAX_INTENSITY, max(MIN_INTENSITY, number))
 
+
 def intensity_json(value: float) -> float | int:
     """An intensity as JSON writes it: 1 rather than 1.0, so a knob at rest reads at rest."""
     return int(value) if float(value).is_integer() else value
+
 
 def scale_saturation(code: str, factor: float) -> str:
     """One colour with its saturation scaled, its hue and lightness left where they were.
@@ -217,6 +234,7 @@ def scale_saturation(code: str, factor: float) -> str:
     scaled = colorsys.hls_to_rgb(hue, lightness, min(1.0, saturation * factor))
     return "".join(f"{round(channel * 255):02x}" for channel in scaled)
 
+
 def scheme_json(
     name: str, flavour: str, mode: str, variant: str, intensity: str, colours: dict[str, str]
 ) -> str:
@@ -231,6 +249,7 @@ def scheme_json(
         }
     )
 
+
 def pick_mode(data_dir: str, name: str, flavour: str, wanted: str) -> str:
     """The mode of a flavour, falling back to whichever one it ships.
 
@@ -240,6 +259,7 @@ def pick_mode(data_dir: str, name: str, flavour: str, wanted: str) -> str:
     if wanted in modes:
         return wanted
     return modes[0] if modes else wanted
+
 
 class Colour:
     """The `{{ role.<field> }}` fields of a user template, as upstream defines them."""
@@ -310,6 +330,7 @@ class Colour:
     def lightness(self) -> int:
         return self._hsl[2]
 
+
 def cmd_config_dump(path: str) -> int:
     """Print the configuration as `key<TAB>value` lines.
 
@@ -335,6 +356,7 @@ def cmd_config_dump(path: str) -> int:
     walk("", data)
     return 0
 
+
 def import_data(data_dir: str, colours: dict[str, str], mode: str, image: str) -> dict:
     """The render data matugen needs to fan a palette out that is already decided.
 
@@ -355,11 +377,13 @@ def import_data(data_dir: str, colours: dict[str, str], mode: str, image: str) -
         "is_dark_mode": mode == "dark",
     }
 
+
 def cmd_import_json(data_dir: str, out: str, name: str, flavour: str, mode: str, image: str) -> int:
     """Write the render data matugen needs to fan a named scheme out, from its file."""
     colours = read_colours(colour_file(data_dir, name, flavour, mode))
     atomic_write(pathlib.Path(out), json.dumps(import_data(data_dir, colours, mode, image)))
     return 0
+
 
 def cmd_import_scheme(data_dir: str, scheme_path: str, out: str, image: str) -> int:
     """Write the render data for a palette that has already been rendered and scaled.
@@ -375,6 +399,7 @@ def cmd_import_scheme(data_dir: str, scheme_path: str, out: str, image: str) -> 
     atomic_write(pathlib.Path(out), json.dumps(payload))
     return 0
 
+
 def cmd_write_named(
     data_dir: str, out: str, name: str, flavour: str, mode: str, variant: str, intensity: str
 ) -> int:
@@ -388,6 +413,7 @@ def cmd_write_named(
     atomic_write(pathlib.Path(out), scheme_json(name, flavour, mode, variant, intensity, colours))
     return 0
 
+
 def cmd_read_scheme(
     data_dir: str, name: str, flavour: str, mode: str, variant: str, intensity: str
 ) -> int:
@@ -395,6 +421,7 @@ def cmd_read_scheme(
     colours = read_colours(colour_file(data_dir, name, flavour, mode))
     print(scheme_json(name, flavour, mode, variant, intensity, colours))
     return 0
+
 
 def cmd_list_nested(data_dir: str, mode: str) -> int:
     tree: dict[str, dict[str, dict[str, str]]] = {}
@@ -405,6 +432,7 @@ def cmd_list_nested(data_dir: str, mode: str) -> int:
             tree[name][flavour] = read_colours(colour_file(data_dir, name, flavour, actual))
     print(json.dumps(tree))
     return 0
+
 
 def cmd_list_flat(data_dir: str) -> int:
     entries = []
@@ -422,6 +450,7 @@ def cmd_list_flat(data_dir: str) -> int:
     print(json.dumps(entries))
     return 0
 
+
 def cmd_names(data_dir: str, what: str, name: str) -> int:
     """List names, flavours or modes, narrowed by the argument before it."""
     if what == "names":
@@ -437,9 +466,11 @@ def cmd_names(data_dir: str, what: str, name: str) -> int:
     print("\n".join(out))
     return 0
 
+
 def cmd_pick_mode(data_dir: str, name: str, flavour: str, mode: str) -> int:
     print(pick_mode(data_dir, name, flavour, mode))
     return 0
+
 
 # Roles matugen does not name but something here reads.
 PALETTE_KEY_COLORS = {
@@ -465,6 +496,7 @@ SUCCESS_COLORS = {
         "onSuccessContainer": "0C1F13",
     },
 }
+
 
 def cmd_finish_palette(scheme_path: str, palettes_path: str, factor: str) -> int:
     """Fold the roles matugen cannot name into a render, and put it at the intensity.
@@ -503,12 +535,14 @@ def cmd_finish_palette(scheme_path: str, palettes_path: str, factor: str) -> int
     atomic_write(scheme, json.dumps(data))
     return 0
 
+
 def cmd_meta(path: str) -> int:
     data = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
     for key in ("name", "flavour", "mode", "variant"):
         print(str(data.get(key, "")).strip())
     print(f"{as_intensity(data.get('intensity')):g}")
     return 0
+
 
 def cmd_normalise_intensity(value: str) -> int:
     """Check an intensity from the command line, and print it as it will be stored.
@@ -525,10 +559,12 @@ def cmd_normalise_intensity(value: str) -> int:
     print(f"{number:g}")
     return 0
 
+
 def cmd_colours_json(path: str) -> int:
     data = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
     print(json.dumps(data.get("colours", {})))
     return 0
+
 
 def cmd_render_templates(scheme_path: str, templates_dir: str, out_dir: str, mode: str) -> int:
     """Render `~/.config/caelestia/templates/` into the state directory.
@@ -561,6 +597,7 @@ def cmd_render_templates(scheme_path: str, templates_dir: str, out_dir: str, mod
         content = mode_field.sub(mode, content)
         atomic_write(pathlib.Path(out_dir) / path.name, content)
     return 0
+
 
 def cmd_smart_variant(image: str) -> int:
     """Pick the variant from the image, the way upstream does.
@@ -615,6 +652,7 @@ def cmd_smart_variant(image: str) -> int:
     else:
         print("tonalspot")
     return 0
+
 
 def cmd_konsole_scheme(scheme_file: str, out: str) -> int:
     """Write a Konsole color scheme from the palette in effect.
@@ -682,6 +720,7 @@ def cmd_konsole_scheme(scheme_file: str, out: str) -> int:
     atomic_write(pathlib.Path(out), "\n".join(lines) + "\n")
     return 0
 
+
 def main(argv: list[str]) -> int:
     command, args = argv[0], argv[1:]
     if command == "config-dump":
@@ -717,6 +756,7 @@ def main(argv: list[str]) -> int:
     if command == "konsole-scheme":
         return cmd_konsole_scheme(*args)
     raise SystemExit(f"unknown python helper: {command}")
+
 
 sys.exit(main(sys.argv[1:]))
 PY
@@ -787,6 +827,7 @@ load_config() {
     done < <(py config-dump "$CLI_CONFIG")
 }
 
+# Absent key means on, except where a target would take over a user's file.
 enabled() {
     local key="theme.$1" default="${2:-true}" value
     value="${CFG[$key]:-}"
@@ -838,6 +879,7 @@ write_matugen_config() {
             printf 'input_path = "%s"\n' "$data/matugen/scheme.json.tmpl"
             printf 'output_path = "%s"\n\n' "$scheme_out"
 
+            # A template cannot ask for a shade by name, so the palettes are dumped and folded in after.
             printf '[templates.palettes]\n'
             printf 'input_path = "%s"\n' "$data/matugen/palettes.json.tmpl"
             printf 'output_path = "%s"\n\n' "$PALETTES_JSON"
@@ -864,6 +906,8 @@ meta_string() {
     python3 -c 'import json, sys; print(json.dumps({"name": sys.argv[1], "flavour": sys.argv[2], "variant": sys.argv[3]}))' "$1" "$2" "$3"
 }
 
+# The config comes first so a failure can name the one that was used: there are two of them, and
+# a fan out failure does not come from the palette's.
 run_matugen() {
     local config="$1"
     shift
@@ -880,12 +924,18 @@ smart_variant() {
     py smart-variant "$1"
 }
 
+# Renders from colors that are already decided rather than derived from the wallpaper, by handing
+# them to matugen as data. A named scheme is such a palette, and so is a generated one whose
+# intensity matugen would not have produced by itself.
 render_decided() {
     local import_json="$1" meta="$2" fan_out="$3"
     write_matugen_config "$FANOUT_CONFIG" "" "$fan_out"
     run_matugen "$FANOUT_CONFIG" json "$import_json" --import-json-string "$meta"
 }
 
+# --source-color-index 0 stops matugen asking which color to use. Whether the wallpaper picks the
+# variant or the mode is the caller's answer, per field: a value it was given by hand is not the
+# wallpaper's to choose, and the two are separate choices - a caller may pin one and not the other.
 render_image() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4" fan_out="$5" out="$6"
     local variant_smart="${7:-false}" mode_smart="${8:-false}"
@@ -910,6 +960,14 @@ render_image() {
         mode_arg="$mode"
     fi
 
+    # Everything that reads matugen's own colors - the terminals, GTK, Qt, the scheme Plasma is
+    # applied - is rendered by the same run as the palette, and matugen cannot be asked for the
+    # palette an intensity asks for. So the palette is rendered and put at that intensity on its
+    # own, and the fan out follows from it, on the colors the shell is given rather than on the
+    # ones matugen would have had. At the default intensity there is nothing to scale and one
+    # pass does all of it, which is what every install does until somebody moves the slider.
+    # Both the command line and the file normalise the value through `%g`, so the default
+    # arrives here as exactly "1".
     if [[ "$fan_out_with_palette" == "true" && "$intensity" != "1" ]]; then
         fan_out_with_palette=false
         fan_out_after=true
@@ -944,6 +1002,9 @@ render_named() {
     py write-named "$data" "$out" "$name" "$flavour" "$mode" "$variant" "${META_INTENSITY:-1}"
 }
 
+# The scheme's metadata, in the order `py meta` prints it: name, flavour, mode, variant and the
+# intensity the palette was rendered at. A scheme that is not there yet leaves it all empty,
+# which is what the callers fall back from.
 read_meta() {
     META_NAME=""
     META_FLAVOUR=""
@@ -978,6 +1039,7 @@ commit() {
     META_COLOURS="$(py colours-json "$SCHEME_FILE")"
 }
 
+# Only a shell on a pty wants the escapes; anything else echoed them.
 apply_terms() {
     local file="$1" sequence pty name comm
     [[ -s "$file" ]] || return 0
@@ -995,6 +1057,8 @@ apply_terms() {
     done
 }
 
+# KDE applies a scheme only when told to and refuses the name in effect, hence two names.
+# An accent set in System Settings is dropped: Plasma would rewrite focus/link/selection from it.
 apply_kde() {
     local scheme="$DATA_HOME/color-schemes/Matugen.colors" current="" target
 
@@ -1022,6 +1086,7 @@ apply_kde() {
     plasma-apply-colorscheme "$target" >/dev/null 2>&1 || warn "could not apply the Plasma color scheme"
 }
 
+# Konsole's format is R,G,B, not hex, and matugen has no template for it.
 apply_konsole() {
     local dir="$DATA_HOME/konsole" profile current="" target
 
@@ -1093,6 +1158,7 @@ defer_to_desktop() {
     return 0
 }
 
+# A failing hook is reported, not fatal: the palette is already on disk.
 run_hook() {
     local label="$1" command="$2"
     shift 2
@@ -1183,6 +1249,8 @@ cmd_scheme_list() {
 }
 
 cmd_scheme_get() {
+    # No flags is the whole scheme, which is what a caller that wants everything reads. Asking
+    # for the file rather than counting the flags keeps the flag set out of this expression.
     if [[ $# -eq 0 && -f "$SCHEME_FILE" ]]; then
         cat "$SCHEME_FILE"
         printf '\n'
@@ -1245,6 +1313,10 @@ cmd_scheme_set() {
     [[ -n "$mode" ]] || mode="${META_MODE:-dark}"
     [[ -n "$variant" ]] || variant="${META_VARIANT:-tonalspot}"
 
+    # The knob is carried by the scheme like the variant is, so it is read out of the scheme in
+    # effect unless this command was given one. Then it is checked here, before anything is
+    # rendered, and handed to the render, which records it; a preview is rendered at it without
+    # it being written back.
     if [[ -n "$intensity" ]]; then
         intensity="$(py normalise-intensity "$intensity")"
         META_INTENSITY="$intensity"
@@ -1264,11 +1336,16 @@ cmd_scheme_set() {
         [[ -n "$flavour" ]] || flavour="default"
     fi
 
+    # A named scheme is its own file, so there is nothing here for the knob to scale. Say so
+    # rather than leaving a change that did nothing unexplained.
     if [[ -n "$intensity" && "$name" != "dynamic" ]]; then
         warn "$name keeps the colors in its file; the intensity colors the wallpaper-derived palette"
     fi
 
     if [[ "$name" == "dynamic" ]]; then
+        # The wallpaper picks a field the caller left out and never one they stated, unless the
+        # caller has turned the wallpaper's choice off for the command as a whole. The pipeline
+        # owns no copy of that setting: the shell states it as --no-smart.
         local smart=true
         ((no_smart)) && smart=false
         local variant_smart="$smart" mode_smart="$smart"
@@ -1400,6 +1477,7 @@ cmd_wallpaper() {
 
     write_wallpaper_state "$file"
 
+    # Only a dynamic scheme follows the wallpaper; a named one stays.
     if [[ -z "${META_NAME:-}" || "${META_NAME}" == "dynamic" ]]; then
         derive_from_wallpaper "$file" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" \
             "${META_VARIANT:-tonalspot}" "$smart" "$smart"

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# The SF fonts were selectable once, so a config written back then still stores a family
+# that resolves to nothing now. Clearing just those values lands those installs on the
+# "Follow system" font option without touching a family the user still has.
 CONFIG_FILE="$HOME/.config/caelestia/shell.json"
 
 if [[ -f "$CONFIG_FILE" ]] && grep -q '"SF Pro"\|"SF Mono"' "$CONFIG_FILE"; then

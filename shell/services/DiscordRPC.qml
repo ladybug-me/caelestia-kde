@@ -51,6 +51,9 @@ Item {
 
     property real shellStartTime: Date.now() / 1000
 
+    /// Rich presence is meant to say what you are doing now, not what you were
+    /// doing before you walked away. Uses the Wayland idle protocol rather than
+    /// a focus-change heuristic, so it also covers sitting and reading.
     readonly property int idleTimeout: GlobalConfig.services.arpcIdleTimeout
 
     property bool userIdle: false
@@ -71,6 +74,7 @@ Item {
         onIsIdleChanged: root.userIdle = isIdle
 
         // Turning the feature off while idle must not strand the presence in
+        // the cleared state.
         onEnabledChanged: if (!enabled)
             root.userIdle = false
     }
@@ -375,4 +379,5 @@ Item {
         if (!DiscordIpc.connected) return;
         DiscordIpc.clearActivity();
     }
+
 }

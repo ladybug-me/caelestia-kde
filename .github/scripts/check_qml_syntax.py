@@ -1,4 +1,29 @@
 #!/usr/bin/env python3
+"""Catch QML syntax errors that would only surface at shell load time.
+
+qmllint can't resolve Quickshell's `qs.*` directory imports, so there is no
+real QML toolchain available in CI for a syntax check. A QML syntax error is
+especially nasty because it cascades: the shell fails to load and the error
+points at whichever file was imported first in the chain, not the file with
+the actual mistake (the 2026-08-30 incident - a top-level inline `component`
+in ColourSelect.qml - surfaced as a chain of "Type X unavailable" errors that
+ended in the real file only by accident).
+
+This script does a lightweight structural parse of every .qml file under
+shell/ that needs no Qt toolchain:
+
+1. Top-level inline `component` declarations. QML only allows inline
+   components inside an object, so `component Foo: Bar {` at brace depth 0 is
+   a syntax error that takes down every file importing this one.
+
+2. Balanced (), [], {} delimiters, correctly skipping // and /* */ comments,
+   "..." and '...' strings, and `...` template literals (including nested
+   ${...} expressions that can themselves hold strings, comments, and nested
+   backticks), so JS inside Process command strings doesn't produce false
+   positives.
+
+Exit code is non-zero when any issue is found.
+"""
 
 from __future__ import annotations
 
@@ -17,6 +42,12 @@ DIVISION_PREV = set(")]}\"'`")
 
 
 def _prev_significant(text: str, i: int) -> tuple[str, str]:
+    """Return (prev_char, prev_word) immediately before text[i], skipping ws.
+
+    prev_char is the last non-whitespace character, or "" at the start. When
+    that character is part of an identifier/number, prev_word is the whole
+    word it belongs to and prev_char is its last character.
+    """
     j = i - 1
     while j >= 0 and text[j] in " \t\r\n":
         j -= 1
@@ -32,8 +63,14 @@ def _prev_significant(text: str, i: int) -> tuple[str, str]:
 
 
 def skip_template(text: str, i: int, line: int) -> tuple[int, int]:
+    """Skip a `...` template literal whose opening backtick is at text[i].
+
+    Handles backslash escapes and ${...} expressions that can themselves hold
+    strings, comments, braces, and nested template literals. Returns the index
+    just past the closing backtick and the updated line number.
+    """
     n = len(text)
-    i += 1
+    i += 1  # opening backtick
     while i < n:
         c = text[i]
         if c == "\\":
@@ -47,10 +84,11 @@ def skip_template(text: str, i: int, line: int) -> tuple[int, int]:
         if c == "\n":
             line += 1
         i += 1
-    return i, line
+    return i, line  # unterminated literal - stop where we are
 
 
 def _skip_template_expr(text: str, i: int, line: int) -> tuple[int, int]:
+    """Skip the body of a ${...} expression, returning past the matching }."""
     n = len(text)
     depth = 1
     while i < n:
@@ -101,6 +139,7 @@ def _skip_template_expr(text: str, i: int, line: int) -> tuple[int, int]:
 
 
 def _is_regex_start(text: str, i: int) -> bool:
+    """Best-effort: is the `/` at text[i] the start of a regex literal?"""
     prev_char, prev_word = _prev_significant(text, i)
     if prev_word:
         return prev_word in REGEX_KEYWORDS
@@ -108,13 +147,14 @@ def _is_regex_start(text: str, i: int) -> bool:
 
 
 def _skip_regex(text: str, i: int, line: int) -> tuple[int, int]:
+    """Skip a JS regex literal starting at text[i] == '/'. Returns (i, line)."""
     n = len(text)
-    i += 1
+    i += 1  # opening '/'
     in_class = False
     while i < n:
         c = text[i]
         if c == "\n":
-            break
+            break  # regex literals can't span lines - misclassified division
         if c == "\\":
             i += 2
             continue
@@ -125,13 +165,14 @@ def _skip_regex(text: str, i: int, line: int) -> tuple[int, int]:
         elif c == "/" and not in_class:
             i += 1
             while i < n and text[i].isalpha():
-                i += 1
+                i += 1  # flags
             return i, line
         i += 1
     return i, line
 
 
 def scan(text: str) -> list[str]:
+    """Return human-readable structural issues found in a QML file's text."""
     issues: list[str] = []
     stack: list[tuple[str, int, bool]] = []
     i = 0

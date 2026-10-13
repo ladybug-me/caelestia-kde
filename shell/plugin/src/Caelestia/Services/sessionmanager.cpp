@@ -16,6 +16,8 @@ namespace caelestia::services {
 
 namespace {
 
+// QString rather than const char* so that the DBus calls below do not need a
+// conversion at every use site (the implicit one is disabled shell wide).
 const QString LOGIN_SERVICE = QStringLiteral("org.freedesktop.login1");
 const QString LOGIN_PATH = QStringLiteral("/org/freedesktop/login1");
 const QString LOGIN_IFACE = QStringLiteral("org.freedesktop.login1.Manager");
@@ -174,7 +176,7 @@ void SessionManager::call(const QString& path, const QString& iface, const QStri
 }
 
 void SessionManager::callManager(const QString& method) {
-    call(LOGIN_PATH, LOGIN_IFACE, method, { true });
+    call(LOGIN_PATH, LOGIN_IFACE, method, { /* interactive = */ true });
 }
 
 void SessionManager::callSession(const QString& method) {

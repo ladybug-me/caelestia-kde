@@ -37,6 +37,7 @@ public:
     Q_INVOKABLE void resetCookies();
 
 signals:
+    /// Emitted for every active download so QML can drive a global progress bar.
     void downloadProgress(int requestId, qint64 bytesReceived, qint64 bytesTotal);
 
 private:

@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import qs.components.controls as Controls
 
+// Asks what to do with files dropped in from another app, like Plasma does.
 Controls.Menu {
     id: root
 

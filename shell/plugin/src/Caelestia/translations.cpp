@@ -28,6 +28,7 @@ QString toLocalPath(const QString& path) {
     return path;
 }
 
+// English is the source language, so it never needs a catalogue.
 bool isSourceLanguage(const QString& code) {
     return code == u"en"_s || code.startsWith(u"en_"_s);
 }

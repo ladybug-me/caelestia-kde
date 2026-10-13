@@ -16,6 +16,7 @@ Searcher {
         Launch.launchEntry(entry);
     }
 
+    /// Every visible desktop entry in AppDb order (favourites, then frequency, then name).
     function allApps(): list<var> {
         const res = [];
         const apps = list;

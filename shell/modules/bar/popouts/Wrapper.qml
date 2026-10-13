@@ -24,12 +24,19 @@ Item {
     readonly property Item current: (content.item as Content)?.current ?? null
     readonly property bool isDetached: detachedMode.length > 0
     readonly property bool sidebarOpen: popoutState.sidebarOpen
+    // Popouts excluded from pushing the notification column / sidebar out of the
+    // way (Panels.qml) and from visually merging with the sidebar (ContentWindow.qml):
+    // hover previews and context menus are transient, so shoving panels around for
+    // them feels jittery. The clock popout is deliberately NOT here — the calendar
+    // is a real panel-sized popout and displaces notifications like audio/network do.
     readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "dockbgcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "clockcontext" || currentName === "statusiconscontext" || currentName === "workspacescontext" || currentName === "traycontext" || currentName === "githubcontext"
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
     property alias dockModel: popoutState.dockModel
     property alias tasksModel: popoutState.tasksModel
     property real currentCenter
+    // Set by ClipWrapper: whether the current bar item sits under the sidebar,
+    // which can be narrower than the bar's right side now that it is resizable.
     property bool underSidebar: true
     property string detachedMode
     readonly property QtObject dummy: QtObject {}
@@ -80,6 +87,8 @@ Item {
     PopoutState {
         id: popoutState
 
+        // Only attach to the sidebar when the popout would open below it anyway;
+        // otherwise it would end up away from the item that opened it.
         sidebarOpen: root.visibilities.sidebar && root.underSidebar
         isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
         onDetachRequested: mode => root.detach(mode)

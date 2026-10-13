@@ -12,11 +12,13 @@ Item {
     required property DrawerVisibilities visibilities
     property var popouts
     property var utilities
+    // Set while a popout pushes the sidebar; its height is already animated.
     property bool followsPopout: false
     readonly property Props props: Props {}
     readonly property bool shouldBeActive: visibilities.sidebar && Config.sidebar.enabled && !visibilities.overview
     property bool keepLoaded: false
     property real offsetScale: shouldBeActive ? 0 : 1
+    // The sidebar sits against the right edge unless the bar is there.
     readonly property bool onRight: Config.bar.position !== "right"
     readonly property int defaultWidth: Tokens.sizes.sidebar.width
     readonly property int minWidth: Math.round(defaultWidth * 0.8)
@@ -39,11 +41,15 @@ Item {
     Behavior on offsetScale {
         Anim {}
     }
+    // Pinning or unpinning switches between the dragged and the default width;
+    // while dragging, the edge follows the cursor directly.
     Behavior on implicitWidth {
         enabled: !resizeHandle.pressed
 
         Anim {}
     }
+    // Animating on top of the popout's own height animation makes the edge lag
+    // behind it, leaving a gap or an overlap while switching popouts.
     Behavior on anchors.bottomMargin {
         enabled: !root.followsPopout
 
@@ -68,6 +74,8 @@ Item {
         }
     }
 
+    // Drag the inner edge of a pinned sidebar to resize it; double-click to go
+    // back to the default width.
     MouseArea {
         id: resizeHandle
 
@@ -102,6 +110,7 @@ Item {
                 return;
             const dx = mapToItem(null, mouse.x, 0).x - pressX;
             let w = CUtils.clamp(pressWidth + (root.onRight ? -dx : dx), root.minWidth, root.maxWidth);
+            // Snap back onto the default width when passing near it.
             if (Math.abs(w - root.defaultWidth) < 12)
                 w = root.defaultWidth;
             w = Math.round(w);

@@ -30,6 +30,7 @@ template <typename Container> ValueCodec* makeListCodec(const QMetaType& type) {
     return elementCodec ? new ListCodec<Container>(type, elementCodec) : nullptr;
 }
 
+// Unions are keyed by their alternatives in order, since order decides which one wins
 QString unionKey(const QList<QMetaType>& types) {
     QStringList ids;
     ids.reserve(types.size());

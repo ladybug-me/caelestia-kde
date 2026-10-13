@@ -1,5 +1,9 @@
 .pragma library
 
+// Grid layout helpers for the desktop icons. Positions are plain objects
+// mapping an item key to its top-left { col, row }; spans optionally map a key
+// to its { w, h } in cells (icons are 1x1). Nothing here touches QML state.
+
 function cellId(col, row) {
     return col + "," + row;
 }
@@ -38,6 +42,7 @@ function rectFree(occ, pos, span) {
     return true;
 }
 
+// Column-major index, the order icons fill the desktop in.
 function orderIndex(pos, rows) {
     return pos.col * rows + pos.row;
 }
@@ -46,6 +51,8 @@ function orderedKeys(positions, rows) {
     return Object.keys(positions).sort((a, b) => orderIndex(positions[a], rows) - orderIndex(positions[b], rows));
 }
 
+// First free place in column-major order. Past a full grid, keeps counting
+// into the columns beyond the right edge rather than stacking items.
 function firstFree(occ, cols, rows, span) {
     const s = span ?? { w: 1, h: 1 };
     const h = Math.min(s.h, rows);
@@ -59,6 +66,7 @@ function firstFree(occ, cols, rows, span) {
     return { col: cols, row: 0 };
 }
 
+// Free place closest to (col, row), ties broken towards the fill order.
 function nearestFree(occ, col, row, cols, rows, span) {
     const s = span ?? { w: 1, h: 1 };
     let best = null;
@@ -91,6 +99,11 @@ function rectsOverlap(a, sa, b, sb) {
     return a.col < b.col + sb.w && b.col < a.col + sa.w && a.row < b.row + sb.h && b.row < a.row + sa.h;
 }
 
+// Moves the keys in `moving` so that `anchor` lands on `target`, keeping their
+// relative placement. The shift is clamped so every moved item stays on the
+// grid. Items overlapping a destination step aside to the free place nearest
+// to where they were. `spans` may give new sizes, which also makes this the
+// resize operation.
 function planMove(positions, moving, anchor, target, cols, rows, spans) {
     const out = copyPositions(positions);
     const from = positions[anchor];
@@ -120,6 +133,7 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
         moved.push(key);
     }
 
+    // Everyone that is not moving keeps their place unless a mover covers it.
     const displaced = [];
     for (const key of orderedKeys(positions, rows)) {
         if (moving.indexOf(key) !== -1)
@@ -140,6 +154,7 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
     return out;
 }
 
+// Packs the keys in column-major order, each into the first place it fits.
 function compact(keys, rows, spans) {
     const out = {};
     const occ = {};
@@ -152,6 +167,8 @@ function compact(keys, rows, spans) {
     return out;
 }
 
+// Auto-arrange drop: pulls the moving keys out of the order and inserts them
+// where `target` is, then packs everything again.
 function planInsert(positions, moving, target, rows, spans) {
     const order = orderedKeys(positions, rows);
     const targetIndex = orderIndex(target, rows);
@@ -179,6 +196,9 @@ function overflowCount(positions, cols, rows, spans) {
     return n;
 }
 
+// Pulls items that fell off a shrunken grid, or overlap, back onto it. When the
+// gaps left between the items that stayed are too scattered for the rest, packs
+// everything again in fill order instead, which keeps more of it on screen.
 function fitIntoGrid(positions, cols, rows, spans) {
     const kept = keepAndPlace(positions, cols, rows, spans);
     const keptOver = overflowCount(kept, cols, rows, spans);
@@ -212,6 +232,8 @@ function keepAndPlace(positions, cols, rows, spans) {
     return out;
 }
 
+// Stable sort for "Sort by". Items are { key, name, kind, type, modified, size };
+// widgets, then folders and groups come first, like Plasma's "folders first".
 function sortItems(items, sortKey) {
     const rank = it => it.kind === "widget" ? 0 : it.kind === "dir" || it.kind === "group" ? 1 : 2;
     const byName = (a, b) => a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" });
@@ -224,6 +246,9 @@ function sortItems(items, sortKey) {
     return items.slice().sort((a, b) => rank(a) - rank(b) || cmp(a, b));
 }
 
+// Where keyboard focus goes from `fromKey` for an arrow key. Measures from
+// the centre of each item, preferring the closest one along the pressed axis
+// and then the one closest to the same line.
 function navigate(positions, fromKey, dir, spans) {
     const from = positions[fromKey];
     if (!from)
@@ -266,6 +291,7 @@ function navigate(positions, fromKey, dir, spans) {
     return best;
 }
 
+// Keys between a and b inclusive in fill order, for Shift selection.
 function rangeBetween(positions, a, b, rows) {
     const order = orderedKeys(positions, rows);
     const ia = order.indexOf(a);
@@ -275,6 +301,7 @@ function rangeBetween(positions, a, b, rows) {
     return order.slice(Math.min(ia, ib), Math.max(ia, ib) + 1);
 }
 
+// Keys whose rectangle intersects the given pixel rectangle.
 function keysInRect(positions, rect, cellWidth, cellHeight, inset, spans) {
     const out = [];
     for (const key in positions) {
@@ -290,6 +317,7 @@ function keysInRect(positions, rect, cellWidth, cellHeight, inset, spans) {
     return out;
 }
 
+// Key covering the cell, if any.
 function occupantAt(positions, col, row, exclude, spans) {
     for (const key in positions) {
         if (exclude && exclude.indexOf(key) !== -1)

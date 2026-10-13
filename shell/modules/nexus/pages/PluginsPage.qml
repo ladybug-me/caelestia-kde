@@ -30,7 +30,7 @@ PageBase {
         }
         return n;
     }
-    property int currentTab: 0
+    property int currentTab: 0 // 0 = Installed, 1 = Store
     property string storeBranch: "main"
 
     function resolveIconUrl(iconString, basePath, isStorePlugin) {
@@ -56,6 +56,7 @@ PageBase {
         return iconString;
     }
 
+    // Version of an installed plugin in the store, "" when the store has no entry for it.
     function storeVersionFor(pluginId) {
         const n = PluginStore.storePlugins.count;
         for (let i = 0; i < n; i++) {
@@ -66,6 +67,7 @@ PageBase {
         return "";
     }
 
+    // True when the store ships a newer version than the installed one.
     function isUpdateAvailableFor(pluginId, installedVersion) {
         const storeVersion = root.storeVersionFor(pluginId);
         if (!storeVersion || !installedVersion)
@@ -497,6 +499,7 @@ PageBase {
 
                     actionComponent: Component {
                         TextButton {
+                            // Installed plugins stay greyed out; only installable ones keep the filled colour
                             text: storeDelegate.isInstalled ? qsTr("Installed") : qsTr("Install")
                             disabled: storeDelegate.isInstalled || PluginStore.installing
                             onClicked: {

@@ -1,4 +1,42 @@
 #!/usr/bin/env python3
+r"""Check for unescaped bash parameter expansion inside QML template literals.
+
+QML (like JavaScript) treats `` `...${...}...` `` as a template literal where
+``${...}`` is evaluated as JavaScript before the string is used. Embedded bash
+scripts therefore must escape a literal ``${`` as ``\${`` — e.g. ``${1#v}``
+must be written ``\${1#v}``.
+
+Leaving it unescaped makes the QML engine parse bash syntax as JavaScript and
+fail with an error like ``Expected token ','``. Because every singleton that
+transitively imports the broken file then reports "Type X unavailable", the
+failure cascades across the whole shell (see shell/services/UpdateChecker.qml,
+which shipped ``${1#v}`` unescaped and broke every singleton on load).
+
+A backtick does the same in one step, and it is easier to do by accident: it is
+the literal's own delimiter, so a stray one in a comment ends the script there.
+That file has since been broken that way too, by a comment naming a command in
+backticks - hence the second check below.
+
+The fix for that broke it a third time, in a comment that explained the rule by
+writing ``${...}``. Its body was ``...``, which is neither valid JavaScript nor
+recognised bash, so the body check below let it through; the engine interpolated
+it anyway and failed the file with ``Expected token 'numeric literal'``. That is
+the reason for the comment rule: a comment is prose, so no interpolation in one
+can be intended, and every unescaped ``${`` on a comment line inside a literal is
+now flagged whatever its body looks like.
+
+This checker scans every backtick template literal in QML files and flags
+unescaped ``${...}`` in comments, unescaped backticks in comments, and unescaped
+``${...}`` in code whose body is clearly bash parameter expansion rather than
+valid JavaScript. Legitimate interpolation (identifiers, member access, calls,
+ternaries) is left alone.
+
+Usage:
+    python3 check_qml_template_interp.py            # all *.qml under repo root
+    python3 check_qml_template_interp.py <paths...> # specific files/dirs
+
+Exit code is 1 if any offending interpolation is found.
+"""
 
 import re
 import sys
@@ -12,17 +50,18 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 
 BASH_INTERP_RE = re.compile(
-    r"#"
-    r"|%"
-    r"|:-|:=|:\?|:\+"
-    r"|:[0-9]"
-    r"|\^"
-    r"|,$"
-    r"|\[[@*]\]"
+    r"#"            # ${#var} length, ${var#pat} / ${var##pat} removal, ${1#v}
+    r"|%"           # ${var%pat} / ${var%%pat} removal
+    r"|:-|:=|:\?|:\+"  # ${var:-def} ${var:=def} ${var:?err} ${var:+alt}
+    r"|:[0-9]"      # ${var:0} / ${var:0:5} substring
+    r"|\^"          # ${var^} / ${var^^} case conversion
+    r"|,$"          # ${var,} / ${var,,} lowercase
+    r"|\[[@*]\]"    # ${arr[@]} / ${arr[*]} array expansion
 )
 
 
 def _unescaped_interpolations(src: str) -> list[tuple[int, str, bool]]:
+    """Return (offset, body, in_comment) for unescaped ${...} in backtick literals."""
     found: list[tuple[int, str, bool]] = []
     in_template = False
     line_start = 0
@@ -62,10 +101,22 @@ def _unescaped_interpolations(src: str) -> list[tuple[int, str, bool]]:
 
 
 def _line_col(src: str, offset: int) -> tuple[int, int]:
+    """Return the 1-based line and column of an offset."""
     return src.count("\n", 0, offset) + 1, offset - src.rfind("\n", 0, offset)
 
 
 def _backticks_in_template_comments(src: str) -> list[int]:
+    """Return offsets of unescaped backticks sitting in a comment inside a literal.
+
+    A backtick ends the literal it is in, so one written in a bash comment in the middle
+    of an embedded script cuts the script short and the rest of the file stops being a
+    string at all. The engine then reports the damage far from the cause - "Expected
+    token ';'" - and every singleton importing the file reports its type unavailable.
+    Prose is where this turns up: a comment naming a command in backticks.
+
+    Only comments are checked. A backtick in the script's own code is command
+    substitution and the author's business; the closing delimiter is on its own line.
+    """
     found: list[int] = []
     in_template = False
     line_start = 0
@@ -91,6 +142,7 @@ def _backticks_in_template_comments(src: str) -> list[int]:
 
 
 def check_file(path: Path) -> list[str]:
+    """Return list of error strings for one QML file."""
     try:
         src = path.read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:

@@ -12,6 +12,7 @@ Controls.Menu {
 
     property var controller: null
 
+    // What the menu acts on: the selected keys, and the open group they sit in.
     property var keys: []
     property string groupId: ""
 

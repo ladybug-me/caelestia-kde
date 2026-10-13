@@ -8,6 +8,7 @@ import qs.components
 import qs.services
 import qs.utils
 
+// One file in ~/Desktop: its metadata, what to show for it and how to open it.
 Scope {
     id: root
 
@@ -23,9 +24,11 @@ Scope {
     readonly property string url: "file://" + path.split("/").map(encodeURIComponent).join("/")
     readonly property bool isDesktopFile: fileName.toLowerCase().endsWith(".desktop")
     readonly property string kind: fileIsDir ? "dir" : "file"
+    // Rough type for "Sort by type": launchers together, then by extension.
     readonly property string typeName: isDesktopFile ? " application" : fileIsDir ? "" : fileSuffix.toLowerCase()
 
     property string desktopName: ""
+    // The Name key the label was read from, e.g. "Name[zh_CN]".
     property string desktopNameKey: "Name"
     property bool desktopNameFound: false
     property string desktopIcon: ""
@@ -71,6 +74,7 @@ Scope {
         return "text-x-generic";
     }
 
+    // Launcher icon name or absolute path, empty for plain files.
     readonly property string appIcon: isDesktopFile ? (desktopEntry?.icon || desktopIcon) : ""
 
     function iconSource(materialYou: bool): string {
@@ -100,12 +104,15 @@ Scope {
     }
 
     function launch(): void {
+        // Run the launcher file itself: its name need not match an installed app id,
+        // and xdg-open would open it in an editor instead.
         if (isDesktopFile)
             Launch.exec(["gio", "launch", path]);
         else
             Launch.exec(["xdg-open", path]);
     }
 
+    // Opens files with this launcher, as when they are dropped onto it.
     function launchWith(paths: var): void {
         if (isDesktopFile)
             Launch.exec(["gio", "launch", path, ...paths]);
@@ -123,6 +130,7 @@ Scope {
         printErrors: false
         onFileChanged: reload()
         onLoaded: {
+            // Prefer Name[lang_COUNTRY], then Name[lang], then Name, as the spec says.
             const locale = Qt.locale().name;
             const nameKeys = [`Name[${locale}]`, `Name[${locale.split("_")[0]}]`, "Name"];
             const values = {};

@@ -52,6 +52,7 @@ bool hasIntelGpu() {
     return false;
 }
 
+// Reading these sysfs nodes never wakes a suspended card; vendor tools do.
 enum class PciPower {
     Active,
     Suspended,
@@ -76,6 +77,7 @@ PciPower pciPowerState(const QString& pciPath) {
         return PciPower::Unknown;
     }
 
+    // Older kernels: d0 is on, anything deeper is asleep.
     QFile power(pciPath + QStringLiteral("/power_state"));
     if (power.open(QIODevice::ReadOnly | QIODevice::Text)) {
         const QString s = QString::fromUtf8(power.readAll()).trimmed().toLower();
@@ -302,6 +304,7 @@ void Gpu::tick() {
         readGenericUsage();
         readGpuTemperature();
     } else if (t == Nvidia) {
+        // nvidia-smi would wake a suspended card; the sysfs check does not (#588, #595).
         if (pciPowerState(m_nvidiaPciPath) == PciPower::Active) {
             startNvidiaUsage();
         } else {
@@ -453,6 +456,7 @@ void Gpu::readGenericUsage() {
         }
     }
 
+    // Cards without a busy-percent node: i915 engines first, clock ratio as fallback (#588).
     for (const QString& card : cards) {
         if (QFile::exists(QStringLiteral("/sys/class/drm/%1/device/gpu_busy_percent").arg(card)))
             continue;

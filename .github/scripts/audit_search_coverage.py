@@ -1,4 +1,25 @@
 #!/usr/bin/env python3
+"""Audit how much of the Nexus settings tree the search index can actually reach.
+
+The search index is built from `shell/modules/nexus/PageDictionary.qml`
+(see `PageRegistry.buildIndex()`), which is hand written. A page, a section or a
+setting that is missing from that table is invisible to search, and nothing else
+in CI notices: the QML still parses, the pages still render, and the setting is
+still reachable by clicking through. That is how searching "font" ended up
+returning only the Appearance page while the font pickers sat unreachable.
+
+Hard gate (exits non-zero):
+  every settings sub-page listed in PageCompRegistry must have a search entry.
+  Sub-pages that only render a device, network or app the user picked before are
+  exempt - a search hit for those would open an empty page.
+
+Reported, not gated:
+  section headers and individual setting rows. Only a minority of them are named
+  by an entry, and giving every one of them an entry is a data change large
+  enough to need its own decision (and a result cap, or a common query returns
+  hundreds of rows). Until then the counts below are printed on every run so the
+  gap stays visible instead of silent.
+"""
 
 from __future__ import annotations
 
@@ -41,6 +62,7 @@ REPORT_LIMIT = 25
 
 
 def normalise(text: str) -> str:
+    """Lowercase and strip punctuation, keeping word boundaries."""
     spaced = "".join(char if char.isalnum() else " " for char in text.lower())
     return re.sub(r"\s+", " ", spaced).strip()
 
@@ -50,6 +72,7 @@ def dictionary_lines() -> list[str]:
 
 
 def search_index() -> list[str]:
+    """Mirror PageRegistry.buildIndex(): the strings a query is matched against."""
     entries: list[str] = []
     page: tuple[str, ...] = ()
     in_settings = False
@@ -90,6 +113,7 @@ def search_index() -> list[str]:
 
 
 def navigation_targets() -> set[tuple[int, int]]:
+    """(pageIdx, subPageIdx) pairs the dictionary can open."""
     targets: set[tuple[int, int]] = set()
     page = -1
     in_settings = False
@@ -114,6 +138,7 @@ def navigation_targets() -> set[tuple[int, int]]:
 
 
 def registry_subpages() -> list[tuple[int, int, str]]:
+    """Every sub-page, as (pageIdx, subPageIdx, component name)."""
     pages: list[list[str]] = []
     for line in (NEXUS / "PageCompRegistry.qml").read_text(encoding="utf-8").splitlines():
         if PAGE.match(line):
@@ -131,6 +156,7 @@ def registry_subpages() -> list[tuple[int, int, str]]:
 
 
 def block_labels(block_type: str) -> list[tuple[str, str]]:
+    """Labels rendered by a given component type, as (label, relative path)."""
     found: list[tuple[str, str]] = []
     for path in sorted((NEXUS / "pages").rglob("*.qml")):
         lines = path.read_text(encoding="utf-8").splitlines()
@@ -165,11 +191,13 @@ def is_subsequence(needle: str, haystack: str) -> bool:
 
 
 def reached(label: str, index: list[str]) -> bool:
+    """fzf matches a query as a subsequence of a candidate string."""
     needle = normalise(label)
     return any(is_subsequence(needle, candidate) for candidate in index)
 
 
 def named(label: str, index: list[str]) -> bool:
+    """An entry actually names this label, rather than matching it by accident."""
     needle = normalise(label)
     return any(needle in candidate for candidate in index)
 

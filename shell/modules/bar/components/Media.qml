@@ -9,6 +9,7 @@ import Caelestia.Services
 import qs.components
 import qs.services
 
+// Compact now-playing entry: truncated title plus the cava visualiser.
 StyledRect {
     id: root
 
@@ -26,6 +27,8 @@ StyledRect {
     readonly property real contentWidth: root.showTitle ? contentLayout.implicitWidth : modeIcon.implicitWidth
     readonly property real contentHeight: root.showTitle ? contentLayout.implicitHeight : modeIcon.implicitHeight
 
+    // Stream-aware volume: MPRIS app volume first, then the matching
+    // PipeWire stream, then the global sink. Driven by mouse scroll.
     readonly property PwNode playerStream: Audio.streams.find(s => {
         const identity = root.player?.identity?.toLowerCase() ?? "";
         const entry = (root.player?.entry ?? "").toString().toLowerCase();
@@ -57,6 +60,7 @@ StyledRect {
     color: Config.bar.media.background ? Colours.tPalette.m3surfaceContainer : Qt.alpha(Colours.tPalette.m3surfaceContainer, 0)
     radius: Tokens.rounding.full
 
+    // A bar entry with auto-hide collapses instead of leaving an empty pill.
     visible: enabled && (!Config.bar.media.autoHide || available)
 
     ServiceRef {

@@ -1,3 +1,4 @@
+
 import QtQuick
 import ".."
 import QtQuick.Layouts
@@ -10,6 +11,7 @@ Item {
     property color activeColor: "#a2adac"
     property color bgColor:     "transparent"
     property bool isCaelestiaMode: false
+
 
     readonly property bool isPlaying:  DinoGameBackend.isPlaying
     readonly property bool isGameOver: DinoGameBackend.isGameOver

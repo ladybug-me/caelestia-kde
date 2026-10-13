@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+# Drive tests/runtime-smoke.sh against a stubbed runtime.
+#
+# The smoke script normally needs Weston, Quickshell and a real install tree.
+# Here the three commands it shells out to are stubbed, so its own logic -
+# argument handling, marker assertions, limit gating, the results document and
+# cleanup - runs for real on a machine without a compositor.
 
 set -uo pipefail
 
@@ -23,6 +29,7 @@ setup_env() {
 cat "$CAELESTIA_STUB_LOG"
 while :; do sleep 1; done'
 
+    # A real AF_UNIX socket, because the script waits for one before starting.
     cat >"$BIN/weston" <<'PY'
 #!/usr/bin/env python3
 import os
@@ -39,6 +46,9 @@ PY
     write_full_log
 }
 
+# A log that satisfies every requirement, derived from the same declaration the
+# smoke script asserts against - so a new marker does not need a matching edit
+# here for the suite to keep testing the script's own logic.
 write_full_log() {
     local minimum marker i
     : >"$DIR/markers.log"
@@ -52,6 +62,7 @@ write_full_log() {
     done <"$MARKS"
 }
 
+# run_smoke <case> <cpu> [script args...]
 run_smoke() {
     local case="$1" cpu="$2"
     shift 2
@@ -89,6 +100,7 @@ PY
 
 test_an_unset_limit_only_reports_the_measurement() {
     setup_env
+    # The committed baseline has no max_idle_cpu_percent, so a high idle reading
     # must not fail the run - it is reported, not gated.
     run_smoke idle-report 42.0 --baseline "$BASELINE"
     assert_status 0 "$LAST_STATUS" "an unset idle CPU limit should not fail the run"
@@ -114,12 +126,16 @@ test_a_missing_marker_fails_the_run_and_keeps_the_report() {
     assert_status 1 "$LAST_STATUS" "a missing readiness marker should fail the run"
     assert_contains "$(cat "$LAST_ERR")" "wallpaper-ready" \
         "the failure should name the missing marker"
+    # A partial run still has to leave a parseable document behind, or the
+    # uploaded diagnostics cannot be read back.
     python3 -c 'import json,sys; json.load(open(sys.argv[1], encoding="utf-8"))' "$LAST_OUT"
     assert_status 0 "$?" "an interrupted run should still emit valid JSON"
 }
 
 test_a_created_window_must_also_be_destroyed() {
     setup_env
+    # Every marker count is satisfied here; only the created/destroyed balance
+    # can catch this.
     printf '[caelestia] nexus=created\n' >>"$DIR/markers.log"
 
     run_smoke unbalanced 0.5 --baseline "$BASELINE"

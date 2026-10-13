@@ -19,6 +19,9 @@ Loader {
     active: opacity > 0
 
     sourceComponent: DrawerConfirmModal {
+        // The props are cleared as soon as the modal is dismissed, but the card keeps
+        // naming the file while it fades out. The entry is named by its path and time
+        // rather than by a position the transfer list can shift.
         property string path
         property real timestamp
 

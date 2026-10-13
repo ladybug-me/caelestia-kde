@@ -105,7 +105,10 @@ if [[ -d "$BUNDLE_DIR/backups" ]]; then
                 SELECTED_BACKUP="${backups[$((_bsel-1))]}"
                 SELECTED_KNSV="$(find "$SELECTED_BACKUP" -maxdepth 1 -type f -name '*.knsv' | head -n 1)"
 
+                # A konsave archive restores the KDE profile but is not a clean
                 # desktop either, so the warning has to run for both kinds of
+                # backup - breaking out early here skipped it whenever a .knsv
+                # happened to be present.
                 if [[ -f "$SELECTED_BACKUP/.config/quickshell/caelestia/shell.qml" ]]; then
                     echo
                     warn "The selected backup contains Caelestia configurations."
@@ -162,6 +165,10 @@ restore_or_remove() {
         backup_path="$backup_dir/$backup_subdir/$name"
     fi
 
+    # A single item the installer owned can be dropped; a whole directory cannot,
+    # because these are shared user configs (fish, kitty, thunar) the user keeps
+    # editing after install - deleting one because no backup exists destroys work
+    # that has nothing to do with Caelestia.
     if [[ -z "$backup_path" && -d "$target" ]]; then
         skip "No backup for $name - left in place (remove $target manually if you want it gone)"
         return 0
@@ -176,6 +183,8 @@ restore_or_remove() {
             warn "Failed to restore $name from backup - $target is now missing"
         fi
     else
+        # No backup and no directory: a file the installer created itself, so
+        # there is nothing of the user's to lose.
         skip "No backup for $name - removed without restore"
     fi
 }

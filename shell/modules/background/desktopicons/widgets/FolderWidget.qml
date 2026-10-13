@@ -12,6 +12,8 @@ import qs.components.filedialog
 import qs.services
 import qs.utils
 
+// A live view of a real folder, like Plasma's Folder View: scroll through it,
+// open files, drag them out, and drop files on it to move them in.
 Item {
     id: root
 
@@ -85,6 +87,7 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             clip: true
+            // Scrolled with the wheel only, so that dragging moves files.
             interactive: false
             cellWidth: width / Math.max(1, Math.floor(width / root.slotWidth))
             cellHeight: root.slotHeight

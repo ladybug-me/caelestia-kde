@@ -9,6 +9,9 @@ on:
       - "crowdin.yml"
       - ".github/workflows/crowdin.yml"
   schedule:
+    # Work done on Crowdin's side -- a translator filling in a language, a
+    # machine translation run -- pushes nothing here, so the schedule is what
+    # turns it into a pull request. Runs every day at 03:00 UTC.
     - cron: '0 3 * * *'
   workflow_dispatch:
     inputs:
@@ -39,7 +42,7 @@ jobs:
     steps:
       - name: Create GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
@@ -47,8 +50,10 @@ jobs:
           permission-pull-requests: write
 
       - name: Checkout Repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
+          # A scheduled run has no branch of its own and would check out the
+          # default branch, uploading sources that are behind dev.
           ref: dev
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
@@ -66,14 +71,19 @@ jobs:
           test -s shell/translations/caelestia_en.ts
 
       - name: Synchronize with Crowdin
-        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689
+        uses: crowdin/github-action@8f01d54f70f1713ee3f09d82c2bbb2daeac28689 # v2
         with:
           upload_sources: ${{ github.event_name == 'push' || github.event_name == 'schedule' || inputs.upload_sources }}
           upload_translations: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.upload_translations) }}
           auto_approve_imported: true
           download_translations: ${{ github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.download_translations) }}
+          # Off on purpose. On, it omits any file that is not fully translated,
+          # which held back every language machine translation left a few
+          # strings short. The languages at 0% come off the project instead, so
           # there is no untranslated catalogue to leak into the picker.
           skip_untranslated_files: false
+          # Without these the action checks out GITHUB_REF itself -- main, on a
+          # scheduled run -- and targets the default branch with the PR.
           skip_ref_checkout: true
           pull_request_base_branch_name: dev
           localization_branch_name: i18n/crowdin
@@ -99,14 +109,14 @@ jobs:
     steps:
       - name: Create GitHub App Token
         id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           client-id: ${{ vars.APP_CLIENT_ID }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           permission-contents: write
 
       - name: Checkout Localization Branch
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: i18n/crowdin
           token: ${{ steps.app-token.outputs.token }}
@@ -138,6 +148,9 @@ jobs:
         run: |
           set -euo pipefail
 
+          # Stage before diffing. A language translated for the first time
+          # produces an untracked .qm, and git diff never reports those, so this
+          # step used to exit early and ship a .ts with no compiled pair.
           git add shell/translations
           if git diff --cached --quiet; then
             echo "Catalogs already match their sources."

@@ -251,6 +251,7 @@ Item {
                                 if (targetUuid)
                                     Kwin.switchToWorkspace(targetUuid, root.screenName);
                             }
+
                         }
                     }
                     drop.accept();

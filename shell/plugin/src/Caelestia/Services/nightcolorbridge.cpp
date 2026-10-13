@@ -48,6 +48,7 @@ bool NightColorBridge::available() const {
 }
 
 void NightColorBridge::toggleAutoMode() {
+    // In KWin 6: Constant = 0, DarkLight = 1
     QString modeStr = m_autoMode ? QStringLiteral("Constant") : QStringLiteral("DarkLight");
 
     QStringList args = { QStringLiteral("--notify"), QStringLiteral("--file"), QStringLiteral("kwinrc"),
@@ -183,7 +184,8 @@ void NightColorBridge::updateState(const QVariantMap& config) {
     }
 
     if (config.contains(QStringLiteral("mode"))) {
-        bool newAuto = (config.value(QStringLiteral("mode")).toUInt() == 1);
+        bool newAuto =
+            (config.value(QStringLiteral("mode")).toUInt() == 1); // 1 = DarkLight (Auto), 0 = Constant (Manual)
         if (newAuto != m_autoMode) {
             m_autoMode = newAuto;
             emit autoModeChanged();

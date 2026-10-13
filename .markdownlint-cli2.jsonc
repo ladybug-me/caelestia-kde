@@ -1,3 +1,6 @@
+// markdownlint-cli2 reads this file as its own options object, so the rule
+// settings have to live under "config" - at the top level they are silently
+// ignored and every default rule (MD013 line length, ...) applies instead.
 {
   "config": {
     "default": true,

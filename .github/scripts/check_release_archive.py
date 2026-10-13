@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Verify that a release archive exactly represents its staged release tree."""
 
 from __future__ import annotations
 

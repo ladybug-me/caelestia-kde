@@ -19,6 +19,8 @@ MaterialShape {
     property bool containsIcon
 
     property bool animated: true
+    // Hidden indicators (an unshown tab, a closed panel) keep their animations
+    // stopped; a running animation keeps its window rendering every frame.
     readonly property bool running: animated && visible
     property int morphAnimRotation: 60
     property real morphScale: 0.14

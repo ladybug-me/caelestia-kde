@@ -232,6 +232,7 @@ StyledRect {
             Layout.fillWidth: true
             spacing: Tokens.spacing.small
 
+            // Scroll over the switcher to flip Record/Capture, like the Quick Toggles card
             WheelHandler {
                 acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
                 onWheel: event => {
@@ -243,6 +244,8 @@ StyledRect {
                 }
             }
 
+            // No isToggle: the checked binding alone drives the colour, so clicking the
+            // already selected mode can't leave it looking deselected
             TextButton {
                 Layout.fillWidth: true
                 text: qsTr("Record")

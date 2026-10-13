@@ -130,6 +130,9 @@ calls_to() {
     awk -v want="$name" '$1 == want { sub(/^[^ ]+ /, ""); print }' "$log"
 }
 
+# Prints a function's body out of a script, so a test can drive the real implementation
+# rather than a copy of it. The body ends at the first closing brace at column zero, which
+# is how the scripts in this repository close their functions.
 extract_function() {
     local file="$1" name="$2"
     awk -v name="$name" '
@@ -139,6 +142,9 @@ extract_function() {
     ' "$file"
 }
 
+# Runs its command with PATH holding only $1, so the command can only reach the
+# stubs that are in there. $2 is the lrelease fallback path the toolchain tests set,
+# and is unused by callers that do not care.
 with_path() {
     local dir="$1" fallback="$2"
     shift 2

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Helper for ensuring matugen is installed across different distributions and migrating
+# legacy cargo installations to distro-managed packages where available.
 if [[ -z "${CAELESTIA_MATUGEN_SOURCED:-}" ]]; then
 CAELESTIA_MATUGEN_SOURCED=1
 

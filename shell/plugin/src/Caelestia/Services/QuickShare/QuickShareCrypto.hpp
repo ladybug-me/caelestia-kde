@@ -23,7 +23,11 @@ public:
     QByteArray generateServerInit();
     QByteArray generateClientFinished();
 
+    /// Wraps plaintext in a DEVICE_TO_DEVICE_MESSAGE SecureMessage, ready to be
+    /// length-prefixed onto the wire. Returns an empty array if OpenSSL fails.
     QByteArray sealDeviceToDevice(int sequenceNumber, const QByteArray& plaintext);
+    /// Unwraps a SecureMessage from the peer. Returns an empty array if the
+    /// signature does not verify or the body cannot be decrypted.
     QByteArray openDeviceToDevice(const QByteArray& secureMessage);
 
     bool isHandshakeComplete() const { return m_handshakeComplete; }

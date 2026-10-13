@@ -20,6 +20,7 @@ namespace {
 
 Q_LOGGING_CATEGORY(logWindowIcon, "caelestia.services.windowicon");
 
+/// RAII for the X display, so every early return still closes it.
 class XDisplay {
 public:
     XDisplay()
@@ -124,6 +125,8 @@ bool matchesClass(Display* dpy, Window win, const QString& wmClass) {
 }
 
 bool matchesTitle(Display* dpy, Window win, const QString& wmClass, const QString& title) {
+    // KWin often reports the title as the "class" for these windows (Minecraft
+    // shows up as "Minecraft* 1.21.11"), so fall back to matching on it.
     const auto actual = windowTitle(dpy, win);
     if (actual.isEmpty()) {
         return false;

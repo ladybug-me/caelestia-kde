@@ -145,6 +145,7 @@ tweak_default_scheme() {
     ok "Default Caelestia color scheme set."
 }
 
+
 tweak_default_shell() {
     local target_shell="${DEFAULT_SHELL:-fish}"
     info "Setting default shell to $target_shell..."

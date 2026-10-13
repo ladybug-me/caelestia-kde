@@ -24,6 +24,8 @@ GridLayout {
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * scaleFactor)
 
     readonly property bool isActive: activeWsId === ws
+    // An inactive, empty workspace keeps its pill only when the user wants the
+    // full strip; otherwise it collapses to nothing.
     readonly property bool shouldShow: Config.bar.workspaces.showUnoccupied || isOccupied || isActive
     property real reveal: shouldShow ? 1 : 0
     readonly property real revealProgress: Math.max(0, Math.min(1, reveal))
@@ -125,6 +127,7 @@ GridLayout {
             readonly property real swipeWeight: {
                 if (!isSwiping || rawSwipeOffset === 0.0) return active ? 1.0 : 0.0;
 
+                // Use swipeStartWsId to prevent KWin desyncs when activeWsId changes before rawSwipeOffset resets
                 const startId = swipeStartWsId !== -1 ? swipeStartWsId : root.activeWsId;
                 const activeIdx = startId - 1;
                 const targetIdx = rawSwipeOffset > 0 ? activeIdx + 1 : activeIdx - 1;

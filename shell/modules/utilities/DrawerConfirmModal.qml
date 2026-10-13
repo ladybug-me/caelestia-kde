@@ -6,13 +6,21 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 
+/// The card a utilities-drawer modal shows when it asks before doing something:
+/// a title, what confirming affects, and Cancel / confirm buttons. Cancelling and
+/// clicking outside both report `dismissed`, so an instance only has to say what
+/// confirming does.
 DrawerModal {
     id: root
 
+    /// The question, e.g. qsTr("Delete recording?").
     required property string title
+    /// What confirming does to what, e.g. qsTr("Recording '%1' will be permanently deleted.").
     required property string message
+    /// The label of the button that confirms.
     required property string confirmText
 
+    /// The user confirmed.
     signal confirmed()
 
     StyledText {

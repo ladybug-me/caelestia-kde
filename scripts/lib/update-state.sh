@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
+# Single contract for the shell update state files.
+#
+# ~/.config/quickshell/caelestia/.current_commit  the revision the running
+#                                                 shell was built from
+# ~/.config/quickshell/caelestia/.update_branch  the tracked update channel
+#                                                 (main or dev only)
+# ~/.config/quickshell/caelestia/.current_version  the version.env of that
+#                                                   revision
+#
+# Writers: record_installed_revision() names what is actually installed and
+# is the only writer of the commit and version files. The branch file has
+# exactly two more writers, both user intent: an explicit branch pick in the
+# Nexus updates page, and the timer's self-heal when the tracked branch
+# disappears from the remote. Readers use the helpers below so the main/dev
+# validation and main default have one implementation.
 
 record_installed_revision() {
     local bundle="$1" config="$2"
@@ -14,6 +29,8 @@ record_installed_revision() {
     mkdir -p -- "$config" || return 1
 
     # A checkout parked on a feature branch must not silently re-point the
+    # update channel (issue #565): only a real channel is a fact worth
+    # recording, anything else leaves the previously tracked branch alone.
     local branch
     branch="$(git -C "$bundle" rev-parse --abbrev-ref HEAD 2>/dev/null)" || branch=""
     case "$branch" in
@@ -38,6 +55,9 @@ record_installed_revision() {
     return 0
 }
 
+# Only main and dev are channels; the callers above and below depend on
+# that, so reject anything else rather than writing a branch no reader
+# will honor.
 update_state_set_branch() {
     local config="$1" branch="$2"
 

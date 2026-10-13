@@ -42,6 +42,8 @@ StyledRect {
         anchors.fill: parent
         anchors.margins: spacious ? Tokens.padding.largeIncreased : Tokens.padding.medium
         anchors.topMargin: spacious ? Tokens.padding.large : Tokens.padding.small
+        // Keep the same right inset as ToggleRow/StepperRow (12px) even when
+        // spacious, so reset icons line up in one column across every row type.
         anchors.rightMargin: Tokens.padding.medium
         spacing: spacious ? Tokens.spacing.medium : Tokens.spacing.small
 

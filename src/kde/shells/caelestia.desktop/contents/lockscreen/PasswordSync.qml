@@ -1,3 +1,4 @@
+
 pragma Singleton
 
 import QtQuick

@@ -7,8 +7,12 @@ import Caelestia
 import Caelestia.Config
 import Caelestia.Services
 
+/// Adapter over the C++ NmQt (NetworkManagerQt/D-Bus) singleton.
+/// Forwards the QML-facing network API to the D-Bus backend and keeps the
+/// AccessPoint/SavedProfile/EthernetDevice object models rebuilt in sync.
 Singleton {
     id: root
+
 
     readonly property bool isConnected: NmQt.isConnected
     property bool wifiEnabled: NmQt.wifiEnabled
@@ -29,6 +33,10 @@ Singleton {
     readonly property var activeVpn: NmQt.activeVpn
     property string vpnPendingConnection: NmQt.vpnPendingConnection
 
+    /// Wi-Fi access point. Exposed as the service itself rather than as three
+    /// copied properties: supported, enabled, the name and whether an enable is
+    /// in flight all change together, and splitting them across an adapter is
+    /// what makes a switch have to guess which of the three is authoritative.
     readonly property HotspotController hotspot: NmQt.hotspot
 
     property list<string> savedConnections: NmQt.savedConnections
@@ -45,6 +53,8 @@ Singleton {
 
     readonly property alias connectionCheckTimer: connectionCheckTimer
     readonly property alias immediateCheckTimer: immediateCheckTimer
+
+
 
     signal connectionSuccessful(string ssid)
     signal connectionFailed(string ssid)
@@ -106,6 +116,7 @@ Singleton {
 
         root.__networks = newList;
     }
+
 
     function connectEthernet(connectionName: string, interfaceName: string, callback: var): void {
         NmQt.connectEthernet(connectionName, interfaceName, callback);
@@ -305,6 +316,8 @@ Singleton {
         rebuildActive();
     }
 
+
+
     Connections {
         function onNetworksChanged(): void {
             rebuildNetworkList();
@@ -410,6 +423,7 @@ Singleton {
             }
         }
     }
+
 
     Component {
         id: apComp

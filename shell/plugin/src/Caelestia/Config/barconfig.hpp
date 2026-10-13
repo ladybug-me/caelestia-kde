@@ -44,6 +44,8 @@ class BarWorkspaces : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, monitorCenter, false)
     CONFIG_PROPERTY(bool, perMonitor, true)
     CONFIG_GLOBAL_PROPERTY(bool, perMonitorWorkspaces, true)
+    // Was a boolean called `useIcon`; upstream's name and shape are kept so a
+    // shell.json written for either shell means the same thing here.
     CONFIG_ENUM_PROPERTY(BarWorkspaceDisplay, displayType, BarWorkspaceDisplay::Shapes)
     CONFIG_PROPERTY(bool, useIcon, true)
     CONFIG_PROPERTY(QString, label, u" "_s)
@@ -240,6 +242,9 @@ class BarConfig : public settings::ObjectNode {
     CONFIG_SUBOBJECT(BarGreeter, greeter)
     CONFIG_SUBOBJECT(BarTray, tray)
     CONFIG_SUBOBJECT(BarStatus, status)
+    // The status area as an ordered list: which icons are there and in what order,
+    // which is upstream's shape for it and what the settings editor reads. An `id`
+    // names one of the icons the bar knows how to draw; `enabled` is its switch.
     CONFIG_LIST(EntryList, statusIcons,
         DEFAULT_ARG({
             LIST_ENTRY(lockStatus, true),

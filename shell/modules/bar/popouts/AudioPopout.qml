@@ -14,6 +14,8 @@ Item {
 
     required property PopoutState popouts
 
+    // Fixed width: device names are arbitrarily long and would otherwise stretch the
+    // popout across the screen. The labels elide instead (see StyledRadioButton).
     implicitWidth: Tokens.sizes.bar.audioWidth
     implicitHeight: layout.implicitHeight + Tokens.padding.medium * 2
 

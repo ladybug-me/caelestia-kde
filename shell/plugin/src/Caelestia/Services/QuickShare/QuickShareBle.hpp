@@ -12,6 +12,8 @@
 
 namespace caelestia::services {
 
+/// The org.bluez.LEAdvertisement1 object BlueZ asks the shell to expose while it
+/// advertises a Quick Share wakeup beacon.
 class QuickShareBleAdvertisementAdaptor : public QDBusAbstractAdaptor {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.bluez.LEAdvertisement1")

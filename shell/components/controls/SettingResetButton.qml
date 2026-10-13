@@ -50,6 +50,8 @@ IconButton {
             root.latched = true;
     }
 
+    // Always occupy its slot at the right edge so rows never shift when it
+    // appears; dimmed and inert until the value differs from the default.
     visible: root.active
     disabled: !(root.dirty || root.latched)
     icon: "restart_alt"

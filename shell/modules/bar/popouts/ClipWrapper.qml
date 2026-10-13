@@ -19,6 +19,7 @@ Item {
     readonly property alias content: content
     readonly property bool isHorizontal: bar.isHorizontal
     property real offsetScale: content.isDetached || content.hasCurrent ? 0 : 1
+    // Where x is heading; x itself animates towards it.
     readonly property real targetX: {
         if (content.isDetached)
             return (parent.width - content.nonAnimWidth) / 2;
@@ -26,6 +27,8 @@ Item {
             if (content.sidebarOpen && !content.isDockPopout)
                 return parent.width - content.nonAnimWidth;
 
+            // An item left of the open sidebar gets its popout kept clear of it, so
+            // the sidebar doesn't have to be pushed out of the way.
             const right = root.visibilities.sidebar && !content.underSidebar ? parent.width - Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) - Tokens.spacing.extraLarge : parent.width;
             const off = content.currentCenter - parent.leftMargin - content.nonAnimWidth / 2;
             const diff = right - Math.floor(off + content.nonAnimWidth);

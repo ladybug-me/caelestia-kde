@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Validate JSON configuration files for schema and internal consistency.
+
+Validates:
+  1. installer/data/theme.json - required top-level keys, color references are valid,
+     ANSI codes match expected pattern.
+  2. installer/data/menu.json - valid menu tree, unique IDs, all action IDs are recognized,
+     select options are non-empty, text defaults are strings.
+"""
 
 import json
 import re

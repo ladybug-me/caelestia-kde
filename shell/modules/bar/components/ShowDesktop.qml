@@ -24,6 +24,9 @@ Item {
         Accessible.role: Accessible.Button
         Accessible.description: qsTr("Minimize all windows to show the desktop")
         acceptedButtons: Qt.LeftButton | Qt.RightButton
+        // KWin's showDesktop() takes the state to end up in; the kglobalaccel
+        // shortcut this used to shell out to is a toggle whose result cannot be
+        // read back, so a second click could leave the desktop showing.
         onClicked: mouse => {
             if (mouse.button === Qt.RightButton) {
                 WindowFactory.create(null, {

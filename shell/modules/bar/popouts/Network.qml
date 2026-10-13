@@ -42,6 +42,8 @@ ColumnLayout {
     property real fontScale: 1.0
 
     spacing: Tokens.spacing.medium * scaleOffset
+    // With the sidebar open, match its width so the popout joins it (like the
+    // narrower popouts do) instead of sticking out past it.
     width: _isSidebarOpen ? Math.max(300 * scaleOffset, (Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) * scaleOffset) - Tokens.padding.extraLargeIncreased) : 400 * scaleOffset
 
     RowLayout {
@@ -200,6 +202,7 @@ ColumnLayout {
                             root.showPasswordDialog = true;
                             root.popouts.currentName = "wirelesspassword";
                         });
+
                     }
                 }
             }

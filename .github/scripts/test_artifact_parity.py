@@ -53,6 +53,7 @@ class ArtifactParityTests(unittest.TestCase):
         self.assertIn("hash mismatch: etc/xdg/quickshell/caelestia/shell.qml", failures[0])
 
     def test_compiled_artifacts_are_compared_by_presence_only(self) -> None:
+        """Two build trees differ in every .so; that is not packaging drift."""
         library = "usr/lib/qt6/qml/Caelestia/lib/libcaelestia-core.so"
         self.write_both(library, "build-source")
         (self.right / library).write_text("build-package", encoding="utf-8")
@@ -68,6 +69,8 @@ class ArtifactParityTests(unittest.TestCase):
         )
 
     def test_cli_allows_the_package_only_paths_the_contract_declares(self) -> None:
+        """Every declared prefix has to cover real package content, and passing
+        the contract explicitly has to mean the same thing as defaulting to it."""
         self.write_both("usr/share/caelestia/shell.qml", "qml")
         for prefix in PACKAGE_ONLY_PREFIXES:
             self.write_right_only(f"{prefix}/content", "package only")

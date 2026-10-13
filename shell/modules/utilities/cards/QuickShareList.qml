@@ -83,6 +83,9 @@ StyledRect {
             }
         }
 
+        // The request the prompt could not finish. Dismissing the prompt leaves no
+        // other Accept / Decline, so the card carries them until the request is
+        // answered — including the PIN, which the sender's side needs.
         RowLayout {
             Layout.fillWidth: true
             visible: QuickShare.pendingIncoming

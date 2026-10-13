@@ -1,3 +1,15 @@
+"""Check that C++ sources match the repository's .clang-format.
+
+Only the files a pull request touches are checked. The vendored plugin has a large
+backlog of files that predate the formatter, and rewriting them wholesale would bury
+real differences for tools/sync-shell.py, so the rule is: touch a file, format it.
+
+Usage:
+    python3 .github/scripts/check_cpp_format.py            # changed files vs the base branch
+    python3 .github/scripts/check_cpp_format.py FILE...    # explicit files
+    python3 .github/scripts/check_cpp_format.py --all      # every C++ source in the tree
+"""
+
 import os
 import re
 import shutil
@@ -8,6 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CPP_TREES = ("shell/plugin", "shell/extras")
 CPP_SUFFIXES = (".cpp", ".hpp", ".h", ".cc")
+# WrapNamespaceBodyWithEmptyLines (shell/.clang-format) needs clang-format 20 or newer.
 MIN_MAJOR = 20
 PINNED = "22.1.8"
 
@@ -25,6 +38,11 @@ def version_of(exe: str) -> tuple[int, int, int] | None:
 
 
 def changed_files() -> list[str]:
+    """Files this change touches.
+
+    Pull requests diff against the base branch; a push diffs against the previous
+    commit. Both are two-dot diffs, so a shallow checkout is enough.
+    """
     base_ref = os.environ.get("GITHUB_BASE_REF")
     if base_ref:
         target = f"origin/{base_ref}"
@@ -76,6 +94,7 @@ def main() -> int:
     else:
         files = [f for f in changed_files() if is_cpp(f)]
 
+    # A deleted file has nothing to format.
     files = [f for f in files if (ROOT / f).exists()]
 
     if not files:

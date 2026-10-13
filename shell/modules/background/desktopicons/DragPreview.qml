@@ -3,6 +3,9 @@ import Caelestia.Config
 import qs.components
 import qs.services
 
+// Rendered off screen and grabbed into the image that follows the pointer
+// during a drag: the pressed icon and its label, with a badge when several
+// files go along.
 Item {
     id: root
 

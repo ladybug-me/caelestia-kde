@@ -8,6 +8,7 @@ import pwd
 
 
 def find_logo(logo_id: str) -> str:
+    """Search standard icon directories for the distro SVG logo."""
     candidates = [
         f"/usr/share/icons/{logo_id}.svg",
         f"/usr/share/pixmaps/{logo_id}.svg",
@@ -22,6 +23,12 @@ def find_logo(logo_id: str) -> str:
 
 
 def read_os_release() -> dict:
+    """Parse /etc/os-release into a dict, stripping surrounding quotes.
+
+    Read as UTF-8 with replacement: the file is display text, and this runs inside the
+    lock screen's data source, where a UnicodeDecodeError would blank the rows instead of
+    showing a name - with no way for the user to see why.
+    """
     result = {}
     try:
         with open("/etc/os-release", encoding="utf-8", errors="replace") as f:

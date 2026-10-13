@@ -16,8 +16,8 @@ jobs:
       models: read
       contents: read
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: github/ai-moderator@81159c370785e295c97461ade67d7c33576e9319
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: github/ai-moderator@81159c370785e295c97461ade67d7c33576e9319 # v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           spam-label: 'spam'

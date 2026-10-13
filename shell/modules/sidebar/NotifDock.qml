@@ -135,6 +135,7 @@ Item {
         }
     }
 
+
     StyledRect {
         id: toggleRect
 

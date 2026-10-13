@@ -54,6 +54,7 @@ Variants {
                 if (button === Qt.RightButton && onEmptyDesktop) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.MiddleButton && onEmptyDesktop) {
+                    // Middle click on empty desktop shows or hides the icons.
                     ContextMenuStore.toggleIcons(win.modelData.name);
                 } else if (button === Qt.LeftButton) {
                     if (true) {

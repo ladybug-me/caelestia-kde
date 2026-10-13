@@ -29,6 +29,7 @@ def compare_trees(
     right: Path,
     allowed_right_only_prefixes: set[str] | None = None,
 ) -> list[str]:
+    """Return parity failures, allowing the packaging contract's extra paths."""
     allowed_prefixes = (
         allowed_right_only_prefixes
         if allowed_right_only_prefixes is not None

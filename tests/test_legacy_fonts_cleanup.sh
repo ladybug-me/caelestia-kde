@@ -8,6 +8,11 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_SHELL="$REPO_ROOT/scripts/08-build-shell.sh"
 INSTALL_KIND="$REPO_ROOT/scripts/lib/install-kind.sh"
 
+# The cleanup only ever touches directories under the user's own HOME: the shell tree an
+# older install wrote and the asset directory 12-fetch-assets.sh downloaded into. The test
+# drives the real function against a throwaway HOME, and lets the step's own
+# install_shell_config() resolve the tree path, so what is checked is the path an install
+# resolves at run time.
 CLEANUP_SOURCE="$(extract_function "$BUILD_SHELL" cleanup_legacy_fonts)"
 
 if [[ -z "$CLEANUP_SOURCE" ]]; then
@@ -16,6 +21,7 @@ if [[ -z "$CLEANUP_SOURCE" ]]; then
     exit 1
 fi
 
+# The step scripts log through lib/log.sh, which this harness does not source.
 LOG_STUBS='
 ok() { :; }
 info() { :; }
@@ -38,6 +44,9 @@ data_fonts() {
     printf '%s\n' "$1/.local/share/caelestia/assets/fonts"
 }
 
+# What the two mechanisms could have left behind: the three font directories they copied and
+# the tree's own README, with one folder of the user's own beside them and the emoji
+# database the same parent directory holds.
 seed_legacy_fonts() {
     local home="$1" fonts
     for fonts in "$(tree_fonts "$home")" "$(data_fonts "$home")"; do

@@ -21,6 +21,8 @@ Item {
 
     property bool dashboardOpen: true
 
+    // Managed media library: uploads are copied under notes/audio|images
+    // so notes survive the original files being moved or deleted.
     readonly property string notesMediaDir: Paths.state + "/notes"
 
     function newNote(type: string): void {
@@ -435,6 +437,7 @@ Item {
                     type: StyledTextField.Filled
                     radius: Tokens.rounding.large
                     text: root.selectedNote ? root.selectedNote.title : ""
+                    // The floating "Title" label only shows while the field is empty.
                     placeholderText: text.length === 0 ? qsTr("Title") : ""
                     font: Tokens.font.body.builders.large.size(22).weight(Font.DemiBold).build()
                     horizontalPadding: Tokens.padding.medium
@@ -492,6 +495,7 @@ Item {
                     }
                 }
 
+                // List editor
                 Flickable {
                     id: listFlick
 
@@ -594,6 +598,7 @@ Item {
                     }
                 }
 
+                // Audio editor
                 ColumnLayout {
                     id: audioCol
 
@@ -672,6 +677,7 @@ Item {
                     }
                 }
 
+                // Image editor
                 Flickable {
                     id: imageFlick
 

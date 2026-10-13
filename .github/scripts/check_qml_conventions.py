@@ -1,4 +1,18 @@
 #!/usr/bin/env python3
+"""Regression gate for the project's QML convention linter.
+
+`shell/scripts/qml-lint-conventions.py` reports thousands of pre-existing
+convention violations, so running it as a plain gate in CI would block every
+PR. Instead we compare the current violation set against a stored baseline and
+fail only when NEW violations appear (same file + rule + message), which is
+robust to line-number shifts.
+
+Baseline location: .github/ci-baselines/qml-conventions.txt
+
+Usage:
+    python3 check_qml_conventions.py             # check against baseline
+    python3 check_qml_conventions.py --update    # regenerate the baseline
+"""
 
 import re
 import subprocess
@@ -21,12 +35,14 @@ DIGITS_RE = re.compile(r"\d+")
 
 
 def normalize_key(rule: str, path: str, message: str) -> str:
+    """Normalize a violation into a stable key (digits replaced, path slashes unified)."""
     path = path.replace("\\", "/")
     msg = DIGITS_RE.sub("N", message.strip())
     return f"{rule}\t{path}\t{msg}"
 
 
 def run_linter() -> tuple[int, list[str]]:
+    """Run the linter, returning (exit_code, normalized_violation_keys)."""
     result = subprocess.run(
         [sys.executable, str(LINTER)],
         capture_output=True,
@@ -65,6 +81,10 @@ def main() -> int:
     print(f"{BOLD}=== QML conventions regression check ==={RESET}")
     print(f"Linter reported {len(current)} violations (baseline: {len(baseline)})")
 
+    # A non-zero exit with nothing parsed means the linter itself failed - missing,
+    # moved, or unable to read a file - and an empty result is not "clean". Ignoring
+    # this turned the gate into a permanent pass, and --update would write the empty
+    # set over the baseline, losing every recorded violation.
     if linter_code != 0 and not current:
         print(f"{RED}The conventions linter failed (exit {linter_code}) and reported nothing:{RESET}")
         print(f"  {LINTER}")

@@ -68,12 +68,14 @@ private:
     QVariantMap windowToVariant(PlasmaWindowHandle* w) const;
     QString getOutputNameForGeometry(int x, int y, int w, int h) const;
     void onStateChanged(PlasmaWindowHandle* handle);
+    // Rebuilds m_windowIndex from the current m_windowList. Call after any
+    // operation that inserts, removes, or reorders entries.
     void rebuildIndex();
 
     QVariantMap m_activeWindow;
     QVariantList m_windowList;
     QHash<QString, QVariantMap> m_windowCache;
-    QHash<QString, int> m_windowIndex;
+    QHash<QString, int> m_windowIndex; // uuid → index in m_windowList, O(1) lookup
     QString m_activeOutputName;
     QString m_pendingFocusAddress;
     QString m_highlightedAddress;

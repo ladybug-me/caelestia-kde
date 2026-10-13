@@ -52,6 +52,7 @@ private:
     [[nodiscard]] QList<QVariantMap> defaultValue() const;
     [[nodiscard]] bool isNested() const;
 
+    // Returns true if the mutation should be skipped, overlays cannot mutate global lists
     [[nodiscard]] bool rejectGlobalMutation() const;
 
     [[nodiscard]] bool validIndex(qsizetype index) const;

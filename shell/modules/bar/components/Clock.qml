@@ -25,6 +25,9 @@ StyledRect {
     readonly property int padding: Config.bar.clock.background ? Tokens.padding.medium : Tokens.padding.extraSmall
     readonly property var font: Tokens.font.body.builders.small.size(root.textSize).scale(1.1)
 
+    // All three digit pairs share one font: the widest pair sets the scale so the
+    // clock does not jitter as the digits change. Seconds are excluded from the
+    // width comparison because they change too often to re-measure from.
     function fontFor(text: string, metricWidth: int): font {
         const scale = text === "11" ? 1.15 : Math.min(1.05, Math.max(hourMetrics.width, minMetrics.width) / metricWidth);
         return root.font.width(scale * 100).letterSpacing(scale).build();

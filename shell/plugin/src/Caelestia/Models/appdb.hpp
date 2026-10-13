@@ -12,9 +12,10 @@
 
 namespace caelestia::models {
 
+// Sort key: favourites, descending frequency, ascending name.
 struct AppRankKey {
-    int notFav;
-    int negFreq;
+    int notFav;  // 0 = fav, 1 = regular
+    int negFreq; // Negative frequency for descending order
     QString name;
 
     bool operator<(const AppRankKey& o) const {

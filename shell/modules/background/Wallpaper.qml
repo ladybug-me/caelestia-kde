@@ -158,6 +158,7 @@ Item {
 
         property string imagePath: ""
         property string videoPath: ""
+        // Follows what this layer holds, not root.source: the hidden layer keeps
         // its old content and must not start decoding a new video as well.
         readonly property bool isVideoImage: videoPath !== ""
         property var screen: null

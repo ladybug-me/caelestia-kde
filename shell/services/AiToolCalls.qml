@@ -7,13 +7,23 @@ import qs.utils
 Singleton {
     id: root
 
+    // The tool-call text protocol. These tags travel through both the prompt
+    // and the parsers, so they live in exactly one place. The concatenation
+    // is deliberate: an over-eager formatter once stripped the literal tags
+    // out of the assistant, and empty tags here would make every scan spin
+    // forever on each streamed chunk.
     readonly property string toolCallStart: "<" + "tool_call" + ">"
     readonly property string toolCallEnd: "</" + "tool_call" + ">"
 
+    // Bookkeeping for one tool batch: how many dispatched tools are still
+    // outstanding and what has come back so far. The assistant resets this
+    // before dispatching and receives the batch via onAllToolsFinished.
     property int runningToolsCount: 0
     property string accumulatedToolResults: ""
     property string accumulatedToolImage: ""
 
+    // Assigned by the assistant: function(results, imageB64OrNull).
+    // Fired once every dispatched tool has reported back.
     property var onAllToolsFinished: null
 
     function reset() {

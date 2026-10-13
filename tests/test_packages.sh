@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# The package layer: which distro this is, what is installed, and installing what is
+# not. Every distro answer here comes from a fixture or a stub - a test that asserts
+# what the machine it runs on happens to be is a test that fails somewhere else.
 
 set -uo pipefail
 
@@ -6,6 +9,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/log.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/packages.sh"
 
+# detect_base_distro reads an os-release and then, only if that says nothing, whichever
+# package manager exists. distro_for supplies the first from a fixture and removes the
+# second from PATH (grep stays, because the ID_LIKE branch needs it), so the answer can
+# only have come from the fixture.
 distro_for() {
     local id="$1" id_like="${2:-}" tmp
     tmp="$(new_tmpdir)"
@@ -21,9 +28,13 @@ distro_for() {
     )
 }
 
+# Runs its command with a stub PATH, a named distro, and a scratch failure cache, so
+# nothing outside the temp dir is read or written.
 with_package_env() {
     local dir="$1" distro="$2"
     shift 2
+    # Recording a failure shells out to mkdir, so the restricted PATH carries the real
+    # one. No host package manager is on it, so only a stub can answer.
     mkdir -p "$dir/real-bin"
     cp "$(command -v mkdir)" "$dir/real-bin/"
     (
@@ -67,6 +78,8 @@ test_detect_base_distro_prefers_the_environment_override() {
 test_package_present_asks_the_distros_own_manager() {
     local tmp
     tmp="$(new_tmpdir)"
+    # rpm says yes and dpkg says no: on a debian base the dpkg answer is the one that
+    # counts, whatever else happens to be installed on the machine.
     recording_stub "$tmp/bin" rpm "$tmp/rpm.log"
     recording_stub "$tmp/bin" dpkg "$tmp/dpkg.log" 1
 
@@ -126,6 +139,8 @@ test_install_if_missing_falls_through_to_the_next_candidate() {
     local tmp log status
     tmp="$(new_tmpdir)"
     log="$tmp/calls.log"
+    # -Qq is the "is it installed" probe, which answers no for both candidates. The
+    # install only works for the second one, so the first has to fall through.
     stub_bin "$tmp/bin" pacman 'case "$1" in
 -Qq) exit 1 ;;
 -S) [[ "$3" == "yes" ]] && exit 0 || exit 1 ;;
@@ -161,6 +176,7 @@ test_install_if_missing_records_the_whole_failed_chain() {
 test_package_install_never_passes_an_empty_flag() {
     local tmp out
     tmp="$(new_tmpdir)"
+    # One argument per line, bracketed: an empty CONFIRM_ARG would show up as [].
     stub_bin "$tmp/bin" yay 'for a in "$@"; do printf "[%s]\n" "$a"; done'
     stub_bin "$tmp/bin" caelestia_sudo 'exit 0'
 

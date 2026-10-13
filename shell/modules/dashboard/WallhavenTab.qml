@@ -23,6 +23,8 @@ Item {
     property real downloadProgressValue: 0
     property string downloadingWallpaperId: ""
     property string downloadState: "idle"
+    // Set to false when embedded in a full page (e.g. Nexus) where the
+    // drawer-style frame would look like a stray gray border.
     property bool showFrame: true
     property string downloadMessage: ""
     property var selectedWallpaper: null

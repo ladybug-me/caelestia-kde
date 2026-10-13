@@ -8,6 +8,8 @@ import qs.components.controls
 import qs.components.effects
 import qs.services
 
+// "Arrange Icons" panel opened from the desktop menu: one-off sorting, the
+// auto-arrange switch and the icon size.
 Item {
     id: root
 
@@ -93,6 +95,7 @@ Item {
                             required property var modelData
 
                             type: TextButton.Tonal
+                            // Shown as chosen only while it keeps applying, under auto-arrange.
                             internalChecked: DesktopLayout.autoArrange && DesktopLayout.sortKey === modelData.key
                             text: modelData.label
                             onClicked: root.controller?.sortBy(modelData.key)

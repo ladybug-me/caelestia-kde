@@ -15,6 +15,8 @@ ColumnLayout {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
+    // PowerProfiles.degradationReason is an enum; printing it directly showed the
+    // enum member name ("HighTemperature") rather than something a user reads.
     function perfDegradationToString(p: int): string {
         switch (p) {
         case PerformanceDegradationReason.HighTemperature:

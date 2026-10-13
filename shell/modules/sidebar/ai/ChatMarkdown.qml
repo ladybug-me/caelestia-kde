@@ -7,6 +7,9 @@ import qs.components
 import qs.components.controls
 import qs.services
 
+// Markdown text for chat bubbles. Fenced code blocks are pulled out and shown
+// as their own wrapping blocks: Qt's Markdown importer keeps code lines
+// unbreakable, so long commands would otherwise run past the bubble.
 Column {
     id: root
 
@@ -14,6 +17,7 @@ Column {
     property color color: Colours.palette.m3onSurface
     property font font: Tokens.font.body.small
     property real maxWidth
+    // Appends a blinking cursor to the last segment while a reply streams in.
     property bool showCursor
     property bool cursorVisible: true
 
@@ -38,6 +42,8 @@ Column {
         for (const line of src.split("\n")) {
             if (!fence) {
                 const m = line.match(/^ {0,3}(`{3,}|~{3,})\s*(.*)$/);
+                // A backtick fence's info string can't contain backticks, so
+                // ```foo``` on one line is inline code, not a block.
                 if (m && !(m[1][0] === "`" && m[2].includes("`"))) {
                     flush(false);
                     fence = new RegExp(`^\\s*${m[1][0] === "`" ? "`" : "~"}{${m[1].length},}\\s*$`);
@@ -52,6 +58,7 @@ Column {
             }
             buf.push(line);
         }
+        // An unterminated fence (still streaming) is shown as code too.
         flush(fence !== null);
         return out;
     }
@@ -66,6 +73,8 @@ Column {
     }
 
     Repeater {
+        // Bound to the count rather than the array so delegates survive while
+        // the text streams in; each one reads its segment by index.
         model: root.segments.length
 
         Item {

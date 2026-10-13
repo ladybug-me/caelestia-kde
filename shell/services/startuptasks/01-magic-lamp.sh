@@ -6,4 +6,5 @@ qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect "squash" 2>/dev/n
 qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.loadEffect "magiclamp" 2>/dev/null || true
 
 echo "StartupTasks: Initialized Magic Lamp default"
+# Return 1 to indicate KWin reconfigure is needed
 exit 1

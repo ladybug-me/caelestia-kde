@@ -22,8 +22,13 @@ Item {
 
     readonly property real arcCoverGap: Tokens.spacing.extraSmall
 
+    // Lets embedders (e.g. the bar popout) show extra controls in the
+    // built-in row. Defaults to false, so the dashboard renders exactly
+    // as before.
     property bool extraButtons: false
 
+    // Lets embedders hide the gif block to compact the player.
+    // Defaults to true, so the dashboard renders exactly as before.
     property bool showGif: true
 
     anchors.top: parent.top

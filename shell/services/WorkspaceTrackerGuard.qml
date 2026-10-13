@@ -6,11 +6,16 @@ import Quickshell.Io
 import Caelestia
 import qs.services
 
+// The workspace-tracker effect is compiled against KWin's internals, so a KDE
+// update can leave the installed binary unloadable and the shell silently
+// without per-output desktops. The check reports that once per session.
 Singleton {
     id: root
 
     readonly property string checkScript: Quickshell.shellPath("scripts/check-workspace-tracker.sh")
 
+    // KWin loads its effects long before the shell starts, so the delay only
+    // covers a login that brings both up at once.
     Timer {
         interval: 5000
         running: true

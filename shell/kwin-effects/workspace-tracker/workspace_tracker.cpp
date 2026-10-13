@@ -41,6 +41,8 @@ WorkspaceTrackerEffect::WorkspaceTrackerEffect()
 
     connectSocket();
 
+    // Registered on the service KWin already owns; any session client may call
+    // it, and nothing extra has to be granted.
     if (!QDBusConnection::sessionBus().registerObject(
             QStringLiteral("/Caelestia/Workspaces"), this, QDBusConnection::ExportAllSlots)) {
         qWarning() << "WorkspaceTracker: could not register /Caelestia/Workspaces:"
@@ -171,6 +173,7 @@ void WorkspaceTrackerEffect::onDesktopChanged(
         sendPayload(newDesktop->x11DesktopNumber(), 0.0f, 0.0f, output);
     }
 }
+
 }
 
 KWIN_EFFECT_FACTORY(caelestia::WorkspaceTrackerEffect, "kwin_workspace_tracker.json")

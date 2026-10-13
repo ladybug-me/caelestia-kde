@@ -33,6 +33,9 @@ Singleton {
 
     readonly property string libdir: Quickshell.env("CAELESTIA_LIB_DIR") || "/usr/lib/caelestia"
 
+    // Where the caelestia commands are installed: /usr/bin when a package owns
+    // them, ~/.local/bin for a source install. Both autostart scripts export
+    // CAELESTIA_BIN_DIR, and the fallback covers a shell started by hand.
     readonly property string binDir: Quickshell.env("CAELESTIA_BIN_DIR") || `${home}/.local/bin`
 
     function bin(name: string): string {

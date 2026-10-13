@@ -16,6 +16,9 @@ Searcher {
     }
 
     function previewVariant(variant: string): void {
+        // The scheme command derives the preview from whatever is in effect: the
+        // wallpaper for a dynamic scheme, the shipped colors otherwise. It prints
+        // the palette instead of applying it, which is what a preview is.
         getPreviewColoursProc.command = ["caelestia", "scheme", "set", "--preview", "-v", variant, ...Colours.smartArg];
         getPreviewColoursProc.running = true;
     }

@@ -9,6 +9,8 @@ SCRIPT="$REPO_ROOT/scripts/04a-window-rules.sh"
 UNINSTALL_SCRIPT="$REPO_ROOT/uninstall.sh"
 BASH_BIN="$(command -v bash || printf '/bin/bash')"
 
+# The stubs that stand in for the two config tools are Python, so this file skips
+# rather than fails where python3 is absent. Only bash is required to run the suite.
 have_python() {
     if command -v python3 >/dev/null 2>&1; then
         return 0
@@ -19,6 +21,8 @@ have_python() {
 
 RULES_FILE="kwinrulesrc"
 RULE_GROUPS=(caelestia-opacity caelestia-dialogs caelestia-pip)
+# The index a fresh file has to end up with: our three groups, in the order the
+# script writes them, and no other name.
 FRESH_INDEX="caelestia-opacity,caelestia-dialogs,caelestia-pip"
 
 SANDBOX=""
@@ -29,12 +33,16 @@ FAKE=""
 OUTPUT=""
 STATUS=0
 
+# The two config tools share one plain ini file: kwriteconfig6 rewrites it and
+# kreadconfig6 answers from it, so the script's "is this value already in place"
+# comparison is exercised for real instead of being answered from a fixture.
 write_fake_config_tools() {
     cat > "$FAKE" <<'PY'
 """Minimal kwinrulesrc reader and writer, standing in for the two config tools."""
 
 import sys
 from pathlib import Path
+
 
 def arguments(argv):
     values = {"file": "kwinrulesrc", "group": "", "key": ""}
@@ -49,6 +57,7 @@ def arguments(argv):
             positional.append(argument)
             index += 1
     return values, positional
+
 
 def read(path):
     sections = {}
@@ -67,6 +76,7 @@ def read(path):
             sections[current][key.strip()] = value.strip()
     return sections
 
+
 def write(path, sections):
     lines = []
     for name, entries in sections.items():
@@ -78,6 +88,7 @@ def write(path, sections):
             lines.append("%s=%s" % (key, value))
         lines.append("")
     path.write_text("\n".join(lines))
+
 
 def main():
     mode = sys.argv[1]
@@ -105,6 +116,7 @@ def main():
     write(path, sections)
     return 0
 
+
 sys.exit(main())
 PY
 }
@@ -121,6 +133,10 @@ setup_sandbox() {
     write_fake_config_tools
 
     stub_bin "$STUB_DIR" kreadconfig6 'exec python3 "$KW_RULES" get "$@"'
+    # KW_SILENT_REJECT makes the writer report success and change nothing, which is
+    # what the tool did on the VM when kwinrulesrc could not be replaced: the status
+    # says one thing and the file says another, so the read-back is the only check
+    # that can tell the two apart.
     stub_bin "$STUB_DIR" kwriteconfig6 "printf '%s %s\n' 'kwriteconfig6' \"\$*\" >> \"\$KW_CALLS\"
 if [[ -n \"\${KW_SILENT_REJECT:-}\" ]]; then
     exit 0
@@ -131,10 +147,16 @@ esac
 exec python3 \"\$KW_RULES\" set \"\$@\""
     recording_stub "$STUB_DIR" qdbus6 "$CALLS"
 
+    # A PATH holding only what the script itself needs, so that kwriteconfig6 is
+    # genuinely missing rather than shadowed.
     ln -s "$(command -v dirname)" "$BARE_DIR/dirname"
     recording_stub "$BARE_DIR" qdbus6 "$CALLS"
 }
 
+# The script reads the group list out of the config file itself, because KConfig
+# has no query that lists a file's groups. XDG_CONFIG_HOME is the sandbox, so the
+# file the stubs write and the file the script enumerates are the same one - and
+# the developer's own kwinrulesrc is never read.
 run_window_rules() {
     : > "$CALLS"
     OUTPUT="$(cd "$SANDBOX" && env PATH="$STUB_DIR:$PATH" XDG_CONFIG_HOME="$SANDBOX" KW_CALLS="$CALLS" KW_RULES="$FAKE" "$@" bash "$SCRIPT" 2>&1)"
@@ -147,6 +169,10 @@ run_window_rules_without_kwriteconfig6() {
     STATUS=$?
 }
 
+# The frozen interface: group, key, value, in the order the script writes them. The
+# index pair comes after the three groups and before the single reload. Only the
+# writer and the reload are recorded, so the two reads the script makes per changed
+# key - before the write, and back after it - are not part of the sequence below.
 expected_calls() {
     local opacity="$1" index="${2:-$FRESH_INDEX}"
     printf '%s\n' \
@@ -167,10 +193,14 @@ expected_calls() {
         "--file $RULES_FILE --group General --key count $(count_index "$index")"
 }
 
+# What the script derives from the list: entries are comma separated, so the number
+# of entries is one more than the number of commas.
 count_index() {
     awk -F, '{ print NF }' <<< "$1"
 }
 
+# The stubs write one plain ini file, so a value is read back straight from it
+# rather than through the config tools: the assertions are about the file.
 ini_value() {
     local file="$1" group="$2" key="$3"
     awk -v group="$group" -v key="$key" '
@@ -180,6 +210,9 @@ ini_value() {
     ' "$file"
 }
 
+# kwinrulesrc as it looks once a user has added a rule of their own: their group,
+# and the index that names it. [$Version] is KWin's own metadata and stays out of
+# the list.
 write_user_rule_fixture() {
     cat > "$SANDBOX/$RULES_FILE" <<'EOF'
 [General]
@@ -199,6 +232,8 @@ update_info=kwinrules.upd:fix-rule-order
 EOF
 }
 
+# kwinrulesrc as the installer leaves it, with the index the installer writes. No
+# Order key, which is what KWin 6.7 writes: only the list and its count.
 write_installed_fixture() {
     local index="$1" count="$2"
     cat > "$SANDBOX/$RULES_FILE" <<EOF
@@ -234,6 +269,9 @@ aboverule=2
 EOF
 }
 
+# uninstall.sh runs from top to bottom and cannot be sourced, so its revert of the window
+# rules is cut out by its own first and last lines - the first delete through the line that
+# reports it - and run against the same stubs the installer step is tested with.
 extract_uninstall_revert() {
     awk '
         /^kwriteconfig6 .*--group "caelestia-opacity"/ { inside = 1 }
@@ -275,6 +313,9 @@ test_the_written_file_carries_the_groups_and_their_values() {
 
     local content
     content="$(cat "$file")"
+    # The pairs below are a second assertion of the same contract the call log
+    # asserts: scripts/04a-window-rules.sh owns the key list, and this file asserts it
+    # in both forms on purpose, so a change has to be made deliberately in both.
     local pair
     for pair in \
         "opacityinactive=95" \
@@ -329,6 +370,8 @@ test_only_our_groups_and_the_index_are_written() {
         esac
     done < <(calls_to "$CALLS" kwriteconfig6)
 
+    # General is written for the index pair and nothing else. Order belongs to KWin:
+    # rewriting it would reorder the user's own rules.
     assert_eq "$(printf '%s\n' \
         "--file $RULES_FILE --group General --key rules $FRESH_INDEX" \
         "--file $RULES_FILE --group General --key count 3")" \
@@ -374,6 +417,7 @@ test_a_missing_kwriteconfig6_warns_instead_of_failing() {
     assert_eq "" "$(cat "$CALLS")" "nothing should be written or reloaded"
 }
 
+# A write kwriteconfig6 rejects - a read-only or unwritable kwinrulesrc - is not a
 # write that happened: it has to be warned about, and the rollup must not claim the
 # rules were applied, but it must not fail the install either.
 test_a_rejected_write_is_warned_about_rather_than_applied() {
@@ -393,6 +437,9 @@ test_a_rejected_write_is_warned_about_rather_than_applied() {
     assert_not_contains "$OUTPUT" "Window rules applied." "and the rollup must not claim it either"
 }
 
+# The same rejection with no error status at all: the writer exits 0 and the file
+# stays as it was, which is what the VM showed with kwinrulesrc replaced by a
+# directory. The value never changes on disk, so the key has to be counted as failed
 # and the rollup must not claim the rules were applied.
 test_a_silent_rejection_is_reported_as_failed_rather_than_applied() {
     have_python || return 0
@@ -422,6 +469,9 @@ test_the_inactive_opacity_comes_from_the_environment() {
     assert_contains "$(cat "$SANDBOX/$RULES_FILE")" "opacityinactive=80" "the file should carry it too"
 }
 
+# A group that is present in the file but left out of the list is never loaded, so
+# the index adopts it before it can matter. Adopting is also what keeps a re-run
+# from narrowing the list to our own names.
 test_a_group_the_file_holds_is_added_to_the_index() {
     have_python || return 0
     setup_sandbox
@@ -457,6 +507,9 @@ test_a_user_rule_keeps_its_place_in_the_index() {
         "a group whose name starts with a dollar is KWin's metadata and is not named"
 }
 
+# uninstall.sh strips our names out of the index and leaves the user's rules alone:
+# the list is theirs, and deleting a name that is not ours would silently disable a
+# rule they wrote.
 test_the_revert_keeps_the_users_names_and_strips_ours() {
     have_python || return 0
     setup_sandbox
@@ -474,6 +527,8 @@ test_the_revert_keeps_the_users_names_and_strips_ours() {
     assert_not_contains "$(cat "$file")" "caelestia-" "every group of ours should be gone"
 }
 
+# With no name left the file has to look like it did before the install: an index
+# that names nothing, and a count of nothing, are both absent rather than empty.
 test_the_revert_removes_the_index_when_no_names_are_left() {
     have_python || return 0
     setup_sandbox

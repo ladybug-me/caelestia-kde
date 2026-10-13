@@ -19,6 +19,9 @@ StyledRect {
     property var weekDays: []
     property int total: 0
     property string lastError: ""
+    // A missing token is a configuration state rather than a fetch failure, so it
+    // gets its own flag. Without it the widget just disappears from the bar and
+    // the only trace is a line in the log.
     property bool tokenMissing: false
     property int refreshInterval: 1800
     property color colour: Colours.palette.m3secondary
@@ -64,6 +67,8 @@ StyledRect {
         console.error("[GitHubWidget] " + msg);
     }
 
+    // Say so once in the UI, pointing at the page that
+    // fixes it, instead of leaving the user to find it in the log.
     function setTokenMissing(): void {
         root.lastError = "";
         root.tokenMissing = true;
@@ -131,6 +136,7 @@ StyledRect {
             }
         }
     }
+
 
     Process {
         id: proc
@@ -302,6 +308,9 @@ PY
         repeat: true
         triggeredOnStart: true
         onTriggered: {
+            // Don't re-poll while no token is configured - it cannot change until the
+            // user saves one via Settings → Panels → Taskbar → GitHub, which fires
+            // GithubStore.refresh() and restarts the process directly.
             if (root.tokenMissing)
                 return;
             proc.exec(proc.command);

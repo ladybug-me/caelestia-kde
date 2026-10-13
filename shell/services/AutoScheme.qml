@@ -16,6 +16,10 @@ Singleton {
 
     property string lastApplied: ""
 
+    /// The two boundaries for the given moment, as minutes since local
+    /// midnight. Falls back to the fixed times whenever solar times are
+    /// unavailable, so enabling this without a location still does something
+    /// sensible.
     function boundariesFor(date: date): var {
         if (root.solar && root.coords) {
             const times = Solar.solarTimes(date, root.coords.lat, root.coords.lon);

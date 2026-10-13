@@ -11,19 +11,30 @@ import qs.components.controls
 import qs.services
 import "chatsessions.js" as Sessions
 
+// The AI chat history: a searchable list of the store's chats, grouped by
+// when they were last active, with pin, rename, copy and delete per chat, and
+// clearing everything unpinned. Deletions can be undone for a few seconds.
+//
+// The list is rebuilt from the store when it changes, but only while the pane
+// is shown, and not while a chat is being renamed (that would tear down the
+// editor).
 Item {
     id: root
 
     required property ChatStore store
+    // The pane is shown.
     property bool active
+    // The open chat is getting a reply: undoing a deletion leaves it open.
     property bool busy
 
     property string query: ""
     property string renamingId: ""
     property bool dirty: true
+    // From the last rebuild: every chat the list can show, whatever the query.
     property int total: 0
     property int pinnedCount: 0
     property var unpinnedIds: []
+    // { removed, previousChatId, switchedTo, label } while a deletion can be undone.
     property var undo: null
 
     readonly property ListModel rows: ListModel {}
@@ -31,7 +42,11 @@ Item {
 
     signal chatOpened(string chatId)
     signal newChatRequested
+    // Before chats are removed, so whatever is running in them can be stopped.
     signal removing(var chatIds)
+    // The history stays shown while the chat behind it changes: after the open
+    // chat was deleted (chatId is the next one, or "" for a new chat), or when
+    // undoing that.
     signal switchChat(string chatId)
 
     function markDirty(): void {
@@ -110,6 +125,7 @@ Item {
         return p;
     }
 
+    // Escapes text for Text.StyledText and emphasises occurrences of the search query.
     function highlight(text: string): string {
         const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         const out = esc(text || "");
@@ -138,6 +154,7 @@ Item {
             Quickshell.clipboardText = Sessions.asMarkdown(s);
     }
 
+    // Removes chats, keeping them around for a short undo window.
     function removeChats(ids: var, label: string): void {
         removing(ids);
         const previousChatId = store.currentChatId;
@@ -159,6 +176,7 @@ Item {
         removeChats([id], qsTr("Chat deleted"));
     }
 
+    // Pinned chats survive "clear"; with none pinned this wipes everything.
     function clearUnpinned(): void {
         if (dirty)
             rebuild();
@@ -653,6 +671,8 @@ Item {
         readonly property int clearableCount: root.total - root.pinnedCount
         readonly property string clearIdleLabel: root.pinnedCount > 0 ? qsTr("Clear unpinned") : qsTr("Clear all")
         readonly property string clearHoldLabel: qsTr("Hold to clear")
+        // Both buttons share one width so the count stays centred, and the
+        // clear label can change without the button resizing.
         readonly property real buttonWidth: Math.max(clearAllIcon.implicitWidth + Tokens.spacing.small + Math.max(idleLabelMetrics.advanceWidth, holdLabelMetrics.advanceWidth), newChatLayout.implicitWidth) + Tokens.padding.large * 2
 
         anchors.bottom: parent.bottom
@@ -674,6 +694,7 @@ Item {
             text: historyActions.clearHoldLabel
         }
 
+        // Press and hold to clear, so a stray click does nothing.
         StyledClippingRect {
             id: clearAllButton
 
@@ -693,6 +714,7 @@ Item {
                 if (holding) {
                     holdAnim.restart();
                 } else {
+                    // Released too early: say why nothing happened.
                     if (holdProgress > 0 && holdProgress < 1) {
                         showHoldHint = true;
                         holdHintReset.restart();

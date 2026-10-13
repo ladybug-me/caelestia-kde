@@ -117,10 +117,15 @@ PageBase {
         }
     }
 
+    // The configured terminal is a bare command and may not be installed - the
+    // default is foot, which a KDE box often does not have - so resolve it once
+    // and fall back to konsole, KDE's own terminal, instead of launching nothing.
     readonly property list<string> terminalCommand: root.configuredTerminalAvailable ? GlobalConfig.general.apps.terminal : ["konsole"]
 
     property bool configuredTerminalAvailable: true
 
+    // Launch the updater in the user's terminal. The page only reports state now;
+    // the updater owns its own output, progress and escalation prompts.
     function launchUpdater(): void {
         if (UpdateChecker.checkingUpdates)
             return;
@@ -459,6 +464,7 @@ PageBase {
         Process {
             id: terminalCheck
 
+            // Only the first word is the program; the rest are its own arguments.
             command: ["bash", "-c", "command -v \"$1\" >/dev/null 2>&1", "--", GlobalConfig.general.apps.terminal[0] || ""]
             running: true
             onExited: code => root.configuredTerminalAvailable = code === 0

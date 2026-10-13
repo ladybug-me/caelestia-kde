@@ -3,13 +3,18 @@ import Quickshell.Io
 import qs.utils
 import "claudecode.js" as ClaudeCode
 
+// One run of the Claude Code CLI for one reply. It parses the CLI's stream-json
+// output and reports typed updates; where they go is up to the owner, which
+// also destroys the session once it has ended.
 Process {
     id: root
 
+    // The message this run writes to.
     property string chatId
     property string msgId
     property bool stopped: false
     readonly property var stream: ClaudeCode.createState()
+    // Live status of the run, shown while its chat is open.
     property real startedAt: 0
     property int outputTokens: 0
     property bool toolRunning: false
@@ -21,7 +26,10 @@ Process {
     signal toolsDone
     signal progressed(text: string)
     signal outputTokensUpdated(count: int)
+    // The usage line changed after the reply was completed (a backgrounded
+    // subagent reported back).
     signal usageUpdated(usage: string)
+    // reply: { text, tools, usage, sessionId }
     signal completed(reply: var)
     signal ended
 

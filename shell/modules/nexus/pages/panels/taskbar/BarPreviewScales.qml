@@ -27,6 +27,7 @@ PageBase {
             text: qsTr("Enable per-element offsets")
             subtext: qsTr("Customize preview scale and font for each popout type")
             checked: GlobalConfig.bar.perElementPreviewScale || GlobalConfig.bar.perElementFontScale
+            // Custom reset: turns both per-element flags off together
             reset: ({
                 customGet: () => GlobalConfig.bar.perElementPreviewScale || GlobalConfig.bar.perElementFontScale,
                 customDef: false,
@@ -77,9 +78,16 @@ PageBase {
             RowLayout {
                 id: headerCols
 
+                // Same column geometry as every row, derived from the container
+                // width (not from this row's own width, which never stretches):
+                // 30% label share, then the two value columns split what's left
+                // once the reset widths are reserved
                 readonly property real rowWidth: scalesCol.width - Layout.leftMargin - Layout.rightMargin
                 readonly property real labelShare: Math.round(headerCols.rowWidth * 0.3)
                 readonly property real colWidth: Math.max(0, (headerCols.rowWidth - labelShare - Tokens.spacing.extraSmall * 4 - headerResetProbe.implicitWidth * 2) / 2)
+                // CustomSpinBox puts a 62px value field before the slider, so the
+                // slider track centre sits half of that inset right of the column
+                // centre; the titles shift by the same amount to sit over it
                 readonly property real knobShift: 62 + Tokens.spacing.small
 
                 Layout.fillWidth: true
@@ -105,6 +113,7 @@ PageBase {
                 }
 
                 Item {
+                    // Reserves the width of a row's reset button so the header stays aligned
                     Layout.preferredWidth: headerResetProbe.implicitWidth
                 }
 
@@ -125,6 +134,7 @@ PageBase {
                 SettingResetButton {
                     id: headerResetProbe
 
+                    // Invisible probe: only used to measure the reset button width
                     options: null
                 }
             }

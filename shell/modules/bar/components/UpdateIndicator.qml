@@ -18,6 +18,8 @@ Item {
 
     readonly property bool checking: UpdateChecker.checkingUpdates
 
+    // Index of the Nexus "Updates" page, resolved by page key so this
+    // indicator can't drift out of sync if the page registry is reordered.
     readonly property int updatesPageIdx: {
         const idx = PageRegistry.indexForKey("updates");
         return idx >= 0 ? idx : 0;

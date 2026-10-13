@@ -37,6 +37,8 @@ Item {
     readonly property int baseThickness: Tokens.sizes.bar.innerWidth
     readonly property int effectiveThickness: rawScale < 1.0 ? baseThickness : barThickness
     readonly property real configuredItemSize: Math.max(16, Math.min(effectiveThickness, Config.bar.dock.iconSize || 32))
+    // Icon size of a dock item. Derived from the configured item size rather than the
+    // delegate's laid-out width, which is still 0 while the delegate is being created.
     readonly property real iconSize: Math.round(configuredItemSize * 0.7 / 2) * 2
 
     implicitWidth: bar.isHorizontal ? container.width : container.implicitWidth
@@ -644,6 +646,8 @@ Item {
                         return LauncherEntry.forApp(modelData.id);
                     }
 
+
+
                     CachingIconImage {
                         id: icon
 
@@ -864,6 +868,10 @@ Item {
 
             if (appClass.toLowerCase().includes("xwaylandvideobridge")) continue;
 
+            // Ungrouped keeps every window on its own icon (pinned entries stay
+            // launchers); PinnedFirst caps a pinned entry at its first window and
+            // lets the rest stand alone. Per-window ids carry the address (or pid)
+            // so they stay stable for the window's lifetime.
             const grouping = GlobalConfig.bar.dock.windowGrouping;
             const ungrouped = grouping === DockWindowGrouping.Ungrouped;
             const pinnedFirst = grouping === DockWindowGrouping.PinnedFirst;

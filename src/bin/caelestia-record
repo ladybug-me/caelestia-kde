@@ -10,6 +10,8 @@ CURRENT_FILE="${STATE_DIR}/current_recording_path"
 MODE_FILE="${STATE_DIR}/current_recording_mode"
 IPC_SOCK="${XDG_RUNTIME_DIR:-/tmp}/caelestia-gsr.sock"
 
+# Where finished recordings live; must match the shell's recordingsDir so the shell finds them.
+# Resolved via user-dirs (not $XDG_VIDEOS_DIR, which is empty in the shell session).
 RECS_DIR="${CAELESTIA_RECORDINGS_DIR:-$(xdg-user-dir VIDEOS 2>/dev/null || echo "$HOME/Videos")/Recordings}"
 
 mkdir -p "$STATE_DIR" "$RECS_DIR"
@@ -27,12 +29,14 @@ _is_recording() {
         local pid
         pid=$(cat "$PID_FILE" 2>/dev/null || true)
         if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+            # Check /proc/$pid/cmdline to avoid the 15-character truncation limit
             if grep -q -- "$recorder_name" "/proc/$pid/cmdline" 2>/dev/null; then
                 return 0
             fi
         fi
     fi
 
+    # Fallback when the pid file is stale: a live recorder with a real output file
     local current_path=""
     [[ -f "$CURRENT_FILE" ]] && current_path=$(cat "$CURRENT_FILE" 2>/dev/null || true)
     if [[ -n "$current_path" ]] && [[ -f "$current_path" ]]; then
@@ -47,6 +51,10 @@ _get_focused_refresh_rate() {
     local rr=60  # fallback
     local active_output=""
 
+    # The focused output comes from KWin, the same property the shell's bridge reads
+    # (KWinActiveWindowBridge::cursorOutputName). An earlier build also wrote it to a file
+    # under XDG_RUNTIME_DIR, but that writer was deleted in the same change that added this
+    # reader, so the file is not a source here - it made every recording `-f 60`.
     if command -v qdbus6 >/dev/null 2>&1; then
         active_output="$(qdbus6 org.kde.KWin /KWin org.kde.KWin.activeOutputName 2>/dev/null || true)"
     fi
@@ -55,6 +63,8 @@ _get_focused_refresh_rate() {
         local kscreen_json
         kscreen_json=$(kscreen-doctor -j 2>/dev/null || true)
         if [[ -n "$kscreen_json" ]]; then
+            # The output name is data, not code: pass it through the environment rather
+            # than into the snippet's source text.
             rr=$(printf '%s' "$kscreen_json" | CAELESTIA_ACTIVE_OUTPUT="$active_output" python3 -c "
 import os, sys, json
 data = json.load(sys.stdin)
@@ -74,6 +84,7 @@ print(60)
 }
 
 _ensure_portals() {
+    # Pipewire screen capture needs both the portal and its KDE backend running.
     if ! systemctl --user is-active --quiet plasma-xdg-desktop-portal-kde 2>/dev/null || \
        ! systemctl --user is-active --quiet xdg-desktop-portal 2>/dev/null; then
         systemctl --user restart plasma-xdg-desktop-portal-kde 2>/dev/null || true
@@ -87,14 +98,17 @@ _stop_recording() {
         local pid
         pid=$(cat "$PID_FILE" 2>/dev/null || true)
         if [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null; then
+            # SIGINT so gpu-screen-recorder finalizes the mp4 trailer
             kill -INT "$pid" 2>/dev/null || true
 
+            # Wait up to 5s for clean shutdown
             local waited=0
             while kill -0 "$pid" 2>/dev/null && [[ $waited -lt 50 ]]; do
                 sleep 0.1
                 waited=$((waited + 1))
             done
 
+            # Only force kill if it actually hung
             if kill -0 "$pid" 2>/dev/null; then
                 kill -KILL "$pid" 2>/dev/null || true
             fi
@@ -102,6 +116,7 @@ _stop_recording() {
         rm -f "$PID_FILE"
     fi
 
+    # Kill stray instances: use -f (full cmdline) to bypass kernel 15-char name truncation
     local recorder_name
     recorder_name=$(basename -- "$RECORDER")
     while read -r pid; do
@@ -119,6 +134,7 @@ _open_dir() {
     fi
 }
 
+# Convert a finished recording to a GIF, dropping the source mp4 on success.
 _convert_to_gif() {
     local src="$1"
     local out="${RECS_DIR}/$(basename "${src%.mp4}.gif")"
@@ -136,6 +152,9 @@ _convert_to_gif() {
     return 1
 }
 
+# Stops the active recording, converting to a GIF when that session asked for one. The
+# mode is read before _stop_recording clears the session files, so a session that wrote
+# none is a plain recording.
 _finish_recording() {
     local saved_path=""
     local mode=""
@@ -208,11 +227,13 @@ done
 
 case "$ACTION" in
     start)
+        # A second start means stop.
         if _is_recording; then
             _finish_recording
             exit 0
         fi
 
+        # Prevent duplicate starts, but recover from a stale lock after a crash.
         if [[ -f "$LOCK_FILE" ]]; then
             if _is_recording; then
                 exit 0
@@ -226,14 +247,17 @@ case "$ACTION" in
         rr=$(_get_focused_refresh_rate)
         [[ "$rr" -le 0 ]] && rr=60
 
+        # Fail before the portal prompt rather than after a recording we cannot convert.
         if [[ "$GIF_MODE" == "true" ]] && ! command -v ffmpeg >/dev/null 2>&1; then
             _notify critical "GIF failed" "ffmpeg not found, cannot convert to GIF"
             rm -f "$LOCK_FILE"
             exit 1
         fi
 
+        # Timestamped so a new recording never clobbers the previous one.
         REC_PATH="${RECS_DIR}/recording_$(date +%Y%m%d_%H-%M-%S).mp4"
         echo "$REC_PATH" > "$CURRENT_FILE"
+        # Written for every session, so a mode left by a session that died cannot decide the next.
         if [[ "$GIF_MODE" == "true" ]]; then
             echo "gif" > "$MODE_FILE"
         else
@@ -254,6 +278,7 @@ case "$ACTION" in
         args+=("-ipc" "$IPC_SOCK")
         args+=("-o" "$REC_PATH")
 
+        # Subshell so the recorder's PID can be captured.
         (
             exec "${args[@]}" >/tmp/gpu-screen-recorder.log 2>&1 &
             echo $! > "$PID_FILE"
@@ -262,6 +287,7 @@ case "$ACTION" in
         ) &
         disown
 
+        # Wait for the PID file to appear.
         pid=""
         waited=0
         while [[ -z "$pid" ]] && [[ $waited -lt 20 ]]; do
@@ -270,6 +296,7 @@ case "$ACTION" in
             waited=$((waited + 1))
         done
 
+        # Wait out the portal dialog: recorder alive, output file not yet created.
         while [[ -n "$pid" ]] && kill -0 "$pid" 2>/dev/null && [[ ! -f "$REC_PATH" ]]; do
             sleep 0.1
         done

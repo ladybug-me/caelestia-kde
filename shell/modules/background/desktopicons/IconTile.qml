@@ -7,6 +7,8 @@ import qs.components
 import qs.components.controls
 import qs.services
 
+// A desktop icon: a file, a launcher or a group of them. Only draws and
+// reports pointer input; the owner decides what selection and clicks mean.
 Item {
     id: root
 
@@ -64,6 +66,8 @@ Item {
         renameCancelled();
     }
 
+    // Is the point (in tile coordinates) over the icon itself rather than its
+    // label or padding? Dropping there merges instead of placing.
     function overIcon(x: real, y: real): bool {
         const p = iconBox.mapFromItem(root, x, y);
         return p.x >= 0 && p.y >= 0 && p.x <= iconBox.width && p.y <= iconBox.height;
@@ -98,6 +102,7 @@ Item {
         anchors.margins: Tokens.padding.small
         spacing: Tokens.spacing.small
 
+        // Fixed height so the icon stays put whether the label wraps to one or two lines.
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: root.iconSize
@@ -116,6 +121,7 @@ Item {
                     }
                 }
 
+                // Backdrop that forms a group when another icon hovers over this one.
                 StyledRect {
                     anchors.centerIn: parent
                     width: parent.width * 1.15
@@ -185,14 +191,18 @@ Item {
 
             visible: root.renaming
             Layout.fillWidth: true
+            // No outline: the editor takes the label's place and should look like it.
             background.visible: false
             onAccepted: root.commitRename()
             onActiveFocusChanged: {
+                // Clicking anywhere outside the editor applies the rename.
                 if (!activeFocus && root.renaming)
                     root.commitRename();
             }
             Keys.onEscapePressed: root.cancelRename()
 
+            // The window only gets keyboard focus once the compositor applies the
+            // exclusive grab, after startRename() has run; focus the editor then.
             Connections {
                 function onActiveChanged(): void {
                     if (renameField.Window.window.active)

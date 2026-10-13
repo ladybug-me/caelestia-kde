@@ -29,6 +29,7 @@ SchemeLoader::SchemeLoader(QObject* parent)
 
     connect(m_watcher, &QFileSystemWatcher::fileChanged, this, [this](const QString&) {
         loadCurrentScheme();
+        // Re-add path because some editors replace files atomically
         watchSchemeState();
     });
     connect(m_watcher, &QFileSystemWatcher::directoryChanged, this, [this](const QString&) {

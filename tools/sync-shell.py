@@ -26,6 +26,7 @@ SKIP_PREFIXES = (
 
 
 class GitError(RuntimeError):
+    """A git invocation that mattered returned a non-zero status."""
 
     def __init__(self, args: tuple[str, ...], returncode: int, stderr: str) -> None:
         super().__init__(f"git {' '.join(args)} failed with status {returncode}: {stderr.strip()}")
@@ -34,6 +35,7 @@ class GitError(RuntimeError):
 
 @dataclass(frozen=True)
 class Repo:
+    """A checkout to operate on, passed explicitly so tests get their own."""
 
     root: Path
 
@@ -53,6 +55,8 @@ class Repo:
         return self._checked(args)
 
     def ls_tree(self, tree: str) -> dict[str, str]:
+        """Return {path: blob_hash} for every file under `tree` (paths are
+        relative to the tree root, so they map 1:1 between shell/ and upstream)."""
         result: dict[str, str] = {}
         for line in self.git("ls-tree", "-r", tree).splitlines():
             meta, path = line.split("\t", 1)
@@ -61,16 +65,18 @@ class Repo:
         return result
 
     def grep_paths(self, tree: str, needle: str, glob: str) -> set[str]:
+        """Paths under `tree` matching `glob` whose content mentions `needle`."""
         args = ("grep", "-l", "-e", needle, tree, "--", glob)
         proc = self._raw(args)
         if proc.returncode == 1:
-            return set()
+            return set()  # git grep exits 1 when nothing matches
         if proc.returncode != 0:
             raise GitError(args, proc.returncode, proc.stderr.decode(errors="replace"))
         return {p for p in proc.stdout.decode("utf-8").splitlines() if p}
 
 
 def kind(path: str) -> str:
+    """Rough file category used only to make the report scannable."""
     name = os.path.basename(path)
     ext = os.path.splitext(path)[1].lower()
     if path.startswith(SKIP_PREFIXES):
@@ -87,6 +93,7 @@ def kind(path: str) -> str:
 
 
 class Classified(NamedTuple):
+    """Where each shell/ path stands relative to upstream."""
 
     in_sync: list[str]
     missing: list[str]

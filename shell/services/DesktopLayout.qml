@@ -5,6 +5,9 @@ import Quickshell
 import Quickshell.Io
 import qs.utils
 
+// Persistent state of the desktop icons: where each icon sits, the virtual
+// groups and the view preferences. Kept out of the C++ config so that it can
+// change at runtime without a plugin rebuild.
 Singleton {
     id: root
 
@@ -12,18 +15,27 @@ Singleton {
     readonly property var iconSizes: [48, 64, 80, 96]
 
     property bool loaded: false
+    // Item key ("f/<file name>" or "g/<group id>") -> { col, row }.
     property var positions: ({})
+    // Group id -> { name, members: [file name, ...], size: { w, h } }. A size
+    // above 1x1 shows the group as a large folder.
     property var groups: ({})
+    // Widget id -> { type, size: { w, h }, config: {} }.
     property var widgets: ({})
     property int iconSize: 64
     property bool autoArrange: false
+    // Clip full-colour icons to a rounded square.
     property bool roundIcons: true
+    // "" keeps the manual order; otherwise name, type, modified or size.
     property string sortKey: ""
     property bool defaultsSeeded: false
     property bool defaultsNeeded: false
 
+    // Follows KDE's "single click to open files" setting.
     property bool singleClick: false
+    // Whether the clipboard holds files, checked when the desktop menu opens.
     property bool clipboardHasFiles: false
+    // Screen name -> DesktopIcons controller instance
     property var controllers: ({})
 
     signal pasteRequested(string screenName, real x, real y)
@@ -147,6 +159,7 @@ Singleton {
         const nextWidgets = {};
         const size = v => v && v.w >= 1 && v.h >= 1 ? { w: v.w | 0, h: v.h | 0 } : { w: 1, h: 1 };
         if (Array.isArray(data)) {
+            // Version 1: a bare list of { name, col, row }.
             for (const it of data)
                 if (it && typeof it.name === "string")
                     nextPositions[fileKey(it.name)] = { col: it.col | 0, row: it.row | 0 };

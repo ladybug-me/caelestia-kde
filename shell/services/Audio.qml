@@ -118,6 +118,8 @@ Singleton {
         return stream.properties["application.name"] || stream.description || stream.name || qsTr("Unknown Application");
     }
 
+    // App-level controls operate on every stream sharing the same app name, so a
+    // single "caelestia-shell" row adjusts all of its streams together.
     function getAppVolume(stream: PwNode): real {
         if (!stream)
             return 0;

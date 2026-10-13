@@ -1,6 +1,7 @@
 import QtQuick
 import qs.utils
 
+// The desktop widgets that can be added, with their sizes in grid cells.
 QtObject {
     readonly property var types: [
         { type: "clock", name: qsTr("Clock & Weather"), icon: "partly_cloudy_day", size: { w: 4, h: 2 }, min: { w: 2, h: 2 }, max: { w: 6, h: 3 }, source: "widgets/ClockWidget.qml" },
@@ -14,6 +15,7 @@ QtObject {
         { type: "folder", name: qsTr("Folder View"), icon: "folder_open", size: { w: 3, h: 3 }, min: { w: 2, h: 2 }, max: { w: 8, h: 6 }, source: "widgets/FolderWidget.qml", config: { path: Paths.home + "/Downloads" } }
     ]
 
+    // Large folders are groups shown at more than one cell.
     readonly property var group: ({ type: "group", name: qsTr("Large Folder"), icon: "folder", size: { w: 3, h: 3 }, min: { w: 3, h: 3 }, max: { w: 8, h: 6 }, source: "BigFolder.qml" })
 
     function info(type: string): var {

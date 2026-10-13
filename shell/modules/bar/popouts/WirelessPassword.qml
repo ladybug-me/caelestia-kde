@@ -240,6 +240,7 @@ ColumnLayout {
                 repeat: true
                 onTriggered: {
                     attempts++;
+                    // Fallback in case property binding was delayed
                     if (NetworkConnection.passwordNetwork) {
                         root.network = {
                             ssid: NetworkConnection.passwordNetwork.ssid,

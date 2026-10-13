@@ -12,6 +12,7 @@ import qs.utils
 Singleton {
     id: root
 
+    // Lives next to the command builder so the switch and its values can't drift apart.
     enum SnipAction {
         Copy,
         Edit,

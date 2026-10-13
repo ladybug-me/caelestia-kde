@@ -24,7 +24,9 @@ Singleton {
             return;
 
         const asked = root.tried[key];
+        // A key that has already resolved belongs to whichever window won it, and keyFor
         // says the class is only a fallback, so a second window sharing the key must not
+        // overwrite that answer. Otherwise only the same window instance is skipped.
         if (asked !== undefined && (root.paths[key] || asked === address))
             return;
 
@@ -56,6 +58,8 @@ Singleton {
         root._awaiting = a;
     }
 
+    // Record a freshly extracted icon. Reassigning a copy is what notifies the
+    // bindings that read paths[...] — mutating in place would not.
     function register(key: string, path: string): void {
         if (!path || path === "" || root.paths[key] === path)
             return;
@@ -83,6 +87,8 @@ Singleton {
                                : (client.class ? Icons.getAppIcon(client.class, "application-x-executable") : "");
     }
 
+    // extract() returns the path directly; the signal carries the same result
+    // for any caller that did not go through request().
     Connections {
         function onExtracted(key: string, path: string): void {
             root.register(key, path);

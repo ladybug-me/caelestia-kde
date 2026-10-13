@@ -1,7 +1,17 @@
 .pragma library
 
+// The Claude Code CLI as the AI assistant uses it: building its command line
+// and turning its stream-json output into typed updates for a reply. No QML
+// types here, so this can be tested on its own; ClaudeCodeSession.qml runs the
+// process.
+
+// --- Command line ------------------------------------------------------------
+
 var bypassMode = "bypassPermissions";
 
+// Models the CLI accepts, found by scanning its binary (one id per line).
+// Dated snapshots and ids that are a prefix of a longer one are dropped;
+// newest first.
 function parseModelList(text) {
     var ids = [];
     var seen = {};
@@ -70,6 +80,8 @@ function effortLevelsFor(model) {
     return [];
 }
 
+// The mode actually used for a request: a chat saved in bypass mode falls back
+// to the CLI default once bypass is no longer allowed.
 function effectivePermissionMode(mode, bypassAllowed) {
     mode = mode || (bypassAllowed ? bypassMode : "default");
     if (mode === bypassMode && !bypassAllowed)
@@ -84,14 +96,22 @@ function permissionArgs(mode, bypassAllowed, sidebarAllowedTools) {
     if (mode === "default")
         return [];
     var args = ["--permission-mode", mode];
+    // There is no approval prompt in the sidebar, so in accept-edits mode
+    // commands, web access and reads outside the working directory would just
+    // be denied. Allow them for sidebar sessions only; edits outside the
+    // working directory still need permission.
     if (mode === "acceptEdits")
         args = args.concat(["--allowedTools", sidebarAllowedTools.join(",")]);
     return args;
 }
 
+// The command for one reply. opts: { bin, prompt, attachments, permissionMode,
+// bypassAllowed, allowedTools, model, effort, sessionId }.
 function replyCommand(opts) {
     var cmd = [opts.bin, "-p", opts.prompt];
 
+    // Attachments usually live outside the working directory (e.g. pasted
+    // screenshots in the cache); allow the CLI to read them in any mode.
     var dirs = [];
     var attachments = opts.attachments || [];
     for (var a = 0; a < attachments.length; a++) {
@@ -125,6 +145,9 @@ function withAttachmentList(text, paths) {
         + paths.map(p => "- " + p).join("\n")).trim();
 }
 
+// The conversation so far as one prompt, to seed a fresh CLI session (new
+// account or working directory) with it. Empty while there is nothing to carry
+// over.
 function transcript(messages) {
     var lines = [];
     for (var i = 0; i < messages.length; i++) {
@@ -143,10 +166,13 @@ function transcript(messages) {
     return "Continue this conversation. Conversation so far:\n\n" + lines.join("\n\n") + "\n\nReply to the last user message.";
 }
 
+// --- Formatting ----------------------------------------------------------------
+
 function isAgentTool(name) {
     return name === "Agent" || name === "Task";
 }
 
+// Short one-line description of a tool call for its card header.
 function toolSummary(name, input) {
     if (!input)
         return "";
@@ -165,6 +191,8 @@ function toolSummary(name, input) {
     return s.length > 200 ? s.substring(0, 200) + "…" : s;
 }
 
+// Every path under the home directory written as ~/..., for tool summaries
+// (file paths, shell commands).
 function shortPaths(text, home) {
     if (!text || !home)
         return text || "";
@@ -195,6 +223,7 @@ function formatTokens(n) {
     return String(n);
 }
 
+// "2 tools · 23.9k tokens · 6.6s" for a subagent card.
 function agentStatsText(t) {
     var parts = [];
     if (t.toolUses)
@@ -206,6 +235,8 @@ function agentStatsText(t) {
     return parts.join(" · ");
 }
 
+// Usage over all the turns of one reply (a backgrounded subagent adds a turn
+// with its own result). The cost the CLI reports is already a running total.
 function mergeResultUsage(prev, evt) {
     if (!prev)
         return evt;
@@ -224,6 +255,7 @@ function mergeResultUsage(prev, evt) {
     };
 }
 
+// "12.3s · 4 turns · 1.2k in / 800 out · $0.04" from the CLI's result event.
 function usageSummary(evt) {
     var parts = [];
     if (evt.duration_ms)
@@ -251,6 +283,20 @@ function isAuthError(text) {
 
 var authHint = "It appears that Claude is not logged into your account.\n\nOpen a terminal, run the command `claude`, and log in with your subscription, then try again here.";
 
+// --- Stream ----------------------------------------------------------------------
+//
+// handleLine() takes one line of `--output-format stream-json` and returns the
+// updates it causes, each { type, ... }:
+//   text { text }        the reply text so far
+//   thought { text }     the thinking so far
+//   tools { tools }      the tool cards changed (array of card objects)
+//   toolStarted { name } the model started calling a tool
+//   toolsDone {}         tool results came back
+//   progress { text }    a subagent reported what it is doing
+//   tokens { count }     output tokens so far (estimated until a message ends)
+//   usage { text }       the usage line changed after the reply finished
+//   finished { reply }   the reply is complete, see finish()
+
 function createState() {
     return {
         acc: "",
@@ -276,6 +322,8 @@ function findTool(st, id) {
     return null;
 }
 
+// Length of the reply text so far; tool calls store it so their cards can be
+// placed between the text written before and after them.
 function textPos(st) {
     return st.acc.trim().length;
 }
@@ -284,6 +332,7 @@ function newTool(st, id, name) {
     return { id: id, name: name || "tool", summary: "", result: "", isError: false, done: false, at: textPos(st) };
 }
 
+// The top-level card a (possibly nested) subagent event belongs to.
 function agentCardFor(st, parentId) {
     return findTool(st, st.agentOf[parentId] || parentId);
 }
@@ -291,6 +340,8 @@ function agentCardFor(st, parentId) {
 function appendText(st, text, out) {
     if (!text)
         return;
+    // A new text block after a tool call (or a new assistant turn) starts a
+    // new paragraph instead of running on from the previous sentence.
     if (st.needSep && st.acc.trim() !== "")
         st.acc = st.acc.replace(/\s+$/, "") + "\n\n";
     st.needSep = false;
@@ -317,6 +368,8 @@ function handleLine(st, line) {
     if (evt.type === "system")
         handleTaskEvent(st, evt, out);
     else if (evt.parent_tool_use_id)
+        // Events from subagents (Task/Agent tool) belong to that tool's card,
+        // not to the main reply.
         handleSubagentEvent(st, evt, out);
     else if (evt.type === "stream_event" && evt.event)
         handleStreamEvent(st, evt.event, out);
@@ -334,6 +387,7 @@ function handleStreamEvent(st, ev, out) {
         st.needSep = true;
         st.msgChars = 0;
     } else if (ev.type === "message_delta" && ev.usage && ev.usage.output_tokens) {
+        // The real count arrives once per message; until then it is estimated.
         st.doneTokens += ev.usage.output_tokens;
         st.msgChars = 0;
         out.push({ type: "tokens", count: st.doneTokens });
@@ -364,6 +418,8 @@ function handleStreamEvent(st, ev, out) {
     }
 }
 
+// Whole assistant messages carry the complete tool_use inputs; they are also
+// the fallback when token-level partials aren't emitted.
 function handleAssistantMessage(st, content, out) {
     var hasTool = false;
     for (var i = 0; i < content.length; i++) {
@@ -379,6 +435,7 @@ function handleAssistantMessage(st, content, out) {
             if (b.name)
                 out.push({ type: "toolStarted", name: b.name });
         } else if (b.type === "text") {
+            // Appended in order so a later tool call is placed after it.
             var bt = (b.text || "").trim();
             if (bt !== "" && st.acc.indexOf(bt) === -1) {
                 st.needSep = true;
@@ -390,6 +447,7 @@ function handleAssistantMessage(st, content, out) {
         out.push({ type: "tools", tools: st.tools });
 }
 
+// Tool results come back as a user message.
 function handleToolResults(st, evt, out) {
     var changed = false;
     var content = evt.message.content;
@@ -402,6 +460,8 @@ function handleToolResults(st, evt, out) {
             continue;
         tr.result = toolResultText(r.content);
         var tur = evt.tool_use_result;
+        // A backgrounded subagent answers at once with a placeholder; its
+        // report arrives later in a task_notification.
         if (isAgentTool(tr.name) && tur && tur.isAsync === true) {
             tr.result = "";
             tr.async = true;
@@ -431,10 +491,14 @@ function handleResult(st, evt, out) {
     var errored = (evt.is_error === true) || (evt.subtype && String(evt.subtype).indexOf("error") !== -1);
     st.resultUsage = mergeResultUsage(st.resultUsage, evt);
     st.usage = usageSummary(st.resultUsage);
+    // The CLI sends one result per turn and a backgrounded subagent adds a
+    // turn, so a later result only updates the usage line.
     if (st.done) {
         out.push({ type: "usage", text: st.usage });
         return;
     }
+    // With a backgrounded subagent still running, the CLI starts another turn
+    // once it reports back, and that turn ends with its own result.
     if (!errored && st.tools.some(t => t.async && !t.done))
         return;
     if (errored && (isAuthError(resText) || isAuthError(st.errAcc)))
@@ -446,11 +510,13 @@ function handleResult(st, evt, out) {
     out.push({ type: "finished", reply: finish(st) });
 }
 
+// task_started / task_progress / task_notification for subagents.
 function handleTaskEvent(st, evt, out) {
     if (!evt.tool_use_id || String(evt.subtype || "").indexOf("task_") !== 0)
         return;
     var t = findTool(st, evt.tool_use_id);
     if (!t) {
+        // A nested subagent: its progress rolls up into the top-level card.
         var top = agentCardFor(st, evt.tool_use_id);
         if (top && top.id !== evt.tool_use_id && evt.description && evt.subtype === "task_progress") {
             top.progress = evt.description;
@@ -484,6 +550,7 @@ function handleTaskEvent(st, evt, out) {
     out.push({ type: "tools", tools: st.tools });
 }
 
+// Tool calls and results made inside a subagent, listed on its card.
 function handleSubagentEvent(st, evt, out) {
     var card = agentCardFor(st, evt.parent_tool_use_id);
     if (!card || !evt.message || !Array.isArray(evt.message.content))
@@ -506,12 +573,15 @@ function handleSubagentEvent(st, evt, out) {
                 }
         }
     }
+    // Long-running subagents: keep only the latest steps on the card.
     if (card.steps.length > 30)
         card.steps = card.steps.slice(card.steps.length - 30);
     if (changed)
         out.push({ type: "tools", tools: st.tools });
 }
 
+// Completes the reply: { text, tools, usage, sessionId }. A tool the CLI never
+// answered (stopped, crashed) is no longer running.
 function finish(st) {
     st.done = true;
     for (var i = 0; i < st.tools.length; i++) {
@@ -524,6 +594,8 @@ function finish(st) {
     return { text: st.acc.trim(), tools: st.tools, usage: st.usage, sessionId: st.sessionId };
 }
 
+// The process exited. Returns the reply if it was not finished yet: with
+// nothing written, an exit code or an auth problem becomes the reply text.
 function handleExit(st, code, stopped) {
     if (st.done)
         return null;

@@ -111,6 +111,9 @@ PYEOF
         ALL_OK=false
     fi
 
+    # The rule is checked before it is installed: a malformed file in sudoers.d stops
+    # sudo working for the whole machine, and $USER is only an environment variable, so
+    # the name comes from id instead.
     local target_user="${SUDO_USER:-$(id -un)}"
     if [[ ! "$target_user" =~ ^[A-Za-z0-9._-]+$ ]]; then
         warn "Could not tell which user the login screen sync belongs to (got '$target_user')."

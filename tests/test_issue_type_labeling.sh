@@ -9,6 +9,7 @@ CLASSIFY="$REPO_ROOT/.github/scripts/classify_issue_type.sh"
 ISSUE_FORM="$REPO_ROOT/.github/ISSUE_TEMPLATE/1-issue.yml"
 WORKFLOW="$REPO_ROOT/.github/workflows/label-issue-type.yml"
 
+# Mirrors how the workflow calls it: title as an argument, body on stdin.
 classify() {
     local title="$1" body="${2:-}"
     printf '%s\n' "$body" | bash "$CLASSIFY" "$title" 2>/dev/null
@@ -67,6 +68,8 @@ test_unticked_form_options_are_not_a_signal() {
     assert_ne "bug" "$label" "an unticked bug box is not a bug report"
 }
 
+# #740: filed through the API, so it carries no form checkboxes at all. The
+# title is the only signal and it has to be enough.
 test_free_form_bug_report_with_a_title_prefix_is_labelled_bug() {
     local body label
 
@@ -102,6 +105,7 @@ test_conventional_commit_prefixes_are_recognized() {
 }
 
 # A tag that says nothing about the type (severity, subsystem) must not swallow
+# the title: the keyword pass still gets a chance.
 test_unmappable_title_tag_falls_through_to_keywords() {
     assert_eq "bug" "$(classify "[CRITICAL] Shell crashes on login" "")" \
         "an unmapped tag should fall through to the keyword pass"
@@ -120,6 +124,8 @@ The dock is stuck behind a fullscreen window
 TITLES
 }
 
+# Bodies are full of stack traces, so the keyword pass reads titles only. This
+# keeps a calm feature request from being read as a bug report.
 test_words_in_the_body_do_not_decide_the_type() {
     local label
 
@@ -150,6 +156,8 @@ Create a website for the kde port
 TITLES
 }
 
+# The classifier matches the form's option text by hand. If someone rewords the
+# template, the form path silently stops working, so fail loudly here instead.
 test_issue_form_still_contains_the_option_text_the_classifier_matches() {
     local form
     form="$(cat "$ISSUE_FORM")"

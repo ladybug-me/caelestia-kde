@@ -22,6 +22,8 @@ using Qt::StringLiterals::operator""_s;
 
 namespace caelestia::services {
 
+/// The P-256 point of `key` as the GenericPublicKey the handshake carries, or an
+/// empty array if OpenSSL cannot export it.
 static QByteArray serializePublicKey(EVP_PKEY* key) {
     EC_KEY* ecKey = key ? EVP_PKEY_get1_EC_KEY(key) : nullptr;
     if (!ecKey)
@@ -35,6 +37,8 @@ static QByteArray serializePublicKey(EVP_PKEY* key) {
         length, nullptr);
     EC_KEY_free(ecKey);
 
+    // A coordinate is big-endian two's complement, so one whose top bit is set
+    // needs a leading zero byte to stay positive.
     const auto coordinate = [](const QByteArray& raw) {
         std::string encoded;
         if (static_cast<unsigned char>(raw.at(0)) >= 0x80)
@@ -53,6 +57,8 @@ static QByteArray serializePublicKey(EVP_PKEY* key) {
     return serialize(genericPublicKey);
 }
 
+/// The uncompressed point the serialized GenericPublicKey `bytes` names, or an
+/// empty array if they do not name a P-256 key.
 static QByteArray peerPublicKey(const std::string& bytes) {
     securemessage::GenericPublicKey genericPublicKey;
     if (!genericPublicKey.ParseFromString(bytes) || genericPublicKey.type() != securemessage::EC_P256)
@@ -65,7 +71,7 @@ static QByteArray peerPublicKey(const std::string& bytes) {
     };
 
     QByteArray point;
-    point.append(static_cast<char>(0x04));
+    point.append(static_cast<char>(0x04)); // an uncompressed point: x then y
     point.append(coordinate(genericPublicKey.ec_p256_public_key().x()));
     point.append(coordinate(genericPublicKey.ec_p256_public_key().y()));
     return point;
@@ -310,6 +316,7 @@ QByteArray QuickShareCrypto::generateClientInit() {
     finishFrame.set_message_data(clientFinished.SerializeAsString());
     m_clientFinishedMsgData = serialize(finishFrame);
 
+    // The commitment is the hash of the frame carrying that public key.
     unsigned char hash[SHA512_DIGEST_LENGTH];
     SHA512(reinterpret_cast<const unsigned char*>(m_clientFinishedMsgData.constData()),
         static_cast<size_t>(m_clientFinishedMsgData.size()), hash);

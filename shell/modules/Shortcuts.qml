@@ -301,6 +301,7 @@ Scope {
         target: CUtils
     }
 
+
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type

@@ -7,6 +7,8 @@ import qs.components
 import qs.components.controls
 import qs.services
 
+// A sticky note typed straight on the desktop. The text is kept in the
+// widget's config, saved shortly after typing stops.
 Item {
     id: root
 

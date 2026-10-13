@@ -25,6 +25,8 @@ Item {
     readonly property int padding: Math.max(Tokens.padding.small, Config.border.thickness)
     readonly property int contentWidth: Math.round(Tokens.sizes.bar.innerWidth * barScale) + padding * 2
     readonly property bool dodgeEnabled: Config.bar.dodgeWindows && Config.bar.persistent && !disabled
+    // The strip the bar occupies, in the absolute multi-monitor coordinates
+    // KWin reports window geometry in — hence the screen origin offset.
     readonly property rect dodgeRect: {
         const ox = screen.x ?? 0;
         const oy = screen.y ?? 0;
@@ -41,6 +43,8 @@ Item {
     readonly property int _dodgeWatchActiveId: (true) ? Kwin.activeWsId : -1
     readonly property var _dodgeWatchActiveByOutput: (true) ? Kwin.activeByOutput : null
     readonly property bool dodging: {
+        // Reading these tracked props here makes QML invalidate this binding
+        // when windowList, activeWindow, activeId, or per-screen workspace changes.
         void _dodgeWatchWindowList;
         void _dodgeWatchActiveWindow;
         void _dodgeWatchActiveId;

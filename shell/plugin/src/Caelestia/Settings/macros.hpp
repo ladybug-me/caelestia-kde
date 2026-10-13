@@ -45,6 +45,7 @@ template <std::floating_point T> bool compare(const QList<T>& a, const QList<T>&
 }
 
 } // namespace detail
+
 } // namespace caelestia::settings
 
 #define DEFAULT_ARG(...) __VA_ARGS__
@@ -84,10 +85,10 @@ public:                                                                         
                                                                                                                        \
     void set_##name(const Type& value) {                                                                               \
         if (rejectInvalidWrite(QStringLiteral(#name), value))                                                          \
-            return;                                                                                                    \
+            return; /* Skip writes of the wrong type */                                                                \
                                                                                                                        \
         if (rejectGlobalWrite(QStringLiteral(#name)))                                                                  \
-            return;                                                                                                    \
+            return; /* Skip writes to global only keys, they belong to the global layer */                             \
                                                                                                                        \
         const auto needsNotify = !caelestia::settings::detail::compare(value, m_##name);                               \
         m_##name = value;                                                                                              \
@@ -140,7 +141,7 @@ private:                                                                        
         explicit Name(Name* fallback = nullptr, QObject* parent = nullptr, bool globalOnly = false)                    \
             : caelestia::settings::ListNode(fallback, parent, globalOnly) {}                                           \
                                                                                                                        \
-        [[nodiscard]] Q_INVOKABLE Element* at(qsizetype index) const {                                                 \
+        [[nodiscard]] Q_INVOKABLE Element* at(qsizetype index) const { /* Format ugh */                                \
             return static_cast<Element*>(elementAt(index));                                                            \
         }                                                                                                              \
         [[nodiscard]] Q_INVOKABLE Element* insert(const QVariantMap& props, qsizetype index = -1) {                    \

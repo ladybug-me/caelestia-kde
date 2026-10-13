@@ -35,10 +35,13 @@ public:
 
     Q_INVOKABLE void pin(int id);
     Q_INVOKABLE void unpin(int pinId);
+    /// Pinned entries are no longer in cliphist, so `cliphist decode` cannot
+    /// bring them back — the stored bytes go to wl-copy directly.
     Q_INVOKABLE void copyPinned(int pinId);
 
 signals:
     void itemsChanged();
+    /// Emitted after the image file for `id` has been fully written to `path`.
     void imageReady(int id, const QString& path);
     void clearHistoryFinished(bool success);
     void availableChanged();

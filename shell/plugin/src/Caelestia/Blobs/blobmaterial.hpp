@@ -11,6 +11,8 @@ struct BlobRectData {
     float invDeform[4] = { 1, 0, 0, 1 };
     float screenHalfX = 0, screenHalfY = 0;
     float radius[4] = { 0, 0, 0, 0 };
+    // Bitmask of indices in this rect's m_cachedRects that mutually exclude (or are excluded by) this rect.
+    // Used by the shader to skip smin between excluded pairs.
     int excludeMask = 0;
 };
 

@@ -29,6 +29,7 @@ ClipboardManager::ClipboardManager(QObject* parent)
     }
     m_imageCacheDir = runtimeDir + QStringLiteral("/clipboard");
 
+    // Pins live in the state dir, not the runtime dir: they have to outlive a
     // reboot, and they must not sit inside the cache clearHistory() wipes.
     const auto stateDir = qEnvironmentVariable("XDG_STATE_HOME", QDir::homePath() + QStringLiteral("/.local/state"));
     m_pinDir = stateDir + QStringLiteral("/caelestia/clipboard-pins");
@@ -90,6 +91,8 @@ void ClipboardManager::loadPins() {
         }
         const bool isImage = entry.value(QStringLiteral("isImage")).toBool();
 
+        // Drop entries whose payload went missing rather than showing a pin
+        // that cannot be pasted.
         const auto path = pinFilePath(pinId, isImage);
         if (!QFileInfo::exists(path)) {
             qCWarning(lcClipboard) << "Dropping clipboard pin with missing payload:" << path;

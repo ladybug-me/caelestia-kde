@@ -252,6 +252,7 @@ void BlobShape::updatePolish() {
         const float innerHW = outerHW - static_cast<float>((inv->borderLeft() + inv->borderRight()) / 2.0);
         const float innerHH = outerHH - static_cast<float>((inv->borderTop() + inv->borderBottom()) / 2.0);
 
+        // Check if this rect is near the border (within 2x smoothing of inner edge)
         bool nearBorder = isInvertedRect();
         if (!nearBorder) {
             const float margin = pad * 2.0f;
@@ -317,6 +318,8 @@ void BlobShape::updatePolish() {
             if (riCornerExcludeMask & (1 << j))
                 continue;
             const auto& rj = m_cachedRects[j];
+            // Square each corner only near rj's edge; keep full radius far outside AND
+            // deep inside rj (buried, so it can't crease the visible junction).
             const float sdTr = cpuSdBox(cTrX, cTrY, rj.cx, rj.cy, rj.hw, rj.hh);
             const float sdBr = cpuSdBox(cBrX, cBrY, rj.cx, rj.cy, rj.hw, rj.hh);
             const float sdBl = cpuSdBox(cBlX, cBlY, rj.cx, rj.cy, rj.hw, rj.hh);

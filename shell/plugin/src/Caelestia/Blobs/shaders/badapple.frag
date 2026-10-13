@@ -17,17 +17,22 @@ void main() {
     vec4 src = texture(source, qt_TexCoord0);
     vec2 uv = qt_TexCoord0;
 
+    // Calculate scale to fit video inside screen without cropping
     vec2 scale = vec2(1.0);
     if (screenRatio > videoRatio) {
+        // Screen is wider than video (pillarbox)
         scale.x = screenRatio / videoRatio;
     } else {
+        // Screen is taller than video (letterbox)
         scale.y = videoRatio / screenRatio;
     }
 
+    // Center the video
     uv = (uv - 0.5) * scale + 0.5;
 
     vec4 m;
     if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+        // Out of bounds (padding area). Sample top-left corner of video to guess background color
         m = texture(mask, vec2(0.01, 0.01));
     } else {
         m = texture(mask, uv);

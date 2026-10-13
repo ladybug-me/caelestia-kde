@@ -101,6 +101,7 @@ fi
 mkdir -p "$HOME/.local/bin"
 cat > "$HOME/.local/bin/ydotoold-wrapper" << 'WRAPPER'
 #!/bin/bash
+# ydotoold-wrapper  starts ydotoold with uinput access (the active session gets it from the udev rule)
 SOCKET="${YDOTOOL_SOCKET:-/run/user/$(id -u)/.ydotool_socket}"
 if [ -S "$SOCKET" ] && pidof ydotoold > /dev/null 2>&1; then
     exit 0
@@ -158,6 +159,9 @@ configure_quick_share() {
         return 0
     fi
 
+    # The port the service listens on, read from the file the plugin build bakes it in
+    # from: the rule below has to open the port the listener actually binds, and a second
+    # copy of the number here is what would let the two drift apart.
     port="$(<"$port_file")"
     if ! [[ "$port" =~ ^[0-9]+$ ]]; then
         warn "Quick Share's transfer port in $port_file is not a port number; it may not be able to receive."

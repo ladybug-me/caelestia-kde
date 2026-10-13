@@ -170,6 +170,8 @@ stop_spinner() {
 }
 
 start_spinner
+# The full cleanup trap lands later; until then a Ctrl-C must still stop
+# the spinner and hand the terminal back.
 trap 'stty sane 2>/dev/null || true; tput cnorm 2>/dev/null || true; kill "${SPINNER_PID:-}" 2>/dev/null || true' EXIT
 
 PREBUILT_BIN=""
@@ -221,6 +223,11 @@ else
 
         BUILD_DIR="$BUNDLE_DIR/installer/build"
         BUILD_LOG="$(mktemp "${TMPDIR:-/tmp}/caelestia-build.XXXXXX.log")"
+        # Configure from a clean directory: cmake bakes absolute source paths into
+        # CMakeCache.txt and refuses to configure over a cache naming a different tree.
+        # One checkout routinely has two names here - ~/Desktop/caelestia-kwin and
+        # /mnt/c/.../caelestia-kwin are the same tree - and reusing that cache fails the
+        # build outright instead of falling back to anything.
         rm -rf "$BUILD_DIR"
         mkdir -p "$BUILD_DIR"
         (
@@ -285,6 +292,8 @@ if [[ ! -x "$BIN" ]]; then
 fi
 
 _installer_start=$(date +%s)
+# Under set -e a plain invocation would kill this script on the installer's first
+# non-zero exit, making the diagnostic block below unreachable exactly when it matters.
 ERR_LOG="$(mktemp "${TMPDIR:-/tmp}/caelestia-installer-err.XXXXXX.log")"
 _exit_code=0
 "$BIN" "$@" 2>"$ERR_LOG" || _exit_code=$?

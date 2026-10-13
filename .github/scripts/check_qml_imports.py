@@ -1,4 +1,39 @@
 #!/usr/bin/env python3
+"""Cross-check QML `import` statements against actual type usage.
+
+This repo has no real Qt/QML toolchain available in CI for a full semantic
+check (`qmllint6` can't resolve the Quickshell-proprietary `qs.*` directory
+imports at all, and is only run per-file/soft-fail today - see check_qml_deployment.py's
+"Runtime QML lesson" notes). Instead, this script builds its own type registry
+from ground truth that IS available statically:
+
+- `qs.<path>` imports map directly to `shell/<path>/*.qml` (Quickshell's own
+  directory-import convention) - exact, no guessing.
+- `Caelestia(.Sub)*` imports map to C++ classes registered with QML_ELEMENT /
+  QML_NAMED_ELEMENT under shell/plugin/src/Caelestia/<Sub>/ - exact, parsed
+  straight from the headers.
+- Any `.qml` file in the same directory as the file being checked is usable
+  without an import (QML's implicit same-directory import) - exact.
+- `import "some/relative/path"` (a quoted directory import) resolves to the
+  `.qml` files in that directory, relative to the importing file - exact.
+- Everything else (QtQuick, QtQuick.Layouts, Quickshell, Quickshell.Io, ...)
+  is resolved from UNAMBIGUOUS evidence only: a file whose only non-qs/
+  non-Caelestia import is a single module M proves, with certainty, that
+  every type it uses (and doesn't get from local/qs/Caelestia/relative
+  imports) is provided by M. A type needs at least 2 such single-module
+  files as evidence before it's trusted enough to flag other files over -
+  this avoids both a single-typo file poisoning the registry and one-off
+  coincidences being treated as proof. Fundamental QtQml-module types
+  (Connections, Timer, Binding, Component) are excluded from checking
+  entirely since they're transitively available through *any* Qt/Quickshell
+  module a file imports, per standard Qt/QML semantics.
+
+Missing-import findings are a hard failure (this is exactly the bug class that
+let a `Singleton {}` root ship without `import Quickshell` - see git history/
+Nmcli.qml). Unused-import findings are informational only (printed, never
+fail the build) since attached-property/enum-only usage of a module is
+common and this script's usage extraction can't always see it.
+"""
 
 from __future__ import annotations
 
@@ -40,6 +75,10 @@ def strip_imports(text: str) -> str:
 
 
 def parse_imports(text: str) -> tuple[list[tuple[str, str | None]], list[str]]:
+    """Returns (named_modules, relative_dir_imports). Named modules are dotted
+    identifiers (QtQuick, qs.services, Caelestia.Services, ...); relative dir
+    imports are quoted paths (`import "../drawers/blur"`), which QML resolves
+    relative to the importing file's own directory, not a shared module name."""
     named: list[tuple[str, str | None]] = []
     relative: list[str] = []
     for m in IMPORT_RE.finditer(text):
@@ -138,6 +177,8 @@ def main() -> int:
         try:
             raw = qml_file.read_text(encoding="utf-8")
         except UnicodeDecodeError as exc:
+            # Report it as a failure of the file, not of the checker: an unhandled
+            # UnicodeDecodeError ends this gate in a traceback that names no file.
             unreadable.append(f"{qml_file.relative_to(shell_root)}: not valid UTF-8 ({exc})")
             continue
         code = strip_imports(strip_comments(raw))

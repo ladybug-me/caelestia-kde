@@ -22,6 +22,8 @@ write_shell_environment() {
     info "Writing the shell environment to $env_d/caelestia.conf"
     mkdir -p "$env_d"
     cat > "$env_d/caelestia.conf" << EOF
+# Written by Caelestia. Read by systemd for every session process and by the
+# user manager the shell's unit runs under.
 QML2_IMPORT_PATH=$(install_qml_import_path)
 CAELESTIA_LIB_DIR=$(install_lib_dir)
 CAELESTIA_BIN_DIR=$(install_bin_dir)
@@ -33,6 +35,13 @@ EOF
     mkdir -p "$plasma_env_d"
     cat > "$plasma_env_d/caelestia.sh" << EOF
 #!/bin/sh
+# Written by Caelestia. Sourced by KDE Plasma during session startup for KWin,
+# kscreenlocker_greet, and graphical session processes.
+#
+# The command directory goes on PATH because a checkout's command lives in
+# ~/.local/bin, which a session does not carry on every distribution: without
+# this, a terminal here cannot run caelestia update by name. A package's
+# /usr/bin is already on PATH, so this only matters for a checkout.
 export PATH="$(install_bin_dir)\${PATH:+:\$PATH}"
 export QML2_IMPORT_PATH="$(install_qml_import_path)\${QML2_IMPORT_PATH:+:\$QML2_IMPORT_PATH}"
 export CAELESTIA_LIB_DIR="$(install_lib_dir)"
@@ -61,6 +70,7 @@ if install_is_packaged; then
     packaged_shell_setup
     exit 0
 fi
+
 
 if command -v ninja >/dev/null 2>&1; then
     CMAKE_GENERATOR="Ninja"
@@ -135,6 +145,16 @@ cleanup_legacy_lockscreen() {
     fi
 }
 
+# The shell used to load every font under `assets/fonts`, so an install can hold two copies
+# of them: the tree's own, which the CMake install puts in the config directory and never
+# deletes files from, and the copy the 12-fetch-assets.sh step (since removed) downloaded
+# into the user's asset directory. Nothing reads either directory now, and the two together
+# are about 600 MiB on a machine that has both. Only what those two mechanisms could have
+# put there is removed; anything the user added themselves stays.
+#
+# A package's tree lives under /etc and belongs to pacman, which drops the fonts with the
+# upgrade that removes them from the package, so install_shell_config() resolves to the
+# package's path there and the packaged half returns before this runs anyway.
 cleanup_legacy_fonts() {
     local -a roots=(
         "$(dirname -- "$(install_shell_config)")/assets/fonts"
@@ -154,6 +174,8 @@ cleanup_legacy_fonts() {
             fi
         done
 
+        # The download copied the tree's own three-line README along with the fonts, and it
+        # describes a directory nothing reads now. Only that exact text is removed.
         if [[ "$(head -n 1 "$root/README.md" 2>/dev/null || true)" == "# Fonts" ]]; then
             rm -f "$root/README.md"
         fi
@@ -231,6 +253,7 @@ if command -v ccache >/dev/null 2>&1; then
     ccache --max-size 8G >/dev/null 2>&1 || true
 fi
 
+
 if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
     info "Running standalone update mode... ensuring prerequisites."
 
@@ -270,6 +293,10 @@ if [[ "${CAELESTIA_SETUP_RUNNING:-0}" == "0" ]]; then
         bash "$BUNDLE_DIR/scripts/10-autostart.sh" || warn "10-autostart.sh failed"
     fi
 
+    # The default wallpaper pack is a step of its own in a full install, but an
+    # update only runs 03-deploy-configs, this script and 09-system-tweaks, so
+    # fetch it from here to keep updates supplied with it. The script is
+    # idempotent: it exits on its own once the pack is already present.
     info "Downloading the default wallpaper pack..."
     if [[ -f "$BUNDLE_DIR/scripts/03a-wallpapers.sh" ]]; then
         bash "$BUNDLE_DIR/scripts/03a-wallpapers.sh" || warn "03a-wallpapers.sh failed"
@@ -300,6 +327,13 @@ shell_release_tag() {
     sed -nE 's/^[[:space:]]*VERSION=//p' "$BUNDLE_DIR/.github/version.env" 2>/dev/null | tr -d '[:space:]'
 }
 
+# The prebuilt archive holds one released revision, so it may only stand in for a
+# tree that is that revision: the released tag itself (an update pinned to a
+# version) or main sitting on its remote tip. A branch, a stale main, or a
+# checkout carrying commits of its own builds locally instead of letting the
+# archive replace them. Main that has moved on since its last release cannot be
+# told apart from that release here - version.env still names it - so such a tree
+# is replaced by the release the archive was built from.
 checkout_may_use_prebuilt() {
     local head revision
     revision="$(shell_release_tag)"
@@ -353,6 +387,9 @@ try_download_prebuilt_shell() {
         ok "Prebuilt shell artifacts match the published checksum."
     fi
 
+    # Nothing above compared the archive against a published hash for the first two
+    # cases, and this extraction writes into $HOME/.config and $HOME/.local, so refuse an
+    # archive carrying setuid or escaping entries even when there is no hash to check.
     if ! archive_entries_are_safe "$tmp_archive"; then
         warn "Refusing to extract $url: the archive has setuid, setgid or escaping entries."
         rm -f "$tmp_archive"
@@ -415,6 +452,7 @@ if [[ -z "${CAELESTIA_FORCE_BUILD_SHELL:-}" ]] \
         ok "Using prebuilt shell artifacts from the release."
     fi
 fi
+
 
 if [[ "$SHELL_PREBUILT" -eq 1 ]]; then
     info "Skipping local shell build; prebuilt artifacts installed."
@@ -597,6 +635,8 @@ fi
 
 record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia" || true
 
+# Outside the deploy guard on purpose: CAELESTIA_SKIP_DEPLOY is about the config files this
+# step deploys, and this is the assets an older install left behind.
 cleanup_legacy_fonts
 
 if [[ "${CAELESTIA_SKIP_DEPLOY:-0}" == "0" && "${APPLY_LOCKSCREEN:-true}" != "false" ]]; then

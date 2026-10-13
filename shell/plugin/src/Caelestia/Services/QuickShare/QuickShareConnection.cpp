@@ -32,10 +32,16 @@ using location::nearby::connections::OfflineFrame;
 using location::nearby::connections::PayloadTransferFrame;
 using location::nearby::connections::V1Frame;
 
+/// The payload chunk size this implementation writes.
 constexpr qint64 chunkSize = 1024 * 1024;
 
+/// How much of an outgoing file may sit in Qt's socket write buffer before the
+/// send waits for the socket to drain.
 constexpr qint64 sendBufferLimit = 4 * chunkSize;
 
+/// The name to save a received file under. The peer chose it, so it can name a
+/// path: keep only the last component and refuse anything that would still
+/// traverse or name nothing at all.
 QString safeIncomingFileName(const QString& proposed) {
     QString name = proposed;
     name.replace(u'\\', u'/');
@@ -45,6 +51,7 @@ QString safeIncomingFileName(const QString& proposed) {
     return name;
 }
 
+/// A path in `directory` that does not overwrite what is already there.
 QString uniqueFilePath(const QString& directory, const QString& fileName) {
     const QString direct = directory + u'/' + fileName;
     if (!QFile::exists(direct))
@@ -77,7 +84,7 @@ QuickShareConnection::QuickShareConnection(QTcpSocket* socket, QObject* parent)
     : QObject(parent)
     , m_socket(socket)
     , m_state(OfflineFrameExchange) {
-    m_socket->setParent(this);
+    m_socket->setParent(this); // the accepted socket belongs to this connection
     m_crypto.initServer();
     connectSocket();
 }
@@ -244,6 +251,8 @@ void QuickShareConnection::sendEncryptedSharingFrame(sharing::nearby::V1Frame::F
 
 void QuickShareConnection::sendEncryptedSharingFrame(const sharing::nearby::Frame& frame) {
     const QByteArray frameData = serialize(frame);
+    // A sharing frame travels as a BYTES payload: the frame itself, then an empty
+    // last chunk that terminates it.
     const qint64 payloadId = qAbs(QRandomGenerator::global()->generate64());
     sendPayloadChunk(payloadId, PayloadTransferFrame::PayloadHeader::BYTES, frameData.size(), 0, false, frameData, {});
     sendPayloadChunk(
@@ -401,6 +410,8 @@ void QuickShareConnection::handlePostHandshake(const QByteArray& data) {
         return;
     }
 
+    // The server (receiver) answers with its CONNECTION_RESPONSE here; the client
+    // (sender) already sent its own right after CLIENT_FINISH.
     if (!m_crypto.isClient())
         sendConnectionResponse();
 
@@ -431,8 +442,10 @@ void QuickShareConnection::handleEncryptedFrame(const QByteArray& data) {
             handlePayloadTransfer(v1.payload_transfer());
         break;
     case V1Frame::KEEP_ALIVE:
-        break;
+        break; // nothing to answer
     case V1Frame::DISCONNECTION:
+        // The peer is closing the connection. A transfer that completed has already
+        // reported itself, so this only ends transfers the peer gave up on.
         setState(Disconnected);
         finishTransfer(false);
         break;
@@ -488,7 +501,7 @@ void QuickShareConnection::handleByteChunk(const PayloadTransferFrame& packet, c
     auto buffer = m_payloadBuffers.find(payloadId);
     if (buffer == m_payloadBuffers.end()) {
         if (chunk.offset() != 0)
-            return;
+            return; // a continuation of a payload this connection never saw start
         buffer = m_payloadBuffers.insert(payloadId, PayloadBuffer());
     }
 
@@ -563,6 +576,7 @@ void QuickShareConnection::pumpOutgoingFile() {
 
         if (m_outgoingFile.atEnd()) {
             m_outgoingFile.close();
+            // An empty last chunk terminates the file payload.
             sendPayloadChunk(m_outgoingFilePayloadId, PayloadTransferFrame::PayloadHeader::FILE, m_outgoingFileSize,
                 m_outgoingFileSize, true, {}, m_outgoingFileName);
             sendDisconnection();
@@ -570,6 +584,8 @@ void QuickShareConnection::pumpOutgoingFile() {
         }
     }
 
+    // Report the transfer only once the socket has handed every byte to the peer:
+    // the transfer is the file, the terminator and the disconnection after it.
     if (m_outgoingFileQueued && m_socket->bytesToWrite() == 0)
         finishTransfer(true);
 }
@@ -579,7 +595,7 @@ void QuickShareConnection::sendDisconnection() {
     frame.set_version(OfflineFrame::V1);
     auto* v1 = frame.mutable_v1();
     v1->set_type(V1Frame::DISCONNECTION);
-    v1->mutable_disconnection();
+    v1->mutable_disconnection(); // an empty disconnection frame
 
     sendSecureFrame(frame);
 }

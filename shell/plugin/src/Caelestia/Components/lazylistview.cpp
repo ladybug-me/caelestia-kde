@@ -330,6 +330,8 @@ LazyListView::HeightUpdate LazyListView::setKnownHeight(int index, qreal height)
     return previous;
 }
 
+// A resize above the viewport shifts everything below it, so opted-in delegates
+// report the delta and let the consumer compensate its scroll position.
 void LazyListView::adjustViewportIfAbove(int index, QQuickItem* item, qreal delta) {
     auto* attached = attachedFor(item);
     if (attached && attached->trackViewport() && m_layout[index].targetY < viewportTop())
@@ -712,6 +714,8 @@ QList<int> LazyListView::missingDelegates(int first, int last) const {
 }
 
 int LazyListView::destroyDelegates(const QList<int>& indices, int budget) {
+    // Take entries out of the maps first so destruction cannot observe
+    // a delegate that is already unreachable from the view.
     QVector<DelegateEntry> removed;
     removed.reserve(std::min(budget, static_cast<int>(indices.size())));
 
@@ -760,6 +764,8 @@ LazyListView::DelegateEntry LazyListView::createDelegate(int modelIndex) {
     if (!m_delegate || !m_model)
         return entry;
 
+    // Use the delegate component's creation context for beginCreate
+    // so bound components (pragma ComponentBehavior: Bound) are accepted.
     auto* compContext = m_delegate->creationContext();
     if (!compContext)
         compContext = qmlContext(this);

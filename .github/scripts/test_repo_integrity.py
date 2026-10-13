@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+"""Repository integrity test suite.
+
+Validates cross-cutting concerns:
+  - All shell scripts parse cleanly
+  - All Python files compile cleanly
+  - version.env is the single source of truth; the CMake build derives from it
+  - Submodules are properly initialized
+  - Workflow files are valid YAML
+  - The offline-only dead proxy stays scoped to build steps, not whole jobs
+  - No duplicate script step names in Runner.cpp
+  - Git-tracked docs/ files referenced in .github/CONTRIBUTING.md exist
+"""
 
 import re
 import shutil
@@ -20,6 +32,7 @@ def repo_files(pattern: str) -> list[Path]:
 
 
 def git_tracked_files(glob_pattern: str) -> list[str]:
+    """Return list of git-tracked files matching glob_pattern, relative to ROOT."""
     result = subprocess.run(
         ["git", "ls-files", "--", glob_pattern],
         capture_output=True, text=True, cwd=ROOT,
@@ -32,6 +45,13 @@ def git_tracked_files(glob_pattern: str) -> list[str]:
 class ScriptSyntaxTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("bash"), "bash is required for shell syntax checks")
     def test_shell_scripts_parse(self) -> None:
+        """Every shell script THIS REPOSITORY tracks must parse.
+
+        Only git-tracked files are checked, for the same reason the Python test below
+        does it: a filesystem walk also picks up an untracked scratch directory, an
+        initialized submodule or a vendored virtualenv, and reports a syntax error in
+        somebody else's file as a failure of the change under review.
+        """
         failures: list[str] = []
 
         tracked = git_tracked_files("*.sh")
@@ -51,6 +71,16 @@ class ScriptSyntaxTests(unittest.TestCase):
         self.assertFalse(failures, "Shell syntax failures:\n\n" + "\n\n".join(failures))
 
     def test_python_scripts_compile(self) -> None:
+        """Syntax-check every Python file without writing bytecode.
+
+        py_compile drops a .pyc next to the source, which fails with EIO on a
+        read-only checkout (a shared folder, a container image, a Nix store).
+        compile() checks the same thing and touches nothing.
+
+        Only git-tracked files are checked. A filesystem walk also picks up a
+        checked-out virtualenv - thousands of files that are not ours, and slow
+        to read over a network mount.
+        """
         failures: list[str] = []
         paths = git_tracked_files("*.py") or [
             path.relative_to(ROOT).as_posix() for path in repo_files("*.py")
@@ -66,6 +96,12 @@ class ScriptSyntaxTests(unittest.TestCase):
 
 
 class BashHelperTestSuite(unittest.TestCase):
+    """Run tests/run-tests.sh so the shell helpers get real behavior coverage.
+
+    scripts/lib/ helpers cannot be exercised from Python, so this delegates to
+    the bash runner and fails on any non-zero exit. Adding a test there is
+    enough to have it enforced here and in CI.
+    """
 
     @unittest.skipUnless(shutil.which("bash"), "bash is required for the helper suite")
     def test_bash_helper_suite_passes(self) -> None:
@@ -85,6 +121,13 @@ class BashHelperTestSuite(unittest.TestCase):
         )
 
     def test_every_test_file_hands_its_tests_to_the_runner(self) -> None:
+        """A test file that never calls run_tests exits 0 and reads as a pass.
+
+        run-tests.sh only executes the file, so test_* functions nobody invokes
+        assert nothing while the suite stays green. Two guard suites did exactly
+        that - and were passing a path where assert_contains wanted file
+        contents, so they could not have passed had they run either.
+        """
         silent = [
             path.name
             for path in sorted((ROOT / "tests").glob("test_*.sh"))
@@ -97,8 +140,15 @@ class BashHelperTestSuite(unittest.TestCase):
 
 
 class ShellSurfaceTests(unittest.TestCase):
+    """Invariants for shell QML surfaces that CI cannot execute.
+
+    There is no Qt/Quickshell toolchain in this job, so the checks here pin the
+    specific behavior the reports describe as silent - a surface that claims
+    success while doing nothing.
+    """
 
     def test_ai_key_writes_wait_for_the_keyring_result(self) -> None:
+        """#652: committing the field before secret-tool replies claims a save that may not have happened."""
         page = (ROOT / "shell" / "modules" / "nexus" / "pages" / "AiSettingsPage.qml").read_text(encoding="utf-8")
 
         store_at = page.find("function storeApiKey")
@@ -128,6 +178,14 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_shortcut_descriptions_are_translatable(self) -> None:
+        """#692: shortcut labels are rendered from this data, so it must be extractable.
+
+        The shortcut manager renders `GlobalShortcut.description` verbatim, and
+        lupdate can only extract `qsTr()` calls with a literal argument. A bare
+        literal is therefore invisible to the catalog and stays English no
+        matter which locale is active. This checks the source is extractable;
+        it cannot check that a translation exists, which is Crowdin's job.
+        """
         offenders: list[str] = []
 
         for path in sorted((ROOT / "shell").rglob("*.qml")):
@@ -147,6 +205,7 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_about_page_links_the_plugin_count_to_the_plugin_manager(self) -> None:
+        """#578: a plugin count with no way through to the plugin page is a dead end."""
         page = (ROOT / "shell" / "modules" / "nexus" / "pages" / "AboutPage.qml").read_text(encoding="utf-8")
 
         self.assertIn(
@@ -161,6 +220,13 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_a_missing_github_token_is_announced_in_the_ui(self) -> None:
+        """The GitHub widget hides itself from the bar unless a fetch has succeeded.
+
+        Aborting inside the provider script therefore made the shell log the only
+        place that mentioned the missing token: the widget vanished and the Nexus
+        page that fixes it said nothing about why. The state has to be visible
+        where the token is configured, not just in an error line.
+        """
 
         def handler_body(source: str, marker: str) -> str:
             start = source.index(marker)
@@ -226,6 +292,12 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_github_widget_ships_disabled(self) -> None:
+        """The widget needs a personal access token, so default-on nags every fresh install.
+
+        The bar only builds entries with enabled: true, so shipping it off is also
+        what keeps the missing-token notice away from people who never asked for
+        GitHub activity.
+        """
         config = (
             ROOT / "shell" / "plugin" / "src" / "Caelestia" / "Config" / "barconfig.hpp"
         ).read_text(encoding="utf-8")
@@ -243,6 +315,12 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_settings_search_waits_for_a_pause_in_typing(self) -> None:
+        """The published query drives two fzf searches, each building a delegate per hit.
+
+        Publishing it straight from the text field meant both panes were rebuilt on
+        every keystroke, which is what made typing feel laggy. Clearing the field is
+        the exception: the locations list has to come back without a delay.
+        """
         pane = (ROOT / "shell" / "modules" / "nexus" / "NavPane.qml").read_text(encoding="utf-8")
 
         self.assertNotIn(
@@ -272,6 +350,14 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_a_search_result_opens_its_subpage_on_the_first_try(self) -> None:
+        """Opening a sub-page of a page that has not been built yet has to be queued.
+
+        The page swap is animated, so openSubPage right after changing page still
+        reaches the page on its way out. When that page has no sub-page at that
+        index it calls closeSubPage, which pops the request, and the page that
+        arrives opens at the top: the first search lands on the page, and only a
+        second search, now that the page is already showing, lands on the section.
+        """
         results = (
             ROOT / "shell" / "modules" / "nexus" / "navpane" / "SearchResults.qml"
         ).read_text(encoding="utf-8")
@@ -308,6 +394,12 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_font_controls_are_reachable_from_search(self) -> None:
+        """Search is driven by PageDictionary, so a section missing from it is invisible.
+
+        The Appearance page holds the font and monospace font pickers, but the only
+        entry that mentioned fonts was the page description, so searching "font"
+        returned the page and nothing that leads to those pickers.
+        """
         lines = (
             ROOT / "shell" / "modules" / "nexus" / "PageDictionary.qml"
         ).read_text(encoding="utf-8").splitlines()
@@ -321,6 +413,13 @@ class ShellSurfaceTests(unittest.TestCase):
             )
 
     def test_every_settings_subpage_is_reachable_from_search(self) -> None:
+        """PageDictionary is the only thing search indexes, so a page missing from it is a dead end.
+
+        Nothing else notices: the page still renders and is still reachable by
+        clicking through, so a sub-page can sit unsearchable indefinitely. The
+        audit also reports the section headers and setting rows that are not
+        indexed individually; only the sub-pages are gated.
+        """
         script = Path(".github", "scripts", "audit_search_coverage.py")
         self.assertTrue((ROOT / script).is_file(), f"expected {script.as_posix()} to exist")
 
@@ -337,6 +436,12 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_dev_timeline_rewrites_commit_subjects(self) -> None:
+        """Raw subjects read as a git log dump rather than as what changed.
+
+        On the dev branch every row showed the commit subject verbatim, so half the
+        list was "Merge pull request #697 from somebody/branch" and the type was
+        printed twice, once as a chip and once as the "fix(scope):" prefix.
+        """
         timeline = (
             ROOT / "shell" / "modules" / "nexus" / "common" / "UpdateTimeline.qml"
         ).read_text(encoding="utf-8")
@@ -358,6 +463,11 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_dev_timeline_hides_merge_commits(self) -> None:
+        """Merges carry no change of their own and made up half of the dev list.
+
+        The commit the running shell is installed at has to stay, though: it is how
+        the timeline marks where the user is.
+        """
         page = (
             ROOT / "shell" / "modules" / "nexus" / "pages" / "UpdatesPage.qml"
         ).read_text(encoding="utf-8")
@@ -369,6 +479,12 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_shortcut_list_does_not_animate_endlessly(self) -> None:
+        """An endless animation in a settings list recomposites the window every frame.
+
+        The collision marker pulsed forever; on a translucent window with a backdrop
+        blur that reads as the whole window blinking. A static dot and its tooltip
+        carry the same warning.
+        """
         row = (
             ROOT / "shell" / "modules" / "nexus" / "common" / "ShortcutRow.qml"
         ).read_text(encoding="utf-8")
@@ -381,6 +497,15 @@ class ShellSurfaceTests(unittest.TestCase):
         self.assertIn("partCollisionName", row, "the collision must still be reported")
 
     def test_the_desktop_is_not_painted_black_while_the_wallpaper_loads(self) -> None:
+        """The desktop went black whenever the shell started or restarted.
+
+        The background window was created black, while the wallpaper is loaded
+        asynchronously and only starts loading a couple of event loop turns later,
+        so a starting shell showed a black desktop for as long as the image took to
+        decode. The fallback color now waits for the wallpaper to report that it
+        has something to show, and until then the desktop the compositor already
+        has keeps showing through.
+        """
         background = (
             ROOT / "shell" / "modules" / "background" / "Background.qml"
         ).read_text(encoding="utf-8")
@@ -416,6 +541,15 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_visualiser_does_not_spin_without_audio(self) -> None:
+        """The desktop repainted every frame from boot, which reads as flashing.
+
+        VisualiserBars::setValues() cleared settled on every update, including an
+        empty value list, and advance() returns early for an empty list, so nothing
+        ever set it back. The frame loop in Visualiser.qml is gated on !settled, so
+        it ran every frame for as long as the shell was up, repainting the whole
+        desktop surface and its blurred wallpaper again and again. Nothing on
+        screen changes while that happens, which is why a screenshot looks static.
+        """
         bars = (
             ROOT / "shell" / "plugin" / "src" / "Caelestia" / "Components" / "visualiserbars.cpp"
         ).read_text(encoding="utf-8")
@@ -449,6 +583,16 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_a_startup_reseed_takes_the_scheme_from_the_wallpaper(self) -> None:
+        """The CLI derives dynamic colors from the wallpaper it was last told about.
+
+        path.txt is written directly by the deploy script and by the wallpaper
+        picker's still-frame path, so the CLI can be left without a wallpaper.
+        `scheme set -n dynamic` then writes nothing, the palette stays on the
+        shell's built-in default, and that default is what the whole desktop
+        shows until something re-derives. Deriving once per start from the
+        wallpaper on screen fixes it at the source; leaving a scheme the user
+        picked alone is what keeps this from undoing their choice.
+        """
         colours = (ROOT / "shell" / "services" / "Colours.qml").read_text(encoding="utf-8")
         self.assertIn(
             'Quickshell.shellPath("scripts/reseed-scheme.sh")',
@@ -551,12 +695,20 @@ class ShellSurfaceTests(unittest.TestCase):
 
 
 class WhatsNewEntryTests(unittest.TestCase):
+    """The release notes are data, and nothing validates them at runtime.
+
+    A duplicate revision means one of the two entries is never shown to anybody,
+    a media file that is not there renders an empty entry, and a bare title or
+    description is invisible to lupdate so it stays English in every locale.
+    None of those fail loudly on their own, so they are checked here.
+    """
 
     ENTRIES = ROOT / "shell" / "modules" / "whatsnew" / "Entries.qml"
     ASSETS = ROOT / "shell" / "assets" / "whatsnew"
     SHELL = ROOT / "shell"
 
     def entries(self) -> list[dict]:
+        """Parse the entry list. Field order within an entry is fixed by the file."""
         text = self.ENTRIES.read_text(encoding="utf-8")
         start = text.index("readonly property var list: [")
         end = text.index("\n    ]", start)
@@ -659,6 +811,7 @@ class MetadataConsistencyTests(unittest.TestCase):
 
 class VersionConsistencyTests(unittest.TestCase):
     def test_cmake_has_no_hardcoded_version(self) -> None:
+        """version.env is the single source of truth - CMakeLists derives from it."""
         env_text = (ROOT / ".github" / "version.env").read_text(encoding="utf-8").strip()
         env_match = re.match(r"^VERSION=(v[\d.]+)$", env_text)
         self.assertIsNotNone(env_match, f"Invalid version.env format: {env_text!r}")
@@ -675,6 +828,7 @@ class VersionConsistencyTests(unittest.TestCase):
         )
 
     def test_version_format_valid(self) -> None:
+        """Version must follow semver-like vX.Y.Z format."""
         env_text = (ROOT / ".github" / "version.env").read_text(encoding="utf-8").strip()
         env_match = re.match(r"^VERSION=(v\d+\.\d+\.\d+)$", env_text)
         self.assertIsNotNone(
@@ -683,9 +837,14 @@ class VersionConsistencyTests(unittest.TestCase):
         )
 
     def test_updater_records_the_installed_revision_through_the_shared_helper(self) -> None:
+        """Update scripts must record the installed commit for delta checks.
+
+        Writing it inline here is what let the updater claim a revision whose
+        build was skipped (#651); the shared helper refuses to in that case.
+        """
         update_script = ROOT / "src" / "bin" / "caelestia-update"
         if not update_script.is_file():
-            return
+            return  # not required if file doesn't exist yet
 
         content = update_script.read_text(encoding="utf-8")
         self.assertIn(
@@ -703,6 +862,7 @@ class VersionConsistencyTests(unittest.TestCase):
 class SubmoduleTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("git"), "git is required for submodule checks")
     def test_submodule_references_valid(self) -> None:
+        """If .gitmodules exists, referenced paths and URLs should be consistent."""
         gitmodules = ROOT / ".gitmodules"
         if not gitmodules.is_file():
             return
@@ -726,6 +886,14 @@ class SubmoduleTests(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("git"), "git is required for submodule checks")
     def test_gitlinks_and_gitmodules_agree(self) -> None:
+        """Every gitlink in the tree is declared in .gitmodules, and the other way round.
+
+        An undeclared gitlink cannot be resolved: `git submodule update` stops with
+        "No url found for submodule path ...", which is how v2.4.3's source tarball
+        was never built. A declared path with no gitlink is the same drift seen from
+        the other side. The check reads the index, so it holds in a checkout that has
+        no submodules initialized.
+        """
         result = subprocess.run(
             ["git", "ls-files", "--stage"],
             capture_output=True, text=True, cwd=ROOT,
@@ -767,6 +935,7 @@ class SubmoduleTests(unittest.TestCase):
 class WorkflowYamlTests(unittest.TestCase):
     @unittest.skipUnless(shutil.which("python3"), "python3 required for YAML parse")
     def test_workflow_files_parse(self) -> None:
+        """All .yml files in .github/workflows/ should be valid YAML."""
         workflows_dir = ROOT / ".github" / "workflows"
         if not workflows_dir.is_dir():
             return
@@ -780,6 +949,12 @@ class WorkflowYamlTests(unittest.TestCase):
                     self.fail(f"Invalid YAML in {wf_file.name}: {e}")
 
     def test_dead_proxy_is_not_set_at_job_scope(self) -> None:
+        """The offline-only proxy must stay on build steps, never on a whole job.
+
+        Steps use http://127.0.0.1:9 to prove a build needs no network. Set at
+        job scope it also reaches actions/checkout, which then cannot fetch the
+        repository and fails with ECONNREFUSED.
+        """
         workflows_dir = ROOT / ".github" / "workflows"
         if not workflows_dir.is_dir():
             return
@@ -804,6 +979,7 @@ class WorkflowYamlTests(unittest.TestCase):
 
 class DocsReferenceTests(unittest.TestCase):
     def test_contributing_references_existing_files(self) -> None:
+        """Files mentioned in CONTRIBUTING.md should exist."""
         contributing = ROOT / ".github" / "CONTRIBUTING.md"
         if not contributing.is_file():
             return
@@ -818,6 +994,12 @@ class DocsReferenceTests(unittest.TestCase):
 
 
 class KrohnkiteIgnoreClassTests(unittest.TestCase):
+    """The C++ fallback and the startup task must name the same window classes.
+
+    Nexus renders DEFAULT_IGNORE_CLASS when kwinrc has no ignoreClass key and writes it
+    back on the first edit, so a fallback that lags IGNORE_CLASSES drops every class it is
+    missing from kwinrc for the rest of the session.
+    """
 
     def test_default_ignore_class_matches_the_startup_task(self) -> None:
         cpp_path = ROOT / "shell" / "plugin" / "src" / "Caelestia" / "Services" / "krohnkiteconfig.cpp"

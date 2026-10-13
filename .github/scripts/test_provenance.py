@@ -76,6 +76,7 @@ class ProvenanceTests(unittest.TestCase):
         return json.loads(metadata.read_text(encoding="utf-8"))["artifact_root_hash"]
 
     def test_root_hash_ignores_compiled_artifacts(self) -> None:
+        """Compiled bytes track the build environment, not the layout."""
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             metadata = self._metadata(root)
@@ -89,6 +90,8 @@ class ProvenanceTests(unittest.TestCase):
             self.assertEqual(source_layout, self._root_hash(metadata))
 
     def test_root_hash_ignores_every_package_only_path(self) -> None:
+        """The hash has to cover the same paths the parity check allows, or the
+        two staged trees would produce different hashes for the same layout."""
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             metadata = self._metadata(root)

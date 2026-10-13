@@ -49,12 +49,14 @@ signals:
     void overridesChanged();
 
 protected:
+    // Null means empty, otherwise it has content
     std::unique_ptr<Quarantine> m_quarantine;
     const bool m_globalOnly;
 
     void warnGlobalRead(const QString& key) const;
     [[nodiscard]] bool rejectInvalidWrite(const QString& key, const QVariant& value) const;
     template <typename T> [[nodiscard]] bool rejectInvalidWrite(const QString& key, const T& value) const;
+    // Returns true if the write should be skipped afterwards, overlays cannot write global options
     bool rejectGlobalWrite(const QString& key);
     static void warnGlobalSync(QList<Diagnostic>& diagnostics, const QString& path);
     bool rejectGlobalSync(QList<Diagnostic>& diagnostics) const;

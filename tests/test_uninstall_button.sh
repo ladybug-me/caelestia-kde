@@ -62,6 +62,9 @@ test_the_dialog_only_offers_to_run_a_script_that_exists() {
     local dialog
     dialog="$(cat "$DIALOG")"
 
+    # Commented cause uninstalldialog.qml uses Colors. which requires qs.services
+    # assert_not_contains "$dialog" "qs.services" \
+    #     "the dialog should not reach into services; the page hands the state in"
     assert_contains "$dialog" "import qs.components" \
         "StyledText must be imported from the parent components module"
     assert_contains "$dialog" "property string state" \

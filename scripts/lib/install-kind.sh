@@ -2,6 +2,7 @@
 if [[ -z "${CAELESTIA_INSTALL_KIND_SOURCED:-}" ]]; then
 CAELESTIA_INSTALL_KIND_SOURCED=1
 
+# Resolved at source time: a caller may change directory before asking.
 if ! CAELESTIA_INSTALL_KIND_SOURCED_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)"; then
     CAELESTIA_INSTALL_KIND_SOURCED_DIR=""
 fi

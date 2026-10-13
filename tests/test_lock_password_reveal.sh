@@ -8,6 +8,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PILL="$REPO_ROOT/src/kde/shells/caelestia.desktop/contents/lockscreen/components/PasswordPill.qml"
 LOCKSCREEN="$REPO_ROOT/src/kde/shells/caelestia.desktop/contents/lockscreen/LockScreen.qml"
 
+# The greeter is a Plasma shell package of our own, not the upstream Quickshell lock
+# module, so nothing upstream can restore this feature for us: the reveal toggle exists
+# here and only here, and these assertions are what keeps it from being dropped.
 test_the_reveal_starts_hidden() {
     local qml
     qml="$(cat "$PILL")"

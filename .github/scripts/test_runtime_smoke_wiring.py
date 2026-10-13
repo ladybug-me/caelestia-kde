@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+"""Runtime smoke wiring tests.
+
+The smoke action builds the shell and runs it in a job container, so these
+invariants are about the container view rather than about shell/ itself: the
+directories the caller passes, and the QML modules the image has to provide.
+They read the same handful of CI files and change for their own reasons, which
+is why they are not in test_repo_integrity.py.
+"""
 
 import re
 import unittest
@@ -12,10 +20,15 @@ ROOT = Path(__file__).resolve().parents[2]
 
 SMOKE_ACTION = "./.github/actions/runtime-smoke"
 
+# check_qml_imports tracks upper-case rooted bareword modules. Qt also resolves
+# reverse-DNS modules such as org.kde.pipewire, so this test accepts that shape
+# too; the quoted form (`import "components"`) is a directory import, not a
+# module, and IMPORT_RE tells the two apart.
 REVERSE_DNS_MODULE_RE = re.compile(r"^(?:org|com|io|net)\.[\w.]+$")
 
 
 def imported_modules(text: str) -> set[str]:
+    """The modules a QML file imports, ignoring relative directory imports."""
     modules = set()
     for match in IMPORT_RE.finditer(text):
         module = match.group(2)
@@ -27,11 +40,26 @@ def imported_modules(text: str) -> set[str]:
 
 
 class RuntimeSmokeWiringTests(unittest.TestCase):
+    """The runtime smoke runs inside a job container, so its directories and its
+    QML modules have to exist the way the container sees them.
+
+    A path interpolated from `github.workspace` is the runner's host path, which
+    inside a container is not the workspace mount: the install tree and the logs
+    land somewhere the artifact upload cannot reach, so a failing run uploads
+    nothing and a passing one uploads nothing either.
+    """
 
     DIRECTORY_INPUTS = ("deps-dir", "install-root", "log-dir")
 
+    # QML modules the shell imports from outside this repository, and the Arch
+    # package that provides each one. The smoke container is built from
+    # install-build-deps, so a module the shell imports and that action never
+    # installs shows up as "Failed to load configuration" halfway through a run.
     EXTERNAL_QML_MODULES = {"org.kde.pipewire": "kpipewire"}
 
+    # Module roots the environment supplies itself: Quickshell, this repository's
+    # own qs.*/Caelestia.*/M3Shapes imports, and Qt (QtQuick, QtCore, Qt.labs.*,
+    # Qt5Compat.* - every Qt module root starts with "Qt").
     PROVIDED_MODULE_ROOTS = ("qs", "Caelestia", "M3Shapes", "Quickshell")
 
     @classmethod
@@ -41,6 +69,7 @@ class RuntimeSmokeWiringTests(unittest.TestCase):
 
     @classmethod
     def smoke_callers(cls) -> dict[str, dict]:
+        """Every workflow step that calls the smoke action, with its inputs."""
         callers: dict[str, dict] = {}
         for workflow in sorted((ROOT / ".github" / "workflows").glob("*.yml")):
             document = yaml.safe_load(workflow.read_text(encoding="utf-8")) or {}

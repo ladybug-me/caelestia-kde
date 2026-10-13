@@ -29,12 +29,21 @@ StyledWindow {
     readonly property alias bar: bar
     readonly property alias interactionWrapper: interactions
     readonly property alias visibilities: visibilities
+    // The per-screen state object the drawers share. The dashboard's tab and the
+    // month its calendar is showing live in it, which is where upstream keeps
+    // them, so both survive the dashboard closing and a shell reload.
     readonly property ScreenState screenState: ShellState.forScreen(screen)
     readonly property var monitor: Kwin.monitorFor(screen)
+    // Reference Kwin.activeWsId so QML re-evaluates this binding whenever the
+    // active workspace changes — hasFullscreenOn() filters by workspace, but
+    // a plain function call only re-runs when its direct property deps change.
     readonly property bool actualFullscreen: (Kwin.activeWsId, Kwin.hasFullscreenOn(screen?.name ?? ""))
     readonly property bool hasOpenOverlay: focusGrabState.active || panels.popouts.isDetached || desktopContextMenu.expanded || desktopIconContextMenu.expanded || dropMenu.expanded || viewOptions.open || widgetGallery.open || visibilities.overview || visibilities.launcher || visibilities.dashboard || visibilities.sidebar || visibilities.session || visibilities.utilities
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
 
+    // The sidebar is the only thing open and it is pinned (or one of the shell's
+    // file dialogs is up): take input only over the panels, not the whole screen,
+    // so clicks outside reach other windows instead of closing the sidebar.
     readonly property bool sidebarPassthrough: visibilities.sidebar && (Visibilities.sidebarPinned || Visibilities.openDialogs > 0)
         && !(panels.popouts.isDetached || desktopContextMenu.expanded || desktopIconContextMenu.expanded || dropMenu.expanded || viewOptions.open || widgetGallery.open || visibilities.overview || visibilities.launcher || visibilities.dashboard || visibilities.session || visibilities.utilities
             || (panels.popouts.currentName.startsWith("traymenu") && (panels.popouts.current as StackView)?.depth > 1))
@@ -94,6 +103,8 @@ StyledWindow {
     WlrLayershell.layer: !wantsKeyboard && (hasOpenOverlay || (actualFullscreen && fsTransitionProg < 1) || (fsTransitionProg > 0 && Config.general.showOverFullscreen) || (panels.notifications.visible && panels.notifications.height > 0 && GlobalConfig.notifs.fullscreen === "on") || (((monitor?.lastIpcObject?.specialWorkspace?.name?.length ?? 0) > 0) && (monitor?.activeWorkspace?.toplevels?.values?.some(t => (t?.lastIpcObject?.fullscreen ?? 0) > 1) ?? false))) ? WlrLayer.Overlay : WlrLayer.Top
     WlrLayershell.keyboardFocus: wantsKeyboard ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
+    // A pinned sidebar gets out of the way of fullscreen windows (games, video)
+    // and comes back once fullscreen ends.
     onActualFullscreenChanged: {
         if (actualFullscreen) {
             if (visibilities.sidebar && Visibilities.sidebarPinned) {
@@ -220,6 +231,9 @@ StyledWindow {
                 }
             }
             onTriggered: {
+                // Focus moved to one of the shell's own file dialogs: keep the
+                // drawers open, and wait for the shell to be focused again before
+                // treating focus loss as a reason to close them.
                 if (Visibilities.openDialogs > 0) {
                     parent._wasActive = false;
                     return;
@@ -441,6 +455,7 @@ StyledWindow {
             id: contextMenuBg
 
             panel: desktopContextMenu.backgroundItem
+            // Stay up while the closing animation runs, not just while expanded.
             visible: desktopContextMenu.visible && panel.width > 0
             x: panel.x
             y: panel.y
@@ -661,6 +676,8 @@ StyledWindow {
                 if (root.screen.name === screenName) {
                     desktopContextMenuAnchor.x = x;
                     desktopContextMenuAnchor.y = y;
+                    // Already open: jump to the new spot and unfold again
+                    // instead of closing and waiting before reopening.
                     if (desktopContextMenu.expanded)
                         desktopContextMenu.reopen();
                     else

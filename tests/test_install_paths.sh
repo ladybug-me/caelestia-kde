@@ -27,6 +27,7 @@ cli_env() {
 }
 
 ipc_defaults() {
+    # $1 = stub dir, $2 = home, $3 = the config path to resolve the defaults for
     env -u QML2_IMPORT_PATH -u CAELESTIA_LIB_DIR -u CAELESTIA_INSTALL_KIND \
         PATH="$1:$PATH" HOME="$2" XDG_CONFIG_HOME="$2/.config" \
         CAELESTIA_SHELL_CONFIG="$2/.config/quickshell/caelestia/shell.qml" \

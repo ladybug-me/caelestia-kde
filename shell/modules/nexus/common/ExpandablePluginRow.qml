@@ -20,8 +20,10 @@ StyledRect {
     property string authorNameText: ""
     property string iconText: "extension"
     property string iconImageUrl: ""
+    // Update indicator
     property bool isUpdateAvailable: false
     property string updateVersionText: ""
+    // true while this plugin is being installed (spinner state)
     property bool updateBusy: false
 
     default property Component actionComponent
@@ -37,6 +39,7 @@ StyledRect {
         return lower.endsWith(".mp4") || lower.endsWith(".webm") || lower.endsWith(".mkv");
     }
 
+    // Helper for transparent images (png, svg, gif)
     function isTransparentMedia(url) {
         if (!url) return false;
         let lower = url.toString().toLowerCase();
@@ -149,6 +152,7 @@ StyledRect {
                             }
                         }
 
+                        // Option 1: opacity pulse
                         StyledRect {
                             id: updateBadgeA
 
@@ -212,6 +216,7 @@ StyledRect {
                                 }
                             }
 
+                            // Clicking the badge updates the plugin in place
                             MouseArea {
                                 anchors.fill: parent
                                 enabled: root.isUpdateAvailable && !root.updateBusy

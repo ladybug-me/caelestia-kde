@@ -7,6 +7,10 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SIDEBAR="$REPO_ROOT/shell/modules/sidebar"
 
+# The assistant's logic that does not need Qt lives in .pragma library files
+# (shell/modules/sidebar/ai/*.js). run_js loads them as ClaudeCode, Sessions
+# and Attachments, runs the given script with node's assert, and prints "ok"
+# when every assertion held.
 JS_PRELUDE='
 const fs = require("fs");
 const assert = require("assert");

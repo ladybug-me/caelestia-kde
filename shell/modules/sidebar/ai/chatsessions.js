@@ -1,7 +1,17 @@
 .pragma library
 
+// Plain data operations on the AI assistant's chat sessions. Kept free of QML
+// types so they can be tested on their own; ChatStore.qml owns the state.
+//
+// A session: { id, title, messages, claudeCodeCwd, claudeCodePermissionMode,
+// claudeCodeSessionId, claudeCodeSessionAccount, provider, updatedAt, pinned,
+// titleLocked }. A message has a stable id, which is how running requests find
+// the message they write to.
+
 var nextMessageSerial = 0;
 
+// Fields kept per message, with their defaults. Every message carries all of
+// them so the ListModel rows built from them always have the same roles.
 var messageDefaults = {
     "msgId": "",
     "isUser": false,
@@ -11,6 +21,8 @@ var messageDefaults = {
     "toolsJson": "",
     "usageText": "",
     "attachments": "",
+    // View state, not stored: the message was just added (pops in once), and
+    // which parts of it are expanded (survives the delegate being recreated).
     "isNew": false,
     "thoughtExpanded": false,
     "expandedTools": ""
@@ -50,12 +62,20 @@ function findMessage(session, msgId) {
     if (!session)
         return null;
     var msgs = session.messages;
+    // Messages being written to are almost always the last ones.
     for (var i = msgs.length - 1; i >= 0; i--)
         if (msgs[i].msgId === msgId)
             return msgs[i];
     return null;
 }
 
+// The one place a chat's messages change. Each edit is made to the session's
+// array and, when `view` (the ListModel showing the open chat) is given, to
+// the same row of it, so the two always agree: row i of the view is message i
+// of the session. Returns the message, or null if there is none with msgId.
+//   "append": fields is the new message (from newMessage())
+//   "update": fields holds the fields to change
+//   "remove": fields is unused
 function editMessage(session, view, op, msgId, fields) {
     var msgs = session.messages;
     if (op === "append") {
@@ -65,6 +85,7 @@ function editMessage(session, view, op, msgId, fields) {
         return fields;
     }
     var i = msgs.length - 1;
+    // Messages being written to are almost always the last ones.
     while (i >= 0 && msgs[i].msgId !== msgId)
         i--;
     if (i < 0)
@@ -83,6 +104,8 @@ function editMessage(session, view, op, msgId, fields) {
     return m;
 }
 
+// Fills the view with a session's messages, as they are when the chat is
+// opened: nothing in it is new any more.
 function showMessages(session, view) {
     view.clear();
     var msgs = session ? session.messages : [];
@@ -92,6 +115,9 @@ function showMessages(session, view) {
     }
 }
 
+// Sessions as saved in the config. Nothing can still be running after a
+// restart, so every stored reply counts as finished, and empty placeholders
+// left by an interrupted reply are dropped.
 function parseStored(json) {
     var parsed;
     try {
@@ -132,6 +158,8 @@ function parseStored(json) {
     return out;
 }
 
+// What gets written to the config: chats with at least one message, without
+// view state, and without a reply placeholder that has nothing in it yet.
 function serialize(sessions) {
     var out = [];
     for (var i = 0; i < sessions.length; i++) {
@@ -158,6 +186,7 @@ function serialize(sessions) {
     return JSON.stringify(out);
 }
 
+// The stored JSON with the given chats removed, or null if none of them is in it.
 function withoutChats(json, ids) {
     var stored;
     try {
@@ -179,6 +208,8 @@ function firstUserText(session) {
     return "";
 }
 
+// Last activity time; chats saved before updatedAt existed fall back to the
+// creation time encoded in their id.
 function chatTimestamp(session) {
     if (session.updatedAt)
         return session.updatedAt;
@@ -186,12 +217,16 @@ function chatTimestamp(session) {
     return m ? Number(m[1]) : 0;
 }
 
+// Message text as one line of plain text, with code blocks collapsed.
 function plainPreview(text) {
     return (text || "").replace(/```[\s\S]*?(```|$)/g, " [code] ").replace(/[#*`>_~|]/g, "").replace(/\s+/g, " ").trim();
 }
 
 var dayMs = 86400000;
 
+// The group of the history list a chat is shown in: "pinned", or by its last
+// activity "today", "yesterday", "week" (the last 7 days), "month" (the last
+// 30 days) or "older". `now` is a Date.
 function historySection(pinned, ts, now) {
     if (pinned)
         return "pinned";
@@ -207,6 +242,10 @@ function historySection(pinned, ts, now) {
     return "older";
 }
 
+// How a history row says when its chat was last active, as { kind, minutes }.
+// kind is "" (not known), "now", "minutes" (that many minutes ago), "time"
+// (today: the time of day), "weekday" (in the last 6 days: weekday and time),
+// "date" (this year: day and month) or "fullDate". `now` is a Date.
 function chatAge(ts, now) {
     if (!ts)
         return { "kind": "", "minutes": 0 };
@@ -228,6 +267,16 @@ function chatAge(ts, now) {
     return { "kind": kind, "minutes": Math.floor(diff / 60000) };
 }
 
+// The history list for `query`: { rows, total, pinned, unpinnedIds }.
+//
+// rows are the chats with messages whose title or text contains the query,
+// pinned first, then most recent. A row's preview is where the query hit, or
+// else the last message (previewIsUser says whether the user wrote it), and
+// its section is from historySection().
+//
+// total, pinned and unpinnedIds count every chat the list can show, whatever
+// the query: the chats there are, how many are pinned, and the ones "clear"
+// removes.
 function historyRows(sessions, query, now) {
     var q = (query || "").trim().toLowerCase();
     var rows = [];

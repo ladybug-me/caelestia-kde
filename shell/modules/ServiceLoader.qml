@@ -23,6 +23,7 @@ Scope {
             Brightness;
             Weather.reload();
             WorkspaceTrackerGuard;
+            TrayRegistry;
 
             if (GlobalConfig.utilities.vpn.enabled)
                 VPN;

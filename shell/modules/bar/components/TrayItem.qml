@@ -16,6 +16,7 @@ Item {
     property int trayIndex: -1
     property var popouts
     property bool isHorizontal: false
+    property bool alwaysVisible: false
     readonly property bool hasMenuEntries: menuOpener.children.values.some(entry => !entry.isSeparator)
 
     implicitWidth: Tokens.font.body.small.pointSize * 2

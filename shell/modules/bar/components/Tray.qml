@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Services.SystemTray
 import Caelestia.Config
 import qs.components
 import qs.services
@@ -23,20 +22,22 @@ StyledRect {
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * Math.max(0.6, !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0))
 
+    readonly property var trayItems: TrayRegistry.trayItems
+    readonly property int collapsedCount: root.trayItems.filter(i => !GlobalConfig.bar.tray.alwaysVisible.includes(i.id)).length
+    readonly property bool showArrow: Config.bar.tray.compact && root.collapsedCount > 0
+
     readonly property real nonAnimHeight: {
         if (isHorizontal)
             return barThickness;
-        if (!Config.bar.tray.compact)
-            return layout.implicitHeight + padding * 2;
-        return (expanded ? expandIcon.implicitHeight + layout.implicitHeight + spacing : expandIcon.implicitHeight) + padding * 2;
+        const arrow = root.showArrow ? expandIcon.implicitHeight + (layout.implicitHeight > 0 ? spacing : 0) : 0;
+        return layout.implicitHeight + arrow + padding * 2;
     }
 
     readonly property real nonAnimWidth: {
         if (!isHorizontal)
             return barThickness;
-        if (!Config.bar.tray.compact)
-            return layout.implicitWidth + padding * 2;
-        return (expanded ? expandIcon.implicitWidth + layout.implicitWidth + spacing : expandIcon.implicitWidth) + padding * 2;
+        const arrow = root.showArrow ? expandIcon.implicitWidth + (layout.implicitWidth > 0 ? spacing : 0) : 0;
+        return layout.implicitWidth + arrow + padding * 2;
     }
 
     clip: true
@@ -81,9 +82,6 @@ StyledRect {
 
         spacing: Tokens.spacing.small
 
-        opacity: root.expanded || !Config.bar.tray.compact ? 1 : 0
-        enabled: root.expanded || !Config.bar.tray.compact
-
         add: Transition {
             Anim {
                 properties: "scale"
@@ -108,10 +106,7 @@ StyledRect {
             id: items
 
             model: ScriptModel {
-                // Passive items are hidden by the protocol and by upstream's bar; TrayItem's
-                // trayIndex and the popout names in popouts/Content.qml both come from this
-                // same filter, so it must match the one there exactly.
-                values: SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))
+                values: root.trayItems
             }
 
             TrayItem {
@@ -120,12 +115,8 @@ StyledRect {
                 trayIndex: index
                 popouts: root.popouts
                 isHorizontal: root.isHorizontal
-            }
-        }
-
-        Behavior on opacity {
-            Anim {
-                type: Anim.DefaultEffects
+                alwaysVisible: GlobalConfig.bar.tray.alwaysVisible.includes(modelData.id)
+                visible: root.expanded || !Config.bar.tray.compact || alwaysVisible
             }
         }
     }
@@ -140,7 +131,7 @@ StyledRect {
         anchors.bottom: isHorizontal ? undefined : parent.bottom
         anchors.right: isHorizontal ? parent.right : undefined
 
-        active: Config.bar.tray.compact && items.count > 0
+        active: root.showArrow
 
         sourceComponent: Item {
             implicitWidth: isHorizontal ? (expandIconInner.implicitWidth - Tokens.padding.small * 2) : expandIconInner.implicitWidth

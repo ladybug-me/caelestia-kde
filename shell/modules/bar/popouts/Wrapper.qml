@@ -64,6 +64,9 @@ Item {
         hasCurrent = false;
         detachedMode = "";
     }
+    function publishContextPopout(): void {
+        Visibilities.setContextPopout(root, hasCurrent && currentName.endsWith("context"));
+    }
 
     implicitWidth: nonAnimWidth
     implicitHeight: nonAnimHeight
@@ -92,6 +95,16 @@ Item {
         sidebarOpen: root.visibilities.sidebar && root.underSidebar
         isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
         onDetachRequested: mode => root.detach(mode)
+    }
+    Connections {
+        function onHasCurrentChanged(): void {
+            root.publishContextPopout();
+        }
+        function onCurrentNameChanged(): void {
+            root.publishContextPopout();
+        }
+
+        target: popoutState
     }
     HyprlandFocusGrab {
         active: root.isDetached

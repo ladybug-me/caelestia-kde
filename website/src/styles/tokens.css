@@ -83,8 +83,11 @@
 
     --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace;
 
-    /* Layout */
-    --measure: 68ch;
+    /* Layout. `ch` here is the width of the font's `0`, not of an average
+       character, and this face has a wide one: 68ch measured 95 characters a
+       line, well past the 60-75 that reads comfortably, so the cap is a tighter
+       count. */
+    --measure: 50ch;
     --page-max: 76rem;
     --page-gutter: clamp(1.25rem, 5vw, 4rem);
     --nav-height: 3.5rem;
@@ -108,11 +111,7 @@
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 
     /* Layer order, so a demo never floats over the nav by accident. */
-    --z-base: 0;
-    --z-raised: 10;
     --z-nav: 100;
-    --z-scrim: 200;
-    --z-overlay: 300;
     --z-toast: 400;
 }
 

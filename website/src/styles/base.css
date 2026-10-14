@@ -13,6 +13,11 @@
 
 html {
     scroll-behavior: smooth;
+    /* The nav is sticky, so an anchor jump has to stop below it rather than
+       under it: without this the heading someone followed a link to lands
+       behind the bar. `--nav-height` is the bar's inner height; the two extra
+       pixels are its top and bottom border. */
+    scroll-padding-block-start: calc(var(--nav-height) + 2px);
     -webkit-text-size-adjust: 100%;
 }
 
@@ -49,6 +54,10 @@ h3,
 h4 {
     margin: 0;
     text-wrap: balance;
+    /* A heading cut from a word longer than the column — a docs page titled
+       "Troubleshooting" at 320px — would otherwise push the whole page sideways,
+       because a single word has nowhere to wrap. */
+    overflow-wrap: break-word;
 }
 
 h1 {
@@ -91,8 +100,10 @@ a {
     transition: text-decoration-color var(--motion-fast) var(--ease-out);
 }
 
-a:hover {
-    text-decoration-color: currentcolor;
+@media (hover: hover) {
+    a:hover {
+        text-decoration-color: currentcolor;
+    }
 }
 
 img,
@@ -122,7 +133,6 @@ textarea {
 :focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
-    border-radius: var(--radius-xs);
 }
 
 ::selection {
@@ -159,7 +169,7 @@ kbd {
     border-radius: var(--radius-xs);
     background: var(--surface-container);
     color: var(--on-surface);
-    font-size: 0.8125em;
+    font-size: max(0.8125em, 0.75rem);
     white-space: nowrap;
 }
 
@@ -173,7 +183,7 @@ hr {
    palette's terminal colours; these rules supply the material around them. */
 pre.astro-code,
 pre:has(> code) {
-    background: var(--astro-code-background, var(--surface-lowest));
+    background: var(--astro-code-background, var(--surface-container-lowest));
     color: var(--astro-code-foreground, var(--code-text));
     border: 1px solid var(--outline-variant);
     border-radius: var(--radius-md);
@@ -192,7 +202,7 @@ table {
 
 th,
 td {
-    text-align: left;
+    text-align: start;
     padding: var(--space-2xs) var(--space-xs);
     border-bottom: 1px solid var(--outline-variant);
     vertical-align: top;
@@ -251,10 +261,6 @@ tbody tr:last-child td {
 
 .measure {
     max-width: var(--measure);
-}
-
-.stack > * + * {
-    margin-top: var(--space-sm);
 }
 
 .cluster {

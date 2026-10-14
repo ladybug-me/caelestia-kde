@@ -27,21 +27,19 @@
     transition: transform var(--motion-fast) var(--ease-out);
 }
 
-.button:hover {
-    background: var(--surface-highest);
+@media (hover: hover) {
+    .button:hover {
+        background: var(--surface-container-highest);
+    }
 }
 
 .button:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
 }
 
 .button--filled {
     background: var(--primary);
     color: var(--on-primary);
-}
-
-.button--filled:hover {
-    background: color-mix(in oklab, var(--primary) 88%, var(--on-primary));
 }
 
 .button--tonal {
@@ -54,8 +52,16 @@
     padding-inline: var(--space-sm);
 }
 
-.button--text:hover {
-    background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+/* Hover is behind `hover: hover` everywhere: on a touch screen the style latches
+   after a tap, and a control that stays lit reads as selected. */
+@media (hover: hover) {
+    .button--filled:hover {
+        background: color-mix(in oklab, var(--primary) 88%, var(--on-primary));
+    }
+
+    .button--text:hover {
+        background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+    }
 }
 
 /* ------------------------------------------------------------------- nav */
@@ -114,14 +120,16 @@
         background-color var(--motion-fast) var(--ease-out);
 }
 
-.site-nav__link:hover {
-    color: var(--on-surface);
-    background: color-mix(in oklab, var(--on-surface) 8%, transparent);
-}
-
 .site-nav__link[aria-current] {
     color: var(--on-surface);
     background: color-mix(in oklab, var(--primary) 18%, transparent);
+}
+
+@media (hover: hover) {
+    .site-nav__link:hover {
+        color: var(--on-surface);
+        background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+    }
 }
 
 .site-nav__external {
@@ -177,18 +185,6 @@
     line-height: var(--leading-callout);
 }
 
-.card__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: var(--radius-md);
-    background: var(--primary-container);
-    color: var(--on-primary-container);
-    font-size: 1.125rem;
-}
-
 .grid {
     display: grid;
     gap: var(--space-sm);
@@ -232,30 +228,36 @@
 .install {
     display: flex;
     align-items: stretch;
+    flex-wrap: wrap;
     gap: var(--space-3xs);
     padding: var(--space-3xs);
     border-radius: var(--radius-lg);
-    background: var(--surface-lowest);
+    background: var(--surface-container-lowest);
     border: 1px solid var(--outline-variant);
     max-width: 44rem;
 }
 
 .install__text {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
+    /* Wide enough for the command to read as a command, and the row wraps the
+       copy button under it rather than crushing the command into a column of
+       broken words on a phone. */
+    flex: 1 1 12rem;
+    /* The block is centred in the row rather than stretched, so the `$` and the
+       command keep their own line box and the `$` stays on the first line of a
+       command that wrapped. */
+    align-self: center;
     padding-inline: var(--space-xs);
-    overflow-x: auto;
+    /* The command is longer than this box on a phone. It wraps rather than
+       scrolling sideways: a command clipped at the edge with its scrollbar
+       hidden reads as the whole command, and a URL is what someone types. */
+    overflow-wrap: anywhere;
     font-family: var(--font-mono);
     font-size: 0.875rem;
     color: var(--code-text);
-    white-space: nowrap;
-    scrollbar-width: none;
 }
 
 .install__text::before {
-    content: '$';
+    content: '$ ';
     color: var(--code-overlay);
 }
 
@@ -300,19 +302,21 @@
     border: 1px solid var(--outline-variant);
     background: var(--surface-container-low);
     color: var(--on-surface);
-    text-align: left;
+    text-align: start;
     cursor: pointer;
     transition:
         transform var(--motion-fast) var(--ease-out),
         border-color var(--motion-fast) var(--ease-out);
 }
 
-.palette-option:hover {
-    border-color: var(--primary);
+@media (hover: hover) {
+    .palette-option:hover {
+        border-color: var(--primary);
+    }
 }
 
 .palette-option:active {
-    transform: scale(0.98);
+    transform: scale(0.96);
 }
 
 .palette-option[aria-pressed='true'] {
@@ -354,7 +358,7 @@
 }
 
 .segmented button:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
 }
 
 .segmented button[aria-pressed='true'] {
@@ -476,9 +480,11 @@
     font-size: var(--text-callout);
 }
 
-.docs-nav a:hover {
-    color: var(--on-surface);
-    background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+@media (hover: hover) {
+    .docs-nav a:hover {
+        color: var(--on-surface);
+        background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+    }
 }
 
 .docs-nav a[aria-current='page'] {

@@ -162,14 +162,18 @@ export function initBarDemo(root: HTMLElement): () => void {
             if (open === surface) close(surface);
             else show(surface);
         });
-
-        panel.addEventListener('keydown', (event) => {
-            if (event.key !== 'Escape') return;
-            event.stopPropagation();
-            close(surface);
-            trigger.focus();
-        });
     }
+
+    // Escape closes the open popout wherever focus is, which is what the demo
+    // promises. The panel holds nothing focusable, so a handler on the panel
+    // itself would never run.
+    const onKeydown = (event: KeyboardEvent): void => {
+        if (event.key !== 'Escape' || !open) return;
+        const surface = open;
+        close(surface);
+        surface.trigger.focus();
+    };
+    document.addEventListener('keydown', onKeydown);
 
     // A press anywhere else shuts the open popout, the way clicking off a
     // popout on the desktop does.
@@ -182,6 +186,7 @@ export function initBarDemo(root: HTMLElement): () => void {
     document.addEventListener('pointerdown', outside, true);
 
     return () => {
+        document.removeEventListener('keydown', onKeydown);
         document.removeEventListener('pointerdown', outside, true);
         surfaces.forEach((surface) => surface.drag.destroy());
     };

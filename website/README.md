@@ -14,6 +14,14 @@ written:
 | Logo and screenshots | `assets/`, by way of `scripts/sync-assets.mjs` |
 | The typeface | `shell/assets/google-sans-flex/`, subset at build time |
 
+The palettes are the one thing the build changes rather than copies. A scheme
+file is written for the shell's own components, where a role that reads fine
+inside a popout can sit below the ratio a paragraph needs on a page, so the
+generator measures every pair the stylesheet paints and moves a role just far
+enough towards white or black to clear its floor: 4.5:1, including the accent,
+which is also the focus ring. The build names each role it moved, and
+`npm run test:unit` fails if a pair ships below its floor.
+
 ## Working on it
 
 ```bash

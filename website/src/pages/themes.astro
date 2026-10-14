@@ -162,7 +162,7 @@ const names = [...new Set(palettes.palettes.map((palette) => palette.name))];
         padding: var(--space-lg);
         border-radius: var(--radius-xl);
         border: 2px dashed var(--outline);
-        background: var(--surface-low);
+        background: var(--surface-container-low);
         text-align: center;
         cursor: pointer;
         transition:
@@ -170,9 +170,15 @@ const names = [...new Set(palettes.palettes.map((palette) => palette.name))];
             background-color var(--motion-fast) var(--ease-out);
     }
 
+    /* The file input is visually hidden, so the ring has to be the label's. */
+    .wallpaper__drop:focus-within {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
     .wallpaper__drop[data-active] {
         border-color: var(--primary);
-        background: color-mix(in oklab, var(--primary) 12%, var(--surface-low));
+        background: color-mix(in oklab, var(--primary) 12%, var(--surface-container-low));
     }
 
     .wallpaper__mark {
@@ -208,5 +214,8 @@ const names = [...new Set(palettes.palettes.map((palette) => palette.name))];
         font-size: var(--text-caption);
         color: var(--on-surface-variant);
         min-width: 3ch;
+        /* The value changes on every frame of a drag; fixed-width digits keep the
+           row from twitching while it does. */
+        font-variant-numeric: tabular-nums;
     }
 </style>

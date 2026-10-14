@@ -37,10 +37,6 @@ html.has-js .reveal.is-in {
     }
 
     /* Anything decorative stops moving entirely. */
-    .materialize {
-        animation: none;
-    }
-
     *,
     *::before,
     *::after {
@@ -60,11 +56,6 @@ html.has-js .reveal.is-in {
     .material,
     .material--thick {
         background: var(--surface-container-high);
-        backdrop-filter: none;
-    }
-
-    .scrim {
-        background: color-mix(in oklab, var(--scrim) 80%, transparent);
         backdrop-filter: none;
     }
 }
@@ -93,10 +84,4 @@ html.has-js .reveal.is-in {
         background: var(--primary);
         color: var(--on-primary);
     }
-}
-
-/* Large surfaces fade while they travel and settle back in, rather than
-   sliding at full opacity. */
-.panel--moving {
-    opacity: 0.85;
 }

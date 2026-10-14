@@ -57,7 +57,9 @@ export function initWallpaperDemo(root: HTMLElement): () => void {
     worker.addEventListener('message', (event: MessageEvent<ThemeResponse>) => {
         const data = event.data;
         if ('error' in data) {
-            say(`Could not read that image: ${data.error}`);
+            // The worker's own message is a browser diagnostic; what the reader
+            // needs is the way forward.
+            say('That image could not be read. Choose a PNG, JPEG or WebP file.');
             return;
         }
 

@@ -1,10 +1,11 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { buildPalettes } from '../../scripts/gen-palettes.mjs';
+import { TEXT_FLOORS, buildPalettes } from '../../scripts/gen-palettes.mjs';
+import { contrastRatio } from '../../scripts/lib/contrast.mjs';
 import { SITE_ROLES, missingRoles, parseSchemeFile, readSchemes } from '../../scripts/lib/schemes.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -87,7 +88,9 @@ describe('the generated stylesheet', () => {
     it('gives each swatch its own colours as values, not as references', () => {
         // A `var(--primary)` inside the swatch would resolve against the palette
         // in force, so every swatch in the grid would show the same colour.
-        const block = built.css.match(/:root\[data-mode='dark'\] \.swatch\[data-palette='catppuccin-mocha'\] \{([^}]*)\}/);
+        const block = built.css.match(
+            /:root\[data-mode='dark'\] \.swatch\[data-palette='catppuccin-mocha'\] \{([^}]*)\}/,
+        );
         expect(block).toBeTruthy();
         expect(block[1]).toMatch(/--swatch-primary: #[0-9a-f]{6}/);
         expect(block[1]).not.toContain('var(');
@@ -132,5 +135,87 @@ describe('the generated files on disk', () => {
         const json = JSON.parse(readFileSync(join(here, '..', '..', 'src', 'data', 'palettes.json'), 'utf8'));
         expect(css).toBe(built.css);
         expect(json).toEqual(built.index);
+    });
+});
+
+/** Every palette rule in the generated stylesheet, with the hex roles it sets. */
+function paletteRules(css) {
+    return [...css.matchAll(/^([^@\n][^{\n]*)\{([^}]*)\}/gm)]
+        .filter(([, selector]) => !selector.includes('.swatch'))
+        .map(([, selector, body]) => {
+            const roles = {};
+            for (const [, property, value] of body.matchAll(/(--[a-z-]+):\s*(#[0-9a-f]{6})/g)) {
+                roles[property] = value;
+            }
+            return { selector: selector.trim(), roles };
+        });
+}
+
+describe('the contrast floors', () => {
+    // One rule per pair the stylesheet paints. A theme file is written for the
+    // shell's own components, so a role that reads fine in a popout can be under
+    // the ratio a paragraph needs, and the generator is what closes the gap.
+    it('ships no pair below the floor it is painted at', () => {
+        const failures = [];
+
+        for (const { selector, roles } of paletteRules(built.css)) {
+            for (const [role, floor, surfaces] of TEXT_FLOORS) {
+                const foreground = roles[SITE_ROLES[role]];
+                if (!foreground) continue;
+
+                for (const surface of surfaces) {
+                    const background = roles[SITE_ROLES[surface]];
+                    if (!background) continue;
+
+                    const ratio = contrastRatio(foreground, background);
+                    if (ratio < floor) {
+                        failures.push(
+                            `${selector}: ${role} on ${surface} is ` +
+                                `${ratio.toFixed(2)}, needs ${floor} (${foreground} on ${background})`,
+                        );
+                    }
+                }
+            }
+        }
+
+        expect(failures).toEqual([]);
+    });
+
+    it('moves a role rather than shipping the palette as written', () => {
+        // The floors are only worth anything if something failed them: a palette
+        // set that needed no adjustment would mean the list above went stale.
+        expect(built.adjustments.length).toBeGreaterThan(0);
+    });
+});
+
+describe('the custom properties the stylesheets read', () => {
+    it('are all declared, so no rule paints with a property that does not exist', () => {
+        const stylesDir = join(here, '..', '..', 'src');
+
+        const files = [];
+        const walk = (dir) => {
+            for (const entry of readdirSync(dir, { withFileTypes: true })) {
+                const path = join(dir, entry.name);
+                if (entry.isDirectory()) walk(path);
+                else if (/\.(css|astro)$/.test(entry.name)) files.push(path);
+            }
+        };
+        walk(stylesDir);
+
+        const declared = new Set();
+        const read = new Map();
+        for (const file of files) {
+            const source = readFileSync(file, 'utf8');
+            for (const [, property] of source.matchAll(/(--[a-z0-9-]+)\s*:/g)) declared.add(property);
+            for (const [, property] of source.matchAll(/var\((--[a-z0-9-]+)/g)) {
+                if (!read.has(property)) read.set(property, file);
+            }
+        }
+
+        // Astro's Font component writes this one into the document at build time.
+        declared.add('--font-sans');
+
+        const undeclared = [...read.keys()].filter((property) => !declared.has(property));
+        expect(undeclared.map((property) => `${property} (${read.get(property)})`)).toEqual([]);
     });
 });

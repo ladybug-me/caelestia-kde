@@ -17,6 +17,17 @@ export function initWorkspacesDemo(root: HTMLElement): () => void {
     if (!track || workspaces.length === 0) return () => {};
 
     const viewport = track.parentElement ?? track;
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-workspace-jump]')];
+
+    /** The strip and the dots say the same thing, so they move together. */
+    const mark = (index: number): void => {
+        for (const [position, workspace] of workspaces.entries()) {
+            workspace.dataset.active = String(position === index);
+        }
+        for (const [position, button] of buttons.entries()) {
+            button.setAttribute('aria-current', String(position === index));
+        }
+    };
 
     const pager = createPager({
         track,
@@ -25,14 +36,13 @@ export function initWorkspacesDemo(root: HTMLElement): () => void {
         pageWidth: () => viewport.clientWidth,
         liveRegion: live ?? undefined,
         label: 'workspace',
-        onChange: (index) => {
-            for (const [position, workspace] of workspaces.entries()) {
-                workspace.dataset.active = String(position === index);
-            }
-        },
+        onChange: mark,
     });
 
-    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-workspace-jump]')];
+    // The markup ships the first workspace as current; this makes the state come
+    // from the strip rather than from the template, so the two cannot drift.
+    mark(0);
+
     for (const button of buttons) {
         button.addEventListener('click', () => pager.goTo(Number(button.dataset.workspaceJump ?? '0')));
     }

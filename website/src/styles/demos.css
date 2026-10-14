@@ -29,7 +29,7 @@
     background:
         radial-gradient(120% 140% at 12% 0%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 60%),
         radial-gradient(120% 120% at 100% 100%, color-mix(in oklab, var(--tertiary) 20%, transparent), transparent 55%),
-        var(--surface-low);
+        var(--surface-container-low);
     overflow: hidden;
     touch-action: pan-x;
 }
@@ -40,10 +40,6 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2xs) var(--space-sm);
-}
-
-.demo__hint kbd {
-    font-size: 0.75em;
 }
 
 /* ------------------------------------------------------------------- bar */
@@ -59,6 +55,10 @@
 
 .bar {
     display: flex;
+    /* Four items do not fit a phone: wrapping keeps every one of them on screen
+       and tappable, where clipping the last one hides a whole popout. */
+    flex-wrap: wrap;
+    max-width: 100%;
     gap: var(--space-3xs);
     padding: var(--space-3xs);
     border-radius: var(--radius-full);
@@ -81,9 +81,11 @@
         background-color var(--motion-fast) var(--ease-out);
 }
 
-.bar__item:hover {
-    background: color-mix(in oklab, var(--on-surface) 10%, transparent);
-    color: var(--on-surface);
+@media (hover: hover) {
+    .bar__item:hover {
+        background: color-mix(in oklab, var(--on-surface) 10%, transparent);
+        color: var(--on-surface);
+    }
 }
 
 .bar__item:active {
@@ -187,7 +189,10 @@
 }
 
 .notif[data-urgency='critical'] {
-    background: color-mix(in oklab, var(--error-container) 92%, transparent);
+    /* Solid, not translucent: this is the one card whose background is a token
+       pair with its text, and an 8% hole in it is enough to drop the pair under
+       4.5:1 over the stage gradient in four of the palettes. */
+    background: var(--error-container);
     color: var(--on-error-container, var(--on-surface));
 }
 
@@ -239,12 +244,14 @@
         background-color var(--motion-fast) var(--ease-out);
 }
 
-.notif__close:hover {
-    background: color-mix(in oklab, currentcolor 14%, transparent);
+@media (hover: hover) {
+    .notif__close:hover {
+        background: color-mix(in oklab, currentcolor 14%, transparent);
+    }
 }
 
 .notif__close:active {
-    transform: scale(0.92);
+    transform: scale(0.96);
 }
 
 /* The timeout, which stops while the pointer is over the card. */
@@ -303,6 +310,13 @@
     border: 1px solid var(--outline-variant);
 }
 
+/* The field is one control, so the ring goes round the field: the input inside
+   it draws none of its own. */
+.launcher__field:focus-within {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
 .launcher__field input {
     flex: 1;
     border: 0;
@@ -318,6 +332,8 @@
 .launcher__status {
     font-size: var(--text-caption);
     color: var(--on-surface-variant);
+    /* The count changes on every keystroke. */
+    font-variant-numeric: tabular-nums;
 }
 
 .launcher__viewport {
@@ -366,13 +382,18 @@
         border-color var(--motion-fast) var(--ease-out);
 }
 
-.app:hover,
 .app[data-highlighted] {
     border-color: var(--primary);
 }
 
+@media (hover: hover) {
+    .app:hover {
+        border-color: var(--primary);
+    }
+}
+
 .app:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
 }
 
 .app__glyph {
@@ -448,20 +469,38 @@
 }
 
 .workspaces__dots button {
-    width: 0.5rem;
-    height: 0.5rem;
+    display: grid;
+    place-items: center;
+    /* A 24px target with an 8px dot inside it: the mark stays as small as it
+       looks, and the thing a finger or a pointer has to find is three times the
+       size WCAG asks for. */
+    width: 1.5rem;
+    height: 1.5rem;
     padding: 0;
     border: 0;
     border-radius: var(--radius-full);
-    background: color-mix(in oklab, var(--on-surface) 25%, transparent);
+    background: transparent;
     cursor: pointer;
     transition: transform var(--motion-fast) var(--ease-out);
 }
 
-.workspaces__dots button:active {
-    transform: scale(0.85);
+.workspaces__dots button::after {
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--on-surface) 25%, transparent);
+    transition: width var(--motion-base) var(--ease-out);
 }
 
-.workspaces__dots button[aria-current='true'] {
+.workspaces__dots button:active {
+    transform: scale(0.96);
+}
+
+/* Which workspace you are on, as a shape rather than as a colour: the dot grows
+   into a bar, which also survives being looked at by someone who cannot tell
+   these two greys apart. */
+.workspaces__dots button[aria-current='true']::after {
+    width: 1.25rem;
     background: var(--primary);
 }

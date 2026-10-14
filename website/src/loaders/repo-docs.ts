@@ -13,7 +13,7 @@
  */
 
 import { readFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, relative, resolve, sep } from 'node:path';
 
 import type { Loader, LoaderContext } from 'astro/loaders';
 
@@ -175,27 +175,42 @@ function readDocument(root: string, file: string): string {
     }
 }
 
-function resolveRoot(context: LoaderContext): string {
+function resolveRoots(context: LoaderContext): { site: string; repo: string } {
     // `new URL(...).pathname` keeps a leading slash that Windows paths do not
     // want, and the drive letter arrives as `/C:/...`. Astro's root is the
     // website directory; the documents live one level up, in the repository.
-    const website = decodeURIComponent(new URL(context.config.root).pathname).replace(/^\/([A-Za-z]:)/, '$1');
-    return resolve(website, '..');
+    const site = decodeURIComponent(new URL(context.config.root).pathname).replace(/^\/([A-Za-z]:)/, '$1');
+    return { site, repo: resolve(site, '..') };
+}
+
+/**
+ * The `filePath` Astro is handed for an entry.
+ *
+ * Astro wants a path relative to the site root, and it throws on anything
+ * starting with `/`, which is every absolute path on Linux and macOS. An
+ * absolute path here therefore built on Windows and failed everywhere else —
+ * including CI. The documents sit outside the site root, so the honest relative
+ * path starts with `..`, and it is written in POSIX form whatever platform the
+ * build runs on.
+ */
+export function sourcePath(site: string, repo: string, file: string): string {
+    return relative(site, join(repo, file)).split(sep).join('/');
 }
 
 export function repoDocs(): Loader {
     return {
         name: 'repo-docs',
         load: async (context: LoaderContext) => {
-            const root = resolveRoot(context);
+            const roots = resolveRoots(context);
             const base = context.config.base ?? '/';
-            const readme = readDocument(root, 'README.md');
+            const readme = readDocument(roots.repo, 'README.md');
 
             for (const section of SECTIONS) {
-                const source = section.file ? readDocument(root, section.file) : readme;
+                const source = section.file ?? 'README.md';
+                const document = section.file ? readDocument(roots.repo, section.file) : readme;
                 const body = section.heading
-                    ? extractSection(source, section.heading, README_HEADINGS)
-                    : stripTitle(source);
+                    ? extractSection(document, section.heading, README_HEADINGS)
+                    : stripTitle(document);
 
                 if (!body) {
                     throw new Error(
@@ -207,7 +222,7 @@ export function repoDocs(): Loader {
                 }
 
                 const markdown = rewriteLinks(body, base);
-                const filePath = join(root, section.file ?? 'README.md');
+                const filePath = sourcePath(roots.site, roots.repo, source);
 
                 context.store.set({
                     id: section.id,
@@ -221,7 +236,7 @@ export function repoDocs(): Loader {
                             description: section.description,
                             group: section.group,
                             order: section.order,
-                            source: section.file ?? 'README.md',
+                            source,
                         },
                     }),
                     rendered: await context.renderMarkdown(markdown, { fileURL: new URL(context.config.root) }),

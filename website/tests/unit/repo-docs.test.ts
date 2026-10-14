@@ -1,13 +1,14 @@
 import { readFileSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, isAbsolute, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { describe, expect, it } from 'vitest';
 
-import { extractSection, rewriteLinks, stripTitle } from '../../src/loaders/repo-docs';
+import { extractSection, rewriteLinks, sourcePath, stripTitle } from '../../src/loaders/repo-docs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repoRoot = resolve(here, '..', '..', '..');
+const siteRoot = resolve(repoRoot, 'website');
 
 const readme = readFileSync(join(repoRoot, 'README.md'), 'utf8');
 const troubleshooting = readFileSync(join(repoRoot, 'docs', 'TROUBLESHOOTING.md'), 'utf8');
@@ -43,6 +44,21 @@ describe('extractSection', () => {
     it('finds sections in the documents the site renders whole', () => {
         const section = extractSection(troubleshooting, '3.4 Colors not applying');
         expect(section).toBeTruthy();
+    });
+});
+
+describe('sourcePath', () => {
+    // Astro's content store throws on a `filePath` starting with `/`, which is
+    // every absolute path on Linux and macOS. The loader used to hand it one, so
+    // the site built on Windows and failed everywhere else, CI included.
+    it('gives Astro a path relative to the site root, never an absolute one', () => {
+        expect(sourcePath(siteRoot, repoRoot, 'README.md')).toBe('../README.md');
+        expect(sourcePath(siteRoot, repoRoot, 'docs/TROUBLESHOOTING.md')).toBe('../docs/TROUBLESHOOTING.md');
+        expect(isAbsolute(sourcePath(siteRoot, repoRoot, 'README.md'))).toBe(false);
+    });
+
+    it('writes the separators the same way on every platform', () => {
+        expect(sourcePath(siteRoot, repoRoot, '.github/CONTRIBUTING.md')).not.toContain('\\');
     });
 });
 

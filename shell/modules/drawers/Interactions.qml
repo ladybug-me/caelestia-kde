@@ -137,6 +137,8 @@ CustomMouseArea {
     }
     onContainsMouseChanged: {
         if (!containsMouse) {
+            const menuOpen = popouts.hasCurrent && popouts.currentName.endsWith("context");
+
             if (!osdShortcutActive) {
                 visibilities.osd = false;
                 root.panels.osd.hovered = false;
@@ -148,11 +150,11 @@ CustomMouseArea {
             if (Config.utilities.showOnHover && !utilitiesShortcutActive)
                 visibilities.utilities = false;
 
-            if (!popoutHideTimer.running)
+            if (!menuOpen && !popoutHideTimer.running)
                 popoutHideTimer.start();
 
-            if (Config.bar.showOnHover)
-                bar.isHovered = false;
+            if (Config.bar.showOnHover && !menuOpen && !barUnhoverTimer.running)
+                barUnhoverTimer.start();
         } else {
             popoutHideTimer.stop();
         }
@@ -171,8 +173,14 @@ CustomMouseArea {
             return;
         }
 
-        if (!visibilities.bar && Config.bar.showOnHover && inBarArea(x, y))
-            bar.isHovered = true;
+        if (!visibilities.bar && Config.bar.showOnHover) {
+            if (inBarArea(x, y)) {
+                barUnhoverTimer.stop();
+                bar.isHovered = true;
+            } else if (!(popouts.hasCurrent && popouts.currentName.endsWith("context")) && !barUnhoverTimer.running) {
+                barUnhoverTimer.start();
+            }
+        }
 
         if (pressed && inBarArea(dragStart.x, dragStart.y)) {
             if (bar.position === "left") {
@@ -349,6 +357,30 @@ CustomMouseArea {
                 }
             }
         }
+    }
+    Timer {
+        id: barUnhoverTimer
+
+        interval: 400
+        onTriggered: {
+            const menuOpen = popouts.hasCurrent && popouts.currentName.endsWith("context");
+            if (!bar.hovered && !visibilities.bar && !menuOpen)
+                bar.isHovered = false;
+        }
+    }
+    Connections {
+        function onHoveredChanged() {
+            if (bar.hovered) {
+                barUnhoverTimer.stop();
+                if (!visibilities.bar && Config.bar.showOnHover && !fullscreen)
+                    bar.isHovered = true;
+            } else if (Config.bar.showOnHover && !fullscreen && !visibilities.bar
+                    && !barUnhoverTimer.running) {
+                barUnhoverTimer.start();
+            }
+        }
+
+        target: bar
     }
     Timer {
         id: popoutHideTimer

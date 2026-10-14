@@ -387,6 +387,9 @@ CustomMouseArea {
 
         interval: 150
         onTriggered: {
+            if (popouts.currentName.endsWith("context")) {
+                return;
+            }
             if (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1) {
                 popouts.hasCurrent = false;
                 bar.closeTray();

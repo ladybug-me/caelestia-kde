@@ -1,0 +1,129 @@
+/*
+ * Design tokens.
+ *
+ * Two rules hold this file together:
+ *
+ *   - Lengths are in rem, so a visitor's raised browser text size grows the
+ *     layout instead of breaking it.
+ *   - Tracking and leading are part of each type step, not a single global
+ *     value. Large text reads too loose at 0 and small text too tight; the
+ *     steps below are tuned for their own size.
+ *
+ * Colour is not here. Each palette brings its own `--bg`, `--surface`,
+ * `--primary` and so on from src/styles/generated/palettes.css, and anything
+ * missing from a vendored palette is derived here from what the palette does
+ * carry.
+ */
+
+:root {
+    color-scheme: dark;
+
+    /* Space. The shell's spacing scale is small/medium/large; these are the
+       steps the site needs between them. */
+    --space-3xs: 0.25rem;
+    --space-2xs: 0.5rem;
+    --space-xs: 0.75rem;
+    --space-sm: 1rem;
+    --space-md: 1.5rem;
+    --space-lg: 2rem;
+    --space-xl: 3rem;
+    --space-2xl: 4.5rem;
+    --space-3xl: 7rem;
+
+    /* Shape. `lg` is what the shell gives a notification popup
+       (`Tokens.rounding.large`), and it is the site's default card radius. */
+    --radius-xs: 4px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+    --radius-full: 999px;
+
+    /* Type. Weights, not sizes, carry emphasis. */
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+
+    --text-display: clamp(2.75rem, 7vw, 5.5rem);
+    /* Large text needs a little more leading than one line suggests: at display
+       sizes, one line's descenders meet the next line's ascenders at 1.0, and
+       the reader sees the two lines colliding. */
+    --leading-display: 1.06;
+    --tracking-display: -0.035em;
+    --weight-display: var(--font-weight-semibold);
+
+    --text-title: clamp(1.75rem, 3.5vw, 2.75rem);
+    --leading-title: 1.1;
+    --tracking-title: -0.022em;
+    --weight-title: var(--font-weight-semibold);
+
+    --text-heading: 1.375rem;
+    --leading-heading: 1.25;
+    --tracking-heading: -0.014em;
+    --weight-heading: var(--font-weight-medium);
+
+    --text-subhead: 1.0625rem;
+    --leading-subhead: 1.35;
+    --tracking-subhead: -0.008em;
+    --weight-subhead: var(--font-weight-medium);
+
+    --text-body: 1rem;
+    --leading-body: 1.55;
+    --tracking-body: 0;
+    --weight-body: var(--font-weight-regular);
+
+    --text-callout: 0.9375rem;
+    --leading-callout: 1.5;
+    --tracking-callout: 0.004em;
+
+    --text-caption: 0.8125rem;
+    --leading-caption: 1.4;
+    --tracking-caption: 0.012em;
+
+    --font-mono: ui-monospace, 'SF Mono', 'JetBrains Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+
+    /* Layout */
+    --measure: 68ch;
+    --page-max: 76rem;
+    --page-gutter: clamp(1.25rem, 5vw, 4rem);
+    --nav-height: 3.5rem;
+
+    /* Materials. `--glass` is the translucent chrome layer; the blur is a
+       variable so prefers-reduced-transparency can flatten it in one place. */
+    --glass-blur: 20px;
+    --glass-saturate: 180%;
+    --glass-opacity: 0.55;
+    --glass-border: color-mix(in oklab, var(--on-surface) 14%, transparent);
+    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.24), 0 8px 24px rgb(0 0 0 / 0.18);
+    --shadow-deep: 0 2px 6px rgb(0 0 0 / 0.3), 0 24px 60px rgb(0 0 0 / 0.35);
+
+    /* Motion, for the CSS-only transitions (colour, opacity, hover). Anything a
+       pointer can drag is animated by the spring layer in src/lib/motion, which
+       is interruptible and velocity-aware; a CSS transition is neither. */
+    --motion-fast: 120ms;
+    --motion-base: 220ms;
+    --motion-slow: 320ms;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+    /* Layer order, so a demo never floats over the nav by accident. */
+    --z-base: 0;
+    --z-raised: 10;
+    --z-nav: 100;
+    --z-scrim: 200;
+    --z-overlay: 300;
+    --z-toast: 400;
+}
+
+/* A palette that predates a role keeps the brand's value, which reads as a
+   colour from another theme. The two roles that matter are derived instead. */
+:root {
+    --primary-dim: color-mix(in oklab, var(--primary) 88%, var(--surface));
+}
+
+:root[data-mode='light'] {
+    color-scheme: light;
+    --shadow-soft: 0 1px 2px rgb(0 0 0 / 0.08), 0 8px 24px rgb(0 0 0 / 0.08);
+    --shadow-deep: 0 2px 6px rgb(0 0 0 / 0.1), 0 24px 60px rgb(0 0 0 / 0.16);
+}

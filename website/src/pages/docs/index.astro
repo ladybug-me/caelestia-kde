@@ -1,0 +1,58 @@
+---
+import { getCollection } from 'astro:content';
+
+import Base from '../../layouts/Base.astro';
+import DocsNav from '../../components/DocsNav.astro';
+import { groupEntries } from '../../lib/docs';
+import { SITE, url } from '../../lib/site';
+
+const all = await getCollection('docs');
+const groups = groupEntries(all);
+---
+
+<Base title="Docs" description={SITE.description}>
+    <div class="page docs-layout">
+        <DocsNav entries={all} />
+        <div class="prose">
+            <h1>Docs</h1>
+            <p class="muted">
+                Written in the repository, read from it here: every page below is a section of the project's own
+                markdown, so it changes when the source does.
+            </p>
+
+            {groups.map((group) => (
+                <section>
+                    <h2>{group.name}</h2>
+                    <ul>
+                        {group.entries.map((entry) => (
+                            <li>
+                                <a href={url(`/docs/${entry.id}`)}>{entry.data.title}</a>{' '}
+                                <span class="muted">— {entry.data.description}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            ))}
+
+            <h2>Elsewhere</h2>
+            <ul>
+                <li>
+                    <a href={url('/features')}>Features</a> — what the port adds over a stock Plasma session.
+                </li>
+                <li>
+                    <a href={url('/gallery')}>Gallery</a> — the shell's own motion, rebuilt in the browser.
+                </li>
+                <li>
+                    <a href={url('/themes')}>Themes</a> — every palette the shell ships, and the one it derives from a
+                    wallpaper.
+                </li>
+                <li>
+                    <a href={SITE.repo} rel="noreferrer">
+                        Repository
+                    </a>{' '}
+                    — issues, discussions and the source.
+                </li>
+            </ul>
+        </div>
+    </div>
+</Base>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ladybug-me.github.io/caelestia-kde/sitemap.xml

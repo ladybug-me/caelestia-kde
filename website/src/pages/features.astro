@@ -1,0 +1,161 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE, url } from '../lib/site';
+
+// Grouped the way someone meets the shell: the things always on screen, the
+// things that open over it, then the parts underneath.
+const groups = [
+    {
+        name: 'Always on screen',
+        blurb: 'The bar, and what each of its elements does.',
+        items: [
+            [
+                'Bar',
+                'Top or bottom, per monitor, every element toggleable. Workspaces, clock, status icons, media, tray, dock, GitHub notifications, updates, greeter and a per-monitor preview scale.',
+            ],
+            ['Workspaces', 'One pill per workspace, with occupancy, urgency and click-to-switch.'],
+            [
+                'Dock',
+                'Pinned and running apps, with hover previews and the Unity launcher API for badges: counts, progress bars and urgency, from the apps that publish them.',
+            ],
+            ['Dashboard', 'Music, performance and terminal tabs in one drop-down, on the media visualiser.'],
+        ],
+    },
+    {
+        name: 'Over the desktop',
+        blurb: 'The surfaces you open, use, and close.',
+        items: [
+            [
+                'Launcher',
+                'App search with actions, emoji, clipboard history and window switching in the same field. Empty-field browse mode with categories.',
+            ],
+            [
+                'Popouts',
+                'Audio, Bluetooth, network, media, calendar, battery, peripheral battery, updates, night light, clip and tray. Each one detaches into its Nexus page.',
+            ],
+            [
+                'Sidebar',
+                'Notifications with a do-not-disturb that can arm itself while you are streaming, plus the AI assistant and the tab switcher.',
+            ],
+            ['Overview', 'Workspaces and windows, with drag and drop between them.'],
+            ['Session menu', 'Logout, shutdown, reboot and hibernate, with configurable icons and commands.'],
+            [
+                'Screenshot and recorder',
+                'Region selection, screen recording, colour picker, Google Lens and text recognition.',
+            ],
+            ['OSD and toasts', 'Volume, brightness and lock keys, plus the toast events you choose to hear about.'],
+        ],
+    },
+    {
+        name: 'Underneath',
+        blurb: 'The parts you configure once and then rely on.',
+        items: [
+            [
+                'Nexus',
+                "The shell's own settings app: appearance, panels, desktop, shortcuts, plugins, services, utilities and about. Every page is searchable.",
+            ],
+            [
+                'Theming',
+                'Wallpaper-derived colours by default, with the Material You palette pushed to Qt, GTK, terminals, VSCode, Zed, Spotify, Discord and Firefox. Named palettes when you would rather pick.',
+            ],
+            [
+                'Plugins',
+                'A store, plus an API for installing your own — including bar widgets and launcher items that register their own pages.',
+            ],
+            [
+                'Window management',
+                "A KWin plugin for the shell's window behaviour and shortcuts, and Krohnkite tiling with a settings page and preview.",
+            ],
+            [
+                'Lock screen',
+                "A greeter that renders the session's palette, falling back to Plasma's own lock screen when it cannot.",
+            ],
+            [
+                'Utilities',
+                'Clipboard history with pinned entries, quick toggles, per-app volume, game mode, night light, weather, and the AI assistant with its own settings.',
+            ],
+        ],
+    },
+];
+
+const install = [
+    ['Arch-based', 'pacman repositories and the AUR', 'The installer picks the right one for the distro it finds.'],
+    ['Fedora', 'dnf', 'Tested against Fedora Workstation on Wayland.'],
+    ['Debian and Ubuntu', 'apt', 'Ubuntu and Debian derivatives, Qt 6.9 or newer.'],
+];
+---
+
+<Base
+    title="Features"
+    description="What Caelestia adds to KDE Plasma 6: a bar and its popouts, launcher, sidebar, overview, session menu, screenshot tools, Nexus settings, plugin store and a matching lock screen."
+>
+    <div class="page">
+        <header class="section" style="padding-bottom: 0">
+            <p class="section__eyebrow">Features</p>
+            <h1>A whole shell, not a widget set</h1>
+            <p class="muted measure">
+                Caelestia replaces the pieces of Plasma that you look at all day and leaves the rest of the desktop
+                alone. It runs as a Quickshell client on top of KWin, so your windows, your KWin scripts and your Plasma
+                session keep working.
+            </p>
+        </header>
+
+        {groups.map((group) => (
+            <section class="section">
+                <div class="section__head">
+                    <h2>{group.name}</h2>
+                    <p class="muted measure">{group.blurb}</p>
+                </div>
+                <div class="grid">
+                    {group.items.map(([title, body]) => (
+                        <article class="card reveal">
+                            <h3>{title}</h3>
+                            <p>{body}</p>
+                        </article>
+                    ))}
+                </div>
+            </section>
+        ))}
+
+        <section class="section">
+            <div class="section__head">
+                <h2>Where it installs</h2>
+                <p class="muted measure">
+                    The installer detects the distribution, installs the packages it needs, builds the QML plugin and
+                    deploys the shell. Optional app theming for the apps listed on{' '}
+                    <a href={url('/docs/installation')}>Installation</a>.
+                </p>
+            </div>
+            <div class="grid">
+                {install.map(([distro, manager, note]) => (
+                    <article class="card">
+                        <h3>{distro}</h3>
+                        <p>
+                            <code>{manager}</code> — {note}
+                        </p>
+                    </article>
+                ))}
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>See it move</h2>
+            <p class="muted measure">
+                The <a href={url('/gallery')}>gallery</a> rebuilds the shell's own surfaces in the browser so you can
+                feel how they behave before you install anything: popouts that track your pointer, notifications you can
+                swipe and catch, a launcher that carries a flick.
+            </p>
+            <div class="cluster" style="margin-top: var(--space-sm)">
+                <a class="button button--filled" href={url('/docs/installation')}>
+                    Install Caelestia
+                </a>
+                <a class="button" href={url('/gallery')}>
+                    Open the gallery
+                </a>
+                <a class="button button--text" href={SITE.repo} rel="noreferrer">
+                    Read the source
+                </a>
+            </div>
+        </section>
+    </div>
+</Base>

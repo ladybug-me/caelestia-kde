@@ -1,0 +1,467 @@
+/*
+ * The gallery: the shell's surfaces, rebuilt.
+ *
+ * The shapes are the shell's — a bar with popouts under it, cards with
+ * `Tokens.rounding.large` corners, translucent surfaces over a wallpaper — and
+ * the motion is the site's own spring layer. Nothing here uses a CSS transition
+ * on a transform: those cannot be grabbed and reversed, which is exactly what
+ * these demos are for.
+ */
+
+.demo {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-block: var(--space-xl);
+}
+
+.demo__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+}
+
+.demo__stage {
+    position: relative;
+    padding: var(--space-md);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--outline-variant);
+    background:
+        radial-gradient(120% 140% at 12% 0%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 60%),
+        radial-gradient(120% 120% at 100% 100%, color-mix(in oklab, var(--tertiary) 20%, transparent), transparent 55%),
+        var(--surface-low);
+    overflow: hidden;
+    touch-action: pan-x;
+}
+
+.demo__hint {
+    font-size: var(--text-caption);
+    color: var(--on-surface-variant);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-sm);
+}
+
+.demo__hint kbd {
+    font-size: 0.75em;
+}
+
+/* ------------------------------------------------------------------- bar */
+
+.demo-bar {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    align-items: flex-start;
+    min-height: 15rem;
+}
+
+.bar {
+    display: flex;
+    gap: var(--space-3xs);
+    padding: var(--space-3xs);
+    border-radius: var(--radius-full);
+}
+
+.bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    min-height: 2.25rem;
+    padding: 0 var(--space-xs);
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--on-surface-variant);
+    cursor: pointer;
+    font-size: var(--text-caption);
+    transition:
+        transform var(--motion-fast) var(--ease-out),
+        background-color var(--motion-fast) var(--ease-out);
+}
+
+.bar__item:hover {
+    background: color-mix(in oklab, var(--on-surface) 10%, transparent);
+    color: var(--on-surface);
+}
+
+.bar__item:active {
+    transform: scale(0.96);
+}
+
+.bar__item[aria-expanded='true'] {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+.bar__dot {
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: var(--radius-full);
+    background: currentcolor;
+}
+
+.popout {
+    position: absolute;
+    top: 3.25rem;
+    left: 0;
+    width: min(22rem, 100%);
+    padding: var(--space-sm);
+    border-radius: var(--radius-lg);
+    /* The transform origin is set from the bar element that opened it, so the
+       surface grows out of the thing that was pressed. */
+    will-change: transform, opacity;
+}
+
+.popout h3 {
+    margin-bottom: var(--space-2xs);
+}
+
+.popout__rows {
+    display: grid;
+    gap: var(--space-2xs);
+    margin-top: var(--space-2xs);
+}
+
+.popout__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    font-size: var(--text-callout);
+    color: var(--on-surface-variant);
+}
+
+.popout__meter {
+    flex: 1;
+    height: 0.4rem;
+    border-radius: var(--radius-full);
+    background: var(--on-surface);
+    opacity: 0.18;
+    position: relative;
+    overflow: hidden;
+}
+
+.popout__meter span {
+    position: absolute;
+    inset: 0;
+    width: var(--value, 50%);
+    background: var(--primary);
+    opacity: 1;
+    border-radius: var(--radius-full);
+}
+
+.popout__handle {
+    width: 2.5rem;
+    height: 0.25rem;
+    border-radius: var(--radius-full);
+    background: var(--on-surface);
+    opacity: 0.25;
+    margin: 0 auto var(--space-xs);
+}
+
+/* --------------------------------------------------------- notifications */
+
+.notif-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    max-width: 24rem;
+}
+
+.notif {
+    position: relative;
+    display: grid;
+    gap: var(--space-3xs);
+    padding: var(--space-sm);
+    padding-inline-end: var(--space-xl);
+    border-radius: var(--radius-lg);
+    background: color-mix(in oklab, var(--surface-container) 88%, transparent);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: var(--shadow-soft);
+    cursor: grab;
+    touch-action: pan-y;
+    will-change: transform;
+}
+
+.notif[data-urgency='critical'] {
+    background: color-mix(in oklab, var(--error-container) 92%, transparent);
+    color: var(--on-error-container, var(--on-surface));
+}
+
+.notif:active {
+    cursor: grabbing;
+}
+
+.notif__head {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--text-caption);
+    color: var(--on-surface-variant);
+}
+
+.notif[data-urgency='critical'] .notif__head {
+    color: inherit;
+}
+
+.notif__summary {
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--tracking-subhead);
+}
+
+.notif__body {
+    font-size: var(--text-callout);
+    color: var(--on-surface-variant);
+}
+
+.notif[data-urgency='critical'] .notif__body {
+    color: inherit;
+}
+
+.notif__close {
+    position: absolute;
+    top: var(--space-2xs);
+    inset-inline-end: var(--space-2xs);
+    width: 1.75rem;
+    height: 1.75rem;
+    display: grid;
+    place-items: center;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    transition:
+        transform var(--motion-fast) var(--ease-out),
+        background-color var(--motion-fast) var(--ease-out);
+}
+
+.notif__close:hover {
+    background: color-mix(in oklab, currentcolor 14%, transparent);
+}
+
+.notif__close:active {
+    transform: scale(0.92);
+}
+
+/* The timeout, which stops while the pointer is over the card. */
+.notif__progress {
+    position: absolute;
+    inset-inline: var(--space-sm);
+    bottom: 0.35rem;
+    height: 2px;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, currentcolor 18%, transparent);
+    overflow: hidden;
+}
+
+.notif__progress::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 100%;
+    background: var(--primary);
+    transform-origin: left center;
+    animation: notif-timeout 9s linear forwards;
+}
+
+.notif[data-urgency='critical'] .notif__progress::after {
+    background: currentcolor;
+}
+
+@keyframes notif-timeout {
+    from {
+        transform: scaleX(1);
+    }
+
+    to {
+        transform: scaleX(0);
+    }
+}
+
+/* ------------------------------------------------------------- launcher */
+
+.launcher {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    max-width: 34rem;
+}
+
+.launcher__field {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding: 0 var(--space-sm);
+    min-height: 2.75rem;
+    border-radius: var(--radius-full);
+    background: var(--surface-container-high);
+    border: 1px solid var(--outline-variant);
+}
+
+.launcher__field input {
+    flex: 1;
+    border: 0;
+    background: transparent;
+    outline: none;
+    font-size: var(--text-body);
+}
+
+.launcher__field input::placeholder {
+    color: var(--on-surface-variant);
+}
+
+.launcher__status {
+    font-size: var(--text-caption);
+    color: var(--on-surface-variant);
+}
+
+.launcher__viewport {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    touch-action: pan-y;
+}
+
+.launcher__track {
+    display: grid;
+    grid-auto-flow: column;
+    gap: var(--space-2xs);
+    width: 200%;
+    will-change: transform;
+}
+
+.launcher__track:focus-visible,
+.workspaces__track:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+}
+
+.launcher__page {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr));
+    width: 50%;
+    align-content: start;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3xs);
+    padding: var(--space-xs) var(--space-2xs);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    background: var(--surface-container);
+    color: var(--on-surface);
+    cursor: pointer;
+    font-size: var(--text-caption);
+    text-align: center;
+    transition:
+        transform var(--motion-fast) var(--ease-out),
+        border-color var(--motion-fast) var(--ease-out);
+}
+
+.app:hover,
+.app[data-highlighted] {
+    border-color: var(--primary);
+}
+
+.app:active {
+    transform: scale(0.97);
+}
+
+.app__glyph {
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(140deg, var(--primary), var(--tertiary));
+    color: var(--on-primary);
+    display: grid;
+    place-items: center;
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ----------------------------------------------------------- workspaces */
+
+.workspaces__viewport {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    touch-action: pan-y;
+}
+
+.workspaces__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--space-2xs);
+    width: 500%;
+    will-change: transform;
+}
+
+.workspace {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 11rem;
+    padding: var(--space-sm);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--outline-variant);
+    background: var(--surface-container-low);
+    color: var(--on-surface-variant);
+    font-size: var(--text-caption);
+    transition:
+        border-color var(--motion-base) var(--ease-out),
+        color var(--motion-base) var(--ease-out);
+}
+
+.workspace[data-active='true'] {
+    border-color: var(--primary);
+    color: var(--on-surface);
+}
+
+.workspace__card {
+    width: min(100%, 14rem);
+    padding: var(--space-xs);
+    border-radius: var(--radius-md);
+    background: var(--surface-container-high);
+    border: 1px solid var(--outline-variant);
+    box-shadow: var(--shadow-soft);
+    font-size: var(--text-caption);
+}
+
+.workspace__card strong {
+    display: block;
+    font-weight: var(--font-weight-medium);
+    color: var(--on-surface);
+}
+
+.workspaces__dots {
+    display: flex;
+    gap: var(--space-3xs);
+    justify-content: center;
+    margin-top: var(--space-2xs);
+}
+
+.workspaces__dots button {
+    width: 0.5rem;
+    height: 0.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-full);
+    background: color-mix(in oklab, var(--on-surface) 25%, transparent);
+    cursor: pointer;
+    transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.workspaces__dots button:active {
+    transform: scale(0.85);
+}
+
+.workspaces__dots button[aria-current='true'] {
+    background: var(--primary);
+}

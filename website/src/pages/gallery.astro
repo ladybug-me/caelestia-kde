@@ -1,0 +1,416 @@
+---
+import Base from '../layouts/Base.astro';
+import { url } from '../lib/site';
+
+import '../styles/demos.css';
+
+const barItems = [
+    {
+        id: 'audio',
+        label: 'Audio',
+        value: '62%',
+        rows: [
+            ['Output', 'Speakers'],
+            ['Now playing', 'Nothing'],
+        ],
+    },
+    {
+        id: 'network',
+        label: 'Network',
+        value: '92%',
+        rows: [
+            ['Wi-Fi', 'caelestia-5G'],
+            ['Signal', 'Good'],
+        ],
+    },
+    {
+        id: 'battery',
+        label: 'Battery',
+        value: '78%',
+        rows: [
+            ['Charging', 'No'],
+            ['Time left', '4h 12m'],
+        ],
+    },
+    {
+        id: 'media',
+        label: 'Media',
+        value: '40%',
+        rows: [
+            ['Track', '—'],
+            ['Player', 'Spotify'],
+        ],
+    },
+];
+
+const apps = [
+    ['Konsole', 'Terminal'],
+    ['Dolphin', 'Files'],
+    ['Firefox', 'Browser'],
+    ['Nexus', 'Settings'],
+    ['Kdenlive', 'Video'],
+    ['Gwenview', 'Images'],
+    ['Spectacle', 'Screenshots'],
+    ['Kate', 'Editor'],
+    ['System Monitor', 'Performance'],
+    ['Discover', 'Software'],
+    ['Kcalc', 'Calculator'],
+    ['Ark', 'Archives'],
+];
+
+const workspaces = [
+    ['1', 'Konsole', 'Firefox'],
+    ['2', 'Dolphin', ''],
+    ['3', 'Kdenlive', ''],
+    ['4', '', ''],
+    ['5', 'System Monitor', ''],
+];
+---
+
+<Base
+    title="Gallery"
+    description="The Caelestia shell's motion, rebuilt in the browser: draggable popouts, swipeable notifications, a flickable launcher and a workspace strip with momentum."
+>
+    <div class="page">
+        <header class="section" style="padding-bottom: 0">
+            <p class="section__eyebrow">Gallery</p>
+            <h1>The shell's motion, in your browser</h1>
+            <p class="muted measure">
+                These are not videos. Each surface below is a working rebuild of the shell's behaviour: springs that
+                start from where the element actually is, drags that keep the velocity you released them with, and
+                surfaces you can grab again while they are still moving. Point at a card and the timer stops, the way it
+                does on the desktop.
+            </p>
+        </header>
+
+        <!-- bar -->
+        <section class="demo" id="bar" data-demo="bar">
+            <div class="demo__head">
+                <h2>Bar and popouts</h2>
+                <p class="muted measure">
+                    A popout opens from the bar element you pressed and leaves the way it came. Drag it down and throw
+                    it: past halfway it closes, and a flick closes it from anywhere. Catch it while it is leaving and it
+                    comes back with the velocity it had.
+                </p>
+            </div>
+
+            <div class="demo__stage demo-bar">
+                <div class="bar material" role="toolbar" aria-label="Bar elements">
+                    {barItems.map((item) => (
+                        <button
+                            class="bar__item"
+                            type="button"
+                            data-popout={item.id}
+                            aria-expanded="false"
+                            aria-controls={`popout-${item.id}`}
+                        >
+                            <span class="bar__dot" aria-hidden="true" />
+                            {item.label}
+                        </button>
+                    ))}
+                </div>
+
+                {barItems.map((item) => (
+                    <section
+                        class="popout material--thick"
+                        id={`popout-${item.id}`}
+                        data-popout-panel={item.id}
+                        aria-label={`${item.label} popout`}
+                        tabindex="-1"
+                    >
+                        <div class="popout__handle" aria-hidden="true" />
+                        <h3>{item.label}</h3>
+                        <div class="popout__meter" aria-hidden="true">
+                            <span style={`--value: ${item.value}`} />
+                        </div>
+                        <div class="popout__rows">
+                            {item.rows.map(([key, value]) => (
+                                <div class="popout__row">
+                                    <span>{key}</span>
+                                    <span>{value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                ))}
+
+                <p class="visually-hidden" role="status" data-bar-live />
+            </div>
+
+            <p class="demo__hint">
+                <span>
+                    <kbd>Drag</kbd> a popout down and let go
+                </span>
+                <span>
+                    <kbd>Flick</kbd> it to throw it closed
+                </span>
+                <span>
+                    <kbd>Esc</kbd> closes it
+                </span>
+            </p>
+        </section>
+
+        <!-- notifications -->
+        <section class="demo" id="notifications" data-demo="notifications">
+            <div class="demo__head">
+                <h2>Notification stack</h2>
+                <p class="muted measure">
+                    Swiping moves the card 1:1 with the pointer. Where it lands is decided by the direction of your
+                    release, not by the distance: the same card released slowly comes back. Point at one and its timeout
+                    pauses.
+                </p>
+            </div>
+
+            <div class="demo__stage">
+                <div class="notif-stack" data-notif-stack>
+                    <article class="notif" data-notif data-app="Audio" data-urgency="normal" data-flip>
+                        <header class="notif__head">
+                            <span data-notif-app>Audio</span>
+                            <span>· now</span>
+                        </header>
+                        <p class="notif__summary" data-notif-summary>
+                            Now playing
+                        </p>
+                        <p class="notif__body" data-notif-body>
+                            Speaker volume set to 62%
+                        </p>
+                        <button class="notif__close" type="button" data-notif-close aria-label="Dismiss">
+                            ×
+                        </button>
+                        <div class="notif__progress" data-notif-progress aria-hidden="true" />
+                    </article>
+
+                    <article class="notif" data-notif data-app="Screenshot" data-urgency="normal" data-flip>
+                        <header class="notif__head">
+                            <span data-notif-app>Screenshot</span>
+                            <span>· 1m</span>
+                        </header>
+                        <p class="notif__summary" data-notif-summary>
+                            Region saved
+                        </p>
+                        <p class="notif__body" data-notif-body>
+                            ~/Pictures/Screenshots/2026-10-13_18-44.png
+                        </p>
+                        <button class="notif__close" type="button" data-notif-close aria-label="Dismiss">
+                            ×
+                        </button>
+                        <div class="notif__progress" data-notif-progress aria-hidden="true" />
+                    </article>
+
+                    <article class="notif" data-notif data-app="Disk" data-urgency="critical" data-flip>
+                        <header class="notif__head">
+                            <span data-notif-app>Disk</span>
+                            <span>· 3m</span>
+                        </header>
+                        <p class="notif__summary" data-notif-summary>
+                            Root filesystem almost full
+                        </p>
+                        <p class="notif__body" data-notif-body>
+                            4.2 GB left on /
+                        </p>
+                        <button class="notif__close" type="button" data-notif-close aria-label="Dismiss">
+                            ×
+                        </button>
+                        <div class="notif__progress" data-notif-progress aria-hidden="true" />
+                    </article>
+                </div>
+
+                <template data-notif-template>
+                    <article class="notif" data-notif data-urgency="normal" data-flip>
+                        <header class="notif__head">
+                            <span data-notif-app>Calendar</span>
+                            <span>· now</span>
+                        </header>
+                        <p class="notif__summary" data-notif-summary>
+                            Event
+                        </p>
+                        <p class="notif__body" data-notif-body>
+                            Details
+                        </p>
+                        <button class="notif__close" type="button" data-notif-close aria-label="Dismiss">
+                            ×
+                        </button>
+                        <div class="notif__progress" data-notif-progress aria-hidden="true" />
+                    </article>
+                </template>
+
+                <p class="visually-hidden" role="status" data-notif-live />
+            </div>
+
+            <p class="demo__hint">
+                <span>
+                    <kbd>Drag</kbd> sideways, either way, to clear one
+                </span>
+                <span>
+                    <kbd>Flick</kbd> to throw it off
+                </span>
+                <span>
+                    <kbd>Point</kbd> at a card to pause its timer
+                </span>
+            </p>
+        </section>
+
+        <!-- launcher -->
+        <section class="demo" id="launcher" data-demo="launcher">
+            <div class="demo__head">
+                <h2>Launcher</h2>
+                <p class="muted measure">
+                    Typing filters on the keystroke — the launcher searches a handful of apps, so waiting for a pause
+                    would be latency for nothing. Flick the grid sideways: the page it lands on is chosen from where
+                    your flick was heading.
+                </p>
+            </div>
+
+            <div class="demo__stage">
+                <div class="launcher">
+                    <label class="launcher__field">
+                        <span class="visually-hidden">Search apps</span>
+                        <input
+                            type="search"
+                            placeholder="Search apps, actions, emoji"
+                            data-launcher-input
+                            autocomplete="off"
+                        />
+                    </label>
+
+                    <div class="launcher__viewport" data-launcher-viewport>
+                        <div
+                            class="launcher__track"
+                            data-launcher-track
+                            data-pages="2"
+                            tabindex="0"
+                            role="group"
+                            aria-label="Apps, two pages. Use the arrow keys to change page."
+                        >
+                            <div class="launcher__page">
+                                {apps.slice(0, 6).map(([name, kind]) => (
+                                    <button class="app" type="button" data-launcher-app={name}>
+                                        <span class="app__glyph" aria-hidden="true">
+                                            {name.slice(0, 1)}
+                                        </span>
+                                        {name}
+                                        <span class="visually-hidden">({kind})</span>
+                                    </button>
+                                ))}
+                            </div>
+                            <div class="launcher__page">
+                                {apps.slice(6).map(([name, kind]) => (
+                                    <button class="app" type="button" data-launcher-app={name}>
+                                        <span class="app__glyph" aria-hidden="true">
+                                            {name.slice(0, 1)}
+                                        </span>
+                                        {name}
+                                        <span class="visually-hidden">({kind})</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cluster">
+                        <p class="launcher__status" role="status" data-launcher-status />
+                        <span class="muted" style="font-size: var(--text-caption); margin-inline-start: auto">
+                            <button class="button button--text" type="button" data-launcher-page="0">
+                                Page 1
+                            </button>
+                            <button class="button button--text" type="button" data-launcher-page="1">
+                                Page 2
+                            </button>
+                        </span>
+                    </div>
+
+                    <p class="visually-hidden" role="status" data-launcher-live />
+                    <p class="muted launcher__empty" data-launcher-empty hidden>
+                        Nothing matches that.
+                    </p>
+                </div>
+            </div>
+
+            <p class="demo__hint">
+                <span>
+                    <kbd>Type</kbd> to filter instantly
+                </span>
+                <span>
+                    <kbd>↑</kbd> <kbd>↓</kbd> to move through the results
+                </span>
+                <span>
+                    <kbd>Drag</kbd> the grid to change page
+                </span>
+            </p>
+        </section>
+
+        <!-- workspaces -->
+        <section class="demo" id="workspaces" data-demo="workspaces">
+            <div class="demo__head">
+                <h2>Workspaces</h2>
+                <p class="muted measure">
+                    Five workspaces, flicked between with momentum. A flick is projected forward before the strip
+                    decides which workspace it was aimed at, which is why a short flick and a long drag can end up in
+                    the same place. The ends give way rather than refusing to move.
+                </p>
+            </div>
+
+            <div class="demo__stage">
+                <div class="workspaces__viewport">
+                    <div
+                        class="workspaces__track"
+                        data-workspace-track
+                        tabindex="0"
+                        role="group"
+                        aria-label="Workspaces. Use the arrow keys to move between them."
+                    >
+                        {workspaces.map(([number, ...windows]) => (
+                            <div class="workspace" data-workspace data-active={number === '1'}>
+                                <span class="visually-hidden">Workspace {number}</span>
+                                {windows.filter(Boolean).map((window) => (
+                                    <div class="workspace__card">
+                                        <strong>{window}</strong>
+                                        <span>Window</span>
+                                    </div>
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div class="workspaces__dots" role="group" aria-label="Jump to workspace">
+                    {workspaces.map(([number], index) => (
+                        <button
+                            type="button"
+                            data-workspace-jump={index}
+                            aria-current={number === '1'}
+                            aria-label={`Workspace ${number}`}
+                        />
+                    ))}
+                </div>
+
+                <p class="visually-hidden" role="status" data-workspace-live />
+            </div>
+
+            <p class="demo__hint">
+                <span>
+                    <kbd>Drag</kbd> the strip
+                </span>
+                <span>
+                    <kbd>Flick</kbd> to carry on to the next workspace
+                </span>
+                <span>
+                    <kbd>←</kbd> <kbd>→</kbd> to step
+                </span>
+            </p>
+        </section>
+
+        <section class="section">
+            <h2>Where to next</h2>
+            <p class="muted measure">
+                The palettes these surfaces are drawn from are on <a href={url('/themes')}>Themes</a>, including the one
+                derived from a wallpaper you drop in. Everything the shell contains, rather than the parts that are fun
+                to rebuild, is on <a href={url('/features')}>Features</a>.
+            </p>
+        </section>
+    </div>
+
+    <script>
+        import '../lib/gallery-client';
+    </script>
+</Base>

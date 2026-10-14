@@ -1,0 +1,37 @@
+{
+    "extends": ["stylelint-config-standard"],
+    "ignoreFiles": ["src/styles/generated/**", "dist/**", "**/*.astro"],
+    "rules": {
+        "selector-class-pattern": null,
+        "custom-property-pattern": null,
+        "no-descending-specificity": null,
+        "declaration-property-value-no-unknown": null,
+        "color-function-notation": null,
+        "alpha-value-notation": null,
+
+        "comment-empty-line-before": null,
+        "custom-property-empty-line-before": null,
+        "declaration-empty-line-before": null,
+        "rule-empty-line-before": null,
+
+        "media-feature-range-notation": null,
+
+        "property-no-vendor-prefix": null,
+        "value-keyword-case": [
+            "lower",
+            {
+                "ignoreProperties": ["font-family", "font", "font-mono"],
+                "ignoreKeywords": [
+                    "optimizeLegibility",
+                    "Menlo",
+                    "Consolas",
+                    "JetBrains Mono",
+                    "Cascadia Code",
+                    "SF Mono"
+                ]
+            }
+        ],
+
+        "no-duplicate-selectors": null
+    }
+}

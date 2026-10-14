@@ -1,0 +1,10 @@
+node_modules/**
+dist/**
+.astro/**
+src/styles/generated/**
+src/data/palettes.json
+src/assets/**
+test-results/**
+playwright-report/**
+*.md
+package-lock.json

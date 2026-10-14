@@ -1,0 +1,189 @@
+---
+import { Image } from 'astro:assets';
+
+import Base from '../layouts/Base.astro';
+import InstallCommand from '../components/InstallCommand.astro';
+import ThemeControls from '../components/ThemeControls.astro';
+import { SITE, url } from '../lib/site';
+import shellScreenshot from '../assets/repo/shell-screenshot.png';
+
+// The tour, in the order someone meets the shell: the bar first, because it is
+// always on screen, then the things it opens.
+const features = [
+    {
+        title: 'A bar that behaves like a surface',
+        body: 'Popouts open from the element that asked for them, track your pointer 1:1, and can be thrown closed. Audio, Bluetooth, network, media, calendar, updates and notifications all live here.',
+    },
+    {
+        title: 'Launcher and overview',
+        body: 'App search with actions, emoji and clipboard in one field. The overview flicks between workspaces with momentum, and drops windows back where you aimed them.',
+    },
+    {
+        title: 'Notifications with manners',
+        body: 'Cards pause their timeout while you are reading, expand on hover, and dismiss on a swipe. Critical notifications keep their urgency colour.',
+    },
+    {
+        title: 'Nexus, the settings app',
+        body: 'Every panel, widget, shortcut and plugin has a page. It runs in the shell, so changes land where you can see them before you commit.',
+    },
+    {
+        title: 'Themed from your wallpaper',
+        body: 'Colours are extracted from the current wallpaper with the Material You algorithm and pushed to Qt, GTK, terminals and the greeter. Pick a named palette instead and it applies just as widely.',
+    },
+    {
+        title: 'A lock screen that matches',
+        body: "The greeter renders in the same palette as the session, with the fallback to Plasma's own lock screen when it cannot.",
+    },
+];
+
+const demos = [
+    { href: '/gallery#bar', label: 'Bar and popouts', note: 'Drag a popout, throw it closed' },
+    { href: '/gallery#notifications', label: 'Notification stack', note: 'Catch one mid-dismiss' },
+    { href: '/gallery#launcher', label: 'Launcher', note: 'Flick between pages of apps' },
+    { href: '/themes', label: 'Wallpaper colours', note: 'Drop an image, watch the site recolour' },
+];
+---
+
+<Base>
+    <section class="page hero">
+        <p class="section__eyebrow">KDE Plasma 6 · Wayland</p>
+        <h1>Caelestia, on KDE&nbsp;Plasma.</h1>
+        <p class="hero__lede">
+            A Quickshell desktop shell: the bar, launcher, overview, notification centre, lock screen and settings app,
+            with colour extracted from your wallpaper. It runs on KWin, and it is the same shell that upstream runs on
+            Hyprland.
+        </p>
+
+        <div class="cluster hero__actions">
+            <a class="button button--filled" href={url('/docs/installation')}>
+                Install Caelestia
+            </a>
+            <a class="button" href={url('/features')}>
+                See what is included
+            </a>
+            <a class="button button--text" href={SITE.repo} rel="noreferrer">
+                Source on GitHub
+            </a>
+        </div>
+
+        <InstallCommand />
+
+        <figure class="hero__shot reveal">
+            <Image
+                src={shellScreenshot}
+                alt="The Caelestia desktop: a vertical bar on the left, a wallpaper-driven colour scheme, a now-playing card and the clock."
+                widths={[640, 1024, 1600, 1920]}
+                sizes="(min-width: 76rem) 76rem, 100vw"
+                loading="eager"
+                fetchpriority="high"
+                format="avif"
+            />
+            <figcaption class="muted">Bar, now playing and the desktop clock, coloured from the wallpaper.</figcaption>
+        </figure>
+    </section>
+
+    <section class="page section">
+        <div class="section__head">
+            <p class="section__eyebrow">What you get</p>
+            <h2>A whole desktop, not a widget set</h2>
+        </div>
+        <div class="grid">
+            {features.map((feature) => (
+                <article class="card reveal">
+                    <h3>{feature.title}</h3>
+                    <p>{feature.body}</p>
+                </article>
+            ))}
+        </div>
+    </section>
+
+    <section class="page section">
+        <div class="section__head">
+            <p class="section__eyebrow">Try it here</p>
+            <h2>Rebuilt in the browser, so you can feel it</h2>
+            <p class="muted measure">
+                The gallery is the shell's own motion, reimplemented on the web: springs that start from where the
+                element is, drags that keep the velocity you released them with, and surfaces you can grab again while
+                they are still moving.
+            </p>
+        </div>
+        <div class="grid">
+            {demos.map((demo) => (
+                <a class="card demo-card reveal" href={url(demo.href)}>
+                    <h3>{demo.label}</h3>
+                    <p>{demo.note}</p>
+                </a>
+            ))}
+        </div>
+    </section>
+
+    <section class="page section">
+        <div class="section__head">
+            <p class="section__eyebrow">Colours</p>
+            <h2>The site wears the shell's palettes</h2>
+            <p class="muted measure">
+                These are the palettes the shell ships, read from the repository at build time. Pick one and the whole
+                site changes with it, light mode included.
+            </p>
+        </div>
+        <ThemeControls />
+        <p class="muted" style="margin-top: var(--space-sm)">
+            Full list, with the wallpaper-derived palette, on <a href={url('/themes')}>Themes</a>.
+        </p>
+    </section>
+</Base>
+
+<style>
+    .hero {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-md);
+        padding-block: var(--space-2xl) var(--space-xl);
+    }
+
+    .hero__lede {
+        max-width: 46rem;
+        font-size: var(--text-subhead);
+        line-height: 1.5;
+        color: var(--on-surface-variant);
+    }
+
+    .hero__actions {
+        gap: var(--space-2xs);
+    }
+
+    .hero__shot {
+        margin: var(--space-lg) 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2xs);
+    }
+
+    .hero__shot img {
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--outline-variant);
+        box-shadow: var(--shadow-deep);
+        width: 100%;
+    }
+
+    .demo-card {
+        text-decoration: none;
+        color: inherit;
+        transition:
+            border-color var(--motion-fast) var(--ease-out),
+            transform var(--motion-fast) var(--ease-out);
+    }
+
+    .demo-card:hover {
+        border-color: var(--primary);
+    }
+
+    .demo-card:active {
+        transform: scale(0.99);
+    }
+
+    .theme-controls {
+        display: grid;
+        gap: var(--space-md);
+    }
+</style>

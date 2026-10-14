@@ -1,0 +1,93 @@
+/*
+ * Materials.
+ *
+ * Chrome floats over content as a translucent layer instead of consuming a
+ * strip of the page: the bar sits above the page, the text scrolls under it,
+ * and an edge fade marks where the two meet. Opaque bars are the thing this
+ * avoids.
+ *
+ * Weight encodes hierarchy. `material` is the light layer for interactive
+ * chrome; `material--thick` is the heavier one that separates structure (the
+ * docs sidebar, the demo frames). A light translucent layer is never stacked on
+ * another one: legibility collapses when it is.
+ */
+
+.material {
+    background: color-mix(in oklab, var(--surface-container) var(--glass-opacity), transparent);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: 1px solid var(--glass-border);
+    /* The bright top edge is the light catching the material. */
+    box-shadow:
+        inset 0 1px 0 color-mix(in oklab, var(--on-surface) 8%, transparent),
+        var(--shadow-soft);
+}
+
+.material--thick {
+    --glass-opacity: 0.72;
+    --glass-blur: 28px;
+    background: color-mix(in oklab, var(--surface-high) var(--glass-opacity), transparent);
+    box-shadow:
+        inset 0 1px 0 color-mix(in oklab, var(--on-surface) 8%, transparent),
+        var(--shadow-deep);
+}
+
+/* Surfaces that carry reading content are solid: no material under text. */
+.material--solid {
+    background: var(--surface-container);
+    backdrop-filter: none;
+    border: 1px solid var(--outline-variant);
+    box-shadow: none;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .material,
+    .material--thick {
+        background: var(--surface-container-high);
+    }
+}
+
+/* Where floating chrome overlaps content, fade instead of drawing a divider. */
+.edge-fade {
+    position: relative;
+}
+
+.edge-fade::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(var(--space-sm) * -1);
+    height: var(--space-lg);
+    background: linear-gradient(to bottom, var(--bg), transparent);
+    pointer-events: none;
+}
+
+.scrim {
+    position: absolute;
+    inset: 0;
+    background: color-mix(in oklab, var(--scrim) 55%, transparent);
+    backdrop-filter: blur(2px);
+}
+
+/**
+ * A material arriving rather than a plain fade: blur and scale move together,
+ * which is what makes a popout read as a surface opening.
+ *
+ * The animation itself is driven by the spring layer when a demo owns it; this
+ * is the declarative version for chrome that appears without a gesture.
+ */
+@keyframes materialize {
+    from {
+        opacity: 0;
+        transform: scale(0.96);
+        backdrop-filter: blur(0) saturate(100%);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.materialize {
+    animation: materialize var(--motion-slow) var(--ease-out) both;
+}

@@ -20,6 +20,9 @@ https://github.com/user-attachments/assets/38b24e7f-fdd9-43db-872b-8c0ac23a44fd
 > Upstream runs on Hyprland; the port runs the same shell on KWin and Plasma. For the original
 > Hyprland dotfiles, see [`caelestia-dots/caelestia`](https://github.com/caelestia-dots/caelestia).
 
+The same documentation, the palettes and interactive rebuilds of the shell's own surfaces live at
+<https://ladybug-me.github.io/caelestia-kde>.
+
 ## Installation
 
 **Requirements:** Arch-based, Fedora, or Debian/Ubuntu - KDE Plasma 6 on Wayland, Qt 6.9+
@@ -111,6 +114,7 @@ docs/          guides, plus design notes under docs/architecture/
 tests/         bash tests for the step-script helpers
 tools/         repo maintenance scripts, never shipped
 assets/        the logo and screenshots used by the docs
+website/       the project site: an Astro build that reads this repository
 .github/       workflows, issue and PR templates, CI checks
 ```
 
@@ -132,7 +136,7 @@ assets/        the logo and screenshots used by the docs
 - [Haidir](https://bitbucket.org/dirn-typo/yet-another-monochrome-icon-set) - icon set
 - [dim-ghub](https://github.com/dim-ghub/caelestia-shell) - v2.0.0 features
 - [dharmx](https://github.com/dharmx/walls) - default wallpapers
-  
+
 ## License
 
 GPL-3.0-or-later - see [LICENSE](LICENSE).

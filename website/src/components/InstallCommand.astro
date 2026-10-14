@@ -1,0 +1,19 @@
+---
+import { SITE } from '../lib/site';
+
+interface Props {
+    /** Shown instead of the one-liner, for a distro-specific page. */
+    command?: string;
+    label?: string;
+}
+const { command = SITE.install, label = 'Install command' } = Astro.props;
+---
+
+<div class="install">
+    <code class="install__text" aria-label={label}>
+        {command}
+    </code>
+    <button class="button button--tonal install__copy" type="button" data-copy={command}>
+        Copy
+    </button>
+</div>

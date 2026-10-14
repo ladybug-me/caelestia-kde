@@ -33,6 +33,7 @@ Make your changes in the cloned repo, test them (see below), then open a PR. Tha
 | Installer theme & menus | `installer/data/theme.json`, `installer/data/menu.json` | JSON |
 | Install step scripts | `scripts/` | Bash |
 | User-facing update scripts | `src/bin/` | Bash |
+| Project website | `website/` | Astro + TypeScript |
 
 ## Development workflow
 
@@ -52,7 +53,6 @@ caelestia-shell-ipc log
 
 - Run `touch ~/.config/quickshell/caelestia/.qmlls.ini` for QML language server support
 - In VS Code, install the "Qt Qml" extension and set the `qmlls` path to `/usr/bin/qmlls6`
-
 
 ### For C++ plugin changes
 
@@ -100,6 +100,22 @@ otherwise reuses a local binary whose stamp matches it. Both paths can hand you 
 binary built before your change, and then the new step silently never runs on a
 fresh install. Bumping makes the prebuilt lookup miss, so the installer compiles
 the tree instead, and the next release publishes the matching binary.
+
+### For website changes
+
+```bash
+cd website
+npm ci
+npm run dev        # regenerates the palettes and stages the assets first
+npm run check      # types, formatting, eslint, stylelint
+npm run test:unit  # the gesture arithmetic, the palette parser, the docs loader
+npm run test:e2e   # the browser: drags, flicks, interruptions, reduced motion
+```
+
+The site reads this repository rather than duplicating it: the docs pages are the
+README sections and `docs/`, the palettes are `src/schemes/`, and the logo and
+screenshots come from `assets/`. Editing those updates the site; there is nothing
+to copy across. See [website/README.md](../website/README.md).
 
 ### For translation changes
 

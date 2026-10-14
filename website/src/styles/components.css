@@ -1,0 +1,523 @@
+/*
+ * Components.
+ *
+ * Press feedback happens on pointer-down (`:active`), never on release, and the
+ * scale change is small enough to read as contact rather than as a jump.
+ */
+
+/* ---------------------------------------------------------------- buttons */
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-3xs);
+    /* 44px minimum on touch: the target is padded past its visible shape. */
+    min-height: 2.75rem;
+    padding: 0 var(--space-md);
+    border: 1px solid transparent;
+    border-radius: var(--radius-full);
+    background: var(--surface-container-high);
+    color: var(--on-surface);
+    font-size: var(--text-callout);
+    font-weight: var(--font-weight-medium);
+    text-decoration: none;
+    cursor: pointer;
+    /* Feedback is instant; only the release eases. */
+    transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.button:hover {
+    background: var(--surface-highest);
+}
+
+.button:active {
+    transform: scale(0.97);
+}
+
+.button--filled {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+.button--filled:hover {
+    background: color-mix(in oklab, var(--primary) 88%, var(--on-primary));
+}
+
+.button--tonal {
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+}
+
+.button--text {
+    background: transparent;
+    padding-inline: var(--space-sm);
+}
+
+.button--text:hover {
+    background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+}
+
+/* ------------------------------------------------------------------- nav */
+
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    border-inline: 0;
+    border-top: 0;
+    border-radius: 0;
+}
+
+.site-nav__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    min-height: var(--nav-height);
+}
+
+.site-nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    color: var(--on-surface);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--tracking-heading);
+    min-height: 2.75rem;
+}
+
+.site-nav__brand img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.site-nav__links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3xs);
+    margin-inline-start: auto;
+    list-style: none;
+}
+
+.site-nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 var(--space-xs);
+    border-radius: var(--radius-full);
+    color: var(--on-surface-variant);
+    text-decoration: none;
+    font-size: var(--text-callout);
+    transition:
+        color var(--motion-fast) var(--ease-out),
+        background-color var(--motion-fast) var(--ease-out);
+}
+
+.site-nav__link:hover {
+    color: var(--on-surface);
+    background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+}
+
+.site-nav__link[aria-current] {
+    color: var(--on-surface);
+    background: color-mix(in oklab, var(--primary) 18%, transparent);
+}
+
+.site-nav__external {
+    display: none;
+}
+
+@media (min-width: 48rem) {
+    .site-nav__external {
+        display: inline-flex;
+    }
+}
+
+/* A phone cannot hold the wordmark and five links on one line. Wrapping them
+   keeps every destination visible and tappable, which hiding them behind a
+   menu would not. */
+@media (max-width: 34rem) {
+    .site-nav__inner {
+        flex-wrap: wrap;
+        padding-block: var(--space-3xs);
+        row-gap: 0;
+    }
+
+    .site-nav__links {
+        width: 100%;
+        margin-inline-start: 0;
+        justify-content: space-between;
+    }
+
+    .site-nav__link {
+        padding-inline: var(--space-2xs);
+    }
+}
+
+/* ------------------------------------------------------------------ cards */
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    background: var(--surface-container);
+    border: 1px solid var(--outline-variant);
+}
+
+.card h3 {
+    margin: 0;
+}
+
+.card p {
+    color: var(--on-surface-variant);
+    font-size: var(--text-callout);
+    line-height: var(--leading-callout);
+}
+
+.card__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-md);
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    font-size: 1.125rem;
+}
+
+.grid {
+    display: grid;
+    gap: var(--space-sm);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+}
+
+/* ---------------------------------------------------------------- section */
+
+.section {
+    padding-block: var(--space-2xl);
+}
+
+.section__eyebrow {
+    color: var(--primary);
+    font-size: var(--text-caption);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: var(--font-weight-medium);
+}
+
+.section__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    margin-bottom: var(--space-lg);
+}
+
+/* A heading needs air above it, but the first thing on a page does not. */
+.section > h2,
+.section > .section__head + * {
+    margin-top: 0;
+}
+
+.page > header > h1 + p,
+.section h1 + p {
+    margin-top: var(--space-2xs);
+}
+
+/* -------------------------------------------------------- install command */
+
+.install {
+    display: flex;
+    align-items: stretch;
+    gap: var(--space-3xs);
+    padding: var(--space-3xs);
+    border-radius: var(--radius-lg);
+    background: var(--surface-lowest);
+    border: 1px solid var(--outline-variant);
+    max-width: 44rem;
+}
+
+.install__text {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    padding-inline: var(--space-xs);
+    overflow-x: auto;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    color: var(--code-text);
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.install__text::before {
+    content: '$';
+    color: var(--code-overlay);
+}
+
+.install__copy {
+    flex: none;
+}
+
+.install__copy[data-copied] {
+    background: var(--success);
+    color: var(--on-primary);
+}
+
+/* --------------------------------------------------------- palette picker */
+
+.swatch {
+    display: block;
+    width: 100%;
+    height: 2.25rem;
+    border-radius: var(--radius-sm);
+    /* Each palette carries its own values, written into the generated
+       stylesheet; the fallbacks are only for a palette that ships nothing. */
+    background: linear-gradient(
+        120deg,
+        var(--swatch-bg, var(--surface)) 0 45%,
+        var(--swatch-primary, var(--primary)) 45% 78%,
+        var(--swatch-tertiary, var(--tertiary)) 78% 100%
+    );
+}
+
+.palette-picker {
+    display: grid;
+    gap: var(--space-2xs);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
+}
+
+.palette-option {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    padding: var(--space-2xs);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--outline-variant);
+    background: var(--surface-container-low);
+    color: var(--on-surface);
+    text-align: left;
+    cursor: pointer;
+    transition:
+        transform var(--motion-fast) var(--ease-out),
+        border-color var(--motion-fast) var(--ease-out);
+}
+
+.palette-option:hover {
+    border-color: var(--primary);
+}
+
+.palette-option:active {
+    transform: scale(0.98);
+}
+
+.palette-option[aria-pressed='true'] {
+    border-color: var(--primary);
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.palette-option__label {
+    font-size: var(--text-caption);
+    line-height: 1.2;
+}
+
+.palette-option__flavour {
+    display: block;
+    color: var(--on-surface-variant);
+    font-size: var(--text-caption);
+}
+
+/* -------------------------------------------------------------- segmented */
+
+.segmented {
+    display: inline-flex;
+    padding: 0.2rem;
+    gap: 0.2rem;
+    border-radius: var(--radius-full);
+    background: var(--surface-container-high);
+}
+
+.segmented button {
+    min-height: 2.25rem;
+    padding-inline: var(--space-sm);
+    border: 0;
+    border-radius: var(--radius-full);
+    background: transparent;
+    color: var(--on-surface-variant);
+    cursor: pointer;
+    font-size: var(--text-caption);
+    transition: transform var(--motion-fast) var(--ease-out);
+}
+
+.segmented button:active {
+    transform: scale(0.97);
+}
+
+.segmented button[aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--on-primary);
+}
+
+.segmented button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------------ prose */
+
+.prose {
+    max-width: var(--measure);
+}
+
+.prose > * + * {
+    margin-top: var(--space-sm);
+}
+
+.prose h2 {
+    margin-top: var(--space-xl);
+    font-size: 1.75rem;
+    line-height: 1.2;
+    letter-spacing: var(--tracking-title);
+}
+
+.prose h3 {
+    margin-top: var(--space-lg);
+}
+
+.prose h4 {
+    margin-top: var(--space-md);
+}
+
+.prose ul,
+.prose ol {
+    padding-inline-start: 1.25rem;
+    list-style: revert;
+}
+
+.prose li + li {
+    margin-top: var(--space-2xs);
+}
+
+.prose blockquote {
+    margin: 0;
+    padding: var(--space-xs) var(--space-md);
+    border-inline-start: 3px solid var(--primary);
+    border-radius: var(--radius-sm);
+    background: var(--surface-container);
+    color: var(--on-surface-variant);
+}
+
+.prose img {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--outline-variant);
+}
+
+.prose table {
+    display: block;
+    overflow-x: auto;
+    max-width: 100%;
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-md);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.prose table th:first-child,
+.prose table td:first-child {
+    padding-inline-start: var(--space-sm);
+}
+
+/* --------------------------------------------------------------- docs nav */
+
+.docs-layout {
+    display: grid;
+    /* `minmax(0, 1fr)` matters: with an `auto` track, a wide code block sizes
+       the whole column and the page scrolls sideways on a phone. The block has
+       its own horizontal scroll; the column must be allowed to shrink. */
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+    align-items: start;
+    padding-block: var(--space-lg) var(--space-2xl);
+}
+
+@media (min-width: 64rem) {
+    .docs-layout {
+        grid-template-columns: 15rem minmax(0, 1fr);
+    }
+}
+
+.docs-nav {
+    display: grid;
+    gap: var(--space-3xs);
+    position: sticky;
+    top: calc(var(--nav-height) + var(--space-sm));
+    padding: var(--space-sm);
+    border-radius: var(--radius-lg);
+}
+
+.docs-nav__group {
+    font-size: var(--text-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--on-surface-variant);
+    margin-top: var(--space-xs);
+}
+
+.docs-nav a {
+    display: block;
+    padding: var(--space-2xs) var(--space-xs);
+    border-radius: var(--radius-sm);
+    color: var(--on-surface-variant);
+    text-decoration: none;
+    font-size: var(--text-callout);
+}
+
+.docs-nav a:hover {
+    color: var(--on-surface);
+    background: color-mix(in oklab, var(--on-surface) 8%, transparent);
+}
+
+.docs-nav a[aria-current='page'] {
+    color: var(--on-surface);
+    background: color-mix(in oklab, var(--primary) 18%, transparent);
+}
+
+.docs-meta {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--outline-variant);
+    color: var(--on-surface-variant);
+    font-size: var(--text-caption);
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.site-footer {
+    margin-top: var(--space-3xl);
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--outline-variant);
+    color: var(--on-surface-variant);
+    font-size: var(--text-caption);
+}
+
+.site-footer ul {
+    list-style: none;
+}
+
+.site-footer__columns {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+}
+
+.site-footer__columns h4 {
+    font-size: var(--text-caption);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--on-surface-variant);
+    margin-bottom: var(--space-2xs);
+}

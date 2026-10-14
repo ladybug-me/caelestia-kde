@@ -1,0 +1,102 @@
+/*
+ * Motion, transparency and contrast preferences.
+ *
+ * Reduced motion is not "no feedback": it is the same information delivered
+ * without travel. Slides, springs and parallax become cross-fades; nothing that
+ * conveys state is dropped, and every demo stays operable.
+ */
+
+/* Progressive enhancement: content is visible by default, and the reveal
+   styles only apply once the script that removes them has loaded. Without
+   JavaScript nothing is hidden. */
+html.has-js .reveal {
+    opacity: 0;
+    transform: translateY(0.75rem);
+}
+
+html.has-js .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition:
+        opacity var(--motion-slow) var(--ease-out),
+        transform var(--motion-slow) var(--ease-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    /* Reveals become immediate; the element still arrives, it just does not
+       travel. */
+    html.has-js .reveal,
+    html.has-js .reveal.is-in {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    /* Anything decorative stops moving entirely. */
+    .materialize {
+        animation: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+    :root {
+        --glass-blur: 0px;
+        --glass-opacity: 1;
+    }
+
+    .material,
+    .material--thick {
+        background: var(--surface-container-high);
+        backdrop-filter: none;
+    }
+
+    .scrim {
+        background: color-mix(in oklab, var(--scrim) 80%, transparent);
+        backdrop-filter: none;
+    }
+}
+
+@media (prefers-contrast: more) {
+    :root {
+        --glass-opacity: 1;
+        --glass-border: var(--on-surface);
+    }
+
+    .material,
+    .material--thick {
+        background: var(--surface-container-highest);
+        backdrop-filter: none;
+        border-color: var(--on-surface);
+    }
+
+    .card,
+    .prose table,
+    pre.astro-code {
+        border-color: var(--on-surface);
+    }
+
+    .site-nav__link[aria-current],
+    .docs-nav a[aria-current='page'] {
+        background: var(--primary);
+        color: var(--on-primary);
+    }
+}
+
+/* Large surfaces fade while they travel and settle back in, rather than
+   sliding at full opacity. */
+.panel--moving {
+    opacity: 0.85;
+}

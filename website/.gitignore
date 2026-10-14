@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.astro/
+
+# Generated at build time by scripts/gen-palettes.mjs and scripts/sync-assets.mjs.
+# Derived from src/schemes and the repository's own assets, so they are recreated
+# on every build rather than committed.
+src/data/palettes.json
+src/styles/generated/
+src/assets/repo/
+src/assets/fonts/
+public/favicon.svg
+
+# Test output
+test-results/
+playwright-report/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.production
+
+# Editors and platforms
+.DS_Store

@@ -1,0 +1,46 @@
+{
+    "name": "caelestia-kde-website",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "engines": {
+        "node": ">=22.12.0"
+    },
+    "scripts": {
+        "generate": "node scripts/gen-palettes.mjs && node scripts/sync-assets.mjs",
+        "predev": "npm run generate",
+        "dev": "astro dev",
+        "prebuild": "npm run generate",
+        "build": "astro build",
+        "preview": "astro preview",
+        "astro": "astro",
+        "format": "prettier --write .",
+        "check": "astro check && prettier --check . && eslint . && stylelint \"src/**/*.css\"",
+        "test:unit": "vitest run",
+        "test:e2e": "playwright test",
+        "lint:docs": "markdownlint-cli2 --config ../.markdownlint-cli2.jsonc \"**/*.md\" \"#node_modules\""
+    },
+    "dependencies": {
+        "@material/material-color-utilities": "^0.4.0",
+        "astro": "^7.3.8",
+        "motion": "^14.2.0"
+    },
+    "devDependencies": {
+        "@astrojs/check": "^0.9.10",
+        "@eslint/js": "^10.0.1",
+        "@playwright/test": "^1.64.0",
+        "@types/node": "^26.6.5",
+        "astro-eslint-parser": "^1.4.0",
+        "eslint": "^10.12.0",
+        "eslint-plugin-astro": "^1.7.0",
+        "markdownlint-cli2": "^0.23.3",
+        "prettier": "^3.9.10",
+        "prettier-plugin-astro": "^1.1.1",
+        "stylelint": "^17.16.0",
+        "stylelint-config-standard": "^40.0.0",
+        "subset-font": "^2.9.0",
+        "typescript": "^6.0.3",
+        "typescript-eslint": "^8.71.2",
+        "vitest": "^5.0.4"
+    }
+}

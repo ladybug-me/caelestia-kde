@@ -1,0 +1,212 @@
+---
+import Base from '../layouts/Base.astro';
+import ThemeControls from '../components/ThemeControls.astro';
+import palettes from '../data/palettes.json';
+import { url } from '../lib/site';
+
+import '../styles/demos.css';
+
+const brand = palettes.palettes.find((palette) => palette.brand);
+const names = [...new Set(palettes.palettes.map((palette) => palette.name))];
+---
+
+<Base
+    title="Themes"
+    description="Every palette Caelestia ships, in light and dark, plus the wallpaper-derived palette the shell builds for you. Pick one here and the whole site wears it."
+>
+    <div class="page">
+        <header class="section" style="padding-bottom: 0">
+            <p class="section__eyebrow">Themes</p>
+            <h1>The palettes the shell ships</h1>
+            <p class="muted measure">
+                {palettes.palettes.length} palettes across {names.length} names, read out of the repository when this
+                site was built. Pick one and every page wears it: the same files drive the shell, so the command under
+                the grid puts your desktop on the same colours.
+            </p>
+        </header>
+
+        <section class="section">
+            <h2>Named palettes</h2>
+            <ThemeControls />
+        </section>
+
+        <section class="section" id="dynamic">
+            <h2>From your wallpaper</h2>
+            <p class="muted measure">
+                This is what the shell does by default: it takes one colour out of the current wallpaper and expands it
+                into a whole scheme, light and dark, then pushes it to Qt, GTK, the terminals and the greeter. Drop an
+                image here and the site does the same thing. Nothing is uploaded — the image is decoded and quantised in
+                your browser.
+            </p>
+
+            <div class="wallpaper" data-demo="wallpaper">
+                <label class="wallpaper__drop" data-wallpaper-drop>
+                    <span class="wallpaper__mark" data-wallpaper-swatch aria-hidden="true" />
+                    <strong>Drop a wallpaper here</strong>
+                    <span class="muted">or choose a file — PNG, JPEG, WebP</span>
+                    <input
+                        class="visually-hidden"
+                        type="file"
+                        accept="image/*"
+                        data-wallpaper-input
+                        aria-label="Choose a wallpaper to derive a palette from"
+                    />
+                </label>
+
+                <div class="wallpaper__controls">
+                    <label class="wallpaper__slider">
+                        <span>Intensity</span>
+                        <input
+                            type="range"
+                            min="0"
+                            max="2"
+                            step="0.05"
+                            value="1"
+                            data-wallpaper-intensity
+                            aria-describedby="intensity-help"
+                        />
+                        <output data-wallpaper-intensity-value>1.00</output>
+                    </label>
+                    <p class="muted" id="intensity-help" style="font-size: var(--text-caption)">
+                        How saturated a wallpaper palette is: <code>1</code> is what the colour engine produced,
+                        <code>0</code> is grey at the same tones, <code>2</code> is as far as the accents go. It is the
+                        same value <code>caelestia scheme set -i</code> sets, and named palettes ignore it, exactly as
+                        they do in the shell.
+                    </p>
+
+                    <button class="button" type="button" data-wallpaper-reset>
+                        Back to the named palette
+                    </button>
+
+                    <p class="launcher__status" role="status" data-wallpaper-status />
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>What changes, and what does not</h2>
+            <div class="grid">
+                <article class="card">
+                    <h3>Everything, on the spot</h3>
+                    <p>
+                        Surfaces, text, outlines, accents, the code blocks on the docs pages and the demo surfaces in
+                        the gallery all read the same custom properties, so one palette changes all of them at once.
+                    </p>
+                </article>
+                <article class="card">
+                    <h3>Your choice sticks</h3>
+                    <p>
+                        The palette is remembered in this browser, and applied before the page paints, so moving between
+                        pages does not flash the brand palette first.
+                    </p>
+                </article>
+                <article class="card">
+                    <h3>Reduced motion, transparency and contrast</h3>
+                    <p>
+                        A palette change is eased, but if you ask for less motion it is instant; if you ask for less
+                        transparency the chrome goes solid; if you ask for more contrast the borders firm up. All three
+                        are honoured on every page.
+                    </p>
+                </article>
+                <article class="card">
+                    <h3>The brand palette</h3>
+                    <p>
+                        <strong>
+                            {brand?.label} {brand?.flavourLabel}
+                        </strong>{' '}
+                        is the one Caelestia ships as its own: dark surface <code>#0a0f0f</code>, primary{' '}
+                        <code>#9bd0cc</code>. Every static surface in the repository takes its colours from it,
+                        including this page's default.
+                    </p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>Keep going</h2>
+            <p class="muted measure">
+                The wallpaper library, slideshow, intensity and per-application theming are covered on
+                <a href={url('/docs/configuring')}>Configuring</a>. If colours stop applying, the answer is usually on
+                <a href={url('/docs/troubleshooting')}>Troubleshooting</a>.
+            </p>
+        </section>
+    </div>
+
+    <script>
+        import { initWallpaperDemo } from '../lib/demos/wallpaper';
+
+        const root = document.querySelector<HTMLElement>('[data-demo="wallpaper"]');
+        if (root) initWallpaperDemo(root);
+    </script>
+</Base>
+
+<style>
+    .wallpaper {
+        display: grid;
+        gap: var(--space-md);
+        margin-top: var(--space-md);
+        align-items: start;
+    }
+
+    @media (min-width: 56rem) {
+        .wallpaper {
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+    }
+
+    .wallpaper__drop {
+        display: grid;
+        place-items: center;
+        gap: var(--space-2xs);
+        min-height: 14rem;
+        padding: var(--space-lg);
+        border-radius: var(--radius-xl);
+        border: 2px dashed var(--outline);
+        background: var(--surface-low);
+        text-align: center;
+        cursor: pointer;
+        transition:
+            border-color var(--motion-fast) var(--ease-out),
+            background-color var(--motion-fast) var(--ease-out);
+    }
+
+    .wallpaper__drop[data-active] {
+        border-color: var(--primary);
+        background: color-mix(in oklab, var(--primary) 12%, var(--surface-low));
+    }
+
+    .wallpaper__mark {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: var(--radius-full);
+        background: var(--surface-container-high);
+        border: 1px solid var(--outline-variant);
+        transition: background-color var(--motion-base) var(--ease-out);
+    }
+
+    .wallpaper__controls {
+        display: grid;
+        gap: var(--space-sm);
+        align-content: start;
+    }
+
+    .wallpaper__slider {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: var(--space-xs);
+        font-size: var(--text-callout);
+    }
+
+    .wallpaper__slider input {
+        width: 100%;
+        accent-color: var(--primary);
+    }
+
+    .wallpaper__slider output {
+        font-family: var(--font-mono);
+        font-size: var(--text-caption);
+        color: var(--on-surface-variant);
+        min-width: 3ch;
+    }
+</style>

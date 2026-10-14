@@ -1,0 +1,200 @@
+---
+import { Font } from 'astro:assets';
+
+import { NAV, SITE, isCurrent, url } from '../lib/site';
+import palettes from '../data/palettes.json';
+import logo from '../assets/repo/logo.svg';
+
+import '../styles/generated/palettes.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/materials.css';
+import '../styles/components.css';
+import '../styles/motion.css';
+
+interface Props {
+    title?: string;
+    description?: string;
+    /** Set on pages that should not be indexed, such as the 404 page. */
+    noindex?: boolean;
+}
+
+const { title, description = SITE.description, noindex = false } = Astro.props;
+const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${SITE.tagline}`;
+const canonical = new URL(Astro.url.pathname.replace(/\/$/, '') || '/', Astro.site).href;
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const brand = palettes.palettes.find((entry) => entry.brand) ?? palettes.palettes[0];
+---
+
+<!doctype html>
+<html lang="en" data-palette={palettes.default.palette} data-mode={palettes.default.mode}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{pageTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        {noindex && <meta name="robots" content="noindex" />}
+        <meta name="generator" content={Astro.generator} />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content={SITE.title} />
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="theme-color" content={brand.modes.includes('dark') ? '#0a0f0f' : '#f6faf9'} />
+
+        <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+
+        <Font cssVariable="--font-sans" preload />
+
+        {/* Restores the visitor's palette before the first paint, so switching
+            pages never flashes the brand palette. */}
+        <script is:inline>
+            (() => {
+                const root = document.documentElement;
+                try {
+                    const palette = localStorage.getItem('caelestia:palette');
+                    if (palette) root.dataset.palette = palette;
+                    const stored = localStorage.getItem('caelestia:mode');
+                    const mode = stored ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                    root.dataset.mode = mode;
+                } catch {
+                    // Private browsing blocks storage; the brand palette stands.
+                }
+                root.classList.add('has-js');
+            })();
+        </script>
+    </head>
+    <body>
+        <a class="skip-link" href="#main">
+            Skip to content
+        </a>
+
+        <header class="site-nav material">
+            <div class="page site-nav__inner">
+                <a class="site-nav__brand" href={url('/')}>
+                    <img src={logo.src} alt="" width="24" height="24" />
+                    {SITE.title}
+                </a>
+
+                <nav aria-label="Main">
+                    <ul class="site-nav__links">
+                        {NAV.map((item) => (
+                            <li>
+                                <a
+                                    class="site-nav__link"
+                                    href={url(item.href)}
+                                    aria-current={isCurrent(current, item.href) ? 'page' : undefined}
+                                >
+                                    {item.label}
+                                </a>
+                            </li>
+                        ))}
+                        <li>
+                            <a class="site-nav__link site-nav__external" href={SITE.repo} rel="noreferrer">
+                                GitHub
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <main id="main">
+            <slot />
+        </main>
+
+        <footer class="site-footer">
+            <div class="page">
+                <div class="site-footer__columns">
+                    <div>
+                        <h4>Project</h4>
+                        <ul>
+                            <li>
+                                <a href={url('/features')}>Features</a>
+                            </li>
+                            <li>
+                                <a href={url('/gallery')}>Gallery</a>
+                            </li>
+                            <li>
+                                <a href={url('/themes')}>Themes</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Docs</h4>
+                        <ul>
+                            <li>
+                                <a href={url('/docs/installation')}>Installation</a>
+                            </li>
+                            <li>
+                                <a href={url('/docs/keybinds')}>Keybinds</a>
+                            </li>
+                            <li>
+                                <a href={url('/docs/troubleshooting')}>Troubleshooting</a>
+                            </li>
+                            <li>
+                                <a href={url('/docs/contributing')}>Contributing</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Community</h4>
+                        <ul>
+                            <li>
+                                <a href={SITE.repo} rel="noreferrer">
+                                    GitHub
+                                </a>
+                            </li>
+                            <li>
+                                <a href={SITE.issues} rel="noreferrer">
+                                    Issues
+                                </a>
+                            </li>
+                            <li>
+                                <a href={SITE.discussions} rel="noreferrer">
+                                    Discussions
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Upstream</h4>
+                        <ul>
+                            <li>
+                                <a href={SITE.upstream} rel="noreferrer">
+                                    caelestia-dots/shell
+                                </a>
+                            </li>
+                            <li>
+                                <a href={SITE.upstreamDots} rel="noreferrer">
+                                    Caelestia dotfiles
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p class="muted" style="margin-top: var(--space-lg)">
+                    Caelestia is built on the design language of the upstream project by
+                    <a href={SITE.upstream} rel="noreferrer">
+                        soramanew
+                    </a>
+                    , ported to KDE Plasma and KWin. Licensed {SITE.licence}. Typeset in
+                    <a href="https://github.com/googlefonts/googlesans-flex" rel="noreferrer">
+                        Google Sans Flex
+                    </a>
+                    (OFL 1.1), the face the shell renders in.
+                </p>
+            </div>
+        </footer>
+
+        <script>
+            // Reveals, copy buttons and the palette control are one bundle: they
+            // share the storage key and none of them is worth a second request.
+            import '../lib/behaviour';
+        </script>
+    </body>
+</html>

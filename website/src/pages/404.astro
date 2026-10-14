@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { NAV, url } from '../lib/site';
+---
+
+<Base title="Not found" description="That page is not here." noindex>
+    <div class="page section not-found">
+        <p class="section__eyebrow">404</p>
+        <h1>That page is not here</h1>
+        <p class="muted measure">
+            The link is either old or mistyped. The shell's documentation, its palettes and the interactive rebuilds are
+            all one press away.
+        </p>
+        <div class="cluster" style="margin-top: var(--space-md)">
+            {NAV.map((item) => (
+                <a class="button" href={url(item.href)}>
+                    {item.label}
+                </a>
+            ))}
+            <a class="button button--text" href={url('/')}>
+                Home
+            </a>
+        </div>
+    </div>
+</Base>
+
+<style>
+    .not-found {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-2xs);
+        min-height: 50dvh;
+        justify-content: center;
+    }
+</style>

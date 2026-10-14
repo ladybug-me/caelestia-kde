@@ -1,0 +1,86 @@
+---
+import { getCollection, render } from 'astro:content';
+
+import Base from '../../layouts/Base.astro';
+import DocsNav from '../../components/DocsNav.astro';
+import { SITE, url } from '../../lib/site';
+
+export async function getStaticPaths() {
+    const entries = await getCollection('docs');
+    return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const all = await getCollection('docs');
+const { Content, headings } = await render(entry);
+const sourceUrl = `${SITE.repo}/blob/main/${entry.data.source}`;
+
+// Only the sections worth a table of contents; a page cut from the README is
+// short enough that listing its h3s would be noise.
+const contents = headings.filter((heading) => heading.depth === 2);
+---
+
+<Base title={entry.data.title} description={entry.data.description}>
+    <div class="page docs-layout">
+        <DocsNav entries={all} current={entry.id} />
+        <article>
+            <div class="prose">
+                <p class="section__eyebrow">{entry.data.group}</p>
+                <h1>{entry.data.title}</h1>
+                <p class="muted">{entry.data.description}</p>
+
+                {contents.length > 2 && (
+                    <nav class="toc material--solid" aria-label="On this page">
+                        <h2 class="toc__title">On this page</h2>
+                        <ul>
+                            {contents.map((heading) => (
+                                <li>
+                                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                )}
+
+                <Content />
+            </div>
+
+            <p class="docs-meta">
+                This page is the <code>{entry.data.source}</code> section of the repository, read at build time.
+                <a href={sourceUrl} rel="noreferrer">
+                    Edit it on GitHub
+                </a>{' '}
+                · <a href={url('/docs')}>All docs</a>
+            </p>
+        </article>
+    </div>
+</Base>
+
+<style>
+    .toc {
+        margin: var(--space-md) 0;
+        padding: var(--space-sm) var(--space-md);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--outline-variant);
+    }
+
+    .toc__title {
+        font-size: var(--text-caption);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--on-surface-variant);
+        margin: 0 0 var(--space-2xs);
+    }
+
+    .toc ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2xs) var(--space-sm);
+    }
+
+    .toc a {
+        font-size: var(--text-callout);
+    }
+</style>

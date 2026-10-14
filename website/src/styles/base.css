@@ -1,0 +1,269 @@
+/*
+ * Base elements.
+ *
+ * The palette is applied to the document by `[data-palette]`/`[data-mode]` on
+ * <html>, so every rule here reads the palette through tokens only.
+ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    /* In-page jumps are navigation, not decoration, so they stay; they just
+       stop being animated. */
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+body {
+    margin: 0;
+    min-height: 100dvh;
+    background: var(--bg);
+    color: var(--on-surface);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    font-weight: var(--weight-body);
+    font-optical-sizing: auto;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    /* Palettes change under the reader; ease the paper rather than snapping it. */
+    transition:
+        background-color var(--motion-base) var(--ease-out),
+        color var(--motion-base) var(--ease-out);
+}
+
+h1,
+h2,
+h3,
+h4 {
+    margin: 0;
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: var(--text-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-display);
+    font-weight: var(--weight-display);
+}
+
+h2 {
+    font-size: var(--text-title);
+    line-height: var(--leading-title);
+    letter-spacing: var(--tracking-title);
+    font-weight: var(--weight-title);
+}
+
+h3 {
+    font-size: var(--text-heading);
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+    font-weight: var(--weight-heading);
+}
+
+h4 {
+    font-size: var(--text-subhead);
+    line-height: var(--leading-subhead);
+    letter-spacing: var(--tracking-subhead);
+    font-weight: var(--weight-subhead);
+}
+
+p {
+    margin: 0;
+    text-wrap: pretty;
+}
+
+a {
+    color: var(--primary);
+    text-decoration-color: color-mix(in oklab, var(--primary) 40%, transparent);
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color var(--motion-fast) var(--ease-out);
+}
+
+a:hover {
+    text-decoration-color: currentcolor;
+}
+
+img,
+picture,
+svg,
+video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+}
+
+::selection {
+    background: color-mix(in oklab, var(--primary) 35%, transparent);
+    color: var(--on-surface);
+}
+
+code,
+kbd,
+samp,
+pre {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    font-variant-ligatures: none;
+}
+
+:not(pre) > code {
+    background: var(--surface-container-high);
+    border-radius: var(--radius-xs);
+    padding: 0.15em 0.35em;
+    color: var(--code-text);
+    /* Documentation is full of long unbreakable paths and commands; without
+       this they push the page wider than the phone it is read on. */
+    overflow-wrap: anywhere;
+}
+
+kbd {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    padding: 0.15em 0.45em;
+    border: 1px solid var(--outline-variant);
+    border-bottom-width: 2px;
+    border-radius: var(--radius-xs);
+    background: var(--surface-container);
+    color: var(--on-surface);
+    font-size: 0.8125em;
+    white-space: nowrap;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--outline-variant);
+    margin: var(--space-xl) 0;
+}
+
+/* Code blocks. Shiki renders spans whose colours come from the active
+   palette's terminal colours; these rules supply the material around them. */
+pre.astro-code,
+pre:has(> code) {
+    background: var(--astro-code-background, var(--surface-lowest));
+    color: var(--astro-code-foreground, var(--code-text));
+    border: 1px solid var(--outline-variant);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    tab-size: 4;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-callout);
+}
+
+th,
+td {
+    text-align: left;
+    padding: var(--space-2xs) var(--space-xs);
+    border-bottom: 1px solid var(--outline-variant);
+    vertical-align: top;
+}
+
+th {
+    font-weight: var(--font-weight-medium);
+    color: var(--on-surface-variant);
+    white-space: nowrap;
+}
+
+tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+/* Utilities the layouts share. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+/* The `hidden` attribute has to beat the component's own `display`, or a
+   component that hides itself (`hidden = true`) stays on screen. */
+[hidden] {
+    display: none !important;
+}
+
+.skip-link {
+    position: absolute;
+    left: var(--space-sm);
+    top: var(--space-sm);
+    z-index: var(--z-toast);
+    transform: translateY(-200%);
+    padding: var(--space-2xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    background: var(--primary);
+    color: var(--on-primary);
+    text-decoration: none;
+    font-weight: var(--font-weight-medium);
+}
+
+.skip-link:focus-visible {
+    transform: translateY(0);
+}
+
+.page {
+    width: min(100% - var(--page-gutter) * 2, var(--page-max));
+    margin-inline: auto;
+}
+
+.measure {
+    max-width: var(--measure);
+}
+
+.stack > * + * {
+    margin-top: var(--space-sm);
+}
+
+.cluster {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.muted {
+    color: var(--on-surface-variant);
+}

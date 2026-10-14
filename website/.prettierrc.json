@@ -1,0 +1,14 @@
+{
+    "printWidth": 120,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "semi": true,
+    "trailingComma": "all",
+    "arrowParens": "always",
+    "overrides": [
+        { "files": "*.json", "options": { "tabWidth": 4 } },
+        { "files": "*.astro", "options": { "parser": "astro" } },
+        { "files": "*.css", "options": { "tabWidth": 4 } }
+    ],
+    "plugins": ["prettier-plugin-astro"]
+}

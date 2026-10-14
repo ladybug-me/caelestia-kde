@@ -1,0 +1,28 @@
+---
+import { groupEntries } from '../lib/docs';
+import { url } from '../lib/site';
+
+interface Props {
+    entries: Array<{ id: string; data: { group: string; order: number; title: string } }>;
+    current?: string;
+}
+
+const { entries, current = '' } = Astro.props;
+const groups = groupEntries(entries);
+---
+
+<nav class="docs-nav material" aria-label="Documentation">
+    <a href={url('/docs')} aria-current={current === '' ? 'page' : undefined}>
+        Overview
+    </a>
+    {groups.map((group) => (
+        <>
+            <p class="docs-nav__group">{group.name}</p>
+            {group.entries.map((entry) => (
+                <a href={url(`/docs/${entry.id}`)} aria-current={current === entry.id ? 'page' : undefined}>
+                    {entry.data.title}
+                </a>
+            ))}
+        </>
+    ))}
+</nav>

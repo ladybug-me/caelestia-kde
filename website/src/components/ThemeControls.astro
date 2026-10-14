@@ -1,0 +1,65 @@
+---
+import palettes from '../data/palettes.json';
+
+/**
+ * The palette and mode controls.
+ *
+ * Every option carries its own colours through the generated stylesheet
+ * (`.swatch[data-palette='<id>']`), so the grid is drawn without shipping the
+ * palette data to the browser, and choosing one is an attribute change on
+ * <html> rather than a repaint done by script.
+ */
+const modes: Array<'dark' | 'light'> = ['dark', 'light'];
+---
+
+<div class="theme-controls">
+    <div class="cluster">
+        <div class="segmented" role="group" aria-label="Mode">
+            {modes.map((mode) => (
+                <button
+                    type="button"
+                    data-mode-control={mode}
+                    data-mode-sync={mode}
+                    data-mode-option={mode}
+                    aria-pressed="false"
+                >
+                    {mode === 'dark' ? 'Dark' : 'Light'}
+                </button>
+            ))}
+        </div>
+        <p class="muted" style="font-size: var(--text-caption); margin: 0">
+            Named palettes are the ones the shell ships. The brand palette is the darkest of them, and the default. A
+            palette that ships only one mode takes the site with it, the way it does in Nexus.
+        </p>
+    </div>
+
+    <div class="palette-picker" role="group" aria-label="Palette">
+        {palettes.palettes.map((palette) => (
+            <button
+                type="button"
+                class="palette-option"
+                data-palette-control={palette.id}
+                data-palette-sync={palette.id}
+                data-palette-modes={palette.modes.join(' ')}
+                data-command-dark={palette.commands.dark}
+                data-command-light={palette.commands.light}
+                aria-pressed="false"
+            >
+                <span class="swatch" data-palette={palette.id} aria-hidden="true" />
+                <span class="palette-option__label">
+                    {palette.label}
+                    <span class="palette-option__flavour">{palette.flavourLabel}</span>
+                </span>
+            </button>
+        ))}
+    </div>
+
+    <div class="install">
+        <code class="install__text" data-command-output aria-label="Command for this palette">
+            caelestia scheme set
+        </code>
+        <button class="button button--tonal install__copy" type="button" data-command-copy data-copy="">
+            Copy
+        </button>
+    </div>
+</div>

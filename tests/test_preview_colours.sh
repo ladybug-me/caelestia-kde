@@ -8,6 +8,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 COLOURS="$REPO_ROOT/shell/services/Colours.qml"
 PREVIEW_COLOURS="$REPO_ROOT/shell/services/PreviewColours.qml"
 WALLPAPERS="$REPO_ROOT/shell/services/Wallpapers.qml"
+LAYER="$REPO_ROOT/shell/modules/background/Wallpaper.qml"
 LAUNCHER="$REPO_ROOT/shell/modules/launcher/Content.qml"
 APPLIST="$REPO_ROOT/shell/modules/launcher/AppList.qml"
 M3VARIANTS="$REPO_ROOT/shell/modules/launcher/services/M3Variants.qml"
@@ -15,6 +16,7 @@ M3VARIANTS="$REPO_ROOT/shell/modules/launcher/services/M3Variants.qml"
 COLOURS_SRC="$(cat "$COLOURS")"
 PC_SRC="$(cat "$PREVIEW_COLOURS")"
 WALL_SRC="$(cat "$WALLPAPERS")"
+LAYER_SRC="$(cat "$LAYER")"
 LAUNCHER_SRC="$(cat "$LAUNCHER")"
 
 # How many times a file writes the preview palette on or off, so that "one owner" is measurable.
@@ -55,6 +57,17 @@ test_the_picker_carries_no_second_preview_flag() {
         "the picker's preview state must be derived, not a flag beside Colours.showPreview"
     assert_contains "$WALL_SRC" 'readonly property bool previewing' \
         "and it is derived from the path being previewed"
+}
+
+test_a_preview_never_puts_its_wallpaper_on_screen() {
+    assert_contains "$WALL_SRC" 'readonly property string current: actualCurrent' \
+        "the wallpaper on screen is the applied one"
+    assert_not_contains "$WALL_SRC" 'previewPath : actualCurrent' \
+        "a preview must not swap the wallpaper on screen, which costs a transition per highlight"
+    assert_contains "$LAYER_SRC" 'source: Wallpapers.current' \
+        "the wallpaper layer shows what Wallpapers calls current"
+    assert_not_contains "$LAYER_SRC" 'previewing' \
+        "and takes no preview of its own"
 }
 
 test_a_result_is_shown_only_when_it_loaded_and_is_still_wanted() {

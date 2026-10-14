@@ -17,7 +17,10 @@ Searcher {
     readonly property string fallback: Quickshell.shellPath("assets/wallpaper.webp")
 
     readonly property bool previewing: previewPath !== ""
-    readonly property string current: previewing ? previewPath : actualCurrent
+    // A preview is a colour preview: it must not put its own wallpaper on screen. Swapping the
+    // wallpaper layer costs a transition per highlight, which is what made scrolling the picker
+    // stutter, so what is shown is always the wallpaper that was applied.
+    readonly property string current: actualCurrent
     property string previewPath
     property string actualCurrent
     property var videoThumbs: ({})

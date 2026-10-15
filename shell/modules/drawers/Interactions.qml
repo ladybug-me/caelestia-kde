@@ -18,6 +18,10 @@ CustomMouseArea {
     required property Bar.BarWrapper bar
     required property real borderThickness
     required property bool fullscreen
+    property bool topPanelActive
+    // Overlay bar repeater + total top overlay thickness, to route hover
+    // into top panels (the primary inBarArea never covers them).
+    property var overlayBars: null
     property var focusGrab: null
     property point dragStart
     property bool dashboardShortcutActive
@@ -67,8 +71,14 @@ CustomMouseArea {
             return x > screen.width - panels.rightMargin - panelWidth && withinPanelHeight(panel, x, y);
         if (bar.position === "top")
             return y < panels.topMargin + panel.y + panelHeight && (withinPanelWidth(panel, x, y) || abovePopoutItem(panel, x));
-        if (bar.position === "bottom")
+        if (bar.position === "bottom") {
+            // A popout born from a top overlay panel hangs below it, so it
+            // needs top-anchored math instead of the bottom-anchored one.
+            if (popouts.fromTopPanel && panel === panels.popoutsWrapper) {
+                return y < panels.topMargin + panel.y + panelHeight && (withinPanelWidth(panel, x, y) || abovePopoutItem(panel, x));
+            }
             return y > screen.height - panels.bottomMargin - panelHeight && (withinPanelWidth(panel, x, y) || abovePopoutItem(panel, x));
+        }
         return false;
     }
     // Next to the open sidebar a popout doesn't always cover the bar item that
@@ -91,7 +101,10 @@ CustomMouseArea {
     }
     function inTopPanel(panel: Item, x: real, y: real, edge = Config.border.thickness, span = 100): bool {
         const panelHeight = panel.height * (1 - (panel.offsetScale ?? 0)); // qmllint disable missing-property
-        return y < Math.max(Config.border.minThickness, edge + panelHeight) && withinPanelWidth(panel, x, y, panelHeight > 0 ? 100 : span);
+        // A grown top border (overlay panel) owns that strip: its own widgets are
+        // the triggers now, so hover/drag only start at the panel's lower edge.
+        const base = panels.topExtent;
+        return y >= base && y < base + Math.max(Config.border.minThickness, edge + panelHeight) && withinPanelWidth(panel, x, y, panelHeight > 0 ? 100 : span);
     }
     function inBottomPanel(panel: Item, x: real, y: real, isCorner = false, edge = Config.border.thickness, span = 100): bool {
         const panelHeight = panel.height * (1 - (panel.offsetScale ?? 0)); // qmllint disable missing-property
@@ -148,7 +161,7 @@ CustomMouseArea {
             if (Config.utilities.showOnHover && !utilitiesShortcutActive)
                 visibilities.utilities = false;
 
-            if (!popoutHideTimer.running)
+            if (Visibilities.openDialogs === 0 && !popoutHideTimer.running)
                 popoutHideTimer.start();
 
             if (Config.bar.showOnHover)
@@ -262,7 +275,7 @@ CustomMouseArea {
                 visibilities.launcher = false;
         }
 
-        const showDashboard = Config.dashboard.showOnHover && inTopPanel(panels.dashboard, x, y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth);
+        const showDashboard = Config.dashboard.showOnHover && !root.topPanelActive && inTopPanel(panels.dashboard, x, y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth);
 
         if (Config.dashboard.showOnHover) {
             if (!dashboardShortcutActive) {
@@ -272,23 +285,38 @@ CustomMouseArea {
             }
         }
 
-        if (pressed && inTopPanel(panels.dashboard, dragStart.x, dragStart.y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth) && withinPanelWidth(panels.dashboard, x, y)) {
+        if (pressed && !root.topPanelActive && inTopPanel(panels.dashboard, dragStart.x, dragStart.y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth) && withinPanelWidth(panels.dashboard, x, y)) {
             if (dragY > Config.dashboard.dragThreshold)
                 visibilities.dashboard = true;
             else if (dragY < -Config.dashboard.dragThreshold)
                 visibilities.dashboard = false;
         }
 
-        if (inBarArea(x, y)) {
+        if (root.overlayBars) {
+            let routed = false;
+            for (let i = 0; i < root.overlayBars.count; i++) {
+                const w = root.overlayBars.itemAt(i);
+                if (w && w.visible && x >= w.x && x < w.x + w.width && y >= w.y && y < w.y + w.height) {
+                    const horizontal = w.effPos === "top" || w.effPos === "bottom";
+                    w.checkPopout(horizontal ? x - w.x - w.padding : y - w.y - w.padding);
+                    popoutHideTimer.stop();
+                    routed = true;
+                    break;
+                }
+            }
+            if (routed) {
+                // Hover handled by the overlay panel above.
+            } else if (inBarArea(x, y)) {
             bar.checkPopout(isBarHorizontal ? x : y);
             popoutHideTimer.stop();
         } else {
             bar.resetHover();
             if ((!popouts.currentName.startsWith("traymenu") || (Config.bar.popouts.tray && ((popouts.current as StackView)?.depth ?? 0) <= 1)) && !inLeftPanel(panels.popoutsWrapper, x, y)) {
-                if (!popoutHideTimer.running) popoutHideTimer.start();
+                if (Visibilities.openDialogs === 0 && !popoutHideTimer.running) popoutHideTimer.start();
             } else {
                 popoutHideTimer.stop();
             }
+        }
         }
 
         const isUtilitiesOnLeft = bar.position === "right";
@@ -298,7 +326,7 @@ CustomMouseArea {
         const inUtilitiesArea = bar.position === "bottom"
             ? inTopPanel(panels.utilities, x, y, Config.utilities.hoverThickness, Config.utilities.hoverWidth) && (root.visibilities.utilities ? inUtilitiesAreaOpen : inUtilitiesAreaClosed)
             : inBottomPanel(panels.utilities, x, y, true, Config.utilities.hoverThickness, Config.utilities.hoverWidth) && (root.visibilities.utilities ? inUtilitiesAreaOpen : inUtilitiesAreaClosed);
-        const showUtilities = Config.utilities.showOnHover && !popouts.hasCurrent && panels.popoutsWrapper.offsetScale > 0.99 && inUtilitiesArea;
+        const showUtilities = Config.utilities.showOnHover && !root.topPanelActive && !popouts.hasCurrent && panels.popoutsWrapper.offsetScale > 0.99 && inUtilitiesArea;
 
         if (Config.utilities.showOnHover) {
             if (!utilitiesShortcutActive) {
@@ -313,14 +341,14 @@ CustomMouseArea {
                 ? inTopPanel(panels.utilities, dragStart.x, dragStart.y, Config.utilities.hoverThickness, Config.utilities.hoverWidth)
                 : inBottomPanel(panels.utilities, dragStart.x, dragStart.y, true, Config.utilities.hoverThickness, Config.utilities.hoverWidth);
 
-            if (inUtilitiesDragStart && (bar.position === "bottom" ? withinPanelWidth(panels.utilities, x, y) : withinPanelWidth(panels.utilities, x, y))) {
+            if (inUtilitiesDragStart && !root.topPanelActive && (bar.position === "bottom" ? withinPanelWidth(panels.utilities, x, y) : withinPanelWidth(panels.utilities, x, y))) {
                 if (bar.position === "bottom") {
-                    if (dragY > Config.utilities.dragThreshold)
+                    if (dragY > Config.utilities.dragThreshold && !root.topPanelActive)
                         visibilities.utilities = true;
                     else if (dragY < -Config.utilities.dragThreshold)
                         visibilities.utilities = false;
                 } else {
-                    if (dragY < -Config.utilities.dragThreshold)
+                    if (dragY < -Config.utilities.dragThreshold && !root.topPanelActive)
                         visibilities.utilities = true;
                     else if (dragY > Config.utilities.dragThreshold)
                         visibilities.utilities = false;
@@ -355,7 +383,7 @@ CustomMouseArea {
 
         interval: 150
         onTriggered: {
-            if (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1) {
+            if (Visibilities.openDialogs === 0 && (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1)) {
                 popouts.hasCurrent = false;
                 bar.closeTray();
             }

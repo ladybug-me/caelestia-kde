@@ -23,6 +23,9 @@ Item {
     required property DrawerVisibilities visibilities
     required property BarPopouts.Wrapper popouts
     required property bool fullscreen
+    // Bar definition for overlay bars (null = legacy primary bar). When set,
+    // entries and orientation come from it, falling back to global keys.
+    property var barDef: null
     property Item currentHoveredItem: null
 
     readonly property int vPadding: Tokens.padding.large
@@ -31,15 +34,23 @@ Item {
     readonly property real barScale: rawScale < 1.0 ? Math.sqrt(Math.max(0.1, rawScale)) : rawScale
     readonly property int thickness: Math.round(Tokens.sizes.bar.innerWidth * barScale)
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    readonly property string effectivePosition: (root.barDef && root.barDef.position) ? root.barDef.position : Config.bar.position
+    readonly property bool isHorizontal: root.effectivePosition === "top" || root.effectivePosition === "bottom"
 
     readonly property real leftZoneSize: isHorizontal ? leftLayout.implicitWidth : leftLayout.implicitHeight
     readonly property real middleZoneSize: isHorizontal ? middleLayout.implicitWidth : middleLayout.implicitHeight
     readonly property real rightZoneSize: isHorizontal ? rightLayout.implicitWidth : rightLayout.implicitHeight
 
-    property var leftEntries: BarWidgets.zoneEntries(Config.bar.entries, "left")
-    property var middleEntries: BarWidgets.zoneEntries(Config.bar.entries, "middle")
-    property var rightEntries: BarWidgets.zoneEntries(Config.bar.entries, "right")
+    // Overlay entries: each bar uses its own list (empty means empty).
+    // Only the legacy primary bar (no barDef) uses the global list.
+    // Unknown ids are dropped so stale config never reaches the delegates.
+    readonly property var effEntries: ((root.barDef ? root.barDef.entries : null) ?? (Config.bar.entries || [])).filter(e => BarWidgets.isKnown(e.id))
+
+    property var leftEntries: effEntries.filter(e => e.enabled && (!e.zone || e.zone === "left") && e.id !== "spacer")
+
+    property var middleEntries: effEntries.filter(e => e.enabled && e.zone === "middle" && e.id !== "spacer")
+
+    property var rightEntries: effEntries.filter(e => e.enabled && e.zone === "right" && e.id !== "spacer")
 
     function resetHover(): void {
         if (currentHoveredItem) {
@@ -83,6 +94,11 @@ Item {
     }
 
     function checkPopout(pos: real): void {
+        // Placement follows the hovered bar: a top overlay panel opens its
+        // popouts downward. The primary bar always clears the flags.
+        const isTopOverlay = (root.barDef && ((root.barDef.position || "bottom") === "top")) ?? false;
+        popouts.fromTopPanel = isTopOverlay;
+        popouts.fromTopDock = isTopOverlay && ((root.barDef.lengthPercent ?? 100) < 100);
         if (popouts.hasCurrent && (popouts.currentName === "clockcontext" || popouts.currentName === "dockcontext" || popouts.currentName === "greetercontext" || popouts.currentName === "statusiconscontext" || popouts.currentName === "workspacescontext" || popouts.currentName === "traycontext" || popouts.currentName === "githubcontext" || popouts.currentName === "osiconcontext" || popouts.currentName === "dockbgcontext"))
             return;
 

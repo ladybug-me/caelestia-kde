@@ -38,6 +38,45 @@ StyledWindow {
     // active workspace changes — hasFullscreenOn() filters by workspace, but
     // a plain function call only re-runs when its direct property deps change.
     readonly property bool actualFullscreen: (Kwin.activeWsId, Kwin.hasFullscreenOn(screen?.name ?? ""))
+    // Extra bars from GlobalConfig.bar.bars (enabled + matching this screen). The
+    // legacy primary bar above always renders from the global keys; these
+    // are overlay bars with their own position/widgets/visibility that
+    // dock to the edges without taking an exclusive zone.
+    readonly property var overlayBarDefs: ((GlobalConfig.bar.bars ? GlobalConfig.bar.bars.values : null) ?? []).filter(b => b && b.enabled !== false && (!b.screens || b.screens.length === 0 || b.screens.includes(root.screen.name)))
+    // A dock (lengthPercent < 100) hangs from the edge as a frame-grade
+    // segment instead of widening the frame, so it never contributes to
+    // the cutout extents.
+    readonly property var frameBarDefs: overlayBarDefs.filter(b => ((b.lengthPercent ?? 100) >= 100))
+    // First visible dock per edge, if any (1 panel per edge max).
+    readonly property var topDockDef: overlayBarDefs.find(b => ((b.position || "bottom") === "top") && ((b.lengthPercent ?? 100) < 100) && (b.persistent !== false || visibilities.bar)) ?? null
+    // Frame cutout widening where overlay bars sit, so the frame surface
+    // itself becomes their background. Gated like overlay visibility.
+    readonly property int overlayLeftExtent: frameBarDefs.filter(b => ((b.position || "bottom") === "left") && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property int overlayRightExtent: frameBarDefs.filter(b => ((b.position || "bottom") === "right") && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property int overlayTopExtent: frameBarDefs.filter(b => ((b.position || "bottom") === "top") && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property int overlayBottomExtent: frameBarDefs.filter(b => ((b.position || "bottom") === "bottom") && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property var overlayExtents: ({
+        left: overlayLeftExtent,
+        right: overlayRightExtent,
+        top: overlayTopExtent,
+        bottom: overlayBottomExtent
+    })
+    // Exclusion extents. Same as the cutout extents, plus the docks: they
+    // hang from the edge without cutting the frame, but maximised windows
+    // still have to stop at their edge like they do at the primary bar's.
+    readonly property int dockLeftExtent: overlayBarDefs.filter(b => ((b.position || "bottom") === "left") && ((b.lengthPercent ?? 100) < 100) && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property int dockRightExtent: overlayBarDefs.filter(b => ((b.position || "bottom") === "right") && ((b.lengthPercent ?? 100) < 100) && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property int dockTopExtent: overlayBarDefs.filter(b => ((b.position || "bottom") === "top") && ((b.lengthPercent ?? 100) < 100) && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property int dockBottomExtent: overlayBarDefs.filter(b => ((b.position || "bottom") === "bottom") && ((b.lengthPercent ?? 100) < 100) && (b.persistent !== false || visibilities.bar)).length * bar.contentWidth
+    readonly property var exclusiveExtents: ({
+        left: overlayLeftExtent + dockLeftExtent,
+        right: overlayRightExtent + dockRightExtent,
+        top: overlayTopExtent + dockTopExtent,
+        bottom: overlayBottomExtent + dockBottomExtent
+    })
+    // A top overlay panel replaces the dashboard/utilities drawers: while
+    // one is enabled they stay closed and cannot be opened.
+    readonly property bool topPanelActive: overlayBarDefs.some(b => ((b.position || "bottom") === "top"))
     readonly property bool hasOpenOverlay: focusGrabState.active || panels.popouts.isDetached || desktopContextMenu.expanded || desktopIconContextMenu.expanded || dropMenu.expanded || viewOptions.open || widgetGallery.open || visibilities.overview || visibilities.launcher || visibilities.dashboard || visibilities.sidebar || visibilities.session || visibilities.utilities
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
 
@@ -86,7 +125,6 @@ StyledWindow {
         visibilities.dashboard = false;
         panels.popouts.close();
     }
-
     name: "drawers"
 
     WlrLayershell.namespace: "dock"
@@ -182,6 +220,8 @@ StyledWindow {
         bar: bar
         panels: panels
         win: root
+        overlayExtents: root.overlayExtents
+        topDockDef: root.topDockDef
     }
     Region {
         id: fullRegion
@@ -319,10 +359,10 @@ StyledWindow {
                 anchors.margins: -50
                 group: overviewBlurMask
                 radius: root.borderRounding
-                borderLeft: Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness) - anchors.margins - root.sdfBorderOffset
-                borderRight: Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness) - anchors.margins - root.sdfBorderOffset
-                borderTop: Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness) - root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
-                borderBottom: Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) + root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
+                borderLeft: Math.max((bar.position === "left" ? bar.implicitWidth : 0) + overlayLeftExtent, root.borderThickness) - anchors.margins - root.sdfBorderOffset
+                borderRight: Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness) - anchors.margins - root.sdfBorderOffset
+                borderTop: Math.max((bar.position === "top" ? bar.implicitHeight : 0) + overlayTopExtent, root.borderThickness) - root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
+                borderBottom: Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness) + root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
                 Config.screen: root.screen.name
             }
         }
@@ -372,10 +412,10 @@ StyledWindow {
             group: GlobalConfig.appearance.islands ? null : blobGroup
             visible: !GlobalConfig.appearance.islands
             radius: root.borderRounding
-            borderLeft: Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness) - anchors.margins - root.sdfBorderOffset
-            borderRight: Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness) - anchors.margins - root.sdfBorderOffset
-            borderTop: Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness) - root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
-            borderBottom: Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) + root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
+            borderLeft: Math.max((bar.position === "left" ? bar.implicitWidth : 0) + overlayLeftExtent, root.borderThickness) - anchors.margins - root.sdfBorderOffset
+            borderRight: Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness) - anchors.margins - root.sdfBorderOffset
+            borderTop: Math.max((bar.position === "top" ? bar.implicitHeight : 0) + overlayTopExtent, root.borderThickness) - root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
+            borderBottom: Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness) + root.overviewVerticalOffset - anchors.margins - root.sdfBorderOffset
             Config.screen: root.screen.name
         }
         BlobRect {
@@ -486,7 +526,7 @@ StyledWindow {
             topRightRadius: GlobalConfig.appearance.islands ? radius : ((bar.position === "bottom" && connectedToSidebar) ? 0 : radius)
             y: {
                 const baseY = panels.popoutsWrapper.y + panels.popouts.y + panels.topMargin;
-                if (bar.position === "top")
+                if (bar.position === "top" || panels.popouts.fromTopPanel)
                     return baseY - panels.popouts.implicitHeight * extraShift;
                 if (bar.position === "bottom" && connectedToSidebar)
                     return baseY - Tokens.spacing.extraLarge - 10;
@@ -511,6 +551,7 @@ StyledWindow {
     DrawerVisibilities {
         id: visibilities
 
+        screenName: root.screen.name
         onOverviewChanged: {
             if (overview && !GlobalConfig.overview.enabled) {
                 overview = false;
@@ -526,6 +567,8 @@ StyledWindow {
         visibilities: visibilities
         panels: panels
         bar: bar
+        topPanelActive: root.topPanelActive
+        overlayBars: overlayBarRepeater
         borderThickness: root.borderLayoutThickness
         fullscreen: root.hasFullscreen
         focusGrab: focusGrabState
@@ -630,6 +673,7 @@ StyledWindow {
             bar: bar
             borderThickness: root.borderThickness
             overviewBorderThickness: root.overviewBorderThickness
+            topExtent: root.overlayTopExtent
             overviewAnimConfig: root.overviewAnimConfig
             utilities.horizontalStretch: (sidebarBg.rawDeformMatrix.m11 - 1) / 2 + 1
             utilities.deformMatrix: utilsBg.rawDeformMatrix
@@ -669,7 +713,95 @@ StyledWindow {
             visibilities: visibilities
             popouts: panels.popouts
             fullscreen: root.hasFullscreen
-            Component.onCompleted: Visibilities.registerBar(root.screen, this)
+            Component.onCompleted: Visibilities.registerBar(root.screen, "main", this, true)
+        }
+        Repeater {
+            id: overlayBarRepeater
+
+            model: root.overlayBarDefs
+
+            BarWrapper {
+                required property var modelData
+                required property int index
+
+                readonly property string effPos: modelData.position || "bottom"
+                readonly property int sameEdgeBefore: {
+                    let n = 0;
+                    const arr = overlayBarRepeater.model;
+                    for (let i = 0; i < index; i++)
+                        if (((arr[i] && arr[i].position) || "bottom") === effPos)
+                            n++;
+                    if (bar.position === effPos && !bar.disabled)
+                        n++;
+                    return n;
+                }
+                readonly property int edgeOffset: {
+                    let total = 0;
+                    const gap = 8;
+                    if (bar.position === effPos && !bar.disabled) {
+                        total += bar.contentWidth + gap;
+                    }
+                    const arr = overlayBarRepeater.model;
+                    for (let i = 0; i < index; i++) {
+                        const prev = arr[i];
+                        if (((prev && prev.position) || "bottom") === effPos) {
+                            total += Math.round(Tokens.sizes.bar.innerWidth * (prev && prev.scale ? Math.max(0.6, prev.scale) : 1.0)) + gap;
+                        }
+                    }
+                    return total;
+                }
+                readonly property int separatorOffset: {
+                    if (index === 0) return -1;
+                    let total = 0;
+                    if (bar.position === effPos && !bar.disabled) {
+                        total += bar.contentWidth + 7;
+                    }
+                    const arr = overlayBarRepeater.model;
+                    for (let i = 0; i < index; i++) {
+                        const prev = arr[i];
+                        if (((prev && prev.position) || "bottom") === effPos) {
+                            const w = Math.round(Tokens.sizes.bar.innerWidth * (prev && prev.scale ? Math.max(0.6, prev.scale) : 1.0));
+                            total += w + 8;
+                        }
+                    }
+                    return total - 1;
+                }
+
+                readonly property bool isDock: ((modelData.lengthPercent ?? 100) < 100)
+                readonly property real dockSpan: Math.max(10, Math.min(100, modelData.lengthPercent ?? 100)) / 100
+
+                screen: root.screen
+                visibilities: visibilities
+                popouts: panels.popouts
+                fullscreen: root.hasFullscreen
+                barDef: modelData
+
+                // Pass separatorOffset to BarWrapper for rendering separator line
+                Component.onCompleted: {
+                    const barWrapper = content.item;
+                    if (barWrapper) {
+                        barWrapper.sepOffset = separatorOffset;
+                        console.log("SET sepOffset idx=" + index + " value=" + separatorOffset);
+                    }
+                    Visibilities.registerBar(root.screen, modelData.name || ("overlay" + index), this, false);
+                }
+                Component.onDestruction: Visibilities.unregisterBar(root.screen, modelData.name || ("overlay" + index))
+
+                anchors.top: effPos === "top" ? parent.top : undefined
+                anchors.bottom: effPos === "bottom" ? parent.bottom : undefined
+                anchors.left: (effPos === "left" || (!isDock && (effPos === "top" || effPos === "bottom"))) ? parent.left : undefined
+                anchors.right: (effPos === "right" || (!isDock && (effPos === "top" || effPos === "bottom"))) ? parent.right : undefined
+                anchors.horizontalCenter: (isDock && (effPos === "top" || effPos === "bottom")) ? parent.horizontalCenter : undefined
+                anchors.verticalCenter: (isDock && (effPos === "left" || effPos === "right")) ? parent.verticalCenter : undefined
+                anchors.topMargin: effPos === "top" ? edgeOffset : 0
+                anchors.bottomMargin: effPos === "bottom" ? edgeOffset : 0
+                anchors.leftMargin: effPos === "left" ? edgeOffset : 0
+                anchors.rightMargin: effPos === "right" ? edgeOffset : 0
+                width: isDock ? (effPos === "left" || effPos === "right" ? implicitWidth : Math.round(parent.width * dockSpan)) : (effPos === "left" || effPos === "right" ? implicitWidth : undefined)
+                height: isDock ? (effPos === "top" || effPos === "bottom" ? implicitHeight : Math.round(parent.height * dockSpan)) : (effPos === "top" || effPos === "bottom" ? implicitHeight : undefined)
+                docked: isDock
+                frameGroup: blobGroup
+            }
         }
         Connections {
             function onOpenDesktopContextMenu(x, y, screenName) {
@@ -756,52 +888,52 @@ StyledWindow {
         Region { x: -10; y: -10; width: 1; height: 1 }
         Region {
             x: 0; y: 0
-            width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness) : 0
+            width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max((bar.position === "left" ? bar.implicitWidth : 0) + overlayLeftExtent, root.borderThickness) : 0
             height: root.height
             intersection: Intersection.Combine
         }
         Region {
-            x: root.width - Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness); y: 0
-            width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness) : 0
+            x: root.width - Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness); y: 0
+            width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness) : 0
             height: root.height
             intersection: Intersection.Combine
         }
         Region {
             x: 0; y: 0
             width: root.width
-            height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness) : 0
+            height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max((bar.position === "top" ? bar.implicitHeight : 0) + overlayTopExtent, root.borderThickness) : 0
             intersection: Intersection.Combine
         }
         Region {
-            x: 0; y: root.height - Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness)
+            x: 0; y: root.height - Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness)
             width: root.width
-            height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) : 0
+            height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur) ? Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness) : 0
             intersection: Intersection.Combine
         }
         Region {
-            x: Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness)
-            y: Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness)
+            x: Math.max((bar.position === "left" ? bar.implicitWidth : 0) + overlayLeftExtent, root.borderThickness)
+            y: Math.max((bar.position === "top" ? bar.implicitHeight : 0) + overlayTopExtent, root.borderThickness)
             width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             intersection: Intersection.Combine
         }
         Region {
-            x: root.width - Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness) - root.borderRounding
-            y: Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness)
+            x: root.width - Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness) - root.borderRounding
+            y: Math.max((bar.position === "top" ? bar.implicitHeight : 0) + overlayTopExtent, root.borderThickness)
             width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             intersection: Intersection.Combine
         }
         Region {
-            x: Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness)
-            y: root.height - Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) - root.borderRounding
+            x: Math.max((bar.position === "left" ? bar.implicitWidth : 0) + overlayLeftExtent, root.borderThickness)
+            y: root.height - Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness) - root.borderRounding
             width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             intersection: Intersection.Combine
         }
         Region {
-            x: root.width - Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness) - root.borderRounding
-            y: root.height - Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) - root.borderRounding
+            x: root.width - Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness) - root.borderRounding
+            y: root.height - Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness) - root.borderRounding
             width: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             height: (!GlobalConfig.appearance.islands && GlobalConfig.appearance.blur && GlobalConfig.appearance.blurMask) ? root.borderRounding : 0
             intersection: Intersection.Combine
@@ -811,10 +943,10 @@ StyledWindow {
             vAnchor: "none"
             hAnchor: "none"
             blurQuality: borderBlurSettings.blurQuality
-            inLeft: Math.max(bar.position === "left" ? bar.implicitWidth : 0, root.borderThickness) + root.borderRounding
-            inRight: root.width - Math.max(bar.position === "right" ? bar.implicitWidth : 0, root.borderThickness) - root.borderRounding
-            inTop: Math.max(bar.position === "top" ? bar.implicitHeight : 0, root.borderThickness) + root.borderRounding
-            inBottom: root.height - Math.max(bar.position === "bottom" ? bar.implicitHeight : 0, root.borderThickness) - root.borderRounding
+            inLeft: Math.max((bar.position === "left" ? bar.implicitWidth : 0) + overlayLeftExtent, root.borderThickness) + root.borderRounding
+            inRight: root.width - Math.max((bar.position === "right" ? bar.implicitWidth : 0) + overlayRightExtent, root.borderThickness) - root.borderRounding
+            inTop: Math.max((bar.position === "top" ? bar.implicitHeight : 0) + overlayTopExtent, root.borderThickness) + root.borderRounding
+            inBottom: root.height - Math.max((bar.position === "bottom" ? bar.implicitHeight : 0) + overlayBottomExtent, root.borderThickness) - root.borderRounding
             rTop: !GlobalConfig.appearance.islands ? root.borderRounding : 0
             rBottom: !GlobalConfig.appearance.islands ? root.borderRounding : 0
             rLeft: !GlobalConfig.appearance.islands ? root.borderRounding : 0

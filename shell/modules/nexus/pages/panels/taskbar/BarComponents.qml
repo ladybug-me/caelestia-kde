@@ -45,6 +45,11 @@ PageBase {
         "power": { icon: "power_settings_new", name: qsTr("Power menu") }
     }
     property bool isGlobalDragging: false
+    // Override mode for editing a single overlay panel instead of the
+    // global bar: entries source plus a write-back. Null keeps legacy
+    // behaviour (global entries) untouched.
+    property var entriesOverride: null
+    property var writeEntries: null
     property string globalDragCompId: ""
     property string globalDragSourceList: ""
     property string globalDragHoveredList: ""
@@ -329,7 +334,9 @@ PageBase {
     }
 
     function load(): void {
-        const entries = BarWidgets.entriesOf(Config.bar);
+        // Per-panel editing (BarPanelEditor) overrides the source list;
+        // otherwise the entries come from the widget registry.
+        let entries = root.entriesOverride ?? BarWidgets.entriesOf(Config.bar);
         leftModel.clear();
         middleModel.clear();
         rightModel.clear();
@@ -360,6 +367,11 @@ PageBase {
     }
 
     function resetToDefaults(): void {
+        if (root.entriesOverride !== null && root.writeEntries) {
+            root.writeEntries([]);
+            load();
+            return;
+        }
         BarWidgets.resetToDefaults(GlobalConfig.bar);
         load();
     }
@@ -389,7 +401,10 @@ PageBase {
             }
         }
 
-        BarWidgets.replaceAll(GlobalConfig.bar, newEntries);
+        if (root.writeEntries)
+            root.writeEntries(newEntries);
+        else
+            BarWidgets.replaceAll(GlobalConfig.bar, newEntries);
     }
 
     title: qsTr("Toggle & rearrange")

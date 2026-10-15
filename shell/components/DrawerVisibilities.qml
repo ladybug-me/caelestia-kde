@@ -1,6 +1,7 @@
 import Quickshell
 
 PersistentProperties {
+    property string screenName
     property bool bar
     property bool osd
     property bool session

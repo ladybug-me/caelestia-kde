@@ -388,7 +388,7 @@ Item {
 
         Repeater {
             model: ScriptModel {
-                values: SystemTray.items.values.filter(i => i.hasMenu && i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))
+                values: SystemTray.items.values.filter(i => i.hasMenu && i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(Services.TrayRegistry.keyOfItem(i)))
             }
 
             Popout {
@@ -396,7 +396,7 @@ Item {
 
                 required property SystemTrayItem modelData
 
-                name: `traymenu${root.trayItemsToIndices[modelData.id]}`
+                name: `traymenu${root.trayItemsToIndices[Services.TrayRegistry.keyOfItem(modelData)]}`
                 previewKey: "trayMenu"
                 sourceComponent: trayMenuComp
 

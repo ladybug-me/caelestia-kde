@@ -18,14 +18,22 @@ Singleton {
     property var remembered: []
     property bool loaded: false
 
+    // Some apps register their status notifier under their process id (2407-1,
+    // then 2652-1 on the next launch), so the id is useless across restarts.
+    // The alias is the stable key every per-icon setting is stored under: a new
+    // id is folded onto the remembered entry whose title and icon it matches,
+    // and the config lists are migrated from ids to aliases on first load.
+
     readonly property var entries: {
-        const known = new Map(root.remembered.map(entry => [entry.id, entry]));
+        const known = new Map(root.remembered.map(entry => [entry.alias ?? entry.id, entry]));
         for (const item of SystemTray.items.values) {
             if (item.status === Status.Passive)
                 continue;
-            const entry = known.get(item.id);
-            known.set(item.id, {
+            const alias = root.keyOfItem(item);
+            const entry = known.get(alias);
+            known.set(alias, {
                 id: item.id,
+                alias: alias,
                 title: item.title || entry?.title || item.id,
                 icon: item.icon || entry?.icon || "",
                 running: true
@@ -33,21 +41,39 @@ Singleton {
         }
         return root.applyOrder([...known.values()].map(entry => ({
                     id: entry.id,
+                    alias: entry.alias ?? entry.id,
                     title: entry.title || entry.id,
                     icon: entry.icon || "",
                     running: entry.running === true
-                })), entry => entry.id);
+                })), entry => entry.alias);
     }
 
     // Passive items are hidden by the protocol and by upstream's bar; TrayItem's
     // trayIndex and the popout names in popouts/Content.qml both come from this
     // same filter, so it must match the one there exactly.
-    readonly property var trayItems: root.applyOrder(SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id)), i => i.id)
+    readonly property var trayItems: root.applyOrder(SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(root.keyOfItem(i))), i => root.keyOfItem(i))
 
     readonly property var trayIndexById: root.trayItems.reduce((acc, item, i) => {
-        acc[item.id] = i;
+        acc[root.keyOfItem(item)] = i;
         return acc;
     }, {})
+
+    function keyOfItem(item: var): string {
+        return root.keyOfId(item.id, item.title, item.icon);
+    }
+
+    function keyOfId(id: string, title: string, icon: string): string {
+        const named = (GlobalConfig.bar.tray.iconSubs.values ?? []).find(sub => sub.id === id && sub.displayName);
+        if (named)
+            return `name:${named.displayName}`;
+        for (const entry of root.remembered) {
+            if (entry.id === id)
+                return entry.alias ?? id;
+            if (entry.alias && id !== entry.id && entry.title && title && entry.title === title && entry.icon === icon)
+                return entry.alias;
+        }
+        return id;
+    }
 
     function applyOrder(list: var, key: var): var {
         const order = GlobalConfig.bar.tray.order;
@@ -63,36 +89,39 @@ Singleton {
         }).map(e => e.entry);
     }
 
-    function stateOf(id: string): string {
-        if (GlobalConfig.bar.tray.hiddenIcons.includes(id))
+    function stateOf(key: string): string {
+        if (GlobalConfig.bar.tray.hiddenIcons.includes(key))
             return "hidden";
-        if (GlobalConfig.bar.tray.alwaysVisible.includes(id))
+        if (GlobalConfig.bar.tray.alwaysVisible.includes(key))
             return "visible";
         return "collapsed";
     }
 
-    function named(id: string): bool {
-        return GlobalConfig.bar.tray.iconSubs.values.some(sub => sub.id === id && sub.displayName);
+    function named(key: string): bool {
+        if (key.startsWith("name:"))
+            return true;
+        return GlobalConfig.bar.tray.iconSubs.values.some(sub => sub.displayName && `name:${sub.displayName}` === key);
     }
 
-    function setState(id: string, state: string): void {
-        GlobalConfig.bar.tray.alwaysVisible = GlobalConfig.bar.tray.alwaysVisible.filter(entry => entry !== id);
-        GlobalConfig.bar.tray.hiddenIcons = GlobalConfig.bar.tray.hiddenIcons.filter(entry => entry !== id);
+    function setState(key: string, state: string): void {
+        GlobalConfig.bar.tray.alwaysVisible = GlobalConfig.bar.tray.alwaysVisible.filter(entry => entry !== key);
+        GlobalConfig.bar.tray.hiddenIcons = GlobalConfig.bar.tray.hiddenIcons.filter(entry => entry !== key);
         if (state === "visible")
-            GlobalConfig.bar.tray.alwaysVisible = [...GlobalConfig.bar.tray.alwaysVisible, id];
+            GlobalConfig.bar.tray.alwaysVisible = [...GlobalConfig.bar.tray.alwaysVisible, key];
         else if (state === "hidden")
-            GlobalConfig.bar.tray.hiddenIcons = [...GlobalConfig.bar.tray.hiddenIcons, id];
+            GlobalConfig.bar.tray.hiddenIcons = [...GlobalConfig.bar.tray.hiddenIcons, key];
     }
 
-    function forget(id: string): void {
-        root.remembered = root.remembered.filter(entry => entry.id !== id);
-        root.setState(id, "collapsed");
+    function forget(alias: string): void {
+        root.remembered = root.remembered.filter(entry => (entry.alias ?? entry.id) !== alias);
+        GlobalConfig.bar.tray.iconSubs = [...(GlobalConfig.bar.tray.iconSubs.values ?? [])].filter(sub => !sub.displayName || `name:${sub.displayName}` !== alias);
+        root.setState(alias, "collapsed");
         saveTimer.restart();
     }
 
     function prune(list: var): var {
         const now = Date.now();
-        return list.filter(entry => root.stateOf(entry.id) !== "collapsed" || root.named(entry.id) || now - (entry.lastSeen ?? 0) < root.unseenTtl);
+        return list.filter(entry => root.stateOf(entry.alias ?? entry.id) !== "collapsed" || root.named(entry.alias ?? entry.id) || now - (entry.lastSeen ?? 0) < root.unseenTtl);
     }
 
     function record(): void {
@@ -100,12 +129,15 @@ Singleton {
             return;
 
         const now = Date.now();
-        const known = new Map(root.remembered.map(entry => [entry.id, entry]));
+        const known = new Map(root.remembered.map(entry => [entry.alias ?? entry.id, entry]));
         for (const item of SystemTray.items.values) {
             if (item.status === Status.Passive)
                 continue;
-            known.set(item.id, {
+            const alias = root.keyOfItem(item);
+            const existing = known.get(alias);
+            known.set(alias, {
                 id: item.id,
+                alias: alias,
                 title: item.title || item.id,
                 icon: item.icon || "",
                 lastSeen: now
@@ -117,6 +149,40 @@ Singleton {
             return;
         root.remembered = next;
         saveTimer.restart();
+    }
+
+    // The three config lists used to hold raw ids. Reinterpret them so an icon the
+    // user already pinned or ordered keeps that state even though its id changes
+    // every launch. Idempotent: an entry only moves if it names a raw id.
+    function migrateConfig(): void {
+        const tray = GlobalConfig.bar.tray;
+        const subs = tray.iconSubs.values ?? [];
+        const byName = new Map(subs.filter(sub => sub.displayName).map(sub => [sub.id, `name:${sub.displayName}`]));
+        const byEntry = new Map();
+        for (const entry of root.remembered)
+            if (entry.alias)
+                byEntry.set(entry.id, entry.alias);
+        const rewrite = list => [...new Set(list.map(id => byName.get(id) ?? byEntry.get(id) ?? id))];
+        tray.alwaysVisible = rewrite(tray.alwaysVisible);
+        tray.hiddenIcons = rewrite(tray.hiddenIcons);
+        tray.order = rewrite(tray.order);
+        let changed = false;
+        const next = root.remembered.map(entry => {
+            if (entry.alias)
+                return entry;
+            changed = true;
+            return {
+                id: entry.id,
+                alias: entry.id,
+                title: entry.title ?? "",
+                icon: entry.icon ?? "",
+                lastSeen: entry.lastSeen ?? 0
+            };
+        });
+        if (changed) {
+            root.remembered = next;
+            saveTimer.restart();
+        }
     }
 
     Component.onCompleted: fileView.reload()
@@ -159,6 +225,7 @@ Singleton {
             }
             root.remembered = root.prune(parsed);
             root.loaded = true;
+            root.migrateConfig();
             root.record();
         }
 

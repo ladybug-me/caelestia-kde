@@ -51,6 +51,7 @@ PageBase {
             const entry = root.entries[i];
             orderModel.append({
                 trayId: entry.id,
+                trayKey: entry.alias,
                 title: entry.title,
                 icon: entry.icon,
                 running: entry.running
@@ -122,7 +123,7 @@ PageBase {
     function commitOrder(): void {
         const ids = [];
         for (let i = 0; i < orderModel.count; i++)
-            ids.push(orderModel.get(i).trayId);
+            ids.push(orderModel.get(i).trayKey);
 
         // Writing the same order still invalidates TrayRegistry.entries and
         // rebuilds every row, so skip it when nothing actually moved.
@@ -295,6 +296,7 @@ PageBase {
 
                 required property int index
                 required property string trayId
+                required property string trayKey
                 required property string title
                 required property string icon
                 required property bool running
@@ -310,18 +312,18 @@ PageBase {
                 label: Icons.getTrayName(row.trayId, row.title)
                 subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
                 icon: Icons.getTrayIcon(row.trayId, row.icon)
-                active: menuItems.find(item => item.value === TrayRegistry.stateOf(row.trayId)) ?? null
-                fallbackText: root.stateLabel(TrayRegistry.stateOf(row.trayId))
-                fallbackIcon: root.stateIcon(TrayRegistry.stateOf(row.trayId))
+                active: menuItems.find(item => item.value === TrayRegistry.stateOf(row.trayKey)) ?? null
+                fallbackText: root.stateLabel(TrayRegistry.stateOf(row.trayKey))
+                fallbackIcon: root.stateIcon(TrayRegistry.stateOf(row.trayKey))
                 onSelected: item => {
                     if (item.value === "forget")
-                        TrayRegistry.forget(row.trayId);
+                        TrayRegistry.forget(row.trayKey);
                     else if (item.value === "rename")
                         nameField.startEdit();
                     else if (item.value === "clearname")
                         Icons.setTrayName(row.trayId, "");
                     else
-                        TrayRegistry.setState(row.trayId, item.value);
+                        TrayRegistry.setState(row.trayKey, item.value);
                 }
                 onReorderStart: root.dragging = true
                 onReorderDrag: sceneY => root.dragTo(row.trayId, sceneY)

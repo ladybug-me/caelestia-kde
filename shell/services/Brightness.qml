@@ -110,6 +110,32 @@ Singleton {
         }
     }
 
+    Connections {
+        target: SessionManager
+
+        function onResumed(): void {
+            resumeTimer.attempts = 0;
+            resumeTimer.restart();
+        }
+    }
+
+    Timer {
+        id: resumeTimer
+
+        property int attempts: 0
+
+        interval: 2000
+        repeat: true
+
+        onTriggered: {
+            attempts++;
+            for (const monitor of root.monitors)
+                monitor.restoreBrightness();
+            if (attempts >= 5)
+                stop();
+        }
+    }
+
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type
@@ -302,6 +328,19 @@ Singleton {
 
             if (isDdc)
                 timer.restart();
+        }
+
+        function restoreBrightness(): void {
+            if (isDdc && busNum === "")
+                return;
+
+            if (dimming < 1)
+                dimming = 1;
+
+            if (isDdc)
+                syncKwinRecord(brightness);
+
+            writeBrightness(brightness);
         }
 
         function initBrightness(): void {

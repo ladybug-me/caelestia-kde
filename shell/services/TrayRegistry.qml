@@ -71,6 +71,10 @@ Singleton {
         return "collapsed";
     }
 
+    function named(id: string): bool {
+        return GlobalConfig.bar.tray.iconSubs.values.some(sub => sub.id === id && sub.displayName);
+    }
+
     function setState(id: string, state: string): void {
         GlobalConfig.bar.tray.alwaysVisible = GlobalConfig.bar.tray.alwaysVisible.filter(entry => entry !== id);
         GlobalConfig.bar.tray.hiddenIcons = GlobalConfig.bar.tray.hiddenIcons.filter(entry => entry !== id);
@@ -88,7 +92,7 @@ Singleton {
 
     function prune(list: var): var {
         const now = Date.now();
-        return list.filter(entry => root.stateOf(entry.id) !== "collapsed" || now - (entry.lastSeen ?? 0) < root.unseenTtl);
+        return list.filter(entry => root.stateOf(entry.id) !== "collapsed" || root.named(entry.id) || now - (entry.lastSeen ?? 0) < root.unseenTtl);
     }
 
     function record(): void {
@@ -123,6 +127,18 @@ Singleton {
         }
 
         target: SystemTray.items
+    }
+
+    Connections {
+        function onAlwaysVisibleChanged(): void {
+            root.record();
+        }
+
+        function onHiddenIconsChanged(): void {
+            root.record();
+        }
+
+        target: GlobalConfig.bar.tray
     }
 
     FileView {

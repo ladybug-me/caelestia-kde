@@ -100,6 +100,7 @@ class BarTrayIconSub : public settings::ObjectNode {
     CONFIG_NODE(BarTrayIconSub, settings::ObjectNode)
 
     CONFIG_PROPERTY(QString, id, {})
+    CONFIG_PROPERTY(QString, displayName, {})
     CONFIG_PROPERTY(QString, icon, {})
     CONFIG_PROPERTY(QString, image, {})
 };

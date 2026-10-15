@@ -1,6 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.SystemTray
 import Caelestia.Config
@@ -31,8 +32,12 @@ Item {
         acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
         Accessible.role: Accessible.Button
-        Accessible.name: root.modelData.title || root.modelData.id
+        Accessible.name: Icons.getTrayName(root.modelData.id, root.modelData.title)
         Accessible.description: root.hasMenuEntries && root.popouts ? qsTr("Left-click activates, right-click opens the menu, middle-click runs the secondary action.") : qsTr("Left-click activates, middle- or right-click runs the secondary action.")
+
+        ToolTip.visible: containsMouse
+        ToolTip.text: Accessible.name
+        ToolTip.delay: 500
 
         onClicked: event => {
             if (event.button === Qt.LeftButton) {

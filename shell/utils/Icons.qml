@@ -273,6 +273,47 @@ Singleton {
         return icon;
     }
 
+    function getTrayName(id: string, title: string): string {
+        for (const sub of GlobalConfig.bar.tray.iconSubs.values)
+            if (sub.id === id)
+                return sub.displayName || title || id;
+        return title || id;
+    }
+
+    function hasTrayName(id: string): bool {
+        for (const sub of GlobalConfig.bar.tray.iconSubs.values)
+            if (sub.id === id)
+                return !!sub.displayName;
+        return false;
+    }
+
+    function setTrayName(id: string, displayName: string): void {
+        const subs = [...GlobalConfig.bar.tray.iconSubs.values].map(sub => ({
+                    id: sub.id,
+                    displayName: sub.displayName ?? "",
+                    icon: sub.icon ?? "",
+                    image: sub.image ?? ""
+                }));
+        const existing = subs.find(sub => sub.id === id);
+        if (existing)
+            existing.displayName = displayName;
+        else if (displayName)
+            subs.push({
+                id: id,
+                displayName: displayName,
+                icon: "",
+                image: ""
+            });
+        else
+            return;
+
+        for (let i = subs.length - 1; i >= 0; i--)
+            if (!subs[i].displayName && !subs[i].icon && !subs[i].image)
+                subs.splice(i, 1);
+
+        GlobalConfig.bar.tray.iconSubs = subs;
+    }
+
     function getBatteryIcon(percentage: real, charging = false): string {
         if (percentage === 1)
             return charging ? "battery_charging_full" : "battery_full";

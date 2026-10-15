@@ -11,6 +11,7 @@ ConnectedRect {
     id: root
 
     property alias label: label.text
+    property Component labelComponent
     property string subtext
     property string icon
     property alias menuItems: splitButton.menuItems
@@ -120,13 +121,21 @@ ConnectedRect {
                 id: label
 
                 Layout.fillWidth: true
+                visible: !root.labelComponent
                 font: Tokens.font.body.small
                 elide: Text.ElideRight
             }
 
+            Loader {
+                Layout.fillWidth: true
+                active: !!root.labelComponent
+                visible: active
+                sourceComponent: root.labelComponent
+            }
+
             StyledText {
                 Layout.fillWidth: true
-                visible: root.subtext
+                visible: root.subtext && !root.labelComponent
                 text: root.subtext
                 color: Colours.palette.m3onSurfaceVariant
                 font: NexusStyle.secondaryFont

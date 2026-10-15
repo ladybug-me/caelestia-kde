@@ -276,6 +276,18 @@ PageBase {
         }
 
         Component {
+            id: nameComponent
+
+            EditableName {
+                label: Icons.getTrayName(row.trayId, row.title)
+                subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
+                placeholder: row.title
+                overridden: Icons.hasTrayName(row.trayId)
+                onRenamed: name => Icons.setTrayName(row.trayId, name)
+            }
+        }
+
+        Component {
             id: orderDelegate
 
             SelectRow {
@@ -294,7 +306,8 @@ PageBase {
                 liftY: root.draggingId === row.trayId ? root.dragTop - row.y : 0
                 first: row.index === 0
                 last: row.index === orderModel.count - 1
-                label: row.title
+                labelComponent: nameComponent
+                label: Icons.getTrayName(row.trayId, row.title)
                 subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
                 icon: Icons.getTrayIcon(row.trayId, row.icon)
                 active: menuItems.find(item => item.value === TrayRegistry.stateOf(row.trayId)) ?? null
@@ -303,6 +316,10 @@ PageBase {
                 onSelected: item => {
                     if (item.value === "forget")
                         TrayRegistry.forget(row.trayId);
+                    else if (item.value === "rename")
+                        nameField.startEdit();
+                    else if (item.value === "clearname")
+                        Icons.setTrayName(row.trayId, "");
                     else
                         TrayRegistry.setState(row.trayId, item.value);
                 }
@@ -311,6 +328,17 @@ PageBase {
                 onReorderDrop: root.dropOrder()
 
                 menuItems: [
+                    MenuItem {
+                        text: qsTr("Rename")
+                        icon: "edit"
+                        value: "rename"
+                    },
+                    MenuItem {
+                        visible: Icons.hasTrayName(row.trayId)
+                        text: qsTr("Clear name")
+                        icon: "backspace"
+                        value: "clearname"
+                    },
                     MenuItem {
                         text: root.stateLabel("visible")
                         icon: root.stateIcon("visible")

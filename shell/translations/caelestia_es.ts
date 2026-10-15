@@ -444,7 +444,7 @@
   <context>
     <name>AddShortcutDialog</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/AddShortcutDialog.qml" line="+62"/>
+      <location filename="../modules/nexus/pages/wallandstyle/AddShortcutDialog.qml" line="+59"/>
       <source>Add Custom Shortcut</source>
       <translation>Añadir acceso directo personalizado</translation>
     </message>
@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+227"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+230"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Coincide con una expresión regular en favouriteApps; edita el archivo de configuración para cambiarlo</translation>
     </message>
@@ -1484,12 +1484,22 @@
       <translation>Escala del relleno</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Animation speed scale</source>
       <translation>Escala de velocidad de las animaciones</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
+      <source>Animations</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Toggle animations on/off</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Corners &amp; effects</source>
       <translation>Esquinas y efectos</translation>
     </message>
@@ -3793,7 +3803,7 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+59"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+60"/>
       <source>Greeter settings</source>
       <translation>Configuración de la pantalla de bienvenida</translation>
     </message>
@@ -4876,12 +4886,12 @@
       <translation>Filtrar:</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+18"/>
       <source>Folders</source>
       <translation>Carpetas</translation>
     </message>
     <message>
-      <location line="+35"/>
+      <location line="+7"/>
       <source>Select Folder</source>
       <translation>Seleccionar carpeta</translation>
     </message>
@@ -4891,7 +4901,7 @@
       <translation>Seleccionar</translation>
     </message>
     <message>
-      <location line="+24"/>
+      <location line="+9"/>
       <source>Cancel</source>
       <translation>Cancelar</translation>
     </message>
@@ -5402,7 +5412,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>FileDialog</name>
     <message>
-      <location filename="../components/filedialog/FileDialog.qml" line="+13"/>
+      <location filename="../components/filedialog/FileDialog.qml" line="+14"/>
       <source>All files</source>
       <translation>Todos los archivos</translation>
     </message>
@@ -6074,7 +6084,7 @@ Ahora salir a tocar el pasto</translation>
       <translation>Distribuciones del teclado</translation>
     </message>
     <message>
-      <location line="+64"/>
+      <location line="+62"/>
       <source>XKB supports only 4 layouts at a time</source>
       <translation>XKB admite solo 4 disposiciones a la vez</translation>
     </message>
@@ -6095,7 +6105,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>KeyCaptureDialog</name>
     <message>
-      <location filename="../modules/nexus/common/KeyCaptureDialog.qml" line="+156"/>
+      <location filename="../modules/nexus/common/KeyCaptureDialog.qml" line="+153"/>
       <source>Record Keybind</source>
       <translation>Registrar atajo de teclado</translation>
     </message>
@@ -7523,7 +7533,7 @@ Ahora salir a tocar el pasto</translation>
       <translation>%1 perfiles disponibles</translation>
     </message>
     <message>
-      <location line="+133"/>
+      <location line="+130"/>
       <source>No VPN profiles found</source>
       <translation>No se encontraron perfiles VPN</translation>
     </message>
@@ -8017,7 +8027,7 @@ Ahora salir a tocar el pasto</translation>
       <translation>Editada %1</translation>
     </message>
     <message>
-      <location line="+42"/>
+      <location line="+46"/>
       <source>Select a note or create one</source>
       <translation>Elegí una nota o creá una</translation>
     </message>
@@ -10360,7 +10370,7 @@ PIN: %1</source>
   <context>
     <name>RegionSelection</name>
     <message>
-      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+544"/>
+      <location filename="../modules/screenshot/regionSelector/RegionSelection.qml" line="+548"/>
       <source>Full Screen Screenshot</source>
       <translation>Captura de pantalla completa</translation>
     </message>
@@ -12176,7 +12186,7 @@ PIN: %1</source>
   <context>
     <name>UninstallDialog</name>
     <message>
-      <location filename="../modules/nexus/common/UninstallDialog.qml" line="+75"/>
+      <location filename="../modules/nexus/common/UninstallDialog.qml" line="+71"/>
       <source>Uninstall Caelestia?</source>
       <translation>¿Desinstalar Caelestia?</translation>
     </message>
@@ -13195,7 +13205,7 @@ PIN: %1</source>
       <translation>Cargar más</translation>
     </message>
     <message>
-      <location line="+138"/>
+      <location line="+142"/>
       <source>Downloading...</source>
       <translation>Descargando...</translation>
     </message>

@@ -53,7 +53,7 @@ PageBase {
                 trayId: entry.id,
                 trayKey: entry.alias,
                 title: entry.title,
-                icon: entry.icon,
+                trayIcon: entry.icon,
                 running: entry.running
             });
         }
@@ -277,18 +277,6 @@ PageBase {
         }
 
         Component {
-            id: nameComponent
-
-            EditableName {
-                label: Icons.getTrayName(row.trayId, row.title)
-                subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
-                placeholder: row.title
-                overridden: Icons.hasTrayName(row.trayId)
-                onRenamed: name => Icons.setTrayName(row.trayId, name)
-            }
-        }
-
-        Component {
             id: orderDelegate
 
             SelectRow {
@@ -298,7 +286,7 @@ PageBase {
                 required property string trayId
                 required property string trayKey
                 required property string title
-                required property string icon
+                required property string trayIcon
                 required property bool running
 
                 width: ListView.view.width
@@ -311,7 +299,7 @@ PageBase {
                 labelComponent: nameComponent
                 label: Icons.getTrayName(row.trayId, row.title)
                 subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
-                icon: Icons.getTrayIcon(row.trayId, row.icon)
+                icon: Icons.getTrayIcon(row.trayId, row.trayIcon)
                 active: menuItems.find(item => item.value === TrayRegistry.stateOf(row.trayKey)) ?? null
                 fallbackText: root.stateLabel(TrayRegistry.stateOf(row.trayKey))
                 fallbackIcon: root.stateIcon(TrayRegistry.stateOf(row.trayKey))
@@ -319,7 +307,7 @@ PageBase {
                     if (item.value === "forget")
                         TrayRegistry.forget(row.trayKey);
                     else if (item.value === "rename")
-                        nameField.startEdit();
+                        labelItem.startEdit();
                     else if (item.value === "clearname")
                         Icons.setTrayName(row.trayId, "");
                     else
@@ -363,6 +351,18 @@ PageBase {
                         value: "forget"
                     }
                 ]
+
+                Component {
+                    id: nameComponent
+
+                    EditableName {
+                        label: Icons.getTrayName(row.trayId, row.title)
+                        subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
+                        placeholder: row.title
+                        overridden: Icons.hasTrayName(row.trayId)
+                        onRenamed: name => Icons.setTrayName(row.trayId, name)
+                    }
+                }
             }
         }
     }

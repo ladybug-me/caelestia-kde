@@ -12,6 +12,7 @@ ConnectedRect {
 
     property alias label: label.text
     property Component labelComponent
+    property alias labelItem: labelLoader.item
     property string subtext
     property string icon
     property alias menuItems: splitButton.menuItems
@@ -127,6 +128,8 @@ ConnectedRect {
             }
 
             Loader {
+                id: labelLoader
+
                 Layout.fillWidth: true
                 active: !!root.labelComponent
                 visible: active

@@ -13,13 +13,12 @@ import qs.components.controls
 import qs.services
 import qs.utils
 import qs.modules.nexus
-import qs.modules.bar.popouts as BarPopouts
 
 StyledRect {
     id: root
 
     required property DrawerVisibilities visibilities
-    required property BarPopouts.Wrapper popouts
+    required property var popouts
 
     readonly property real nonAnimHeight: implicitHeight
 

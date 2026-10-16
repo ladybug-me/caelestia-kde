@@ -51,20 +51,6 @@ Item {
         target: Clipboard
     }
 
-    Connections {
-        function onLauncherInitialSearchChanged(): void {
-            if (!Visibilities.launcherInitialSearch)
-                return;
-            if (root.visibilities !== Visibilities.launcherInitialSearchTarget)
-                return;
-            search.text = Visibilities.launcherInitialSearch;
-            Visibilities.launcherInitialSearch = "";
-            Visibilities.launcherInitialSearchTarget = null;
-        }
-
-        target: Visibilities
-    }
-
     Item {
         id: listWrapper
 
@@ -340,7 +326,7 @@ Item {
 
             onTextChanged: {
                 if (root.visibilities.launcher)
-                    Visibilities.launcherMode = Visibilities.modeForText(text);
+                    root.visibilities.launcherMode = Visibilities.modeForText(text);
                 if (!text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
                     Windows.isSwitching = false;
                     Kwin.clearHighlight();
@@ -348,20 +334,27 @@ Item {
             }
 
             Component.onCompleted: {
-                if (Visibilities.launcherInitialSearch) {
-                    text = Visibilities.launcherInitialSearch;
-                    Visibilities.launcherInitialSearch = "";
+                if (root.visibilities.launcherInitialSearch) {
+                    text = root.visibilities.launcherInitialSearch;
+                    root.visibilities.launcherInitialSearch = "";
                 }
                 forceActiveFocus();
             }
 
             Connections {
+                function onLauncherInitialSearchChanged(): void {
+                    if (!root.visibilities.launcherInitialSearch)
+                        return;
+                    search.text = root.visibilities.launcherInitialSearch;
+                    root.visibilities.launcherInitialSearch = "";
+                }
+
                 function onLauncherChanged(): void {
                     if (root.visibilities.launcher) {
-                        if (Visibilities.launcherInitialSearch) {
-                            search.text = Visibilities.launcherInitialSearch;
-                            Visibilities.launcherInitialSearch = "";
-                        } else if (!Visibilities.launcherMode) {
+                        if (root.visibilities.launcherInitialSearch) {
+                            search.text = root.visibilities.launcherInitialSearch;
+                            root.visibilities.launcherInitialSearch = "";
+                        } else if (!root.visibilities.launcherMode) {
                             search.text = "";
                         }
                         search.forceActiveFocus();

@@ -119,7 +119,7 @@ CustomMouseArea {
     onPressed: event => {
         dragStart = Qt.point(event.x, event.y);
 
-        if (Visibilities.launcherOpenAnywhere && !root.visibilities.launcher) {
+        if (Visibilities.launcherScreen !== null && !root.visibilities.launcher) {
             Visibilities.closeLauncher();
             return;
         }

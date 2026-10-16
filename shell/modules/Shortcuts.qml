@@ -14,7 +14,6 @@ Scope {
     id: root
 
     property bool launcherInterrupted
-    property string lastAction: ""
     readonly property bool hasFullscreen: Kwin.hasFullscreen()
 
     // `action` ids are the krohnkite
@@ -120,7 +119,7 @@ Scope {
         description: qsTr("Toggle launcher, dashboard and osd")
         onPressed: {
             const v = Visibilities.getForActive();
-            if (Visibilities.launcherOpenAnywhere || v.dashboard || v.osd || v.utilities) {
+            if (Visibilities.launcherScreen !== null || v.dashboard || v.osd || v.utilities) {
                 Visibilities.closeLauncher();
                 v.dashboard = v.osd = v.utilities = false;
             } else {
@@ -221,13 +220,8 @@ Scope {
         description: qsTr("Toggle launcher")
         onPressed: root.launcherInterrupted = false
         onReleased: {
-            if (!root.launcherInterrupted) {
-                root.lastAction = "launcher";
-                if (Visibilities.launcherOpenVisibilities())
-                    Visibilities.closeLauncher();
-                else
-                    Visibilities.openLauncher("");
-            }
+            if (!root.launcherInterrupted)
+                Visibilities.toggleLauncher("");
             root.launcherInterrupted = false;
         }
     }
@@ -287,12 +281,11 @@ Scope {
 
     Connections {
         function onModifierReleased(): void {
-            if (Visibilities.launcherOpenVisibilities() && root.lastAction === "windows") {
+            if (Visibilities.launcherScreen?.launcherMode === "windows") {
                 const switcherKey = (typeof KeybindsModel !== "undefined" && KeybindsModel.getKey("windowSwitcher")) || "Alt+Tab";
                 if (!CUtils.isShortcutModifierPressed(switcherKey)) {
                     Windows.focusSelectedWindow();
                     Visibilities.closeLauncher();
-                    root.lastAction = "";
                 }
             }
         }
@@ -308,10 +301,9 @@ Scope {
         description: qsTr("Open window switcher")
         enabled: Config.tabSwitch.enabled
         onPressed: {
-            if (Visibilities.launcherOpenVisibilities() && root.lastAction === "windows") {
+            if (Visibilities.launcherScreen?.launcherMode === "windows") {
                 Windows.triggerCycleNext();
             } else {
-                root.lastAction = "windows";
                 Windows.isSwitching = true;
                 Windows.updateItems();
                 Windows.selectedIndex = (Windows.items.length > 1) ? 1 : 0;
@@ -327,10 +319,9 @@ Scope {
         description: qsTr("Open window switcher (reverse)")
         enabled: Config.tabSwitch.enabled
         onPressed: {
-            if (Visibilities.launcherOpenVisibilities() && root.lastAction === "windows") {
+            if (Visibilities.launcherScreen?.launcherMode === "windows") {
                 Windows.triggerCyclePrev();
             } else {
-                root.lastAction = "windows";
                 Windows.isSwitching = true;
                 Windows.updateItems();
                 Windows.selectedIndex = (Windows.items.length > 1) ? Windows.items.length - 1 : 0;
@@ -458,11 +449,15 @@ Scope {
             if (list().split("\n").includes(drawer)) {
                 if (root.hasFullscreen && ["launcher", "session", "dashboard"].includes(drawer))
                     return;
-                const visibilities = Visibilities.getForActive();
-                if (drawer === "overview")
-                    Visibilities.setOverview(!visibilities.overview);
-                else
-                    visibilities[drawer] = !visibilities[drawer];
+                if (drawer === "launcher") {
+                    Visibilities.toggleLauncher("");
+                } else {
+                    const visibilities = Visibilities.getForActive();
+                    if (drawer === "overview")
+                        Visibilities.setOverview(!visibilities.overview);
+                    else
+                        visibilities[drawer] = !visibilities[drawer];
+                }
                 Logger.mark(`drawer=${drawer} toggled`);
             } else {
                 console.warn(lc, `Drawer "${drawer}" does not exist`);
@@ -472,6 +467,10 @@ Scope {
             if (list().split("\n").includes(drawer)) {
                 if (root.hasFullscreen && ["launcher", "session", "dashboard"].includes(drawer))
                     return;
+                if (drawer === "launcher") {
+                    Visibilities.toggleLauncher("");
+                    return;
+                }
                 if (drawer === "sidebar" && tab !== "") {
                     Visibilities.initialSidebarTab = tab;
                     const visibilities = Visibilities.getForActive();
@@ -529,7 +528,6 @@ Scope {
     }
     IpcHandler {
         function action(name: string): void {
-            root.lastAction = name;
             Visibilities.toggleLauncher(name);
         }
 

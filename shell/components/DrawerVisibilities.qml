@@ -11,4 +11,6 @@ PersistentProperties {
     property bool sidebarSuspended
     property bool overview
     property bool skipLauncherAnim: false
+    property string launcherMode: ""
+    property string launcherInitialSearch: ""
 }

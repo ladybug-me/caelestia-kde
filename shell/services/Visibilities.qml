@@ -14,8 +14,7 @@ Singleton {
     property string initialSidebarTab: ""
     property string lastSidebarTab: "notifications"
     property int openDialogs: 0
-    property var contextPopoutWrapper: null
-    readonly property bool contextPopoutOpen: contextPopoutWrapper !== null
+    readonly property bool contextPopoutOpen: contextPopoutScreens().length > 0
     readonly property bool sidebarPinned: GlobalConfig.sidebar.pinned
     // Live width while the pinned sidebar's edge is dragged; otherwise follows
     // sidebar.width, where 0 means the default width.
@@ -105,17 +104,19 @@ Singleton {
         for (const visibilities of screens.values())
             visibilities.overview = visible;
     }
-    function setContextPopout(wrapper: var, open: bool): void {
-        if (open)
-            contextPopoutWrapper = wrapper;
-        else if (contextPopoutWrapper === wrapper)
-            contextPopoutWrapper = null;
+    function contextPopoutScreens(): list<DrawerVisibilities> {
+        const out = [];
+        for (const visibilities of screens.values())
+            if (visibilities.contextPopout)
+                out.push(visibilities);
+        return out;
     }
     function closeContextPopouts(): void {
-        const wrapper = contextPopoutWrapper;
-        contextPopoutWrapper = null;
-        if (wrapper)
-            wrapper.hasCurrent = false;
+        for (const visibilities of contextPopoutScreens()) {
+            const wrapper = bars.get(visibilities.screenName)?.popouts;
+            if (wrapper)
+                wrapper.close();
+        }
     }
 
     Binding on sidebarWidth {

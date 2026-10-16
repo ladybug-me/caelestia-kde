@@ -119,7 +119,10 @@ CustomMouseArea {
     onPressed: event => {
         dragStart = Qt.point(event.x, event.y);
 
-        if (root.focusGrab && (root.focusGrab.active || popouts.isDetached)) {
+        const grabActive = root.focusGrab && (root.focusGrab.active || popouts.isDetached);
+        const menuOpen = Visibilities.contextPopoutOpen;
+
+        if (grabActive || menuOpen) {
             let inside = false;
 
             if (inBarArea(event.x, event.y)) inside = true;
@@ -131,13 +134,16 @@ CustomMouseArea {
             else if (popouts.hasCurrent && inLeftPanel(panels.popoutsWrapper, event.x, event.y)) inside = true;
 
             if (!inside) {
-                root.focusGrab.clear();
+                if (grabActive)
+                    root.focusGrab.clear();
+                if (menuOpen)
+                    Visibilities.closeContextPopouts();
             }
         }
     }
     onContainsMouseChanged: {
         if (!containsMouse) {
-            const menuOpen = popouts.hasCurrent && popouts.currentName.endsWith("context");
+            const menuOpen = popouts.isContextPopout;
 
             if (!osdShortcutActive) {
                 visibilities.osd = false;
@@ -153,10 +159,10 @@ CustomMouseArea {
             if (!menuOpen && !popoutHideTimer.running)
                 popoutHideTimer.start();
 
-            if (Config.bar.showOnHover && !menuOpen && !barUnhoverTimer.running)
-                barUnhoverTimer.start();
+            bar.hoverGraceTimer.start();
         } else {
             popoutHideTimer.stop();
+            bar.hoverGraceTimer.stop();
         }
     }
     onPositionChanged: event => {
@@ -175,10 +181,10 @@ CustomMouseArea {
 
         if (!visibilities.bar && Config.bar.showOnHover) {
             if (inBarArea(x, y)) {
-                barUnhoverTimer.stop();
-                bar.isHovered = true;
-            } else if (!(popouts.hasCurrent && popouts.currentName.endsWith("context")) && !barUnhoverTimer.running) {
-                barUnhoverTimer.start();
+                bar.hoverGraceTimer.stop();
+                bar.pointerInReach = true;
+            } else if (!bar.hoverGraceTimer.running) {
+                bar.hoverGraceTimer.start();
             }
         }
 
@@ -359,37 +365,12 @@ CustomMouseArea {
         }
     }
     Timer {
-        id: barUnhoverTimer
-
-        interval: 400
-        onTriggered: {
-            const menuOpen = popouts.hasCurrent && popouts.currentName.endsWith("context");
-            if (!bar.hovered && !visibilities.bar && !menuOpen)
-                bar.isHovered = false;
-        }
-    }
-    Connections {
-        function onHoveredChanged() {
-            if (bar.hovered) {
-                barUnhoverTimer.stop();
-                if (!visibilities.bar && Config.bar.showOnHover && !fullscreen)
-                    bar.isHovered = true;
-            } else if (Config.bar.showOnHover && !fullscreen && !visibilities.bar
-                    && !barUnhoverTimer.running) {
-                barUnhoverTimer.start();
-            }
-        }
-
-        target: bar
-    }
-    Timer {
         id: popoutHideTimer
 
         interval: 150
         onTriggered: {
-            if (popouts.currentName.endsWith("context")) {
+            if (popouts.isContextPopout)
                 return;
-            }
             if (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1) {
                 popouts.hasCurrent = false;
                 bar.closeTray();

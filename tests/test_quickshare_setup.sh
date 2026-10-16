@@ -10,7 +10,7 @@ PORT_FILE="$REPO_ROOT/shell/scripts/quickshare-port"
 SERVICE_CPP="$REPO_ROOT/shell/plugin/src/Caelestia/Services/QuickShare/quickshare_service.cpp"
 PLUGIN_CMAKE="$REPO_ROOT/shell/plugin/CMakeLists.txt"
 QUICKSHARE_CMAKE="$REPO_ROOT/shell/plugin/src/Caelestia/Services/QuickShare/CMakeLists.txt"
-SERVICES_STEP="$REPO_ROOT/scripts/06-services.sh"
+SERVICES_STEP="$REPO_ROOT/installer/src/steps/services.rs"
 QS_SETUP_QML="$REPO_ROOT/shell/services/QuickShareSetup.qml"
 
 if [[ ! -f "$PORT_FILE" ]]; then
@@ -283,111 +283,8 @@ test_opening_the_firewall_does_nothing_when_no_manager_is_running() {
         "a hand-rolled rule set is invisible, so nothing is changed and that is said"
 }
 
-SERVICES_SOURCE="$(extract_function "$SERVICES_STEP" configure_quick_share)"
-
-if [[ -z "$SERVICES_SOURCE" ]]; then
-    fail "could not find configure_quick_share in scripts/06-services.sh"
-fi
-
-stub_bundle_reporting() {
-    local dir="$1" setup="$2"
-    mkdir -p "$dir/shell/scripts"
-    cat > "$dir/shell/scripts/quickshare_setup.sh" <<EOS
-#!/bin/bash
-printf 'AVAHI=active\nFIREWALL=none\nPORT=allowed\nSETUP=$setup\n'
-EOS
-    cp "$PORT_FILE" "$dir/shell/scripts/quickshare-port"
-    printf '%s\n' "$dir"
-}
-
-run_configure_quick_share() {
-    local bundle="$1" packaged_status="$2" log="${3:-/dev/null}" sudo_status="${4:-0}"
-    env BUNDLE_DIR="$bundle" CONFIGURE_LOG="$log" PACKAGED="$packaged_status" SUDO_STATUS="$sudo_status" \
-        bash -c 'install_is_packaged() { return "$PACKAGED"; }
-skip() { printf "SKIP %s\n" "$*"; }
-warn() { printf "WARN %s\n" "$*"; }
-ok() { printf "OK %s\n" "$*"; }
-caelestia_sudo() { printf "ESCALATE %s\n" "$*" >> "$CONFIGURE_LOG"; return "$SUDO_STATUS"; }
-'"$SERVICES_SOURCE"'
-configure_quick_share'
-}
-
-test_a_packaged_install_leaves_quick_share_to_the_package() {
-    local tmp out
-    tmp="$(new_tmpdir)"
-
-    out="$(run_configure_quick_share "$(stub_bundle_reporting "$tmp/bundle" ok)" 0 2>&1)"
-
-    assert_contains "$out" "packaged install" "a package install gets no root-level changes from the installer"
-    assert_not_contains "$out" "ESCALATE" "so the installer must leave it alone"
-}
-
-test_a_missing_helper_warns_without_stopping_the_install() {
-    local tmp out
-    tmp="$(new_tmpdir)"
-
-    out="$(run_configure_quick_share "$tmp/absent" 1 2>&1)"
-
-    assert_contains "$out" "setup helper is missing" "the step should say what it could not find"
-    assert_not_contains "$out" "ESCALATE" "and nothing should be elevated for it"
-}
-
-test_a_bundle_without_the_transfer_port_warns_without_raising() {
-    local tmp dir out
-    tmp="$(new_tmpdir)"
-    dir="$tmp/bundle"
-    mkdir -p "$dir/shell/scripts"
-    stub_bin "$dir/shell/scripts" quickshare_setup.sh 'printf "SETUP=needed\n"'
-
-    out="$(run_configure_quick_share "$dir" 1 2>&1)"
-
-    assert_contains "$out" "transfer port is missing" "the step should say what it could not read"
-    assert_not_contains "$out" "ESCALATE" "and nothing should be elevated for it"
-}
-
-test_a_bundle_whose_transfer_port_is_not_a_number_warns_without_raising() {
-    local tmp dir out
-    tmp="$(new_tmpdir)"
-    dir="$(stub_bundle_reporting "$tmp/bundle" needed)"
-    printf 'not-a-port\n' > "$dir/shell/scripts/quickshare-port"
-
-    out="$(run_configure_quick_share "$dir" 1 2>&1)"
-
-    assert_contains "$out" "is not a port number" "a port the firewall cannot be asked for is worth saying"
-    assert_not_contains "$out" "ESCALATE" "and nothing should be elevated for it"
-}
-
-test_a_system_that_already_works_is_not_raised_for() {
-    local tmp log out
-    tmp="$(new_tmpdir)"
-    log="$tmp/calls.log"
-
-    out="$(run_configure_quick_share "$(stub_bundle_reporting "$tmp/bundle" ok)" 1 "$log" 2>&1)"
-
-    assert_contains "$out" "already has the access it needs" "the status check is what decides"
-    assert_not_contains "$out" "ESCALATE" "an install that needs no password must not ask for one"
-}
-
-test_a_system_that_needs_setup_is_raised_for() {
-    local tmp log out
-    tmp="$(new_tmpdir)"
-    log="$tmp/calls.log"
-
-    out="$(run_configure_quick_share "$(stub_bundle_reporting "$tmp/bundle" needed)" 1 "$log" 2>&1)"
-
-    assert_contains "$(cat "$log")" "quickshare_setup.sh --port $PORT" \
-        "the elevated run has to carry the port the service listens on"
-    assert_contains "$out" "Quick Share can receive" "and the step should report what it achieved"
-}
-
-test_a_failed_setup_warns_without_stopping_the_install() {
-    local tmp out
-    tmp="$(new_tmpdir)"
-
-    out="$(run_configure_quick_share "$(stub_bundle_reporting "$tmp/bundle" needed)" 1 /dev/null 1 2>&1)"
-
-    assert_contains "$out" "did not finish" \
-        "a firewall that refused is worth saying, not worth failing the install over"
-}
+# configure_quick_share is the native 06-services step now, and the crate tests it
+# there (installer/tests/steps.rs): what it skips, what it refuses to escalate for, and the
+# port it hands the elevated run. What is left here is the helper that step calls.
 
 run_tests

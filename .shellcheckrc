@@ -17,9 +17,8 @@ source-path=SCRIPTDIR
 # SC2155 - declare and assign separately (style)
 # SC2250 - braces around variable references (style)
 #
-# SC2164 (cd without || exit) is deliberately NOT disabled: uninstall.sh, update.sh and
-# installer/distro/* run without `set -e`, where an unguarded cd silently retargets
-# everything after it.
+# SC2164 (cd without || exit) is deliberately NOT disabled: uninstall.sh and update.sh run
+# without `set -e`, where an unguarded cd silently retargets everything after it.
 
 disable=SC1090,SC1091,SC2034,SC2154,SC2155,SC2250
 

@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 // Environment variables originally set via //@ pragma directives moved to
-// the launcher scripts (08-build-shell.sh, 10-autostart.sh) for broader
+// the launcher scripts (the 08-build-shell and 10-autostart steps) for broader
 // quickshell version compatibility.
 //@ pragma Env QS_CRASHREPORT_URL=https://github.com/ladybug-me/caelestia-kde/issues/new?template=crash.yml
 // //@ pragma DefaultEnv QS_NO_RELOAD_POPUP=1

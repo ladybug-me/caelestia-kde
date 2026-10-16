@@ -195,13 +195,9 @@ if("shell" IN_LIST ENABLE_MODULES)
         DESTINATION "${INSTALL_DATADIR}"
         PATTERN ".git*" EXCLUDE)
 
-    file(GLOB CAELESTIA_STEP_SCRIPTS CONFIGURE_DEPENDS
-        "${CAELESTIA_ROOT_DIR}/scripts/[0-9]*.sh")
-    if(NOT CAELESTIA_STEP_SCRIPTS)
-        message(FATAL_ERROR "No installer step scripts found in ${CAELESTIA_ROOT_DIR}/scripts")
+    if(NOT EXISTS "${CAELESTIA_ROOT_DIR}/scripts/lib/installer-bin.sh")
+        message(FATAL_ERROR "No installer resolver found in ${CAELESTIA_ROOT_DIR}/scripts/lib")
     endif()
-    install(PROGRAMS ${CAELESTIA_STEP_SCRIPTS}
-        DESTINATION "${INSTALL_DATADIR}/scripts")
     caelestia_install_directory("${CAELESTIA_ROOT_DIR}/scripts/lib"
         DESTINATION "${INSTALL_DATADIR}/scripts"
         PATTERN ".git*" EXCLUDE)
@@ -238,9 +234,6 @@ if("shell" IN_LIST ENABLE_MODULES)
     install(FILES LICENSE DESTINATION "${INSTALL_QSCONFDIR}")
 
     if(CAELESTIA_PACKAGE)
-        # Anything added here and nowhere else is package-only content. The
-        # artifact checks have to allow for it: add the installed prefix to
-        # PACKAGE_ONLY_PREFIXES in .github/scripts/packaging_contract.py.
         set(_SDDM_THEME_DIR "usr/share/sddm/themes/caelestia")
         caelestia_install_directory(
             "${CAELESTIA_ROOT_DIR}/src/sddm/themes/full/"

@@ -6,7 +6,7 @@
 source "$(dirname "${BASH_SOURCE[0]}")/download.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/log.sh"
 
-# What the shell build can link against, in the same words 08-build-shell.sh stores
+# What the shell build can link against, in the same words the 08-build-shell step stores
 # in its toolchain stamp: a pkg-config version, "sdk" for the prebuilt headers, or
 # "none". One probe, so the stamp and the guard cannot disagree.
 cava_state() {

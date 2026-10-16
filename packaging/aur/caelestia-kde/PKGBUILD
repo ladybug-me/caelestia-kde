@@ -44,7 +44,7 @@ depends=(
     'power-profiles-daemon'
     'ttf-material-symbols-variable'
 )
-makedepends=('cmake' 'ninja' 'qt6-shadertools' 'extra-cmake-modules' 'kwin' 'vulkan-headers')
+makedepends=('cmake' 'ninja' 'qt6-shadertools' 'extra-cmake-modules' 'kwin' 'vulkan-headers' 'rust')
 optdepends=(
     'ttf-rubik-vf: clock and workspace font'
     'ttf-cascadia-code-nerd: monospace font'
@@ -61,13 +61,20 @@ conflicts=('caelestia-shell' 'caelestia-shell-git')
 
 _source_url="${_source_url:-$url/releases/download/v$pkgver/$pkgname-v$pkgver.tar.gz}"
 _source_sum="${_source_sum:-SKIP}"
+# installer/data/tui.version. The release job publishes the crates the lockfile names
+# as a tarball of this version, which is what makes the installer build offline.
+_tui_version="${_tui_version:-4}"
+_vendor_url="${_vendor_url:-$url/releases/download/v$pkgver/caelestia-vendor-v$_tui_version.tar.gz}"
+_vendor_sum="${_vendor_sum:-SKIP}"
 _build_dir="build"
 _effect_build_dir="effect-build"
 
 source=("$_source_url"
+        "$_vendor_url"
         'caelestia-autostart'
         'caelestia-shell.service')
 sha256sums=("$_source_sum"
+            "$_vendor_sum"
             '378569eb38a781d827570afdd08a8452dfcf36caabd373642080482918c151c6'
             'f219b72c98ad98418cbe9ef2648d0c2cd3664d36bd06f2870b8c8b253d6d17c8')
 
@@ -80,6 +87,23 @@ prepare() {
         echo "set CAELESTIA_ALLOW_UNVERIFIED_SOURCE=1 to build anyway." >&2
         return 1
     fi
+
+    if [[ "$_vendor_sum" == "SKIP" && "${CAELESTIA_ALLOW_UNVERIFIED_SOURCE:-0}" != "1" ]]; then
+        echo "No vendored-crate checksum: put the release's sha256 in the second entry." >&2
+        echo "It is the caelestia-vendor-v$_tui_version.tar.gz asset, beside the installer." >&2
+        echo "set CAELESTIA_ALLOW_UNVERIFIED_SOURCE=1 to build anyway." >&2
+        return 1
+    fi
+
+    # Cargo resolves every crate from the tarball's tree, so the installer builds
+    # without network, which is what a package build has.
+    cat > "$srcdir/cargo-config.toml" <<VENDOR
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "$srcdir/vendor"
+VENDOR
 
     local sub
     for sub in src/dots src/yet-another-monochrome-icon-set; do
@@ -106,6 +130,13 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr
     cmake --build "$_effect_build_dir" || exit 1
+
+    # The installer's own target directory keeps cargo from reading or writing the
+    # build user's cache, which a package build must not depend on.
+    CARGO_HOME="$srcdir/cargo-home" cargo build --release --frozen --offline \
+        --manifest-path installer/Cargo.toml \
+        --target-dir "$srcdir/cargo-target" \
+        --config "$srcdir/cargo-config.toml" || exit 1
 }
 
 package() {
@@ -126,6 +157,8 @@ DROPIN
     echo 'KERNEL=="uinput", MODE="0600", OPTIONS+="static_node=uinput", TAG+="uaccess"' > "$pkgdir/usr/lib/udev/rules.d/70-uinput.rules"
 
     install -Dm755 "$srcdir/caelestia-autostart" "$pkgdir/usr/bin/caelestia-autostart"
+    install -Dm755 "$srcdir/cargo-target/release/caelestia-install" \
+        "$pkgdir/usr/bin/caelestia-install"
     install -Dm644 "$srcdir/caelestia-shell.service" \
         "$pkgdir/usr/lib/systemd/user/caelestia-shell.service"
 
@@ -133,6 +166,7 @@ DROPIN
 
     local required=(
         etc/sddm.conf.d/zz-caelestia.conf
+        usr/bin/caelestia-install
         usr/lib/systemd/user/caelestia-shell.service
         usr/share/licenses/$pkgname/LICENSE
     )

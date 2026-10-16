@@ -89,9 +89,9 @@ did and costs a file in a directory that already exists.
 
 Two things cannot be a template. The terminal sequences go to the ptys that are running a shell,
 and only those: writing escape sequences into a pty whose foreground process is something else
-feeds them to that program as input. That guard used to live in `scripts/09-system-tweaks.sh`,
-which patched the upstream CLI's `theme.py` in place; it is now part of `caelestia-color` and the
-patch step is gone. Spicetify is told to re-read its theme, if it is installed.
+feeds them to that program as input. That guard used to live in the install step that patched the
+upstream CLI's `theme.py` in place; it is now part of `caelestia-color` and the patch step is gone.
+Spicetify is told to re-read its theme, if it is installed.
 
 ## Applying the palette
 

@@ -112,38 +112,59 @@ release_tag() {
     sed -nE 's/^[[:space:]]*VERSION=//p' "$BUNDLE_DIR/.github/version.env" 2>/dev/null | tr -d '[:space:]'
 }
 
-try_download_prebuilt_installer() {
-    local arch
+fetch_installer() {
+    local arch version tag url status=0
     arch="$(uname -m)"
     case "$arch" in
         x86_64|aarch64) ;;
-        *) return 1 ;;
+        *)
+            echo "[FATAL] There is no prebuilt installer for ${arch}." >&2
+            return 1
+            ;;
     esac
 
-    local version tag tmp_bin url status=0
     version="$(tui_version)"
     tag="$(release_tag)"
-    [[ -n "$version" && -n "$tag" ]] || return 1
-    tmp_bin="$(mktemp)"
-    url="https://github.com/ladybug-me/caelestia-kde/releases/download/${tag}/caelestia-install-${arch}-v${version}"
-    if ! fetch_asset "$url" "$tmp_bin" --max-time 30 2>/dev/null; then
-        rm -f "$tmp_bin"
+    if [[ -z "$version" || -z "$tag" ]]; then
+        echo "[FATAL] This checkout does not say which installer version it needs." >&2
         return 1
     fi
 
-    verify_download "$url" "$tmp_bin" || status=$?
+    url="https://github.com/ladybug-me/caelestia-kde/releases/download/${tag}/caelestia-install-${arch}-v${version}"
+    rm -f "$BIN"
+    if ! fetch_asset "$url" "$BIN" --max-time 60 2>/dev/null; then
+        echo "[FATAL] Could not download the installer for v${version}." >&2
+        return 1
+    fi
+
+    verify_download "$url" "$BIN" || status=$?
     if [[ "$status" -eq 1 ]]; then
-        echo "[WARN]  Checksum mismatch for the prebuilt installer - compiling locally." >&2
-    elif [[ "$status" -eq 2 ]]; then
-        echo "[WARN]  No published checksum for the prebuilt installer - compiling locally." >&2
+        echo "[FATAL] The downloaded installer failed its checksum." >&2
+        rm -f "$BIN"
+        return 1
+    fi
+    if [[ "$status" -eq 2 ]]; then
+        echo "[FATAL] The release publishes no checksum for the installer." >&2
+        rm -f "$BIN"
+        return 1
     fi
     if [[ "$status" -ne 0 ]]; then
-        rm -f "$tmp_bin"
+        echo "[FATAL] The installer could not be verified (status ${status})." >&2
+        rm -f "$BIN"
         return 1
     fi
+    chmod +x "$BIN"
+    return 0
+}
 
-    chmod +x "$tmp_bin"
-    printf '%s\n' "$tmp_bin"
+installer_matches_checkout() {
+    local version
+    version="$(tui_version)"
+    if [[ "$("$BIN" --version 2>/dev/null)" != "$version" ]]; then
+        echo "[FATAL] The downloaded installer does not report v${version}." >&2
+        rm -f "$BIN"
+        return 1
+    fi
     return 0
 }
 
@@ -174,116 +195,32 @@ start_spinner
 # the spinner and hand the terminal back.
 trap 'stty sane 2>/dev/null || true; tput cnorm 2>/dev/null || true; kill "${SPINNER_PID:-}" 2>/dev/null || true' EXIT
 
-PREBUILT_BIN=""
-if [[ -z "${CAELESTIA_FORCE_BUILD_INSTALLER:-}" ]] && command -v curl >/dev/null 2>&1; then
-    PREBUILT_BIN="$(try_download_prebuilt_installer || true)"
-fi
-
-if [[ -n "$PREBUILT_BIN" && ! -x "$PREBUILT_BIN" ]]; then
-    echo "[WARN]  The prebuilt installer download did not produce a binary; compiling locally." >&2
-    PREBUILT_BIN=""
-fi
-
-if [[ -n "$PREBUILT_BIN" ]]; then
+if ! fetch_installer || ! installer_matches_checkout; then
     stop_spinner
-    rm -f "$BIN"
-    mv "$PREBUILT_BIN" "$BIN"
-    echo "[OK]    Using prebuilt installer binary v$(tui_version)."
-else
-    stop_spinner
-    if [[ -n "${CAELESTIA_FORCE_BUILD_INSTALLER:-}" ]]; then
-        echo "[INFO]  CAELESTIA_FORCE_BUILD_INSTALLER set - compiling locally."
-    else
-        echo "[INFO]  No prebuilt binary for v$(tui_version) - compiling locally."
-    fi
-    STAMP="$BUNDLE_DIR/installer/build/.tui_stamp"
-    if [[ -x "$BIN" && -f "$STAMP" ]] && [[ "$(cat "$STAMP" 2>/dev/null)" == "$(tui_version)" ]]; then
-        stop_spinner
-        echo "[OK]    Reusing compiled installer binary (matches TUI version)."
-    else
-        MISSING_PKGS=()
-        if ! command -v g++ >/dev/null 2>&1; then MISSING_PKGS+=("g++"); fi
-        if ! command -v cmake >/dev/null 2>&1; then MISSING_PKGS+=("cmake"); fi
-        if ! command -v make >/dev/null 2>&1; then MISSING_PKGS+=("make"); fi
-        if [ ${#MISSING_PKGS[@]} -ne 0 ]; then
-            stop_spinner
-            echo "Missing build tools: ${MISSING_PKGS[*]}. Installing..."
-            if [[ "$BASE_DISTRO" == "arch" ]]; then
-                run_arch_pacman_install base-devel cmake
-            elif [[ "$BASE_DISTRO" == "fedora" ]]; then
-                caelestia_sudo dnf install -y gcc-c++ cmake make
-            elif [[ "$BASE_DISTRO" == "debian" ]]; then
-                caelestia_sudo apt-get update && caelestia_sudo apt-get install -y build-essential g++ cmake make
-            else
-                echo "Could not auto-install build tools. Please install manually: ${MISSING_PKGS[*]}"
-                exit 1
-            fi
-            start_spinner
-        fi
-
-        BUILD_DIR="$BUNDLE_DIR/installer/build"
-        BUILD_LOG="$(mktemp "${TMPDIR:-/tmp}/caelestia-build.XXXXXX.log")"
-        # Configure from a clean directory: cmake bakes absolute source paths into
-        # CMakeCache.txt and refuses to configure over a cache naming a different tree.
-        # One checkout routinely has two names here - ~/Desktop/caelestia-kwin and
-        # /mnt/c/.../caelestia-kwin are the same tree - and reusing that cache fails the
-        # build outright instead of falling back to anything.
-        rm -rf "$BUILD_DIR"
-        mkdir -p "$BUILD_DIR"
-        (
-            cd "$BUILD_DIR" || exit 1
-            cmake -DCMAKE_BUILD_TYPE=Release "$BUNDLE_DIR/installer/tui" >"$BUILD_LOG" 2>&1 || exit 1
-            make -j"$(nproc 2>/dev/null || echo 1)" >>"$BUILD_LOG" 2>&1 || exit 1
-        ) || {
-            stop_spinner
-            echo "[FATAL] Failed to build the Caelestia installer." >&2
-            echo "--- build log (last 60 lines) ---"
-            tail -n 60 "$BUILD_LOG" 2>/dev/null || cat "$BUILD_LOG" 2>/dev/null
-            echo "--- end build log ---"
-            echo "Full log saved to: $BUILD_LOG"
-            exit 1
-        }
-
-        stop_spinner
-        rm -f "$BIN"
-        cp "$BUILD_DIR/caelestia-install" "$BIN" || {
-            echo "[FATAL] Failed to copy the compiled Caelestia installer to $BIN." >&2
-            exit 1
-        }
-        echo "$(tui_version)" > "$STAMP"
-    fi
+    echo ""
+    echo "  The installer is a published download. Check your network connection,"
+    echo "  and that the release named by .github/version.env is still available."
+    echo ""
+    echo "Press Enter to close this window..."
+    read -r
+    exit 1
 fi
+stop_spinner
+echo "[OK]    Using the installer binary v$(tui_version)."
 
 cleanup_install_state() {
     stty sane 2>/dev/null || true
     kill "${SPINNER_PID:-}" 2>/dev/null || true
-    rm -f "${BUILD_LOG:-}" "${ERR_LOG:-}" 2>/dev/null || true
+    rm -f "${ERR_LOG:-}" 2>/dev/null || true
     tput cnorm 2>/dev/null || true
     printf '\033[0m\033[?1049l\033[?25h' 2>/dev/null || true
-
-    local inhibit_dir="${XDG_RUNTIME_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}}/caelestia"
-    local inhibit_pid="$inhibit_dir/inhibit.pid"
-    local kde_cookie="$inhibit_dir/kde_inhibit.cookie"
-    if [[ -f "$inhibit_pid" ]]; then
-        local pid
-        pid="$(cat "$inhibit_pid")"
-        if [[ -r "/proc/$pid/cmdline" ]] &&
-            tr '\0' ' ' <"/proc/$pid/cmdline" | grep -q systemd-inhibit; then
-            kill -9 "$pid" 2>/dev/null || true
-        fi
-    fi
-    if [[ -f "$kde_cookie" ]]; then
-        qdbus6 org.freedesktop.ScreenSaver /ScreenSaver org.freedesktop.ScreenSaver.UnInhibit "$(cat "$kde_cookie")" 2>/dev/null || true
-    fi
-    rm -f "$inhibit_pid" "$kde_cookie"
 }
 trap cleanup_install_state EXIT
 
 if [[ ! -x "$BIN" ]]; then
     echo ""
     echo "============================================================"
-    echo "  FATAL: Installer binary missing: $BIN"
-    echo "  C++ compilation likely failed — check g++, cmake, make."
+    echo "  FATAL: The installer binary is missing: $BIN"
     echo "============================================================"
     echo ""
     echo "Press Enter to close this window..."
@@ -291,35 +228,27 @@ if [[ ! -x "$BIN" ]]; then
     exit 1
 fi
 
-_installer_start=$(date +%s)
+export CAELESTIA_INSTALL_LOG="${XDG_CACHE_HOME:-$HOME/.cache}/caelestia/install.log"
+
 # Under set -e a plain invocation would kill this script on the installer's first
 # non-zero exit, making the diagnostic block below unreachable exactly when it matters.
 ERR_LOG="$(mktemp "${TMPDIR:-/tmp}/caelestia-installer-err.XXXXXX.log")"
 _exit_code=0
 "$BIN" "$@" 2>"$ERR_LOG" || _exit_code=$?
-_installer_elapsed=$(($(date +%s) - _installer_start))
 
-_reached_done=0
-if grep -q '\[installer\] done (success)' "$ERR_LOG" 2>/dev/null; then
-    _reached_done=1
-fi
-
-_show_diagnostic=0
 _diag_title=""
+case $_exit_code in
+    0) ;;
+    1) _diag_title="INSTALLER FAILED: a step failed" ;;
+    2) _diag_title="INSTALLER CALLED INCORRECTLY (bad arguments)" ;;
+    3) echo "Stopped at your request. Nothing was changed by it." ;;
+    4) _diag_title="THE INSTALLER COULD NOT RUN HERE" ;;
+    5) _diag_title="INSTALLER FAILED: a bug in the installer" ;;
+    130) echo "The install was interrupted." ;;
+    *) _diag_title="INSTALLER FAILED (exit code: $_exit_code)" ;;
+esac
 
-if [[ $_exit_code -ne 0 ]]; then
-    _show_diagnostic=1
-    _diag_title="INSTALLER FAILED (exit code: $_exit_code)"
-elif [[ $_reached_done -eq 0 ]]; then
-    _show_diagnostic=1
-    if [[ $_installer_elapsed -lt 3 ]]; then
-        _diag_title="INSTALLER EXITED PREMATURELY (ran ${_installer_elapsed}s, exit 0)"
-    else
-        _diag_title="INSTALLER EXITED UNEXPECTEDLY (no completion marker)"
-    fi
-fi
-
-if [[ $_show_diagnostic -eq 1 ]]; then
+if [[ -n "$_diag_title" ]]; then
     stty sane 2>/dev/null || true
     tput cnorm 2>/dev/null || true
     printf '\033[0m\033[?1049l\033[?25h' 2>/dev/null || true
@@ -340,17 +269,19 @@ if [[ $_show_diagnostic -eq 1 ]]; then
         echo ""
     fi
 
-    if [[ $_exit_code -eq 139 ]]; then
-        echo "Exit code 139 = SIGSEGV (segmentation fault / memory crash)."
-    elif [[ $_exit_code -eq 127 ]]; then
-        echo "Exit code 127 = command not found (missing shared library or binary)."
-    elif [[ $_exit_code -eq 134 ]] || [[ $_exit_code -eq 135 ]]; then
-        echo "Exit code $_exit_code = SIGABRT (aborted, possible assertion failure)."
-    elif [[ $_exit_code -eq 0 ]] && [[ $_reached_done -eq 0 ]]; then
-        echo "Binary exited cleanly (code 0) but never reached the summary screen."
-        echo "This usually means it returned early before phase 6."
+    if [[ -s "$CAELESTIA_INSTALL_LOG" ]]; then
+        echo "--- last 20 lines of the install log ---"
+        tail -n 20 "$CAELESTIA_INSTALL_LOG"
+        echo "--- end install log ---"
+        echo ""
+        echo "Full log: $CAELESTIA_INSTALL_LOG"
+        echo ""
     fi
-    echo ""
+
+    if [[ $_exit_code -ge 128 ]]; then
+        echo "Exit code $_exit_code means the installer was killed by signal $((_exit_code - 128))."
+        echo ""
+    fi
 
     echo "Press Enter to close this window..."
     read -r

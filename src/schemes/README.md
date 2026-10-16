@@ -45,5 +45,5 @@ into the render data matugen needs, so GTK, Qt, the terminals and the rest are t
 named palette the same way they are from a generated one.
 
 `src/bin/caelestia-color` looks for this directory under `$CAELESTIA_DATA_DIR`,
-`$CAELESTIA_LIB_DIR` and `/usr/share/caelestia`. `scripts/08-build-shell.sh` installs it into the
+`$CAELESTIA_LIB_DIR` and `/usr/share/caelestia`. The `08-build-shell` step installs it into the
 first of those.

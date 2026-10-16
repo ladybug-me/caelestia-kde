@@ -26,22 +26,24 @@ This document catalogs known failure modes, error conditions, and edge cases dis
 
 ## 1. Build & Compilation Issues
 
-### 1.1 C++ Installer Compilation Fails
+### 1.1 The Installer Will Not Start
 
-The installer compiles the `caelestia-install` TUI binary during `setup.sh`. The CMake project requires **C++20** (`CMAKE_CXX_STANDARD 20`).
+`setup.sh` downloads the published `caelestia-install` binary and runs it. Nothing is
+compiled on your machine, and the binary is static, so it does not care which glibc you
+have.
 
 | Symptom | Likely Cause | Fix |
 |---|---|---|
-| `g++: command not found` | Build tools not installed | Arch: `sudo pacman -S base-devel` — Fedora: `sudo dnf install gcc-c++` |
-| `cmake: command not found` | CMake missing | Auto-installer handles this if `BASE_DISTRO` is detected; otherwise install manually |
-| `[FATAL] Failed to build the Caelestia installer` | General CMake/make error | Read build log: `cat /tmp/caelestia_build.log` |
-| Compiler error about modern C++ features | GCC older than 10 | Ensure GCC 10+ is installed: `g++ --version` |
-| Exit 139 (SIGSEGV) at runtime | C++ bug in the TUI | Check stderr log at `/tmp/caelestia_installer_err.log` |
-| Exit 127 at runtime | Missing shared library | Run `ldd` on the binary to find missing `.so` files |
+| `[FATAL] Could not download the installer for vN` | No network, or the release is gone | Check the connection; the release named by `.github/version.env` has to be published |
+| `[FATAL] The downloaded installer failed its checksum` | A truncated or tampered download | Re-run `setup.sh`; if it repeats, the published asset is wrong |
+| `[FATAL] The release publishes no checksum for the installer` | A release from before checksums existed | Update the checkout, or install from an older release |
+| `[FATAL] The downloaded installer does not report vN` | The checkout and the published binary disagree | Update the checkout |
+| `[FATAL] There is no prebuilt installer for <arch>` | An architecture we do not publish | Build it: `cargo build --release --manifest-path installer/Cargo.toml` |
+| The installer refuses to start | It was run without a terminal, or from outside a checkout | Run `setup.sh`, or pass the bundle directory as its argument |
 
 ### 1.2 Shell / Plugin Compilation Fails
 
-The shell build (`08-build-shell.sh`) requires **Qt 6.9+** and several system libraries. The CMake project in `shell/CMakeLists.txt` uses `qt_standard_project_setup(REQUIRES 6.9)`.
+The shell build (the `08-build-shell` step) requires **Qt 6.9+** and several system libraries. The CMake project in `shell/CMakeLists.txt` uses `qt_standard_project_setup(REQUIRES 6.9)`.
 
 #### Qt / QML Dependencies
 
@@ -81,15 +83,15 @@ This means the CMake install step didn't copy required `qmldir` or `.so` files p
 **Causes & fixes:**
 - **Install prefix mismatch:** The build uses `-DCMAKE_INSTALL_PREFIX=$HOME/.local`. If Qt6 looks for QML modules elsewhere, the module won't load.
 - **Stale build artifacts:** Run `rm -rf shell/build shell/plugin/build` before re-running
-- **Partial installation:** If CMake install was interrupted, files may be missing. Re-run `08-build-shell.sh`
+- **Partial installation:** If CMake install was interrupted, files may be missing. Re-run `caelestia-install step 08-build-shell`
 
 ### 1.4 ccache Not Speeding Up Rebuilds
 
-The project enables ccache in both `installer/CMakeLists.txt` and `shell/CMakeLists.txt`. If rebuilds are still slow:
+The project enables ccache in `shell/CMakeLists.txt`. If rebuilds are still slow:
 
 - Check ccache stats: `ccache -s`
 - The cache directory (`~/.cache/ccache`) may be too small — increase it: `ccache -M 5G`
-- Debug builds (`-DCMAKE_BUILD_TYPE=Debug`) are much slower; the installer uses `Release`
+- Debug builds (`-DCMAKE_BUILD_TYPE=Debug`) are much slower
 
 ---
 
@@ -99,8 +101,8 @@ The project enables ccache in both `installer/CMakeLists.txt` and `shell/CMakeLi
 
 | Issue | Cause |
 |---|---|
-| `yay` fails to install | Network issues, AUR down, or PKGBUILD changes. The script (`installer/distro/arch/packages.sh`) retries individually and falls back to `makepkg -si`. |
-| `pacman` errors during install | The script uses `-Sy --noconfirm` (refresh DB) then `-S --needed --noconfirm`. If the system update step (`00a-system-update.sh`) was skipped, partial upgrades can cause conflicts. |
+| `yay` fails to install | Network issues, AUR down, or PKGBUILD changes. The `02-all-packages` step retries individually and falls back to `makepkg -si`. |
+| `pacman` errors during install | The script uses `-Sy --noconfirm` (refresh DB) then `-S --needed --noconfirm`. If the `00a-system-update` step was skipped, partial upgrades can cause conflicts. |
 
 **AUR packages used by Caelestia:**
 
@@ -180,7 +182,7 @@ CAELESTIA_BIN_DIR=$HOME/.local/bin
 CAELESTIA_SHELL_CONFIG=$HOME/.config/quickshell/caelestia/shell.qml
 ```
 
-**If they are missing:** re-run `scripts/08-build-shell.sh`, then log out and back
+**If they are missing:** re-run `caelestia-install step 08-build-shell`, then log out and back
 in. `systemctl --user show-environment` lists what the systemd user manager has.
 
 ### 3.3 Window Thumbnails / Screencast Not Working
@@ -378,7 +380,7 @@ ls -la ~/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen/LockSc
 | Symptom | Cause | Solution |
 |---|---|---|
 | Stock Breeze lock screen appears | `ShellPackage` reset after KDE update or theme switch. | Caelestia autostart (`caelestia-autostart.sh`) automatically self-heals this at next login if `caelestia.desktop` is present. To restore immediately in session: `kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelestia.desktop" && kwriteconfig6 --file kscreenlockerrc --group "Greeter" --key "Theme" --delete`. |
-| Lock screen fails or crashes | Greeter files missing or corrupted in `~/.local/share/plasma/shells/`. | Re-deploy via `BUNDLE_DIR=. ./scripts/08-build-shell.sh` or `cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/`. |
+| Lock screen fails or crashes | Greeter files missing or corrupted in `~/.local/share/plasma/shells/`. | Re-deploy via `caelestia-install step 08-build-shell --bundle .` or `cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/`. |
 | Lock screen shows wallpaper error | Legacy `PlasmaApplicationWallpaper` left in `kscreenlockerrc`. | Reset WallpaperPlugin: `kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin "org.kde.image"`. |
 | Profile picture missing | `~/.face` does not exist and no system user avatar set. | Place your avatar image at `~/.face` or configure an avatar in KDE System Settings → Users. |
 
@@ -403,7 +405,7 @@ qdbus6 org.kde.KWin /KWin reconfigure
 
 ### 5.2 KDE OSD Still Showing
 
-The tweak script disables OSD in `plasmarc`, `kdeglobals`, `plasmanotifyrc`, `powerdevilrc`, and `kmixrc`. If OSD still appears:
+The `09-system-tweaks` step disables OSD in `plasmarc`, `kdeglobals`, `plasmanotifyrc`, `powerdevilrc`, and `kmixrc`. If OSD still appears:
 
 ```bash
 systemctl --user restart plasma-plasmashell
@@ -456,7 +458,7 @@ This is a **hard failure** - the installer cannot proceed past config deployment
 
 ```bash
 git -C ~/caelestia-kde submodule update --init --recursive src/dots
-bash ~/caelestia-kde/scripts/02a-submodules.sh
+caelestia-install step 02a-submodules --bundle ~/caelestia-kde
 ```
 
 The shared folder mounted at `/mnt/hgfs/` is read-only, so an install run from there cannot fetch anything: clone the repository to a writable directory first.
@@ -691,7 +693,7 @@ install step reads to open the same port on the firewall. It reaches the setup h
 as `--port`. A listener on a random port could only be opened while the shell runs,
 which needs administrator rights on every start.
 
-`scripts/06-services.sh` does both during a source install. A package install leaves
+The `06-services` step does both during a source install. A package install leaves
 them to the shell, because a package must not enable a system daemon or open a port
 behind the user's back. There, the first time Quick Share is switched on the shell
 checks the system through
@@ -756,20 +758,37 @@ If you chose not to log out:
 2. Log back in
 3. If the shell still doesn't appear, run: `caelestia shell -d`
 
-### 8.2 Installer Exited Prematurely (Marker Check)
+### 8.2 Installer Exit Codes
 
-The outer `setup.sh` wrapper checks if `[installer] done (success)` appears in stderr:
+Steps run inside the installer binary where one is available, and fall back to the step
+scripts under `scripts/` where it is not. If the binary is missing from a checkout or an
+update, one is downloaded from the release once, checked against the published SHA-256,
+and cached in `${XDG_CACHE_HOME:-~/.cache}/caelestia/caelestia-install`. Set
+`CAELESTIA_NO_INSTALLER_FETCH=1` to keep a machine offline; the step scripts then run as
+they always have.
 
-| Condition | Warning |
+`setup.sh` reads the installer's exit code. It does not scrape the installer's output,
+so the two cannot disagree about whether the install worked.
+
+| Code | Meaning |
 |---|---|
-| Exit 0 but elapsed < 3 seconds without marker | **"INSTALLER EXITED PREMATURELY"** |
-| Exit 0 but elapsed > 3 seconds without marker | **"INSTALLER EXITED UNEXPECTEDLY"** |
+| 0 | Finished |
+| 1 | A step failed - the failing step is named on screen |
+| 2 | Called with arguments it does not understand |
+| 3 | Cancelled. Nothing failed |
+| 4 | Cannot run here: no terminal, or the step scripts are missing |
+| 5 | A bug in the installer - report it with the log |
+| 130 | Interrupted |
+| 128+n | Killed by signal n |
+
+The install log it writes is named by `CAELESTIA_INSTALL_LOG`, which `setup.sh` points
+at `$XDG_CACHE_HOME/caelestia/install.log`; a failure prints its last lines.
 
 ### 8.3 CONFIRM_ARG Behavior
 
 The configuration menu sets `CONFIRM_ARG` as `true`/`false`. The installer converts it per-script context:
 - Some scripts use `-n "$CONFIRM_ARG"` (non-empty = auto-confirm)
-- The installer writes an `[installer] done (success)` marker line to its stderr log, and `setup.sh` greps that log for it to decide whether the install succeeded (see `scripts/setup.sh`).
+The installer passes each of the Configure answers in the environment each step is spawned with, whether the step is a Rust step or one of the scripts under `scripts/`.
 
 ### 8.4 Stale Lock Files
 
@@ -778,7 +797,7 @@ If the script is killed with **SIGKILL** (not SIGTERM), lock files may persist:
 | Lock File | Script |
 |---|---|
 | `${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock` | `setup.sh` |
-| `${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock` | `update.sh` |
+| `${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock` | `update.sh`, then `caelestia-install --update` |
 
 **Always use Ctrl+C (SIGINT)** which is handled gracefully. Remove stale locks:
 ```bash
@@ -796,7 +815,7 @@ rm -f "${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock"
 
 ### 8.6 Installer Stops After a System Upgrade
 
-`00a-system-update.sh` upgrades the system first, and later steps compile and load the Caelestia
+The `00a-system-update` step upgrades the system first, and later steps compile and load the Caelestia
 KWin plugin into the session that is **already running**. If the upgrade replaced `kwin`,
 `plasma-workspace`, `libplasma`, `qt6-base` or `qt6-declarative`, the live session still holds the
 old libraries in memory while the on-disk headers are new, so the installer stops and names the
@@ -824,7 +843,7 @@ all depends on what the artifact is for:
 
 | Artifact | No published checksum | On mismatch |
 |---|---|---|
-| Prebuilt shell tarball (`08-build-shell.sh`, extracted over `$HOME`) | Warns and extracts | Builds the shell locally instead |
+| Prebuilt shell tarball (the `08-build-shell` step, extracted over `$HOME`) | Warns and extracts | Builds the shell locally instead |
 | Prebuilt installer binary (executed straight away) | Compiles the installer locally instead | Same |
 | Prebuilt CAVA SDK (unpacked into `/usr` as root) | Warns and unpacks | Not unpacked; `libcava` comes from the repositories instead |
 
@@ -990,9 +1009,6 @@ kreadconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin
 
 # View failed packages log
 cat $XDG_CACHE_HOME/caelestia-kde/failed_packages.txt 2>/dev/null
-
-# View installer build log
-cat /tmp/caelestia_build.log 2>/dev/null | tail -60
 
 # View installer stderr log
 cat /tmp/caelestia_installer_err.log 2>/dev/null

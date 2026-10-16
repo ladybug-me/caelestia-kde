@@ -85,8 +85,12 @@ jobs:
             echo "QML files outside shell/: $NON_SHELL_QML" >> $GITHUB_STEP_SUMMARY
           fi
 
-          if grep -qE '^installer/tui/.*\.(cpp|hpp|h)$' /tmp/changed_files.txt; then
-            echo "Installer C++ changes - compilation will be verified by validate workflow." >> $GITHUB_STEP_SUMMARY
+          if grep -qE '^installer/(src|tests)/.*\.rs$' /tmp/changed_files.txt; then
+            echo "Installer Rust changes - run: cargo test --manifest-path installer/Cargo.toml" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if grep -q 'installer/Cargo.toml' /tmp/changed_files.txt; then
+            echo "Installer dependency changes - the committed Cargo.lock is the build's contract." >> $GITHUB_STEP_SUMMARY
           fi
 
           if grep -q 'CMakeLists.txt' /tmp/changed_files.txt; then

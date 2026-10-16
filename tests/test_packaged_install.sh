@@ -7,7 +7,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CLI="$REPO_ROOT/src/bin/caelestia"
 
-EXPECTED_STEPS=(03-deploy-configs.sh 03a-wallpapers.sh 04-deploy-kde.sh 04a-window-rules.sh 05-sddm-theme.sh 06-services.sh 08-build-shell.sh 09-system-tweaks.sh 10-autostart.sh)
+EXPECTED_STEPS=(03-deploy-configs 03a-wallpapers 04-deploy-kde 04a-window-rules 05-sddm-theme 06-services 08-build-shell 09-system-tweaks 10-autostart)
 
 DIR=""
 CALLS=""
@@ -18,15 +18,22 @@ stub_steps() {
     DIR="$(new_tmpdir)"
     DATA="$DIR/data"
     CALLS="$DIR/calls.log"
-    mkdir -p "$DATA/scripts"
+    mkdir -p "$DATA/scripts/lib"
     : > "$CALLS"
+    cp "$REPO_ROOT/scripts/lib/installer-bin.sh" "$DATA/scripts/lib/"
+
+    cat > "$DATA/caelestia-install" <<EOF
+#!/bin/bash
+printf '%s|%s|%s\n' "\$2" "\$CAELESTIA_DATA_DIR" "\$CAELESTIA_INSTALL_KIND" >> "$CALLS"
+if [ '$failing' = "\$2" ]; then
+    exit 7
+fi
+exit 0
+EOF
+    chmod +x "$DATA/caelestia-install"
 
     for step in "${EXPECTED_STEPS[@]}"; do
-        {
-            printf 'printf "%%s|%%s|%%s\\n" "%s" "$BUNDLE_DIR" "$CAELESTIA_INSTALL_KIND" >> "%s"\n' "$step" "$CALLS"
-            [[ "$step" == "$failing" ]] && printf 'exit 3\n'
-            printf 'exit 0\n'
-        } > "$DATA/scripts/$step"
+        printf '#!/bin/bash\nexit 0\n' > "$DATA/scripts/$step.sh"
     done
 }
 
@@ -85,19 +92,19 @@ test_the_machine_steps_stay_out_of_a_packaged_install() {
     local calls
     calls="$(cat "$CALLS")"
     local absent
-    for absent in 00a-system-update.sh 01-ensure-prereqs.sh 02-all-packages.sh 02a-submodules.sh 07-kde-apps.sh 11-optional-apps.sh; do
-        assert_not_contains "$calls" "$absent" "$absent belongs to the package, not to the user's half"
+    for absent in 00a-system-update 01-ensure-prereqs 02-all-packages 02a-submodules 07-kde-apps 11-optional-apps; do
+        assert_not_contains "$calls" "$absent|" "$absent belongs to the package, not to the user's half"
     done
 }
 
 test_the_greeter_step_selects_without_installing_the_theme() {
     local script
-    script="$(cat "$REPO_ROOT/scripts/05-sddm-theme.sh")"
+    script="$(cat "$REPO_ROOT/installer/src/steps/login_screen.rs")"
 
-    assert_contains "$script" 'skip "The theme files belong to the package."' "the theme copy should be skipped"
-    assert_contains "$script" 'skip "The theme selection belongs to the package."' "the selection under /etc should be skipped"
-    assert_contains "$script" "skip \"The display manager's dependencies belong to the package.\"" "the distro dependencies should be skipped"
-    assert_contains "$script" 'register_greeter_sync "SDDM theme installed."' "while the posthook is still registered for both kinds"
+    assert_contains "$script" 'The theme files belong to the package.' "the theme copy should be skipped"
+    assert_contains "$script" 'The theme selection belongs to the package.' "the selection under /etc should be skipped"
+    assert_contains "$script" "The display manager's dependencies belong to the package." "the distro dependencies should be skipped"
+    assert_contains "$script" '"SDDM theme installed."' "while the posthook is still registered for both kinds"
 
     local cmake pkgbuild
     cmake="$(cat "$REPO_ROOT/shell/CMakeLists.txt")"
@@ -112,7 +119,7 @@ test_shared_runtime_files_have_one_cmake_owner() {
     local cmake pkgbuild build_script workflow
     cmake="$(cat "$REPO_ROOT/shell/CMakeLists.txt")"
     pkgbuild="$(cat "$REPO_ROOT/packaging/aur/caelestia-kde/PKGBUILD")"
-    build_script="$(cat "$REPO_ROOT/scripts/08-build-shell.sh")"
+    build_script="$(cat "$REPO_ROOT/installer/src/steps/build_shell.rs")"
     workflow="$(cat "$REPO_ROOT/.github/workflows/version-release.yml")"
 
     assert_contains "$cmake" 'set(INSTALL_BINDIR "usr/bin"' \
@@ -123,8 +130,10 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "CMake should own the matugen data"
     assert_contains "$cmake" '"${CAELESTIA_ROOT_DIR}/src/schemes"' \
         "CMake should own the shipped schemes"
-    assert_contains "$cmake" '"${CAELESTIA_ROOT_DIR}/scripts/[0-9]*.sh"' \
-        "CMake should own the installer step scripts"
+    assert_contains "$cmake" 'scripts/lib/installer-bin.sh' \
+        "CMake should own the resolver a packaged install reaches its steps through"
+    assert_contains "$cmake" '"${CAELESTIA_ROOT_DIR}/scripts/lib"' \
+        "CMake should install the resolver library"
     assert_contains "$cmake" '"${CAELESTIA_ROOT_DIR}/src/dots"' \
         "CMake should own the deployed dotfiles"
     assert_contains "$cmake" '"${CAELESTIA_ROOT_DIR}/shell/assets/wallpaper.webp"' \
@@ -137,8 +146,8 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "CMake should own package-only repository assets"
     assert_contains "$cmake" 'if(NOT CAELESTIA_BIN_FILES)' \
         "CMake should refuse a configure where the CLI glob matched nothing"
-    assert_contains "$cmake" 'if(NOT CAELESTIA_STEP_SCRIPTS)' \
-        "CMake should refuse a configure where the step-script glob matched nothing"
+    assert_contains "$cmake" 'if(NOT EXISTS "${CAELESTIA_ROOT_DIR}/scripts/lib/installer-bin.sh")' \
+        "CMake should refuse a configure where the resolver is missing"
     assert_contains "$pkgbuild" '-DCAELESTIA_PACKAGE=ON' \
         "the package should enable package-only CMake assets"
     assert_contains "$pkgbuild" 'install_manifest.txt' \
@@ -149,7 +158,7 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "the package must not ship a second, hand-maintained manifest"
     assert_not_contains "$pkgbuild" 'usr/share/caelestia/src/dots' \
         "the package must not re-declare CMake-owned data paths"
-    assert_not_contains "$pkgbuild" 'usr/share/caelestia/scripts/03-deploy-configs.sh' \
+    assert_not_contains "$pkgbuild" 'usr/share/caelestia/scripts/08-build-shell.sh' \
         "the package must not re-declare CMake-owned installer scripts"
     assert_not_contains "$pkgbuild" 'usr/share/sddm/themes/caelestia' \
         "the package must not re-declare the CMake-owned SDDM theme"
@@ -167,18 +176,18 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "the package must not copy the wallpaper outside CMake"
     assert_not_contains "$pkgbuild" 'cp -r assets/org.quickshell.desktop' \
         "the package must not copy desktop integration outside CMake"
-    assert_not_contains "$build_script" 'install -m 755 "$BUNDLE_DIR/src/bin/' \
+    assert_not_contains "$build_script" 'src/bin' \
         "the source installer must not copy CLI wrappers outside CMake"
-    assert_not_contains "$build_script" 'cp -r "$BUNDLE_DIR/src/matugen"' \
+    assert_not_contains "$build_script" 'matugen' \
         "the source installer must not copy color data outside CMake"
-    assert_contains "$build_script" 'tar -tzf "$tmp_archive" bin/' \
-        "prebuilt installs should require the CMake-owned CLI tree"
-    assert_contains "$build_script" 'tar -tzf "$tmp_archive" lib/caelestia/' \
-        "prebuilt installs should require the source data tree"
-    assert_contains "$build_script" 'tar -C "$HOME/.local" -xzf "$tmp_archive" bin' \
-        "prebuilt installs should extract the CMake-owned CLI tree"
-    assert_not_contains "$build_script" 'bin share' \
+    assert_not_contains "$build_script" '"share"' \
         "prebuilt installs should not introduce a second data layout"
+    assert_contains "$build_script" 'archive_has(&archive, "bin/")' \
+        "prebuilt installs should require the CMake-owned CLI tree"
+    assert_contains "$build_script" 'archive_has(&archive, "lib/caelestia/")' \
+        "prebuilt installs should require the source data tree"
+    assert_contains "$build_script" 'extract(&archive, &local, "bin")' \
+        "prebuilt installs should extract the CMake-owned CLI tree"
     assert_contains "$build_script" 'falling back to a local build' \
         "legacy prebuilt artifacts should not claim a complete install"
     assert_contains "$workflow" 'cp -a stage/usr/bin/. dist/root/bin/' \
@@ -186,13 +195,13 @@ test_shared_runtime_files_have_one_cmake_owner() {
 }
 
 test_a_failing_step_stops_the_run() {
-    stub_steps "04-deploy-kde.sh"
+    stub_steps "04-deploy-kde"
     CAELESTIA_DATA_DIR="$DATA" CAELESTIA_INSTALL_KIND=package "$CLI" install > "$DIR/out.txt" 2>&1
     local status=$?
 
     assert_status 1 "$status" "a failing step should fail the run"
-    assert_contains "$(cat "$DIR/out.txt")" "04-deploy-kde.sh failed" "the failure should name the step"
-    assert_not_contains "$(cat "$CALLS")" "06-services.sh" "nothing after the failing step should run"
+    assert_contains "$(cat "$DIR/out.txt")" "04-deploy-kde failed" "the failure should name the step"
+    assert_not_contains "$(cat "$CALLS")" "06-services|" "nothing after the failing step should run"
 }
 
 test_every_packaged_step_failure_stops_before_the_next_step() {
@@ -206,10 +215,10 @@ test_every_packaged_step_failure_stops_before_the_next_step() {
         assert_status 1 "$status" "$failing should fail the packaged run"
 
         calls="$(cat "$CALLS")"
-        assert_contains "$calls" "$failing" "$failing should be reached before failure"
+        assert_contains "$calls" "$failing|" "$failing should be reached before failure"
         if (( index + 1 < ${#EXPECTED_STEPS[@]} )); then
             next="${EXPECTED_STEPS[$((index + 1))]}"
-            assert_not_contains "$calls" "$next" "a failure in $failing must stop before $next"
+            assert_not_contains "$calls" "$next|" "a failure in $failing must stop before $next"
         fi
     done
 }

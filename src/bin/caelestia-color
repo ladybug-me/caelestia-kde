@@ -809,7 +809,7 @@ require_data_dir() {
 
   Looked for matugen/scheme.json.tmpl and schemes/ beside the command, in
   \${CAELESTIA_LIB_DIR:-~/.local/lib/caelestia} and in /usr/share/caelestia.
-  From a checkout, either run 'scripts/08-build-shell.sh' or set
+  From a checkout, either run 'make build-shell' or set
   CAELESTIA_DATA_DIR to the checkout's src directory.
 EOF
         exit 1

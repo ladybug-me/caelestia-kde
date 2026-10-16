@@ -7,22 +7,20 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 UPDATER="$REPO_ROOT/src/bin/caelestia-update"
-BUILD_SHELL="$REPO_ROOT/scripts/08-build-shell.sh"
+BUILD_SHELL="$REPO_ROOT/installer/src/steps/build_shell.rs"
 
-FALLBACK_SOURCE="$(extract_function "$BUILD_SHELL" sparsify_checkout_paths)"
+FALLBACK_SOURCE="$(awk '/^const SPARSIFY/{found=1} found{print} found&&/\];/{exit}' "$BUILD_SHELL")"
 PREVIOUS=""
 UPSTREAM_RULES=()
 CURRENT_RULES=()
 FALLBACK_RULES=()
-FIXTURE_REMOTE=""
 
 rules_written_by() {
     sed -n 's/.*echo "\([^"]*\)" >\+ \.git\/info\/sparse-checkout.*/\1/p' "$1"
 }
 
 fallback_rules() {
-    sed -n 's/^[[:space:]]*sparsify_checkout_paths \(.*\)$/\1/p' "$BUILD_SHELL" | tr ' ' '\n' |
-        sed '/^$/d'
+    printf '%s\n' "$FALLBACK_SOURCE" | grep -o '"[^"]*"' | tr -d '"'
 }
 
 # The release an install updating to this tree is coming from. The version being
@@ -77,7 +75,7 @@ resolve_previous() {
 }
 
 if [[ -z "$FALLBACK_SOURCE" ]]; then
-    fail "could not find sparsify_checkout_paths in scripts/08-build-shell.sh"
+    fail "could not find the SPARSIFY rules in installer/src/steps/build_shell.rs"
     run_tests
     exit 1
 fi
@@ -85,47 +83,10 @@ fi
 if ! resolve_previous; then
     PREVIOUS=""
 elif [[ "${#CURRENT_RULES[@]}" -eq 0 || "${#FALLBACK_RULES[@]}" -eq 0 ]]; then
-    fail "could not read the sparse rules from src/bin/caelestia-update or the repair from scripts/08-build-shell.sh"
+    fail "could not read the sparse rules from src/bin/caelestia-update or the repair from installer/src/steps/build_shell.rs"
     run_tests
     exit 1
 fi
-
-# The tree the release ships, as the remote an update fetches from.
-ensure_fixture() {
-    [[ -n "$FIXTURE_REMOTE" ]] && return 0
-
-    local remote
-    remote="$(new_tmpdir)/upstream"
-    mkdir -p "$remote" || return 1
-    git -C "$REPO_ROOT" archive HEAD | tar -x -C "$remote" || return 1
-    git -C "$remote" init -q || return 1
-    git -C "$remote" add -A || return 1
-    git -C "$remote" -c user.name=fixture -c user.email=fixture@example.invalid \
-        commit -qm fixture || return 1
-    git -C "$remote" branch -M main || return 1
-
-    FIXTURE_REMOTE="$remote"
-}
-
-# A checkout holding exactly what the rules passed in select, which is what the updater of
-# the release that wrote them leaves behind.
-seed_checkout() {
-    local repo="$1"
-    shift
-
-    git init -q "$repo" || return 1
-    git -C "$repo" remote add origin "$FIXTURE_REMOTE" || return 1
-    git -C "$repo" config core.sparseCheckout true || return 1
-    printf '%s\n' "$@" > "$repo/.git/info/sparse-checkout" || return 1
-    git -C "$repo" fetch -q --depth 1 origin main || return 1
-    git -C "$repo" reset --hard -q FETCH_HEAD || return 1
-}
-
-run_repair() {
-    BUNDLE_DIR="$1" bash -c "set -euo pipefail
-${FALLBACK_SOURCE}
-sparsify_checkout_paths \"\$@\"" -- "${FALLBACK_RULES[@]}" 2>&1
-}
 
 test_a_rule_this_release_adds_is_one_the_repair_covers() {
     [[ -n "$PREVIOUS" ]] || return 0
@@ -136,69 +97,28 @@ test_a_rule_this_release_adds_is_one_the_repair_covers() {
     done < <(new_rules)
 
     [[ -z "$missing" ]] || fail \
-        "this release sparsifies$missing and $PREVIOUS's updater never writes them, so an install still on $PREVIOUS starts the update without them: name them in sparsify_checkout_paths in scripts/08-build-shell.sh"
+        "this release sparsifies$missing and $PREVIOUS's updater never writes them, so an install still on $PREVIOUS starts the update without them: name them in SPARSIFY in installer/src/steps/build_shell.rs"
 }
 
-test_the_repair_fills_what_a_checkout_on_the_previous_release_lacks() {
-    [[ -n "$PREVIOUS" ]] || return 0
-
-    local repo rule path absent=""
-    ensure_fixture || {
-        fail "could not build the fixture repository"
-        return 0
-    }
-    repo="$(new_tmpdir)/repo"
-    seed_checkout "$repo" "${UPSTREAM_RULES[@]}" || {
-        fail "could not create the fixture checkout"
-        return 0
-    }
-
-    while IFS= read -r rule; do
-        assert_file_missing "$repo/${rule%/}"
-    done < <(new_rules)
-
-    run_repair "$repo" >/dev/null
-
-    while IFS= read -r rule; do
-        path="$repo/${rule%/}"
-        if [[ -d "$path" ]]; then
-            [[ -n "$(ls -A -- "$path")" ]] || fail "the repair left $rule with nothing in it"
-        else
-            assert_file_exists "$path"
-        fi
-    done < <(new_rules)
+# A checkout on the previous release lacks every rule this one adds, and SPARSIFY is what the
+# repair reads, so each rule has to name a path the release actually ships. What the repair
+# then does with them is covered by the crate test
+# the_repair_fills_what_a_sparse_checkout_left_out, against a checkout it seeds itself.
+test_the_paths_the_repair_fetches_are_the_ones_the_tree_ships() {
+    local rule path absent=""
+    for rule in "${FALLBACK_RULES[@]}"; do
+        path="$REPO_ROOT/${rule%/}"
+        [[ -e "$path" ]] || absent="$absent ${rule%/}"
+    done
+    [[ -z "$absent" ]] || fail "SPARSIFY names paths this tree does not ship:$absent"
 
     for rule in "${CURRENT_RULES[@]}"; do
-        [[ -e "$repo/${rule%/}" ]] || absent="$absent $rule"
+        [[ -e "$REPO_ROOT/${rule%/}" ]] || absent="$absent ${rule%/}"
     done
-    [[ -z "$absent" ]] || fail "a checkout that started on $PREVIOUS still lacks$absent"
+    [[ -z "$absent" ]] || fail "the updater sparsifies paths this tree does not ship:$absent"
 
-    assert_file_exists "$repo/assets/org.quickshell.desktop"
-}
-
-test_the_repair_keeps_what_the_previous_release_already_had() {
-    [[ -n "$PREVIOUS" ]] || return 0
-
-    local repo rule missing=""
-    ensure_fixture || {
-        fail "could not build the fixture repository"
-        return 0
-    }
-    repo="$(new_tmpdir)/repo"
-    seed_checkout "$repo" "${UPSTREAM_RULES[@]}" || {
-        fail "could not create the fixture checkout"
-        return 0
-    }
-
-    run_repair "$repo" >/dev/null
-
-    for rule in "${UPSTREAM_RULES[@]}"; do
-        [[ -e "$repo/${rule%/}" ]] || missing="$missing $rule"
-    done
-    [[ -z "$missing" ]] || fail "the repair dropped what $PREVIOUS's rules already selected:$missing"
-
-    assert_file_exists "$repo/scripts/08-build-shell.sh"
-    assert_file_exists "$repo/shell/CMakeLists.txt"
+    assert_file_exists "$REPO_ROOT/installer/src/steps/build_shell.rs"
+    assert_file_exists "$REPO_ROOT/shell/CMakeLists.txt"
 }
 
 run_tests

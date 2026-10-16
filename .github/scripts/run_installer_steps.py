@@ -15,12 +15,39 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 
 INSTALLER_STEPS = [
-    "scripts/00a-system-update.sh",
-    "scripts/01-ensure-prereqs.sh",
-    "scripts/02a-submodules.sh",
-    "scripts/02-all-packages.sh",
-    "scripts/08-build-shell.sh",
+    "00a-system-update",
+    "01-ensure-prereqs",
+    "02a-submodules",
+    "02-all-packages",
+    "08-build-shell",
 ]
+
+
+def installer_binary() -> Path:
+    """The step table lives in the installer crate, so the steps run through it."""
+    if "CAELESTIA_INSTALL_BIN" in os.environ:
+        return Path(os.environ["CAELESTIA_INSTALL_BIN"])
+
+    for candidate in (
+        ROOT / "installer" / "target" / "release" / "caelestia-install",
+        ROOT / "installer" / "target" / "debug" / "caelestia-install",
+        ROOT / "caelestia-install",
+    ):
+        if candidate.is_file():
+            return candidate
+
+    raise SystemExit(
+        "::error::the installer binary is missing; build it with "
+        "`cargo build --release --manifest-path installer/Cargo.toml`"
+    )
+
+
+def step_command(step: str, binary: Path) -> list[str]:
+    """A step that still has a script runs it; a ported step runs inside the installer."""
+    script = ROOT / "scripts" / f"{step}.sh"
+    if script.is_file():
+        return ["bash", str(script)]
+    return [str(binary), "step", step, "--bundle", str(ROOT)]
 
 
 def detect_base_distro() -> str:
@@ -112,13 +139,16 @@ def run_steps() -> int:
 
     failed: list[tuple[str, str]] = []
 
+    binary = installer_binary()
+
     for s in steps:
+        command = step_command(s, binary)
         print("\n=========================================")
-        print(f"  RUNNING STEP: {s}")
+        print(f"  RUNNING STEP: {s} ({command[0]})")
         print("=========================================")
 
         proc = subprocess.Popen(
-            ["bash", s],
+            command,
             cwd=ROOT,
             env=env,
             stdout=subprocess.PIPE,

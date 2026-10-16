@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 # suite: isolated
+# The update itself belongs to the installer; what is left in shell is the entry point, so this
+# covers the hand-off: which binary it finds, what it says to it, and what happens when there is
+# no binary to run.
 
 set -uo pipefail
 
@@ -7,98 +10,100 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-make_update_bundle() {
-    local root="$1" log="$2" failing="${3:-}"
-    mkdir -p "$root/scripts/lib" "$root/shell/scripts"
+make_bundle() {
+    local root="$1"
+    mkdir -p "$root/scripts/lib"
     cp "$REPO_ROOT/update.sh" "$root/update.sh"
-    cp "$REPO_ROOT/scripts/lib/log.sh" "$REPO_ROOT/scripts/lib/privileges.sh" \
-        "$REPO_ROOT/scripts/lib/install-fs.sh" "$REPO_ROOT/scripts/lib/submodules.sh" \
+    cp "$REPO_ROOT/scripts/lib/log.sh" "$REPO_ROOT/scripts/lib/installer-bin.sh" \
         "$root/scripts/lib/"
+}
 
-    for step in 03-deploy-configs.sh 08-build-shell.sh 09-system-tweaks.sh; do
-        printf '#!/bin/bash\nprintf '\''%%s\\n'\'' '\''%s'\'' >> '\''%s'\''\n' \
-            "${step%.sh}" "$log" > "$root/scripts/$step"
-        if [[ "$step" == "$failing" ]]; then
-            printf 'exit 7\n' >> "$root/scripts/$step"
-        fi
-        chmod +x "$root/scripts/$step"
-    done
-
-    cat > "$root/shell/scripts/restart_shell.sh" <<EOF
+# A stand-in for the installer: it records the arguments it was given and the branch it was told
+# to follow, and answers with the status it was asked for.
+stub_installer() {
+    local root="$1" log="$2" status="${3:-0}"
+    cat > "$root/caelestia-install" <<EOF
 #!/bin/bash
-mkdir -p "\${XDG_STATE_HOME}/caelestia"
-printf 'ready\\n' > "\${XDG_STATE_HOME}/caelestia/scheme.json"
+printf 'args=%s branch=%s bundle=%s\n' "\$*" "\${CAELESTIA_UPDATE_BRANCH:-}" "\$BUNDLE_DIR" >> '$log'
+exit $status
 EOF
-    chmod +x "$root/shell/scripts/restart_shell.sh"
+    chmod +x "$root/caelestia-install"
 }
 
-test_update_runs_twice_in_an_isolated_home() {
-    local root home bin log calls status expected
+test_the_entry_point_runs_the_installers_update() {
+    local root bin log status line
     root="$(new_tmpdir)"
-    home="$root/home"
     bin="$root/bin"
-    log="$root/steps.log"
-    mkdir -p "$home" "$bin" "$home/.runtime"
-    make_update_bundle "$root" "$log"
-
-    for command in git cmake make caelestia; do
-        stub_bin "$bin" "$command" 'exit 0'
-    done
+    log="$root/calls.log"
+    mkdir -p "$bin"
+    make_bundle "$root"
+    stub_installer "$root" "$log"
+    cp "$root/caelestia-install" "$bin/"
 
     status="$(
-        HOME="$home" XDG_STATE_HOME="$home/.local/state" XDG_RUNTIME_DIR="$home/.runtime" \
-            PATH="$bin:$PATH" bash "$root/update.sh" > "$root/first.log" 2>&1
+        PATH="$bin:$PATH" bash "$root/update.sh" > "$root/update.log" 2>&1
         printf '%s\n' "$?"
     )"
-    assert_status 0 "$status" "the first isolated update should succeed"
+    assert_status 0 "$status" "an update whose installer succeeds should succeed"
 
-    status="$(
-        HOME="$home" XDG_STATE_HOME="$home/.local/state" XDG_RUNTIME_DIR="$home/.runtime" \
-            PATH="$bin:$PATH" bash "$root/update.sh" > "$root/second.log" 2>&1
-        printf '%s\n' "$?"
-    )"
-    assert_status 0 "$status" "the repeated isolated update should succeed"
-
-    calls="$(cat "$log")"
-    expected=$'03-deploy-configs\n08-build-shell\n09-system-tweaks\n03-deploy-configs\n08-build-shell\n09-system-tweaks'
-    assert_eq "$expected" "$calls" "update should run its core steps in order on both runs"
-    assert_file_exists "$home/.local/state/caelestia/scheme.json"
+    line="$(cat "$log")"
+    assert_contains "$line" "--update" "the installer should be asked to update"
+    assert_contains "$line" "--bundle $root" "and told which tree to update"
+    assert_contains "$line" "branch= bundle=" "with no branch asked for unless one was given"
 }
 
-test_each_update_step_failure_stops_before_the_next_step() {
-    local root home bin log failing next status calls
-    for failing in 03-deploy-configs.sh 08-build-shell.sh 09-system-tweaks.sh; do
-        root="$(new_tmpdir)"
-        home="$root/home"
-        bin="$root/bin"
-        log="$root/steps.log"
-        mkdir -p "$home" "$bin" "$home/.runtime"
-        make_update_bundle "$root" "$log" "$failing"
+test_the_entry_point_forwards_the_branch_it_was_given() {
+    local root bin log status
+    root="$(new_tmpdir)"
+    bin="$root/bin"
+    log="$root/calls.log"
+    mkdir -p "$bin"
+    make_bundle "$root"
+    stub_installer "$root" "$log"
+    cp "$root/caelestia-install" "$bin/"
 
-        for command in git cmake make caelestia; do
-            stub_bin "$bin" "$command" 'exit 0'
-        done
+    PATH="$bin:$PATH" bash "$root/update.sh" dev > "$root/update.log" 2>&1 || true
+    assert_contains "$(cat "$log")" "branch=dev" "the branch argument should reach the installer"
 
-        HOME="$home" XDG_STATE_HOME="$home/.local/state" XDG_RUNTIME_DIR="$home/.runtime" \
-            PATH="$bin:$PATH" bash "$root/update.sh" > "$root/update.log" 2>&1
-        status=$?
-        if [[ "$failing" == "09-system-tweaks.sh" ]]; then
-            assert_status 0 "$status" "$failing is intentionally non-fatal"
-        else
-            assert_status 1 "$status" "$failing should make the isolated update fail"
-        fi
-        calls="$(cat "$log")"
-        assert_contains "$calls" "${failing%.sh}" "$failing should be reached before failure"
+    status="$(
+        PATH="$bin:$PATH" bash "$root/update.sh" > /dev/null 2>&1
+        printf '%s\n' "$?"
+    )"
+    assert_status 0 "$status" "and an update with no branch should still run"
+}
 
-        case "$failing" in
-            03-deploy-configs.sh) next="08-build-shell" ;;
-            08-build-shell.sh) next="09-system-tweaks" ;;
-            *) next="" ;;
-        esac
-        if [[ -n "$next" ]]; then
-            assert_not_contains "$calls" "$next" "a failure in $failing must stop before $next"
-        fi
-    done
+test_a_failed_update_is_reported_as_a_failure() {
+    local root bin status
+    root="$(new_tmpdir)"
+    bin="$root/bin"
+    mkdir -p "$bin"
+    make_bundle "$root"
+    stub_installer "$root" "$root/calls.log" 7
+    cp "$root/caelestia-install" "$bin/"
+
+    status="$(
+        PATH="$bin:$PATH" bash "$root/update.sh" > "$root/update.log" 2>&1
+        printf '%s\n' "$?"
+    )"
+    assert_status 7 "$status" "the installer's own exit status should be what the caller sees"
+}
+
+test_without_a_binary_the_entry_point_says_so() {
+    local root status
+    root="$(new_tmpdir)"
+    mkdir -p "$root/home"
+    make_bundle "$root"
+
+    # A PATH with the system's own tools but no installer, a home with none either, and
+    # nothing to fetch one with: the resolver has no way to answer.
+    status="$(
+        HOME="$root/home" PATH="/usr/bin:/bin" CAELESTIA_NO_INSTALLER_FETCH=1 \
+            bash "$root/update.sh" > "$root/update.log" 2>&1
+        printf '%s\n' "$?"
+    )"
+    assert_status 1 "$status" "an update with no installer to run should fail"
+    assert_contains "$(cat "$root/update.log")" "caelestia-install" \
+        "and should name what it could not find"
 }
 
 run_tests

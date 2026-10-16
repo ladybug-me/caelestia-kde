@@ -6,18 +6,8 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-LIB="$REPO_ROOT/scripts/lib/install-kind.sh"
 CLI="$REPO_ROOT/src/bin/caelestia"
 IPC_HELPER="$REPO_ROOT/src/bin/caelestia-shell-ipc"
-
-layout() {
-    CAELESTIA_INSTALL_KIND="$1" BUNDLE_DIR="$REPO_ROOT" LAYOUT_LIB="$LIB" LAYOUT_FN="$2" \
-        bash -c '
-            set -u
-            source "$LAYOUT_LIB"
-            "$LAYOUT_FN"
-        '
-}
 
 cli_env() {
     env -u QML2_IMPORT_PATH -u CAELESTIA_LIB_DIR -u CAELESTIA_INSTALL_KIND \
@@ -36,49 +26,6 @@ ipc_defaults() {
                  _export_shell_env
                  printf "%s|%s" "$QML2_IMPORT_PATH" "$CAELESTIA_LIB_DIR"' \
         "$IPC_HELPER" "$3"
-}
-
-test_the_packaged_layout_is_the_packages_directories() {
-    assert_eq "/etc/xdg/quickshell/caelestia/shell.qml" "$(layout package install_shell_config)" "the shell tree"
-    assert_eq "/usr/lib/qt6/qml:/etc/xdg/quickshell/caelestia" "$(layout package install_qml_import_path)" "the QML import path"
-    assert_eq "/usr/lib/caelestia" "$(layout package install_lib_dir)" "the library directory"
-    assert_eq "/usr/bin" "$(layout package install_bin_dir)" "the command directory"
-}
-
-test_the_checkout_layout_is_the_users_own_directories() {
-    assert_eq "$HOME/.config/quickshell/caelestia/shell.qml" "$(layout source install_shell_config)" "the shell tree"
-    assert_eq "$HOME/.local/lib/qt6/qml:$HOME/.config/quickshell/caelestia" "$(layout source install_qml_import_path)" "the QML import path"
-    assert_eq "$HOME/.local/lib/caelestia" "$(layout source install_lib_dir)" "the library directory"
-    assert_eq "$HOME/.local/bin" "$(layout source install_bin_dir)" "the command directory"
-}
-
-test_no_path_is_the_same_in_both_layouts() {
-    local fn
-    for fn in install_shell_config install_qml_import_path install_lib_dir install_bin_dir; do
-        assert_ne "$(layout source "$fn")" "$(layout package "$fn")" "$fn should differ between the two installs"
-    done
-}
-
-test_the_kind_can_be_stated_rather_than_inferred() {
-    assert_eq "package" "$(layout package install_kind)" "the environment's answer wins"
-    assert_eq "source" "$(layout source install_kind)" "in both directions"
-}
-
-test_the_kind_survives_walking_into_another_directory() {
-    local dir out
-    dir="$(new_tmpdir)"
-    mkdir -p "$dir/elsewhere"
-
-    out="$(cd "$REPO_ROOT" && bash -c '
-        set -u
-        source scripts/lib/install-kind.sh
-        cd "$1" || exit 1
-        printf "%s|%s" "$(install_shell_config)" "$(install_lib_dir)"
-    ' _ "$dir/elsewhere" 2>&1)"
-
-    assert_not_contains "$out" "[ERR]" "answering from another directory should not complain"
-    assert_eq "$HOME/.config/quickshell/caelestia/shell.qml|$HOME/.local/lib/caelestia" "$out" \
-        "and a checkout's directories should still be the answer"
 }
 
 test_the_command_names_the_installs_own_directories() {

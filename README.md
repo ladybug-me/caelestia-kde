@@ -101,9 +101,8 @@ For detailed logs, enable Debug Mode in Nexus -> About -> Advanced, then run
 
 ```
 installer/     TUI installer and the per-distro package lists
-  tui/         C++ TUI source and its CMakeLists
-  data/        menu.json, theme.json, tui.version
-  distro/      per-distro package installation (arch, debian, fedora)
+  src/         the Rust installer, including the package lists under src/packages/
+  data/        tui.version
 scripts/       install/update pipeline: the numbered steps and their shared lib/
 src/           files copied onto the system, plus the vendored submodules
 shell/         the QML shell and its C++ QML plugin
@@ -132,7 +131,7 @@ assets/        the logo and screenshots used by the docs
 - [Haidir](https://bitbucket.org/dirn-typo/yet-another-monochrome-icon-set) - icon set
 - [dim-ghub](https://github.com/dim-ghub/caelestia-shell) - v2.0.0 features
 - [dharmx](https://github.com/dharmx/walls) - default wallpapers
-  
+
 ## License
 
 GPL-3.0-or-later - see [LICENSE](LICENSE).

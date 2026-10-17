@@ -55,8 +55,10 @@ Item {
     readonly property bool keptOpen: Config.bar.persistent && !dodging
     readonly property int exclusiveZone: !disabled && !dodgeEnabled && (Config.bar.persistent || visibilities.bar) ? contentWidth : Config.border.thickness
     readonly property int visualThickness: !disabled && (Config.bar.persistent || visibilities.bar) ? contentWidth : Config.border.thickness
-    readonly property bool shouldBeVisible: !fullscreen && !disabled && !visibilities.overview && (keptOpen || visibilities.bar || isHovered)
-    property bool isHovered
+    property alias hoverGraceTimer: barUnhoverTimer
+    property bool pointerInReach: false
+    readonly property bool hovered: barHover.hovered || pointerInReach
+    readonly property bool shouldBeVisible: !fullscreen && !disabled && !visibilities.overview && (keptOpen || visibilities.bar || hovered || popouts.isContextPopout)
     readonly property bool isHorizontal: root.position === "top" || root.position === "bottom"
     readonly property int clampedThickness: Math.max(Config.border.minThickness, isHorizontal ? implicitHeight : implicitWidth)
     readonly property int clampedWidth: isHorizontal ? root.width : clampedThickness
@@ -197,4 +199,15 @@ Item {
             }
         ]
     }
+
+    Timer {
+        id: barUnhoverTimer
+
+        interval: 400
+        onTriggered: {
+            if (!barHover.hovered)
+                root.pointerInReach = false;
+        }
+    }
+    HoverHandler { id: barHover }
 }

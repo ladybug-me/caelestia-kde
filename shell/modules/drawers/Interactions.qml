@@ -119,7 +119,10 @@ CustomMouseArea {
     onPressed: event => {
         dragStart = Qt.point(event.x, event.y);
 
-        if (root.focusGrab && (root.focusGrab.active || popouts.isDetached)) {
+        const grabActive = root.focusGrab && (root.focusGrab.active || popouts.isDetached);
+        const menuOpen = Visibilities.contextPopoutOpen;
+
+        if (grabActive || menuOpen) {
             let inside = false;
 
             if (inBarArea(event.x, event.y)) inside = true;
@@ -131,12 +134,17 @@ CustomMouseArea {
             else if (popouts.hasCurrent && inLeftPanel(panels.popoutsWrapper, event.x, event.y)) inside = true;
 
             if (!inside) {
-                root.focusGrab.clear();
+                if (grabActive)
+                    root.focusGrab.clear();
+                if (menuOpen)
+                    Visibilities.closeContextPopouts();
             }
         }
     }
     onContainsMouseChanged: {
         if (!containsMouse) {
+            const menuOpen = popouts.isContextPopout;
+
             if (!osdShortcutActive) {
                 visibilities.osd = false;
                 root.panels.osd.hovered = false;
@@ -148,13 +156,13 @@ CustomMouseArea {
             if (Config.utilities.showOnHover && !utilitiesShortcutActive)
                 visibilities.utilities = false;
 
-            if (!popoutHideTimer.running)
+            if (!menuOpen && !popoutHideTimer.running)
                 popoutHideTimer.start();
 
-            if (Config.bar.showOnHover)
-                bar.isHovered = false;
+            bar.hoverGraceTimer.start();
         } else {
             popoutHideTimer.stop();
+            bar.hoverGraceTimer.stop();
         }
     }
     onPositionChanged: event => {
@@ -171,8 +179,14 @@ CustomMouseArea {
             return;
         }
 
-        if (!visibilities.bar && Config.bar.showOnHover && inBarArea(x, y))
-            bar.isHovered = true;
+        if (!visibilities.bar && Config.bar.showOnHover) {
+            if (inBarArea(x, y)) {
+                bar.hoverGraceTimer.stop();
+                bar.pointerInReach = true;
+            } else if (!bar.hoverGraceTimer.running) {
+                bar.hoverGraceTimer.start();
+            }
+        }
 
         if (pressed && inBarArea(dragStart.x, dragStart.y)) {
             if (bar.position === "left") {
@@ -355,6 +369,8 @@ CustomMouseArea {
 
         interval: 150
         onTriggered: {
+            if (popouts.isContextPopout)
+                return;
             if (!popouts.currentName.startsWith("traymenu") || ((popouts.current as StackView)?.depth ?? 0) <= 1) {
                 popouts.hasCurrent = false;
                 bar.closeTray();

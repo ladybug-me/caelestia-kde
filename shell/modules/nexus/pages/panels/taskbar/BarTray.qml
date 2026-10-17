@@ -296,7 +296,7 @@ PageBase {
                 liftY: root.draggingId === row.trayId ? root.dragTop - row.y : 0
                 first: row.index === 0
                 last: row.index === orderModel.count - 1
-                labelComponent: nameComponent
+                label: row.title
                 subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
                 icon: Icons.getTrayIcon(row.trayId, row.trayIcon)
                 active: menuItems.find(item => item.value === TrayRegistry.stateOf(row.trayKey)) ?? null
@@ -335,17 +335,6 @@ PageBase {
                         value: "forget"
                     }
                 ]
-
-                Component {
-                    id: nameComponent
-
-                    EditableName {
-                        name: Icons.getTrayName(row.trayId, row.title)
-                        defaultName: row.title || row.trayId
-                        subtext: row.running ? row.trayId : qsTr("%1 (not running)").arg(row.trayId)
-                        onRenamed: name => Icons.setTrayName(row.trayId, name)
-                    }
-                }
             }
         }
     }

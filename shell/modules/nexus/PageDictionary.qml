@@ -66,7 +66,7 @@ QtObject {
                 { label: qsTr("Unoccupied workspaces"), keywords: ["workspaces", "empty", "inactive", "hide"], pagePath: "panels/taskbar/BarWorkspaces.qml", subPageIdx: 7 },
                 { label: qsTr("Greeter"), keywords: ["greeting", "popout"], pagePath: "panels/taskbar/BarGreeter.qml", subPageIdx: 8 },
                 { label: qsTr("Greeter slideshow"), keywords: ["slideshow", "folders", "media", "greeting", "timing", "order"], pagePath: "panels/taskbar/BarGreeter.qml", subPageIdx: 8 },
-                { label: qsTr("Tray"), keywords: ["system tray", "icons", "always visible", "collapse", "hidden", "overflow", "pin", "rename", "name"], pagePath: "panels/taskbar/BarTray.qml", subPageIdx: 9 },
+                { label: qsTr("Tray"), keywords: ["system tray", "icons", "always visible", "collapse", "hidden", "overflow", "pin"], pagePath: "panels/taskbar/BarTray.qml", subPageIdx: 9 },
                 { label: qsTr("Status icons"), keywords: ["indicators", "bar"], pagePath: "panels/taskbar/BarStatusIcons.qml", subPageIdx: 10 },
                 { label: qsTr("Clock"), keywords: ["date", "time"], pagePath: "panels/taskbar/BarClock.qml", subPageIdx: 11 },
                 { label: qsTr("Clock seconds"), keywords: ["clock", "time", "seconds", "show seconds"], pagePath: "panels/taskbar/BarClock.qml", subPageIdx: 11 },

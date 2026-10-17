@@ -63,9 +63,6 @@ Singleton {
     }
 
     function keyOfId(id: string, title: string, icon: string): string {
-        const named = (GlobalConfig.bar.tray.iconSubs.values ?? []).find(sub => sub.id === id && sub.displayName);
-        if (named)
-            return `name:${named.displayName}`;
         for (const entry of root.remembered) {
             if (entry.id === id)
                 return entry.alias ?? id;
@@ -97,12 +94,6 @@ Singleton {
         return "collapsed";
     }
 
-    function named(key: string): bool {
-        if (key.startsWith("name:"))
-            return true;
-        return GlobalConfig.bar.tray.iconSubs.values.some(sub => sub.displayName && `name:${sub.displayName}` === key);
-    }
-
     function setState(key: string, state: string): void {
         GlobalConfig.bar.tray.alwaysVisible = GlobalConfig.bar.tray.alwaysVisible.filter(entry => entry !== key);
         GlobalConfig.bar.tray.hiddenIcons = GlobalConfig.bar.tray.hiddenIcons.filter(entry => entry !== key);
@@ -114,14 +105,13 @@ Singleton {
 
     function forget(alias: string): void {
         root.remembered = root.remembered.filter(entry => (entry.alias ?? entry.id) !== alias);
-        GlobalConfig.bar.tray.iconSubs = [...(GlobalConfig.bar.tray.iconSubs.values ?? [])].filter(sub => !sub.displayName || `name:${sub.displayName}` !== alias);
         root.setState(alias, "collapsed");
         saveTimer.restart();
     }
 
     function prune(list: var): var {
         const now = Date.now();
-        return list.filter(entry => root.stateOf(entry.alias ?? entry.id) !== "collapsed" || root.named(entry.alias ?? entry.id) || now - (entry.lastSeen ?? 0) < root.unseenTtl);
+        return list.filter(entry => root.stateOf(entry.alias ?? entry.id) !== "collapsed" || now - (entry.lastSeen ?? 0) < root.unseenTtl);
     }
 
     function sameEntries(a: var, b: var): bool {
@@ -172,13 +162,11 @@ Singleton {
     // every launch. Idempotent: an entry only moves if it names a raw id.
     function migrateConfig(): void {
         const tray = GlobalConfig.bar.tray;
-        const subs = tray.iconSubs.values ?? [];
-        const byName = new Map(subs.filter(sub => sub.displayName).map(sub => [sub.id, `name:${sub.displayName}`]));
         const byEntry = new Map();
         for (const entry of root.remembered)
             if (entry.alias)
                 byEntry.set(entry.id, entry.alias);
-        const rewrite = list => [...new Set(list.map(id => byName.get(id) ?? byEntry.get(id) ?? id))];
+        const rewrite = list => [...new Set(list.map(id => byEntry.get(id) ?? id))];
         tray.alwaysVisible = rewrite(tray.alwaysVisible);
         tray.hiddenIcons = rewrite(tray.hiddenIcons);
         tray.order = rewrite(tray.order);
@@ -209,18 +197,6 @@ Singleton {
         }
 
         target: SystemTray.items
-    }
-
-    Connections {
-        function onAlwaysVisibleChanged(): void {
-            root.record();
-        }
-
-        function onHiddenIconsChanged(): void {
-            root.record();
-        }
-
-        target: GlobalConfig.bar.tray
     }
 
     FileView {

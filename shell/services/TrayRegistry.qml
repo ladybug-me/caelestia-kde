@@ -18,12 +18,6 @@ Singleton {
     property var remembered: []
     property bool loaded: false
 
-    // Some apps register their status notifier under their process id (2407-1,
-    // then 2652-1 on the next launch), so the id is useless across restarts.
-    // The alias is the stable key every per-icon setting is stored under: a new
-    // id is folded onto the remembered entry whose title and icon it matches,
-    // and the config lists are migrated from ids to aliases on first load.
-
     readonly property var entries: {
         const known = new Map(root.remembered.map(entry => [entry.alias ?? entry.id, entry]));
         for (const item of SystemTray.items.values) {
@@ -157,9 +151,6 @@ Singleton {
         saveTimer.restart();
     }
 
-    // The three config lists used to hold raw ids. Reinterpret them so an icon the
-    // user already pinned or ordered keeps that state even though its id changes
-    // every launch. Idempotent: an entry only moves if it names a raw id.
     function migrateConfig(): void {
         const tray = GlobalConfig.bar.tray;
         const byEntry = new Map();

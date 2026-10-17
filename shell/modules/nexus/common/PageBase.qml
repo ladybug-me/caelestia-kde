@@ -17,8 +17,6 @@ ColumnLayout {
     property bool isSubPage
     property bool scrollable: true
 
-    // Extra room a page can ask for below its content, e.g. so a popup that
-    // opens downwards can be scrolled into view instead of being cut off.
     property real scrollReserve: 0
     readonly property int cappedWidth: Math.min(Tokens.sizes.nexus.maxContentWidth, width)
     readonly property alias flickable: flickable

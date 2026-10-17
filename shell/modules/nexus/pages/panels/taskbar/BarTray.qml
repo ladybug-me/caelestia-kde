@@ -90,8 +90,6 @@ PageBase {
             root.grabDy = item ? y - item.y : 0;
         }
 
-        // Keep this ahead of the reorder so the lifted row never lags the
-        // cursor; liftY is a binding, so it also tracks slot changes.
         root.dragTop = y - root.grabDy;
 
         const from = root.indexOfId(id);
@@ -120,8 +118,6 @@ PageBase {
         const from = root.indexOfId(root.draggingId);
         const own = orderList.itemAtIndex(from);
 
-        // Clear the id last so the row glides into its slot instead of
-        // snapping back the moment the cursor lets go.
         root.landingY = own ? own.y : 0;
         root.landing = true;
         landAnim.start();
@@ -132,8 +128,6 @@ PageBase {
         for (let i = 0; i < orderModel.count; i++)
             ids.push(orderModel.get(i).trayKey);
 
-        // Writing the same order still invalidates TrayRegistry.entries and
-        // rebuilds every row, so skip it when nothing actually moved.
         const current = GlobalConfig.bar.tray.order;
         if (ids.length === current.length && ids.every((v, i) => v === current[i]))
             return;
@@ -144,8 +138,6 @@ PageBase {
     title: qsTr("Tray")
     isSubPage: true
 
-    // Menus open downwards and are capped at 320 tall, so keep that much
-    // scrollable room after the list - otherwise the last rows' menus are cut.
     scrollReserve: 320
 
     Component.onCompleted: root.syncOrder()

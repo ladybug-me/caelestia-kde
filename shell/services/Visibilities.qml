@@ -10,7 +10,6 @@ Singleton {
     property var screens: new Map()
     property var bars: new Map()
     property var docks: new Map()
-    property string launcherInitialSearch: ""
     property string initialSidebarTab: ""
     property string lastSidebarTab: "notifications"
     property int openDialogs: 0
@@ -27,6 +26,7 @@ Singleton {
     property real dragWidth: 0
     property real dragHeight: 0
     property string streamClaim: ""
+    property DrawerVisibilities launcherScreen: null
 
     signal cycleOverview(bool backwards)
 
@@ -51,12 +51,16 @@ Singleton {
         visibilities.launcherChanged.connect(() => {
             if (!visibilities.launcher) {
                 Kwin.clearHighlight();
+                visibilities.launcherMode = "";
+                if (launcherScreen === visibilities)
+                    launcherScreen = null;
                 return;
             }
             for (const other of screens.values()) {
                 if (other !== visibilities)
                     other.launcher = false;
             }
+            launcherScreen = visibilities;
         });
         visibilities.overviewChanged.connect(() => {
             if (visibilities.overview)
@@ -84,7 +88,33 @@ Singleton {
         const monitor = Kwin.monitors.find(m => m.name === Kwin.cursorOutputName()) || Kwin.focusedMonitor;
         return screens.get(monitor) || screens.values().next().value;
     }
-
+    function modeForText(text: string): string {
+        const prefix = GlobalConfig.launcher.actionPrefix;
+        if (!text.startsWith(prefix))
+            return "";
+        const rest = text.slice(prefix.length);
+        const space = rest.indexOf(" ");
+        return space < 0 ? "" : rest.slice(0, space);
+    }
+    function openLauncher(mode: string): void {
+        const v = launcherScreen ?? getForActive();
+        if (!v)
+            return;
+        v.launcherInitialSearch = mode ? `${GlobalConfig.launcher.actionPrefix}${mode} ` : "";
+        v.launcherMode = mode;
+        v.launcher = true;
+    }
+    function closeLauncher(): void {
+        if (launcherScreen)
+            launcherScreen.launcher = false;
+    }
+    function toggleLauncher(mode: string): void {
+        if (launcherScreen && (mode === "" || launcherScreen.launcherMode === mode)) {
+            closeLauncher();
+            return;
+        }
+        openLauncher(mode);
+    }
     function setDrag(address: string, x: real, y: real, w: real, h: real, originScreen: string): void {
         dragAddress = address;
         dragX = x;

@@ -323,6 +323,8 @@ Item {
             }
 
             onTextChanged: {
+                if (root.visibilities.launcher)
+                    root.visibilities.launcherMode = Visibilities.modeForText(text);
                 if (!text.startsWith(`${GlobalConfig.launcher.actionPrefix}windows `)) {
                     Windows.isSwitching = false;
                     Kwin.clearHighlight();
@@ -330,19 +332,29 @@ Item {
             }
 
             Component.onCompleted: {
-                if (Visibilities.launcherInitialSearch) {
-                    text = Visibilities.launcherInitialSearch;
-                    Visibilities.launcherInitialSearch = "";
+                if (root.visibilities.launcherInitialSearch) {
+                    text = root.visibilities.launcherInitialSearch;
+                    root.visibilities.launcherInitialSearch = "";
                 }
                 forceActiveFocus();
             }
 
             Connections {
+                function onLauncherInitialSearchChanged(): void {
+                    if (!root.visibilities.launcherInitialSearch)
+                        return;
+                    search.text = root.visibilities.launcherInitialSearch;
+                    root.visibilities.launcherInitialSearch = "";
+                }
+
                 function onLauncherChanged(): void {
                     if (root.visibilities.launcher) {
-                        // Every open decides the field: the requested prefix, or the app grid.
-                        search.text = Visibilities.launcherInitialSearch;
-                        Visibilities.launcherInitialSearch = "";
+                        if (root.visibilities.launcherInitialSearch) {
+                            search.text = root.visibilities.launcherInitialSearch;
+                            root.visibilities.launcherInitialSearch = "";
+                        } else if (!root.visibilities.launcherMode) {
+                            search.text = "";
+                        }
                         search.forceActiveFocus();
                     } else {
                         Windows.isSwitching = false;

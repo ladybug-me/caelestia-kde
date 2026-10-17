@@ -35,8 +35,7 @@ Item {
                 }
                 return;
             }
-            const visibilities = Visibilities.getForActive();
-            visibilities.launcher = !visibilities.launcher;
+            Visibilities.toggleLauncher("");
         }
     }
 

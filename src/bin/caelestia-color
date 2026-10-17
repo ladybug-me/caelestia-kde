@@ -721,6 +721,36 @@ def cmd_konsole_scheme(scheme_file: str, out: str) -> int:
     return 0
 
 
+def cmd_kde_selection(scheme_file: str, colors_file: str) -> int:
+    """Set a dynamic scheme's KDE selection text to a colour that reads on the selection.
+
+    The KDE template speaks the selection's text in `secondary_fixed`, which a Material
+    palette renders light, on a `primary` background a dark mode also renders light, so a
+    dynamic scheme's selected item is washed out. The template is vendored, and a named
+    scheme's text colour belongs to its file, so only a dynamic scheme is rewritten here,
+    with the `on_primary` its own palette generated as the contrast colour.
+    """
+    data = json.loads(pathlib.Path(scheme_file).read_text(encoding="utf-8"))
+    if data.get("name") != "dynamic":
+        return 0
+
+    on_primary = str(data.get("colours", {}).get("onPrimary", "")).lstrip("#").strip()
+    if len(on_primary) != 6:
+        return 0
+
+    path = pathlib.Path(colors_file)
+    lines = path.read_text(encoding="utf-8").splitlines()
+    in_selection = False
+    for index, line in enumerate(lines):
+        if line.startswith("["):
+            in_selection = line.strip() == "[Colors:Selection]"
+        elif in_selection and line.startswith("ForegroundNormal="):
+            lines[index] = f"ForegroundNormal=#{on_primary}"
+            atomic_write(path, "\n".join(lines) + "\n")
+            return 0
+    return 0
+
+
 def main(argv: list[str]) -> int:
     command, args = argv[0], argv[1:]
     if command == "config-dump":
@@ -755,6 +785,8 @@ def main(argv: list[str]) -> int:
         return cmd_smart_variant(*args)
     if command == "konsole-scheme":
         return cmd_konsole_scheme(*args)
+    if command == "kde-selection":
+        return cmd_kde_selection(*args)
     raise SystemExit(f"unknown python helper: {command}")
 
 
@@ -1063,6 +1095,9 @@ apply_kde() {
     local scheme="$DATA_HOME/color-schemes/Matugen.colors" current="" target
 
     [[ -f "$scheme" ]] || return 0
+    # Before the tools are asked for: the file a reader could apply by hand later is
+    # rewritten either way, and the copy to the alternate name below comes after it.
+    py kde-selection "$SCHEME_FILE" "$scheme" || warn "could not set the dynamic scheme's selection text"
     if ! command -v plasma-apply-colorscheme >/dev/null 2>&1 ||
         ! command -v kreadconfig6 >/dev/null 2>&1 ||
         ! command -v kwriteconfig6 >/dev/null 2>&1; then

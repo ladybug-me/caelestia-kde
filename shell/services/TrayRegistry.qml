@@ -124,6 +124,18 @@ Singleton {
         return list.filter(entry => root.stateOf(entry.alias ?? entry.id) !== "collapsed" || root.named(entry.alias ?? entry.id) || now - (entry.lastSeen ?? 0) < root.unseenTtl);
     }
 
+    function sameEntries(a: var, b: var): bool {
+        if (a.length !== b.length)
+            return false;
+        for (let i = 0; i < a.length; i++) {
+            const x = a[i];
+            const y = b[i];
+            if (x.id !== y.id || (x.alias ?? x.id) !== (y.alias ?? y.id) || x.title !== y.title || x.icon !== y.icon)
+                return false;
+        }
+        return true;
+    }
+
     function record(): void {
         if (!root.loaded)
             return;
@@ -145,8 +157,12 @@ Singleton {
         }
 
         const next = root.prune([...known.values()]);
-        if (JSON.stringify(next) === JSON.stringify(root.remembered))
+        if (root.sameEntries(next, root.remembered)) {
+            for (let i = 0; i < next.length; i++)
+                root.remembered[i].lastSeen = next[i].lastSeen;
+            saveTimer.restart();
             return;
+        }
         root.remembered = next;
         saveTimer.restart();
     }

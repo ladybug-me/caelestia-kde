@@ -23,6 +23,7 @@ Scope {
             Brightness;
             Weather.reload();
             WorkspaceTrackerGuard;
+            PlasmaWidgets;
 
             if (GlobalConfig.utilities.vpn.enabled)
                 VPN;

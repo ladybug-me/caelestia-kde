@@ -984,4 +984,44 @@ PY
     assert_contains "$described" "the file is the palette" "$described"
 }
 
+test_wallpaper_resolves_first_frame_thumbnail_to_source_video() {
+    setup_sandbox
+    local video="$SANDBOX/video.mp4"
+    touch "$video"
+    local thumb_dir="$XDG_CACHE_HOME/wallpapers/abc123"
+    mkdir -p "$thumb_dir"
+    local thumb="$thumb_dir/first_frame.png"
+    touch "$thumb"
+    printf '%s' "$video" > "$thumb_dir/source_path"
+
+    run_color wallpaper -f "$thumb"
+    assert_status 0 "$STATUS" "setting wallpaper with thumbnail should succeed"
+    assert_eq "$video" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt should contain original video, not first_frame.png thumbnail"
+}
+
+test_wallpaper_resolves_skwd_wall_thumbnail_to_actual_file() {
+    setup_sandbox
+    local video="$SANDBOX/samurai.mp4"
+    touch "$video"
+    local thumb_dir="$XDG_CACHE_HOME/skwd-wall-v2/video-thumbs"
+    mkdir -p "$thumb_dir"
+    local thumb="$thumb_dir/samurai.webp"
+    touch "$thumb"
+
+    mkdir -p "$XDG_CACHE_HOME/skwd-wall-v2"
+    cat > "$XDG_CACHE_HOME/skwd-wall-v2/last-wallpaper.json" <<EOF
+{
+    "thumb": "$thumb",
+    "path": "$video",
+    "type": "video"
+}
+EOF
+
+    run_color wallpaper -f "$thumb"
+    assert_status 0 "$STATUS" "setting wallpaper with skwd thumbnail should succeed"
+    assert_eq "$video" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt should contain actual video from skwd-wall, not webp thumbnail"
+}
+
 run_tests

@@ -16,6 +16,7 @@ Searcher {
     readonly property string currentNamePath: `${Paths.state}/wallpaper/path.txt`
     readonly property string fallback: Quickshell.shellPath("assets/wallpaper.webp")
 
+    property bool previousWallpaperEnabledState: false
     readonly property bool previewing: previewPath !== ""
     readonly property string current: previewing ? previewPath : actualCurrent
     property string previewPath
@@ -114,7 +115,7 @@ Searcher {
         if (Images.isVideo(path)) {
             const thumb = thumbFor(path);
             if (thumb !== "") {
-                const script = 'caelestia wallpaper -f "$1" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
+                const script = 'caelestia wallpaper -f "$1" --apply-path "$2" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
                 Quickshell.execDetached(["sh", "-c", script, "--", thumb, path, root.currentNamePath]);
                 syncPlasmaWallpaper(thumb);
             } else {
@@ -142,6 +143,11 @@ Searcher {
     }
 
     function preview(path: string): void {
+        if (!previewing) {
+            previousWallpaperEnabledState = GlobalConfig.background.wallpaperEnabled;
+            GlobalConfig.background.wallpaperEnabled = true;
+        }
+
         previewPath = path;
         previewColourOf(path);
     }
@@ -153,6 +159,10 @@ Searcher {
     }
 
     function stopPreview(): void {
+        if (previewing) {
+            GlobalConfig.background.wallpaperEnabled = previousWallpaperEnabledState;
+        }
+
         previewPath = "";
         previewColoursState.stop();
     }
@@ -183,7 +193,11 @@ Searcher {
 
         const out = getThumbnailPath(path);
         const script = 'out="$1"; src="$2"; [ -s "$out" ] || { mkdir -p "$(dirname "$out")"; ' +
-                       'ffmpeg -y -loglevel error -i "$src" -vf "thumbnail,scale=640:-1" -frames:v 1 "$out" >/dev/null 2>&1; }; ' +
+                       'stem="$(basename "${src%.*}")"; ' +
+                       'skwd="${XDG_CACHE_HOME:-$HOME/.cache}/skwd-wall-v2/video-thumbs/${stem}.webp"; ' +
+                       'if [ -s "$skwd" ]; then cp "$skwd" "$out"; else ' +
+                       'ffmpeg -y -loglevel error -i "$src" -vf "thumbnail,scale=640:-1" -frames:v 1 "$out" >/dev/null 2>&1; fi; }; ' +
+                       'printf "%s" "$src" > "$(dirname "$out")/source_path"; ' +
                        '[ -s "$out" ] && printf %s "$out"';
         const qml = 'import QtQuick\nimport Quickshell.Io\n' +
             'Process {\n' +
@@ -206,7 +220,7 @@ Searcher {
             m[path] = out;
             root.videoThumbs = Object.assign({}, m);
             if (path === root.actualCurrent) {
-                const script = 'caelestia wallpaper -f "$1" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
+                const script = 'caelestia wallpaper -f "$1" --apply-path "$2" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
                 Quickshell.execDetached(["sh", "-c", script, "--", out, path, root.currentNamePath]);
                 syncPlasmaWallpaper(out);
             }
@@ -258,8 +272,13 @@ Searcher {
                 return;
             }
             root.actualCurrent = wall;
-            if (!Images.isVideo(wall))
+            if (!Images.isVideo(wall)) {
                 syncPlasmaWallpaper(wall);
+            } else {
+                const thumb = thumbFor(wall);
+                if (thumb)
+                    syncPlasmaWallpaper(thumb);
+            }
         }
         onLoadFailed: {
             root.actualCurrent = root.fallback;

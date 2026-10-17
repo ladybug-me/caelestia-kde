@@ -41,7 +41,7 @@ PageBase {
         let workspaces = []
         let tiling = []
 
-        const shellRegex = /^(nexus|launcher|dashboard|showall|screenshot|googleLens|screenRecording|lock|session|sidebar|aiAssistant|utilities|emoji|clipboard|windowSwitcher.*|wallpaper|keybinds|whatsnew)$/
+        const shellRegex = /^(nexus|launcher|dashboard|showall|screenshot|googleLens|screenRecording|lock|session|sidebar|aiAssistant|utilities|emoji|clipboard|windowSwitcher.*|wallpaper.*|skwd-wall.*|keybinds|whatsnew)$/
         const workspaceRegex = /^workspace.*$/
         const tilingRegex = /^krohnkite.*$/
 

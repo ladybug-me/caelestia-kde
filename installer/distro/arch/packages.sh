@@ -12,6 +12,10 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/packages.sh"
 # shellcheck source=scripts/lib/darkly.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/darkly.sh"
+# shellcheck source=scripts/lib/skwd-wall.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/skwd-wall.sh"
+# shellcheck source=scripts/lib/plasma-audio-visualizer.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/plasma-audio-visualizer.sh"
 
 info "Installing Arch packages..."
 
@@ -53,6 +57,8 @@ CORE_PACKAGES=(
 
 SHELL_PACKAGES=(
     quickshell matugen python
+    skwd-wall-v2-bin skwd-lens-bin skwd-paper-plasma
+    plasma6-applets-audio-visualizer
     foot eza fastfetch starship btop bash
     pciutils
 )

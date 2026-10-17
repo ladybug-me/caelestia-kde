@@ -19,7 +19,7 @@ Controls.Menu {
     property var itemPool: ({})
     property var entryByKey: ({})
     readonly property bool iconsEnabled: screenName ? ContextMenuStore.iconsShownOn(screenName) : GlobalConfig.background.desktopIconsEnabled
-    readonly property bool iconsShown: (screenName ? GlobalConfig.forScreen(screenName) : GlobalConfig).background.wallpaperEnabled && (screenName ? GlobalConfig.forScreen(screenName) : GlobalConfig).background.desktopIconsEnabled
+    readonly property bool iconsShown: (screenName ? GlobalConfig.forScreen(screenName) : GlobalConfig).background.desktopIconsEnabled
 
     function executeEntryByKey(key) {
         let entry = root.entryByKey[key];
@@ -43,6 +43,10 @@ Controls.Menu {
         }
         if (entry.action === "ToggleDesktopIcons") {
             ContextMenuStore.toggleIcons(root.screenName);
+            return;
+        }
+        if (entry.action === "EnterEditMode") {
+            ContextMenuStore.editMode = true;
             return;
         }
         if (entry.action === "Wallpapers.next()") {

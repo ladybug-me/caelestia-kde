@@ -10,6 +10,7 @@ Singleton {
     property var screens: new Map()
     property var bars: new Map()
     property var docks: new Map()
+    property var exclusions: new Map()
     property string launcherInitialSearch: ""
     property string initialSidebarTab: ""
     property string lastSidebarTab: "notifications"
@@ -29,6 +30,7 @@ Singleton {
     property string streamClaim: ""
 
     signal cycleOverview(bool backwards)
+    signal exclusionBoundsChanged(ShellScreen screen)
 
     function sidebarWidthFor(defaultWidth: real): real {
         return sidebarPinned && sidebarWidth > 0 ? sidebarWidth : defaultWidth;
@@ -79,6 +81,17 @@ Singleton {
     function unregisterDock(screen: ShellScreen): void {
         docks.delete(screen.name);
         docks = new Map(docks);
+    }
+    function registerExclusions(screen: ShellScreen, exclusionObj: var): void {
+        exclusions.set(screen.name, exclusionObj);
+        exclusions = new Map(exclusions);
+        exclusionBoundsChanged(screen);
+    }
+    function exclusionsFor(screen: ShellScreen): var {
+        return exclusions.get(screen?.name) ?? null;
+    }
+    function notifyExclusionBoundsChanged(screen: ShellScreen): void {
+        exclusionBoundsChanged(screen);
     }
     function getForActive(): DrawerVisibilities {
         const monitor = Kwin.monitors.find(m => m.name === Kwin.cursorOutputName()) || Kwin.focusedMonitor;

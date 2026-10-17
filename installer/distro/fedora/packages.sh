@@ -14,6 +14,10 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/darkly.sh"
 # shellcheck source=scripts/lib/matugen.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/matugen.sh"
+# shellcheck source=scripts/lib/skwd-wall.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/skwd-wall.sh"
+# shellcheck source=scripts/lib/plasma-audio-visualizer.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/plasma-audio-visualizer.sh"
 
 darkly_rpm_asset_url() {
     local release_json ver url
@@ -77,7 +81,7 @@ UTILITY_PACKAGES=(
 )
 
 COPR_CORE=(app2unit libcava)
-COPR_SHELL=(quickshell-git matugen)
+COPR_SHELL=(quickshell-git matugen skwd-wall-v2 skwd-lens skwd-paper-plasma plasma-audio-visualizer)
 COPR_UTILS=()
 
 PACKAGES=()
@@ -88,7 +92,7 @@ case "$PACKAGE_GROUP" in
     themes) PACKAGES=("${THEME_PACKAGES[@]}");  COPR_PKGS=() ;;
     utils)  PACKAGES=("${UTILITY_PACKAGES[@]}"); COPR_PKGS=("${COPR_UTILS[@]}") ;;
     all|*)  PACKAGES=("${CORE_PACKAGES[@]}" "${SHELL_PACKAGES[@]}" "${THEME_PACKAGES[@]}" "${UTILITY_PACKAGES[@]}")
-            COPR_PKGS=("quickshell-git" "gpu-screen-recorder" "app2unit" "starship" "libcava" "wl-clip-persist" "matugen") ;;
+            COPR_PKGS=("quickshell-git" "gpu-screen-recorder" "app2unit" "starship" "libcava" "wl-clip-persist" "matugen" "skwd-wall-v2" "plasma-audio-visualizer") ;;
 esac
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "core" ]]; then
@@ -197,6 +201,16 @@ for pkg in "${COPR_PKGS[@]}"; do
             ;;
         matugen)
             if install_matugen_fedora; then
+                COPR_FAILED="no"
+            fi
+            ;;
+        skwd-wall-v2|skwd-wall|skwd-lens|skwd-paper-plasma)
+            if install_skwd_wall_fedora; then
+                COPR_FAILED="no"
+            fi
+            ;;
+        plasma-audio-visualizer)
+            if install_plasma_audio_visualizer_fedora; then
                 COPR_FAILED="no"
             fi
             ;;

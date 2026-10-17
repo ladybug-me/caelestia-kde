@@ -264,10 +264,10 @@ StyledRect {
     Timer {
         id: execTimer
 
+        property var pendingAction: null
+
         interval: 250
         repeat: false
-
-        property var pendingAction: null
         onTriggered: {
             if (pendingAction) pendingAction();
             pendingAction = null;
@@ -632,7 +632,10 @@ StyledRect {
                     delegate: Toggle {
                         icon: "equalizer"
                         checked: GlobalConfig.background.visualiser.enabled
-                        onClicked: GlobalConfig.background.visualiser.enabled = !GlobalConfig.background.visualiser.enabled
+                        onClicked: {
+                            const next = !GlobalConfig.background.visualiser.enabled;
+                            PlasmaWidgets.setWidgetEnabled("visualizer", next);
+                        }
                     }
                 }
                 DelegateChoice {

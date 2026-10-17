@@ -31,9 +31,9 @@ Variants {
         screen: modelData
         name: "background"
         isDesktopWidget: true
-        color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp) ? "black" : "transparent"
+        color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp && !ContextMenuStore.editMode) ? "black" : "transparent"
         surfaceFormat.opaque: false
-        mask: Config.background.wallpaperEnabled ? null : emptyRegion
+        mask: (!Config.background.disableQuickshellDesktop && !ContextMenuStore.editMode) ? null : emptyRegion
         anchors.top: true
         anchors.bottom: true
         anchors.left: true
@@ -47,10 +47,13 @@ Variants {
         }
         TapHandler {
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+            enabled: !Config.background.disableQuickshellDesktop
             onTapped: (eventPoint, button) => {
+                if (Config.background.disableQuickshellDesktop)
+                    return;
                 if (desktopIcons.renameActive)
                     desktopIcons.renamingDelegate?.commitRename();
-                const onEmptyDesktop = Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y);
+                const onEmptyDesktop = !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y) && !ContextMenuStore.editMode;
                 if (button === Qt.RightButton && onEmptyDesktop) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.MiddleButton && onEmptyDesktop) {
@@ -73,17 +76,11 @@ Variants {
 
                 asynchronous: true
                 anchors.fill: parent
-                active: Config.background.wallpaperEnabled
+                active: Config.background.wallpaperEnabled && !ContextMenuStore.editMode
+                visible: !ContextMenuStore.editMode
                 sourceComponent: Wallpaper {
                     screen: win.modelData
                 }
-            }
-            Visualiser {
-                anchors.fill: parent
-                screen: win.modelData
-                wallpaper: wallpaper
-                z: 2
-                visible: true
             }
         }
         DesktopIcons {
@@ -94,7 +91,7 @@ Variants {
             z: 3
         }
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.layer: WlrLayer.Background
-        WlrLayershell.keyboardFocus: desktopIcons.renameActive ? WlrKeyboardFocus.Exclusive : desktopIcons.visible ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        WlrLayershell.layer: WlrLayer.Bottom
+        WlrLayershell.keyboardFocus: (!Config.background.disableQuickshellDesktop && desktopIcons.renameActive) ? WlrKeyboardFocus.Exclusive : (!Config.background.disableQuickshellDesktop && desktopIcons.visible) ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
     }
 }

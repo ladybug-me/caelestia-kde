@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Caelestia.Components
 import Caelestia.Config
 import qs.components
@@ -61,50 +62,12 @@ PageBase {
             ToggleRow {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
+                last: true
                 text: qsTr("Auto-hide lyrics")
                 subtext: qsTr("Hide lyrics when a window is open")
                 reset: ({ node: GlobalConfig.background.desktopLyrics, setting: "autoHide" })
                 checked: Config.background.desktopLyrics.autoHide
                 onToggled: GlobalConfig.background.desktopLyrics.autoHide = checked
-            }
-
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                last: !Config.background.visualiser.enabled
-                text: qsTr("Background visualiser")
-                subtext: qsTr("Show music visualiser on wallpaper (May consume more power)")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "enabled" })
-                checked: Config.background.visualiser.enabled
-                onToggled: {
-                    GlobalConfig.background.visualiser.enabled = checked;
-                    if (!checked)
-                        GlobalConfig.background.visualiser.autoHide = false;
-                }
-            }
-
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                visible: Config.background.visualiser.enabled
-                text: qsTr("Auto-hide visualiser")
-                subtext: qsTr("Hide visualiser when a window is fullscreen")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "autoHide" })
-                checked: Config.background.visualiser.autoHide
-                onToggled: GlobalConfig.background.visualiser.autoHide = checked
-            }
-
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                last: true
-                visible: Config.background.visualiser.enabled
-                text: qsTr("Hide on all monitors")
-                subtext: qsTr("Also hide on all other monitors if disabled by a window")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "hideOnAllMonitors" })
-                checked: Config.background.visualiser.hideOnAllMonitors
-                enabled: Config.background.visualiser.autoHide
-                onToggled: GlobalConfig.background.visualiser.hideOnAllMonitors = checked
             }
         }
 
@@ -170,46 +133,26 @@ PageBase {
 
             ToggleRow {
                 first: true
+                last: !Config.background.visualiser.enabled
                 Layout.fillWidth: true
-                text: qsTr("Blur")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "blur" })
-                checked: Config.background.visualiser.blur
-                onToggled: GlobalConfig.background.visualiser.blur = checked
+                text: qsTr("Enable Visualizer")
+                subtext: qsTr("Show audio visualizer on desktop")
+                reset: ({ node: GlobalConfig.background.visualiser, setting: "enabled" })
+                checked: Config.background.visualiser.enabled
+                onToggled: {
+                    PlasmaWidgets.setWidgetEnabled("visualizer", checked);
+                }
             }
 
-            StepperRow {
-                Layout.fillWidth: true
-                label: qsTr("Rounding")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "rounding" })
-                value: Config.background.visualiser.rounding
-                from: 0
-                to: 1
-                stepSize: 0.05
-                onMoved: v => GlobalConfig.background.visualiser.rounding = v
-            }
-
-            StepperRow {
-                Layout.fillWidth: true
-                label: qsTr("Spacing")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "spacing" })
-                value: Config.background.visualiser.spacing
-                from: 0.5
-                to: 3
-                stepSize: 0.1
-                onMoved: v => GlobalConfig.background.visualiser.spacing = v
-            }
-
-            StepperRow {
+            InfoRow {
                 last: true
                 Layout.fillWidth: true
-                label: qsTr("Size")
-                subtext: qsTr("Column width multiplier, lower values leave more room in the middle")
-                reset: ({ node: GlobalConfig.background.visualiser, setting: "size" })
-                value: Config.background.visualiser.size
-                from: 0.25
-                to: 1.25
-                stepSize: 0.05
-                onMoved: v => GlobalConfig.background.visualiser.size = v
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+                visible: Config.background.visualiser.enabled
+                icon: "info"
+                wrapSubtext: true
+                label: qsTr("Configure Visualizer")
+                subtext: qsTr("Right click on desktop -> Edit Mode -> Right click visualizer -> Configure")
             }
         }
     }

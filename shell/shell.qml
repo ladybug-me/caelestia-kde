@@ -68,6 +68,7 @@ ShellRoot {
 
     Background {}
     BadAppleOverlay {}
+    EditModeOverlay {}
 
     Drawers {}
 

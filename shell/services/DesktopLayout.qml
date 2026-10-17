@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Caelestia.Config
 import qs.utils
 
 // Persistent state of the desktop icons: where each icon sits, the virtual
@@ -37,6 +38,7 @@ Singleton {
     property bool clipboardHasFiles: false
     // Screen name -> DesktopIcons controller instance
     property var controllers: ({})
+    property string pendingWallpaperSyncMode: ""
 
     signal pasteRequested(string screenName, real x, real y)
     signal viewOptionsRequested(string screenName, real x, real y)
@@ -258,6 +260,14 @@ Singleton {
         });
     }
 
+    function syncKdeWallpaperLayout(modeOrIconsEnabled: var): void {
+        if (typeof modeOrIconsEnabled === "boolean")
+            pendingWallpaperSyncMode = modeOrIconsEnabled ? "desktop" : "folder";
+        else
+            pendingWallpaperSyncMode = String(modeOrIconsEnabled);
+        syncDebounceTimer.restart();
+    }
+
     Process {
         id: clipboardProc
 
@@ -276,6 +286,17 @@ Singleton {
 
         interval: 400
         onTriggered: layoutFile.setText(root.serialise())
+    }
+
+    Timer {
+        id: syncDebounceTimer
+
+        interval: 350
+        repeat: false
+        onTriggered: {
+            if (root.pendingWallpaperSyncMode)
+                Launch.exec(["bash", Quickshell.shellPath("scripts/sync-kde-wallpaper-layout.sh"), root.pendingWallpaperSyncMode]);
+        }
     }
 
     FileView {

@@ -1322,7 +1322,7 @@ Item {
     }
 
     anchors.fill: parent
-    visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.wallpaperEnabled
+    visible: !root.screenConfig.disableQuickshellDesktop && root.screenConfig.enabled && !ContextMenuStore.editMode
     focus: true
     Keys.onPressed: event => handleKey(event)
 

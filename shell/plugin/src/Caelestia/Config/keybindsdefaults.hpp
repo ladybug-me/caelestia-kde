@@ -30,6 +30,8 @@ inline QJsonObject defaultKeybinds() {
         { QStringLiteral("github-desktop"), QStringLiteral("Meta+G") },
         { QStringLiteral("nemo"), QStringLiteral("Meta+Alt+E") },
         { QStringLiteral("kcolorpicker"), QStringLiteral("Meta+Shift+C") },
+        { QStringLiteral("skwd-wall"), QStringLiteral("Meta+X") },
+        { QStringLiteral("wallpaperRandom"), QStringLiteral("Meta+Shift+X") },
         { QStringLiteral("krohnkiteFocusUp"), QStringLiteral("Meta+Up") },
         { QStringLiteral("krohnkiteFocusDown"), QStringLiteral("Meta+Down") },
         { QStringLiteral("krohnkiteFocusLeft"), QStringLiteral("Meta+Left") },

@@ -45,17 +45,17 @@ PageBase {
         ToggleRow {
             Layout.fillWidth: true
             first: true
-            text: qsTr("Show KDE Desktop")
-            subtext: qsTr("Disable Caelestia desktop and use native Plasma 6 desktop instead")
-            reset: ({ node: GlobalConfig.background, setting: "wallpaperEnabled" })
-            checked: !Config.background.wallpaperEnabled
-            onToggled: {
-                GlobalConfig.background.wallpaperEnabled = !checked;
+            text: qsTr("Disable Quickshell Desktop")
+            subtext: qsTr("Completely disable quickshell desktop features and use plasma desktop.")
+            checked: Config.background.disableQuickshellDesktop
+            onToggled: { 
+                GlobalConfig.background.disableQuickshellDesktop = checked; 
                 for (let i = 0; i < Quickshell.screens.length; i++) {
                     let sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
-                    if (sConf) sConf.background.resetOption("wallpaperEnabled");
+                    if (sConf) sConf.background.resetOption("disableQuickshellDesktop");
                 }
-                GlobalConfig.save();
+                GlobalConfig.save(); 
+                DesktopLayout.syncKdeWallpaperLayout(checked ? "folder" : "desktop");
             }
         }
 
@@ -74,7 +74,7 @@ PageBase {
                 }
                 GlobalConfig.save();
             }
-            enabled: Config.background.wallpaperEnabled
+            enabled: !Config.background.disableQuickshellDesktop
         }
 
         ToggleRow {
@@ -92,7 +92,7 @@ PageBase {
                 }
                 GlobalConfig.save();
             }
-            enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled
+            enabled: !Config.background.disableQuickshellDesktop && Config.background.desktopIconsEnabled
         }
 
         ToggleRow {
@@ -110,7 +110,7 @@ PageBase {
                 }
                 GlobalConfig.save();
             }
-            enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled && Config.background.materialYouIconsEnabled
+            enabled: !Config.background.disableQuickshellDesktop && Config.background.desktopIconsEnabled && Config.background.materialYouIconsEnabled
         }
 
         SelectRow {
@@ -120,7 +120,7 @@ PageBase {
             subtext: qsTr("Ctrl+scroll on the desktop also changes it")
             menuItems: root.iconSizeItems
             active: root.iconSizeItems.find(i => i.value === DesktopLayout.iconSize) ?? root.iconSizeItems[1]
-            enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled
+            enabled: !Config.background.disableQuickshellDesktop && Config.background.desktopIconsEnabled
             onSelected: item => DesktopLayout.setIconSize(item.value)
         }
 
@@ -131,7 +131,7 @@ PageBase {
             subtext: qsTr("Keep desktop icons packed; dragging one reorders the rest")
             checked: DesktopLayout.autoArrange
             onToggled: DesktopLayout.setAutoArrange(checked)
-            enabled: Config.background.wallpaperEnabled && Config.background.desktopIconsEnabled
+            enabled: !Config.background.disableQuickshellDesktop && Config.background.desktopIconsEnabled
         }
 
         ToggleRow {
@@ -170,6 +170,8 @@ PageBase {
             icon: "extension"
             label: qsTr("Desktop Addons")
             status: qsTr("Visualiser, auto-hide, styling")
+            enabled: !Config.background.disableQuickshellDesktop
+            opacity: enabled ? 1.0 : 0.5
             onClicked: root.nState.openSubPage(1)
         }
 
@@ -178,6 +180,8 @@ PageBase {
             icon: "menu_open"
             label: qsTr("Right Click Menu")
             status: qsTr("Configure desktop right click menu")
+            enabled: !Config.background.disableQuickshellDesktop
+            opacity: enabled ? 1.0 : 0.5
             onClicked: root.nState.openSubPage(2)
         }
     }

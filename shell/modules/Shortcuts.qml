@@ -358,6 +358,20 @@ Scope {
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type
+        name: "skwd-wall"
+        description: qsTr("Wallpaper (skwd-wall)")
+        onPressed: Launch.exec(["sh", "-c", "command -v skwd-wall-v2 >/dev/null 2>&1 && exec skwd-wall-v2 || exec skwd-wall"])
+    }
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
+        name: "wallpaperRandom"
+        description: qsTr("Random wallpaper")
+        onPressed: Launch.exec(["sh", "-c", "command -v skwd-wall-v2 >/dev/null 2>&1 && exec skwd-wall-v2 random || (command -v skwd-wall >/dev/null 2>&1 && exec skwd-wall random) || caelestia wallpaper -r"])
+    }
+    // qmllint disable unresolved-type
+    CustomShortcut {
+        // qmllint enable unresolved-type
         name: "keybinds"
         description: qsTr("Open keybinds list")
         onPressed: {

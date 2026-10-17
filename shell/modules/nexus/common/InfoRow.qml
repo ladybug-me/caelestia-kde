@@ -16,6 +16,7 @@ ConnectedRect {
     property string icon
     property color iconColour: Colours.palette.m3onSurfaceVariant
     property Component leadingComponent: icon ? iconComp : null
+    property bool wrapSubtext: false
 
     Layout.fillWidth: true
     implicitHeight: rowLayout.implicitHeight + rowLayout.anchors.margins * 2
@@ -53,17 +54,19 @@ ConnectedRect {
                 id: label
 
                 Layout.fillWidth: true
+                visible: text.length > 0
                 font: Tokens.font.body.small
                 elide: Text.ElideRight
             }
 
             StyledText {
                 Layout.fillWidth: true
-                visible: root.subtext
+                visible: root.subtext.length > 0
                 text: root.subtext
                 color: Colours.palette.m3onSurfaceVariant
                 font: NexusStyle.secondaryFont
-                elide: Text.ElideRight
+                wrapMode: root.wrapSubtext ? Text.Wrap : Text.NoWrap
+                elide: root.wrapSubtext ? Text.ElideNone : Text.ElideRight
             }
         }
 

@@ -7,3 +7,5 @@ target_compile_definitions(version PRIVATE
     DISTRIBUTOR="${DISTRIBUTOR}"
 )
 install(TARGETS version DESTINATION ${INSTALL_LIBDIR})
+
+

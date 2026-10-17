@@ -21,7 +21,7 @@ Item {
 
     property real shapesScale: frame ? Math.min(frame.width / 220, frame.height / 220) : 1
     readonly property bool autoHide: Config.background.desktopShapes.autoHide
-    readonly property bool windowHidesShapes: Kwin.windowHidesDesktopWidgets(root.screen ? root.screen.name : "", Config.background.visualiser.hideOnAllMonitors)
+    readonly property bool windowHidesShapes: Kwin.windowHidesDesktopWidgets(root.screen ? root.screen.name : "", false)
     readonly property bool shouldHide: autoHide && windowHidesShapes
     readonly property bool isPlaying: Players.active?.isPlaying ?? false
 

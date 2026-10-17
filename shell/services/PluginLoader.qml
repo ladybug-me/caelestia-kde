@@ -30,6 +30,18 @@ Item {
         return meta.enabled && (meta.type === "quickshell" || meta.type === "kwineffect");
     }
 
+    // The plugins page reads the plugins out of a ListModel, which drops nested
+    // arrays, so the manifest's settings schema is kept in this list instead and
+    // looked up by id when the settings popup needs it.
+    function settingsSchemaFor(idOrName) {
+        for (let i = 0; i < discovered.length; i++) {
+            const meta = discovered[i];
+            if ((meta.id || meta.name) === idOrName)
+                return meta.settings || [];
+        }
+        return [];
+    }
+
     function updateEnabledCount() {
         let count = 0;
         for (let i = 0; i < discovered.length; i++) {
@@ -167,6 +179,7 @@ Item {
                             let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
                             meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
                             meta.settings = meta.settings || [];
+                            meta.settingsCount = meta.settings.length;
                             meta.mediaurl = meta.mediaurl || "";
                             meta.restart = (meta.restart === "true" || meta.restart === true);
 
@@ -250,6 +263,7 @@ Item {
         let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
         meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
         meta.settings = meta.settings || [];
+        meta.settingsCount = meta.settings.length;
         meta.mediaurl = meta.mediaurl || "";
         meta.restart = (meta.restart === "true" || meta.restart === true);
 
@@ -293,6 +307,7 @@ Item {
                     let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
                     meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
                     meta.settings = meta.settings || [];
+                    meta.settingsCount = meta.settings.length;
                     meta.mediaurl = meta.mediaurl || "";
                     meta.icon = meta.icon || "extension";
                     meta.restart = (meta.restart === "true" || meta.restart === true);

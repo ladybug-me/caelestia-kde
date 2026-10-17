@@ -11,18 +11,27 @@ import qs.modules.nexus.common
 Popup {
     id: root
 
-    parent: Overlay.overlay
-    x: Math.round((parent.width - width) / 2)
-    y: Math.round((parent.height - height) / 2)
+    property string pluginId: ""
+
+    property var settingsSchema: PluginLoader.settingsSchemaFor(root.pluginId)
+
+    property string pluginName: ""
+
+    function openIn(win) {
+        if (win && win.contentItem)
+            parent = win.contentItem;
+
+        open();
+    }
+
+    // The popup is shown from a page of the Nexus, which lives inside a Quickshell content
+    // window. Overlay.overlay resolves to null there, so the parent is set from the window
+    // the caller is in: a QtQuick Popup can only be shown once it belongs to a window.
+    x: parent ? Math.round((parent.width - width) / 2) : 0
+    y: parent ? Math.round((parent.height - height) / 2) : 0
     width: 450
     modal: true
     dim: true
-
-    property string pluginId: ""
-
-    property var settingsSchema: []
-
-    property string pluginName: ""
 
     Settings {
         id: pSettings
@@ -83,6 +92,30 @@ Popup {
                                 }
                             }
                         }
+                    }
+
+                    StyledSwitch {
+                        visible: delegateRow.modelData.type === "toggle"
+                        checked: root.visible ? pSettings.value(delegateRow.modelData.id, delegateRow.modelData.default ?? false) : false
+                        onToggled: pSettings.setValue(delegateRow.modelData.id, checked)
+                    }
+
+                    StyledTextField {
+                        visible: delegateRow.modelData.type === "text"
+                        Layout.preferredWidth: 180
+                        text: root.visible ? pSettings.value(delegateRow.modelData.id, delegateRow.modelData.default ?? "") : ""
+                        placeholderText: delegateRow.modelData.placeholder ?? ""
+                        onEditingFinished: pSettings.setValue(delegateRow.modelData.id, text)
+                    }
+
+                    CustomSpinBox {
+                        visible: delegateRow.modelData.type === "number"
+                        Layout.preferredWidth: 140
+                        min: delegateRow.modelData.min ?? 0
+                        max: delegateRow.modelData.max ?? 100
+                        step: delegateRow.modelData.step ?? 1
+                        value: root.visible ? Number(pSettings.value(delegateRow.modelData.id, delegateRow.modelData.default ?? 0)) : 0
+                        onValueModified: v => pSettings.setValue(delegateRow.modelData.id, v)
                     }
                 }
             }

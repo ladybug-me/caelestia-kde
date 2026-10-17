@@ -115,13 +115,14 @@ Item {
         } else if (id === "tray" && Config.bar.popouts.tray && !visibilities.sidebar) {
             const tray = ch.item as Tray;
             const mouseMap = mapToItem(tray.expandIcon, isHorizontal ? pos : tray.implicitWidth / 2, isHorizontal ? tray.implicitHeight / 2 : pos);
-            if (!Config.bar.tray.compact || (tray.expanded && !tray.expandIcon.contains(mouseMap))) {
-                const traySize = isHorizontal ? tray.layout.implicitWidth : tray.layout.implicitHeight;
-                const localX = isHorizontal ? tray.layout.mapFromItem(null, pos, 0).x : tray.layout.mapFromItem(null, 0, pos).y;
-                const index = Math.floor((localX / (traySize + Tokens.spacing.small)) * tray.items.count);
-                const trayItem = tray.items.itemAt(index);
-                if (trayItem && localX >= 0 && localX <= traySize) {
-                    popouts.currentName = `traymenu${index}`;
+            const local = isHorizontal ? tray.layout.mapFromItem(null, pos, 0) : tray.layout.mapFromItem(null, 0, pos);
+            const trayItem = tray.layout.childAt(isHorizontal ? local.x : tray.layout.width / 2, isHorizontal ? tray.layout.height / 2 : local.y) as TrayItem;
+            if (tray.expandIcon.contains(mouseMap)) {
+                popouts.hasCurrent = false;
+                tray.expanded = true;
+            } else if (!Config.bar.tray.compact || tray.expanded || (trayItem?.alwaysVisible ?? false)) {
+                if (trayItem && trayItem.trayIndex >= 0) {
+                    popouts.currentName = `traymenu${trayItem.trayIndex}`;
                     popouts.currentCenter = isHorizontal ? trayItem.mapToItem(null, trayItem.implicitWidth / 2, 0).x : trayItem.mapToItem(null, 0, trayItem.implicitHeight / 2).y;
                     popouts.hasCurrent = true;
                 } else {
@@ -129,7 +130,6 @@ Item {
                 }
             } else {
                 popouts.hasCurrent = false;
-                tray.expanded = true;
             }
         } else if (id === "statusIcons") {
             const statusIcons = ch.item as StatusIcons;

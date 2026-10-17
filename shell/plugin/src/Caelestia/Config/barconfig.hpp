@@ -113,6 +113,8 @@ class BarTray : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, compact, true)
     CONFIG_GLOBAL_LIST(BarTrayIconSubList, iconSubs, {})
     CONFIG_GLOBAL_PROPERTY(QStringList, hiddenIcons, QStringList())
+    CONFIG_GLOBAL_PROPERTY(QStringList, alwaysVisible, QStringList())
+    CONFIG_GLOBAL_PROPERTY(QStringList, order, QStringList())
 };
 
 class BarStatus : public settings::ObjectNode {

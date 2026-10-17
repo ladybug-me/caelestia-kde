@@ -6,99 +6,63 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
-import qs.utils
 import qs.modules.nexus.common
 
-Item {
+ColumnLayout {
     id: root
 
-    property string label
+    property string name
+    property string defaultName
     property string subtext
-    property string placeholder
-    property bool overridden
-    property bool editing: false
 
     signal renamed(string name)
 
-    function startEdit(): void {
-        field.text = root.overridden ? root.label : "";
-        root.editing = true;
-        field.forceActiveFocus();
-        field.selectAll();
-    }
-
     function commit(): void {
-        if (!root.editing)
-            return;
-        root.editing = false;
-        root.renamed(field.text.trim());
+        const value = field.text.trim();
+        if (value !== root.name)
+            root.renamed(value === root.defaultName ? "" : value);
+        field.text = root.name;
     }
 
-    function cancel(): void {
-        root.editing = false;
+    spacing: 0
+
+    StyledTextField {
+        id: field
+
+        Layout.preferredWidth: Tokens.sizes.nexus.textFieldWidth
+        Layout.fillWidth: false
+        horizontalAlignment: TextInput.AlignLeft
+        verticalPadding: Tokens.padding.small
+        horizontalPadding: Tokens.padding.medium
+        selectByMouse: true
+        onAccepted: root.commit()
+        onActiveFocusChanged: {
+            if (!activeFocus)
+                root.commit();
+        }
+        Keys.onEscapePressed: {
+            field.text = root.name;
+            field.focus = false;
+        }
+
+        Component.onCompleted: text = root.name
     }
 
-    implicitWidth: column.implicitWidth
-    implicitHeight: column.implicitHeight
-
-    ColumnLayout {
-        id: column
-
-        anchors.fill: parent
-        spacing: 0
-
-        StyledText {
-            id: labelText
-
-            Layout.fillWidth: true
-            visible: !root.editing
-            text: root.label
-            font: Tokens.font.body.small
-            elide: Text.ElideRight
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            visible: !root.editing && !!root.subtext
-            text: root.subtext
-            color: Colours.palette.m3onSurfaceVariant
-            font: NexusStyle.secondaryFont
-            elide: Text.ElideRight
-        }
-
-        StyledTextField {
-            id: field
-
-            Layout.fillWidth: true
-            Layout.minimumWidth: 160
-            visible: root.editing
-            horizontalAlignment: TextInput.AlignLeft
-            verticalPadding: Tokens.padding.small
-            horizontalPadding: Tokens.padding.medium
-            placeholderText: root.placeholder
-            onAccepted: root.commit()
-            onActiveFocusChanged: {
-                if (!activeFocus && root.editing)
-                    root.commit();
-            }
-            Keys.onEscapePressed: root.cancel()
-
-            Connections {
-                function onActiveChanged(): void {
-                    if (field.Window.window.active)
-                        field.forceActiveFocus();
-                }
-
-                target: field.Window.window
-                enabled: root.editing
-            }
-        }
+    StyledText {
+        Layout.fillWidth: true
+        visible: !!root.subtext
+        text: root.subtext
+        color: Colours.palette.m3onSurfaceVariant
+        font: NexusStyle.secondaryFont
+        elide: Text.ElideRight
     }
 
-    MouseArea {
-        anchors.fill: parent
-        enabled: !root.editing
-        cursorShape: Qt.IBeamCursor
-        onClicked: root.startEdit()
+    Connections {
+        function onNameChanged(): void {
+            if (!field.activeFocus)
+                field.text = root.name;
+        }
+
+        target: root
     }
 }

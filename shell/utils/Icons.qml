@@ -285,13 +285,6 @@ Singleton {
         return title || id;
     }
 
-    function hasTrayName(id: string): bool {
-        for (const sub of GlobalConfig.bar.tray.iconSubs.values)
-            if (sub.id === id)
-                return !!sub.displayName;
-        return false;
-    }
-
     function setTrayName(id: string, displayName: string): void {
         const subs = [...GlobalConfig.bar.tray.iconSubs.values].map(sub => ({
                     id: sub.id,

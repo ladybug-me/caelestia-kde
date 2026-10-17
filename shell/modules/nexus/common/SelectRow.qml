@@ -12,7 +12,6 @@ ConnectedRect {
 
     property alias label: label.text
     property Component labelComponent
-    property alias labelItem: labelLoader.item
     property string subtext
     property string icon
     property alias menuItems: splitButton.menuItems

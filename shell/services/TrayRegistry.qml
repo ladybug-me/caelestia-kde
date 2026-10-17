@@ -140,8 +140,8 @@ Singleton {
             known.set(alias, {
                 id: item.id,
                 alias: alias,
-                title: item.title || item.id,
-                icon: item.icon || "",
+                title: item.title || existing?.title || item.id,
+                icon: item.icon || existing?.icon || "",
                 lastSeen: now
             });
         }

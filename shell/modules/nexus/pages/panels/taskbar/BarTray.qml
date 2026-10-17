@@ -46,9 +46,16 @@ PageBase {
         if (root.dragging)
             return;
 
+        const entries = root.entries;
+        if (entries.length === orderModel.count && entries.every((entry, i) => {
+            const row = orderModel.get(i);
+            return row.trayId === entry.id && row.trayKey === entry.alias && row.title === entry.title && row.trayIcon === entry.icon && row.running === entry.running;
+        }))
+            return;
+
         orderModel.clear();
-        for (let i = 0; i < root.entries.length; i++) {
-            const entry = root.entries[i];
+        for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
             orderModel.append({
                 trayId: entry.id,
                 trayKey: entry.alias,

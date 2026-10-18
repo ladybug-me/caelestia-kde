@@ -183,6 +183,10 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "legacy prebuilt artifacts should not claim a complete install"
     assert_contains "$workflow" 'cp -a stage/usr/bin/. dist/root/bin/' \
         "release staging should include the CMake-owned CLI tree"
+    assert_contains "$workflow" 'cp -a stage/etc/xdg/quickshell/caelestia dist/root/quickshell/' \
+        "release staging should copy quickshell config from etc, not usr/etc"
+    assert_not_contains "$workflow" 'stage/usr/etc' \
+        "release staging must not reference non-existent stage/usr/etc"
 }
 
 test_a_failing_step_stops_the_run() {

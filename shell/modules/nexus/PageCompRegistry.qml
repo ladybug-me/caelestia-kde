@@ -242,9 +242,6 @@ QtObject {
                     OsdPage {}
                 }
                 Component {
-                    ClipboardPage {}
-                }
-                Component {
                     UtilitiesPanelPage {}
                 }
                 Component {

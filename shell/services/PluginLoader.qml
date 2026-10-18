@@ -30,6 +30,18 @@ Item {
         return meta.enabled && (meta.type === "quickshell" || meta.type === "kwineffect");
     }
 
+    // The plugins page reads the plugins out of a ListModel, which drops nested
+    // arrays, so the manifest's settings schema is kept in this list instead and
+    // looked up by id when the settings popup needs it.
+    function settingsSchemaFor(idOrName) {
+        for (let i = 0; i < discovered.length; i++) {
+            const meta = discovered[i];
+            if ((meta.id || meta.name) === idOrName)
+                return meta.settings || [];
+        }
+        return [];
+    }
+
     function updateEnabledCount() {
         let count = 0;
         for (let i = 0; i < discovered.length; i++) {
@@ -72,6 +84,26 @@ Item {
         meta.barWidgets = normalized;
     }
 
+    function normalizeBackgroundWidgets(meta): void {
+        const specs = meta.backgroundWidgets;
+        const normalized = [];
+
+        for (const spec of (specs ?? [])) {
+            if (!spec || !spec.id || !spec.component)
+                continue;
+            if (spec.component.startsWith("/") || spec.component.indexOf("..") !== -1)
+                continue;
+            normalized.push({
+                id: spec.id,
+                name: spec.name ?? spec.id,
+                z: typeof spec.z === "number" ? spec.z : 4,
+                componentUrl: "file://" + meta.path + "/" + spec.component
+            });
+        }
+
+        meta.backgroundWidgets = normalized;
+    }
+
     function syncBarWidgets(meta, enabled): void {
         const key = meta.id || meta.name;
         if (!key)
@@ -80,6 +112,16 @@ Item {
             BarWidgetRegistry.register(key, meta.barWidgets);
         else
             BarWidgetRegistry.unregister(key);
+    }
+
+    function syncBackgroundWidgets(meta, enabled): void {
+        const key = meta.id || meta.name;
+        if (!key)
+            return;
+        if (enabled && meta.backgroundWidgets && meta.backgroundWidgets.length > 0)
+            BackgroundWidgetRegistry.register(key, meta.backgroundWidgets);
+        else
+            BackgroundWidgetRegistry.unregister(key);
     }
 
     function loadPlugin(meta) {
@@ -160,6 +202,7 @@ Item {
                     unloadPlugin(itemId);
                 }
                 syncBarWidgets(item, enable);
+                syncBackgroundWidgets(item, enable);
                 updateEnabledCount();
             }
         }
@@ -179,6 +222,7 @@ Item {
         loadedCount = 0;
 
         BarWidgetRegistry.clear();
+        BackgroundWidgetRegistry.clear();
 
         for (let k = 0; k < discovered.length; k++) {
             let meta = discovered[k];
@@ -188,6 +232,7 @@ Item {
                 loadPlugin(meta);
             }
             syncBarWidgets(meta, meta.enabled);
+            syncBackgroundWidgets(meta, meta.enabled);
         }
         updateEnabledCount();
         pluginsReloaded();
@@ -214,6 +259,7 @@ Item {
                             let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
                             meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
                             meta.settings = meta.settings || [];
+                            meta.settingsCount = meta.settings.length;
                             meta.mediaurl = meta.mediaurl || "";
                             meta.restart = (meta.restart === "true" || meta.restart === true);
 
@@ -222,6 +268,7 @@ Item {
                             meta.icon = meta.icon || "extension";
 
                             pluginLoader.normalizeBarWidgets(meta);
+                            pluginLoader.normalizeBackgroundWidgets(meta);
                             pluginLoader.discovered.push(meta);
                         } catch(e) {
                             console.log("Failed to parse metadata.json for", "${pluginInfo.id}", e);
@@ -279,6 +326,7 @@ Item {
     function removePluginFromAvailable(id) {
         unloadPlugin(id);
         BarWidgetRegistry.unregister(id);
+        BackgroundWidgetRegistry.unregister(id);
         for (let j = 0; j < discovered.length; j++) {
             if ((discovered[j].id || discovered[j].name) === id) {
                 discovered.splice(j, 1);
@@ -299,6 +347,7 @@ Item {
         let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
         meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
         meta.settings = meta.settings || [];
+        meta.settingsCount = meta.settings.length;
         meta.mediaurl = meta.mediaurl || "";
         meta.restart = (meta.restart === "true" || meta.restart === true);
 
@@ -307,10 +356,12 @@ Item {
         meta.icon = meta.icon || "extension";
 
         normalizeBarWidgets(meta);
+        normalizeBackgroundWidgets(meta);
 
         discovered.push(meta);
         CaelestiaApi.plugins.available.append(meta);
         syncBarWidgets(meta, meta.enabled);
+        syncBackgroundWidgets(meta, meta.enabled);
         updateEnabledCount();
         pluginLoader.pluginsReloaded();
     }
@@ -345,6 +396,7 @@ Item {
                     let disabled = pluginLoader.pluginSettings.disabledPlugins || [];
                     meta.enabled = (disabled.indexOf(meta.id) === -1 && disabled.indexOf(meta.name) === -1);
                     meta.settings = meta.settings || [];
+                    meta.settingsCount = meta.settings.length;
                     meta.mediaurl = meta.mediaurl || "";
                     meta.icon = meta.icon || "extension";
                     meta.restart = (meta.restart === "true" || meta.restart === true);
@@ -358,6 +410,7 @@ Item {
                     }
 
                     pluginLoader.normalizeBarWidgets(meta);
+                    pluginLoader.normalizeBackgroundWidgets(meta);
 
                     console.log("addPluginToAvailable: adding", meta.id, "to available list. mediaurl:", meta.mediaurl);
 
@@ -380,6 +433,7 @@ Item {
                     pluginLoader.discovered.push(meta);
                     CaelestiaApi.plugins.available.append(meta);
                     pluginLoader.syncBarWidgets(meta, meta.enabled);
+                    pluginLoader.syncBackgroundWidgets(meta, meta.enabled);
                     pluginsReloaded();
                     if (meta.restart) {
                         PluginStore.restartRequired = true;

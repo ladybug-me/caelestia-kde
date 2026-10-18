@@ -3,76 +3,55 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Effects
 import Quickshell
-import Quickshell.Wayland
 import Caelestia.Config
-import qs.components.containers
 import qs.services
 
-Variants {
-    model: BadApplePlayer.shouldPlay ? Quickshell.screens : []
+Item {
+    id: root
 
-    StyledWindow {
-        id: root
+    required property ShellScreen screen
 
-        required property ShellScreen modelData
+    anchors.fill: parent
 
-        screen: modelData
-        name: "drawers"
-        isDesktopWidget: true
-        WlrLayershell.exclusionMode: ExclusionMode.Ignore
-        WlrLayershell.layer: WlrLayer.Bottom
-        color: "transparent"
+    Item {
+        id: badAppleMaskContainer
 
-        anchors.top: true
-        anchors.bottom: true
-        anchors.left: true
-        anchors.right: true
+        anchors.fill: parent
+        layer.enabled: BadApplePlayer.shouldPlay
+        layer.effect: BadApplePlayer.shouldPlay ? badAppleShaderComponent : null
 
-        mask: Region {
-            width: root.width
-            height: root.height
-        }
-
-        Item {
-            id: badAppleMaskContainer
-
+        Rectangle {
             anchors.fill: parent
-            layer.enabled: BadApplePlayer.shouldPlay
-            layer.effect: BadApplePlayer.shouldPlay ? badAppleShaderComponent : null
+            color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.tPalette.m3surface
+            visible: BadApplePlayer.shouldPlay
+            opacity: 1.0
+        }
+    }
 
-            Rectangle {
-                anchors.fill: parent
-                color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.tPalette.m3surface
-                visible: BadApplePlayer.shouldPlay
-                opacity: 1.0
+    Component {
+        id: badAppleShaderComponent
+
+        ShaderEffect {
+            property variant mask: ShaderEffectSource {
+                sourceItem: badAppleMaskSource.videoOutput
+                hideSource: true
             }
-        }
-
-        Component {
-            id: badAppleShaderComponent
-
-            ShaderEffect {
-                property variant mask: ShaderEffectSource {
-                    sourceItem: badAppleMaskSource.videoOutput
-                    hideSource: true
-                }
-                property real videoRatio: {
-                    if (badAppleMaskSource.videoOutput.sourceRect.height > 0)
-                        return badAppleMaskSource.videoOutput.sourceRect.width / badAppleMaskSource.videoOutput.sourceRect.height;
-                    return 16.0 / 9.0;
-                }
-                property real screenRatio: root.width / root.height
-
-                fragmentShader: "qrc:/shaders/badapple.frag.qsb"
+            property real videoRatio: {
+                if (badAppleMaskSource.videoOutput && badAppleMaskSource.videoOutput.sourceRect.height > 0)
+                    return badAppleMaskSource.videoOutput.sourceRect.width / badAppleMaskSource.videoOutput.sourceRect.height;
+                return 16.0 / 9.0;
             }
-        }
+            property real screenRatio: root.width / Math.max(1.0, root.height)
 
-        BadAppleVideo {
-            id: badAppleMaskSource
-
-            screenModel: root.screen
-            anchors.fill: parent
-            opacity: 0.0
+            fragmentShader: "qrc:/shaders/badapple.frag.qsb"
         }
+    }
+
+    BadAppleVideo {
+        id: badAppleMaskSource
+
+        screenModel: root.screen
+        anchors.fill: parent
+        opacity: 0.0
     }
 }

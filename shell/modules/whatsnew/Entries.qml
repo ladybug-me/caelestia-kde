@@ -63,6 +63,15 @@ QtObject {
             "icon": "chat",
             "title": qsTr("Rich Notification Formatting"),
             "description": qsTr("Notifications in both popups and the sidebar now cleanly sanitize FreeDesktop markup, auto-link web URLs, and preserve paragraph formatting.")
+        },
+        {
+            "id": "shimeji-cat",
+            "revision": 62,
+            "icon": "pets",
+            "title": qsTr("Shimeji Cat update"),
+            "settingsPage": "plugins",
+            "settingsSubPage": 1,
+            "description": qsTr("Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed.")
         }
     ]
 

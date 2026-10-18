@@ -1694,7 +1694,7 @@ wl-paste --no-newline --type text/uri-list`]
         id: gridItem
 
         readonly property var barConfig: GlobalConfig.forScreen(root.screenData.name).bar
-        readonly property bool barEnabled: barConfig.enabled ?? Config.bar.enabled
+        readonly property bool barEnabled: !Strings.testRegexList(barConfig.excludedScreens, root.screenData.name)
         readonly property string barPosition: barConfig.position ?? Config.bar.position
         readonly property int barZone: barEnabled ? (Visibilities.bars.get(root.screenData.name)?.visualThickness ?? (Tokens.sizes.bar.innerWidth + Math.max(Tokens.padding.small, Config.border.thickness))) : 0
         readonly property int baseMargin: Math.round(Tokens.padding.large * 2 * root.effectiveScale)

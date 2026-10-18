@@ -2018,7 +2018,7 @@
   <context>
     <name>BarComponents</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/taskbar/BarComponents.qml" line="+21"/>
+      <location filename="../modules/nexus/pages/panels/taskbar/BarComponents.qml" line="+22"/>
       <source>Logo</source>
       <translation>標誌</translation>
     </message>
@@ -2178,7 +2178,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+189"/>
+      <location line="+204"/>
       <source>Not detected</source>
       <translation>未檢測到</translation>
     </message>
@@ -2193,7 +2193,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+140"/>
+      <location line="+143"/>
       <source>Toggle &amp; rearrange</source>
       <translation>切換與重排</translation>
     </message>
@@ -4015,29 +4015,6 @@
     </message>
   </context>
   <context>
-    <name>ClipboardPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/utilities/ClipboardPage.qml" line="+9"/>
-      <source>Clipboard</source>
-      <translation>剪貼簿</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>History</source>
-      <translation>歷史記錄</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Maximum entries</source>
-      <translation>最大條目數</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Number of entries available in the launcher</source>
-      <translation>啟動器中可用的條目數</translation>
-    </message>
-  </context>
-  <context>
     <name>ColourSelect</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/ColourSelect.qml" line="+39"/>
@@ -4073,7 +4050,7 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+61"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+83"/>
       <source>Greeter settings</source>
       <translation type="unfinished"/>
     </message>
@@ -4995,13 +4972,13 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+586"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+593"/>
       <location line="+3"/>
       <source>Group</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+295"/>
+      <location line="+298"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation type="unfinished"/>
@@ -5019,7 +4996,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+493"/>
+      <location line="+498"/>
       <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
@@ -5389,232 +5366,72 @@ Now go touch grass</source>
     <name>Entries</name>
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
-      <source>Terminal Updates</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The system package updater is now configured to launch inside your preferred user terminal emulator, with an automatic fallback to Konsole.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Built-in Uninstaller</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>A safe uninstaller action has been added directly to the About page in settings, providing a clean way to remove the shell and its owned resources.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>System Font Integration</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>A new option allows the shell to automatically follow your system-wide KDE font settings, rather than using a static default font.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Export Configuration</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>You can now export your complete shell configuration to a YAML file, providing a lossless backup of all your settings and preferences.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Setting Reset Buttons</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Added persistent, inline reset buttons across Nexus settings pages, allowing you to instantly restore individual sliders, steppers, and toggles to their default values.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Quick Toggles Overhaul</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Complete visual and functional overhaul of Quick Toggles. Supports custom order, multiple layouts, settings shortcut, and more.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Interactive Desktop Icons</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>A complete overhaul of desktop icons adding support for rectangle multi-selection, keyboard navigation, grid auto-alignment, grouping, and drag-and-drop.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Sidebar Startup Tab</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The sidebar can now be configured to open on the last-used tab, or to always open on a specific default tab of your choice.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Desktop Elements Fine-Tuning</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Added configurable fine X and Y position offsets for the desktop clock and desktop lyrics, allowing precise placement of elements on your wallpaper.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Wi-Fi Hotspot</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>A built-in Wi-Fi hotspot toggle switch has been added to the quick toggles and network popout, complete with auto-refresh state monitoring.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Advanced Brightness Control</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The Brightness OSD now perfectly synchronizes with KWin state during slider drags, and supports reading and displaying software dimming multipliers.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Audio Visualizer Enhancements</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The audio visualizer now allows you to choose the capture source (System Audio Output vs Microphone Input), and features configurable side widths and margin size scaling.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Ungrouped Dock Icons</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>An option has been added to the Dock to display separate, ungrouped icon tiles for each individual window instance instead of grouping them by application.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Bar Item Settings Links</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Right-clicking specific bar items (such as the OS Icon, Power Button, and Show Desktop) now instantly opens their respective configuration pages in Nexus settings.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>App Browser Layouts</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The launcher now supports multiple app browser layouts. Choose between the standard categorized Grid, a Simple list, or a Compact list view via configuration.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Hourly Weather Forecast</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The Weather tab in the dashboard now includes an hourly forecast alongside the existing daily weather predictions.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Pinned Sidebar</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The sidebar can now be pinned to stay open, reserving screen workarea space so windows don&apos;t overlap it. You can resize it dynamically by dragging its edge.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Unified Capture Card</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Screen recording and screenshots are now combined into a single Capture Card in the utilities drawer. It provides quick access to fullscreen, active window, region snip, OCR, image search, and a history of saved captures.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Dock App Shortcuts</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>You can now use keyboard shortcuts (like Meta + 1 through 9) to quickly focus or launch your pinned applications from the dock. Requires setting up the shortcuts in the Shortcut Manager.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Bar Widgets</source>
+      <source>Auto DND While Streaming</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>The Bar now features a full-featured media widget with cover art, live CAVA visualization, quick actions, and a complete popout player.</source>
+      <source>Do Not Disturb now activates automatically when sharing your screen or streaming via OBS, keeping unwanted notification banners and sounds off your broadcast.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Note Types &amp; Editors</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>The Dashboard Notes tab now supports dedicated editors for different note types, including Plain Text, Markdown, and Checklists, allowing for richer note-taking right from the dashboard.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Desktop Widgets &amp; Large Folders</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>You can now place interactive widgets and expandable large folders directly onto the desktop grid for quick access to tools and files.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Quick Share (Nearby Share)</source>
+      <source>Master Animation Switch</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Receive and send files natively via the Nearby Share protocol. Quick Share features a background transfer service, interactive notifications, a quick toggle switch, and a dedicated utilities card for transfer tracking.</source>
+      <source>A single toggle in Appearance settings now allows you to completely disable all shell animations and transitions for instant responsiveness.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Music Ambient Glow</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>The Dashboard Music tab now features a dynamic ambient glow effect reflecting the colors of your currently playing media&apos;s album artwork.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Audio Visualizer Toggle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>A dedicated Audio Visualizer toggle has been added to Quick Toggles, allowing you to instantly show or hide the desktop visualizer on demand.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>New Taskbar Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>The taskbar now includes dedicated widgets for Notes, Weather, Performance stats, Shortcuts, Screen Capture, and Keep Awake, complete with hover popouts and inline settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Background Worker Thread</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Ticking background services are now offloaded to a dedicated worker thread with queued connections, reducing shell latency and eliminating unnecessary desktop redraws.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Rich Notification Formatting</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Notifications in both popups and the sidebar now cleanly sanitize FreeDesktop markup, auto-link web URLs, and preserve paragraph formatting.</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -9309,7 +9126,7 @@ Now go touch grass</source>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+346"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+343"/>
       <source>Page under construction</source>
       <translation>此頁面正在建設中</translation>
     </message>
@@ -9490,6 +9307,11 @@ Now go touch grass</source>
       <location line="+1"/>
       <source>Truncated app names</source>
       <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Clipboard</source>
+      <translation>剪貼簿</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9764,18 +9586,13 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+3"/>
-      <source>Quick controls, clipboard, game mode</source>
-      <translation>快速控制、剪貼簿、遊戲模式</translation>
+      <source>Quick controls, game mode</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
       <source>On-screen Sliders</source>
       <translation>螢幕滑塊</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Clipboard</source>
-      <translation>剪貼簿</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -12048,26 +11865,26 @@ PIN: %1</source>
   <context>
     <name>SystemWidget</name>
     <message>
-      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+66"/>
-      <location line="+36"/>
+      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+69"/>
+      <location line="+39"/>
       <source>CPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-30"/>
-      <location line="+40"/>
+      <location line="-33"/>
+      <location line="+43"/>
       <source>GPU</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-35"/>
-      <location line="+45"/>
+      <location line="-38"/>
+      <location line="+48"/>
       <source>Memory</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-40"/>
-      <location line="+50"/>
+      <location line="-43"/>
+      <location line="+53"/>
       <source>Disk</source>
       <translation type="unfinished"/>
     </message>
@@ -13327,16 +13144,6 @@ PIN: %1</source>
       <location line="+1"/>
       <source>Volume, microphone, brightness, and edge triggers</source>
       <translation>音量、麥克風、亮度與邊緣觸發</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Clipboard</source>
-      <translation>剪貼簿</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>History size</source>
-      <translation>歷史大小</translation>
     </message>
     <message>
       <location line="+6"/>

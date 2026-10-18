@@ -23,4 +23,21 @@ QtObject {
             return group;
         return types.find(t => t.type === type) ?? { type: "", name: "", icon: "widgets", size: { w: 1, h: 1 }, min: { w: 1, h: 1 }, max: { w: 1, h: 1 }, source: "" };
     }
+
+    function infoForGrid(type: string, maxCols: int, maxRows: int): var {
+        const item = info(type);
+        const limitW = maxCols > 0 ? maxCols : item.size.w;
+        const limitH = maxRows > 0 ? maxRows : item.size.h;
+        const w = Math.max(1, Math.min(item.size.w, limitW));
+        const h = Math.max(1, Math.min(item.size.h, limitH));
+        const minW = Math.max(1, Math.min(item.min.w, w));
+        const minH = Math.max(1, Math.min(item.min.h, h));
+        const maxW = Math.max(minW, Math.min(item.max.w, limitW));
+        const maxH = Math.max(minH, Math.min(item.max.h, limitH));
+        return Object.assign({}, item, {
+            size: { w, h },
+            min: { w: minW, h: minH },
+            max: { w: maxW, h: maxH }
+        });
+    }
 }

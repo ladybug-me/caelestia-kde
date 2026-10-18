@@ -91,7 +91,7 @@ function nearestFree(occ, col, row, cols, rows, span) {
 function copyPositions(positions) {
     const out = {};
     for (const key in positions)
-        out[key] = { col: positions[key].col, row: positions[key].row };
+        out[key] = Object.assign({}, positions[key]);
     return out;
 }
 
@@ -128,7 +128,7 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
         const p = positions[key];
         if (!p)
             continue;
-        out[key] = { col: p.col + dc, row: p.row + dr };
+        out[key] = Object.assign({}, p, { col: p.col + dc, row: p.row + dr });
         markRect(occ, out[key], spanOf(spans, key), key);
         moved.push(key);
     }
@@ -148,7 +148,7 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
         const p = positions[key];
         const s = spanOf(spans, key);
         const cell = nearestFree(occ, p.col, p.row, cols, rows, s);
-        out[key] = cell;
+        out[key] = Object.assign({}, cell, p && p.screen ? { screen: p.screen } : {});
         markRect(occ, cell, s, key);
     }
     return out;
@@ -216,7 +216,7 @@ function keepAndPlace(positions, cols, rows, spans) {
         const p = positions[key];
         const s = spanOf(spans, key);
         if (inGrid(p, cols, rows, s) && rectFree(occ, p, s)) {
-            out[key] = { col: p.col, row: p.row };
+            out[key] = Object.assign({}, p, { col: p.col, row: p.row });
             markRect(occ, p, s, key);
         } else {
             outside.push(key);
@@ -226,7 +226,7 @@ function keepAndPlace(positions, cols, rows, spans) {
         const p = positions[key];
         const s = spanOf(spans, key);
         const cell = nearestFree(occ, Math.min(p.col, cols - s.w), Math.min(p.row, rows - s.h), cols, rows, s);
-        out[key] = cell;
+        out[key] = Object.assign({}, cell, p && p.screen ? { screen: p.screen } : {});
         markRect(occ, cell, s, key);
     }
     return out;

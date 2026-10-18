@@ -165,8 +165,12 @@ Singleton {
                     nextPositions[fileKey(it.name)] = { col: it.col | 0, row: it.row | 0 };
         } else if (data && typeof data === "object") {
             for (const it of data.items ?? [])
-                if (it && typeof it.key === "string")
-                    nextPositions[it.key] = { col: it.col | 0, row: it.row | 0 };
+                if (it && typeof it.key === "string") {
+                    const itemPos = { col: it.col | 0, row: it.row | 0 };
+                    if (typeof it.screen === "string" && it.screen.length > 0)
+                        itemPos.screen = it.screen;
+                    nextPositions[it.key] = itemPos;
+                }
             for (const g of data.groups ?? [])
                 if (g && typeof g.id === "string" && Array.isArray(g.members))
                     nextGroups[g.id] = { name: String(g.name ?? ""), members: g.members.filter(m => typeof m === "string"), size: size(g.size) };
@@ -189,7 +193,7 @@ Singleton {
         loaded = true;
     }
 
-    function seedDefaults(cols: int, rows: int): void {
+    function seedDefaults(cols: int, rows: int, screenName: string): void {
         if (!defaultsNeeded || cols <= 0 || rows <= 0)
             return;
         defaultsNeeded = false;
@@ -197,6 +201,7 @@ Singleton {
 
         const nextWidgets = Object.assign({}, widgets);
         const nextPositions = Object.assign({}, positions);
+        const scr = (typeof screenName === "string" && screenName.length > 0) ? { screen: screenName } : {};
 
         const lyricsId = newGroupId();
         const lyricsKey = widgetKey(lyricsId);
@@ -205,10 +210,10 @@ Singleton {
             size: { w: 3, h: 2 },
             config: {}
         };
-        nextPositions[lyricsKey] = {
+        nextPositions[lyricsKey] = Object.assign({
             col: 0,
             row: 0
-        };
+        }, scr);
 
         const clockId = newGroupId();
         const clockKey = widgetKey(clockId);
@@ -217,10 +222,10 @@ Singleton {
             size: { w: 2, h: 2 },
             config: {}
         };
-        nextPositions[clockKey] = {
+        nextPositions[clockKey] = Object.assign({
             col: Math.max(0, cols - 2),
             row: 0
-        };
+        }, scr);
 
         const shapesId = newGroupId();
         const shapesKey = widgetKey(shapesId);
@@ -229,10 +234,10 @@ Singleton {
             size: { w: 2, h: 2 },
             config: {}
         };
-        nextPositions[shapesKey] = {
+        nextPositions[shapesKey] = Object.assign({
             col: Math.max(0, Math.floor((cols - 2) / 2)),
             row: Math.max(0, rows - 2)
-        };
+        }, scr);
 
         widgets = nextWidgets;
         positions = nextPositions;
@@ -241,8 +246,13 @@ Singleton {
 
     function serialise(): string {
         const items = [];
-        for (const key in positions)
-            items.push({ key, col: positions[key].col, row: positions[key].row });
+        for (const key in positions) {
+            const p = positions[key];
+            const item = { key, col: p.col, row: p.row };
+            if (p.screen)
+                item.screen = p.screen;
+            items.push(item);
+        }
         const groupList = [];
         for (const id in groups)
             groupList.push({ id, name: groups[id].name, members: groups[id].members, size: groups[id].size ?? { w: 1, h: 1 } });

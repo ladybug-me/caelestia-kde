@@ -18,9 +18,14 @@ Item {
     readonly property bool isGroup: controller.isGroupKey(key)
     readonly property string itemId: controller.nameOf(key)
     readonly property var widget: isGroup ? null : (DesktopLayout.widgets[itemId] ?? null)
-    readonly property var config: widget?.config ?? ({})
-    readonly property var info: controller.widgetCatalog.info(isGroup ? "group" : (widget?.type ?? ""))
-    readonly property var span: controller.displaySpans[key] ?? info.size
+    readonly property var info: controller.widgetCatalog.infoForGrid(isGroup ? "group" : (widget?.type ?? ""), controller.cols, controller.rows)
+    readonly property var span: {
+        const raw = controller.displaySpans[key] ?? info.size;
+        return {
+            w: Math.max(1, Math.min(raw.w, controller.cols)),
+            h: Math.max(1, Math.min(raw.h, controller.rows))
+        };
+    }
     readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true)
 
     property bool selected: false
@@ -261,8 +266,12 @@ Item {
             if (!pressed)
                 return;
             const p = mapToItem(root.controller, mouse.x, mouse.y);
-            const w = Math.max(root.info.min.w, Math.min(root.info.max.w, Math.round(startSpan.w + (p.x - origin.x) / root.controller.cellWidth)));
-            const h = Math.max(root.info.min.h, Math.min(root.info.max.h, Math.round(startSpan.h + (p.y - origin.y) / root.controller.cellHeight)));
+            const maxW = Math.max(1, Math.min(root.info.max.w, root.controller.cols));
+            const maxH = Math.max(1, Math.min(root.info.max.h, root.controller.rows));
+            const minW = Math.max(1, Math.min(root.info.min.w, maxW));
+            const minH = Math.max(1, Math.min(root.info.min.h, maxH));
+            const w = Math.max(minW, Math.min(maxW, Math.round(startSpan.w + (p.x - origin.x) / root.controller.cellWidth)));
+            const h = Math.max(minH, Math.min(maxH, Math.round(startSpan.h + (p.y - origin.y) / root.controller.cellHeight)));
             root.controller.previewResize(root.key, w, h);
         }
         onReleased: {

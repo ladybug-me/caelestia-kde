@@ -58,6 +58,7 @@ QtObject {
                 { label: qsTr("Launcher"), pagePath: "panels/LauncherPanel.qml", subPageIdx: 3 },
                 { label: qsTr("App browser layout"), keywords: ["launcher", "layout", "simple", "compact", "categories", "favourites"], pagePath: "panels/LauncherPanel.qml", subPageIdx: 3 },
                 { label: qsTr("Truncated app names"), keywords: ["launcher", "name", "truncated", "long", "tooltip", "shrink", "flip"], pagePath: "panels/LauncherPanel.qml", subPageIdx: 3 },
+                { label: qsTr("Clipboard"), keywords: ["history", "copied", "paste", "maximum entries", "history size", "confirm clear"], pagePath: "panels/LauncherPanel.qml", subPageIdx: 3 },
                 { label: qsTr("Sidebar"), pagePath: "panels/SidebarPanel.qml", subPageIdx: 4 },
                 { label: qsTr("Quick Toggles Panel"), pagePath: "panels/UtilitiesPanel.qml", subPageIdx: 5 },
                 { label: qsTr("Overview"), pagePath: "panels/OverviewPanel.qml", keywords: ["overview", "animations", "blur"], subPageIdx: 16 },
@@ -146,16 +147,15 @@ QtObject {
             label: qsTr("Utilities"),
             key: "utilities",
             icon: "build",
-            description: qsTr("Quick controls, clipboard, game mode"),
+            description: qsTr("Quick controls, game mode"),
             category: "controls",
             settings: [
                 { label: qsTr("On-screen Sliders"), subPageIdx: 3, keywords: ["volume", "microphone", "brightness", "osd"] },
-                { label: qsTr("Clipboard"), subPageIdx: 4, keywords: ["history", "copied", "paste", "maximum entries", "history size"] },
-                { label: qsTr("Utilities Panel"), subPageIdx: 5, keywords: ["keep awake", "screenshot", "record"] },
-                { label: qsTr("Quick Toggles"), subPageIdx: 6, keywords: ["toggles", "dashboard", "switches"] },
+                { label: qsTr("Utilities Panel"), subPageIdx: 4, keywords: ["keep awake", "screenshot", "record"] },
+                { label: qsTr("Quick Toggles"), subPageIdx: 5, keywords: ["toggles", "dashboard", "switches"] },
                 { label: qsTr("Game Mode"), pagePath: "services/GameModePage.qml", subPageIdx: 1, keywords: ["hyprland overrides", "performance", "games"] },
                 { label: qsTr("Auto-enable rules"), keywords: ["game mode", "rules", "target windows"], pagePath: "services/GameModeTargetsPage.qml", subPageIdx: 2 },
-                { label: qsTr("Quick Share"), pagePath: "services/QuickSharePage.qml", subPageIdx: 7, keywords: ["bluetooth", "nearby", "file sharing", "send file", "receive file", "android"] }
+                { label: qsTr("Quick Share"), pagePath: "services/QuickSharePage.qml", subPageIdx: 6, keywords: ["bluetooth", "nearby", "file sharing", "send file", "receive file", "android"] }
             ]
         },
         {

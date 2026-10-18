@@ -30,17 +30,10 @@ PageBase {
         }
 
         NavRow {
-            icon: "content_paste"
-            label: qsTr("Clipboard")
-            status: qsTr("History size")
-            onClicked: root.nState.openSubPage(4)
-        }
-
-        NavRow {
             icon: "widgets"
             label: qsTr("Utilities panel")
             status: qsTr("Choose the cards shown in the panel")
-            onClicked: root.nState.openSubPage(5)
+            onClicked: root.nState.openSubPage(4)
         }
 
         NavRow {
@@ -48,7 +41,7 @@ PageBase {
             icon: "toggle_on"
             label: qsTr("Quick toggles")
             status: qsTr("Choose the controls shown in Quick Toggles")
-            onClicked: root.nState.openSubPage(6)
+            onClicked: root.nState.openSubPage(5)
         }
 
         SectionHeader {
@@ -74,7 +67,7 @@ PageBase {
             icon: "near_me"
             label: qsTr("Quick Share")
             status: qsTr("Send files to nearby devices")
-            onClicked: root.nState.openSubPage(7)
+            onClicked: root.nState.openSubPage(6)
         }
     }
 }

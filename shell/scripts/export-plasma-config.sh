@@ -29,12 +29,42 @@ normalize_visualizer_profile() {
 
 save_user_visualizer_config() {
     python3 - "$USER_CONFIG_DIR" "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf" << 'PYEOF'
-import os, re, subprocess, sys
+import json, os, re, subprocess, sys
 
 config_dir = sys.argv[1]
 fallback_tmpl = sys.argv[2]
 plugin_id = "luisbocanegra.audio.visualizer"
 target_file = os.path.join(config_dir, "caelestia", "plasma-audio-visualizer", "user.conf")
+
+# Check live visualizer widgets from Plasma via D-Bus
+live_ids = None
+try:
+    js_live = f"""
+    var ids = [];
+    for (var d_idx = 0; d_idx < desktops().length; d_idx++) {{
+        var ws = desktops()[d_idx].widgets();
+        for (var i = 0; i < ws.length; i++) {{
+            if (ws[i].type === '{plugin_id}') {{
+                ids.push(String(ws[i].id));
+            }}
+        }}
+    }}
+    print(JSON.stringify(ids));
+    """
+    out = subprocess.check_output(
+        ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_live],
+        text=True, stderr=subprocess.DEVNULL
+    ).strip()
+    if out.startswith("["):
+        live_ids = json.loads(out)
+except Exception:
+    live_ids = None
+
+if live_ids is not None and len(live_ids) == 0:
+    os.makedirs(os.path.dirname(target_file), exist_ok=True)
+    with open(target_file, "w") as fh:
+        fh.write("# User visualizer configuration\n# No visualizer widgets configured\n")
+    sys.exit(0)
 
 candidate_files = []
 shell_pkg = ""
@@ -81,9 +111,11 @@ for appletsrc in candidate_files:
         lines = sec.strip().splitlines()
         if not lines: continue
         hdr = lines[0].strip()
-        m = re.match(rf"^\[Containments\]\[{c_id}\]\[(?:Applets|DisabledApplets)\]\[(\d+)\]$", hdr)
+        m = re.match(rf"^\[Containments\]\[{c_id}\]\[Applets\]\[(\d+)\]$", hdr)
         if m:
             aid = m.group(1)
+            if live_ids is not None and aid not in live_ids:
+                continue
             for l in lines[1:]:
                 if l.strip() == f"plugin={plugin_id}":
                     if aid not in vis_ids:
@@ -121,7 +153,7 @@ for appletsrc in candidate_files:
         cfg_lines = []
         for sec in sections:
             sl = sec.strip().splitlines()
-            if sl and re.match(rf"^\[Containments\]\[{c_id}\]\[(?:Applets|DisabledApplets)\]\[{aid}\]\[Configuration\]\[General\]$", sl[0].strip()):
+            if sl and re.match(rf"^\[Containments\]\[{c_id}\]\[Applets\]\[{aid}\]\[Configuration\]\[General\]$", sl[0].strip()):
                 for l in sl[1:]:
                     l = l.strip()
                     if l and not l.startswith("#") and "=" in l:
@@ -135,10 +167,12 @@ for appletsrc in candidate_files:
         found_blocks = blocks
         break
 
-if found_blocks:
-    os.makedirs(os.path.dirname(target_file), exist_ok=True)
-    with open(target_file, "w") as fh:
+os.makedirs(os.path.dirname(target_file), exist_ok=True)
+with open(target_file, "w") as fh:
+    if found_blocks:
         fh.write("\n\n".join(found_blocks) + "\n")
+    else:
+        fh.write("# User visualizer configuration\n# No visualizer widgets configured\n")
 PYEOF
 }
 
@@ -213,7 +247,12 @@ get_visualizer_applet_count() {
 
     if [[ -f "$conf_path" ]]; then
         local c
-        c="$(grep -c '^\[Applet_[0-9]\+\]$' "$conf_path" 2>/dev/null || echo 0)"
+        c="$(grep -c '^\[Applet_[0-9]\+\]$' "$conf_path" 2>/dev/null || true)"
+        c="${c:-0}"
+        if [[ "$profile" == "user" ]]; then
+            echo "$c"
+            return
+        fi
         if [[ "$c" -gt 0 ]]; then
             echo "$c"
             return

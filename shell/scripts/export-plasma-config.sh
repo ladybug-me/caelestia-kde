@@ -660,7 +660,14 @@ for idx in range(1, count + 1):
         x, y, w, h = td["geom"]
     else:
         x, y, w, h = default_geoms[idx - 1] if idx - 1 < len(default_geoms) else (0.0, 0.0, 400.0, 300.0)
-    applets_data.append({"x": x, "y": y, "w": w, "h": h, "config": td.get("config", {})})
+    cfg = dict(td.get("config", {}))
+    if "desktopWidgetBg" not in cfg:
+        cfg["desktopWidgetBg"] = "0"
+    if "fillWave" not in cfg:
+        cfg["fillWave"] = "true"
+    if "hideWhenIdle" not in cfg:
+        cfg["hideWhenIdle"] = "true"
+    applets_data.append({"x": x, "y": y, "w": w, "h": h, "config": cfg})
 
 state_file = "/tmp/plasma-visualizer-last-target.json"
 target_data = {"profile": profile, "applets": applets_data}
@@ -723,23 +730,96 @@ if need_update:
     js_add = f"""
     var d = desktops()[0];
     var data = {json.dumps(applets_data)};
+
+    // Probe next applet ID by creating an invisible dummy spacer
+    var dummy = d.addWidget('org.kde.plasma.panelspacer', -10000, -10000, 1, 1);
+    var nextId = dummy ? (dummy.id + 1) : 0;
+    if (dummy) {{
+        dummy.remove();
+    }}
+
+    var createdIds = [];
     for (var i = 0; i < data.length; i++) {{
         var item = data[i];
+        var targetId = nextId + i;
+
+        if (nextId > 0) {{
+            // Pre-populate KConfigGroup before widget instantiation with fillWave=false
+            // so QML never paints frame 0 with an uninitialized wave bounding-box fill flash
+            d.currentConfigGroup = ['Applets', String(targetId), 'Configuration', 'General'];
+            for (var k in item.config) {{
+                if (k !== 'fillWave') {{
+                    d.writeConfig(k, item.config[k]);
+                }}
+            }}
+            d.writeConfig('fillWave', false);
+            d.currentConfigGroup = ['Applets', String(targetId)];
+            d.writeConfig('immutability', 1);
+            d.writeConfig('plugin', '{plugin_id}');
+        }}
+
         var w = d.addWidget('{plugin_id}', item.x, item.y, item.w, item.h);
         if (w) {{
+            createdIds.push(w.id);
+            w.userBackgroundHints = 'NoBackground';
             w.currentConfigGroup = ['General'];
             for (var k in item.config) {{
-                w.writeConfig(k, item.config[k]);
+                if (k !== 'fillWave') {{
+                    w.writeConfig(k, item.config[k]);
+                }}
             }}
+            w.writeConfig('fillWave', false);
             w.reloadConfig();
         }}
     }}
+    print(JSON.stringify(createdIds));
     """
     try:
-        subprocess.run(
+        add_out = subprocess.check_output(
             ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_add],
-            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-        )
+            text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        created_ids = json.loads(add_out) if add_out.startswith("[") else []
+
+        fill_flags = [
+            str(item.get("config", {}).get("fillWave", "")).lower() in ("true", "1")
+            for item in applets_data
+        ]
+        if any(fill_flags):
+            time.sleep(0.25)
+            js_fill = f"""
+            var d = desktops()[0];
+            var createdIds = {json.dumps(created_ids)};
+            var fills = {json.dumps(fill_flags)};
+            var ws = d.widgets();
+            if (createdIds.length > 0) {{
+                for (var i = 0; i < ws.length; i++) {{
+                    var idx = createdIds.indexOf(ws[i].id);
+                    if (idx !== -1 && fills[idx]) {{
+                        ws[i].currentConfigGroup = ['General'];
+                        ws[i].writeConfig('fillWave', true);
+                        ws[i].reloadConfig();
+                    }}
+                }}
+            }} else {{
+                var visWs = [];
+                for (var i = 0; i < ws.length; i++) {{
+                    if (ws[i].type === '{plugin_id}') visWs.push(ws[i]);
+                }}
+                for (var i = 0; i < visWs.length && i < fills.length; i++) {{
+                    if (fills[i]) {{
+                        visWs[i].currentConfigGroup = ['General'];
+                        visWs[i].writeConfig('fillWave', true);
+                        visWs[i].reloadConfig();
+                    }}
+                }}
+            }}
+            """
+            subprocess.run(
+                ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_fill],
+                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+
         with open(state_file, "w") as sf:
             sf.write(target_key)
     except Exception:

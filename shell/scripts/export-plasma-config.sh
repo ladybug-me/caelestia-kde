@@ -1,310 +1,137 @@
 #!/usr/bin/env bash
+# Plasma Configuration & Widget Management Tool
+
+# General tool for KDE Plasma desktop widget interaction, configuration export,
+# and desktop layout synchronization. Supports both direct generic plasma widget
+# interactions and modular per-widget helper extensions.
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-CONFIG_DIR="$SCRIPT_DIR/plasma-config"
-VISUALIZER_CONFIG_DIR="$CONFIG_DIR/plasma-audio-visualizer"
-USER_CONFIG_DIR="${USER_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}}"
+CONFIG_DIR="${CAELESTIA_CONFIG_DIR:-$SCRIPT_DIR/plasma-config}"
+USER_CONFIG_DIR="${CAELESTIA_USER_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}}"
+WIDGETS_DIR="${CONFIG_DIR}/scripts"
 
-normalize_visualizer_profile() {
-    local p="${1:-double_reversed}"
-    case "${p,,}" in
-        user|user_defined|user-defined|"user defined")
-            echo "user"
-            ;;
-        double_reversed|double-reversed|"double reversed"|double|default|"")
-            echo "double_reversed"
-            ;;
-        single)
-            echo "single"
-            ;;
-        circle)
-            echo "circle"
-            ;;
-        *)
-            echo "$p"
-            ;;
-    esac
+# Source modular widget helpers
+if [[ -d "$WIDGETS_DIR" ]]; then
+    for mod in "$WIDGETS_DIR"/*.sh; do
+        if [[ -f "$mod" ]]; then
+            # shellcheck source=/dev/null
+            source "$mod"
+        fi
+    done
+elif [[ -d "$SCRIPT_DIR/plasma-config/scripts" ]]; then
+    for mod in "$SCRIPT_DIR/plasma-config/scripts"/*.sh; do
+        if [[ -f "$mod" ]]; then
+            # shellcheck source=/dev/null
+            source "$mod"
+        fi
+    done
+fi
+
+# General Plasma Desktop & Applet Helpers
+
+get_plasma_shell_pkg() {
+    local shell_pkg=""
+    shell_pkg="$(qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.shell 2>/dev/null || true)"
+    echo "${shell_pkg:-org.kde.plasma.desktop}"
 }
 
-save_user_visualizer_config() {
-    python3 - "$USER_CONFIG_DIR" "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf" << 'PYEOF'
-import json, os, re, subprocess, sys
+get_candidate_appletsrc_files() {
+    local config_dir="${1:-$USER_CONFIG_DIR}"
+    local shell_pkg
+    shell_pkg="$(get_plasma_shell_pkg)"
 
-config_dir = sys.argv[1]
-fallback_tmpl = sys.argv[2]
-plugin_id = "luisbocanegra.audio.visualizer"
-target_file = os.path.join(config_dir, "caelestia", "plasma-audio-visualizer", "user.conf")
+    local -a files=()
+    if [[ -n "$shell_pkg" && -f "$config_dir/plasma-${shell_pkg}-appletsrc" ]]; then
+        files+=("$config_dir/plasma-${shell_pkg}-appletsrc")
+    fi
+    for name in "plasma-caelestia.desktop-appletsrc" "plasma-org.kde.plasma.desktop-appletsrc"; do
+        local p="$config_dir/$name"
+        if [[ -f "$p" && ! " ${files[*]} " =~ " ${p} " ]]; then
+            files+=("$p")
+        fi
+    done
+    for f in "$config_dir"/*desktop-appletsrc; do
+        if [[ -f "$f" && ! " ${files[*]} " =~ " ${f} " ]]; then
+            files+=("$f")
+        fi
+    done
+    printf '%s\n' "${files[@]}"
+}
 
-# Check live visualizer widgets from Plasma via D-Bus
-live_ids = None
+get_desktop_containment_id() {
+    local appletsrc="$1"
+    python3 - "$appletsrc" << 'PYEOF'
+import re, sys
 try:
-    js_live = f"""
-    var ids = [];
-    for (var d_idx = 0; d_idx < desktops().length; d_idx++) {{
-        var ws = desktops()[d_idx].widgets();
-        for (var i = 0; i < ws.length; i++) {{
-            if (ws[i].type === '{plugin_id}') {{
-                ids.push(String(ws[i].id));
-            }}
-        }}
-    }}
-    print(JSON.stringify(ids));
-    """
-    out = subprocess.check_output(
-        ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_live],
-        text=True, stderr=subprocess.DEVNULL
-    ).strip()
-    if out.startswith("["):
-        live_ids = json.loads(out)
-except Exception:
-    live_ids = None
-
-if live_ids is not None and len(live_ids) == 0:
-    os.makedirs(os.path.dirname(target_file), exist_ok=True)
-    with open(target_file, "w") as fh:
-        fh.write("# User visualizer configuration\n# No visualizer widgets configured\n")
-    sys.exit(0)
-
-candidate_files = []
-shell_pkg = ""
-try:
-    shell_pkg = subprocess.check_output(
-        ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.shell"],
-        text=True, stderr=subprocess.DEVNULL
-    ).strip()
-except Exception:
-    pass
-if shell_pkg:
-    pkg_file = os.path.join(config_dir, f"plasma-{shell_pkg}-appletsrc")
-    if os.path.exists(pkg_file):
-        candidate_files.append(pkg_file)
-for name in ["plasma-caelestia.desktop-appletsrc", "plasma-org.kde.plasma.desktop-appletsrc"]:
-    p = os.path.join(config_dir, name)
-    if os.path.exists(p) and p not in candidate_files:
-        candidate_files.append(p)
-
-found_blocks = []
-for appletsrc in candidate_files:
-    try:
-        txt = open(appletsrc).read()
-    except Exception:
-        continue
-    sections = re.split(r"(?m)(?=^\[)", txt)
+    txt = open(sys.argv[1]).read()
     c_m = re.search(
         r"\[Containments\]\[(\d+)\](?:(?!\[Containments\]).)*?"
         r"(?:plugin=org\.kde\.desktopcontainment|plugin=org\.kde\.plasma\.folder)",
         txt, re.S
     )
-    c_id = c_m.group(1) if c_m else "1"
-    c_geoms = {}
-    for sec in sections:
-        lines = sec.strip().splitlines()
-        if lines and lines[0].strip() == f"[Containments][{c_id}]":
-            for l in lines[1:]:
-                if l.startswith("ItemGeometries"):
-                    for gm in re.finditer(r"Applet-(\d+):(-?[\d.]+),(-?[\d.]+),(-?[\d.]+),(-?[\d.]+)", l):
-                        c_geoms[gm.group(1)] = (float(gm.group(2)), float(gm.group(3)), float(gm.group(4)), float(gm.group(5)))
-    vis_ids = []
-    saved_geoms = {}
-    for sec in sections:
-        lines = sec.strip().splitlines()
-        if not lines: continue
-        hdr = lines[0].strip()
-        m = re.match(rf"^\[Containments\]\[{c_id}\]\[Applets\]\[(\d+)\]$", hdr)
-        if m:
-            aid = m.group(1)
-            if live_ids is not None and aid not in live_ids:
-                continue
-            for l in lines[1:]:
-                if l.strip() == f"plugin={plugin_id}":
-                    if aid not in vis_ids:
-                        vis_ids.append(aid)
-                if l.startswith("saved_geometry="):
-                    try:
-                        sp = l.split("=", 1)[1].strip().split(",")
-                        saved_geoms[aid] = (float(sp[0]), float(sp[1]), float(sp[2]), float(sp[3]))
-                    except Exception:
-                        pass
-    if not vis_ids:
-        continue
-
-    blocks = []
-    for idx, aid in enumerate(vis_ids, start=1):
-        g = c_geoms.get(aid) or saved_geoms.get(aid)
-        geom_str = f"{g[0]},{g[1]},{g[2]},{g[3]},0" if g else ""
-        lines = [
-            f"[Applet_{idx}]",
-            f"geometry={geom_str}" if geom_str else "",
-            "immutability=1",
-            f"plugin={plugin_id}",
-            "",
-            f"[Applet_{idx}][Configuration]",
-            "popupHeight=450",
-            "popupWidth=450",
-            "",
-            f"[Applet_{idx}][Configuration][ConfigDialog]",
-            "DialogHeight=630",
-            "DialogWidth=810",
-            "",
-            f"[Applet_{idx}][Configuration][General]"
-        ]
-        lines = [l for l in lines if l != ""]
-        cfg_lines = []
-        for sec in sections:
-            sl = sec.strip().splitlines()
-            if sl and re.match(rf"^\[Containments\]\[{c_id}\]\[Applets\]\[{aid}\]\[Configuration\]\[General\]$", sl[0].strip()):
-                for l in sl[1:]:
-                    l = l.strip()
-                    if l and not l.startswith("#") and "=" in l:
-                        cfg_lines.append(l)
-                break
-        if cfg_lines:
-            lines.extend(cfg_lines)
-            blocks.append("\n".join(lines))
-
-    if blocks:
-        found_blocks = blocks
-        break
-
-os.makedirs(os.path.dirname(target_file), exist_ok=True)
-with open(target_file, "w") as fh:
-    if found_blocks:
-        fh.write("\n\n".join(found_blocks) + "\n")
-    else:
-        fh.write("# User visualizer configuration\n# No visualizer widgets configured\n")
+    print(c_m.group(1) if c_m else "1")
+except Exception:
+    print("1")
 PYEOF
 }
 
-get_visualizer_conf_path() {
-    local profile="$1"
-    local user_p_conf="$USER_CONFIG_DIR/caelestia/plasma-audio-visualizer/${profile}.conf"
-    local sys_p_conf="$CONFIG_DIR/plasma-audio-visualizer/${profile}.conf"
-
-    if [[ "$profile" == "user" ]]; then
-        if [[ -f "$user_p_conf" ]]; then
-            echo "$user_p_conf"
-            return
-        fi
-        save_user_visualizer_config
-        if [[ -f "$user_p_conf" ]]; then
-            echo "$user_p_conf"
-            return
-        fi
-        echo "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf"
-        return
-    fi
-
-    if [[ -f "$sys_p_conf" ]]; then
-        echo "$sys_p_conf"
-    elif [[ -f "$user_p_conf" ]]; then
-        echo "$user_p_conf"
-    elif [[ -f "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf" ]]; then
-        echo "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf"
-    else
-        echo ""
-    fi
+get_live_plasma_widgets() {
+    local plugin_id="${1:-}"
+    python3 - "$plugin_id" << 'PYEOF'
+import json, subprocess, sys
+plugin_id = sys.argv[1]
+js = f"""
+var data = {{}};
+for (var d_idx = 0; d_idx < desktops().length; d_idx++) {{
+    var ws = desktops()[d_idx].widgets();
+    for (var i = 0; i < ws.length; i++) {{
+        if (!'{plugin_id}' || ws[i].type === '{plugin_id}') {{
+            var aid = String(ws[i].id);
+            var g = ws[i].geometry;
+            data[aid] = {{
+                "type": ws[i].type,
+                "x": Math.round(g.x),
+                "y": Math.round(g.y),
+                "width": Math.round(g.width),
+                "height": Math.round(g.height)
+            }};
+        }}
+    }}
+}}
+print(JSON.stringify(data));
+"""
+try:
+    out = subprocess.check_output(
+        ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js],
+        text=True, stderr=subprocess.DEVNULL
+    ).strip()
+    print(out if out.startswith("{") else "{}")
+except Exception:
+    print("{}")
+PYEOF
 }
 
-parse_visualizer_args() {
-    local -n out_profile="$1"
-    local -n out_geoms="$2"
-    shift 2
-
-    local default_profile="double_reversed"
-    if [[ -f "$USER_CONFIG_DIR/caelestia/shell.json" ]]; then
-        local cfg_prof
-        cfg_prof="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('profile', '')).lower())" 2>/dev/null || true)"
-        if [[ -n "$cfg_prof" ]]; then
-            default_profile="$(normalize_visualizer_profile "$cfg_prof")"
-        fi
-    fi
-
-    out_profile="$default_profile"
-    out_geoms=()
-
-    if [[ $# -gt 0 ]]; then
-        local first="$1"
-        case "${first,,}" in
-            user|user_defined|user-defined|"user defined"|double_reversed|double-reversed|"double reversed"|double|default|single|circle)
-                out_profile="$(normalize_visualizer_profile "$first")"
-                shift
-                ;;
-            *)
-                if ! [[ "$first" =~ ^-?[0-9]+(\.[0-9]+)?$ ]]; then
-                    out_profile="$(normalize_visualizer_profile "$first")"
-                    shift
-                fi
-                ;;
-        esac
-    fi
-    out_geoms=("$@")
-}
-
-get_visualizer_applet_count() {
+get_widget_applet_count() {
     local conf_path="$1"
-    local profile="${2:-double_reversed}"
+    local default_count="${2:-1}"
 
     if [[ -f "$conf_path" ]]; then
         local c
         c="$(grep -c '^\[Applet_[0-9]\+\]$' "$conf_path" 2>/dev/null || true)"
         c="${c:-0}"
-        if [[ "$profile" == "user" ]]; then
-            echo "$c"
-            return
-        fi
         if [[ "$c" -gt 0 ]]; then
             echo "$c"
             return
         fi
     fi
-    echo 2
+    echo "$default_count"
 }
 
-
-show_help() {
-    cat << EOF
-Usage: $(basename "$0") [TARGET [ACTION [PROFILE]]]
-
-Exports, configures, or removes Plasma configurations and widgets.
-If no target is specified, all configurations are exported.
-
-Targets:
-  skwd, skwd-wall, wall       Export skwd-wall-v2 config
-  visualizer [enable|disable|configure|geometry] [PROFILE] [GEOM...]
-                              Manage plasma-audio-visualizer widgets
-                              Profiles: double_reversed (default), user, single, circle
-  all                         Export all configs (default)
-  -h, --help                  Show this help message
-EOF
-}
-
-apply_skwd_wallpaper() {
-    if [[ -z "${CAELESTIA_TEST_MODE:-}" && "$USER_CONFIG_DIR" != "/tmp/"* ]] && command -v skwd-helm >/dev/null 2>&1; then
-        local curr_wall
-        curr_wall="$(skwd-helm current 2>/dev/null | cut -f2- || true)"
-        if [[ -z "$curr_wall" ]]; then
-            local cache_json="${XDG_CACHE_HOME:-$HOME/.cache}/skwd-wall-v2/last-applied.json"
-            if [[ -f "$cache_json" ]]; then
-                curr_wall="$(python3 -c "import json; print(json.load(open('$cache_json')).get('any', {}).get('path', ''))" 2>/dev/null || true)"
-            fi
-        fi
-        if [[ -n "$curr_wall" && -f "$curr_wall" ]]; then
-            skwd-helm apply "$curr_wall" >/dev/null 2>&1 || true
-        fi
-    fi
-}
-
-export_skwd() {
-    echo "Exporting skwd-wall-v2 configuration..."
-    mkdir -p "$USER_CONFIG_DIR/skwd-wall-v2"
-    cp "$CONFIG_DIR/skwd-wall-v2/config.json" "$USER_CONFIG_DIR/skwd-wall-v2/config.json"
-    echo "✓ skwd-wall-v2 config exported to $USER_CONFIG_DIR/skwd-wall-v2/config.json"
-}
+# Generic Plasma Applet Synchronization & Live Operations
 
 # Syncs N applet instances from template or existing configuration into appletsrc files.
-# Syncs N applet instances from template or existing configuration into appletsrc files.
-# Preserves user-defined configuration when profile is "user" or when visualizer is disabled.
 sync_kde_applets() {
     python3 - "$@" << 'PYEOF'
 import glob, json, os, re, subprocess, sys
@@ -314,7 +141,7 @@ config_dir = sys.argv[2]
 plugin_id = sys.argv[3]
 count = int(sys.argv[4])
 label = sys.argv[5]
-profile = sys.argv[6] if len(sys.argv) > 6 and sys.argv[6] else "double_reversed"
+profile = sys.argv[6] if len(sys.argv) > 6 and sys.argv[6] else "default"
 
 custom_geoms = {}
 geom_args = sys.argv[7:]
@@ -372,7 +199,7 @@ if not candidate_files:
     candidate_files = [default_target]
 
 any_new_ids = False
-cache_file = os.path.join(config_dir, "caelestia", "visualizer-user-cache.conf")
+cache_file = os.path.join(config_dir, "caelestia", f"{label}-user-cache.conf")
 
 for appletsrc in candidate_files:
     with open(appletsrc, "r") as f:
@@ -405,18 +232,20 @@ for appletsrc in candidate_files:
         if not lines:
             continue
         hdr = lines[0].strip()
-        am = re.match(rf"^\[Containments\]\[{c_id}\]\[Applets\]\[(\d+)\]$", hdr)
-        if am:
-            aid = int(am.group(1))
+
+        m = re.match(rf"^\[Containments\]\[{c_id}\]\[Applets\]\[(\d+)\]$", hdr)
+        if m:
+            aid = int(m.group(1))
             all_ids.add(aid)
             for l in lines[1:]:
                 if l.strip() == f"plugin={plugin_id}":
                     if aid not in active_ids:
                         active_ids.append(aid)
                     break
-        dm = re.match(rf"^\[Containments\]\[{c_id}\]\[DisabledApplets\]\[(\d+)\]$", hdr)
-        if dm:
-            aid = int(dm.group(1))
+
+        m_dis = re.match(rf"^\[Containments\]\[{c_id}\]\[DisabledApplets\]\[(\d+)\]$", hdr)
+        if m_dis:
+            aid = int(m_dis.group(1))
             all_ids.add(aid)
             for l in lines[1:]:
                 if l.strip() == f"plugin={plugin_id}":
@@ -424,7 +253,7 @@ for appletsrc in candidate_files:
                         disabled_ids.append(aid)
                     break
 
-    # Disable visualizer (count == 0): move active applets to [DisabledApplets] and strip ItemGeometries
+    # Disable widgets (count == 0): move active applets to [DisabledApplets] and strip ItemGeometries
     if count == 0:
         c_header = f"[Containments][{c_id}]"
         all_vis = active_ids + disabled_ids
@@ -482,7 +311,7 @@ for appletsrc in candidate_files:
         )
         continue
 
-    # Enable / configure visualizer (count > 0)
+    # Enable / configure widgets (count > 0)
     existing_vis_ids = active_ids + [d for d in disabled_ids if d not in active_ids]
 
     if len(existing_vis_ids) >= count:
@@ -552,7 +381,7 @@ for appletsrc in candidate_files:
                 c_lines.append(f"ItemGeometriesHorizontal=Applet-{aid}:{g};")
         sections.insert(0, "\n".join(c_lines) + "\n\n")
 
-    # 2. Update sections: strip previous visualizer applet blocks and write clean templates
+    # 2. Update sections: strip previous applet blocks and write clean templates
     new_sections = []
     affected_ids = set(keep_ids + disable_ids)
     for sec in sections:
@@ -584,104 +413,84 @@ for appletsrc in candidate_files:
     text = "\n\n".join(clean) + "\n"
     with open(appletsrc, "w") as fh:
         fh.write(text)
-    print(
-        f"✓ Synced {len(keep_ids)} {label} widget(s) (profile: {profile}) in {os.path.basename(appletsrc)}"
-        f" (kept: {keep_ids})"
-    )
 
-if any_new_ids:
-    print("NEEDS_SECOND_RECONFIGURE")
+    print(f"✓ Synchronized {count} {label} widget(s) in {os.path.basename(appletsrc)} (IDs: {keep_ids})")
 PYEOF
 }
 
-plasma_reconfigure() {
-    if [[ -z "${CAELESTIA_TEST_MODE:-}" && "$USER_CONFIG_DIR" != "/tmp/"* ]] && command -v qdbus6 >/dev/null 2>&1; then
-        qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
-        qdbus6 org.kde.plasmashell /PlasmaShell refreshCurrentShell 2>/dev/null || true
-    fi
-}
-
-remove_kde_applets_live() {
-    local plugin_id="$1"
-    if [[ -z "${CAELESTIA_TEST_MODE:-}" && "$USER_CONFIG_DIR" != "/tmp/"* ]] && command -v qdbus6 >/dev/null 2>&1; then
-        qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "
-for (var i = 0; i < desktops().length; i++) {
-    var ws = desktops()[i].widgets();
-    for (var j = 0; j < ws.length; j++) {
-        if (ws[j].type === '${plugin_id}') {
-            ws[j].remove();
-        }
-    }
-}
-" >/dev/null 2>&1 || true
-    fi
-}
-
+# Live widget manipulation in Plasmashell via evaluateScript.
 add_kde_applets_live() {
     local conf_path="$1"
     local plugin_id="$2"
-    local count="$3"
-    local profile="${4:-user}"
-    local user_cfg_dir="${USER_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}}"
-    shift 4
+    local count="${3:-1}"
+    local profile="${4:-default}"
+    shift 4 || true
+    local -a geom_args=("$@")
 
-    if [[ -z "${CAELESTIA_TEST_MODE:-}" && "$USER_CONFIG_DIR" != "/tmp/"* ]] && command -v qdbus6 >/dev/null 2>&1; then
-        python3 - "$conf_path" "$plugin_id" "$count" "$profile" "$user_cfg_dir" "$@" << 'PYEOF'
-import glob, json, os, re, subprocess, sys, time
+    local test_mode=false
+    if [[ -n "${CAELESTIA_TEST_MODE:-}" || "$USER_CONFIG_DIR" == "/tmp/"* ]]; then
+        test_mode=true
+    fi
+
+    if [[ "$test_mode" == true ]]; then
+        return 0
+    fi
+
+    if ! command -v qdbus6 >/dev/null 2>&1; then
+        return 0
+    fi
+
+    python3 - "$conf_path" "$plugin_id" "$count" "$profile" "${geom_args[@]}" << 'PYEOF'
+import json, os, re, subprocess, sys, time
 
 conf_path = sys.argv[1]
 plugin_id = sys.argv[2]
 count = int(sys.argv[3])
 profile = sys.argv[4]
-config_dir = sys.argv[5]
+geom_args = sys.argv[5:]
 
 custom_geoms = []
-geom_args = sys.argv[6:]
-for idx in range(1, (len(geom_args) // 4) + 1):
-    base = (idx - 1) * 4
+for idx in range(0, len(geom_args), 4):
     try:
-        gx, gy, gw, gh = geom_args[base:base+4]
+        gx, gy, gw, gh = geom_args[idx:idx+4]
         if gx and gy and gw and gh:
             custom_geoms.append((float(gx), float(gy), float(gw), float(gh)))
     except Exception:
         break
 
-sw, sh = 1920.0, 1080.0
-try:
-    import shutil
-    if shutil.which("kscreen-doctor"):
-        out = subprocess.check_output(["kscreen-doctor", "-o"], text=True)
-        m = re.search(r"Geometry:\s*\d+,\d+\s+(\d+)x(\d+)", out)
-        if m:
-            sw, sh = float(m.group(1)), float(m.group(2))
-except Exception:
-    pass
-center_gap = round(sw * (224.0 / 1920.0))
-vis_w = (sw - center_gap) / 2.0
-vis_h = round((sh - 56.0) * 0.40)
-vis_y = sh - vis_h - 8.0
-default_geoms = [
-    (0.0, vis_y, vis_w, vis_h),
-    (sw - vis_w, vis_y, vis_w, vis_h)
-]
+default_geoms = [(0.0, 656.0, 848.0, 416.0), (1072.0, 656.0, 848.0, 416.0)]
 
 tmpl_data = {}
 if os.path.exists(conf_path):
-    with open(conf_path, "r") as f:
-        text = f.read()
-    for idx in range(1, count + 1):
-        geom_m = re.search(rf"^\[Applet_{idx}\].*?^geometry=([^\n]+)", text, re.S | re.M)
+    with open(conf_path) as f:
+        conf = f.read()
+    for block in re.split(r"(?m)(?=^\[Applet_\d+\]$)", conf):
+        lines = block.strip().splitlines()
+        if not lines:
+            continue
+        m = re.match(r"^\[Applet_(\d+)\]$", lines[0])
+        if not m:
+            continue
+        idx = int(m.group(1))
         geom = None
-        if geom_m:
-            try:
-                gp = geom_m.group(1).split(",")
-                geom = (float(gp[0]), float(gp[1]), float(gp[2]), float(gp[3]))
-            except Exception:
-                pass
-        gen_m = re.search(rf"\[Applet_{idx}\]\[Configuration\]\[General\]\n((?:(?!^\[).)*)", text, re.S | re.M)
+        for line in lines:
+            if line.startswith("geometry="):
+                parts = line.split("=", 1)[1].strip().split(",")
+                if len(parts) >= 4:
+                    try:
+                        geom = (float(parts[0]), float(parts[1]), float(parts[2]), float(parts[3]))
+                    except Exception:
+                        pass
+                break
         cfg = {}
-        if gen_m:
-            for line in gen_m.group(1).splitlines():
+        in_gen = False
+        for line in lines:
+            if line.strip() == f"[Applet_{idx}][Configuration][General]":
+                in_gen = True
+                continue
+            elif in_gen and line.strip().startswith("["):
+                in_gen = False
+            elif in_gen:
                 line = line.strip()
                 if line and not line.startswith("#") and "=" in line:
                     k, v = line.split("=", 1)
@@ -702,15 +511,14 @@ for idx in range(1, count + 1):
     cfg = dict(td.get("config", {}))
     if "desktopWidgetBg" not in cfg:
         cfg["desktopWidgetBg"] = "0"
-    if str(cfg.get("fillWave", "")).strip().lower() in ("false", "0"):
-        cfg["fillWave"] = "false"
-    else:
+    if "fillWave" not in cfg:
         cfg["fillWave"] = "true"
     if "hideWhenIdle" not in cfg:
-        cfg["hideWhenIdle"] = "true"
+        cfg["hideWhenIdle"] = "false"
     applets_data.append({"x": x, "y": y, "w": w, "h": h, "config": cfg})
 
-state_file = "/tmp/plasma-visualizer-last-target.json"
+safe_plugin = re.sub(r'[^a-zA-Z0-9_-]', '_', plugin_id)
+state_file = f"/tmp/plasma-{safe_plugin}-last-target.json"
 target_data = {"profile": profile, "applets": applets_data}
 target_key = json.dumps(target_data, sort_keys=True)
 
@@ -759,12 +567,10 @@ if need_update:
     print(removed ? 'REMOVED' : 'NONE');
     """
     try:
-        rm_out = subprocess.check_output(
+        subprocess.check_output(
             ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_remove],
             text=True, stderr=subprocess.DEVNULL
         ).strip()
-        if "REMOVED" in rm_out:
-            time.sleep(0.15)
     except Exception:
         pass
 
@@ -790,7 +596,11 @@ if need_update:
             d.currentConfigGroup = ['Applets', String(targetId), 'Configuration', 'General'];
             for (var k in item.config) {{
                 if (k !== 'fillWave') {{
-                    d.writeConfig(k, item.config[k]);
+                    var valPre = item.config[k];
+                    if (k === 'eq' && typeof valPre === 'string' && valPre.indexOf(',') !== -1) {{
+                        valPre = valPre.split(',');
+                    }}
+                    d.writeConfig(k, valPre);
                 }}
             }}
             d.writeConfig('fillWave', false);
@@ -806,7 +616,11 @@ if need_update:
             w.currentConfigGroup = ['General'];
             for (var k in item.config) {{
                 if (k !== 'fillWave') {{
-                    w.writeConfig(k, item.config[k]);
+                    var val = item.config[k];
+                    if (k === 'eq' && typeof val === 'string' && val.indexOf(',') !== -1) {{
+                        val = val.split(',');
+                    }}
+                    w.writeConfig(k, val);
                 }}
             }}
             w.writeConfig('fillWave', false);
@@ -823,11 +637,11 @@ if need_update:
         created_ids = json.loads(add_out) if add_out.startswith("[") else []
 
         fill_flags = [
-            str(item.get("config", {}).get("fillWave", "true")).strip().lower() not in ("false", "0")
+            str(item.get("config", {}).get("fillWave", "")).lower() in ("true", "1")
             for item in applets_data
         ]
         if any(fill_flags):
-            time.sleep(0.25)
+            time.sleep(0.3)
             js_fill = f"""
             var d = desktops()[0];
             var createdIds = {json.dumps(created_ids)};
@@ -866,121 +680,149 @@ if need_update:
     except Exception:
         pass
 PYEOF
-    fi
 }
 
-set_visualizer_geometry() {
-    local profile=""
-    local -a geoms=()
-    parse_visualizer_args profile geoms "$@"
-    if [[ ${#geoms[@]} -eq 0 ]]; then
+# Removes all live widgets of the given plugin_id from all Plasma desktops.
+remove_kde_applets_live() {
+    local plugin_id="$1"
+
+    local test_mode=false
+    if [[ -n "${CAELESTIA_TEST_MODE:-}" || "$USER_CONFIG_DIR" == "/tmp/"* ]]; then
+        test_mode=true
+    fi
+
+    if [[ "$test_mode" == true ]]; then
         return 0
     fi
 
-    local conf_path
-    conf_path="$(get_visualizer_conf_path "$profile")"
-    local count
-    count="$(get_visualizer_applet_count "$conf_path" "$profile")"
-
-    add_kde_applets_live \
-        "$conf_path" \
-        "luisbocanegra.audio.visualizer" \
-        "$count" \
-        "$profile" \
-        "${geoms[@]}"
-
-    sync_kde_applets \
-        "$conf_path" \
-        "$USER_CONFIG_DIR" \
-        "luisbocanegra.audio.visualizer" \
-        "$count" \
-        "plasma-audio-visualizer" \
-        "$profile" \
-        "${geoms[@]}" >/dev/null 2>&1 || true
-}
-
-export_visualizer() {
-    local profile=""
-    local -a geoms=()
-    parse_visualizer_args profile geoms "$@"
-
-    local prev_profile=""
-    if [[ -f "/tmp/plasma-visualizer-last-target.json" ]]; then
-        prev_profile="$(python3 -c "import json; print(json.load(open('/tmp/plasma-visualizer-last-target.json')).get('profile', ''))" 2>/dev/null || true)"
-    fi
-    if [[ "$prev_profile" == "user" && "$profile" != "user" ]]; then
-        save_user_visualizer_config
+    if ! command -v qdbus6 >/dev/null 2>&1; then
+        return 0
     fi
 
-    local conf_path
-    conf_path="$(get_visualizer_conf_path "$profile")"
-    local count
-    count="$(get_visualizer_applet_count "$conf_path" "$profile")"
+    local safe_plugin
+    safe_plugin="$(echo "$plugin_id" | tr -c 'a-zA-Z0-9_-' '_')"
+    rm -f "/tmp/plasma-${safe_plugin}-last-target.json"
 
-    echo "Adding plasma-audio-visualizer widgets directly (profile: $profile, count: $count)..."
-    add_kde_applets_live \
-        "$conf_path" \
-        "luisbocanegra.audio.visualizer" \
-        "$count" \
-        "$profile" \
-        "${geoms[@]}"
+    python3 - "$plugin_id" << 'PYEOF'
+import subprocess, sys
 
-    sync_kde_applets \
-        "$conf_path" \
-        "$USER_CONFIG_DIR" \
-        "luisbocanegra.audio.visualizer" \
-        "$count" \
-        "plasma-audio-visualizer" \
-        "$profile" \
-        "${geoms[@]}" >/dev/null 2>&1 || true
-    echo "✓ Plasma audio visualizer enabled ($profile)"
+plugin_id = sys.argv[1]
+js = f"""
+var removed = false;
+for (var d_idx = 0; d_idx < desktops().length; d_idx++) {{
+    var d = desktops()[d_idx];
+    var ws = d.widgets();
+    for (var i = 0; i < ws.length; i++) {{
+        if (ws[i].type === '{plugin_id}') {{
+            ws[i].remove();
+            removed = true;
+        }}
+    }}
+}}
+print(removed ? 'REMOVED' : 'NONE');
+"""
+try:
+    subprocess.check_output(
+        ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js],
+        text=True, stderr=subprocess.DEVNULL
+    ).strip()
+except Exception:
+    pass
+PYEOF
 }
 
-disable_visualizer() {
-    local profile=""
-    local -a geoms=()
-    parse_visualizer_args profile geoms "$@"
 
-    if [[ "$profile" == "user" ]]; then
-        save_user_visualizer_config
-    fi
+# General Applet CLI Command Handler
 
-    local conf_path
-    conf_path="$(get_visualizer_conf_path "$profile")"
 
-    echo "Removing plasma-audio-visualizer widgets directly..."
-    rm -f "/tmp/plasma-visualizer-last-target.json"
+handle_general_applet_command() {
+    local subcmd="${1:-list}"
+    shift || true
 
-    # Sync applets to disabled state FIRST so user settings are preserved in desktop-appletsrc
-    sync_kde_applets \
-        "$conf_path" \
-        "$USER_CONFIG_DIR" \
-        "luisbocanegra.audio.visualizer" \
-        "0" \
-        "plasma-audio-visualizer" \
-        "$profile" >/dev/null 2>&1 || true
-
-    remove_kde_applets_live "luisbocanegra.audio.visualizer"
-    echo "✓ Plasma audio visualizer disabled"
+    case "$subcmd" in
+        list)
+            local plugin="${1:-}"
+            get_live_plasma_widgets "$plugin"
+            ;;
+        add)
+            if [[ $# -lt 3 ]]; then
+                echo "Usage: $(basename "$0") applet add <PLUGIN_ID> <CONF_PATH> <COUNT> [PROFILE] [GEOM...]" >&2
+                return 1
+            fi
+            local plugin_id="$1"
+            local conf_path="$2"
+            local count="$3"
+            local profile="${4:-default}"
+            shift 4 || shift $#
+            add_kde_applets_live "$conf_path" "$plugin_id" "$count" "$profile" "$@"
+            ;;
+        remove|rm|del)
+            if [[ $# -lt 1 ]]; then
+                echo "Usage: $(basename "$0") applet remove <PLUGIN_ID>" >&2
+                return 1
+            fi
+            remove_kde_applets_live "$1"
+            ;;
+        sync)
+            if [[ $# -lt 3 ]]; then
+                echo "Usage: $(basename "$0") applet sync <CONF_PATH> <PLUGIN_ID> <COUNT> [LABEL] [PROFILE] [GEOM...]" >&2
+                return 1
+            fi
+            local conf_path="$1"
+            local plugin_id="$2"
+            local count="$3"
+            local label="${4:-applet}"
+            local profile="${5:-default}"
+            shift 5 || shift $#
+            sync_kde_applets "$conf_path" "$USER_CONFIG_DIR" "$plugin_id" "$count" "$label" "$profile" "$@"
+            ;;
+        *)
+            echo "Unknown applet subcommand: $subcmd" >&2
+            echo "Available: list, add, remove, sync" >&2
+            return 1
+            ;;
+    esac
 }
 
-configure_visualizer() {
-    echo "To configure plasma-audio-visualizer:"
-    echo "Right click on desktop -> Edit Mode -> Right click visualizer -> Configure"
+show_help() {
+    cat << EOF
+Usage: $(basename "$0") [TARGET [ACTION [ARGS...]]]
+
+General tool for Plasma widget interactions, configuration export, and synchronization.
+
+Generic Plasma Widget Commands:
+  applet list [PLUGIN_ID]                             List live desktop widgets (JSON)
+  applet add <PLUGIN_ID> <CONF_PATH> <COUNT> [ARGS]   Add & position widgets live in Plasma
+  applet remove <PLUGIN_ID>                           Remove all live widgets of plugin
+  applet sync <CONF_PATH> <PLUGIN_ID> <COUNT> [ARGS]  Sync widget sections in appletsrc
+
+Target Modules:
+  visualizer [enable|disable|geometry|configure|snapshot|check-edit-mode] [PROFILE] [GEOM...]
+                                                      Manage audio visualizer widgets
+  skwd, skwd-wall, wall                               Export and apply skwd-wall-v2 config
+  all                                                 Export and apply all configs (default)
+
+Options:
+  -h, --help                                          Show this help message
+EOF
 }
+
+
+# CLI Entry Point & Dispatcher
+
 
 DO_SKWD=false
 VISUALIZER_ACTION=""
 VISUALIZER_ARGS=()
+APPLET_ARGS=()
 
 if [[ $# -eq 0 ]]; then
     DO_SKWD=true
-    # When no args (or startup), respect user configuration
     is_vis_enabled=true
-    vis_profile="user"
+    vis_profile="double_reversed"
     if [[ -f "$USER_CONFIG_DIR/caelestia/shell.json" ]]; then
         is_vis_enabled="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('enabled', True)).lower())" 2>/dev/null || echo "true")"
-        vis_profile="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('profile', 'user')).lower())" 2>/dev/null || echo "user")"
+        vis_profile="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('profile', 'double_reversed')).lower())" 2>/dev/null || echo "double_reversed")"
     fi
     VISUALIZER_ARGS=("$vis_profile")
     if [[ "$is_vis_enabled" == "false" ]]; then
@@ -991,6 +833,13 @@ if [[ $# -eq 0 ]]; then
 else
     while [[ $# -gt 0 ]]; do
         case "$1" in
+            applet|widget)
+                shift
+                exec 200>"/tmp/plasma-export-config.lock"
+                flock -x 200
+                handle_general_applet_command "$@"
+                exit 0
+                ;;
             skwd|skwd-wall|wall|wallpaper|--skwd|--skwd-wall)
                 DO_SKWD=true
                 shift
@@ -1025,6 +874,14 @@ else
                             ;;
                         configure|config|menu)
                             VISUALIZER_ACTION="configure"
+                            shift
+                            ;;
+                        snapshot)
+                            VISUALIZER_ACTION="snapshot"
+                            shift
+                            ;;
+                        check-edit-mode|check_edit_mode)
+                            VISUALIZER_ACTION="check-edit-mode"
                             shift
                             ;;
                         user|user_defined|user-defined|"user defined"|double_reversed|double-reversed|"double reversed"|single|circle)
@@ -1071,10 +928,10 @@ else
             all|--all)
                 DO_SKWD=true
                 is_vis_enabled=true
-                vis_profile="user"
+                vis_profile="double_reversed"
                 if [[ -f "$USER_CONFIG_DIR/caelestia/shell.json" ]]; then
                     is_vis_enabled="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('enabled', True)).lower())" 2>/dev/null || echo "true")"
-                    vis_profile="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('profile', 'user')).lower())" 2>/dev/null || echo "user")"
+                    vis_profile="$(python3 -c "import json; print(str(json.load(open('$USER_CONFIG_DIR/caelestia/shell.json')).get('background', {}).get('visualiser', {}).get('profile', 'double_reversed')).lower())" 2>/dev/null || echo "double_reversed")"
                 fi
                 VISUALIZER_ARGS=("$vis_profile")
                 if [[ "$is_vis_enabled" == "false" ]]; then
@@ -1098,30 +955,11 @@ else
 fi
 
 if [[ "$DO_SKWD" == true ]]; then
-    export_skwd
+    handle_skwd_command "export"
 fi
 
 if [[ -n "$VISUALIZER_ACTION" ]]; then
     exec 200>"/tmp/plasma-export-config.lock"
     flock -x 200
-fi
-
-case "$VISUALIZER_ACTION" in
-    enable)
-        export_visualizer "${VISUALIZER_ARGS[@]}"
-        ;;
-    geometry)
-        set_visualizer_geometry "${VISUALIZER_ARGS[@]}"
-        ;;
-    disable)
-        disable_visualizer "${VISUALIZER_ARGS[@]}"
-        ;;
-    configure)
-        configure_visualizer
-        ;;
-esac
-
-if [[ "$DO_SKWD" == true ]]; then
-    sleep 2
-    apply_skwd_wallpaper
+    handle_visualizer_command "$VISUALIZER_ACTION" "${VISUALIZER_ARGS[@]}"
 fi

@@ -3,6 +3,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Caelestia.Config
 import qs.services
 
@@ -106,7 +107,7 @@ Singleton {
 
         switch (widgetId) {
         case "visualizer":
-            const prof = root.visualizerProfile || "user";
+            const prof = root.visualizerProfile || "double_reversed";
             if (prof === "double_reversed" && geom) {
                 Quickshell.execDetached([
                     "bash", scriptPath, "visualizer", "enable", prof,
@@ -129,7 +130,7 @@ Singleton {
 
         switch (widgetId) {
         case "visualizer":
-            const prof = root.visualizerProfile || "user";
+            const prof = root.visualizerProfile || "double_reversed";
             Quickshell.execDetached(["bash", scriptPath, "visualizer", "disable", prof]);
             break;
         default:
@@ -169,7 +170,7 @@ Singleton {
 
         switch (widgetId) {
         case "visualizer":
-            const prof = root.visualizerProfile || "user";
+            const prof = root.visualizerProfile || "double_reversed";
             if (prof !== "double_reversed")
                 return;
             Quickshell.execDetached([
@@ -207,6 +208,19 @@ Singleton {
             enableWidget("visualizer");
         else
             disableWidget("visualizer");
+    }
+
+    // Snapshot live visualizer state at start of edit mode
+    function snapshotVisualizerState(): void {
+        const scriptPath = Quickshell.shellPath("scripts/export-plasma-config.sh");
+        Quickshell.execDetached(["bash", scriptPath, "visualizer", "snapshot"]);
+    }
+
+    // Check if visualizer widgets changed in edit mode, save to user.conf and switch profile
+    function checkVisualizerEditModeChange(): void {
+        const scriptPath = Quickshell.shellPath("scripts/export-plasma-config.sh");
+        checkEditModeProc.command = ["bash", scriptPath, "visualizer", "check-edit-mode"];
+        checkEditModeProc.running = true;
     }
 
     onLeftExclusionChanged: scheduleSync()
@@ -272,5 +286,32 @@ Singleton {
         interval: 150
         repeat: false
         onTriggered: root.syncAll()
+    }
+
+    Process {
+        id: checkEditModeProc
+
+        running: false
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const lines = text.trim().split("\n");
+                const lastLine = lines.length > 0 ? lines[lines.length - 1].trim() : "";
+                if (lastLine === "STATUS_CHANGED") {
+                    GlobalConfig.background.visualiser.profile = "user";
+                    GlobalConfig.save();
+                }
+            }
+        }
+    }
+
+    Connections {
+        function onEditModeChanged(): void {
+            if (ContextMenuStore.editMode)
+                root.snapshotVisualizerState();
+            else
+                root.checkVisualizerEditModeChange();
+        }
+
+        target: ContextMenuStore
     }
 }

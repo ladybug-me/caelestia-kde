@@ -33,14 +33,14 @@ PageBase {
 
     readonly property list<MenuItem> visualizerProfiles: [
         MenuItem {
-            property string value: "user"
-
-            text: qsTr("User defined (default)")
-        },
-        MenuItem {
             property string value: "double_reversed"
 
-            text: qsTr("Double Reversed")
+            text: qsTr("Double Reversed (default)")
+        },
+        MenuItem {
+            property string value: "user"
+
+            text: qsTr("User defined")
         },
         MenuItem {
             property string value: "single"
@@ -159,7 +159,7 @@ PageBase {
                 menuItems: root.visualizerProfiles
                 active: {
                     for (let i = 0; i < root.visualizerProfiles.length; i++) {
-                        if (root.visualizerProfiles[i].value === Config.background.visualiser.profile)
+                        if (root.visualizerProfiles[i].value === (Config.background.visualiser.profile || "double_reversed"))
                             return root.visualizerProfiles[i];
                     }
                     return root.visualizerProfiles[0];

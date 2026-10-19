@@ -154,7 +154,7 @@ ShellRoot {
         id: skwdWallCheckProcess
 
         running: true
-        command: ["sh", "-c", "command -v skwd-walld"]
+        command: ["systemctl", "--user", "is-active", "--quiet", "skwd-walld.service"]
 
         onExited: code => {
             const enabled = (code !== 0);

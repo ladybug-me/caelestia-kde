@@ -4752,17 +4752,28 @@
       <translation>Complementos del escritorio</translation>
     </message>
     <message>
-      <location line="+20"/>
-      <source>Auto-hide media shapes</source>
-      <translation>Ocultar automáticamente las formas multimedia</translation>
+      <location line="+14"/>
+      <source>Desktop clock</source>
+      <translation>Reloj del escritorio</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Hide media shapes when a window is open</source>
-      <translation>Ocultar las formas multimedia cuando haya una ventana abierta</translation>
+      <location line="+11"/>
+      <location line="+32"/>
+      <source>Invert colors</source>
+      <translation>Invertir colores</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="-24"/>
+      <source>Desktop lyrics</source>
+      <translation>Lyrics de Multimedia (Mostrar letras en el escritorio)</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Alignment</source>
+      <translation>Alineación</translation>
+    </message>
+    <message>
+      <location line="+23"/>
       <source>Auto-hide lyrics</source>
       <translation>Ocultar automáticamente las letras</translation>
     </message>
@@ -4770,6 +4781,11 @@
       <location line="+1"/>
       <source>Hide lyrics when a window is open</source>
       <translation>Ocultar las letras cuando haya una ventana abierta</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Visualiser</source>
+      <translation>Visualizador</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -4782,53 +4798,7 @@
       <translation>Mostrar el visualizador de música en el fondo de pantalla (puede consumir más energía)</translation>
     </message>
     <message>
-      <location line="+14"/>
-      <source>Auto-hide visualiser</source>
-      <translation>Ocultar automáticamente el visualizador</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hide visualiser when a window is fullscreen</source>
-      <translation>Ocultar el visualizador cuando una ventana esté a pantalla completa</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Hide on all monitors</source>
-      <translation>Ocultar en todos los monitores</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Also hide on all other monitors if disabled by a window</source>
-      <translation>Ocultar también en todos los demás monitores si una ventana lo desactiva</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Desktop clock</source>
-      <translation>Reloj del escritorio</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <location line="+33"/>
-      <source>Invert colors</source>
-      <translation>Invertir colores</translation>
-    </message>
-    <message>
-      <location line="-25"/>
-      <source>Desktop lyrics</source>
-      <translation>Lyrics de Multimedia (Mostrar letras en el escritorio)</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Alignment</source>
-      <translation>Alineación</translation>
-    </message>
-    <message>
-      <location line="+23"/>
-      <source>Visualiser</source>
-      <translation>Visualizador</translation>
-    </message>
-    <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Blur</source>
       <translation>Desenfoque</translation>
     </message>
@@ -4843,7 +4813,7 @@
       <translation>Espaciado</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Size</source>
       <translation>Tamaño</translation>
     </message>
@@ -4851,6 +4821,41 @@
       <location line="+1"/>
       <source>Column width multiplier, lower values leave more room in the middle</source>
       <translation>Multiplicador del ancho de las columnas; valores bajos dejan más espacio en el centro</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Auto-hide visualiser</source>
+      <translation>Ocultar automáticamente el visualizador</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide visualiser when a window is fullscreen</source>
+      <translation>Ocultar el visualizador cuando una ventana esté a pantalla completa</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Hide on all monitors</source>
+      <translation>Ocultar en todos los monitores</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Also hide on all other monitors if disabled by a window</source>
+      <translation>Ocultar también en todos los demás monitores si una ventana lo desactiva</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Media shapes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Auto-hide media shapes</source>
+      <translation>Ocultar automáticamente las formas multimedia</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide media shapes when a window is open</source>
+      <translation>Ocultar las formas multimedia cuando haya una ventana abierta</translation>
     </message>
   </context>
   <context>
@@ -4972,7 +4977,7 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+593"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+672"/>
       <location line="+3"/>
       <source>Group</source>
       <translation>Agrupar</translation>
@@ -4996,7 +5001,7 @@
       <translation>Falló la operación de archivo</translation>
     </message>
     <message>
-      <location line="+498"/>
+      <location line="+502"/>
       <source>%1 could not complete the request</source>
       <translation>%1 no pudo completar la solicitud</translation>
     </message>
@@ -5434,6 +5439,16 @@ Ahora salir a tocar el pasto</translation>
     <message>
       <location line="+1"/>
       <source>Notifications in both popups and the sidebar now cleanly sanitize FreeDesktop markup, auto-link web URLs, and preserve paragraph formatting.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Shimeji Cat update</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -10033,12 +10048,12 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>PluginSettingsPopup</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+44"/>
+      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+53"/>
       <source>Settings</source>
       <translation>Configuración</translation>
     </message>
     <message>
-      <location line="+51"/>
+      <location line="+74"/>
       <source>Done</source>
       <translation>Listo</translation>
     </message>
@@ -10100,13 +10115,13 @@ Ahora salir a tocar el pasto</translation>
       <translation>Reiniciar shell</translation>
     </message>
     <message>
-      <location line="+34"/>
-      <location line="+371"/>
+      <location line="+43"/>
+      <location line="+369"/>
       <source>Installed</source>
       <translation>Instalados</translation>
     </message>
     <message>
-      <location line="-362"/>
+      <location line="-360"/>
       <source>Store</source>
       <translation>Tienda</translation>
     </message>
@@ -10121,12 +10136,12 @@ Ahora salir a tocar el pasto</translation>
       <translation>Plugins del shell</translation>
     </message>
     <message>
-      <location line="+73"/>
+      <location line="+72"/>
       <source>User Installed</source>
       <translation>Instalados por el usuario</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+105"/>
       <source>No plugins installed</source>
       <translation>No hay plugins instalados</translation>
     </message>

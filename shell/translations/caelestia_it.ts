@@ -4752,17 +4752,28 @@
       <translation>Addons Desktop</translation>
     </message>
     <message>
-      <location line="+20"/>
-      <source>Auto-hide media shapes</source>
-      <translation>Nascondi automaticamente le forme multimediali</translation>
+      <location line="+14"/>
+      <source>Desktop clock</source>
+      <translation>Orologio da tavolo</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Hide media shapes when a window is open</source>
-      <translation>Nasconde le forme multimediali quando una finestra è aperta</translation>
+      <location line="+11"/>
+      <location line="+32"/>
+      <source>Invert colors</source>
+      <translation>Inverti colori</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="-24"/>
+      <source>Desktop lyrics</source>
+      <translation>Testo del desktop</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Alignment</source>
+      <translation>Allineamento</translation>
+    </message>
+    <message>
+      <location line="+23"/>
       <source>Auto-hide lyrics</source>
       <translation>Nascondi automaticamente i testi</translation>
     </message>
@@ -4770,6 +4781,11 @@
       <location line="+1"/>
       <source>Hide lyrics when a window is open</source>
       <translation>Nascondi i testi quando una finestra è aperta</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Visualiser</source>
+      <translation>Visualizzatore</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -4782,53 +4798,7 @@
       <translation>Mostra il visualizzatore musicale sullo sfondo (può consumare più potenza)</translation>
     </message>
     <message>
-      <location line="+14"/>
-      <source>Auto-hide visualiser</source>
-      <translation>Nascondi automaticamente il visualizzatore</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hide visualiser when a window is fullscreen</source>
-      <translation>Nasconde il visualizzatore quando una finestra è a schermo intero</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Hide on all monitors</source>
-      <translation>Nascondi su tutti i monitor</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Also hide on all other monitors if disabled by a window</source>
-      <translation>Nascondi anche su tutti gli altri monitor se disabilitato da una finestra</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Desktop clock</source>
-      <translation>Orologio da tavolo</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <location line="+33"/>
-      <source>Invert colors</source>
-      <translation>Inverti colori</translation>
-    </message>
-    <message>
-      <location line="-25"/>
-      <source>Desktop lyrics</source>
-      <translation>Testo del desktop</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Alignment</source>
-      <translation>Allineamento</translation>
-    </message>
-    <message>
-      <location line="+23"/>
-      <source>Visualiser</source>
-      <translation>Visualizzatore</translation>
-    </message>
-    <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Blur</source>
       <translation type="unfinished"/>
     </message>
@@ -4843,7 +4813,7 @@
       <translation>Spaziatura</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4851,6 +4821,41 @@
       <location line="+1"/>
       <source>Column width multiplier, lower values leave more room in the middle</source>
       <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Auto-hide visualiser</source>
+      <translation>Nascondi automaticamente il visualizzatore</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide visualiser when a window is fullscreen</source>
+      <translation>Nasconde il visualizzatore quando una finestra è a schermo intero</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Hide on all monitors</source>
+      <translation>Nascondi su tutti i monitor</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Also hide on all other monitors if disabled by a window</source>
+      <translation>Nascondi anche su tutti gli altri monitor se disabilitato da una finestra</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Media shapes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Auto-hide media shapes</source>
+      <translation>Nascondi automaticamente le forme multimediali</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide media shapes when a window is open</source>
+      <translation>Nasconde le forme multimediali quando una finestra è aperta</translation>
     </message>
   </context>
   <context>
@@ -4972,7 +4977,7 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+593"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+672"/>
       <location line="+3"/>
       <source>Group</source>
       <translation type="unfinished"/>
@@ -4996,7 +5001,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+498"/>
+      <location line="+502"/>
       <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
@@ -5432,6 +5437,16 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>Notifications in both popups and the sidebar now cleanly sanitize FreeDesktop markup, auto-link web URLs, and preserve paragraph formatting.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Shimeji Cat update</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -10031,12 +10046,12 @@ Now go touch grass</source>
   <context>
     <name>PluginSettingsPopup</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+44"/>
+      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+53"/>
       <source>Settings</source>
       <translation>Impostazioni</translation>
     </message>
     <message>
-      <location line="+51"/>
+      <location line="+74"/>
       <source>Done</source>
       <translation>Fatto</translation>
     </message>
@@ -10098,13 +10113,13 @@ Now go touch grass</source>
       <translation>Riavvia Shell</translation>
     </message>
     <message>
-      <location line="+34"/>
-      <location line="+371"/>
+      <location line="+43"/>
+      <location line="+369"/>
       <source>Installed</source>
       <translation>Installato</translation>
     </message>
     <message>
-      <location line="-362"/>
+      <location line="-360"/>
       <source>Store</source>
       <translation>Negozio</translation>
     </message>
@@ -10119,12 +10134,12 @@ Now go touch grass</source>
       <translation>Plugin Shell</translation>
     </message>
     <message>
-      <location line="+73"/>
+      <location line="+72"/>
       <source>User Installed</source>
       <translation>Utente Installato</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+105"/>
       <source>No plugins installed</source>
       <translation>Nessun plugin installato</translation>
     </message>

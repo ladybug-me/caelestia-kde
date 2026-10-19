@@ -31,6 +31,29 @@ PageBase {
         }
     ]
 
+    readonly property list<MenuItem> visualizerProfiles: [
+        MenuItem {
+            property string value: "user"
+
+            text: qsTr("User defined (default)")
+        },
+        MenuItem {
+            property string value: "double_reversed"
+
+            text: qsTr("Double Reversed")
+        },
+        MenuItem {
+            property string value: "single"
+
+            text: qsTr("Single")
+        },
+        MenuItem {
+            property string value: "circle"
+
+            text: qsTr("Circle")
+        }
+    ]
+
     isSubPage: true
     title: qsTr("Desktop Addons")
 
@@ -124,6 +147,25 @@ PageBase {
                 checked: Config.background.visualiser.enabled
                 onToggled: {
                     PlasmaWidgets.setWidgetEnabled("visualizer", checked);
+                }
+            }
+
+            SelectRow {
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+                Layout.fillWidth: true
+                visible: Config.background.visualiser.enabled
+                label: qsTr("Profile")
+                subtext: qsTr("Visualizer layout and style preset")
+                menuItems: root.visualizerProfiles
+                active: {
+                    for (let i = 0; i < root.visualizerProfiles.length; i++) {
+                        if (root.visualizerProfiles[i].value === Config.background.visualiser.profile)
+                            return root.visualizerProfiles[i];
+                    }
+                    return root.visualizerProfiles[0];
+                }
+                onSelected: item => {
+                    PlasmaWidgets.setVisualizerProfile(item.value);
                 }
             }
 

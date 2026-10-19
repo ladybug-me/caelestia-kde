@@ -29,8 +29,9 @@ Singleton {
     readonly property real usableHeight: primaryExclusions ? primaryExclusions.usableHeight : Math.max(100, screenHeight - topExclusion - bottomExclusion)
     readonly property rect usableArea: Qt.rect(leftExclusion, topExclusion, usableWidth, usableHeight)
 
-    // Track visualizer enabled status from configuration
+    // Track visualizer enabled status and profile from configuration
     readonly property bool visualizerEnabled: Config.background.visualiser.enabled
+    readonly property string visualizerProfile: Config.background.visualiser.profile
 
     property bool ready: false
 
@@ -98,14 +99,15 @@ Singleton {
 
         switch (widgetId) {
         case "visualizer":
-            if (geom) {
+            const prof = root.visualizerProfile || "user";
+            if (prof === "double_reversed" && geom) {
                 Quickshell.execDetached([
-                    "bash", scriptPath, "visualizer", "enable",
+                    "bash", scriptPath, "visualizer", "enable", prof,
                     geom.x1.toString(), geom.y1.toString(), geom.w1.toString(), geom.h1.toString(),
                     geom.x2.toString(), geom.y2.toString(), geom.w2.toString(), geom.h2.toString()
                 ]);
             } else {
-                Quickshell.execDetached(["bash", scriptPath, "visualizer", "enable"]);
+                Quickshell.execDetached(["bash", scriptPath, "visualizer", "enable", prof]);
             }
             break;
         default:
@@ -120,7 +122,8 @@ Singleton {
 
         switch (widgetId) {
         case "visualizer":
-            Quickshell.execDetached(["bash", scriptPath, "visualizer", "disable"]);
+            const prof = root.visualizerProfile || "user";
+            Quickshell.execDetached(["bash", scriptPath, "visualizer", "disable", prof]);
             break;
         default:
             console.warn("PlasmaWidgets: unknown widget id", widgetId);
@@ -139,6 +142,13 @@ Singleton {
         }
     }
 
+    // Set visualizer profile preset
+    function setVisualizerProfile(profile: string): void {
+        GlobalConfig.background.visualiser.profile = profile;
+        if (root.visualizerEnabled)
+            enableWidget("visualizer");
+    }
+
     // Sync widget position live without re-saving appletsrc
     function syncWidgetGeometry(widgetId: string): void {
         if (!isWidgetEnabled(widgetId))
@@ -152,8 +162,11 @@ Singleton {
 
         switch (widgetId) {
         case "visualizer":
+            const prof = root.visualizerProfile || "user";
+            if (prof !== "double_reversed")
+                return;
             Quickshell.execDetached([
-                "bash", scriptPath, "visualizer", "geometry",
+                "bash", scriptPath, "visualizer", "geometry", prof,
                 geom.x1.toString(), geom.y1.toString(), geom.w1.toString(), geom.h1.toString(),
                 geom.x2.toString(), geom.y2.toString(), geom.w2.toString(), geom.h2.toString()
             ]);
@@ -190,6 +203,13 @@ Singleton {
             enableWidget("visualizer");
         else
             disableWidget("visualizer");
+    }
+
+    onVisualizerProfileChanged: {
+        if (!ready)
+            return;
+        if (visualizerEnabled)
+            enableWidget("visualizer");
     }
 
     Component.onCompleted: {

@@ -35,6 +35,7 @@ class BackgroundVisualiser : public settings::ObjectNode {
     CONFIG_NODE(BackgroundVisualiser, settings::ObjectNode)
 
     CONFIG_PROPERTY(bool, enabled, true)
+    CONFIG_PROPERTY(QString, profile, QStringLiteral("user"))
 };
 
 class DesktopLyricsBackground : public settings::ObjectNode {

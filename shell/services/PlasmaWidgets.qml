@@ -1,3 +1,4 @@
+pragma ComponentBehavior: Bound
 pragma Singleton
 
 import QtQuick
@@ -32,7 +33,13 @@ Singleton {
     // Track visualizer enabled status and profile from configuration
     readonly property bool visualizerEnabled: Config.background.visualiser.enabled
     readonly property string visualizerProfile: Config.background.visualiser.profile
+    readonly property bool visualizerAutoHide: Config.background.visualiser.autoHide
+    readonly property bool visualizerHideOnAllMonitors: Config.background.visualiser.hideOnAllMonitors
+    readonly property bool windowHidesVisualizer: (Kwin.windowList, Kwin.activeWsId, Kwin.activeByOutput, Kwin.windowHidesDesktopWidgets(root.primaryScreen ? root.primaryScreen.name : "", visualizerHideOnAllMonitors))
+    readonly property bool gameModeSuppressesVisualizer: GameMode.enabled && GlobalConfig.utilities.gameMode.disableVisualizer
+    readonly property bool visualizerEffectiveEnabled: visualizerEnabled && !gameModeSuppressesVisualizer && (!visualizerAutoHide || !windowHidesVisualizer)
 
+    property bool visualizerActive: false
     property bool ready: false
 
     // Geometry calculator for the audio visualizer (dual channel symmetric split)
@@ -86,7 +93,7 @@ Singleton {
     function isWidgetEnabled(widgetId: string): bool {
         switch (widgetId) {
         case "visualizer":
-            return root.visualizerEnabled;
+            return root.visualizerEffectiveEnabled;
         default:
             return false;
         }
@@ -178,7 +185,7 @@ Singleton {
 
     // Sync all currently active widgets
     function syncAll(): void {
-        if (visualizerEnabled)
+        if (visualizerEffectiveEnabled)
             syncWidgetGeometry("visualizer");
     }
 
@@ -189,6 +196,19 @@ Singleton {
         syncTimer.restart();
     }
 
+    function updateVisualizerState(): void {
+        if (!ready)
+            return;
+        const target = visualizerEffectiveEnabled;
+        if (visualizerActive === target)
+            return;
+        visualizerActive = target;
+        if (target)
+            enableWidget("visualizer");
+        else
+            disableWidget("visualizer");
+    }
+
     onLeftExclusionChanged: scheduleSync()
     onTopExclusionChanged: scheduleSync()
     onRightExclusionChanged: scheduleSync()
@@ -196,28 +216,37 @@ Singleton {
     onUsableWidthChanged: scheduleSync()
     onUsableHeightChanged: scheduleSync()
 
-    onVisualizerEnabledChanged: {
+    onVisualizerEffectiveEnabledChanged: {
         if (!ready)
             return;
-        if (visualizerEnabled)
-            enableWidget("visualizer");
-        else
-            disableWidget("visualizer");
+        visualizerStateTimer.restart();
     }
 
     onVisualizerProfileChanged: {
         if (!ready)
             return;
-        if (visualizerEnabled)
+        if (visualizerEffectiveEnabled)
             enableWidget("visualizer");
     }
 
     Component.onCompleted: {
         Qt.callLater(() => {
             root.ready = true;
-            if (root.visualizerEnabled)
+            root.visualizerActive = root.visualizerEffectiveEnabled;
+            if (root.visualizerAutoHide && !root.visualizerEffectiveEnabled && root.visualizerEnabled) {
+                root.disableWidget("visualizer");
+            } else if (root.visualizerEffectiveEnabled) {
                 root.scheduleSync();
+            }
         });
+    }
+
+    Timer {
+        id: visualizerStateTimer
+
+        interval: 100
+        repeat: false
+        onTriggered: root.updateVisualizerState()
     }
 
     Connections {

@@ -663,7 +663,9 @@ for idx in range(1, count + 1):
     cfg = dict(td.get("config", {}))
     if "desktopWidgetBg" not in cfg:
         cfg["desktopWidgetBg"] = "0"
-    if "fillWave" not in cfg:
+    if str(cfg.get("fillWave", "")).strip().lower() in ("false", "0"):
+        cfg["fillWave"] = "false"
+    else:
         cfg["fillWave"] = "true"
     if "hideWhenIdle" not in cfg:
         cfg["hideWhenIdle"] = "true"
@@ -782,7 +784,7 @@ if need_update:
         created_ids = json.loads(add_out) if add_out.startswith("[") else []
 
         fill_flags = [
-            str(item.get("config", {}).get("fillWave", "")).lower() in ("true", "1")
+            str(item.get("config", {}).get("fillWave", "true")).strip().lower() not in ("false", "0")
             for item in applets_data
         ]
         if any(fill_flags):

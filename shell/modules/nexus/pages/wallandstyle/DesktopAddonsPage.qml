@@ -169,6 +169,29 @@ PageBase {
                 }
             }
 
+            ToggleRow {
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+                Layout.fillWidth: true
+                visible: Config.background.visualiser.enabled
+                text: qsTr("Auto-hide visualizer")
+                subtext: qsTr("Hide visualizer when a window is maximized on active workspace")
+                reset: ({ node: GlobalConfig.background.visualiser, setting: "autoHide" })
+                checked: Config.background.visualiser.autoHide
+                onToggled: GlobalConfig.background.visualiser.autoHide = checked
+            }
+
+            ToggleRow {
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+                Layout.fillWidth: true
+                visible: Config.background.visualiser.enabled
+                text: qsTr("Hide on all monitors")
+                subtext: qsTr("Also hide on all other monitors if disabled by a window")
+                reset: ({ node: GlobalConfig.background.visualiser, setting: "hideOnAllMonitors" })
+                checked: Config.background.visualiser.hideOnAllMonitors
+                enabled: Config.background.visualiser.autoHide
+                onToggled: GlobalConfig.background.visualiser.hideOnAllMonitors = checked
+            }
+
             InfoRow {
                 last: true
                 Layout.fillWidth: true

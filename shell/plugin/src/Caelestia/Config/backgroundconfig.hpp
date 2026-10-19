@@ -36,6 +36,8 @@ class BackgroundVisualiser : public settings::ObjectNode {
 
     CONFIG_PROPERTY(bool, enabled, true)
     CONFIG_PROPERTY(QString, profile, QStringLiteral("user"))
+    CONFIG_PROPERTY(bool, autoHide, true)
+    CONFIG_PROPERTY(bool, hideOnAllMonitors, false)
 };
 
 class DesktopLyricsBackground : public settings::ObjectNode {

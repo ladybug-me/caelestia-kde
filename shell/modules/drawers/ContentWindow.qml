@@ -309,8 +309,8 @@ StyledWindow {
                         source: {
                             const cur = Wallpapers.current;
                             if (Images.isVideo(cur)) {
-                                const thumb = Wallpapers.thumbFor(cur);
-                                return thumb !== "" ? thumb : Wallpapers.getThumbnailPath(cur);
+                                const hifi = Wallpapers.thumbHifi(cur);
+                                return hifi !== "" ? hifi : Wallpapers.getThumbnailHifiPath(cur);
                             }
                             return cur;
                         }

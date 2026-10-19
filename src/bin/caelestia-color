@@ -722,7 +722,7 @@ def cmd_konsole_scheme(scheme_file: str, out: str) -> int:
 
 
 def is_thumbnail(p: pathlib.Path) -> bool:
-    if p.name == "first_frame.png":
+    if p.name in ("first_frame.png", "first_frame_hifi.png"):
         return True
     parts = p.parts
     if any(part in ("thumbs", "video-thumbs", "thumbs-sm", "remote-thumbs") for part in parts):
@@ -748,7 +748,7 @@ def cmd_resolve_thumb(thumb_path: str) -> int:
         return 0
 
     # 1. Quickshell video preview thumb
-    if thumb_p.name == "first_frame.png":
+    if thumb_p.name in ("first_frame.png", "first_frame_hifi.png"):
         src = thumb_p.parent / "source_path"
         if src.is_file():
             val = src.read_text(encoding="utf-8").strip()
@@ -1371,7 +1371,7 @@ resolve_actual_wallpaper() {
         fi
     fi
 
-    if [[ "$candidate" == */first_frame.png ]]; then
+    if [[ "$candidate" == */first_frame.png || "$candidate" == */first_frame_hifi.png ]]; then
         local dir source_video
         dir="$(dirname -- "$candidate")"
         if [[ -f "$dir/source_path" ]]; then

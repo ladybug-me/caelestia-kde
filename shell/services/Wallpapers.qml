@@ -23,6 +23,8 @@ Searcher {
     property string actualCurrent
     property var videoThumbs: ({})
     property var videoThumbsPending: ({})
+    property var videoThumbsHifi: ({})
+    property var videoThumbsHifiPending: ({})
 
     property string currentMediaFilter: "All"
 
@@ -114,10 +116,12 @@ Searcher {
         actualCurrent = path;
         if (Images.isVideo(path)) {
             const thumb = thumbFor(path);
-            if (thumb !== "") {
+            const hifi = thumbHifi(path);
+            const target = hifi !== "" ? hifi : thumb;
+            if (target !== "") {
                 const script = 'caelestia wallpaper -f "$1" --apply-path "$2" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
-                Quickshell.execDetached(["sh", "-c", script, "--", thumb, path, root.currentNamePath]);
-                syncPlasmaWallpaper(thumb);
+                Quickshell.execDetached(["sh", "-c", script, "--", thumb !== "" ? thumb : target, path, root.currentNamePath]);
+                syncPlasmaWallpaper(target);
             } else {
                 Quickshell.execDetached(["sh", "-c", 'printf "%s" "$1" > "$2"', "--", path, root.currentNamePath]);
             }
@@ -174,6 +178,21 @@ Searcher {
         return path;
     }
 
+    function getThumbnailHifiPath(path: string): string {
+        if (Images.isVideo(path)) {
+            return `${Paths.cache}/wallpapers/${CUtils.sha256(path)}/first_frame_hifi.png`;
+        }
+        return path;
+    }
+
+    function thumb(path: string): string {
+        return thumbFor(path);
+    }
+
+    function thumbHifi(path: string): string {
+        return thumbForHifi(path);
+    }
+
     function thumbFor(path: string): string {
         const p = String(path || "").replace(/^file:\/\//, "");
         if (p === "" || !Images.isVideo(p))
@@ -181,6 +200,16 @@ Searcher {
         if (root.videoThumbs[p])
             return root.videoThumbs[p];
         requestVideoThumb(p);
+        return "";
+    }
+
+    function thumbForHifi(path: string): string {
+        const p = String(path || "").replace(/^file:\/\//, "");
+        if (p === "" || !Images.isVideo(p))
+            return p;
+        if (root.videoThumbsHifi[p])
+            return root.videoThumbsHifi[p];
+        requestVideoThumbHifi(p);
         return "";
     }
 
@@ -214,6 +243,33 @@ Searcher {
         }
     }
 
+    function requestVideoThumbHifi(path: string): void {
+        if (root.videoThumbsHifiPending[path] || root.videoThumbsHifi[path])
+            return;
+        const pending = root.videoThumbsHifiPending;
+        pending[path] = true;
+        root.videoThumbsHifiPending = pending;
+
+        const out = getThumbnailHifiPath(path);
+        const script = 'out="$1"; src="$2"; [ -s "$out" ] || { mkdir -p "$(dirname "$out")"; ' +
+                       'ffmpeg -y -loglevel error -i "$src" -vf "thumbnail" -frames:v 1 "$out" >/dev/null 2>&1; }; ' +
+                       'printf "%s" "$src" > "$(dirname "$out")/source_path"; ' +
+                       '[ -s "$out" ] && printf %s "$out"';
+        const qml = 'import QtQuick\nimport Quickshell.Io\n' +
+            'Process {\n' +
+            '    id: p\n' +
+            '    command: ' + JSON.stringify(["sh", "-c", script, "--", out, path]) + '\n' +
+            '    stdout: StdioCollector { onStreamFinished: root.onVideoThumbHifi(' + JSON.stringify(path) + ', (text || "").trim(), p); }\n' +
+            '    onExited: code => { if (code !== 0) p.destroy(); }\n' +
+            '}';
+        try {
+            const o = Qt.createQmlObject(qml, root, "videoThumbHifiProc");
+            o.running = true;
+        } catch (e) {
+            Logger.log("[wallpapers] video hifi thumbnail error: " + e.message);
+        }
+    }
+
     function onVideoThumb(path: string, out: string, proc: var): void {
         if (out !== "") {
             const m = root.videoThumbs;
@@ -222,7 +278,8 @@ Searcher {
             if (path === root.actualCurrent) {
                 const script = 'caelestia wallpaper -f "$1" --apply-path "$2" ' + Colours.smartArg.join(" ") + '; printf "%s" "$2" > "$3"';
                 Quickshell.execDetached(["sh", "-c", script, "--", out, path, root.currentNamePath]);
-                syncPlasmaWallpaper(out);
+                if (!root.videoThumbsHifi[path])
+                    syncPlasmaWallpaper(out);
             }
             if (path === root.previewPath && root.previewing)
                 root.previewColourOf(path);
@@ -230,6 +287,22 @@ Searcher {
         const pending = root.videoThumbsPending;
         delete pending[path];
         root.videoThumbsPending = pending;
+        if (proc)
+            proc.destroy();
+    }
+
+    function onVideoThumbHifi(path: string, out: string, proc: var): void {
+        if (out !== "") {
+            const m = root.videoThumbsHifi;
+            m[path] = out;
+            root.videoThumbsHifi = Object.assign({}, m);
+            if (path === root.actualCurrent) {
+                syncPlasmaWallpaper(out);
+            }
+        }
+        const pending = root.videoThumbsHifiPending;
+        delete pending[path];
+        root.videoThumbsHifiPending = pending;
         if (proc)
             proc.destroy();
     }
@@ -268,16 +341,21 @@ Searcher {
                 wall = root.fallback;
                 Quickshell.execDetached(["caelestia", "wallpaper", "-f", root.fallback, ...Colours.smartArg]);
             }
-            if (Images.isVideo(root.actualCurrent) && wall === root.getThumbnailPath(root.actualCurrent)) {
+            if (Images.isVideo(root.actualCurrent) && (wall === root.getThumbnailPath(root.actualCurrent) || wall === root.getThumbnailHifiPath(root.actualCurrent))) {
                 return;
             }
             root.actualCurrent = wall;
             if (!Images.isVideo(wall)) {
                 syncPlasmaWallpaper(wall);
             } else {
-                const thumb = thumbFor(wall);
-                if (thumb)
-                    syncPlasmaWallpaper(thumb);
+                const hifi = thumbHifi(wall);
+                if (hifi)
+                    syncPlasmaWallpaper(hifi);
+                else {
+                    const thumb = thumbFor(wall);
+                    if (thumb)
+                        syncPlasmaWallpaper(thumb);
+                }
             }
         }
         onLoadFailed: {

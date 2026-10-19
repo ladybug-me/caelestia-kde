@@ -51,22 +51,14 @@ Singleton {
         const centerGap = Math.round(root.screenWidth * (224 / 1920));
         const visW = Math.floor((root.usableWidth - centerGap) / 2);
         const visH = Math.round(root.usableHeight * 0.40);
-        const rawY = Math.round(
-            root.bottomExclusion <= Config.border.thickness
-                ? root.screenHeight - visH - 8
-                : root.screenHeight - root.bottomExclusion - visH - 8
-        );
+        const rawY = Math.round(root.screenHeight - root.bottomExclusion - visH - 8);
         // Ensure visualizer is strictly clamped near the bottom edge
         const minY = Math.round(root.screenHeight * 0.5);
-        const maxY = Math.round(root.screenHeight - visH - 4);
+        const maxY = Math.round(root.screenHeight - root.bottomExclusion - visH - 4);
         const visY = Math.max(minY, Math.min(maxY, rawY));
 
-        const visX1 = Math.round(root.leftExclusion <= Config.border.thickness ? 0 : root.leftExclusion);
-        const visX2 = Math.round(
-            root.rightExclusion <= Config.border.thickness
-                ? root.screenWidth - visW
-                : root.screenWidth - root.rightExclusion - visW
-        );
+        const visX1 = Math.round(root.leftExclusion);
+        const visX2 = Math.round(root.screenWidth - root.rightExclusion - visW);
 
         return {
             x1: visX1,
@@ -278,6 +270,14 @@ Singleton {
         }
 
         target: Config.bar
+    }
+
+    Connections {
+        function onThicknessChanged(): void {
+            root.scheduleSync();
+        }
+
+        target: Config.border
     }
 
     Timer {

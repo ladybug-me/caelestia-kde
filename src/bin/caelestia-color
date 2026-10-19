@@ -1347,6 +1347,7 @@ _find_parent_video_arg() {
 # This detects the re-entrant call skwd-walld -> caelestia-color and is used to skip
 # the skwd-helm apply that would feed back into skwd-walld, creating an infinite loop.
 _called_from_skwd_walld() {
+    [[ -n "${SKWD_WALLD:-}" ]] && return 0
     local pid="$BASHPID" ppid comm
     while true; do
         ppid="$(ps -p "$pid" -o ppid= 2>/dev/null | tr -d ' ')" || break
@@ -1403,7 +1404,11 @@ write_wallpaper_state() {
     # to apply the same wallpaper again, which triggers the theme authority again,
     # creating an infinite loop. The wallpaper state is written above regardless.
     if command -v skwd-helm >/dev/null 2>&1 && ! _called_from_skwd_walld; then
-        skwd-helm apply "$wallpaper" >/dev/null 2>&1 || true
+        local curr_helm
+        curr_helm="$(skwd-helm current 2>/dev/null | cut -f2- || true)"
+        if [[ "$curr_helm" != "$wallpaper" ]]; then
+            skwd-helm apply "$wallpaper" >/dev/null 2>&1 || true
+        fi
     fi
 }
 

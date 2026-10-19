@@ -19,7 +19,14 @@
     "maximized": true,
     "processEnabled": false
   },
+  "postProcessing": [
+    {
+      "command": "caelestia-color wallpaper -f %thumb% -a %path%",
+      "type": "all"
+    }
+  ],
   "theme": {
-    "authority": "caelestia"
+    "authority": "skwd",
+    "policy": "wallpaper"
   }
 }

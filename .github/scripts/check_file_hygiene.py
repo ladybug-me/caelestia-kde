@@ -33,7 +33,6 @@ VIOLATIONS: list[str] = []
 SKIP_PATTERNS = [
     "diff_upstream.txt",
     "QMLTermWidget",
-    "json.hpp",
 ]
 
 STYLE_SKIP_DIRS = {"QMLTermWidget", "build", "__pycache__", ".git", "templates"}

@@ -71,20 +71,6 @@ jobs:
       - name: Audit settings search coverage
         run: python3 .github/scripts/audit_search_coverage.py
 
-  json-validation:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-
-      - name: Set up Python
-        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
-        with:
-          python-version: '3.x'
-
-      - name: Validate theme.json and menu.json
-        run: python3 .github/scripts/validate_json_configs.py
-
   file-hygiene:
     runs-on: ubuntu-latest
     steps:
@@ -170,6 +156,9 @@ jobs:
 
       - name: Cross-check QML config references against C++ declarations
         run: python3 .github/scripts/check_config_references.py
+
+      - name: Check the lock screen falls back to the shell's palette
+        run: python3 .github/scripts/check_lockscreen_palette.py
 
   actionlint:
     runs-on: ubuntu-latest
@@ -365,47 +354,84 @@ jobs:
           python3 .github/scripts/check_provenance.py \
             stage-package/usr/share/caelestia/build-provenance.json
 
-  installer-build:
-    name: Build installer TUI with strict warnings
+  installer:
+    name: Build and test the installer
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Set up CMake and compiler
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq cmake g++
+      - name: Use the newest stable Rust
+        run: rustup update stable && rustup default stable
 
-      - name: Configure installer
-        run: cmake -S installer/tui -B installer/build -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-Wall -Wextra -Werror"
+      - name: Install the musl toolchain
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq musl-tools
 
-      - name: Build installer
-        run: cmake --build installer/build --parallel
+      - name: Add the musl target
+        run: rustup target add x86_64-unknown-linux-musl
 
-      - name: Run installer unit tests
+      - name: Lint
         run: |
-          cmake --build installer/build --target step-policy-tests --parallel
-          ctest --test-dir installer/build --output-on-failure -R step-policy-tests
+          set -euo pipefail
+          cargo fmt --manifest-path installer/Cargo.toml -- --check
+          cargo clippy --manifest-path installer/Cargo.toml --all-targets -- -D warnings
 
-  installer-sanitizers:
-    name: Build installer with sanitizers
+      - name: Test
+        run: cargo test --manifest-path installer/Cargo.toml
+
+      - name: Build the binary that gets published
+        run: cargo build --release --manifest-path installer/Cargo.toml --target x86_64-unknown-linux-musl
+
+      - name: It has to be static, and it has to run
+        run: |
+          set -euo pipefail
+          binary=installer/target/x86_64-unknown-linux-musl/release/caelestia-install
+          if file "$binary" | grep -q "dynamically linked"; then
+            echo "::error::the installer must be static: it has to run on any glibc"
+            file "$binary"
+            exit 1
+          fi
+          "$binary" --version
+
+      # A release publishes this binary; a branch that names an unreleased version has none to
+      # download, and building one is not something a user's machine should do. Keeping it here
+      # gives a reviewer of that branch the exact binary for the commit, via
+      # CAELESTIA_INSTALL_BIN.
+      - name: Keep the installer for reviewers
+        uses: actions/upload-artifact@v4
+        with:
+          name: caelestia-install
+          path: installer/target/x86_64-unknown-linux-musl/release/caelestia-install
+          if-no-files-found: error
+
+  # `rust-version` in Cargo.toml is a promise to anyone reading the crate. The job above builds on
+  # whatever stable is current, which never tests that promise, so it is tested here against the
+  # exact version the crate names.
+  installer-msrv:
+    name: Installer builds on its stated minimum Rust
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Set up CMake and compiler
-        run: sudo apt-get update -qq && sudo apt-get install -y -qq cmake g++
-
-      - name: Configure sanitizer build
-        run: cmake -S installer/tui -B installer/build-sanitizers -DCMAKE_BUILD_TYPE=Debug -DCAELESTIA_ENABLE_SANITIZERS=ON
-
-      - name: Build sanitizer target
-        run: cmake --build installer/build-sanitizers --parallel
-
-      - name: Run sanitizer unit tests
+      - name: Use the Rust version the crate claims
         run: |
-          cmake --build installer/build-sanitizers --target step-policy-tests --parallel
-          ctest --test-dir installer/build-sanitizers --output-on-failure -R step-policy-tests
+          set -euo pipefail
+          version="$(sed -nE 's/^rust-version = "(.*)"/\1/p' installer/Cargo.toml)"
+          if [[ -z "$version" ]]; then
+            echo "::error::installer/Cargo.toml must state rust-version"
+            exit 1
+          fi
+          echo "Building with the stated minimum: $version"
+          rustup toolchain install "$version" --profile minimal
+          rustup default "$version"
+
+      - name: Build and test on that version
+        run: |
+          set -euo pipefail
+          rustc --version
+          cargo build --release --manifest-path installer/Cargo.toml
+          cargo test --manifest-path installer/Cargo.toml
 
   runtime-smoke:
     name: Installed QML runtime smoke
@@ -472,7 +498,6 @@ jobs:
       - shell-tests
       - release-update-safety
       - repo-integrity
-      - json-validation
       - file-hygiene
       - qml-conventions
       - qml-finals
@@ -485,8 +510,8 @@ jobs:
       - shell-quality
       - cpp-format
       - build-parity
-      - installer-build
-      - installer-sanitizers
+      - installer
+      - installer-msrv
       - runtime-smoke
       - shell-sanitizers
     runs-on: ubuntu-latest
@@ -500,7 +525,6 @@ jobs:
           declare -A job_results
           job_results[python-quality]="${{ needs.python-quality.result }}"
           job_results[repo-integrity]="${{ needs.repo-integrity.result }}"
-          job_results[json-validation]="${{ needs.json-validation.result }}"
           job_results[file-hygiene]="${{ needs.file-hygiene.result }}"
           job_results[qml-conventions]="${{ needs.qml-conventions.result }}"
           job_results[embedded-bash]="${{ needs.embedded-bash.result }}"
@@ -514,8 +538,8 @@ jobs:
           job_results[release-update-safety]="${{ needs.release-update-safety.result }}"
           job_results[cpp-format]="${{ needs.cpp-format.result }}"
           job_results[build-parity]="${{ needs.build-parity.result }}"
-          job_results[installer-build]="${{ needs.installer-build.result }}"
-          job_results[installer-sanitizers]="${{ needs.installer-sanitizers.result }}"
+          job_results[installer]="${{ needs.installer.result }}"
+          job_results[installer-msrv]="${{ needs.installer-msrv.result }}"
           job_results[runtime-smoke]="${{ needs.runtime-smoke.result }}"
           job_results[shell-sanitizers]="${{ needs.shell-sanitizers.result }}"
 

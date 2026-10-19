@@ -74,13 +74,28 @@ The Caelestia lock screen brings the Quickshell lock screen design into native K
 ## 4. Deployment, Testing, and Uninstallation
 
 ### Deployment
-The lock screen greeter is deployed during the shell build ([`scripts/08-build-shell.sh`](../../scripts/08-build-shell.sh)); `scripts/02-packages.sh` only sets up the Python tooling and matugen the build needs:
+The lock screen greeter is deployed during the shell build (the `08-build-shell` step); the `02-packages` step only sets up the Python tooling and matugen the build needs:
 
 ```bash
 # Manual installation / deployment:
 mkdir -p ~/.local/share/plasma/shells/
 cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/
 kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelestia.desktop"
+```
+
+The screen is built from the plugins the shell build produces - `Caelestia.Services`
+and `M3Shapes` - and a module import is looked up in the engine's import path, never
+beside the file that asks for it. The greeter is a process of the session that began
+before any of that was installed, so its import path is the one that session was born
+with. The installer therefore links both modules into
+`contents/lockscreen/`, and the lock screen imports them by directory
+(`import "M3Shapes"`, `import "../Caelestia/Services"`), which resolves against the
+package itself. A copy made by hand needs the same two links, or `QML2_IMPORT_PATH`
+in the session's environment:
+
+```bash
+ln -s ~/.local/lib/qt6/qml/Caelestia ~/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen/
+ln -s ~/.local/lib/qt6/qml/M3Shapes  ~/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen/
 ```
 
 ### Interactive Testing

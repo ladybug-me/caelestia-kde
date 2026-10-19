@@ -1,7 +1,7 @@
 
 import QtQuick
-import Caelestia.Services
-import M3Shapes
+import "Caelestia/Services"
+import "M3Shapes"
 
 Item {
     id: root

@@ -89,9 +89,9 @@ did and costs a file in a directory that already exists.
 
 Two things cannot be a template. The terminal sequences go to the ptys that are running a shell,
 and only those: writing escape sequences into a pty whose foreground process is something else
-feeds them to that program as input. That guard used to live in `scripts/09-system-tweaks.sh`,
-which patched the upstream CLI's `theme.py` in place; it is now part of `caelestia-color` and the
-patch step is gone. Spicetify is told to re-read its theme, if it is installed.
+feeds them to that program as input. That guard used to live in the install step that patched the
+upstream CLI's `theme.py` in place; it is now part of `caelestia-color` and the patch step is gone.
+Spicetify is told to re-read its theme, if it is installed.
 
 ## Applying the palette
 
@@ -121,8 +121,8 @@ every color change `theme.postHook` with `SCHEME_NAME`, `SCHEME_FLAVOUR`, `SCHEM
 
 `~/.config/caelestia/templates/` is rendered the same way too, into
 `$XDG_STATE_HOME/caelestia/theme/`. Those files are written against upstream's `{{ role.hex }}`
-syntax rather than matugen's, so they are rendered by the command instead of by a template: the
-SDDM theme the installer registers is one of them, and the greeter reads the result.
+syntax rather than matugen's, so they are rendered by the command instead of by a template:
+the Plasma Login colour scheme the installer syncs is one of them, and the greeter reads the result.
 
 ## The palette will look different
 

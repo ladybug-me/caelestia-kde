@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-# caelestia-color - the color pipeline behind `caelestia wallpaper` and `caelestia scheme`.
-# State: $XDG_STATE_HOME/caelestia/{scheme.json,wallpaper/,theme/}.
-# Config: $XDG_CONFIG_HOME/caelestia/cli.json; an absent key is on.
 
 set -euo pipefail
 
-# The python helper is one heredoc dispatched by argv. Column zero is required.
 
 SELF="$(realpath -- "${BASH_SOURCE[0]}" 2>/dev/null || printf '%s' "${BASH_SOURCE[0]}")"
 BIN_DIR="$(dirname -- "$SELF")"
@@ -524,7 +520,6 @@ def cmd_finish_palette(scheme_path: str, palettes_path: str, factor: str) -> int
 
     colours.update(SUCCESS_COLORS["light" if data.get("mode") == "light" else "dark"])
 
-    # A Catppuccin name upstream carried through: onSurface is what `text` means to SDDM.
     if colours.get("onSurface") and not colours.get("text"):
         colours["text"] = colours["onSurface"]
 
@@ -570,7 +565,7 @@ def cmd_render_templates(scheme_path: str, templates_dir: str, out_dir: str, mod
     """Render `~/.config/caelestia/templates/` into the state directory.
 
     Upstream's own `{{ role.hex }}` syntax, unchanged because templates in the wild are
-    written against it; ours ships one for SDDM.
+    written against it; ours ships one for Plasma Login.
     """
     data = json.loads(pathlib.Path(scheme_path).read_text(encoding="utf-8"))
     colours = {name: Colour(code) for name, code in data.get("colours", {}).items()}
@@ -809,7 +804,7 @@ require_data_dir() {
 
   Looked for matugen/scheme.json.tmpl and schemes/ beside the command, in
   \${CAELESTIA_LIB_DIR:-~/.local/lib/caelestia} and in /usr/share/caelestia.
-  From a checkout, either run 'scripts/08-build-shell.sh' or set
+  From a checkout, either run 'make build-shell' or set
   CAELESTIA_DATA_DIR to the checkout's src directory.
 EOF
         exit 1
@@ -827,7 +822,6 @@ load_config() {
     done < <(py config-dump "$CLI_CONFIG")
 }
 
-# Absent key means on, except where a target would take over a user's file.
 enabled() {
     local key="theme.$1" default="${2:-true}" value
     value="${CFG[$key]:-}"
@@ -879,7 +873,6 @@ write_matugen_config() {
             printf 'input_path = "%s"\n' "$data/matugen/scheme.json.tmpl"
             printf 'output_path = "%s"\n\n' "$scheme_out"
 
-            # A template cannot ask for a shade by name, so the palettes are dumped and folded in after.
             printf '[templates.palettes]\n'
             printf 'input_path = "%s"\n' "$data/matugen/palettes.json.tmpl"
             printf 'output_path = "%s"\n\n' "$PALETTES_JSON"
@@ -906,8 +899,6 @@ meta_string() {
     python3 -c 'import json, sys; print(json.dumps({"name": sys.argv[1], "flavour": sys.argv[2], "variant": sys.argv[3]}))' "$1" "$2" "$3"
 }
 
-# The config comes first so a failure can name the one that was used: there are two of them, and
-# a fan out failure does not come from the palette's.
 run_matugen() {
     local config="$1"
     shift
@@ -924,18 +915,12 @@ smart_variant() {
     py smart-variant "$1"
 }
 
-# Renders from colors that are already decided rather than derived from the wallpaper, by handing
-# them to matugen as data. A named scheme is such a palette, and so is a generated one whose
-# intensity matugen would not have produced by itself.
 render_decided() {
     local import_json="$1" meta="$2" fan_out="$3"
     write_matugen_config "$FANOUT_CONFIG" "" "$fan_out"
     run_matugen "$FANOUT_CONFIG" json "$import_json" --import-json-string "$meta"
 }
 
-# --source-color-index 0 stops matugen asking which color to use. Whether the wallpaper picks the
-# variant or the mode is the caller's answer, per field: a value it was given by hand is not the
-# wallpaper's to choose, and the two are separate choices - a caller may pin one and not the other.
 render_image() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4" fan_out="$5" out="$6"
     local variant_smart="${7:-false}" mode_smart="${8:-false}"
@@ -960,14 +945,6 @@ render_image() {
         mode_arg="$mode"
     fi
 
-    # Everything that reads matugen's own colors - the terminals, GTK, Qt, the scheme Plasma is
-    # applied - is rendered by the same run as the palette, and matugen cannot be asked for the
-    # palette an intensity asks for. So the palette is rendered and put at that intensity on its
-    # own, and the fan out follows from it, on the colors the shell is given rather than on the
-    # ones matugen would have had. At the default intensity there is nothing to scale and one
-    # pass does all of it, which is what every install does until somebody moves the slider.
-    # Both the command line and the file normalise the value through `%g`, so the default
-    # arrives here as exactly "1".
     if [[ "$fan_out_with_palette" == "true" && "$intensity" != "1" ]]; then
         fan_out_with_palette=false
         fan_out_after=true
@@ -1002,9 +979,6 @@ render_named() {
     py write-named "$data" "$out" "$name" "$flavour" "$mode" "$variant" "${META_INTENSITY:-1}"
 }
 
-# The scheme's metadata, in the order `py meta` prints it: name, flavour, mode, variant and the
-# intensity the palette was rendered at. A scheme that is not there yet leaves it all empty,
-# which is what the callers fall back from.
 read_meta() {
     META_NAME=""
     META_FLAVOUR=""
@@ -1039,7 +1013,6 @@ commit() {
     META_COLOURS="$(py colours-json "$SCHEME_FILE")"
 }
 
-# Only a shell on a pty wants the escapes; anything else echoed them.
 apply_terms() {
     local file="$1" sequence pty name comm
     [[ -s "$file" ]] || return 0
@@ -1057,8 +1030,6 @@ apply_terms() {
     done
 }
 
-# KDE applies a scheme only when told to and refuses the name in effect, hence two names.
-# An accent set in System Settings is dropped: Plasma would rewrite focus/link/selection from it.
 apply_kde() {
     local scheme="$DATA_HOME/color-schemes/Matugen.colors" current="" target
 
@@ -1086,7 +1057,6 @@ apply_kde() {
     plasma-apply-colorscheme "$target" >/dev/null 2>&1 || warn "could not apply the Plasma color scheme"
 }
 
-# Konsole's format is R,G,B, not hex, and matugen has no template for it.
 apply_konsole() {
     local dir="$DATA_HOME/konsole" profile current="" target
 
@@ -1158,7 +1128,6 @@ defer_to_desktop() {
     return 0
 }
 
-# A failing hook is reported, not fatal: the palette is already on disk.
 run_hook() {
     local label="$1" command="$2"
     shift 2
@@ -1249,8 +1218,6 @@ cmd_scheme_list() {
 }
 
 cmd_scheme_get() {
-    # No flags is the whole scheme, which is what a caller that wants everything reads. Asking
-    # for the file rather than counting the flags keeps the flag set out of this expression.
     if [[ $# -eq 0 && -f "$SCHEME_FILE" ]]; then
         cat "$SCHEME_FILE"
         printf '\n'
@@ -1313,10 +1280,6 @@ cmd_scheme_set() {
     [[ -n "$mode" ]] || mode="${META_MODE:-dark}"
     [[ -n "$variant" ]] || variant="${META_VARIANT:-tonalspot}"
 
-    # The knob is carried by the scheme like the variant is, so it is read out of the scheme in
-    # effect unless this command was given one. Then it is checked here, before anything is
-    # rendered, and handed to the render, which records it; a preview is rendered at it without
-    # it being written back.
     if [[ -n "$intensity" ]]; then
         intensity="$(py normalise-intensity "$intensity")"
         META_INTENSITY="$intensity"
@@ -1336,16 +1299,11 @@ cmd_scheme_set() {
         [[ -n "$flavour" ]] || flavour="default"
     fi
 
-    # A named scheme is its own file, so there is nothing here for the knob to scale. Say so
-    # rather than leaving a change that did nothing unexplained.
     if [[ -n "$intensity" && "$name" != "dynamic" ]]; then
         warn "$name keeps the colors in its file; the intensity colors the wallpaper-derived palette"
     fi
 
     if [[ "$name" == "dynamic" ]]; then
-        # The wallpaper picks a field the caller left out and never one they stated, unless the
-        # caller has turned the wallpaper's choice off for the command as a whole. The pipeline
-        # owns no copy of that setting: the shell states it as --no-smart.
         local smart=true
         ((no_smart)) && smart=false
         local variant_smart="$smart" mode_smart="$smart"
@@ -1477,7 +1435,6 @@ cmd_wallpaper() {
 
     write_wallpaper_state "$file"
 
-    # Only a dynamic scheme follows the wallpaper; a named one stays.
     if [[ -z "${META_NAME:-}" || "${META_NAME}" == "dynamic" ]]; then
         derive_from_wallpaper "$file" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" \
             "${META_VARIANT:-tonalspot}" "$smart" "$smart"

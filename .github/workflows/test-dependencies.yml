@@ -52,14 +52,15 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           submodules: recursive
-      - name: Build Installer Binary
+      - name: Build Installer
         run: |
-          chown -R builduser:builduser .
-          su - builduser -c "cd $GITHUB_WORKSPACE && mkdir -p installer/build && cd installer/build && cmake -DCMAKE_BUILD_TYPE=Release ../tui && make -j\$(nproc)"
+          pacman -S --needed --noconfirm rust
+          cargo build --release --manifest-path installer/Cargo.toml
       - name: Run Installer Steps
         run: |
           chown -R builduser:builduser .
-          su - builduser -c "cd $GITHUB_WORKSPACE && python3 .github/scripts/run_installer_steps.py"
+          export CAELESTIA_INSTALL_BIN=$GITHUB_WORKSPACE/installer/target/release/caelestia-install
+          su - builduser -c "cd $GITHUB_WORKSPACE && CAELESTIA_INSTALL_BIN=$CAELESTIA_INSTALL_BIN python3 .github/scripts/run_installer_steps.py"
       - name: Verify Package Installation
         run: |
           if [ -s /home/builduser/.cache/caelestia-kde/failed_packages.txt ]; then
@@ -75,16 +76,16 @@ jobs:
     container: fedora:latest
     steps:
       - name: Prepare Fedora Environment
-        run: dnf install -y git sudo python3 gcc-c++ cmake make nodejs
+        run: dnf install -y git sudo python3 gcc-c++ cmake make nodejs curl
       - name: Checkout Code
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           submodules: recursive
-      - name: Build Installer Binary
+      - name: Build Installer
         run: |
-          mkdir -p installer/build && cd installer/build
-          cmake -DCMAKE_BUILD_TYPE=Release ../tui
-          make -j$(nproc)
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          . "$HOME/.cargo/env"
+          cargo build --release --manifest-path installer/Cargo.toml
       - name: Run Installer Steps
         run: python3 .github/scripts/run_installer_steps.py
       - name: Verify Package Installation
@@ -109,13 +110,14 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           submodules: recursive
-      - name: Build Installer Binary
+      - name: Build Installer
         run: |
-          mkdir -p installer/build && cd installer/build
-          cmake -DCMAKE_BUILD_TYPE=Release ../tui
-          make -j$(nproc)
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
+          . "$HOME/.cargo/env"
+          cargo build --release --manifest-path installer/Cargo.toml
       - name: Run Installer Steps
         run: python3 .github/scripts/run_installer_steps.py
+
       - name: Verify Package Installation
         run: |
           if [ -s ~/.cache/caelestia-kde/failed_packages.txt ]; then

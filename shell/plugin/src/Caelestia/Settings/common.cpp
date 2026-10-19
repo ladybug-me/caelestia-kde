@@ -37,6 +37,7 @@ QString DiagnosticType::toString(Type t) {
     case InvalidValue:
         return QStringLiteral("InvalidValue");
     }
+    return QStringLiteral("Unknown");
 }
 
 namespace {

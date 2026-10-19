@@ -14,7 +14,6 @@ SOURCES=(
     "$SHELL_DIR/utils"
     "$REPO_DIR/shell/plugin/src"
     "$REPO_DIR/src/kde/shells/caelestia.desktop/contents/lockscreen"
-    "$REPO_DIR/src/sddm/themes"
 )
 
 find_tool() {

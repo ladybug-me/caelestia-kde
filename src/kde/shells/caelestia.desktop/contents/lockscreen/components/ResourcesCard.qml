@@ -3,7 +3,7 @@ import QtQuick
 import ".."
 import QtQuick.Layouts
 import QtQuick.Shapes
-import M3Shapes
+import "../M3Shapes"
 import Qt5Compat.GraphicalEffects
 
 Rectangle {

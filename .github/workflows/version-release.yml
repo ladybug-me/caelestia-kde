@@ -255,7 +255,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          # --repo: inside a container gh's git-based repo detection fails ("not a git
           gh release upload "$TAG" "$ARTIFACT" "$CHECKSUM" --repo "$GITHUB_REPOSITORY" --clobber
 
   build-source:
@@ -286,20 +285,12 @@ jobs:
 
           for path in "${submodules[@]}"; do
             echo "::group::submodule $path"
-            # A .gitmodules entry with no gitlink in this tree has nothing to inline:
-            # the path is either a real directory the tarball already carries or it is
-            # absent, which the PKGBUILD's prepare() reports by name.
             if ! git ls-files --stage -- "$path" | grep -q '^160000'; then
               echo "::warning::$path is declared in .gitmodules but is not a submodule in this tree"
               echo "::endgroup::"
               continue
             fi
-            # scripts/lib/submodules.sh is not reused here on purpose: the installer
-            # helper it exposes ends in a plain clone of the submodule's default
-            # branch, and a release tarball has to carry the commits the tag pins.
             if ! git submodule update --init --recursive --depth 1 --force "$path"; then
-              # A stale gitlink inside a submodule is not this repository's to fix, and
-              # the tarball only needs the submodule's own contents at its pinned commit.
               echo "::warning::$path does not check out recursively, retrying without it"
               git submodule update --init --depth 1 --force "$path"
             fi
@@ -322,8 +313,6 @@ jobs:
           set -euo pipefail
           ROOT="caelestia-kde-$PKGVER"
           mkdir -p "dist/$ROOT"
-          # /dist is anchored: the staging directory lives inside the tree being
-          # staged, and without this rsync copies it into itself.
           rsync -a --exclude '/dist' --exclude '.git' --exclude '.gitmodules' ./ "dist/$ROOT/"
           git rev-parse HEAD > "dist/$ROOT/REVISION"
 
@@ -351,6 +340,64 @@ jobs:
           gh release upload "$TAG" "$ARTIFACT" "$ARTIFACT.sha256" \
             --repo "$GITHUB_REPOSITORY" --clobber
 
+  vendor-installer:
+    name: Vendor the installer's crates
+    needs: version-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Load Release Tag
+        run: |
+          set -euo pipefail
+          source .github/version.env
+          echo "TAG=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Use the newest stable Rust
+        run: rustup update stable && rustup default stable
+
+      - name: Vendor the crates the lockfile names
+        run: |
+          set -euo pipefail
+          cargo vendor --locked --versioned-dirs installer/vendor > /dev/null
+
+      - name: The vendored tree has to build offline
+        run: |
+          set -euo pipefail
+          mkdir -p .cargo
+          cat > .cargo/config.toml <<'EOF'
+          [source.crates-io]
+          replace-with = "vendored-sources"
+
+          [source.vendored-sources]
+          directory = "installer/vendor"
+          EOF
+          cargo build --release --frozen --offline --manifest-path installer/Cargo.toml
+          rm -rf .cargo
+
+      - name: Attach the Vendored Crates to Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TUI_VERSION="$(tr -d '[:space:]' < installer/data/tui.version)"
+          ARTIFACT="caelestia-vendor-v${TUI_VERSION}.tar.gz"
+          tar -C installer -czf "$ARTIFACT" vendor
+          sha256sum "$ARTIFACT" > "$ARTIFACT.sha256"
+          du -h "$ARTIFACT"
+          {
+            echo "### $ARTIFACT"
+            echo "```"
+            cat "$ARTIFACT.sha256"
+            echo "```"
+            echo "Second entry of the PKGBUILD's \`sha256sums\` array."
+          } >> "$GITHUB_STEP_SUMMARY"
+          gh release upload "$TAG" "$ARTIFACT" "$ARTIFACT.sha256" \
+            --repo "$GITHUB_REPOSITORY" --clobber
+
   build-installer:
     name: Build installer TUI (${{ matrix.arch }})
     needs: version-release
@@ -369,23 +416,40 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - name: Install Build Dependencies
-        run: |
-          set -euo pipefail
-          sudo apt-get update -qq
-          sudo apt-get install -y -qq cmake g++ make
-
       - name: Load Release Tag
         run: |
           set -euo pipefail
           source .github/version.env
           echo "TAG=$VERSION" >> "$GITHUB_ENV"
 
-      - name: Build Installer TUI
+      - name: Use the newest stable Rust
+        run: rustup update stable && rustup default stable
+
+      - name: Install the musl toolchain
         run: |
           set -euo pipefail
-          cmake -B installer/build -DCMAKE_BUILD_TYPE=Release installer/tui
-          cmake --build installer/build -- -j"$(nproc)"
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq musl-tools
+
+      - name: Add the musl target
+        run: rustup target add ${{ matrix.arch }}-unknown-linux-musl
+
+      - name: Build the installer
+        run: |
+          set -euo pipefail
+          cargo build --release --manifest-path installer/Cargo.toml \
+            --target ${{ matrix.arch }}-unknown-linux-musl
+
+      - name: It has to be static
+        run: |
+          set -euo pipefail
+          binary="installer/target/${{ matrix.arch }}-unknown-linux-musl/release/caelestia-install"
+          if file "$binary" | grep -q "dynamically linked"; then
+            echo "::error::the published installer must be static: it has to run on any glibc"
+            file "$binary"
+            exit 1
+          fi
+          "$binary" --version
 
       - name: Attach Prebuilt Installer to Release
         env:
@@ -394,6 +458,6 @@ jobs:
           set -euo pipefail
           TUI_VERSION="$(tr -d '[:space:]' < installer/data/tui.version)"
           BINARY="caelestia-install-${{ matrix.arch }}-v${TUI_VERSION}"
-          cp installer/build/caelestia-install "$BINARY"
+          cp "installer/target/${{ matrix.arch }}-unknown-linux-musl/release/caelestia-install" "$BINARY"
           sha256sum "$BINARY" > "$BINARY.sha256"
           gh release upload "$TAG" "$BINARY" "$BINARY.sha256" --repo "$GITHUB_REPOSITORY" --clobber

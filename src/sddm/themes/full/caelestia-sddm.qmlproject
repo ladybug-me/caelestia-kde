@@ -1,8 +1,0 @@
-{
-    "importPaths": [
-        ".",
-        "components",
-        "/usr/lib/qt6/qml"
-    ],
-    "mainFile": "Main.qml"
-}

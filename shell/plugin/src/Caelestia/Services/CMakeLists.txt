@@ -2,11 +2,7 @@ find_package(KF6GlobalAccel REQUIRED)
 find_package(KF6Config REQUIRED)
 find_package(KF6NetworkManagerQt REQUIRED)
 find_package(X11 REQUIRED)
-# For QPlatformNativeInterface, the only way to reach a QWindow's wl_surface:
-# Qt exposes no public native interface for it. Ships with qt6-base on Arch and
-# with qt6-qtbase-private-devel on Fedora, both already installed by setup.
 find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
-# Cava audio visualizer — optional on systems where it's not packaged.
 set(CAVA_SOURCES "")
 set(CAVA_LIBRARIES "")
 if(Cava_FOUND)
@@ -125,6 +121,14 @@ set_source_files_properties(
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-output-device-v2-protocol.c
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-output-management-v2-protocol.c
     PROPERTIES SKIP_PRECOMPILE_HEADERS ON
+)
+
+set_source_files_properties(
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-zkde-screencast-unstable-v1.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-plasma-window-management.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-kde-output-device-v2.cpp
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-kde-output-management-v2.cpp
+    PROPERTIES COMPILE_OPTIONS "-w"
 )
 
 add_subdirectory(QuickShare)

@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
-# The build toolchain's own dependencies: the Qt Linguist tools the translations step
-# needs, and the prebuilt CAVA SDK the shell links against. Nothing here knows which
-# distro it is on beyond the name its caller passes in.
 
 source "$(dirname "${BASH_SOURCE[0]}")/download.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/log.sh"
 
-# What the shell build can link against, in the same words 08-build-shell.sh stores
-# in its toolchain stamp: a pkg-config version, "sdk" for the prebuilt headers, or
-# "none". One probe, so the stamp and the guard cannot disagree.
 cava_state() {
     local version=""
     if command -v pkg-config >/dev/null 2>&1; then
@@ -33,10 +27,6 @@ linguist_tools_available() {
     command -v lrelease >/dev/null 2>&1 || [[ -x "$fallback" ]]
 }
 
-# install_linguist_tools <arch|fedora|debian>
-#
-# Takes the distro for the same reason install_cava_sdk does: "whichever manager is on
-# PATH" answers for the wrong package universe on a machine with a second one installed.
 install_linguist_tools() {
     local distro="${1:-}"
 
@@ -52,12 +42,6 @@ install_linguist_tools() {
     esac
 }
 
-# install_cava_sdk <arch|fedora|debian>
-#
-# Unpacks the prebuilt SDK into /usr, which needs escalation. Callers that cannot
-# know the SDK is missing should ask cava_sdk_installed first: this asks for a
-# password, and asking for one to re-unpack what is already there is a password for
-# nothing.
 install_cava_sdk() {
     local distro="${1:-}"
 
@@ -94,8 +78,6 @@ install_cava_sdk() {
         fi
     fi
 
-    # The archive is unpacked as root and tar takes the mode and the owner from it, so
-    # the entries themselves have to be safe when there is no published hash to check.
     if ! archive_entries_are_safe "$archive"; then
         warn "Refusing to unpack $url: the archive has setuid, setgid or escaping entries."
         rm -f "$archive"

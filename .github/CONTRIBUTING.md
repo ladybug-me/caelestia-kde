@@ -29,9 +29,8 @@ Make your changes in the cloned repo, test them (see below), then open a PR. Tha
 | Shell UI (launcher, bar, notifications, etc.) | `shell/` | QML + Quickshell |
 | Lock screen greeter (Plasma 6 shell) | `src/kde/shells/caelestia.desktop/` | QML + KDE ScreenLocker |
 | KWin plugin (window management, shortcuts) | `shell/plugin/` | C++ |
-| TUI installer | `installer/tui/` | C++ |
-| Installer theme & menus | `installer/data/theme.json`, `installer/data/menu.json` | JSON |
-| Install step scripts | `scripts/` | Bash |
+| TUI installer and install steps | `installer/` | Rust |
+| Steps not ported yet | `scripts/` | Bash |
 | User-facing update scripts | `src/bin/` | Bash |
 
 ## Development workflow
@@ -57,7 +56,7 @@ caelestia-shell-ipc log
 ### For C++ plugin changes
 
 ```bash
-bash scripts/08-build-shell.sh   # Recompiles and installs the plugins
+make build-shell   # Recompiles and installs the plugins
 bash shell/scripts/restart_shell.sh  # Restart to pick up the new .so
 ```
 
@@ -83,23 +82,27 @@ kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelest
 ### For installer changes
 
 ```bash
-cmake -B installer/build -S installer/tui && cmake --build installer/build   # Compile
-./installer/build/caelestia-install "$PWD"    # Run from the repo root (use with care!)
+cargo test --manifest-path installer/Cargo.toml          # unit and process tests
+cargo clippy --manifest-path installer/Cargo.toml --all-targets -- -D warnings
+cargo fmt --manifest-path installer/Cargo.toml
+cargo build --release --manifest-path installer/Cargo.toml   # Linux only
 ```
 
-The installer reads `installer/data/theme.json` and `installer/data/menu.json`
-relative to its bundle directory, which is the executable's own directory unless
-you pass one as the first argument. That is why the run above passes `$PWD`;
-`setup.sh` copies the binary to the repo root instead, where no argument is
-needed.
+These need the newest stable Rust: `rust-version` in `installer/Cargo.toml` names the
+release the crate tracks, and an older toolchain refuses the build.
 
-Adding, removing or reordering a step means bumping `installer/data/tui.version`.
-The step table is compiled into the TUI binary, and `scripts/setup.sh` keys on that
-number alone: it downloads the prebuilt binary published for the version, and
-otherwise reuses a local binary whose stamp matches it. Both paths can hand you a
-binary built before your change, and then the new step silently never runs on a
-fresh install. Bumping makes the prebuilt lookup miss, so the installer compiles
-the tree instead, and the next release publishes the matching binary.
+The installer is a Rust crate at `installer/`, and it is Linux-only: the wizard, the
+step runner and the credential all use unix facilities. Everything that is portable
+(the CLI, the step table, the menu tree, the screens, the runner) is covered by
+`cargo test` on any host, and the screens are asserted through ratatui's test
+backend, so a layout change is caught without a terminal.
+
+The theme, the Configure menu and the step table are Rust source, not data files, so
+adding an option or a step is an ordinary edit and the compiler checks its shape.
+`installer/data/tui.version` survives only as the marker that ties a published binary
+to the checkout it belongs to: `scripts/setup.sh` downloads the asset for that version
+and refuses a binary that reports a different one. Bump it whenever the step table or
+the wizard's contract changes, so a stale binary cannot run new scripts.
 
 ### For translation changes
 

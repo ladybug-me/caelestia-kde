@@ -3,7 +3,7 @@ import QtQuick
 import ".."
 import QtQuick.Layouts
 import Qt5Compat.GraphicalEffects
-import Caelestia.Services
+import "../Caelestia/Services"
 
 Item {
     id: root

@@ -84,7 +84,7 @@ class ArtifactParityTests(unittest.TestCase):
 
     def test_cli_rejects_undocumented_extra(self) -> None:
         self.write_both("usr/bin/caelestia", "binary")
-        self.write_right_only("etc/sddm.conf.d/zz-caelestia.conf", "[Theme]\nCurrent=caelestia\n")
+        self.write_right_only("etc/keyd/quickshell.conf", "[ids]\n")
         self.assertEqual(1, main([str(self.left), str(self.right)]))
 
 

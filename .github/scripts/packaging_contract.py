@@ -24,13 +24,11 @@ import hashlib
 from collections.abc import Iterable
 from pathlib import Path
 
-# Installed only by CAELESTIA_PACKAGE=ON, relative to the staging root.
-# Keep in step with the if(CAELESTIA_PACKAGE) block in shell/CMakeLists.txt:
-# the icons land under INSTALL_QSCONFDIR, which is etc/xdg, not usr/share.
+# Keep in step with the CAELESTIA_PACKAGE block in shell/CMakeLists.txt.
 PACKAGE_ONLY_PREFIXES = (
     "etc/xdg/quickshell/caelestia/assets/icons",
+    "usr/bin/caelestia-greeter-sync",
     "usr/share/plasma/shells/caelestia.desktop",
-    "usr/share/sddm/themes/caelestia",
 )
 
 COMPILED_SUFFIXES = (".so", ".dylib", ".dll")

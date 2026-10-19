@@ -101,7 +101,7 @@ _start_shell() {
 
 if [[ ! -f "$SHELL_CONFIG" ]]; then
     echo "[ERR] Caelestia shell config not found: $SHELL_CONFIG" >&2
-    echo "       Build the shell first: bash scripts/08-build-shell.sh" >&2
+    echo "       Build the shell first: caelestia-install step 08-build-shell" >&2
     exit 1
 fi
 

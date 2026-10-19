@@ -2,7 +2,7 @@
 import QtQuick
 import ".."
 import QtQuick.Layouts
-import M3Shapes
+import "../M3Shapes"
 import org.kde.plasma.components as PlasmaComponents3
 import org.kde.plasma.private.sessions
 

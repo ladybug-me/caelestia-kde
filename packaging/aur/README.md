@@ -51,7 +51,7 @@ and the ones the defaults name are in the optdepends (`ttf-rubik-vf` for the clo
 the workspace label, `ttf-cascadia-code-nerd` for the mono style). That is upstream's
 arrangement, and it is why nothing downloads a font any more: the step that fetched the
 Apple families into `~/.local/share/caelestia/assets/fonts` is gone, and
-`08-build-shell.sh` reclaims what an older install left in that directory and in the
+`08-build-shell` reclaims what an older install left in that directory and in the
 shell tree, about 300 MiB in each.
 
 It no longer depends on `caelestia-cli`. The color pipeline belongs to this
@@ -130,7 +130,7 @@ directory does, and a checkout's `uninstall.sh` does both for a source install.
 
 What stays is the user's own state, which the package never owned: `~/.config/caelestia`,
 the session environment at `~/.config/environment.d/caelestia.conf`, the autostart state
-under `~/.local`, and the sudoers drop-in at `/etc/sudoers.d/caelestia-sddm-sync` that
+under `~/.local`, and the sudoers drop-in at `/etc/sudoers.d/caelestia-greeter-sync` that
 lets the login screen follow the wallpaper. Deleting those is what removes the last trace
 of the install. There is no uninstall command, and upstream has none either: removal
 belongs to whoever installed the files, which for a package is pacman.
@@ -160,9 +160,15 @@ Updating for a release:
    is what the file ships with: `prepare()` refuses to build while it is there, and a
    wrong hash stops the build with "Integrity checks
    (sha256) differ";
-3. the other two `sha256sums` entries are the files beside the PKGBUILD, so run
+3. the same for the second entry, the vendored crate tree `build-installer`'s sibling
+   job `vendor-installer` attaches as `caelestia-vendor-v$_tui_version.tar.gz`, and for
+   `_tui_version` itself: it is `installer/data/tui.version`, and the asset name carries
+   it, so a bump of that file is a bump of this variable. `cargo vendor` inside
+   `build()` is what lets the installer compile with no network to crates.io, which is
+   what a package build has;
+4. the other two `sha256sums` entries are the files beside the PKGBUILD, so run
    `makepkg -g` to refresh them if any of them changed;
-4. check the tag still has everything `package()` copies by name: `src/bin/*`,
+5. check the tag still has everything `package()` copies by name: `src/bin/*`,
    `src/matugen/`, `src/schemes/`, `src/kde/shells/caelestia.desktop`,
    `shell/kwin-effects/workspace-tracker`, and for the user's half `scripts/`,
    `src/dots/`, `src/dots-extra/`, `src/yet-another-monochrome-icon-set/`,
@@ -171,7 +177,13 @@ Updating for a release:
    is why they are named. No version file is among them: the version the shell and
    the command report is compiled into `/usr/lib/caelestia/version` from the same
    `-DVERSION=$pkgver` the build is given, so there is nothing to keep in step;
-5. regenerate `.SRCINFO` before pushing.
+6. regenerate `.SRCINFO` before pushing.
+
+The package builds the installer from source and installs it as
+`/usr/bin/caelestia-install`. It is what runs the install steps, so the packaged half
+no longer needs the step scripts to be the only implementation: `caelestia install`
+prefers the binary and falls back to the shipped scripts, which are still packaged
+while the port onto it is finished.
 
 The source is the tarball the release job attaches, not a clone of the tag. The tree
 carries two submodules, so a clone makes every build download them as well; the tarball
@@ -183,8 +195,9 @@ Upstream does the same thing for the same reason.
 
 To build before a tag exists, use `packaging/aur/makepkg-from-checkout.sh`. It builds
 the same tarball from the checkout - same exclusions, same submodules, same `REVISION`
-- hashes it, and runs `makepkg` on a staged copy of the PKGBUILD that points at it, so
-this is the real package build and not a variant of it:
+- vendors the installer's crates from the same checkout, hashes both, and runs `makepkg`
+on a staged copy of the PKGBUILD that points at them, so this is the real package build
+and not a variant of it:
 
     packaging/aur/makepkg-from-checkout.sh -si
 

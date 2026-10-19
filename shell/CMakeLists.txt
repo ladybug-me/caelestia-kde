@@ -148,6 +148,12 @@ if("m3shapes" IN_LIST ENABLE_MODULES)
     if(TARGET m3shapesplugin)
         set_target_properties(m3shapesplugin PROPERTIES INSTALL_RPATH "$ORIGIN")
     endif()
+
+    foreach(_m3shape IN ITEMS m3shapes_core m3shapes_morph m3shapes_shapes m3shapesplugin)
+        if(TARGET ${_m3shape})
+            target_compile_options(${_m3shape} PRIVATE -w)
+        endif()
+    endforeach()
 endif()
 
 add_compile_definitions(
@@ -195,13 +201,9 @@ if("shell" IN_LIST ENABLE_MODULES)
         DESTINATION "${INSTALL_DATADIR}"
         PATTERN ".git*" EXCLUDE)
 
-    file(GLOB CAELESTIA_STEP_SCRIPTS CONFIGURE_DEPENDS
-        "${CAELESTIA_ROOT_DIR}/scripts/[0-9]*.sh")
-    if(NOT CAELESTIA_STEP_SCRIPTS)
-        message(FATAL_ERROR "No installer step scripts found in ${CAELESTIA_ROOT_DIR}/scripts")
+    if(NOT EXISTS "${CAELESTIA_ROOT_DIR}/scripts/lib/installer-bin.sh")
+        message(FATAL_ERROR "No installer resolver found in ${CAELESTIA_ROOT_DIR}/scripts/lib")
     endif()
-    install(PROGRAMS ${CAELESTIA_STEP_SCRIPTS}
-        DESTINATION "${INSTALL_DATADIR}/scripts")
     caelestia_install_directory("${CAELESTIA_ROOT_DIR}/scripts/lib"
         DESTINATION "${INSTALL_DATADIR}/scripts"
         PATTERN ".git*" EXCLUDE)
@@ -215,6 +217,7 @@ if("shell" IN_LIST ENABLE_MODULES)
         DESTINATION "${INSTALL_DATADIR}/shell/assets")
     install(FILES
         "${CAELESTIA_ROOT_DIR}/assets/org.quickshell.desktop"
+        "${CAELESTIA_ROOT_DIR}/assets/caelestia.svg"
         DESTINATION "${INSTALL_DATADIR}/assets")
 
     foreach(dir assets components modules services utils)
@@ -238,20 +241,10 @@ if("shell" IN_LIST ENABLE_MODULES)
     install(FILES LICENSE DESTINATION "${INSTALL_QSCONFDIR}")
 
     if(CAELESTIA_PACKAGE)
-        # Anything added here and nowhere else is package-only content. The
-        # artifact checks have to allow for it: add the installed prefix to
-        # PACKAGE_ONLY_PREFIXES in .github/scripts/packaging_contract.py.
-        set(_SDDM_THEME_DIR "usr/share/sddm/themes/caelestia")
-        caelestia_install_directory(
-            "${CAELESTIA_ROOT_DIR}/src/sddm/themes/full/"
-            DESTINATION "${_SDDM_THEME_DIR}"
-            )
         install(PROGRAMS
-            "${CAELESTIA_ROOT_DIR}/src/sddm/sync.sh"
-            DESTINATION "${_SDDM_THEME_DIR}/scripts")
-        install(FILES
-            "${CAELESTIA_ROOT_DIR}/src/kde/shells/caelestia.desktop/contents/fonts/GoogleSansFlex.ttf"
-            DESTINATION "${_SDDM_THEME_DIR}/assets/google-sans-flex")
+            "${CAELESTIA_ROOT_DIR}/src/greeter/sync.sh"
+            DESTINATION "${INSTALL_BINDIR}"
+            RENAME "caelestia-greeter-sync")
         caelestia_install_directory(
             "${CAELESTIA_ROOT_DIR}/src/kde/shells/caelestia.desktop"
             DESTINATION "usr/share/plasma/shells"

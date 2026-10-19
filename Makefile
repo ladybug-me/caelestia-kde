@@ -10,8 +10,7 @@
 
 SHELL_DIR     := shell
 INSTALLER_DIR := installer
-TUI_DIR       := $(INSTALLER_DIR)/tui
-BUILD_DIR     := $(INSTALLER_DIR)/build
+INSTALLER_MANIFEST := $(INSTALLER_DIR)/Cargo.toml
 STEPS_DIR     := scripts
 TESTS_DIR     := tests
 TOOLS_DIR     := tools
@@ -23,7 +22,7 @@ BASH   ?= bash
 .DEFAULT_GOAL := help
 
 .PHONY: help install update uninstall build-shell fetch-dependencies installer \
-        test test-bash test-fast test-isolated test-artifacts test-repo validate hygiene \
+        test test-bash test-fast test-isolated test-artifacts test-repo test-installer hygiene \
         check check-shell check-python check-qml search-coverage \
         sync-fetch sync-report translations clean
 
@@ -46,18 +45,17 @@ uninstall: ## Remove the shell, its configs and the lockscreen plugin
 # Build
 
 build-shell: ## Build and install the C++ QML plugin (needs Qt6 + CMake; Linux only)
-	$(BASH) $(STEPS_DIR)/08-build-shell.sh
+	cargo run -q --release --manifest-path $(INSTALLER_MANIFEST) -- step 08-build-shell --bundle $(CURDIR)
 
 fetch-dependencies: ## Fetch pinned build dependencies for offline builds
 	$(BASH) $(STEPS_DIR)/fetch-dependencies.sh
 
-installer: ## Compile the TUI installer to installer/build/caelestia-install
-	cmake -B $(BUILD_DIR) -S $(TUI_DIR) -DCMAKE_BUILD_TYPE=Release
-	cmake --build $(BUILD_DIR)
+installer: ## Build the installer TUI (needs cargo; Linux only)
+	cargo build --release --manifest-path $(INSTALLER_MANIFEST)
 
 # Test
 
-test: test-bash test-repo validate ## Run every test CI runs
+test: test-bash test-repo test-installer ## Run every test CI runs
 
 test-bash: ## Run the bash helper and step-unit tests
 	$(BASH) $(TESTS_DIR)/run-tests.sh
@@ -74,8 +72,13 @@ test-artifacts: ## Run the artifact parity and provenance tests on their own (te
 test-repo: ## Check cross-cutting invariants (paths, versions, workflows, submodules, artifact checks)
 	$(PYTHON) -m unittest discover -s $(CI_DIR) -p 'test_*.py'
 
-validate: ## Validate the installer's menu.json and theme.json
-	$(PYTHON) $(CI_DIR)/validate_json_configs.py
+validate: ## Lint and test the installer (cargo fmt, clippy and its tests)
+	cargo fmt --manifest-path $(INSTALLER_MANIFEST) -- --check
+	cargo clippy --manifest-path $(INSTALLER_MANIFEST) --all-targets -- -D warnings
+	cargo test --manifest-path $(INSTALLER_MANIFEST)
+
+test-installer: ## Run the installer's own tests
+	cargo test --manifest-path $(INSTALLER_MANIFEST)
 
 hygiene: ## Check file sizes, merge markers, trailing whitespace, line endings
 	$(PYTHON) $(CI_DIR)/check_file_hygiene.py --all

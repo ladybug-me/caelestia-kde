@@ -11,7 +11,7 @@ import org.kde.kirigami as Kirigami
 import org.kde.kscreenlocker as ScreenLocker
 
 import org.kde.plasma.private.sessions
-import Caelestia.Services
+import "Caelestia/Services"
 
 import "components"
 
@@ -52,23 +52,23 @@ Item {
     readonly property color clCardBg: alterColour(clSurfaceContainer, 0.60, 1)
     readonly property color clCardBgHigh: alterColour(clSurfaceContainerHigh, 0.60, 1)
 
-    property color clSurface: "#0a0f0f"
-    property color clSurfaceFg: "#dce8e6"
-    property color clSurfaceContainer: "#131b1a"
-    property color clSurfaceContainerHigh: "#192120"
-    property color clSurfaceContainerHighest: "#1d2827"
-    property color clPrimary: "#9bd0cc"
-    property color clSecondary: "#b0ccc9"
-    property color clPrimaryFg: "#0d4845"
-    property color clError: "#fa746f"
-    property color clSurfaceVariantFg: "#a2adac"
-    property color clPrimaryContainer: "#255b58"
-    property color clSecondaryContainer: "#27403e"
-    property color clTertiary: "#d5efff"
-    property color clOnTertiary: "#2e5c72"
-    property color clOutline: "#6d7876"
+    property color clSurface: "#191114"
+    property color clSurfaceFg: "#efdfe2"
+    property color clSurfaceContainer: "#261d20"
+    property color clSurfaceContainerHigh: "#31282a"
+    property color clSurfaceContainerHighest: "#3c3235"
+    property color clPrimary: "#ffb0ca"
+    property color clSecondary: "#e2bdc7"
+    property color clPrimaryFg: "#541d34"
+    property color clError: "#ffb4ab"
+    property color clSurfaceVariantFg: "#d5c2c6"
+    property color clPrimaryContainer: "#6f334a"
+    property color clSecondaryContainer: "#5a3f48"
+    property color clTertiary: "#f0bc95"
+    property color clOnTertiary: "#48290c"
+    property color clOutline: "#9e8c91"
 
-    property var clTerms: []
+    property var clTerms: ["#353434", "#ff4c8a", "#ffbbb7", "#ffdedf", "#b3a2d5", "#e98fb0", "#ffba93", "#eed1d2"]
 
     readonly property bool isAuthenticating: authHandler.isAuthenticating
     readonly property var activePasswordPill: isPortrait ? portraitPasswordPill : passwordPill

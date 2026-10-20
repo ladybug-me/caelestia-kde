@@ -44,6 +44,7 @@ PageBase {
 
             NavRow {
                 icon: "settings_suggest"
+                last: true
                 label: qsTr("Wallpaper Settings")
                 status: qsTr("Configure wallpaper engine, mixer, and effects")
                 onClicked: root.nState.openSubPage(5)

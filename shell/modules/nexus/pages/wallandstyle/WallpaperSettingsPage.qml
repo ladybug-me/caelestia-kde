@@ -3,8 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Caelestia.Components
 import Caelestia.Config
+import Caelestia.Services
 import qs.components
 import qs.components.controls
 import qs.services
@@ -14,22 +14,71 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
+    property string skwdKeybind: KeybindsModel.getKey("skwd-wall")
+    property string caelestiaKeybind: KeybindsModel.getKey("wallpaper")
+    readonly property bool isSkwdOverridden: root.skwdKeybind !== "Meta+X"
+    readonly property bool isCaelestiaOverridden: root.caelestiaKeybind !== "Meta+Ctrl+T"
+
+    function openSkwd(section: string): void {
+        const target = section ? section : "";
+        const script =
+            'if ! command -v skwd-helm >/dev/null 2>&1; then ' +
+            '    command -v skwd-wall-v2 >/dev/null 2>&1 && exec skwd-wall-v2 || exec skwd-wall; ' +
+            '    exit 0; ' +
+            'fi; ' +
+            'if ! skwd-helm ui state >/dev/null 2>&1; then ' +
+            '    (command -v skwd-wall-v2 >/dev/null 2>&1 && setsid skwd-wall-v2 </dev/null >/dev/null 2>&1 || setsid skwd-wall </dev/null >/dev/null 2>&1) & ' +
+            '    for i in $(seq 1 30); do ' +
+            '        sleep 0.1; ' +
+            '        if skwd-helm ui state >/dev/null 2>&1; then break; fi; ' +
+            '    done; ' +
+            'fi; ' +
+            'skwd-helm ui show >/dev/null 2>&1 || true; ' +
+            'skwd-helm ui dismiss >/dev/null 2>&1 || true; ' +
+            (target !== "" ? `skwd-helm ui open "${target}";` : "");
+
+        Launch.exec(["sh", "-c", script]);
+    }
+
+    function openCaptureDialog(name: string, currentKey: string, targetItem: var): void {
+        dialogLoader.active = true;
+        dialogLoader.item.shortcutName = name;
+        dialogLoader.item.currentKey = currentKey;
+        dialogLoader.item.targetItem = targetItem;
+        dialogLoader.item.open();
+    }
+
     isSubPage: true
     title: qsTr("Wallpaper Settings")
 
-    readonly property list<MenuItem> scalingItems: [
-        MenuItem { text: qsTr("Crop") },
-        MenuItem { text: qsTr("Fit") },
-        MenuItem { text: qsTr("Stretch") }
+    headerActions: [
+        IconTextButton {
+            id: resetBtn
+
+            property bool armed: false
+
+            text: resetBtn.armed ? qsTr("Sure?") : qsTr("Reset settings")
+            icon: "restart_alt"
+            type: resetBtn.armed ? TextButton.Filled : TextButton.Tonal
+            onClicked: {
+                if (resetBtn.armed) {
+                    resetBtn.armed = false;
+                    resetArmTimer.stop();
+                    Launch.exec(["bash", Quickshell.shellPath("scripts/export-plasma-config.sh"), "skwd"]);
+                } else {
+                    resetBtn.armed = true;
+                    resetArmTimer.start();
+                }
+            }
+
+            Timer {
+                id: resetArmTimer
+
+                interval: 3000
+                onTriggered: resetBtn.armed = false
+            }
+        }
     ]
-
-    readonly property list<int> scalingValues: [Image.PreserveAspectCrop, Image.PreserveAspectFit, Image.Stretch]
-
-    function scaleKeyToIndex(key: int): int {
-        if (key === Image.PreserveAspectFit) return 1;
-        if (key === Image.Stretch) return 2;
-        return 0;
-    }
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -37,64 +86,132 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.large
 
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: Tokens.padding.large
+        Connections {
+            function onKeybindsChanged(): void {
+                root.skwdKeybind = KeybindsModel.getKey("skwd-wall");
+                root.caelestiaKeybind = KeybindsModel.getKey("wallpaper");
+            }
+
+            target: KeybindsModel
+        }
+
+        Loader {
+            id: dialogLoader
+
+            active: false
+            sourceComponent: KeyCaptureDialog {
+                onConfirm: (name, newKey) => {
+                    KeybindsModel.setKey(name, newKey);
+                }
+                onClear: (name) => {
+                    KeybindsModel.setKey(name, "");
+                }
+                onUnblocked: {
+                    dialogLoader.active = false;
+                }
+            }
+        }
+
+        SectionHeader {
+            first: true
+            text: qsTr("Configuration & Tools")
         }
 
         ColumnLayout {
             Layout.fillWidth: true
-            spacing: 0
+            spacing: Tokens.spacing.extraSmall / 2
 
-            SelectRow {
+            InfoRow {
                 first: true
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
-                label: qsTr("Wallpaper scaling")
-                subtext: qsTr("How the wallpaper image fits the screen")
-                menuItems: root.scalingItems
-                active: root.scalingItems[root.scaleKeyToIndex(Config.background.wallpaperFillMode)]
-                onSelected: item => {
-                    let fillMode = root.scalingValues[root.scalingItems.indexOf(item)];
-                    GlobalConfig.background.wallpaperFillMode = fillMode;
-                    for (let i = 0; i < Quickshell.screens.length; i++) {
-                        let sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
-                        if (sConf) sConf.background.resetOption("wallpaperFillMode");
-                    }
-                    GlobalConfig.save();
-                }
+                icon: "info"
+                wrapSubtext: true
+                label: qsTr("Managed by skwd-wall")
+                subtext: qsTr("Wallpaper settings and effects are configured directly through skwd-wall.")
             }
 
-            ToggleRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
-                text: qsTr("Recolor wallpaper")
-                subtext: qsTr("Tint the wallpaper to match static color schemes")
-                reset: ({ node: GlobalConfig.background, setting: "wallpaperRecolor" })
-                checked: Config.background.wallpaperRecolor
-                onToggled: {
-                    GlobalConfig.background.wallpaperRecolor = checked;
-                    for (let i = 0; i < Quickshell.screens.length; i++) {
-                        let sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
-                        if (sConf) sConf.background.resetOption("wallpaperRecolor");
-                    }
-                    GlobalConfig.save();
-                }
-                enabled: Config.background.wallpaperEnabled
+            NavRow {
+                icon: "settings"
+                label: qsTr("General Settings")
+                status: qsTr("Configure wallpaper engine and display options")
+                onClicked: root.openSkwd("settings")
             }
 
-            SliderRow {
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                Layout.fillWidth: true
+            NavRow {
+                icon: "tune"
+                label: qsTr("Wallpaper Mixer")
+                status: qsTr("Blend and layer multiple wallpapers")
+                onClicked: root.openSkwd("mixer")
+            }
+
+            NavRow {
                 last: true
-                icon: ""
-                label: qsTr("Recolor strength")
-                valueLabel: Math.round(value * 100) + "%"
-                reset: ({ node: GlobalConfig.background, setting: "wallpaperRecolorStrength" })
-                value: Config.background.wallpaperRecolorStrength
-                enabled: Config.background.wallpaperRecolor && Config.background.wallpaperEnabled
-                onMoved: v => GlobalConfig.background.wallpaperRecolorStrength = v
+                icon: "auto_fix_high"
+                label: qsTr("Shaders & Effects")
+                status: qsTr("Post-processing, blur, and visual filters")
+                onClicked: root.openSkwd("effects")
+            }
+        }
+
+        SectionHeader {
+            text: qsTr("Playlists & Automation")
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall / 2
+
+            NavRow {
+                first: true
+                icon: "slideshow"
+                label: qsTr("Playlists & Slideshows")
+                status: qsTr("Manage wallpaper playlists and transition intervals")
+                onClicked: root.openSkwd("playlists")
+            }
+
+            NavRow {
+                last: true
+                icon: "schedule"
+                label: qsTr("Schedule & Timers")
+                status: qsTr("Time-based wallpaper rules and schedules")
+                onClicked: root.openSkwd("schedule")
+            }
+        }
+
+        SectionHeader {
+            text: qsTr("Shortcuts")
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall / 2
+
+            ShortcutRow {
+                first: true
+                actionName: "skwd-wall"
+                label: qsTr("skwd-wall")
+                status: qsTr("Launch skwd-wall wallpaper changer")
+                keybind: root.skwdKeybind
+                isOverridden: root.isSkwdOverridden
+                isShell: true
+                onAddClicked: target => root.openCaptureDialog("skwd-wall", root.skwdKeybind, target)
+                onKeybindEdited: newKey => KeybindsModel.setKey("skwd-wall", newKey)
+                onResetClicked: KeybindsModel.resetKey("skwd-wall")
+            }
+
+            ShortcutRow {
+                last: true
+                actionName: "wallpaper"
+                label: qsTr("Caelestia")
+                status: qsTr("Launch Caelestia wallpaper changer")
+                keybind: root.caelestiaKeybind
+                isOverridden: root.isCaelestiaOverridden
+                isShell: true
+                onAddClicked: target => root.openCaptureDialog("wallpaper", root.caelestiaKeybind, target)
+                onKeybindEdited: newKey => KeybindsModel.setKey("wallpaper", newKey)
+                onResetClicked: KeybindsModel.resetKey("wallpaper")
             }
         }
     }
 }
+

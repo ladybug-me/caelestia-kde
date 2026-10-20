@@ -24,7 +24,7 @@ QtObject {
                 { label: qsTr("Wallpapers"), pagePath: "wallandstyle/WallpaperSelect.qml", subPageIdx: 1 },
                 { label: qsTr("Wallhaven"), keywords: ["wallhaven", "download", "online", "search"], pagePath: "wallandstyle/WallhavenPage.qml", subPageIdx: 4 },
                 { label: qsTr("Wallpaper settings"), keywords: ["filters", "thumbnails", "wallpaper"], pagePath: "wallandstyle/WallpaperSettingsPage.qml", subPageIdx: 5 },
-                { label: qsTr("Slideshow & Order"), keywords: ["slideshow", "interval", "randomise", "shuffle", "order"], pagePath: "wallandstyle/SlideshowAndOrderPage.qml", subPageIdx: 6 },
+                { label: qsTr("Library & Community"), keywords: ["library", "community", "wallhaven", "online", "tags"], pagePath: "wallandstyle/LibraryAndCommunityPage.qml", subPageIdx: 6 },
                 { label: qsTr("Video wallpapers"), keywords: ["video", "animated", "motion"], pagePath: "wallandstyle/VideoWallpapersPage.qml", subPageIdx: 7 },
                 { label: qsTr("Lock Screen"), keywords: ["lock", "wallpaper sync", "screen lock"], pagePath: "wallandstyle/LockScreenPage.qml", subPageIdx: 9 },
                 { label: qsTr("Fingerprint"), keywords: ["fingerprint", "unlock", "attempts", "tries", "howdy", "biometric"], pagePath: "wallandstyle/LockScreenPage.qml", subPageIdx: 9 },

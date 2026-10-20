@@ -36,10 +36,17 @@ PageBase {
             }
 
             NavRow {
-                icon: "image_search"
-                label: qsTr("Wallhaven")
-                status: qsTr("Download wallpapers from Wallhaven")
-                onClicked: root.nState.openSubPage(4)
+                icon: "cloud_download"
+                label: qsTr("Library & Community")
+                status: qsTr("Wallhaven, online wallpapers, tags and filters")
+                onClicked: root.nState.openSubPage(6)
+            }
+
+            NavRow {
+                icon: "settings_suggest"
+                label: qsTr("Wallpaper Settings")
+                status: qsTr("Configure wallpaper engine, mixer, and effects")
+                onClicked: root.nState.openSubPage(5)
             }
 
             NavRow {
@@ -85,44 +92,20 @@ PageBase {
                 onClicked: root.nState.openSubPage(3)
             }
 
+            InfoRow {
+                Layout.fillWidth: true
+                icon: "info"
+                wrapSubtext: true
+                label: qsTr("Color Management")
+                subtext: qsTr("Caelestia owns color management and not skwd-wall.")
+            }
+
             NavRow {
                 last: true
                 icon: "style"
                 label: qsTr("Theme & Effects")
                 status: qsTr("Islands, Pitch Black, Transparency")
                 onClicked: root.nState.openSubPage(8)
-            }
-        }
-
-        SectionHeader {
-            text: qsTr("Wallpaper options")
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: Tokens.spacing.extraSmall / 2
-
-            NavRow {
-                first: true
-                icon: "settings_suggest"
-                label: qsTr("Wallpaper Settings")
-                status: qsTr("Display, Recolor, Desktop Icons")
-                onClicked: root.nState.openSubPage(5)
-            }
-
-            NavRow {
-                icon: "slideshow"
-                label: qsTr("Slideshow & Order")
-                status: qsTr("Slideshow interval and randomization")
-                onClicked: root.nState.openSubPage(6)
-            }
-
-            NavRow {
-                last: true
-                icon: "movie"
-                label: qsTr("Video Wallpapers")
-                status: qsTr("Audio and pausing behavior")
-                onClicked: root.nState.openSubPage(7)
             }
         }
     }

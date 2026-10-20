@@ -48,14 +48,6 @@ PageBase {
                 status: qsTr("Configure wallpaper engine, mixer, and effects")
                 onClicked: root.nState.openSubPage(5)
             }
-
-            NavRow {
-                last: true
-                icon: "folder_open"
-                label: qsTr("Open wallpaper folder")
-                status: qsTr("Add your own wallpapers")
-                onClicked: Quickshell.execDetached(["xdg-open", Paths.wallsdir])
-            }
         }
 
         SectionHeader {
@@ -91,7 +83,7 @@ PageBase {
                 status: qsTr("Caelestia owns color management and not skwd-wall.")
                 onClicked: root.nState.openSubPage(3)
             }
-            
+
             NavRow {
                 last: true
                 icon: "style"

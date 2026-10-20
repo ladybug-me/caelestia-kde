@@ -201,13 +201,10 @@ PageBase {
                 Layout.topMargin: Tokens.spacing.medium
                 imgHeight: Math.round(width * 0.3)
                 radius: Tokens.rounding.extraLarge
-                source: Wallpapers.fallback
-                text: qsTr("Featured wallpaper")
+                source: Wallpapers.actualCurrent || Wallpapers.fallback
+                text: qsTr("Current wallpaper")
                 fillLabel: false
-                onClicked: {
-                    Wallpapers.setWallpaper(Wallpapers.fallback);
-                    root.nState.closeSubPage();
-                }
+                onClicked: root.nState.closeSubPage()
             }
 
             RowLayout {

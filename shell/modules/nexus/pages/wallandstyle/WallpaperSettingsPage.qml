@@ -60,6 +60,8 @@ PageBase {
             text: resetBtn.armed ? qsTr("Sure?") : qsTr("Reset settings")
             icon: "restart_alt"
             type: resetBtn.armed ? TextButton.Filled : TextButton.Tonal
+            enabled: Wallpapers.hasSkwd
+            opacity: enabled ? 1 : 0.5
             onClicked: {
                 if (resetBtn.armed) {
                     resetBtn.armed = false;
@@ -126,14 +128,16 @@ PageBase {
                 Layout.fillWidth: true
                 icon: "info"
                 wrapSubtext: true
-                label: qsTr("Managed by skwd-wall")
-                subtext: qsTr("Wallpaper settings and effects are configured directly through skwd-wall.")
+                label: Wallpapers.hasSkwd ? qsTr("Managed by skwd-wall") : qsTr("skwd-walld inactive")
+                subtext: Wallpapers.hasSkwd ? qsTr("Wallpaper settings and effects are configured directly through skwd-wall.") : qsTr("skwd-walld service is not active. Enable or start skwd-walld to configure these settings.")
             }
 
             NavRow {
                 icon: "settings"
                 label: qsTr("General Settings")
                 status: qsTr("Configure wallpaper engine and display options")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("settings")
             }
 
@@ -141,6 +145,8 @@ PageBase {
                 icon: "tune"
                 label: qsTr("Wallpaper Mixer")
                 status: qsTr("Blend and layer multiple wallpapers")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("mixer")
             }
 
@@ -149,6 +155,8 @@ PageBase {
                 icon: "auto_fix_high"
                 label: qsTr("Shaders & Effects")
                 status: qsTr("Post-processing, blur, and visual filters")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("effects")
             }
         }
@@ -166,6 +174,8 @@ PageBase {
                 icon: "slideshow"
                 label: qsTr("Playlists & Slideshows")
                 status: qsTr("Manage wallpaper playlists and transition intervals")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("playlists")
             }
 
@@ -174,6 +184,8 @@ PageBase {
                 icon: "schedule"
                 label: qsTr("Schedule & Timers")
                 status: qsTr("Time-based wallpaper rules and schedules")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("schedule")
             }
         }
@@ -194,6 +206,8 @@ PageBase {
                 keybind: root.skwdKeybind
                 isOverridden: root.isSkwdOverridden
                 isShell: true
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onAddClicked: target => root.openCaptureDialog("skwd-wall", root.skwdKeybind, target)
                 onKeybindEdited: newKey => KeybindsModel.setKey("skwd-wall", newKey)
                 onResetClicked: KeybindsModel.resetKey("skwd-wall")

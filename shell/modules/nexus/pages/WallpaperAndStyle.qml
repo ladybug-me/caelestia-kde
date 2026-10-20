@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Caelestia.Config
+import qs.services
 import qs.utils
 import qs.modules.nexus.common
 
@@ -46,7 +47,9 @@ PageBase {
                 icon: "settings_suggest"
                 last: true
                 label: qsTr("Wallpaper Settings")
-                status: qsTr("Configure wallpaper engine, mixer, and effects")
+                status: Wallpapers.hasSkwd ? qsTr("Configure wallpaper engine, mixer, and effects") : qsTr("Disabled (skwd-walld inactive)")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.nState.openSubPage(5)
             }
         }

@@ -157,8 +157,9 @@ ShellRoot {
         command: ["systemctl", "--user", "is-active", "--quiet", "skwd-walld.service"]
 
         onExited: code => {
-            const enabled = (code !== 0);
-            GlobalConfig.background.wallpaperEnabled = enabled;
+            const hasSkwd = (code === 0);
+            Wallpapers.hasSkwd = hasSkwd;
+            GlobalConfig.background.wallpaperEnabled = !hasSkwd;
             for (let i = 0; i < Quickshell.screens.length; i++) {
                 const sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
                 if (sConf)

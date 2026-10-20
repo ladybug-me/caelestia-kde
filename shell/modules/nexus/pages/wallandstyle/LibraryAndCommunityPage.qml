@@ -64,6 +64,8 @@ PageBase {
                 icon: "cloud_download"
                 label: qsTr("Online Wallpapers")
                 status: qsTr("Browse and download community wallpapers")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("downloads")
             }
         }
@@ -81,6 +83,8 @@ PageBase {
                 icon: "label"
                 label: qsTr("Tags & Filters")
                 status: qsTr("Organize library with custom tags")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("tags")
             }
 
@@ -89,6 +93,8 @@ PageBase {
                 icon: "wallpaper"
                 label: qsTr("Open skwd-wall")
                 status: qsTr("Launch the main wallpaper picker interface")
+                enabled: Wallpapers.hasSkwd
+                opacity: enabled ? 1 : 0.5
                 onClicked: root.openSkwd("")
             }
         }

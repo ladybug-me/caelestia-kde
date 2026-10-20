@@ -51,11 +51,12 @@ Singleton {
 
         const centerGap = Math.round(root.screenWidth * (224 / 1920));
         const visW = Math.floor((root.usableWidth - centerGap) / 2);
-        const visH = Math.round(root.usableHeight * 0.40);
-        const rawY = Math.round(root.screenHeight - root.bottomExclusion - visH - 8);
+        const visH = Math.round(root.usableHeight * (416 / 1080));
+        const bottomGap = (root.bottomExclusion > Config.border.thickness) ? 0 : 8;
+        const rawY = Math.round(root.screenHeight - root.bottomExclusion - visH - bottomGap);
         // Ensure visualizer is strictly clamped near the bottom edge
         const minY = Math.round(root.screenHeight * 0.5);
-        const maxY = Math.round(root.screenHeight - root.bottomExclusion - visH - 4);
+        const maxY = Math.round(root.screenHeight - root.bottomExclusion - visH);
         const visY = Math.max(minY, Math.min(maxY, rawY));
 
         const visX1 = Math.round(root.leftExclusion);
@@ -101,7 +102,7 @@ Singleton {
         switch (widgetId) {
         case "visualizer":
             const prof = root.visualizerProfile || "double_reversed";
-            if (prof === "double_reversed" && geom) {
+            if (prof !== "user" && geom) {
                 Quickshell.execDetached([
                     "bash", scriptPath, "visualizer", "enable", prof,
                     geom.x1.toString(), geom.y1.toString(), geom.w1.toString(), geom.h1.toString(),
@@ -164,7 +165,7 @@ Singleton {
         switch (widgetId) {
         case "visualizer":
             const prof = root.visualizerProfile || "double_reversed";
-            if (prof !== "double_reversed")
+            if (prof === "user")
                 return;
             Quickshell.execDetached([
                 "bash", scriptPath, "visualizer", "geometry", prof,

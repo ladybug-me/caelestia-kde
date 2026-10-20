@@ -3,6 +3,8 @@
 # Plugin: luisbocanegra.audio.visualizer
 
 VISUALIZER_PLUGIN_ID="luisbocanegra.audio.visualizer"
+USER_CONFIG_DIR="${USER_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}}"
+CONFIG_DIR="${CONFIG_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 
 normalize_visualizer_profile() {
     local raw="${1,,}"
@@ -548,9 +550,6 @@ set_visualizer_geometry() {
     local profile=""
     local -a geoms=()
     parse_visualizer_args profile geoms "$@"
-    if [[ ${#geoms[@]} -eq 0 ]]; then
-        return 0
-    fi
 
     local conf_path
     conf_path="$(get_visualizer_conf_path "$profile")"
@@ -680,3 +679,12 @@ handle_visualizer_command() {
             ;;
     esac
 }
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    _SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    _MAIN_SCRIPT="$(cd "$_SCRIPT_DIR/../.." && pwd)/export-plasma-config.sh"
+    if [[ -f "$_MAIN_SCRIPT" ]]; then
+        exec bash "$_MAIN_SCRIPT" visualizer "$@"
+    fi
+    handle_visualizer_command "$@"
+fi

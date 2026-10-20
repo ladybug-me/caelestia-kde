@@ -334,6 +334,47 @@ for appletsrc in candidate_files:
     if new_ids:
         any_new_ids = True
 
+    def get_screen_resolution():
+        try:
+            js_res = "var d = desktops()[0]; print(Math.round(d.geometry.width) + 'x' + Math.round(d.geometry.height));"
+            out = subprocess.check_output(
+                ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_res],
+                text=True, stderr=subprocess.DEVNULL
+            ).strip()
+            if "x" in out:
+                w_str, h_str = out.split("x", 1)
+                w, h = float(w_str), float(h_str)
+                if w > 0 and h > 0:
+                    return w, h
+        except Exception:
+            pass
+        try:
+            out = subprocess.check_output(["kscreen-doctor", "-o"], text=True, stderr=subprocess.DEVNULL)
+            m = re.search(r"Geometry:\s*\d+,\d+\s+(\d+)x(\d+)", out)
+            if m:
+                return float(m.group(1)), float(m.group(2))
+        except Exception:
+            pass
+        return 1920.0, 1080.0
+
+    def compute_default_geoms(screen_w, screen_h, applet_count):
+        center_gap = round(screen_w * (224.0 / 1920.0))
+        vis_w = float(int((screen_w - center_gap) / 2))
+        vis_h = round(screen_h * (416.0 / 1080.0))
+        vis_y = round(screen_h - vis_h - 8.0)
+        vis_x1 = 0.0
+        vis_x2 = float(screen_w - vis_w)
+        if applet_count == 1:
+            single_w = round(screen_w * (848.0 / 1920.0))
+            single_x = round((screen_w - single_w) / 2.0)
+            return [(single_x, vis_y, single_w, vis_h)]
+        return [(vis_x1, vis_y, vis_w, vis_h), (vis_x2, vis_y, vis_w, vis_h)]
+
+    screen_w, screen_h = get_screen_resolution()
+    screen_w_int = int(round(screen_w))
+    screen_h_int = int(round(screen_h))
+    default_geoms_sync = compute_default_geoms(screen_w, screen_h, count)
+
     # 1. Update ItemGeometries in desktop containment
     c_header = f"[Containments][{c_id}]"
     c_found = False
@@ -345,11 +386,16 @@ for appletsrc in candidate_files:
         c_lines = lines[:]
         for idx, aid in enumerate(keep_ids, start=1):
             aid_str = str(aid)
-            g = custom_geoms.get(idx, "") or templates.get(idx, {}).get("geom", "") or c_geoms.get(aid_str, "")
+            dg = default_geoms_sync[idx - 1] if idx - 1 < len(default_geoms_sync) else None
+            dg_str = f"{dg[0]},{dg[1]},{dg[2]},{dg[3]},0" if dg else ""
+            if profile == "user":
+                g = custom_geoms.get(idx, "") or templates.get(idx, {}).get("geom", "") or c_geoms.get(aid_str, "") or dg_str
+            else:
+                g = custom_geoms.get(idx, "") or dg_str or templates.get(idx, {}).get("geom", "") or c_geoms.get(aid_str, "")
             if not g:
                 continue
 
-            for gk in ("ItemGeometries-1920x1080", "ItemGeometriesHorizontal"):
+            for gk in (f"ItemGeometries-{screen_w_int}x{screen_h_int}", "ItemGeometriesHorizontal"):
                 found_key = False
                 for li, line in enumerate(c_lines):
                     if line.startswith(f"{gk}="):
@@ -375,9 +421,14 @@ for appletsrc in candidate_files:
         c_lines = [c_header, "plugin=org.kde.desktopcontainment"]
         for idx, aid in enumerate(keep_ids, start=1):
             aid_str = str(aid)
-            g = custom_geoms.get(idx, "") or templates.get(idx, {}).get("geom", "") or c_geoms.get(aid_str, "")
+            dg = default_geoms_sync[idx - 1] if idx - 1 < len(default_geoms_sync) else None
+            dg_str = f"{dg[0]},{dg[1]},{dg[2]},{dg[3]},0" if dg else ""
+            if profile == "user":
+                g = custom_geoms.get(idx, "") or templates.get(idx, {}).get("geom", "") or c_geoms.get(aid_str, "") or dg_str
+            else:
+                g = custom_geoms.get(idx, "") or dg_str or templates.get(idx, {}).get("geom", "") or c_geoms.get(aid_str, "")
             if g:
-                c_lines.append(f"ItemGeometries-1920x1080=Applet-{aid}:{g};")
+                c_lines.append(f"ItemGeometries-{screen_w_int}x{screen_h_int}=Applet-{aid}:{g};")
                 c_lines.append(f"ItemGeometriesHorizontal=Applet-{aid}:{g};")
         sections.insert(0, "\n".join(c_lines) + "\n\n")
 
@@ -458,7 +509,44 @@ for idx in range(0, len(geom_args), 4):
     except Exception:
         break
 
-default_geoms = [(0.0, 656.0, 848.0, 416.0), (1072.0, 656.0, 848.0, 416.0)]
+def get_screen_resolution():
+    try:
+        js_res = "var d = desktops()[0]; print(Math.round(d.geometry.width) + 'x' + Math.round(d.geometry.height));"
+        out = subprocess.check_output(
+            ["qdbus6", "org.kde.plasmashell", "/PlasmaShell", "org.kde.PlasmaShell.evaluateScript", js_res],
+            text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        if "x" in out:
+            w_str, h_str = out.split("x", 1)
+            w, h = float(w_str), float(h_str)
+            if w > 0 and h > 0:
+                return w, h
+    except Exception:
+        pass
+    try:
+        out = subprocess.check_output(["kscreen-doctor", "-o"], text=True, stderr=subprocess.DEVNULL)
+        m = re.search(r"Geometry:\s*\d+,\d+\s+(\d+)x(\d+)", out)
+        if m:
+            return float(m.group(1)), float(m.group(2))
+    except Exception:
+        pass
+    return 1920.0, 1080.0
+
+def compute_default_geoms(screen_w, screen_h, applet_count):
+    center_gap = round(screen_w * (224.0 / 1920.0))
+    vis_w = float(int((screen_w - center_gap) / 2))
+    vis_h = round(screen_h * (416.0 / 1080.0))
+    vis_y = round(screen_h - vis_h - 8.0)
+    vis_x1 = 0.0
+    vis_x2 = float(screen_w - vis_w)
+    if applet_count == 1:
+        single_w = round(screen_w * (848.0 / 1920.0))
+        single_x = round((screen_w - single_w) / 2.0)
+        return [(single_x, vis_y, single_w, vis_h)]
+    return [(vis_x1, vis_y, vis_w, vis_h), (vis_x2, vis_y, vis_w, vis_h)]
+
+screen_w, screen_h = get_screen_resolution()
+default_geoms = compute_default_geoms(screen_w, screen_h, count)
 
 tmpl_data = {}
 if os.path.exists(conf_path):
@@ -504,6 +592,8 @@ for idx in range(1, count + 1):
         x, y, w, h = td["geom"]
     elif idx - 1 < len(custom_geoms):
         x, y, w, h = custom_geoms[idx - 1]
+    elif profile != "user" and idx - 1 < len(default_geoms):
+        x, y, w, h = default_geoms[idx - 1]
     elif td.get("geom") is not None:
         x, y, w, h = td["geom"]
     else:

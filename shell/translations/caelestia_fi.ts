@@ -4417,6 +4417,16 @@
     </message>
     <message>
       <location line="+1"/>
+      <source>Lock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Widget Outlines</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Työpöydän Kuvakkeet</translation>
     </message>
@@ -4861,7 +4871,7 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+99"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+109"/>
       <source>Hide Desktop Icons</source>
       <translation type="unfinished"/>
     </message>
@@ -4870,11 +4880,21 @@
       <source>Show Desktop Icons</source>
       <translation type="unfinished"/>
     </message>
+    <message>
+      <location line="+8"/>
+      <source>Lock All Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Unlock All Widgets</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>DesktopIconContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+69"/>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+71"/>
       <source>Open %1 Items</source>
       <translation type="unfinished"/>
     </message>
@@ -4965,6 +4985,26 @@
     </message>
     <message>
       <location line="+6"/>
+      <source>Unlock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Unlock Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Lock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Lock Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>Remove Widgets</source>
       <translation type="unfinished"/>
     </message>
@@ -4983,7 +5023,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+298"/>
+      <location line="+306"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation type="unfinished"/>
@@ -5001,7 +5041,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+502"/>
+      <location line="+504"/>
       <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
@@ -5370,83 +5410,33 @@ Now go touch grass</source>
   <context>
     <name>Entries</name>
     <message>
-      <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
-      <source>Auto DND While Streaming</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Do Not Disturb now activates automatically when sharing your screen or streaming via OBS, keeping unwanted notification banners and sounds off your broadcast.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Master Animation Switch</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>A single toggle in Appearance settings now allows you to completely disable all shell animations and transitions for instant responsiveness.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Music Ambient Glow</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>The Dashboard Music tab now features a dynamic ambient glow effect reflecting the colors of your currently playing media&apos;s album artwork.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Audio Visualizer Toggle</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>A dedicated Audio Visualizer toggle has been added to Quick Toggles, allowing you to instantly show or hide the desktop visualizer on demand.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>New Taskbar Widgets</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>The taskbar now includes dedicated widgets for Notes, Weather, Performance stats, Shortcuts, Screen Capture, and Keep Awake, complete with hover popouts and inline settings.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Background Worker Thread</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Ticking background services are now offloaded to a dedicated worker thread with queued connections, reducing shell latency and eliminating unnecessary desktop redraws.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Rich Notification Formatting</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Notifications in both popups and the sidebar now cleanly sanitize FreeDesktop markup, auto-link web URLs, and preserve paragraph formatting.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
+      <location filename="../modules/whatsnew/Entries.qml" line="+14"/>
       <source>Shimeji Cat update</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
       <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Multi-Monitor Desktop Support</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Desktop icons and widgets now fully support multi-monitor setups with screen-aware positioning. Each connected display maintains its own grid layout and arrangement independently, ensuring widgets and icons stay pinned to their designated monitor across display reconnections and resolution changes without overlapping or shifting between screens.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Widget Locking &amp; Outlines</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Desktop widgets can now be locked individually or altogether directly from their context menus, preventing accidental dragging or resizing while interacting with them. In addition, a new widget outlines toggle highlights widget boundaries on your wallpaper, making it effortless to locate empty or conditionally hidden widgets across your desktop.</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -10571,11 +10561,6 @@ PIN: %1</source>
       <translation>Taustakuva</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Bad Apple</source>
-      <translation>Huono Omena</translation>
-    </message>
-    <message>
       <location line="+3"/>
       <source>Microphone</source>
       <translation>Mikrofoni</translation>
@@ -12522,7 +12507,7 @@ PIN: %1</source>
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+287"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+283"/>
       <source>Quick Toggles</source>
       <translation type="unfinished"/>
     </message>

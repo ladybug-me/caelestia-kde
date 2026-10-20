@@ -361,7 +361,7 @@ for appletsrc in candidate_files:
         center_gap = round(screen_w * (224.0 / 1920.0))
         vis_w = float(int((screen_w - center_gap) / 2))
         vis_h = round(screen_h * (416.0 / 1080.0))
-        vis_y = round(screen_h - vis_h - 8.0)
+        vis_y = round(screen_h - vis_h)
         vis_x1 = 0.0
         vis_x2 = float(screen_w - vis_w)
         if applet_count == 1:
@@ -536,7 +536,7 @@ def compute_default_geoms(screen_w, screen_h, applet_count):
     center_gap = round(screen_w * (224.0 / 1920.0))
     vis_w = float(int((screen_w - center_gap) / 2))
     vis_h = round(screen_h * (416.0 / 1080.0))
-    vis_y = round(screen_h - vis_h - 8.0)
+    vis_y = round(screen_h - vis_h)
     vis_x1 = 0.0
     vis_x2 = float(screen_w - vis_w)
     if applet_count == 1:
@@ -900,7 +900,7 @@ EOF
 
 # CLI Entry Point & Dispatcher
 
-
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
 DO_SKWD=false
 VISUALIZER_ACTION=""
 VISUALIZER_ARGS=()
@@ -1052,4 +1052,5 @@ if [[ -n "$VISUALIZER_ACTION" ]]; then
     exec 200>"/tmp/plasma-export-config.lock"
     flock -x 200
     handle_visualizer_command "$VISUALIZER_ACTION" "${VISUALIZER_ARGS[@]}"
+fi
 fi

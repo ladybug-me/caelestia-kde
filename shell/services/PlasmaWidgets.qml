@@ -52,15 +52,18 @@ Singleton {
         const centerGap = Math.round(root.screenWidth * (224 / 1920));
         const visW = Math.floor((root.usableWidth - centerGap) / 2);
         const visH = Math.round(root.usableHeight * (416 / 1080));
-        const bottomGap = (root.bottomExclusion > Config.border.thickness) ? 0 : 8;
-        const rawY = Math.round(root.screenHeight - root.bottomExclusion - visH - bottomGap);
+        const rawY = Math.round(root.screenHeight - root.bottomExclusion - visH);
         // Ensure visualizer is strictly clamped near the bottom edge
         const minY = Math.round(root.screenHeight * 0.5);
         const maxY = Math.round(root.screenHeight - root.bottomExclusion - visH);
         const visY = Math.max(minY, Math.min(maxY, rawY));
 
-        const visX1 = Math.round(root.leftExclusion);
-        const visX2 = Math.round(root.screenWidth - root.rightExclusion - visW);
+        const visX1 = Math.round(root.leftExclusion <= Config.border.thickness ? 0 : root.leftExclusion);
+        const visX2 = Math.round(
+            root.rightExclusion <= Config.border.thickness
+                ? root.screenWidth - visW
+                : root.screenWidth - root.rightExclusion - visW
+        );
 
         return {
             x1: visX1,

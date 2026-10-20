@@ -215,6 +215,24 @@ causing that app to freeze or crash.
 This falls back to static app icons for thumbnails instead of live video and
 avoids Caelestia's use of the protocol entirely.
 
+### 3.3.2 Black Window in Screen Center (xwaylandvideobridge) ([#1006](https://github.com/ladybug-me/caelestia-kde/issues/1006))
+
+On systems where `xwaylandvideobridge` autostarts (such as Fedora KDE), an opaque black floating window can appear in the center of the display at startup and reappear whenever clicking the desktop.
+
+**Cause:**
+`xwaylandvideobridge` creates an idle dummy X11 helper window (`ContentsWindow`, painted `Qt::black` with `setOpacity(0)`). On some builds (e.g., Fedora), this window is flagged as a dialog (`types 32`). Because Caelestia's `caelestia-dialogs` rule centers all dialogs (`placement 5`) and `caelestia-opacity` forces inactive opacity to 95% on `types 33` (`Normal | Dialog`), KWin centered the bridge helper window and rendered it at 95% opacity above Quickshell's bottom layer. When focused, the window reverted to its native 0% active opacity (disappearing), but returned to 95% opacity as soon as focus shifted back to the desktop.
+
+Because KWin evaluates rules top-to-bottom and resolves attribute conflicts by **first match wins**, specific application rules must precede general catch-all rules in `[General] rules=` to prevent general rules from overriding them.
+
+**Fix:**
+Re-apply the Caelestia window rules to write the `caelestia-xwaylandvideobridge` rule ahead of general rules in `~/.config/kwinrulesrc`:
+
+```bash
+bash scripts/04a-window-rules.sh
+```
+
+The rule uses substring matching (`wmclassmatch 2`), omits `types` (matching both Dialog and Normal window types), enforces `placement 0` (NoPlacement to prevent centering), forces 0% active and inactive opacity, and marks the window to stay below others while skipping taskbars, pagers, and window switchers.
+
 ### 3.4 Colors Not Applying
 
 | Symptom | Fix |
@@ -611,20 +629,23 @@ themes that ask for it, which is what that optional dependency is for.
 
 ### 7.7 Installer Window Rules
 
-The installer writes three groups into `~/.config/kwinrulesrc`. `caelestia-opacity`
-gives normal windows and dialogs an inactive opacity of 95 percent,
-`caelestia-dialogs` forces centered placement on dialogs, and `caelestia-pip` keeps
-windows whose title matches `Picture(-| )in(-| )[Pp]icture` above others. Opacity is
-a per-activation-state key, so a window is dimmed only while it is not focused, and
-the dialog rule is the one that can disagree with a placement policy chosen in
-System Settings.
+The installer writes four groups into `~/.config/kwinrulesrc` in priority order:
+`caelestia-xwaylandvideobridge` keeps `xwaylandvideobridge` transparent and uncentered
+out of switchers and taskbars (resolving a black centered box glitch on distros like Fedora; see [issue #1006](https://github.com/ladybug-me/caelestia-kde/issues/1006)),
+`caelestia-pip` keeps windows whose title matches `Picture(-| )in(-| )[Pp]icture` above others,
+`caelestia-dialogs` forces centered placement on dialogs, and `caelestia-opacity` gives
+normal windows and dialogs an inactive opacity of 95 percent. Specific rules are intentionally
+indexed before catch-all rules because KWin evaluates rules top-to-bottom and resolves attribute
+conflicts using first-match-wins. Opacity is a per-activation-state key, so a window is dimmed only
+while it is not focused, and the dialog rule is the one that can disagree with a placement policy
+chosen in System Settings.
 
 A group only takes effect if the index names it. `[General] rules=` is the list KWin
 loads its rule groups from, and a group that is present in the file but missing from
 that list is never loaded, and is removed the next time KWin saves the file. The
-installer writes the list as the union of the entries that were already in it, every
-group the file holds and its own three names, with `count` set to the number of
-entries, so the user's own rules are named alongside ours and keep their order.
+installer writes the list with the user's existing rules first, followed by Caelestia's
+rules in priority order, with `count` set to the number of entries, so the user's own
+rules are preserved and keep precedence.
 
 To read a value back:
 
@@ -632,13 +653,14 @@ To read a value back:
 kreadconfig6 --file kwinrulesrc --group caelestia-opacity --key opacityinactive
 kreadconfig6 --file kwinrulesrc --group caelestia-dialogs --key placement
 kreadconfig6 --file kwinrulesrc --group caelestia-pip --key above
+kreadconfig6 --file kwinrulesrc --group caelestia-xwaylandvideobridge --key opacityinactive
 kreadconfig6 --file kwinrulesrc --group General --key rules
 ```
 
-To remove the rules, delete the three `[caelestia-...]` sections out of the file, or
+To remove the rules, delete the four `[caelestia-...]` sections out of the file, or
 delete the key that switches each group on. A group that is deleted has to leave the
 index with it, or the list keeps a name whose group is gone and `count` no longer
-matches it. `uninstall.sh` removes the keys, strips the three names out of the list,
+matches it. `uninstall.sh` removes the keys, strips the four names out of the list,
 rewrites `count`, and deletes both index keys once no name is left. KWin does not
 watch kwinrulesrc, so the reload is not optional:
 
@@ -648,6 +670,8 @@ kwriteconfig6 --file kwinrulesrc --group caelestia-opacity \
 kwriteconfig6 --file kwinrulesrc --group caelestia-dialogs \
     --key placementrule --delete
 kwriteconfig6 --file kwinrulesrc --group caelestia-pip --key aboverule --delete
+kwriteconfig6 --file kwinrulesrc --group caelestia-xwaylandvideobridge \
+    --key opacityinactiverule --delete
 qdbus6 org.kde.KWin /KWin reconfigure
 ```
 

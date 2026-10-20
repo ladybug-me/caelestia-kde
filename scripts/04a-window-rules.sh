@@ -9,7 +9,7 @@ RULES_FILE="kwinrulesrc"
 # KConfig has no query that lists the groups of a file, so the index below is built
 # from the file itself, read at the same path the tools write.
 RULES_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/$RULES_FILE"
-RULE_GROUPS=(caelestia-opacity caelestia-dialogs caelestia-pip)
+RULE_GROUPS=(caelestia-xwaylandvideobridge caelestia-pip caelestia-dialogs caelestia-opacity)
 RULE_INDEX=""
 RULE_INDEX_COUNT=0
 WINDOW_OPACITY="${WINDOW_OPACITY:-95}"
@@ -120,9 +120,19 @@ build_rule_index() {
     RULE_INDEX=""
     RULE_INDEX_COUNT=0
     while IFS= read -r name; do
-        add_to_rule_index "$(trim_rule_name "$name")"
+        name="$(trim_rule_name "$name")"
+        [[ -n "$name" ]] || continue
+        case "$name" in
+            caelestia-opacity|caelestia-dialogs|caelestia-pip|caelestia-xwaylandvideobridge) continue ;;
+        esac
+        add_to_rule_index "$name"
     done <<< "$(printf '%s' "$current" | tr ',' '\n')"
     while IFS= read -r name; do
+        name="$(trim_rule_name "$name")"
+        [[ -n "$name" ]] || continue
+        case "$name" in
+            caelestia-opacity|caelestia-dialogs|caelestia-pip|caelestia-xwaylandvideobridge) continue ;;
+        esac
         add_to_rule_index "$name"
     done <<< "$groups"
     for name in "${RULE_GROUPS[@]}"; do
@@ -141,23 +151,34 @@ if [[ "${APPLY_WINDOW_RULES:-true}" == "true" ]]; then
         exit 0
     fi
 
-    # KWin has no floating action and no keepabove key: a rule cannot make a window
-    # float, and the keep-above action below is spelled above.
+    # KWin evaluates rules top to bottom and resolves attribute conflicts by first
+    # match wins. Specific rules must come before general catch-all rules so their
+    # properties are not overridden.
 
-    # types=33 is Normal|Dialog, so panels, tooltips and the OSD keep full opacity.
-    apply_rule_group "caelestia-opacity" "window opacity" \
-        Description "Caelestia: window opacity" \
-        types 33 \
-        opacityinactive "$WINDOW_OPACITY" \
-        opacityinactiverule 2
-
-    # The rule placement is a bare integer, 5 being PlacementCentered; the global
-    # [Windows] Placement key in kwinrc is a string, this one is not.
-    apply_rule_group "caelestia-dialogs" "dialog centering" \
-        Description "Caelestia: center dialogs" \
-        types 32 \
-        placement 5 \
-        placementrule 2
+    # xwaylandvideobridge creates an idle dummy window marked as a dialog (types=32)
+    # or normal window (types=1) with a black background. Force it completely
+    # transparent, uncentered (placement=0), below other windows, and stripped
+    # from taskbar/switchers so it cannot show as a black box.
+    apply_rule_group "caelestia-xwaylandvideobridge" "hide xwaylandvideobridge" \
+        Description "Caelestia: hide xwaylandvideobridge" \
+        wmclass "xwaylandvideobridge" \
+        wmclassmatch 2 \
+        opacityactive 0 \
+        opacityactiverule 2 \
+        opacityinactive 0 \
+        opacityinactiverule 2 \
+        placement 0 \
+        placementrule 2 \
+        below true \
+        belowrule 2 \
+        skiptaskbar true \
+        skiptaskbarrule 2 \
+        skippager true \
+        skippagerrule 2 \
+        skipswitcher true \
+        skipswitcherrule 2 \
+        noborder true \
+        noborderrule 2
 
     # No types key here: picture-in-picture windows are Normal or Dialog depending
     # on the app, and the title regex is specific enough on its own.
@@ -167,6 +188,21 @@ if [[ "${APPLY_WINDOW_RULES:-true}" == "true" ]]; then
         titlematch 3 \
         above true \
         aboverule 2
+
+    # The rule placement is a bare integer, 5 being PlacementCentered; the global
+    # [Windows] Placement key in kwinrc is a string, this one is not.
+    apply_rule_group "caelestia-dialogs" "dialog centering" \
+        Description "Caelestia: center dialogs" \
+        types 32 \
+        placement 5 \
+        placementrule 2
+
+    # types=33 is Normal|Dialog, so panels, tooltips and the OSD keep full opacity.
+    apply_rule_group "caelestia-opacity" "window opacity" \
+        Description "Caelestia: window opacity" \
+        types 33 \
+        opacityinactive "$WINDOW_OPACITY" \
+        opacityinactiverule 2
 
     # Our groups first, then the index that names them, then the reload. The index
     # is rebuilt from the file as it is now, so the groups just written are in it.

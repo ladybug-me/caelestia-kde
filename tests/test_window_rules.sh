@@ -20,10 +20,10 @@ have_python() {
 }
 
 RULES_FILE="kwinrulesrc"
-RULE_GROUPS=(caelestia-opacity caelestia-dialogs caelestia-pip)
-# The index a fresh file has to end up with: our three groups, in the order the
+RULE_GROUPS=(caelestia-xwaylandvideobridge caelestia-pip caelestia-dialogs caelestia-opacity)
+# The index a fresh file has to end up with: our four groups, in the order the
 # script writes them, and no other name.
-FRESH_INDEX="caelestia-opacity,caelestia-dialogs,caelestia-pip"
+FRESH_INDEX="caelestia-xwaylandvideobridge,caelestia-pip,caelestia-dialogs,caelestia-opacity"
 
 SANDBOX=""
 STUB_DIR=""
@@ -176,19 +176,38 @@ run_window_rules_without_kwriteconfig6() {
 expected_calls() {
     local opacity="$1" index="${2:-$FRESH_INDEX}"
     printf '%s\n' \
-        "--file $RULES_FILE --group caelestia-opacity --key Description Caelestia: window opacity" \
-        "--file $RULES_FILE --group caelestia-opacity --key types 33" \
-        "--file $RULES_FILE --group caelestia-opacity --key opacityinactive $opacity" \
-        "--file $RULES_FILE --group caelestia-opacity --key opacityinactiverule 2" \
-        "--file $RULES_FILE --group caelestia-dialogs --key Description Caelestia: center dialogs" \
-        "--file $RULES_FILE --group caelestia-dialogs --key types 32" \
-        "--file $RULES_FILE --group caelestia-dialogs --key placement 5" \
-        "--file $RULES_FILE --group caelestia-dialogs --key placementrule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key Description Caelestia: hide xwaylandvideobridge" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key wmclass xwaylandvideobridge" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key wmclassmatch 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key opacityactive 0" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key opacityactiverule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key opacityinactive 0" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key opacityinactiverule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key placement 0" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key placementrule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key below true" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key belowrule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key skiptaskbar true" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key skiptaskbarrule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key skippager true" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key skippagerrule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key skipswitcher true" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key skipswitcherrule 2" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key noborder true" \
+        "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key noborderrule 2" \
         "--file $RULES_FILE --group caelestia-pip --key Description Caelestia: pin picture-in-picture" \
         "--file $RULES_FILE --group caelestia-pip --key title Picture(-| )in(-| )[Pp]icture" \
         "--file $RULES_FILE --group caelestia-pip --key titlematch 3" \
         "--file $RULES_FILE --group caelestia-pip --key above true" \
         "--file $RULES_FILE --group caelestia-pip --key aboverule 2" \
+        "--file $RULES_FILE --group caelestia-dialogs --key Description Caelestia: center dialogs" \
+        "--file $RULES_FILE --group caelestia-dialogs --key types 32" \
+        "--file $RULES_FILE --group caelestia-dialogs --key placement 5" \
+        "--file $RULES_FILE --group caelestia-dialogs --key placementrule 2" \
+        "--file $RULES_FILE --group caelestia-opacity --key Description Caelestia: window opacity" \
+        "--file $RULES_FILE --group caelestia-opacity --key types 33" \
+        "--file $RULES_FILE --group caelestia-opacity --key opacityinactive $opacity" \
+        "--file $RULES_FILE --group caelestia-opacity --key opacityinactiverule 2" \
         "--file $RULES_FILE --group General --key rules $index" \
         "--file $RULES_FILE --group General --key count $(count_index "$index")"
 }
@@ -248,17 +267,26 @@ wmclassmatch=1
 placement=2
 placementrule=2
 
-[caelestia-opacity]
-Description=Caelestia: window opacity
-types=33
-opacityinactive=95
+[caelestia-xwaylandvideobridge]
+Description=Caelestia: hide xwaylandvideobridge
+wmclass=xwaylandvideobridge
+wmclassmatch=2
+opacityactive=0
+opacityactiverule=2
+opacityinactive=0
 opacityinactiverule=2
-
-[caelestia-dialogs]
-Description=Caelestia: center dialogs
-types=32
-placement=5
+placement=0
 placementrule=2
+below=true
+belowrule=2
+skiptaskbar=true
+skiptaskbarrule=2
+skippager=true
+skippagerrule=2
+skipswitcher=true
+skipswitcherrule=2
+noborder=true
+noborderrule=2
 
 [caelestia-pip]
 Description=Caelestia: pin picture-in-picture
@@ -266,6 +294,18 @@ title=Picture(-| )in(-| )[Pp]icture
 titlematch=3
 above=true
 aboverule=2
+
+[caelestia-dialogs]
+Description=Caelestia: center dialogs
+types=32
+placement=5
+placementrule=2
+
+[caelestia-opacity]
+Description=Caelestia: window opacity
+types=33
+opacityinactive=95
+opacityinactiverule=2
 EOF
 }
 
@@ -292,7 +332,7 @@ run_uninstall_revert() {
     STATUS=$?
 }
 
-test_a_fresh_run_writes_every_key_of_the_three_groups() {
+test_a_fresh_run_writes_every_key_of_the_four_groups() {
     have_python || return 0
     setup_sandbox
     run_window_rules
@@ -309,7 +349,7 @@ test_the_written_file_carries_the_groups_and_their_values() {
 
     local file="$SANDBOX/$RULES_FILE"
     assert_file_exists "$file"
-    assert_eq "3" "$(grep -c '^\[caelestia-' "$file")" "the file should hold exactly the three named groups"
+    assert_eq "4" "$(grep -c '^\[caelestia-' "$file")" "the file should hold exactly the four named groups"
 
     local content
     content="$(cat "$file")"
@@ -327,21 +367,36 @@ test_the_written_file_carries_the_groups_and_their_values() {
         "title=Picture(-| )in(-| )[Pp]icture" \
         "titlematch=3" \
         "above=true" \
-        "aboverule=2"; do
+        "aboverule=2" \
+        "wmclass=xwaylandvideobridge" \
+        "wmclassmatch=2" \
+        "opacityactive=0" \
+        "opacityactiverule=2" \
+        "placement=0" \
+        "below=true" \
+        "belowrule=2" \
+        "skiptaskbar=true" \
+        "skiptaskbarrule=2" \
+        "skippager=true" \
+        "skippagerrule=2" \
+        "skipswitcher=true" \
+        "skipswitcherrule=2" \
+        "noborder=true" \
+        "noborderrule=2"; do
         assert_contains "$content" "$pair" "the file should carry $pair"
     done
 }
 
-test_a_fresh_file_names_exactly_the_three_groups() {
+test_a_fresh_file_names_exactly_the_four_groups() {
     have_python || return 0
     setup_sandbox
     run_window_rules
 
     local file="$SANDBOX/$RULES_FILE"
     assert_eq "$FRESH_INDEX" "$(ini_value "$file" General rules)" \
-        "a fresh file should name our three groups, in the order they were written"
-    assert_eq "3" "$(ini_value "$file" General count)" "and count them"
-    assert_eq "3" "$(grep -c '^\[caelestia-' "$file")" \
+        "a fresh file should name our four groups, in the order they were written"
+    assert_eq "4" "$(ini_value "$file" General count)" "and count them"
+    assert_eq "4" "$(grep -c '^\[caelestia-' "$file")" \
         "the index should name what the file holds, and nothing else"
 }
 
@@ -366,7 +421,7 @@ test_only_our_groups_and_the_index_are_written() {
         group="$(printf '%s\n' "$call" | awk '{ for (i = 1; i < NF; i++) if ($i == "--group") print $(i + 1) }')"
         case " ${RULE_GROUPS[*]} General " in
             *" $group "*) ;;
-            *) fail "kwriteconfig6 was called outside the three caelestia-* groups and the index: $call" ;;
+            *) fail "kwriteconfig6 was called outside the four caelestia-* groups and the index: $call" ;;
         esac
     done < <(calls_to "$CALLS" kwriteconfig6)
 
@@ -374,7 +429,7 @@ test_only_our_groups_and_the_index_are_written() {
     # rewriting it would reorder the user's own rules.
     assert_eq "$(printf '%s\n' \
         "--file $RULES_FILE --group General --key rules $FRESH_INDEX" \
-        "--file $RULES_FILE --group General --key count 3")" \
+        "--file $RULES_FILE --group General --key count 4")" \
         "$(calls_to "$CALLS" kwriteconfig6 | grep -F -- '--group General')" \
         "the index pair should be the only General keys written"
     assert_not_contains "$(cat "$CALLS")" "--key Order" "Order belongs to KWin and reordering the user's rules is not ours to do"
@@ -392,7 +447,7 @@ test_a_second_run_finds_nothing_to_do() {
         "a config that already holds every value should need no writes"
     assert_contains "$OUTPUT" "already in place" "the second run should report the rules as already in place"
     assert_not_contains "$OUTPUT" "Window rules applied." "the second run should not claim to have applied anything"
-    assert_contains "$OUTPUT" "Rule index names 3 group(s)." \
+    assert_contains "$OUTPUT" "Rule index names 4 group(s)." \
         "the rollup should still report the index a re-run did not have to rebuild"
 }
 
@@ -427,7 +482,7 @@ test_a_rejected_write_is_warned_about_rather_than_applied() {
     run_window_rules
 
     assert_status 0 "$STATUS" "a rejected write should not fail the install"
-    assert_contains "$(calls_to "$CALLS" kwriteconfig6)" "--key aboverule 2" \
+    assert_contains "$(calls_to "$CALLS" kwriteconfig6)" "--key noborderrule 2" \
         "every key should still be attempted"
     assert_contains "$(calls_to "$CALLS" kwriteconfig6)" "--key rules $FRESH_INDEX" \
         "including the index, so a file that lost its list gets one back"
@@ -447,7 +502,7 @@ test_a_silent_rejection_is_reported_as_failed_rather_than_applied() {
     run_window_rules KW_SILENT_REJECT=1
 
     assert_status 0 "$STATUS" "a silently rejected write should not fail the install"
-    assert_contains "$(calls_to "$CALLS" kwriteconfig6)" "--key aboverule 2" \
+    assert_contains "$(calls_to "$CALLS" kwriteconfig6)" "--key noborderrule 2" \
         "every key should still be attempted"
     assert_contains "$(calls_to "$CALLS" kwriteconfig6)" "--key rules $FRESH_INDEX" \
         "including the index, so a file that lost its list gets one back"
@@ -482,8 +537,8 @@ test_a_group_the_file_holds_is_added_to_the_index() {
     local file="$SANDBOX/$RULES_FILE"
     assert_status 0 "$STATUS" "a file with a group of its own should still succeed"
     assert_eq "steam,$FRESH_INDEX" "$(ini_value "$file" General rules)" \
-        "the group the file holds should be named, before our three"
-    assert_eq "4" "$(ini_value "$file" General count)" "and counted with them"
+        "the group the file holds should be named, before our four"
+    assert_eq "5" "$(ini_value "$file" General count)" "and counted with them"
     assert_eq "steamwebhelper" "$(ini_value "$file" steam wmclass)" \
         "the user's group should be left as it was"
 }
@@ -499,7 +554,7 @@ test_a_user_rule_keeps_its_place_in_the_index() {
     assert_status 0 "$STATUS" "a file with a user rule should still succeed"
     assert_eq "user-rule,$FRESH_INDEX" "$(ini_value "$file" General rules)" \
         "the user's name should keep its place and ours should be appended"
-    assert_eq "4" "$(ini_value "$file" General count)" "count should cover both"
+    assert_eq "5" "$(ini_value "$file" General count)" "count should cover both"
     assert_eq "user-rule" "$(ini_value "$file" General Order)" \
         "Order is KWin's own key and should not be rewritten"
     assert_eq "keepme" "$(ini_value "$file" user-rule wmclass)" "the user's rule should not be touched"
@@ -513,7 +568,7 @@ test_a_user_rule_keeps_its_place_in_the_index() {
 test_the_revert_keeps_the_users_names_and_strips_ours() {
     have_python || return 0
     setup_sandbox
-    write_installed_fixture "user-rule,$FRESH_INDEX" 4
+    write_installed_fixture "user-rule,$FRESH_INDEX" 5
 
     run_uninstall_revert
 
@@ -532,7 +587,7 @@ test_the_revert_keeps_the_users_names_and_strips_ours() {
 test_the_revert_removes_the_index_when_no_names_are_left() {
     have_python || return 0
     setup_sandbox
-    write_installed_fixture "$FRESH_INDEX" 3
+    write_installed_fixture "$FRESH_INDEX" 4
 
     run_uninstall_revert
 

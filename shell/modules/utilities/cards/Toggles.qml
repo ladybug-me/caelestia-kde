@@ -34,9 +34,6 @@ StyledRect {
                 id: "restartShell"
             },
             {
-                id: "badapple"
-            },
-            {
                 id: "pauseWallpaper"
             },
             {
@@ -115,7 +112,6 @@ StyledRect {
         case "dnd": return "notifications_off";
         case "vpn": return "vpn_key";
         case "quickShare": return "near_me";
-        case "badapple": return "nutrition";
         default: return "toggle_on";
         }
     }
@@ -572,20 +568,6 @@ StyledRect {
                         icon: "near_me"
                         checked: QuickShare.enabled
                         onClicked: QuickShare.setEnabled(!QuickShare.enabled)
-                    }
-                }
-                DelegateChoice {
-                    roleValue: "badapple"
-                    delegate: Toggle {
-                        icon: "nutrition"
-                        isToggle: false
-                        inactiveOnColour: Colours.palette.m3onSurfaceVariant
-                        onClicked: {
-                            if (BadApplePlayer.shouldPlay)
-                                BadApplePlayer.stop();
-                            else
-                                BadApplePlayer.play();
-                        }
                     }
                 }
                 DelegateChoice {

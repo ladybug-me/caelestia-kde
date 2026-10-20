@@ -27,6 +27,12 @@ Item {
         };
     }
     readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true)
+    // Locked widgets cannot be dragged or resized from the desktop.
+    readonly property bool locked: !isGroup && widget?.locked === true
+    // Keeps the outline on every widget while the option is on, so that one that
+    // is empty (or hidden by its own condition) can still be located. It does not
+    // follow the desktop icons toggle: widgets stay on the desktop without them.
+    readonly property bool outlineAlways: !isGroup && DesktopLayout.widgetOutlines
 
     property bool selected: false
     property bool focusVisible: false
@@ -135,7 +141,7 @@ Item {
         radius: root.frameless ? Tokens.rounding.medium : Tokens.rounding.extraLarge
         color: root.frameless ? "transparent" : (GlobalConfig.appearance.pitchBlack ? Qt.alpha("#000000", 0.7) : Qt.alpha(Colours.palette.m3surfaceContainer, 0.4))
         border.width: root.selected || root.mergeTarget || root.focusVisible ? 2 : (root.frameless ? 0 : 1)
-        border.color: root.selected || root.mergeTarget || root.focusVisible ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, 0.12)
+        border.color: root.selected || root.mergeTarget || root.focusVisible ? Qt.darker(Colours.palette.m3primary, 1.45) : Qt.alpha(Colours.palette.m3onSurface, 0.12)
 
         // Background of the card: selects, opens, drags and resizes the item.
         // Controls inside the content take their own clicks first.
@@ -158,7 +164,7 @@ Item {
                 });
             }
             onPositionChanged: mouse => {
-                if (!(pressedButtons & Qt.LeftButton) || dragSent)
+                if (root.locked || !(pressedButtons & Qt.LeftButton) || dragSent)
                     return;
                 const dx = mouse.x - pressPos.x;
                 const dy = mouse.y - pressPos.y;
@@ -205,6 +211,19 @@ Item {
         }
     }
 
+    // Outline for every widget while the outlines option is on: locates widgets
+    // that are empty or hidden by their own condition.
+    StyledRect {
+        id: outline
+
+        anchors.fill: card
+        visible: root.outlineAlways && !root.selected && !root.mergeTarget && !root.focusVisible
+        color: "transparent"
+        radius: card.radius
+        border.width: 2
+        border.color: Colours.palette.m3primary
+    }
+
     // Centred in the gap down to the next row's card (its top gap included), so
     // names in different scripts line up.
     // Only groups carry a name; widgets show none.
@@ -247,9 +266,10 @@ Item {
         width: Tokens.padding.large * 2
         height: width
         hoverEnabled: true
-        cursorShape: Qt.SizeFDiagCursor
-        visible: opacity > 0
-        opacity: root.hovered || root.selected || pressed ? 1 : 0
+        cursorShape: root.locked ? Qt.ArrowCursor : Qt.SizeFDiagCursor
+        enabled: !root.locked
+        visible: !root.locked && opacity > 0
+        opacity: root.locked ? 0 : (root.hovered || root.selected || pressed ? 1 : 0)
         preventStealing: true
         onPressed: mouse => {
             origin = mapToItem(root.controller, mouse.x, mouse.y);

@@ -23,7 +23,6 @@ PageBase {
         { id: "overview", label: qsTr("Overview") },
         { id: "dashboard", label: qsTr("Dashboard") },
         { id: "wallpaper", label: qsTr("Wallpaper") },
-        { id: "badapple", label: qsTr("Bad Apple") },
     ]
     readonly property var systemToggles: [
         { id: "mic", label: qsTr("Microphone") },

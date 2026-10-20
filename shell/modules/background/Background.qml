@@ -75,8 +75,6 @@ Variants {
         color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp && !ContextMenuStore.editMode) ? "black" : "transparent"
         surfaceFormat.opaque: false
         mask: {
-            if (BadApplePlayer.shouldPlay)
-                return null;
             if (ContextMenuStore.editMode)
                 return emptyRegion;
             if (Config.background.disableQuickshellDesktop) {
@@ -136,16 +134,6 @@ Variants {
                 active: Config.background.wallpaperEnabled && !ContextMenuStore.editMode
                 visible: !ContextMenuStore.editMode
                 sourceComponent: Wallpaper {
-                    screen: win.modelData
-                }
-            }
-            Loader {
-                id: badApple
-
-                anchors.fill: parent
-                active: BadApplePlayer.shouldPlay
-                z: 2.5
-                sourceComponent: BadAppleOverlay {
                     screen: win.modelData
                 }
             }

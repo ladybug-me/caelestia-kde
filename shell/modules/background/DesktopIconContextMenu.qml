@@ -28,6 +28,8 @@ Controls.Menu {
     readonly property var firstWidget: single ? (controller?.widgetOf(firstKey) ?? null) : null
     readonly property bool firstIsBig: single && (controller?.isBigKey(firstKey) ?? false)
     readonly property bool isPinnedToDock: appEntry ? Strings.testRegexList(GlobalConfig.bar.dock.pinnedApps, appEntry.id) : false
+    readonly property var selectedWidgets: keys.filter(k => controller?.isWidgetKey(k) ?? false)
+    readonly property bool widgetsAllLocked: selectedWidgets.length > 0 && selectedWidgets.every(k => DesktopLayout.isWidgetLocked(controller.nameOf(k)))
 
     function openAt(x: real, y: real, selected: var, inGroup: string): void {
         keys = selected;
@@ -155,6 +157,12 @@ Controls.Menu {
             icon: "delete"
             visible: root.hasFiles
             onClicked: root.controller?.trashKeys(root.keys)
+        },
+        Controls.MenuItem {
+            text: root.widgetsAllLocked ? (root.selectedWidgets.length > 1 ? qsTr("Unlock Widgets") : qsTr("Unlock Widget")) : (root.selectedWidgets.length > 1 ? qsTr("Lock Widgets") : qsTr("Lock Widget"))
+            icon: root.widgetsAllLocked ? "lock_open" : "lock"
+            visible: root.hasWidgets
+            onClicked: root.selectedWidgets.forEach(k => DesktopLayout.setWidgetLocked(root.controller.nameOf(k), !root.widgetsAllLocked))
         },
         Controls.MenuItem {
             text: root.keys.filter(k => root.controller?.isWidgetKey(k) ?? false).length > 1 ? qsTr("Remove Widgets") : qsTr("Remove Widget")

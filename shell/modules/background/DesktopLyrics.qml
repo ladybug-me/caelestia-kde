@@ -208,6 +208,14 @@ Item {
             root.forceUpdate();
         }
 
+        // hasLyricsChanged only fires when the boolean flips, so a track with
+        // lyrics replacing another one never triggered a refresh and the widget
+        // kept showing the previous song until it was rebuilt. lyricsChanged
+        // fires on every load, which keeps the lines in sync.
+        function onLyricsChanged() {
+            root.forceUpdate();
+        }
+
         target: Lyrics
     }
 

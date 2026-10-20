@@ -406,9 +406,4 @@ test_no_dead_icon_asset_needs_a_colour_baked_in() {
     fi
 }
 
-test_no_element_holds_an_offscreen_layer_it_never_animates() {
-    assert_file_not_contains "$SHELL_DIR/modules/background/BadAppleVideo.qml" 'layer.enabled: true' \
-        "the video output has nothing reading its texture"
-}
-
 run_tests

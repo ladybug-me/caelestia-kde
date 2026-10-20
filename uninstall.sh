@@ -459,6 +459,26 @@ kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "title"      
 kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "titlematch"          --delete 2>/dev/null || true
 kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "above"               --delete 2>/dev/null || true
 kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "aboverule"           --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "Description"         --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "wmclass"             --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "wmclassmatch"        --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "types"               --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityactive"       --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityactiverule"   --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityinactive"     --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityinactiverule" --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "placement"           --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "placementrule"       --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "below"               --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "belowrule"           --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skiptaskbar"         --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skiptaskbarrule"     --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skippager"           --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skippagerrule"       --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skipswitcher"        --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skipswitcherrule"     --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "noborder"           --delete 2>/dev/null || true
+kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "noborderrule"       --delete 2>/dev/null || true
 
 KEPT_RULE_NAMES=()
 KEPT_RULE_COUNT=0
@@ -467,7 +487,7 @@ while IFS= read -r rule_name; do
     rule_name="${rule_name%"${rule_name##*[![:space:]]}"}"
     [[ -n "$rule_name" ]] || continue
     case "$rule_name" in
-        caelestia-opacity|caelestia-dialogs|caelestia-pip) continue ;;
+        caelestia-opacity|caelestia-dialogs|caelestia-pip|caelestia-xwaylandvideobridge) continue ;;
     esac
     KEPT_RULE_NAMES+=("$rule_name")
     KEPT_RULE_COUNT=$((KEPT_RULE_COUNT + 1))

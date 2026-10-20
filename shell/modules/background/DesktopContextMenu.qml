@@ -49,6 +49,16 @@ Controls.Menu {
             ContextMenuStore.editMode = true;
             return;
         }
+        if (entry.action === "ToggleWidgetLock") {
+            // Any unlocked widget means the next click locks them all; only when
+            // everything is already locked does the entry unlock the set.
+            DesktopLayout.setAllWidgetsLocked(DesktopLayout.anyWidgetUnlocked());
+            return;
+        }
+        if (entry.action === "ToggleWidgetOutlines") {
+            DesktopLayout.setWidgetOutlines(!DesktopLayout.widgetOutlines);
+            return;
+        }
         if (entry.action === "Wallpapers.next()") {
             Wallpapers.next();
             return;
@@ -107,6 +117,14 @@ Controls.Menu {
                 item.text = entry.label;
                 item.icon = entry.icon || "content_paste";
                 item.visible = Qt.binding(() => root.iconsShown && DesktopLayout.clipboardHasFiles);
+            } else if (entry.action === "ToggleWidgetLock") {
+                item.text = Qt.binding(() => DesktopLayout.anyWidgetUnlocked() ? qsTr("Lock All Widgets") : qsTr("Unlock All Widgets"));
+                item.icon = Qt.binding(() => DesktopLayout.anyWidgetUnlocked() ? "lock" : "lock_open");
+                item.visible = true;
+            } else if (entry.action === "ToggleWidgetOutlines") {
+                item.text = entry.label;
+                item.icon = Qt.binding(() => DesktopLayout.widgetOutlines ? "check_box" : "check_box_outline_blank");
+                item.visible = true;
             } else if (entry.action === "AddWidget") {
                 item.text = entry.label;
                 item.icon = entry.icon || "widgets";

@@ -848,7 +848,13 @@ Item {
         return Engine.planMove(current, [key], key, current[key], cols, rows, s);
     }
 
+    function isKeyLocked(key: string): bool {
+        return isWidgetKey(key) && DesktopLayout.isWidgetLocked(nameOf(key));
+    }
+
     function previewResize(key: string, w: int, h: int): void {
+        if (isKeyLocked(key))
+            return;
         if (!DesktopLayout.positions[key])
             return;
         const span = previewSpans?.[key];
@@ -866,6 +872,8 @@ Item {
 
     function resizeItem(key: string, w: int, h: int): void {
         endResizePreview();
+        if (isKeyLocked(key))
+            return;
         const pos = DesktopLayout.positions[key];
         if (!pos)
             return;
@@ -1085,14 +1093,16 @@ Item {
     }
 
     function beginDrag(key: string): void {
-        if (renameActive)
+        if (renameActive || isKeyLocked(key))
             return;
         // The first drag can outrun the async image grab; starting without it flickers.
         if (!dragImageReady && dragImageKey === key) {
             pendingDragKey = key;
             return;
         }
-        const keys = isSelected(key) ? selectedKeys() : [key];
+        const keys = (isSelected(key) ? selectedKeys() : [key]).filter(k => !isKeyLocked(k));
+        if (keys.length === 0)
+            return;
         // For big widgets, adjust the hotSpot to the card's position within the tile.
         let hotSpot = pressPoint;
         if (isBigKey(key)) {

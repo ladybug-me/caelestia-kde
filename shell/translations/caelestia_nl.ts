@@ -4417,6 +4417,16 @@
     </message>
     <message>
       <location line="+1"/>
+      <source>Lock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Widget Outlines</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Bureaublad pictogrammen</translation>
     </message>
@@ -4752,17 +4762,28 @@
       <translation>Bureaublad Addons</translation>
     </message>
     <message>
-      <location line="+20"/>
-      <source>Auto-hide media shapes</source>
-      <translation>Mediavormen automatisch verbergen</translation>
+      <location line="+14"/>
+      <source>Desktop clock</source>
+      <translation>Bureaublad klok</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Hide media shapes when a window is open</source>
-      <translation>Mediavormen verbergen wanneer een venster open is</translation>
+      <location line="+11"/>
+      <location line="+32"/>
+      <source>Invert colors</source>
+      <translation>Kleuren omkeren</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="-24"/>
+      <source>Desktop lyrics</source>
+      <translation>Desktop songteksten</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Alignment</source>
+      <translation>Uitlijning</translation>
+    </message>
+    <message>
+      <location line="+23"/>
       <source>Auto-hide lyrics</source>
       <translation>Automatisch songteksten verbergen</translation>
     </message>
@@ -4770,6 +4791,11 @@
       <location line="+1"/>
       <source>Hide lyrics when a window is open</source>
       <translation>Songtekst verbergen wanneer een venster open is</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Visualiser</source>
+      <translation>Visualiseerder</translation>
     </message>
     <message>
       <location line="+10"/>
@@ -4782,53 +4808,7 @@
       <translation>Toon muziek visualiser op achtergrond (kan meer stroom verbruiken)</translation>
     </message>
     <message>
-      <location line="+14"/>
-      <source>Auto-hide visualiser</source>
-      <translation>visualiser automatisch verbergen</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hide visualiser when a window is fullscreen</source>
-      <translation>visualiser verbergen wanneer een venster vol scherm is</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Hide on all monitors</source>
-      <translation>Verberg op alle monitoren</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Also hide on all other monitors if disabled by a window</source>
-      <translation>Verbergen op alle andere monitoren indien uitgeschakeld door een venster</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Desktop clock</source>
-      <translation>Bureaublad klok</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <location line="+33"/>
-      <source>Invert colors</source>
-      <translation>Kleuren omkeren</translation>
-    </message>
-    <message>
-      <location line="-25"/>
-      <source>Desktop lyrics</source>
-      <translation>Desktop songteksten</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Alignment</source>
-      <translation>Uitlijning</translation>
-    </message>
-    <message>
-      <location line="+23"/>
-      <source>Visualiser</source>
-      <translation>Visualiseerder</translation>
-    </message>
-    <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Blur</source>
       <translation type="unfinished"/>
     </message>
@@ -4843,7 +4823,7 @@
       <translation>Afstand</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
       <source>Size</source>
       <translation type="unfinished"/>
     </message>
@@ -4852,11 +4832,46 @@
       <source>Column width multiplier, lower values leave more room in the middle</source>
       <translation type="unfinished"/>
     </message>
+    <message>
+      <location line="+11"/>
+      <source>Auto-hide visualiser</source>
+      <translation>visualiser automatisch verbergen</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide visualiser when a window is fullscreen</source>
+      <translation>visualiser verbergen wanneer een venster vol scherm is</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Hide on all monitors</source>
+      <translation>Verberg op alle monitoren</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Also hide on all other monitors if disabled by a window</source>
+      <translation>Verbergen op alle andere monitoren indien uitgeschakeld door een venster</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Media shapes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Auto-hide media shapes</source>
+      <translation>Mediavormen automatisch verbergen</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide media shapes when a window is open</source>
+      <translation>Mediavormen verbergen wanneer een venster open is</translation>
+    </message>
   </context>
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+99"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+109"/>
       <source>Hide Desktop Icons</source>
       <translation type="unfinished"/>
     </message>
@@ -4865,11 +4880,21 @@
       <source>Show Desktop Icons</source>
       <translation type="unfinished"/>
     </message>
+    <message>
+      <location line="+8"/>
+      <source>Lock All Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Unlock All Widgets</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>DesktopIconContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+69"/>
+      <location filename="../modules/background/DesktopIconContextMenu.qml" line="+71"/>
       <source>Open %1 Items</source>
       <translation type="unfinished"/>
     </message>
@@ -4960,6 +4985,26 @@
     </message>
     <message>
       <location line="+6"/>
+      <source>Unlock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Unlock Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Lock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Lock Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>Remove Widgets</source>
       <translation type="unfinished"/>
     </message>
@@ -4972,13 +5017,13 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+593"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+672"/>
       <location line="+3"/>
       <source>Group</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+298"/>
+      <location line="+306"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation type="unfinished"/>
@@ -4996,7 +5041,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+498"/>
+      <location line="+504"/>
       <source>%1 could not complete the request</source>
       <translation type="unfinished"/>
     </message>
@@ -5365,73 +5410,33 @@ Now go touch grass</source>
   <context>
     <name>Entries</name>
     <message>
-      <location filename="../modules/whatsnew/Entries.qml" line="+12"/>
-      <source>Auto DND While Streaming</source>
+      <location filename="../modules/whatsnew/Entries.qml" line="+14"/>
+      <source>Shimeji Cat update</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Do Not Disturb now activates automatically when sharing your screen or streaming via OBS, keeping unwanted notification banners and sounds off your broadcast.</source>
+      <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Master Animation Switch</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>A single toggle in Appearance settings now allows you to completely disable all shell animations and transitions for instant responsiveness.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Music Ambient Glow</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>The Dashboard Music tab now features a dynamic ambient glow effect reflecting the colors of your currently playing media&apos;s album artwork.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Audio Visualizer Toggle</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>A dedicated Audio Visualizer toggle has been added to Quick Toggles, allowing you to instantly show or hide the desktop visualizer on demand.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>New Taskbar Widgets</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>The taskbar now includes dedicated widgets for Notes, Weather, Performance stats, Shortcuts, Screen Capture, and Keep Awake, complete with hover popouts and inline settings.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Background Worker Thread</source>
+      <source>Multi-Monitor Desktop Support</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Ticking background services are now offloaded to a dedicated worker thread with queued connections, reducing shell latency and eliminating unnecessary desktop redraws.</source>
+      <source>Desktop icons and widgets now fully support multi-monitor setups with screen-aware positioning. Each connected display maintains its own grid layout and arrangement independently, ensuring widgets and icons stay pinned to their designated monitor across display reconnections and resolution changes without overlapping or shifting between screens.</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Rich Notification Formatting</source>
+      <source>Widget Locking &amp; Outlines</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Notifications in both popups and the sidebar now cleanly sanitize FreeDesktop markup, auto-link web URLs, and preserve paragraph formatting.</source>
+      <source>Desktop widgets can now be locked individually or altogether directly from their context menus, preventing accidental dragging or resizing while interacting with them. In addition, a new widget outlines toggle highlights widget boundaries on your wallpaper, making it effortless to locate empty or conditionally hidden widgets across your desktop.</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -10031,12 +10036,12 @@ Now go touch grass</source>
   <context>
     <name>PluginSettingsPopup</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+44"/>
+      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+53"/>
       <source>Settings</source>
       <translation>Instellingen</translation>
     </message>
     <message>
-      <location line="+51"/>
+      <location line="+74"/>
       <source>Done</source>
       <translation>Voltooid</translation>
     </message>
@@ -10098,13 +10103,13 @@ Now go touch grass</source>
       <translation>Herstart Granaat</translation>
     </message>
     <message>
-      <location line="+34"/>
-      <location line="+371"/>
+      <location line="+43"/>
+      <location line="+369"/>
       <source>Installed</source>
       <translation>Geinstalleerd</translation>
     </message>
     <message>
-      <location line="-362"/>
+      <location line="-360"/>
       <source>Store</source>
       <translation>Winkel</translation>
     </message>
@@ -10119,12 +10124,12 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+73"/>
+      <location line="+72"/>
       <source>User Installed</source>
       <translation>Gebruiker geïnstalleerd</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+105"/>
       <source>No plugins installed</source>
       <translation>Geen plugins geïnstalleerd</translation>
     </message>
@@ -10554,11 +10559,6 @@ PIN: %1</source>
       <location line="+1"/>
       <source>Wallpaper</source>
       <translation>Achtergrond</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Bad Apple</source>
-      <translation>Slechte Appel</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -12507,7 +12507,7 @@ PIN: %1</source>
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+287"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+283"/>
       <source>Quick Toggles</source>
       <translation type="unfinished"/>
     </message>

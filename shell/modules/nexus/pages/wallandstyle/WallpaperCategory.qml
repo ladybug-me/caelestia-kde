@@ -4,6 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
 import Caelestia.Models
+import qs.components.controls
 import qs.services
 import qs.utils
 import qs.modules.nexus.common
@@ -14,20 +15,6 @@ PageBase {
     property var wallsList: {
         const category = root.nState ? root.nState.selectedWallpaperCategory : "";
         let walls = Wallpapers.list.filter(w => Wallpapers.getCategoryFor(w) === category);
-        const filter = root.nState ? root.nState.wallpaperFilterType : "all";
-
-        walls = walls.filter(w => {
-            const isVid = Images.isVideo(w.name);
-            const isGif = w.name.toLowerCase().endsWith(".gif");
-            const isImg = Images.isValidImageByName(w.name) && !isGif;
-
-            if (filter === "all") return true;
-            if (filter === "video") return isVid;
-            if (filter === "gif") return isGif;
-            if (filter === "image") return isImg;
-            return false;
-        });
-
         walls.sort((a, b) => a.name.localeCompare(b.name));
         while (walls.length % Config.nexus.wallpapersPerRow !== 0)
             walls.push(null);
@@ -40,6 +27,100 @@ PageBase {
     }
     isSubPage: true
     scrollable: false
+
+    headerActions: [
+        SplitButton {
+            id: typeFilterBtn
+
+            type: SplitButton.Tonal
+            fallbackIcon: {
+                const f = Wallpapers.currentMediaFilter;
+                if (f === "Video") return "movie";
+                if (f === "Animated") return "gif";
+                if (f === "Image") return "image";
+                return "collections";
+            }
+            fallbackText: {
+                const f = Wallpapers.currentMediaFilter;
+                if (f === "Video") return qsTr("Videos");
+                if (f === "Animated") return qsTr("GIFs");
+                if (f === "Image") return qsTr("Images");
+                return qsTr("All");
+            }
+            minLeftWidth: 100
+
+            menuItems: [
+                MenuItem {
+                    property string filterValue: "All"
+
+                    text: qsTr("All")
+                    icon: "collections"
+                    onClicked: {
+                        Wallpapers.currentMediaFilter = "All";
+                    }
+                },
+                MenuItem {
+                    property string filterValue: "Image"
+
+                    text: qsTr("Images")
+                    icon: "image"
+                    onClicked: {
+                        Wallpapers.currentMediaFilter = "Image";
+                    }
+                },
+                MenuItem {
+                    property string filterValue: "Animated"
+
+                    text: qsTr("GIFs")
+                    icon: "gif"
+                    onClicked: {
+                        Wallpapers.currentMediaFilter = "Animated";
+                    }
+                },
+                MenuItem {
+                    property string filterValue: "Video"
+
+                    text: qsTr("Videos")
+                    icon: "movie"
+                    onClicked: {
+                        Wallpapers.currentMediaFilter = "Video";
+                    }
+                }
+            ]
+
+            active: {
+                const f = Wallpapers.currentMediaFilter;
+                for (let i = 0; i < menuItems.length; i++) {
+                    if (menuItems[i].filterValue === f)
+                        return menuItems[i];
+                }
+                return menuItems[0];
+            }
+
+            Component.onCompleted: {
+                for (let i = 0; i < menuItems.length; i++) {
+                    if (menuItems[i].filterValue === Wallpapers.currentMediaFilter) {
+                        active = menuItems[i];
+                        return;
+                    }
+                }
+            }
+
+            Connections {
+                function onCurrentMediaFilterChanged(): void {
+                    for (let i = 0; i < typeFilterBtn.menuItems.length; i++) {
+                        if (typeFilterBtn.menuItems[i].filterValue === Wallpapers.currentMediaFilter) {
+                            typeFilterBtn.active = typeFilterBtn.menuItems[i];
+                            return;
+                        }
+                    }
+                    typeFilterBtn.active = typeFilterBtn.menuItems[0];
+                }
+
+                target: Wallpapers
+            }
+        }
+    ]
 
     ListView {
         id: gridList

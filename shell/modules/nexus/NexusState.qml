@@ -12,7 +12,6 @@ QtObject {
     property string searchQuery
 
     property string selectedWallpaperCategory
-    property string wallpaperFilterType: "all"
     property BluetoothDevice selectedBtDevice
     property DesktopEntry selectedApp
     property int editingVpnIndex: -1

@@ -377,4 +377,10 @@ Searcher {
     PreviewColours {
         id: previewColoursState
     }
+
+    Settings {
+        property alias mediaFilter: root.currentMediaFilter
+
+        category: "Wallpapers"
+    }
 }

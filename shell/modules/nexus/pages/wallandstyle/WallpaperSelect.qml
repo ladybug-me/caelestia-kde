@@ -39,21 +39,8 @@ PageBase {
         const baseDir = Paths.wallsdir;
         const categories = {};
         const list = [];
-        const filter = root.nState ? root.nState.wallpaperFilterType : "all";
 
         for (const w of walls) {
-            const isVid = Images.isVideo(w.name);
-            const isGif = w.name.toLowerCase().endsWith(".gif");
-            const isImg = Images.isValidImageByName(w.name) && !isGif;
-
-            let matches = false;
-            if (filter === "all") matches = true;
-            else if (filter === "video" && isVid) matches = true;
-            else if (filter === "gif" && isGif) matches = true;
-            else if (filter === "image" && isImg) matches = true;
-
-            if (!matches) continue;
-
             if (w.parentDir !== baseDir) {
                 const category = Wallpapers.getCategoryFor(w);
                 if (category && (!(category in categories) || categories[category].name.localeCompare(w.name) > 0))
@@ -382,52 +369,91 @@ PageBase {
                     id: typeFilterBtn
 
                     type: SplitButton.Tonal
-                    fallbackIcon: "collections"
-                    fallbackText: qsTr("All")
+                    fallbackIcon: {
+                        const f = Wallpapers.currentMediaFilter;
+                        if (f === "Video") return "movie";
+                        if (f === "Animated") return "gif";
+                        if (f === "Image") return "image";
+                        return "collections";
+                    }
+                    fallbackText: {
+                        const f = Wallpapers.currentMediaFilter;
+                        if (f === "Video") return qsTr("Videos");
+                        if (f === "Animated") return qsTr("GIFs");
+                        if (f === "Image") return qsTr("Images");
+                        return qsTr("All");
+                    }
                     minLeftWidth: 100
 
                     menuItems: [
                         MenuItem {
-                            property string filterValue: "all"
+                            property string filterValue: "All"
 
                             text: qsTr("All")
                             icon: "collections"
                             onClicked: {
-                                if (root.nState) root.nState.wallpaperFilterType = "all"
+                                Wallpapers.currentMediaFilter = "All";
                             }
                         },
                         MenuItem {
-                            property string filterValue: "image"
+                            property string filterValue: "Image"
 
                             text: qsTr("Images")
                             icon: "image"
                             onClicked: {
-                                if (root.nState) root.nState.wallpaperFilterType = "image"
+                                Wallpapers.currentMediaFilter = "Image";
                             }
                         },
                         MenuItem {
-                            property string filterValue: "gif"
+                            property string filterValue: "Animated"
 
                             text: qsTr("GIFs")
                             icon: "gif"
                             onClicked: {
-                                if (root.nState) root.nState.wallpaperFilterType = "gif"
+                                Wallpapers.currentMediaFilter = "Animated";
                             }
                         },
                         MenuItem {
-                            property string filterValue: "video"
+                            property string filterValue: "Video"
 
                             text: qsTr("Videos")
                             icon: "movie"
                             onClicked: {
-                                if (root.nState) root.nState.wallpaperFilterType = "video"
+                                Wallpapers.currentMediaFilter = "Video";
                             }
                         }
                     ]
 
                     active: {
-                        const f = root.nState ? root.nState.wallpaperFilterType : "all";
-                        return menuItems.find(m => m.filterValue === f) ?? menuItems[0];
+                        const f = Wallpapers.currentMediaFilter;
+                        for (let i = 0; i < menuItems.length; i++) {
+                            if (menuItems[i].filterValue === f)
+                                return menuItems[i];
+                        }
+                        return menuItems[0];
+                    }
+
+                    Component.onCompleted: {
+                        for (let i = 0; i < menuItems.length; i++) {
+                            if (menuItems[i].filterValue === Wallpapers.currentMediaFilter) {
+                                active = menuItems[i];
+                                return;
+                            }
+                        }
+                    }
+
+                    Connections {
+                        function onCurrentMediaFilterChanged(): void {
+                            for (let i = 0; i < typeFilterBtn.menuItems.length; i++) {
+                                if (typeFilterBtn.menuItems[i].filterValue === Wallpapers.currentMediaFilter) {
+                                    typeFilterBtn.active = typeFilterBtn.menuItems[i];
+                                    return;
+                                }
+                            }
+                            typeFilterBtn.active = typeFilterBtn.menuItems[0];
+                        }
+
+                        target: Wallpapers
                     }
                 }
             }

@@ -150,34 +150,6 @@ ShellRoot {
         }
     }
 
-    Process {
-        id: skwdWallCheckProcess
-
-        running: true
-        command: ["systemctl", "--user", "is-active", "--quiet", "skwd-walld.service"]
-
-        onExited: code => {
-            const hasSkwd = (code === 0);
-            Wallpapers.hasSkwd = hasSkwd;
-            GlobalConfig.background.wallpaperEnabled = !hasSkwd;
-            for (let i = 0; i < Quickshell.screens.length; i++) {
-                const sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
-                if (sConf)
-                    sConf.background.resetOption("wallpaperEnabled");
-        }
-    }
-
-    Process {
-        id: plasmaVisualizerCheckProcess
-
-        running: true
-        command: ["sh", "-c", "test -d \"$HOME/.local/share/plasma/plasmoids/luisbocanegra.audio.visualizer\" || test -d \"/usr/share/plasma/plasmoids/luisbocanegra.audio.visualizer\" || (command -v kpackagetool6 >/dev/null 2>&1 && kpackagetool6 -t Plasma/Applet -s luisbocanegra.audio.visualizer >/dev/null 2>&1)"]
-
-        onExited: code => {
-            PlasmaWidgets.hasVisualizer = (code === 0);
-        }
-    }
-
     BatteryMonitor {}
     BluetoothReconnect {}
 }

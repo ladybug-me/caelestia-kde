@@ -384,4 +384,22 @@ Searcher {
 
         category: "Wallpapers"
     }
+
+    Process {
+        id: skwdWallCheckProcess
+
+        running: true
+        command: ["systemctl", "--user", "is-active", "--quiet", "skwd-walld.service"]
+
+        onExited: code => {
+            const hasSkwd = (code === 0);
+            root.hasSkwd = hasSkwd;
+            GlobalConfig.background.wallpaperEnabled = !hasSkwd;
+            for (let i = 0; i < Quickshell.screens.length; i++) {
+                const sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
+                if (sConf)
+                    sConf.background.resetOption("wallpaperEnabled");
+            }
+        }
+    }
 }

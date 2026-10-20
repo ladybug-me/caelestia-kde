@@ -315,4 +315,15 @@ Singleton {
 
         target: ContextMenuStore
     }
+
+    Process {
+        id: plasmaVisualizerCheckProcess
+
+        running: true
+        command: ["sh", "-c", "test -d \"$HOME/.local/share/plasma/plasmoids/luisbocanegra.audio.visualizer\" || test -d \"/usr/share/plasma/plasmoids/luisbocanegra.audio.visualizer\" || (command -v kpackagetool6 >/dev/null 2>&1 && kpackagetool6 -t Plasma/Applet -s luisbocanegra.audio.visualizer >/dev/null 2>&1)"]
+
+        onExited: code => {
+            root.hasVisualizer = (code === 0);
+        }
+    }
 }

@@ -49,7 +49,7 @@ QtObject {
                     LibraryAndCommunityPage {}
                 }
                 Component {
-                    VideoWallpapersPage {}
+                    Item {}
                 }
                 Component {
                     AppearancePage {}

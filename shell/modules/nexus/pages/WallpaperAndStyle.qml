@@ -88,18 +88,10 @@ PageBase {
                 first: true
                 icon: "palette"
                 label: qsTr("Colors")
-                status: qsTr("Dynamic, light and dark palettes")
+                status: qsTr("Caelestia owns color management and not skwd-wall.")
                 onClicked: root.nState.openSubPage(3)
             }
-
-            InfoRow {
-                Layout.fillWidth: true
-                icon: "info"
-                wrapSubtext: true
-                label: qsTr("Color Management")
-                subtext: qsTr("Caelestia owns color management and not skwd-wall.")
-            }
-
+            
             NavRow {
                 last: true
                 icon: "style"

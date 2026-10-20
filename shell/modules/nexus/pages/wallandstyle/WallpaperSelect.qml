@@ -159,20 +159,17 @@ PageBase {
 
             RowLayout {
                 Layout.topMargin: Tokens.spacing.medium
+                Layout.bottomMargin: Tokens.spacing.large
                 Layout.fillWidth: true
                 z: typeFilterBtn.expanded ? 1 : 0
 
-                ButtonRow {
+                Row {
                     spacing: Tokens.spacing.small
 
                     IconTextButton {
                         icon: "photo_library"
                         text: qsTr("Browse")
-                        font: Tokens.font.body.large
-                        isRound: true
-                        shapeMorph: true
-                        horizontalPadding: Tokens.padding.extraLarge
-                        verticalPadding: Tokens.padding.medium
+                        type: IconTextButton.Tonal
                         onClicked: browseDialog.open()
 
                         FileDialog {
@@ -190,11 +187,6 @@ PageBase {
                     IconTextButton {
                         icon: "shuffle"
                         text: qsTr("Random")
-                        font: Tokens.font.body.large
-                        isRound: true
-                        shapeMorph: true
-                        horizontalPadding: Tokens.padding.extraLarge
-                        verticalPadding: Tokens.padding.medium
                         type: IconTextButton.Tonal
                         onClicked: Wallpapers.setRandom()
                     }
@@ -202,11 +194,6 @@ PageBase {
                     IconTextButton {
                         icon: "folder_open"
                         text: qsTr("Open folder")
-                        font: Tokens.font.body.large
-                        isRound: true
-                        shapeMorph: true
-                        horizontalPadding: Tokens.padding.extraLarge
-                        verticalPadding: Tokens.padding.medium
                         type: IconTextButton.Tonal
                         onClicked: Quickshell.execDetached(["xdg-open", Paths.wallsdir])
                     }

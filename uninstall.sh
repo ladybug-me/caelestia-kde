@@ -512,6 +512,24 @@ kwriteconfig6 --file kscreenlockerrc --group Greeter --group LnF --group General
 kwriteconfig6 --file kscreenlockerrc --group Greeter --group LnF --group General --key showMediaControls --delete 2>/dev/null || true
 ok "Restored stock KDE lock screen configuration."
 
+_sync_wallpaper_script=""
+for _candidate in \
+    "$BUNDLE_DIR/shell/scripts/sync-kde-wallpaper-layout.sh" \
+    "$HOME/.config/quickshell/caelestia/scripts/sync-kde-wallpaper-layout.sh"; do
+    if [[ -f "$_candidate" ]]; then
+        _sync_wallpaper_script="$_candidate"
+        break
+    fi
+done
+
+if [[ -n "$_sync_wallpaper_script" ]]; then
+    if bash "$_sync_wallpaper_script" folder >/dev/null 2>&1; then
+        ok "Switched KDE desktop layout to Folder View"
+    else
+        warn "Could not switch KDE desktop layout to Folder View"
+    fi
+fi
+
 if [[ "$THEME_RESTORED_FROM_BACKUP" != "true" ]]; then
     kwriteconfig6 --file kwinrc --group "Desktops" --key "Number" "1" 2>/dev/null || true
     kwriteconfig6 --file kwinrc --group "Desktops" --key "Rows"   "1" 2>/dev/null || true

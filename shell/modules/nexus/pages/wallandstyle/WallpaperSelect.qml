@@ -154,7 +154,7 @@ PageBase {
                 source: Wallpapers.actualCurrent || Wallpapers.fallback
                 text: qsTr("Current wallpaper")
                 fillLabel: false
-                onClicked: root.nState.closeSubPage()
+                clickable: false
             }
 
             RowLayout {

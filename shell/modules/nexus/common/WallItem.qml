@@ -25,6 +25,7 @@ Item {
     property bool fillLabel: true
     property bool isFolder: false
     property int folderCount: 0
+    property bool clickable: true
 
     signal clicked
 
@@ -139,6 +140,7 @@ Item {
 
     StateLayer {
         anchors.bottomMargin: root.fillLabel ? 0 : layout.implicitHeight - imgWrapper.implicitHeight
+        disabled: !root.clickable
         onClicked: root.clicked()
     }
 }

@@ -49,9 +49,6 @@ QtObject {
                     LibraryAndCommunityPage {}
                 }
                 Component {
-                    Item {}
-                }
-                Component {
                     AppearancePage {}
                 }
                 Component {

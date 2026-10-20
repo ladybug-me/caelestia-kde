@@ -65,7 +65,7 @@ PageBase {
                 icon: "lock"
                 label: qsTr("Lock screen")
                 status: qsTr("Wallpaper sync and lock screen settings")
-                onClicked: root.nState.openSubPage(9)
+                onClicked: root.nState.openSubPage(8)
             }
         }
 
@@ -90,7 +90,7 @@ PageBase {
                 icon: "style"
                 label: qsTr("Theme & Effects")
                 status: qsTr("Islands, Pitch Black, Transparency")
-                onClicked: root.nState.openSubPage(8)
+                onClicked: root.nState.openSubPage(7)
             }
         }
     }

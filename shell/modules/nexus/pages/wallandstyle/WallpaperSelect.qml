@@ -148,60 +148,7 @@ PageBase {
             width: gridList.width
             spacing: Tokens.spacing.small
 
-            ButtonRow {
-                Layout.bottomMargin: Tokens.spacing.medium
-                Layout.alignment: Qt.AlignHCenter
-                spacing: Tokens.spacing.small
-
-                IconTextButton {
-                    icon: "photo_library"
-                    text: qsTr("Browse")
-                    font: Tokens.font.body.large
-                    isRound: true
-                    shapeMorph: true
-                    horizontalPadding: Tokens.padding.extraLarge
-                    verticalPadding: Tokens.padding.medium
-                    onClicked: browseDialog.open()
-
-                    FileDialog {
-                        id: browseDialog
-
-                        title: qsTr("Select an image")
-                        filterLabel: qsTr("Image files")
-                        filters: Images.validImageExtensions
-                        onAccepted: path => {
-                            Wallpapers.setWallpaper(path);
-                        }
-                    }
-                }
-
-                IconTextButton {
-                    icon: "shuffle"
-                    text: qsTr("Random")
-                    font: Tokens.font.body.large
-                    isRound: true
-                    shapeMorph: true
-                    horizontalPadding: Tokens.padding.extraLarge
-                    verticalPadding: Tokens.padding.medium
-                    type: IconTextButton.Tonal
-                    onClicked: Wallpapers.setRandom()
-                }
-
-                IconTextButton {
-                    icon: "folder_open"
-                    text: qsTr("Open folder")
-                    font: Tokens.font.body.large
-                    isRound: true
-                    shapeMorph: true
-                    horizontalPadding: Tokens.padding.extraLarge
-                    verticalPadding: Tokens.padding.medium
-                    type: IconTextButton.Tonal
-                    onClicked: Quickshell.execDetached(["xdg-open", Paths.wallsdir])
-                }
-            }
-
             WallItem {
-                Layout.topMargin: Tokens.spacing.medium
                 imgHeight: Math.round(width * 0.3)
                 radius: Tokens.rounding.extraLarge
                 source: Wallpapers.actualCurrent || Wallpapers.fallback
@@ -215,149 +162,53 @@ PageBase {
                 Layout.fillWidth: true
                 z: typeFilterBtn.expanded ? 1 : 0
 
-                Item {
-                    Layout.fillWidth: true
-                }
+                ButtonRow {
+                    spacing: Tokens.spacing.small
 
-                Row {
-                    spacing: Tokens.spacing.medium
+                    IconTextButton {
+                        icon: "photo_library"
+                        text: qsTr("Browse")
+                        font: Tokens.font.body.large
+                        isRound: true
+                        shapeMorph: true
+                        horizontalPadding: Tokens.padding.extraLarge
+                        verticalPadding: Tokens.padding.medium
+                        onClicked: browseDialog.open()
 
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Tokens.rounding.full
-                        color: "#e53935"
+                        FileDialog {
+                            id: browseDialog
 
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 36
-                            height: 36
-                            radius: parent.radius
-                            color: "transparent"
-                            border.width: root.sortColor === "#e53935" ? 3 : 0
-                            border.color: Colours.palette.m3onSurface
-                        }
-
-                        StateLayer {
-                            anchors.fill: parent
-                            radius: parent.radius
-                            onClicked: root.toggleSortColor("#e53935")
+                            title: qsTr("Select an image")
+                            filterLabel: qsTr("Image files")
+                            filters: Images.validImageExtensions
+                            onAccepted: path => {
+                                Wallpapers.setWallpaper(path);
+                            }
                         }
                     }
 
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Tokens.rounding.full
-                        color: "#1e88e5"
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 36
-                            height: 36
-                            radius: parent.radius
-                            color: "transparent"
-                            border.width: root.sortColor === "#1e88e5" ? 3 : 0
-                            border.color: Colours.palette.m3onSurface
-                        }
-
-                        StateLayer {
-                            anchors.fill: parent
-                            radius: parent.radius
-                            onClicked: root.toggleSortColor("#1e88e5")
-                        }
+                    IconTextButton {
+                        icon: "shuffle"
+                        text: qsTr("Random")
+                        font: Tokens.font.body.large
+                        isRound: true
+                        shapeMorph: true
+                        horizontalPadding: Tokens.padding.extraLarge
+                        verticalPadding: Tokens.padding.medium
+                        type: IconTextButton.Tonal
+                        onClicked: Wallpapers.setRandom()
                     }
 
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Tokens.rounding.full
-                        color: "#43a047"
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 36
-                            height: 36
-                            radius: parent.radius
-                            color: "transparent"
-                            border.width: root.sortColor === "#43a047" ? 3 : 0
-                            border.color: Colours.palette.m3onSurface
-                        }
-
-                        StateLayer {
-                            anchors.fill: parent
-                            radius: parent.radius
-                            onClicked: root.toggleSortColor("#43a047")
-                        }
-                    }
-
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Tokens.rounding.full
-                        color: "#fdd835"
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 36
-                            height: 36
-                            radius: parent.radius
-                            color: "transparent"
-                            border.width: root.sortColor === "#fdd835" ? 3 : 0
-                            border.color: Colours.palette.m3onSurface
-                        }
-
-                        StateLayer {
-                            anchors.fill: parent
-                            radius: parent.radius
-                            onClicked: root.toggleSortColor("#fdd835")
-                        }
-                    }
-
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Tokens.rounding.full
-                        color: "#8e24aa"
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 36
-                            height: 36
-                            radius: parent.radius
-                            color: "transparent"
-                            border.width: root.sortColor === "#8e24aa" ? 3 : 0
-                            border.color: Colours.palette.m3onSurface
-                        }
-
-                        StateLayer {
-                            anchors.fill: parent
-                            radius: parent.radius
-                            onClicked: root.toggleSortColor("#8e24aa")
-                        }
-                    }
-
-                    Rectangle {
-                        width: 36
-                        height: 36
-                        radius: Tokens.rounding.full
-                        color: "#fb8c00"
-
-                        Rectangle {
-                            anchors.centerIn: parent
-                            width: 36
-                            height: 36
-                            radius: parent.radius
-                            color: "transparent"
-                            border.width: root.sortColor === "#fb8c00" ? 3 : 0
-                            border.color: Colours.palette.m3onSurface
-                        }
-
-                        StateLayer {
-                            anchors.fill: parent
-                            radius: parent.radius
-                            onClicked: root.toggleSortColor("#fb8c00")
-                        }
+                    IconTextButton {
+                        icon: "folder_open"
+                        text: qsTr("Open folder")
+                        font: Tokens.font.body.large
+                        isRound: true
+                        shapeMorph: true
+                        horizontalPadding: Tokens.padding.extraLarge
+                        verticalPadding: Tokens.padding.medium
+                        type: IconTextButton.Tonal
+                        onClicked: Quickshell.execDetached(["xdg-open", Paths.wallsdir])
                     }
                 }
 
@@ -456,12 +307,6 @@ PageBase {
                         target: Wallpapers
                     }
                 }
-            }
-
-            StyledText {
-                Layout.topMargin: Tokens.spacing.large
-                text: qsTr("Local wallpapers")
-                font: Tokens.font.title.small
             }
         }
 

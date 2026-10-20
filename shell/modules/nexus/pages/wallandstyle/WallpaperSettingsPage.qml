@@ -128,8 +128,8 @@ PageBase {
                 Layout.fillWidth: true
                 icon: "info"
                 wrapSubtext: true
-                label: Wallpapers.hasSkwd ? qsTr("Managed by skwd-wall") : qsTr("skwd-walld inactive")
-                subtext: Wallpapers.hasSkwd ? qsTr("Wallpaper settings and effects are configured directly through skwd-wall.") : qsTr("skwd-walld service is not active. Enable or start skwd-walld to configure these settings.")
+                label: Wallpapers.hasSkwd ? qsTr("Managed by skwd-wall") : qsTr("skwd-wall not installed")
+                subtext: Wallpapers.hasSkwd ? qsTr("Wallpaper settings and effects are configured directly through skwd-wall.") : qsTr("Download and install skwd-wall to enable these settings.")
             }
 
             NavRow {

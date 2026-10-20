@@ -78,8 +78,18 @@ PageBase {
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
-            NavRow {
+            InfoRow {
                 first: true
+                Layout.fillWidth: true
+                visible: !Wallpapers.hasSkwd
+                icon: "info"
+                wrapSubtext: true
+                label: qsTr("skwd-wall not installed")
+                subtext: qsTr("Download and install skwd-wall to enable these settings.")
+            }
+
+            NavRow {
+                first: Wallpapers.hasSkwd
                 icon: "label"
                 label: qsTr("Tags & Filters")
                 status: qsTr("Organize library with custom tags")

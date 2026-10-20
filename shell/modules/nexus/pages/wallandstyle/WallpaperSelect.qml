@@ -106,6 +106,10 @@ PageBase {
         root.sortVersion++;
     }
 
+    function restartSortDebouncer(): void {
+        sortDebouncer.restart();
+    }
+
     title: qsTr("Select wallpaper")
     isSubPage: true
     scrollable: false
@@ -114,6 +118,17 @@ PageBase {
         if (sortColor === "transparent") {
             wallpaperColors = ({});
             colorDistances = ({});
+        }
+    }
+
+    Item {
+        Timer {
+            id: sortDebouncer
+
+            interval: 250
+            onTriggered: {
+                root.analyzeColors();
+            }
         }
     }
 
@@ -132,15 +147,6 @@ PageBase {
         header: ColumnLayout {
             width: gridList.width
             spacing: Tokens.spacing.small
-
-            Timer {
-                id: sortDebouncer
-
-                interval: 250
-                onTriggered: {
-                    root.analyzeColors();
-                }
-            }
 
             ButtonRow {
                 Layout.bottomMargin: Tokens.spacing.medium
@@ -178,10 +184,7 @@ PageBase {
                     horizontalPadding: Tokens.padding.extraLarge
                     verticalPadding: Tokens.padding.medium
                     type: IconTextButton.Tonal
-                    onClicked: {
-                        Wallpapers.setRandom();
-                        root.nState.closeSubPage();
-                    }
+                    onClicked: Wallpapers.setRandom()
                 }
 
                 IconTextButton {
@@ -521,7 +524,7 @@ PageBase {
                             if (wallItem.modelData && dominantColour.a > 0) {
                                 root.wallpaperColors[wallItem.modelData.path] = dominantColour;
                                 if (root.sortColor !== "transparent") {
-                                    sortDebouncer.restart();
+                                    root.restartSortDebouncer();
                                 }
                             }
                         }

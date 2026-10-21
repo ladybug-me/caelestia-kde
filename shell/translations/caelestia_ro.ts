@@ -4050,85 +4050,85 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+83"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+85"/>
       <source>Greeter settings</source>
       <translation>Setări de bun venit</translation>
     </message>
     <message>
       <location line="+2"/>
-      <location line="+65"/>
+      <location line="+66"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+144"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+12"/>
       <location line="+11"/>
       <location line="+11"/>
-      <location line="+142"/>
       <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
+      <location line="+12"/>
       <location line="+10"/>
-      <location line="+10"/>
-      <location line="+10"/>
-      <location line="+11"/>
-      <location line="+9"/>
       <source>Elements &amp; Modules</source>
       <translation>Elemente și module</translation>
     </message>
     <message>
-      <location line="-260"/>
+      <location line="-273"/>
       <source>Clock settings</source>
       <translation>Setări ceas</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Launcher settings</source>
       <translation>Setări lansator</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Status icons settings</source>
       <translation>Setări pictograme de stare</translation>
     </message>
     <message>
-      <location line="+142"/>
+      <location line="+144"/>
       <source>Workspaces settings</source>
       <translation>Setările spațiilor de lucru</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Tray settings</source>
       <translation>Setări tavă</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>GitHub settings</source>
       <translation>Setări GitHub</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Media settings</source>
       <translation>Setări media</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Performance settings</source>
       <translation>Setări de performanță</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Weather settings</source>
       <translation>Setări vreme</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Screen Capture settings</source>
       <translation>Setări captură de ecran</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Keep Awake settings</source>
       <translation>Setările Păstrează treaz</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Dock settings</source>
       <translation>Setări bară de andocare</translation>
     </message>
@@ -4163,7 +4163,7 @@
       <translation>Terminal</translation>
     </message>
     <message>
-      <location filename="../modules/launcher/Content.qml" line="+45"/>
+      <location filename="../modules/launcher/Content.qml" line="+49"/>
       <source>Clipboard history cleared</source>
       <translation>Istoricul clipboard-ului golit</translation>
     </message>
@@ -4198,7 +4198,7 @@
       <translation>Tip &quot;%1&quot; pentru comenzi</translation>
     </message>
     <message>
-      <location line="+329"/>
+      <location line="+324"/>
       <source>Clear clipboard history?</source>
       <translation>Ștergeți istoricul clipboard?</translation>
     </message>
@@ -4333,6 +4333,11 @@
     </message>
     <message>
       <location line="+1"/>
+      <source>Enter edit mode</source>
+      <translation>Intră în modul de editare</translation>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Wallpaper &amp; style</source>
       <translation>Fundal &amp; stil</translation>
     </message>
@@ -4401,7 +4406,7 @@
   <context>
     <name>ContextMenuStore</name>
     <message>
-      <location filename="../services/ContextMenuStore.qml" line="+27"/>
+      <location filename="../services/ContextMenuStore.qml" line="+28"/>
       <source>Paste</source>
       <translation>Lipește</translation>
     </message>
@@ -4429,6 +4434,11 @@
       <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Pictograme desktop</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter edit mode</source>
+      <translation>Intră în modul de editare</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4742,7 +4752,7 @@
   <context>
     <name>DesktopAddonsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+19"/>
+      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+20"/>
       <source>Left</source>
       <translation>Stânga</translation>
     </message>
@@ -4755,6 +4765,26 @@
       <location line="+5"/>
       <source>Right</source>
       <translation>Dreapta</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Double Reversed (default)</source>
+      <translation>Dublu inversat (implicit)</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>User defined</source>
+      <translation>Definit de utilizator</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Single</source>
+      <translation>Singur</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Circle</source>
+      <translation>Cerc</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -4798,52 +4828,47 @@
       <translation>Vizualizator</translation>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Background visualiser</source>
-      <translation>Vizualizator de fundal</translation>
+      <location line="+13"/>
+      <source>plasma-audio-visualizer not installed</source>
+      <translation>plasma-audio-vizualizator neinstalat</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show music visualiser on wallpaper (May consume more power)</source>
-      <translation>Arată vizualizatorul de muzică pe imagini de fundal (mai consumă mai mult)</translation>
+      <source>Download and install plasma-audio-visualizer to enable these settings.</source>
+      <translation>Descarcă și instalează plasma-audio-vizualizalizator pentru a activa aceste setări.</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Enable Visualizer</source>
+      <translation>Activare vizualizator</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Show audio visualizer on desktop</source>
+      <translation>Afișează vizualizatorul audio pe desktop</translation>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Profile</source>
+      <translation>Profil</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visualizer layout and style preset</source>
+      <translation>Presetări pentru aspectul și stilul vizualizatorului</translation>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Auto-hide visualizer</source>
+      <translation>Ascunde automat vizualizatorul</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide visualizer when a window is maximized on active workspace</source>
+      <translation>Ascunde vizualizatorul atunci când o fereastră este maximizată pe spațiul de lucru activ</translation>
     </message>
     <message>
       <location line="+12"/>
-      <source>Blur</source>
-      <translation>Estompare</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Rounding</source>
-      <translation>Rotunjire</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Spacing</source>
-      <translation>Spațiere</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Size</source>
-      <translation>Dimensiune</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Column width multiplier, lower values leave more room in the middle</source>
-      <translation>Multiplicatorul lățimii coloanei; valorile mai mici lasă mai mult spațiu în mijloc</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Auto-hide visualiser</source>
-      <translation>Ascundere automată vizualizator</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hide visualiser when a window is fullscreen</source>
-      <translation>Ascunde vizualizatorul când o fereastră este pe tot ecranul</translation>
-    </message>
-    <message>
-      <location line="+10"/>
       <source>Hide on all monitors</source>
       <translation>Ascunde pe toate ecranele</translation>
     </message>
@@ -4853,7 +4878,17 @@
       <translation>Ascunde pe toate celelalte monitoare dacă sunt dezactivate de o fereastră</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+13"/>
+      <source>Configure Visualizer</source>
+      <translation>Configurare vizualizator</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Right click on desktop -&gt; Edit Mode -&gt; Right click visualizer -&gt; Configure</source>
+      <translation>Click dreapta pe desktop -&gt; Mod rditare -&gt; Click dreapta pe Vizualizator -&gt; Configurare</translation>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Media shapes</source>
       <translation>Forme media</translation>
     </message>
@@ -4871,7 +4906,7 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+109"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
       <source>Hide Desktop Icons</source>
       <translation>Ascunde pictogramele de pe desktop</translation>
     </message>
@@ -5075,13 +5110,13 @@
     </message>
     <message>
       <location line="+14"/>
-      <source>Show KDE Desktop</source>
-      <translation>Arată KDE Desktop</translation>
+      <source>Disable Quickshell Desktop</source>
+      <translation>Dezactivează Desktop Quickshell</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Disable Caelestia desktop and use native Plasma 6 desktop instead</source>
-      <translation>Dezactivaţi desktop-ul Caelestia şi utilizaţi desktop-ul nativ Plasma 6 în schimb</translation>
+      <source>Completely disable quickshell desktop features and use plasma desktop.</source>
+      <translation>Dezactivează complet funcțiile Quickshell desktop și utilizează Plasma desktop.</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -5169,7 +5204,7 @@
       <translation>Visualizator, ascundere automată, stil</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+9"/>
       <source>Right Click Menu</source>
       <translation>Meniu clic dreapta</translation>
     </message>
@@ -5399,6 +5434,14 @@ Acum atinge iarba</translation>
       <location line="+6"/>
       <source>Cancel</source>
       <translation>Anulează</translation>
+    </message>
+  </context>
+  <context>
+    <name>EditModeOverlay</name>
+    <message>
+      <location filename="../modules/background/EditModeOverlay.qml" line="+93"/>
+      <source>Exit edit mode</source>
+      <translation>Ieșire din modul editare</translation>
     </message>
   </context>
   <context>
@@ -6891,7 +6934,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+20"/>
       <source>Tint custom logo</source>
-      <translation type="unfinished"/>
+      <translation>Nuanță logo personalizat</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -6931,22 +6974,22 @@ Acum atinge iarba</translation>
     <message>
       <location line="+7"/>
       <source>App browser layout</source>
-      <translation type="unfinished"/>
+      <translation>Aspect browser aplicații</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Default: a sidebar of categories next to the apps. Simple: full-width app grid with favourites on top. Compact: vertical list of apps like search results</source>
-      <translation type="unfinished"/>
+      <translation>Implicit: o bară laterală cu categorii lângă aplicații. Simplu: grilă de aplicații pe toată lățimea ecranului, cu aplicațiile preferate în partea de sus. Compact: listă verticală de aplicații, asemănătoare rezultatelor unei căutări</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Truncated app names</source>
-      <translation type="unfinished"/>
+      <translation>Nume de aplicații trunchiate</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
-      <translation type="unfinished"/>
+      <translation>Cum se pot afișa numele aplicațiilor care sunt prea lungi pentru casetă: un text explicativ care apare la trecerea cursorului, micșorarea pictogramei pentru a face loc unei a doua linii sau ascunderea pictogramei pentru a afișa numele complet</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -6971,7 +7014,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+10"/>
       <source>Hover trigger depth</source>
-      <translation type="unfinished"/>
+      <translation>Adâncimea de declanșare la trecerea cursorului</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -6981,7 +7024,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+10"/>
       <source>Hover trigger width</source>
-      <translation type="unfinished"/>
+      <translation>Lățimea declanșatorului la trecerea cursorului</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -7001,7 +7044,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+10"/>
       <source>Clipboard</source>
-      <translation type="unfinished"/>
+      <translation>Clipboard</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -7077,6 +7120,74 @@ Acum atinge iarba</translation>
       <location line="+8"/>
       <source>Wallpapers</source>
       <translation>Fundal</translation>
+    </message>
+  </context>
+  <context>
+    <name>LibraryAndCommunityPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/wallandstyle/LibraryAndCommunityPage.qml" line="+37"/>
+      <source>Library &amp; Community</source>
+      <translation>Bibliotecă și comunitate</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Community &amp; Online</source>
+      <translation>Comunitate și online</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Wallhaven</source>
+      <translation>Wallhaven</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Download wallpapers from Wallhaven</source>
+      <translation>Descarcă imagini de fundal de pe Wallhaven</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Online Wallpapers</source>
+      <translation>Imagini de fundal online</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Browse and download community wallpapers</source>
+      <translation>Răsfoiește și descarcă imagini de fundal create de comunitate</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Library Management</source>
+      <translation>Gestionare bibliotecă</translation>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>skwd-wall not installed</source>
+      <translation>skwd-wall nu este instalat</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Download and install skwd-wall to enable these settings.</source>
+      <translation>Descarcă și instalează skwd-wall pentru a activa aceste setări.</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Tags &amp; Filters</source>
+      <translation>Etichete și filtre</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Organize library with custom tags</source>
+      <translation>Organizează biblioteca cu etichete personalizate</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Open skwd-wall</source>
+      <translation>Deschide skwd-wall</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch the main wallpaper picker interface</source>
+      <translation>Lansează interfața principală a selectorului de imagini</translation>
     </message>
   </context>
   <context>
@@ -8875,7 +8986,7 @@ Acum atinge iarba</translation>
     <message>
       <location filename="../modules/nexus/pages/panels/OverviewPanel.qml" line="+19"/>
       <source>KDE Grid</source>
-      <translation type="unfinished"/>
+      <translation>Grilă KDE</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -9133,7 +9244,7 @@ Acum atinge iarba</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+343"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
       <source>Page under construction</source>
       <translation>Pagină în construcție</translation>
     </message>
@@ -9217,13 +9328,8 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Slideshow &amp; Order</source>
-      <translation>Prezentare de diapozitive și ordine</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Video wallpapers</source>
-      <translation>Fundal video</translation>
+      <source>Library &amp; Community</source>
+      <translation>Bibliotecă și comunitate</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9724,7 +9830,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+1"/>
       <source>Visualiser Input</source>
-      <translation type="unfinished"/>
+      <translation>Intrare vizualizator</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9739,7 +9845,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+3"/>
       <source>Locale, timezone, formats</source>
-      <translation type="unfinished"/>
+      <translation>Locație, fus orar, formate</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -9815,7 +9921,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+1"/>
       <source>Uninstall Caelestia</source>
-      <translation type="unfinished"/>
+      <translation>Dezinstalează Caelestia</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -9835,7 +9941,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+1"/>
       <source>Let the CLI run its own tools</source>
-      <translation type="unfinished"/>
+      <translation>Lasă CLI să își administreze propriile unelte</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9915,7 +10021,7 @@ Acum atinge iarba</translation>
     <message>
       <location line="+6"/>
       <source>Sidebar</source>
-      <translation type="unfinished"/>
+      <translation>Bară laterală</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -9948,12 +10054,12 @@ Acum atinge iarba</translation>
     <message>
       <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/PasswordPill.qml" line="+81"/>
       <source>Loading...</source>
-      <translation type="unfinished"/>
+      <translation>Se încarcă...</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Please wait...</source>
-      <translation type="unfinished"/>
+      <translation>Așteaptă...</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -10032,18 +10138,18 @@ Acum atinge iarba</translation>
     <message>
       <location line="+0"/>
       <source>No active player</source>
-      <translation type="unfinished"/>
+      <translation>Niciun jucător activ</translation>
     </message>
   </context>
   <context>
     <name>PluginSettingsPopup</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+53"/>
+      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+99"/>
       <source>Settings</source>
       <translation>Setări</translation>
     </message>
     <message>
-      <location line="+74"/>
+      <location line="+71"/>
       <source>Done</source>
       <translation>Terminat</translation>
     </message>
@@ -10053,38 +10159,38 @@ Acum atinge iarba</translation>
     <message>
       <location filename="../services/PluginStore.qml" line="+67"/>
       <source>Plugin update available</source>
-      <translation type="unfinished"/>
+      <translation>Actualizare plugin disponibilă</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>1 plugin can be updated</source>
-      <translation type="unfinished"/>
+      <translation>1 plugin poate fi actualizat</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Plugin updates available</source>
-      <translation type="unfinished"/>
+      <translation>Actualizări disponibile pentru plugin</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 plugins can be updated</source>
-      <translation type="unfinished"/>
+      <translation>%1 plugin-uri pot fi actualizate</translation>
     </message>
     <message>
       <location line="+153"/>
       <source>Enter a valid git URL</source>
-      <translation type="unfinished"/>
+      <translation>Introdu o adresă git validă</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Cloning plugin...</source>
-      <translation type="unfinished"/>
+      <translation>Se clonează pluginul...</translation>
     </message>
     <message>
       <location line="+27"/>
       <location line="+5"/>
       <source>Install failed</source>
-      <translation type="unfinished"/>
+      <translation>Instalare eșuată</translation>
     </message>
   </context>
   <context>
@@ -10138,17 +10244,17 @@ Acum atinge iarba</translation>
     <message>
       <location line="+8"/>
       <source>Install from source</source>
-      <translation type="unfinished"/>
+      <translation>Instalează de la sursă</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Git URL</source>
-      <translation type="unfinished"/>
+      <translation>URL Git</translation>
     </message>
     <message>
       <location line="+21"/>
       <source>The repository root must contain metadata.json</source>
-      <translation type="unfinished"/>
+      <translation>Directorul rădăcină al depozitului trebuie să conțină fișierul metadata.json</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -10198,13 +10304,14 @@ Acum atinge iarba</translation>
     <message>
       <location filename="../services/QuickShare.qml" line="+96"/>
       <source>%1 wants to send you %2 (%3)</source>
-      <translation type="unfinished"/>
+      <translation>%1 dorește să-ți trimită %2 (%3)</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>
 PIN: %1</source>
-      <translation type="unfinished"/>
+      <translation>
+PIN: %1</translation>
     </message>
     <message>
       <location line="+22"/>
@@ -10212,32 +10319,32 @@ PIN: %1</source>
       <location line="+23"/>
       <location line="+24"/>
       <source>Quick Share</source>
-      <translation type="unfinished"/>
+      <translation>Distribuire rapidă</translation>
     </message>
     <message>
       <location line="-54"/>
       <source>Quick Share needs administrator rights to start Avahi and open the transfer port.</source>
-      <translation type="unfinished"/>
+      <translation>Distribuire rapidă are nevoie de drepturi de administrator pentru a porni Avahi şi pentru a deschide portul de transfer.</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Quick Share could not confirm the transfer port is reachable. Allow port %1 in Settings -&gt; Services -&gt; Quick Share.</source>
-      <translation type="unfinished"/>
+      <translation>Quick Share nu a putut confirma că portul de transfer este accesibil. Permite portul %1 în Setări -&gt; Servicii -&gt; Quick Share.</translation>
     </message>
     <message>
       <location line="+19"/>
       <source>Incoming file</source>
-      <translation type="unfinished"/>
+      <translation>Fișier primit</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Decline</source>
-      <translation type="unfinished"/>
+      <translation>Respinge</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Accept</source>
-      <translation type="unfinished"/>
+      <translation>Acceptă</translation>
     </message>
   </context>
   <context>
@@ -10245,17 +10352,17 @@ PIN: %1</source>
     <message>
       <location filename="../modules/utilities/QuickShareDeleteModal.qml" line="+35"/>
       <source>Delete file?</source>
-      <translation type="unfinished"/>
+      <translation>Ștergi fișierul?</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>&apos;%1&apos; will be permanently deleted.</source>
-      <translation type="unfinished"/>
+      <translation>&apos;%1&apos; va fi șters definitiv.</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Delete</source>
-      <translation type="unfinished"/>
+      <translation>Șterge</translation>
     </message>
   </context>
   <context>
@@ -10263,32 +10370,32 @@ PIN: %1</source>
     <message>
       <location filename="../modules/utilities/QuickShareDeviceSelector.qml" line="+45"/>
       <source>Send a file</source>
-      <translation type="unfinished"/>
+      <translation>Trimite un fișier</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Looking for nearby devices that have Quick Share open.</source>
-      <translation type="unfinished"/>
+      <translation>Se caută dispozitive din apropiere care au distribuire rapidă deschisă.</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Choose a nearby device to send the file to.</source>
-      <translation type="unfinished"/>
+      <translation>Alege un dispozitiv din apropiere pentru a trimite fișierul.</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Nearby devices have to be on the same network, which for a phone means the same Wi-Fi</source>
-      <translation type="unfinished"/>
+      <translation>Dispozitivele din apropiere trebuie să fie în aceeași rețea, ceea ce pentru un telefon înseamnă aceeași rețea Wi-Fi</translation>
     </message>
     <message>
       <location line="+58"/>
       <source>Cancel</source>
-      <translation type="unfinished"/>
+      <translation>Anulează</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Select a file to send</source>
-      <translation type="unfinished"/>
+      <translation>Selectează un fișier de trimis</translation>
     </message>
   </context>
   <context>
@@ -10296,32 +10403,32 @@ PIN: %1</source>
     <message>
       <location filename="../modules/utilities/cards/QuickShareList.qml" line="+64"/>
       <source>Quick Share</source>
-      <translation type="unfinished"/>
+      <translation>Distribuire rapidă</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Disabled</source>
-      <translation type="unfinished"/>
+      <translation>Dezactivat</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Visible to nearby devices</source>
-      <translation type="unfinished"/>
+      <translation>Vizibil pentru dispozitivele din apropiere</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Hidden</source>
-      <translation type="unfinished"/>
+      <translation>Ascuns</translation>
     </message>
     <message>
       <location line="+33"/>
       <source>Incoming file: %1 from %2</source>
-      <translation type="unfinished"/>
+      <translation>Fişier primit: %1 de la %2</translation>
     </message>
     <message>
       <location line="+2"/>
       <source> (PIN %1)</source>
-      <translation type="unfinished"/>
+      <translation> (PIN %1)</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -10805,27 +10912,27 @@ PIN: %1</source>
     <message>
       <location line="+57"/>
       <source>Screenshot at %1</source>
-      <translation type="unfinished"/>
+      <translation>Captură de ecran la %1</translation>
     </message>
     <message>
       <location line="+42"/>
       <source>Delete this screenshot?</source>
-      <translation type="unfinished"/>
+      <translation>Ștergi această captură de ecran?</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Cancel</source>
-      <translation type="unfinished"/>
+      <translation>Anulează</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Delete</source>
-      <translation type="unfinished"/>
+      <translation>Șterge</translation>
     </message>
     <message>
       <location line="+100"/>
       <source>No screenshots found</source>
-      <translation type="unfinished"/>
+      <translation>Nu s-au găsit capturi de ecran</translation>
     </message>
   </context>
   <context>
@@ -10848,12 +10955,12 @@ PIN: %1</source>
     <message>
       <location line="-132"/>
       <source>Local</source>
-      <translation type="unfinished"/>
+      <translation>Local</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Generic</source>
-      <translation type="unfinished"/>
+      <translation>Generic</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -10863,12 +10970,12 @@ PIN: %1</source>
     <message>
       <location line="+9"/>
       <source>Output</source>
-      <translation type="unfinished"/>
+      <translation>Ieșire</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Input</source>
-      <translation type="unfinished"/>
+      <translation>Intrare</translation>
     </message>
     <message>
       <location line="+16"/>
@@ -10998,17 +11105,17 @@ PIN: %1</source>
     <message>
       <location line="+10"/>
       <source>Visualiser input</source>
-      <translation type="unfinished"/>
+      <translation>Intrare vizualizator</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Audio the visualisers react to</source>
-      <translation type="unfinished"/>
+      <translation>Audio la care reacționează vizualizatoarele</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>GPU</source>
-      <translation type="unfinished"/>
+      <translation>GPU</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -11026,32 +11133,32 @@ PIN: %1</source>
     <message>
       <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/Session.qml" line="+55"/>
       <source>Sleep</source>
-      <translation type="unfinished"/>
+      <translation>Somn</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Hibernate</source>
-      <translation type="unfinished"/>
+      <translation>Hibernare</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Switch User</source>
-      <translation type="unfinished"/>
+      <translation>Schimbă utilizatorul</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Log Out</source>
-      <translation type="unfinished"/>
+      <translation>Deconectare</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Restart</source>
-      <translation type="unfinished"/>
+      <translation>Repornire</translation>
     </message>
     <message>
       <location line="+9"/>
       <source>Shut Down</source>
-      <translation type="unfinished"/>
+      <translation>Închidere</translation>
     </message>
   </context>
   <context>
@@ -11117,13 +11224,13 @@ PIN: %1</source>
       <location line="-24"/>
       <location line="+30"/>
       <source>Hibernate</source>
-      <translation type="unfinished"/>
+      <translation>Hibernare</translation>
     </message>
     <message>
       <location line="-23"/>
       <location line="+30"/>
       <source>Reboot</source>
-      <translation type="unfinished"/>
+      <translation>Repornire</translation>
     </message>
     <message>
       <location line="-24"/>
@@ -11180,7 +11287,7 @@ PIN: %1</source>
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+26"/>
+      <location filename="../modules/Shortcuts.qml" line="+25"/>
       <source>Focus the window above</source>
       <translation>Focalizează fereastra de mai sus</translation>
     </message>
@@ -11370,7 +11477,7 @@ PIN: %1</source>
       <translation>Comută lansatorul, tabloul de bord și osd</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Toggle dashboard</source>
       <translation>Comută tabloul de bord</translation>
     </message>
@@ -11410,7 +11517,7 @@ PIN: %1</source>
       <translation>Comutare lansator</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+12"/>
       <source>Interrupt launcher keybind</source>
       <translation>Întrerupeţi tastatura lansatorului</translation>
     </message>
@@ -11435,32 +11542,42 @@ PIN: %1</source>
       <translation>Deschide selectorul de emoji</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Open clipboard history</source>
       <translation>Deschide istoricul clipboard-ului</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+23"/>
       <source>Open window switcher</source>
       <translation>Deschide comutatorul ferestrei</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+18"/>
       <source>Open window switcher (reverse)</source>
       <translation>Deschide comutatorul ferestrei (invers)</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+18"/>
       <source>Open wallpaper picker</source>
       <translation>Deschide selectorul de tapet</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
+      <source>Wallpaper (skwd-wall)</source>
+      <translation>Imagine de fundal (skwd-wall)</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Random wallpaper</source>
+      <translation>Fundal aleatoriu</translation>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Open keybinds list</source>
       <translation>Deschide lista de taste</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+5"/>
       <source>Launch Terminal</source>
       <translation>Lansare terminal</translation>
     </message>
@@ -11540,94 +11657,94 @@ PIN: %1</source>
       <translation>Comutați la spațiul de lucru 10</translation>
     </message>
     <message>
-      <location line="+116"/>
+      <location line="+103"/>
       <source>Open dock entry 1</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 1 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 2</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 2 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 3</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 3 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 4</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 4 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 5</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 5 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 6</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 6 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 7</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 7 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 8</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 8 în doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open dock entry 9</source>
-      <translation type="unfinished"/>
+      <translation>Deschide intrarea 9 în doc</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Open new window of dock entry 1</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 1 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 2</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 2 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 3</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 3 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 4</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 4 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 5</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 5 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 6</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 6 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 7</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 7 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 8</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 8 din doc</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Open new window of dock entry 9</source>
-      <translation type="unfinished"/>
+      <translation>Deschide o fereastră nouă pentru intrarea 9 din doc</translation>
     </message>
   </context>
   <context>
@@ -11656,27 +11773,27 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/panels/SidebarPanel.qml" line="+16"/>
       <source>Last used</source>
-      <translation type="unfinished"/>
+      <translation>Ultima utilizare</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Notifications</source>
-      <translation type="unfinished"/>
+      <translation>Notificări</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>AI Assistant</source>
-      <translation type="unfinished"/>
+      <translation>Asistent IA</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>News</source>
-      <translation type="unfinished"/>
+      <translation>Știri</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Sidebar</source>
-      <translation type="unfinished"/>
+      <translation>Bară laterală</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -11701,7 +11818,7 @@ PIN: %1</source>
     <message>
       <location line="+13"/>
       <source>Grab width</source>
-      <translation type="unfinished"/>
+      <translation>Lățimea de prindere</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -11711,17 +11828,17 @@ PIN: %1</source>
     <message>
       <location line="+10"/>
       <source>Sidebar Tabs</source>
-      <translation type="unfinished"/>
+      <translation>File din bara laterală</translation>
     </message>
     <message>
       <location line="+5"/>
       <source>Open on</source>
-      <translation type="unfinished"/>
+      <translation>Deschis pe</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Tab shown when the sidebar opens</source>
-      <translation type="unfinished"/>
+      <translation>Fila afișată când se deschide bara laterală</translation>
     </message>
     <message>
       <location line="+13"/>
@@ -11736,45 +11853,12 @@ PIN: %1</source>
     <message>
       <location line="+10"/>
       <source>Show Caelestia Mode</source>
-      <translation type="unfinished"/>
+      <translation>Afișează modul Caelestia</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the Caelestia Mode toggle at the bottom of notifications</source>
       <translation>Arată comutatorul Modul Caelestia în partea de jos a notificărilor</translation>
-    </message>
-  </context>
-  <context>
-    <name>SlideshowAndOrderPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/wallandstyle/SlideshowAndOrderPage.qml" line="+16"/>
-      <source>Slideshow &amp; Order</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+20"/>
-      <source>Wallpaper slideshow</source>
-      <translation>Prezentare fundal</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Automatically change wallpaper on a timer</source>
-      <translation>Schimbă automat imaginea de fundal pe un cronometru</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Slideshow interval</source>
-      <translation>Interval diapozitiv</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Random order</source>
-      <translation>Ordine aleatorie</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Affects slideshow and the &apos;Next Wallpaper&apos; right-click menu option</source>
-      <translation>Afectează prezentarea slideshow şi opţiunea &apos;Următoarea imagine&apos; meniu click-dreapta</translation>
     </message>
   </context>
   <context>
@@ -11802,7 +11886,7 @@ PIN: %1</source>
     <message>
       <location line="+9"/>
       <source>Feedback</source>
-      <translation type="unfinished"/>
+      <translation>Opinii</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -12326,7 +12410,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>Scroll on the left half of a horizontal bar (top half if vertical) to adjust volume</source>
-      <translation type="unfinished"/>
+      <translation>Derulează pe jumătatea stângă a unei bare orizontale (pe jumătatea superioară, dacă este verticală) pentru a regla volumul</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -12336,7 +12420,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>Scroll on the right half of a horizontal bar (bottom half if vertical) to adjust brightness</source>
-      <translation type="unfinished"/>
+      <translation>Derulează pe jumătatea din dreapta a unei bare orizontale (jumătatea de jos, dacă este verticală) pentru a regla luminozitatea</translation>
     </message>
   </context>
   <context>
@@ -12374,7 +12458,7 @@ PIN: %1</source>
     <message>
       <location line="+7"/>
       <source>Audio</source>
-      <translation type="unfinished"/>
+      <translation>Audio</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -12394,7 +12478,7 @@ PIN: %1</source>
     <message>
       <location line="+7"/>
       <source>Input</source>
-      <translation type="unfinished"/>
+      <translation>Intrare</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -12447,7 +12531,7 @@ PIN: %1</source>
     <message>
       <location line="+4"/>
       <source>Important</source>
-      <translation type="unfinished"/>
+      <translation>Important</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -12515,7 +12599,7 @@ PIN: %1</source>
     <message>
       <location filename="../modules/utilities/cards/Toggles.qml" line="+283"/>
       <source>Quick Toggles</source>
-      <translation type="unfinished"/>
+      <translation>Comutatoare rapide</translation>
     </message>
   </context>
   <context>
@@ -12523,7 +12607,7 @@ PIN: %1</source>
     <message>
       <location filename="../modules/sidebar/ai/ToolCard.qml" line="+169"/>
       <source>+%1 earlier steps</source>
-      <translation type="unfinished"/>
+      <translation>+%1 pași anteriori</translation>
     </message>
   </context>
   <context>
@@ -12552,29 +12636,31 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/common/UninstallDialog.qml" line="+71"/>
       <source>Uninstall Caelestia?</source>
-      <translation type="unfinished"/>
+      <translation>Dezinstalezi Caelestia?</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Still looking for the uninstaller. Try again in a moment.</source>
-      <translation type="unfinished"/>
+      <translation>Încă se caută programul de dezinstalare. Încearcă din nou peste câteva momente.</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>This opens the uninstaller in a terminal, where it asks for confirmation of its own. It removes the shell, its config files and its services, and can restore your pre-install configuration from a backup.</source>
-      <translation type="unfinished"/>
+      <translation>Aceasta deschide programul de dezinstalare într-un terminal, unde ți se va solicita confirmarea. Acesta elimină shell-ul, fișierele sale de configurare și serviciile aferente și poate restabili configurația pe care o aveai înainte de instalare, pornind de la o copie de rezervă.</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>This install belongs to a package, so the package manager owns its files. Remove it with:
 
 %1</source>
-      <translation type="unfinished"/>
+      <translation>Această instalare face parte dintr-un pachet, așa că fișierele sale aparțin managerului de pachete. Elimină folosind:
+
+%1</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>No uninstaller script was found and no known package manager owns this install. Remove it the same way you installed it.</source>
-      <translation type="unfinished"/>
+      <translation>Nu s-a găsit niciun script de dezinstalare și niciun manager de pachete cunoscut nu gestionează această instalare. Dezinstalează în același mod în care ai instalat.</translation>
     </message>
     <message>
       <location line="+15"/>
@@ -12593,31 +12679,31 @@ PIN: %1</source>
       <location filename="../services/Units.qml" line="+22"/>
       <source>%1°</source>
       <comment>temperature</comment>
-      <translation type="unfinished"/>
+      <translation>%1°</translation>
     </message>
     <message>
       <location line="+3"/>
       <source>%1°F</source>
       <comment>temperature</comment>
-      <translation type="unfinished"/>
+      <translation>%1°F</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>%1 K</source>
       <comment>temperature</comment>
-      <translation type="unfinished"/>
+      <translation>%1 K</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1°C</source>
       <comment>temperature</comment>
-      <translation type="unfinished"/>
+      <translation>%1°C</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>%1 B</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 B</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -12629,25 +12715,25 @@ PIN: %1</source>
       <location line="+1"/>
       <source>%1 MB</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 MB</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 GB</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 GB</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 TB</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 TB</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 KiB</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 KiB</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -12659,124 +12745,124 @@ PIN: %1</source>
       <location line="+1"/>
       <source>%1 GiB</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 GiB</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 TiB</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 TiB</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 B/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 B/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 KB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 KB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 MB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 MB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 GB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 GB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 TB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 TB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 KiB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 KiB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 MiB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 MiB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 GiB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 GiB/s</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 TiB/s</source>
       <comment>data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 TiB/s</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>%1 %2</source>
       <comment>value and data unit</comment>
-      <translation type="unfinished"/>
+      <translation>%1 %2</translation>
     </message>
     <message>
       <location line="+34"/>
       <source>%1 / %2</source>
       <comment>used / total amount</comment>
-      <translation type="unfinished"/>
+      <translation>%1 / %2</translation>
     </message>
     <message>
       <location line="+30"/>
       <source>%1d</source>
-      <translation type="unfinished"/>
+      <translation>%1d</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>%1h</source>
-      <translation type="unfinished"/>
+      <translation>%1h</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>%1m</source>
-      <translation type="unfinished"/>
+      <translation>%1m</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>%1 day</source>
-      <translation type="unfinished"/>
+      <translation>%1 zi</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 days</source>
-      <translation type="unfinished"/>
+      <translation>%1 zile</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>%1 hour</source>
-      <translation type="unfinished"/>
+      <translation>%1 oră</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 hours</source>
-      <translation type="unfinished"/>
+      <translation>%1 ore</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>%1 minute</source>
-      <translation type="unfinished"/>
+      <translation>%1 minut</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1 minutes</source>
-      <translation type="unfinished"/>
+      <translation>%1 minute</translation>
     </message>
   </context>
   <context>
@@ -12823,7 +12909,7 @@ PIN: %1</source>
     <message>
       <location filename="../modules/bar/components/UpdateIndicator.qml" line="+47"/>
       <source>Caelestia updates</source>
-      <translation type="unfinished"/>
+      <translation>Actualizări Caelestia</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -12846,12 +12932,12 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>perf</source>
-      <translation type="unfinished"/>
+      <translation>perf</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>refactor</source>
-      <translation type="unfinished"/>
+      <translation>refactor</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -12866,7 +12952,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>test</source>
-      <translation type="unfinished"/>
+      <translation>test</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -12876,7 +12962,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>ci</source>
-      <translation type="unfinished"/>
+      <translation>ci</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -12919,12 +13005,12 @@ PIN: %1</source>
     <message>
       <location line="+11"/>
       <source>%1m %2s</source>
-      <translation type="unfinished"/>
+      <translation>%1m %2s</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>%1s</source>
-      <translation type="unfinished"/>
+      <translation>%1s</translation>
     </message>
     <message>
       <location line="+64"/>
@@ -12983,7 +13069,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>Reinstall %1?</source>
-      <translation type="unfinished"/>
+      <translation>Reinstalezi %1?</translation>
     </message>
     <message>
       <location line="+2"/>
@@ -13126,7 +13212,7 @@ PIN: %1</source>
     <message>
       <location filename="../modules/dashboard/dash/User.qml" line="+216"/>
       <source>up %1</source>
-      <translation type="unfinished"/>
+      <translation>până la %1</translation>
     </message>
   </context>
   <context>
@@ -13164,7 +13250,7 @@ PIN: %1</source>
     <message>
       <location line="+7"/>
       <source>Quick toggles</source>
-      <translation type="unfinished"/>
+      <translation>Comutatoare rapide</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -13189,17 +13275,17 @@ PIN: %1</source>
     <message>
       <location line="+5"/>
       <source>File sharing</source>
-      <translation type="unfinished"/>
+      <translation>Partajare fișier</translation>
     </message>
     <message>
       <location line="+7"/>
       <source>Quick Share</source>
-      <translation type="unfinished"/>
+      <translation>Distribuire rapidă</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Send files to nearby devices</source>
-      <translation type="unfinished"/>
+      <translation>Trimite fișiere pe dispozitive din apropiere</translation>
     </message>
   </context>
   <context>
@@ -13232,7 +13318,7 @@ PIN: %1</source>
     <message>
       <location line="+9"/>
       <source>Hover trigger depth</source>
-      <translation type="unfinished"/>
+      <translation>Adâncimea de declanșare la trecerea cursorului</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -13242,7 +13328,7 @@ PIN: %1</source>
     <message>
       <location line="+12"/>
       <source>Hover trigger width</source>
-      <translation type="unfinished"/>
+      <translation>Lățimea declanșatorului la trecerea cursorului</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -13285,12 +13371,12 @@ PIN: %1</source>
     <message>
       <location line="+7"/>
       <source>Screen Capture</source>
-      <translation type="unfinished"/>
+      <translation>Captură de ecran</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the screen capture card</source>
-      <translation type="unfinished"/>
+      <translation>Arată cardul de captare a ecranului</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -13305,17 +13391,17 @@ PIN: %1</source>
     <message>
       <location line="+7"/>
       <source>Quick Share</source>
-      <translation type="unfinished"/>
+      <translation>Distribuire rapidă</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Show the Quick Share card while it is enabled</source>
-      <translation type="unfinished"/>
+      <translation>Afișează cardul de partajare rapidă cât timp este activat</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Quick Toggles</source>
-      <translation type="unfinished"/>
+      <translation>Comutatoare rapide</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -13338,24 +13424,24 @@ PIN: %1</source>
     <message>
       <location line="+73"/>
       <source>Login required</source>
-      <translation type="unfinished"/>
+      <translation>Autentificare necesară</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Machine authorization required</source>
-      <translation type="unfinished"/>
+      <translation>Este necesară autorizarea</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Tailscale may not be running</source>
-      <translation type="unfinished"/>
+      <translation>Este posibil ca Tailscale să nu ruleze</translation>
     </message>
     <message>
       <location line="+31"/>
       <location line="+73"/>
       <location line="+46"/>
       <source>Authentication required</source>
-      <translation type="unfinished"/>
+      <translation>Autentificare necesară</translation>
     </message>
     <message>
       <location line="-6"/>
@@ -13386,7 +13472,7 @@ PIN: %1</source>
       <location line="+0"/>
       <location line="+5"/>
       <source>%1: %2</source>
-      <translation type="unfinished"/>
+      <translation>%1: %2</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -13406,114 +13492,76 @@ PIN: %1</source>
     </message>
   </context>
   <context>
-    <name>VideoWallpapersPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/wallandstyle/VideoWallpapersPage.qml" line="+17"/>
-      <source>Video Wallpapers</source>
-      <translation>Fundal video</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Pause video wallpapers</source>
-      <translation>Întrerupeți imaginile video</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Enable video audio</source>
-      <translation>Activare audio video</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Pause video on fullscreen</source>
-      <translation>Întrerupeți videoclipul pe tot ecranul</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Pause video on tiled windows</source>
-      <translation>Pauză video pe ferestrele înclinate</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Pause video on all displays</source>
-      <translation>Întrerupeți videoclipul pe toate ecranele</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Mute video when media plays</source>
-      <translation>Amuțește videoclipul atunci când media redă</translation>
-    </message>
-  </context>
-  <context>
     <name>ViewOptions</name>
     <message>
       <location filename="../modules/background/desktopicons/ViewOptions.qml" line="+78"/>
       <source>Sort by</source>
-      <translation type="unfinished"/>
+      <translation>Sortare după</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Name</source>
-      <translation type="unfinished"/>
+      <translation>Nume</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Type</source>
-      <translation type="unfinished"/>
+      <translation>Tip</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Date modified</source>
-      <translation type="unfinished"/>
+      <translation>Data modificării</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Size</source>
-      <translation type="unfinished"/>
+      <translation>Dimensiune</translation>
     </message>
     <message>
       <location line="+24"/>
       <source>Arrange automatically</source>
-      <translation type="unfinished"/>
+      <translation>Aranjare automată</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Keep icons packed; dragging reorders them</source>
-      <translation type="unfinished"/>
+      <translation>Păstrează pictogramele grupate; prin glisare se modifică ordinea acestora</translation>
     </message>
     <message>
       <location line="+18"/>
       <source>Rounded icon corners</source>
-      <translation type="unfinished"/>
+      <translation>Colțuri rotunjite ale pictogramelor</translation>
     </message>
     <message>
       <location line="+12"/>
       <source>Icon size</source>
-      <translation type="unfinished"/>
+      <translation>Dimensiune pictogramă</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Small</source>
-      <translation type="unfinished"/>
+      <translation>Mică</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Medium</source>
-      <translation type="unfinished"/>
+      <translation>Medie</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Large</source>
-      <translation type="unfinished"/>
+      <translation>Mare</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Huge</source>
-      <translation type="unfinished"/>
+      <translation>Imensă</translation>
     </message>
     <message>
       <location line="+15"/>
       <source>Tip: Ctrl+scroll on the desktop also resizes icons</source>
-      <translation type="unfinished"/>
+      <translation>Sfat: Combinația Ctrl + derulare pe desktop permite, de asemenea, redimensionarea pictogramelor</translation>
     </message>
   </context>
   <context>
@@ -13521,7 +13569,7 @@ PIN: %1</source>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/WallhavenPage.qml" line="+7"/>
       <source>Wallhaven</source>
-      <translation type="unfinished"/>
+      <translation>Wallhaven</translation>
     </message>
   </context>
   <context>
@@ -13529,7 +13577,7 @@ PIN: %1</source>
     <message>
       <location filename="../modules/dashboard/WallhavenTab.qml" line="+136"/>
       <source>Wallhaven</source>
-      <translation type="unfinished"/>
+      <translation>Wallhaven</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -13615,7 +13663,7 @@ PIN: %1</source>
   <context>
     <name>WallpaperAndStyle</name>
     <message>
-      <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+13"/>
+      <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+14"/>
       <source>Appearance</source>
       <translation>Aspectul</translation>
     </message>
@@ -13636,26 +13684,31 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+6"/>
-      <source>Wallhaven</source>
-      <translation type="unfinished"/>
+      <source>Library &amp; Community</source>
+      <translation>Bibliotecă și comunitate</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Download wallpapers from Wallhaven</source>
-      <translation>Descarcă imagini de fundal de pe Wallhaven</translation>
+      <source>Wallhaven, online wallpapers, tags and filters</source>
+      <translation>Wallhaven, imagini de fundal online, etichete și filtre</translation>
     </message>
     <message>
       <location line="+7"/>
-      <source>Open wallpaper folder</source>
-      <translation>Deschide directorul de fundal</translation>
+      <source>Wallpaper Settings</source>
+      <translation>Setări fundal</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Add your own wallpapers</source>
-      <translation>Adaugă propriile tale imagini de fundal</translation>
+      <source>Configure wallpaper engine, mixer, and effects</source>
+      <translation>Configurare motor imagini de fundal, mixer și efecte</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+0"/>
+      <source>Disabled (skwd-walld inactive)</source>
+      <translation>Dezactivat (skwd-walld inactiv)</translation>
+    </message>
+    <message>
+      <location line="+8"/>
       <location line="+11"/>
       <source>Lock screen</source>
       <translation>Ecran de blocare</translation>
@@ -13673,8 +13726,8 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+1"/>
-      <source>Dynamic, light and dark palettes</source>
-      <translation>Palete dinamice, ușoare și întunecate</translation>
+      <source>Caelestia owns color management and not skwd-wall.</source>
+      <translation>Caelestia deține managementul culorilor și nu skwd-wall.</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -13686,56 +13739,53 @@ PIN: %1</source>
       <source>Islands, Pitch Black, Transparency</source>
       <translation>Insule, Pitch Negru, Transparență</translation>
     </message>
+  </context>
+  <context>
+    <name>WallpaperCategory</name>
     <message>
-      <location line="+6"/>
-      <source>Wallpaper options</source>
-      <translation>Opțiuni fundal</translation>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperCategory.qml" line="+45"/>
+      <location line="+38"/>
+      <source>Videos</source>
+      <translation>Videoclipuri</translation>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Wallpaper Settings</source>
-      <translation>Setări fundal</translation>
+      <location line="-37"/>
+      <location line="+28"/>
+      <source>GIFs</source>
+      <translation>GIF-uri</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Display, Recolor, Desktop Icons</source>
-      <translation>Afișare, Recolor, Pictograme Desktop</translation>
+      <location line="-27"/>
+      <location line="+18"/>
+      <source>Images</source>
+      <translation>Imagini</translation>
     </message>
     <message>
-      <location line="+6"/>
-      <source>Slideshow &amp; Order</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Slideshow interval and randomization</source>
-      <translation>Interval diapozitiv şi randomizare</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Video Wallpapers</source>
-      <translation>Fundal video</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Audio and pausing behavior</source>
-      <translation>Comportament audio și pauză</translation>
+      <location line="-17"/>
+      <location line="+8"/>
+      <source>All</source>
+      <translation>Toate</translation>
     </message>
   </context>
   <context>
     <name>WallpaperSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+122"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+113"/>
       <source>Select wallpaper</source>
       <translation>Selectați imaginea de fundal</translation>
     </message>
     <message>
-      <location line="+43"/>
+      <location line="+42"/>
+      <source>Current wallpaper</source>
+      <translation>Imagine de fundal curentă</translation>
+    </message>
+    <message>
+      <location line="+16"/>
       <source>Browse</source>
       <translation>Răsfoiţi</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Select an image</source>
       <translation>Selectați o imagine</translation>
     </message>
@@ -13750,43 +13800,36 @@ PIN: %1</source>
       <translation>Aleator</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+7"/>
       <source>Open folder</source>
       <translation>Deschide dosarul</translation>
     </message>
     <message>
-      <location line="+16"/>
-      <source>Featured wallpaper</source>
-      <translation>Fundal recomandat</translation>
-    </message>
-    <message>
-      <location line="+168"/>
-      <location line="+7"/>
-      <source>All</source>
-      <translation>Toate</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Images</source>
-      <translation>Imagini</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>GIFs</source>
-      <translation>GIF-uri</translation>
-    </message>
-    <message>
-      <location line="+9"/>
+      <location line="+23"/>
+      <location line="+38"/>
       <source>Videos</source>
       <translation>Video-uri</translation>
     </message>
     <message>
-      <location line="+17"/>
-      <source>Local wallpapers</source>
-      <translation>Fundal local</translation>
+      <location line="-37"/>
+      <location line="+28"/>
+      <source>GIFs</source>
+      <translation>GIF-uri</translation>
     </message>
     <message>
-      <location line="+100"/>
+      <location line="-27"/>
+      <location line="+18"/>
+      <source>Images</source>
+      <translation>Imagini</translation>
+    </message>
+    <message>
+      <location line="-17"/>
+      <location line="+8"/>
+      <source>All</source>
+      <translation>Toate</translation>
+    </message>
+    <message>
+      <location line="+165"/>
       <source>No local wallpapers found</source>
       <translation>Nu s-au găsit imagini de fundal locale</translation>
     </message>
@@ -13794,49 +13837,124 @@ PIN: %1</source>
   <context>
     <name>WallpaperSettingsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+18"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+52"/>
       <source>Wallpaper Settings</source>
       <translation>Setări fundal</translation>
     </message>
     <message>
-      <location line="+3"/>
-      <source>Crop</source>
-      <translation>Decupați</translation>
+      <location line="+8"/>
+      <source>Sure?</source>
+      <translation>Sigur?</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Reset settings</source>
+      <translation>Resetează setările</translation>
+    </message>
+    <message>
+      <location line="+59"/>
+      <source>Configuration &amp; Tools</source>
+      <translation>Configurare și instrumente</translation>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Managed by skwd-wall</source>
+      <translation>Gestionat de skwd-wall</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>skwd-wall not installed</source>
+      <translation>skwd-wall nu este instalat</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Fit</source>
-      <translation>Potrivire</translation>
+      <source>Wallpaper settings and effects are configured directly through skwd-wall.</source>
+      <translation>Setările de fundal și efectele sunt configurate direct prin intermediul skwd-wall.</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Download and install skwd-wall to enable these settings.</source>
+      <translation>Descarcă și instalează skwd-wall pentru a activa aceste setări.</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>General Settings</source>
+      <translation>Setări generale</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Stretch</source>
-      <translation>Întindere</translation>
+      <source>Configure wallpaper engine and display options</source>
+      <translation>Configurare motor imagini de fundal și opțiuni de afișare</translation>
     </message>
     <message>
-      <location line="+30"/>
-      <source>Wallpaper scaling</source>
-      <translation>Scalare fundal</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>How the wallpaper image fits the screen</source>
-      <translation>Cum se potrivește imaginea de fundal pe ecran</translation>
-    </message>
-    <message>
-      <location line="+17"/>
-      <source>Recolor wallpaper</source>
-      <translation>Fundal Recolor</translation>
+      <location line="+8"/>
+      <source>Wallpaper Mixer</source>
+      <translation>Mixer de fundal</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Tint the wallpaper to match static color schemes</source>
-      <translation>Indică imaginea de fundal pentru a se potrivi schemelor de culori statice</translation>
+      <source>Blend and layer multiple wallpapers</source>
+      <translation>Combină și suprapune mai multe imagini de fundal</translation>
     </message>
     <message>
-      <location line="+19"/>
-      <source>Recolor strength</source>
-      <translation>Rezistență la reclame</translation>
+      <location line="+9"/>
+      <source>Shaders &amp; Effects</source>
+      <translation>Shader-e și efecte</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Post-processing, blur, and visual filters</source>
+      <translation>Post-procesare, estompare și filtre vizuale</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Playlists &amp; Automation</source>
+      <translation>Liste de redare și automatizare</translation>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Playlists &amp; Slideshows</source>
+      <translation>Liste de redare și prezentări de diapozitive</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage wallpaper playlists and transition intervals</source>
+      <translation>Gestionează listele de redare pentru imaginile de fundal și intervalele de tranziție</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Schedule &amp; Timers</source>
+      <translation>Programare și Temporizatoare</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Time-based wallpaper rules and schedules</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Shortcuts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch skwd-wall wallpaper changer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Caelestia</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch Caelestia wallpaper changer</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -13844,33 +13962,33 @@ PIN: %1</source>
     <message>
       <location filename="../modules/bar/popouts/Weather.qml" line="+59"/>
       <source>H:%1 L:%2</source>
-      <translation type="unfinished"/>
+      <translation>Max:%1 Min:%2</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Humidity</source>
-      <translation type="unfinished"/>
+      <translation>Umiditate</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Feels like</source>
       <comment>apparent temperature</comment>
-      <translation type="unfinished"/>
+      <translation>Se simte</translation>
     </message>
     <message>
       <location line="+6"/>
       <source>Wind</source>
-      <translation type="unfinished"/>
+      <translation>Vânt</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>%1 km/h</source>
-      <translation type="unfinished"/>
+      <translation>%1 km/h</translation>
     </message>
     <message>
       <location line="+11"/>
       <source>Hourly forecast</source>
-      <translation type="unfinished"/>
+      <translation>Prognoza pe ore</translation>
     </message>
     <message>
       <location filename="../services/Weather.qml" line="+127"/>
@@ -13888,12 +14006,12 @@ PIN: %1</source>
     <message>
       <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/WeatherCard.qml" line="+105"/>
       <source>Feels like %1</source>
-      <translation type="unfinished"/>
+      <translation>Se simte ca %1</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>High %1 • Low %2</source>
-      <translation type="unfinished"/>
+      <translation>Maxim %1 • Minim %2</translation>
     </message>
   </context>
   <context>
@@ -13902,7 +14020,7 @@ PIN: %1</source>
       <location filename="../components/widgets/WeatherCards.qml" line="+253"/>
       <source>Now</source>
       <comment>hourly forecast, current hour</comment>
-      <translation type="unfinished"/>
+      <translation>Acum</translation>
     </message>
   </context>
   <context>
@@ -13931,7 +14049,7 @@ PIN: %1</source>
       <location line="+6"/>
       <source>Feels like</source>
       <comment>apparent temperature</comment>
-      <translation type="unfinished"/>
+      <translation>Se simte ca</translation>
     </message>
     <message>
       <location line="+6"/>
@@ -13941,29 +14059,29 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>%1 km/h</source>
-      <translation type="unfinished"/>
+      <translation>%1 km/h</translation>
     </message>
     <message>
       <location line="+19"/>
       <source>Hourly forecast</source>
-      <translation type="unfinished"/>
+      <translation>Prognoza pe ore</translation>
     </message>
     <message>
       <location line="+62"/>
       <source>7-day forecast</source>
-      <translation type="unfinished"/>
+      <translation>Prognoza pe 7 zile</translation>
     </message>
     <message>
       <location line="+34"/>
       <source>Today</source>
       <comment>forecast column</comment>
-      <translation type="unfinished"/>
+      <translation>Astăzi</translation>
     </message>
     <message>
       <location line="+26"/>
       <source>%1 / %2</source>
       <comment>min/max temperature</comment>
-      <translation type="unfinished"/>
+      <translation>%1 / %2</translation>
     </message>
     <message>
       <location line="+252"/>
@@ -14049,17 +14167,17 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>Note</source>
-      <translation type="unfinished"/>
+      <translation>Notă</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Folder View</source>
-      <translation type="unfinished"/>
+      <translation>Vizualizare dosare</translation>
     </message>
     <message>
       <location line="+4"/>
       <source>Large Folder</source>
-      <translation type="unfinished"/>
+      <translation>Dosar mare</translation>
     </message>
   </context>
   <context>
@@ -14067,12 +14185,12 @@ PIN: %1</source>
     <message>
       <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+78"/>
       <source>Add Widget</source>
-      <translation type="unfinished"/>
+      <translation>Adaugă widget</translation>
     </message>
     <message>
       <location line="+64"/>
       <source>Drag a widget&apos;s corner to resize it; right-click for more</source>
-      <translation type="unfinished"/>
+      <translation>Trage de colțul unui widget pentru a-i modifica dimensiunea; clic dreapta pentru mai multe opțiuni</translation>
     </message>
   </context>
   <context>
@@ -14153,22 +14271,22 @@ PIN: %1</source>
     <message>
       <location line="+4"/>
       <source>Profile picture changed</source>
-      <translation type="unfinished"/>
+      <translation>Poză de profil schimbată</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Profile picture changed to %1</source>
-      <translation type="unfinished"/>
+      <translation>Poza de profil a fost schimbată la %1</translation>
     </message>
     <message>
       <location line="+2"/>
       <source>Unable to change profile picture</source>
-      <translation type="unfinished"/>
+      <translation>Nu se poate schimba imaginea de profil</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Failed to change profile picture to %1</source>
-      <translation type="unfinished"/>
+      <translation>Schimbarea fotografiei de profil cu %1 a eșuat</translation>
     </message>
   </context>
   <context>
@@ -14176,12 +14294,12 @@ PIN: %1</source>
     <message>
       <location filename="../plugin/src/Caelestia/Services/sessionmanager.cpp" line="+121"/>
       <source>Hibernate failed</source>
-      <translation type="unfinished"/>
+      <translation>Hibernarea a eșuat</translation>
     </message>
     <message>
       <location line="+0"/>
       <source>Enable hibernation to use this feature.</source>
-      <translation type="unfinished"/>
+      <translation>Activează modul de hibernare pentru a putea utiliza această funcție.</translation>
     </message>
   </context>
   <context>

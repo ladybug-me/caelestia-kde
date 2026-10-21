@@ -4050,85 +4050,85 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+83"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+85"/>
       <source>Greeter settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+2"/>
-      <location line="+65"/>
+      <location line="+66"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+144"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+12"/>
       <location line="+11"/>
       <location line="+11"/>
-      <location line="+142"/>
       <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
+      <location line="+12"/>
       <location line="+10"/>
-      <location line="+10"/>
-      <location line="+10"/>
-      <location line="+11"/>
-      <location line="+9"/>
       <source>Elements &amp; Modules</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-260"/>
+      <location line="-273"/>
       <source>Clock settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Launcher settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Status icons settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+142"/>
+      <location line="+144"/>
       <source>Workspaces settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Tray settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>GitHub settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Media settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Performance settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Weather settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Screen Capture settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Keep Awake settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Dock settings</source>
       <translation type="unfinished"/>
     </message>
@@ -4163,7 +4163,7 @@
       <translation>Terminál</translation>
     </message>
     <message>
-      <location filename="../modules/launcher/Content.qml" line="+45"/>
+      <location filename="../modules/launcher/Content.qml" line="+49"/>
       <source>Clipboard history cleared</source>
       <translation>Historie schránky vymazána</translation>
     </message>
@@ -4198,7 +4198,7 @@
       <translation>Zadejte &quot;%1&quot; pro příkazy</translation>
     </message>
     <message>
-      <location line="+329"/>
+      <location line="+324"/>
       <source>Clear clipboard history?</source>
       <translation>Vymazat historii schránky?</translation>
     </message>
@@ -4333,6 +4333,11 @@
     </message>
     <message>
       <location line="+1"/>
+      <source>Enter edit mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Wallpaper &amp; style</source>
       <translation>Tapeta &amp; styl</translation>
     </message>
@@ -4401,7 +4406,7 @@
   <context>
     <name>ContextMenuStore</name>
     <message>
-      <location filename="../services/ContextMenuStore.qml" line="+27"/>
+      <location filename="../services/ContextMenuStore.qml" line="+28"/>
       <source>Paste</source>
       <translation type="unfinished"/>
     </message>
@@ -4429,6 +4434,11 @@
       <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Ikony plochy</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter edit mode</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -4742,7 +4752,7 @@
   <context>
     <name>DesktopAddonsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+19"/>
+      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+20"/>
       <source>Left</source>
       <translation>Vlevo</translation>
     </message>
@@ -4755,6 +4765,26 @@
       <location line="+5"/>
       <source>Right</source>
       <translation>Vpravo</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Double Reversed (default)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>User defined</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Single</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Circle</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
@@ -4798,52 +4828,47 @@
       <translation>Vizualizér</translation>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Background visualiser</source>
-      <translation>Vizualizér pozadí</translation>
+      <location line="+13"/>
+      <source>plasma-audio-visualizer not installed</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show music visualiser on wallpaper (May consume more power)</source>
-      <translation>Zobrazit hudební vizualizér na tapetě (může spotřebovávat více energii)</translation>
+      <source>Download and install plasma-audio-visualizer to enable these settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Enable Visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Show audio visualizer on desktop</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Profile</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visualizer layout and style preset</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Auto-hide visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide visualizer when a window is maximized on active workspace</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+12"/>
-      <source>Blur</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Rounding</source>
-      <translation>Zaokrouhlení</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Spacing</source>
-      <translation>Mezera</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Size</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Column width multiplier, lower values leave more room in the middle</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Auto-hide visualiser</source>
-      <translation>Automaticky skrýt vizualizér</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hide visualiser when a window is fullscreen</source>
-      <translation>Skrýt vizualizátor, když je okno v režimu celé obrazovky</translation>
-    </message>
-    <message>
-      <location line="+10"/>
       <source>Hide on all monitors</source>
       <translation>Skrýt na všech monitorech</translation>
     </message>
@@ -4853,7 +4878,17 @@
       <translation>Pokud je okno vypnuto, skryje také na všech ostatních monitorech</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+13"/>
+      <source>Configure Visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Right click on desktop -&gt; Edit Mode -&gt; Right click visualizer -&gt; Configure</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Media shapes</source>
       <translation type="unfinished"/>
     </message>
@@ -4871,7 +4906,7 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+109"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
       <source>Hide Desktop Icons</source>
       <translation type="unfinished"/>
     </message>
@@ -5075,13 +5110,13 @@
     </message>
     <message>
       <location line="+14"/>
-      <source>Show KDE Desktop</source>
+      <source>Disable Quickshell Desktop</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Disable Caelestia desktop and use native Plasma 6 desktop instead</source>
-      <translation>Vypněte plochu Caelestia a použijte místo toho nativní plochu Plasma 6</translation>
+      <source>Completely disable quickshell desktop features and use plasma desktop.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+16"/>
@@ -5169,7 +5204,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+9"/>
       <source>Right Click Menu</source>
       <translation>Nabídka pravého tlačítka</translation>
     </message>
@@ -5396,6 +5431,14 @@ Now go touch grass</source>
     <message>
       <location line="+6"/>
       <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>EditModeOverlay</name>
+    <message>
+      <location filename="../modules/background/EditModeOverlay.qml" line="+93"/>
+      <source>Exit edit mode</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -7075,6 +7118,74 @@ Now go touch grass</source>
       <location line="+8"/>
       <source>Wallpapers</source>
       <translation>Tapety</translation>
+    </message>
+  </context>
+  <context>
+    <name>LibraryAndCommunityPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/wallandstyle/LibraryAndCommunityPage.qml" line="+37"/>
+      <source>Library &amp; Community</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Community &amp; Online</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Wallhaven</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Download wallpapers from Wallhaven</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Online Wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Browse and download community wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Library Management</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>skwd-wall not installed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Download and install skwd-wall to enable these settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Tags &amp; Filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Organize library with custom tags</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Open skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch the main wallpaper picker interface</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -9131,7 +9242,7 @@ Now go touch grass</source>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+343"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
       <source>Page under construction</source>
       <translation>Stránka je ve výstavbě</translation>
     </message>
@@ -9215,13 +9326,8 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+1"/>
-      <source>Slideshow &amp; Order</source>
+      <source>Library &amp; Community</source>
       <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Video wallpapers</source>
-      <translation>Video tapety</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10036,12 +10142,12 @@ Now go touch grass</source>
   <context>
     <name>PluginSettingsPopup</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+53"/>
+      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+99"/>
       <source>Settings</source>
       <translation>Nastavení</translation>
     </message>
     <message>
-      <location line="+74"/>
+      <location line="+71"/>
       <source>Done</source>
       <translation>Hotovo</translation>
     </message>
@@ -11174,7 +11280,7 @@ PIN: %1</source>
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+26"/>
+      <location filename="../modules/Shortcuts.qml" line="+25"/>
       <source>Focus the window above</source>
       <translation>Zaměřit okno výše</translation>
     </message>
@@ -11364,7 +11470,7 @@ PIN: %1</source>
       <translation>Přepnout spouštěč, nástěnku a osd</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Toggle dashboard</source>
       <translation>Přepnout nástěnku</translation>
     </message>
@@ -11404,7 +11510,7 @@ PIN: %1</source>
       <translation>Přepnout spouštěč</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+12"/>
       <source>Interrupt launcher keybind</source>
       <translation>Klávesová zkratka přerušeného spouštěče</translation>
     </message>
@@ -11429,32 +11535,42 @@ PIN: %1</source>
       <translation>Otevřít výběr emoji</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Open clipboard history</source>
       <translation>Otevřít historii schránky</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+23"/>
       <source>Open window switcher</source>
       <translation>Přepínač otevřeného okna</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+18"/>
       <source>Open window switcher (reverse)</source>
       <translation>Přepínač otevřeného okna (obrácení)</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+18"/>
       <source>Open wallpaper picker</source>
       <translation>Otevřít výběr tapety</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
+      <source>Wallpaper (skwd-wall)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Random wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Open keybinds list</source>
       <translation>Otevřít seznam klíčů</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+5"/>
       <source>Launch Terminal</source>
       <translation>Spustit Terminál</translation>
     </message>
@@ -11534,7 +11650,7 @@ PIN: %1</source>
       <translation>Přepnout na pracovní prostor 10</translation>
     </message>
     <message>
-      <location line="+116"/>
+      <location line="+103"/>
       <source>Open dock entry 1</source>
       <translation type="unfinished"/>
     </message>
@@ -11736,39 +11852,6 @@ PIN: %1</source>
       <location line="+1"/>
       <source>Show the Caelestia Mode toggle at the bottom of notifications</source>
       <translation>Zobrazit přepínač Caelestia režimu v dolní části oznámení</translation>
-    </message>
-  </context>
-  <context>
-    <name>SlideshowAndOrderPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/wallandstyle/SlideshowAndOrderPage.qml" line="+16"/>
-      <source>Slideshow &amp; Order</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+20"/>
-      <source>Wallpaper slideshow</source>
-      <translation>Snímky tapety</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Automatically change wallpaper on a timer</source>
-      <translation>Automaticky změnit tapetu na časovače</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Slideshow interval</source>
-      <translation>Interval prezentace</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Random order</source>
-      <translation>Náhodné pořadí</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Affects slideshow and the &apos;Next Wallpaper&apos; right-click menu option</source>
-      <translation>Ovlivňuje prezentaci a &apos;Další tapeta&apos; možnost menu kliknutím pravým tlačítkem</translation>
     </message>
   </context>
   <context>
@@ -13400,44 +13483,6 @@ PIN: %1</source>
     </message>
   </context>
   <context>
-    <name>VideoWallpapersPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/wallandstyle/VideoWallpapersPage.qml" line="+17"/>
-      <source>Video Wallpapers</source>
-      <translation>Video tapety</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Pause video wallpapers</source>
-      <translation>Pozastavit tapety videa</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Enable video audio</source>
-      <translation>Povolit video</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Pause video on fullscreen</source>
-      <translation>Pozastavit video na celou obrazovku</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Pause video on tiled windows</source>
-      <translation>Pozastavit video v tažených oknech</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Pause video on all displays</source>
-      <translation>Pozastavit video na všech obrazovkách</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Mute video when media plays</source>
-      <translation>Ztlumit video při přehrávání médií</translation>
-    </message>
-  </context>
-  <context>
     <name>ViewOptions</name>
     <message>
       <location filename="../modules/background/desktopicons/ViewOptions.qml" line="+78"/>
@@ -13609,7 +13654,7 @@ PIN: %1</source>
   <context>
     <name>WallpaperAndStyle</name>
     <message>
-      <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+13"/>
+      <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+14"/>
       <source>Appearance</source>
       <translation>Vzhled</translation>
     </message>
@@ -13630,26 +13675,31 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+6"/>
-      <source>Wallhaven</source>
+      <source>Library &amp; Community</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Download wallpapers from Wallhaven</source>
-      <translation>Stáhnout tapety z Wallhaven</translation>
+      <source>Wallhaven, online wallpapers, tags and filters</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
-      <source>Open wallpaper folder</source>
-      <translation>Otevřít složku tapety</translation>
+      <source>Wallpaper Settings</source>
+      <translation>Nastavení tapety</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Add your own wallpapers</source>
-      <translation>Přidat vlastní tapety</translation>
+      <source>Configure wallpaper engine, mixer, and effects</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+0"/>
+      <source>Disabled (skwd-walld inactive)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
       <location line="+11"/>
       <source>Lock screen</source>
       <translation>Zamykací obrazovka</translation>
@@ -13667,8 +13717,8 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+1"/>
-      <source>Dynamic, light and dark palettes</source>
-      <translation>Dynamické, lehké a tmavé palety</translation>
+      <source>Caelestia owns color management and not skwd-wall.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
@@ -13680,56 +13730,53 @@ PIN: %1</source>
       <source>Islands, Pitch Black, Transparency</source>
       <translation>Ostrovy, Pitch Black, průhlednost</translation>
     </message>
+  </context>
+  <context>
+    <name>WallpaperCategory</name>
     <message>
-      <location line="+6"/>
-      <source>Wallpaper options</source>
-      <translation>Možnosti tapety</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Wallpaper Settings</source>
-      <translation>Nastavení tapety</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Display, Recolor, Desktop Icons</source>
-      <translation>Zobrazit, zapisovat, ikony plochy</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Slideshow &amp; Order</source>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperCategory.qml" line="+45"/>
+      <location line="+38"/>
+      <source>Videos</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Slideshow interval and randomization</source>
-      <translation>Interval prezentace a randomizace</translation>
+      <location line="-37"/>
+      <location line="+28"/>
+      <source>GIFs</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Video Wallpapers</source>
-      <translation>Video tapety</translation>
+      <location line="-27"/>
+      <location line="+18"/>
+      <source>Images</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Audio and pausing behavior</source>
-      <translation>Zvuk a pozastavení chování</translation>
+      <location line="-17"/>
+      <location line="+8"/>
+      <source>All</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>WallpaperSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+122"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+113"/>
       <source>Select wallpaper</source>
       <translation>Vybrat tapetu</translation>
     </message>
     <message>
-      <location line="+43"/>
+      <location line="+42"/>
+      <source>Current wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+16"/>
       <source>Browse</source>
       <translation>Procházet</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Select an image</source>
       <translation>Vyberte obrázek</translation>
     </message>
@@ -13744,43 +13791,36 @@ PIN: %1</source>
       <translation>Náhodný</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+7"/>
       <source>Open folder</source>
       <translation>Otevřít složku</translation>
     </message>
     <message>
-      <location line="+16"/>
-      <source>Featured wallpaper</source>
-      <translation>Doporučená tapeta</translation>
-    </message>
-    <message>
-      <location line="+168"/>
-      <location line="+7"/>
-      <source>All</source>
-      <translation>Vše</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Images</source>
-      <translation>Obrázky</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>GIFs</source>
-      <translation>GIFy</translation>
-    </message>
-    <message>
-      <location line="+9"/>
+      <location line="+23"/>
+      <location line="+38"/>
       <source>Videos</source>
       <translation>Videa</translation>
     </message>
     <message>
-      <location line="+17"/>
-      <source>Local wallpapers</source>
-      <translation>Místní tapety</translation>
+      <location line="-37"/>
+      <location line="+28"/>
+      <source>GIFs</source>
+      <translation>GIFy</translation>
     </message>
     <message>
-      <location line="+100"/>
+      <location line="-27"/>
+      <location line="+18"/>
+      <source>Images</source>
+      <translation>Obrázky</translation>
+    </message>
+    <message>
+      <location line="-17"/>
+      <location line="+8"/>
+      <source>All</source>
+      <translation>Vše</translation>
+    </message>
+    <message>
+      <location line="+165"/>
       <source>No local wallpapers found</source>
       <translation>Nebyla nalezena žádná místní tapeta</translation>
     </message>
@@ -13788,49 +13828,124 @@ PIN: %1</source>
   <context>
     <name>WallpaperSettingsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+18"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+52"/>
       <source>Wallpaper Settings</source>
       <translation>Nastavení tapety</translation>
     </message>
     <message>
-      <location line="+3"/>
-      <source>Crop</source>
-      <translation>Plodiny</translation>
+      <location line="+8"/>
+      <source>Sure?</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Reset settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+59"/>
+      <source>Configuration &amp; Tools</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Managed by skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>skwd-wall not installed</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Fit</source>
-      <translation>Přizpůsobit</translation>
+      <source>Wallpaper settings and effects are configured directly through skwd-wall.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Download and install skwd-wall to enable these settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>General Settings</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Stretch</source>
-      <translation>Roztáhnout</translation>
+      <source>Configure wallpaper engine and display options</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+30"/>
-      <source>Wallpaper scaling</source>
-      <translation>Velikost tapety</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>How the wallpaper image fits the screen</source>
-      <translation>Jak se obrázek tapety shoduje s obrazovkou</translation>
-    </message>
-    <message>
-      <location line="+17"/>
-      <source>Recolor wallpaper</source>
-      <translation>Přepínač tapety</translation>
+      <location line="+8"/>
+      <source>Wallpaper Mixer</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Tint the wallpaper to match static color schemes</source>
-      <translation>Tipnout tapetu pro shodu statických barevných schémat</translation>
+      <source>Blend and layer multiple wallpapers</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+19"/>
-      <source>Recolor strength</source>
-      <translation>Pevnost rekuperace</translation>
+      <location line="+9"/>
+      <source>Shaders &amp; Effects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Post-processing, blur, and visual filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Playlists &amp; Automation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Playlists &amp; Slideshows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage wallpaper playlists and transition intervals</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Schedule &amp; Timers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Time-based wallpaper rules and schedules</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Shortcuts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch skwd-wall wallpaper changer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Caelestia</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch Caelestia wallpaper changer</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

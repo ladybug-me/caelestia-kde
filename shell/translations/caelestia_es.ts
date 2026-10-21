@@ -4050,85 +4050,85 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+83"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+85"/>
       <source>Greeter settings</source>
       <translation>Configuración de la pantalla de bienvenida</translation>
     </message>
     <message>
       <location line="+2"/>
-      <location line="+65"/>
+      <location line="+66"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+144"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+12"/>
       <location line="+11"/>
       <location line="+11"/>
-      <location line="+142"/>
       <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
-      <location line="+11"/>
+      <location line="+12"/>
       <location line="+10"/>
-      <location line="+10"/>
-      <location line="+10"/>
-      <location line="+11"/>
-      <location line="+9"/>
       <source>Elements &amp; Modules</source>
       <translation>Elementos y módulos</translation>
     </message>
     <message>
-      <location line="-260"/>
+      <location line="-273"/>
       <source>Clock settings</source>
       <translation>Configuración del reloj</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Launcher settings</source>
       <translation>Configuración del lanzador</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Status icons settings</source>
       <translation>Configuración de los iconos de estado</translation>
     </message>
     <message>
-      <location line="+142"/>
+      <location line="+144"/>
       <source>Workspaces settings</source>
       <translation>Configuración de los espacios de trabajo</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Tray settings</source>
       <translation>Configuración de la bandeja del sistema</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>GitHub settings</source>
       <translation>Configuración de GitHub</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Media settings</source>
       <translation>Configuración de multimedia</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Performance settings</source>
       <translation>Configuración de rendimiento</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Weather settings</source>
       <translation>Configuración del clima</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Screen Capture settings</source>
       <translation>Configuración de captura de pantalla</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+11"/>
       <source>Keep Awake settings</source>
       <translation>Configuración de Mantener activo</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Dock settings</source>
       <translation>Configuración del dock</translation>
     </message>
@@ -4163,7 +4163,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location filename="../modules/launcher/Content.qml" line="+45"/>
+      <location filename="../modules/launcher/Content.qml" line="+49"/>
       <source>Clipboard history cleared</source>
       <translation>Historial del portapapeles borrado</translation>
     </message>
@@ -4198,7 +4198,7 @@
       <translation>Escribe &quot;%1&quot; para ejecutar comandos</translation>
     </message>
     <message>
-      <location line="+329"/>
+      <location line="+324"/>
       <source>Clear clipboard history?</source>
       <translation>¿Borrar el historial del portapapeles?</translation>
     </message>
@@ -4333,6 +4333,11 @@
     </message>
     <message>
       <location line="+1"/>
+      <source>Enter edit mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Wallpaper &amp; style</source>
       <translation>Fondo de pantalla y estilo</translation>
     </message>
@@ -4401,7 +4406,7 @@
   <context>
     <name>ContextMenuStore</name>
     <message>
-      <location filename="../services/ContextMenuStore.qml" line="+27"/>
+      <location filename="../services/ContextMenuStore.qml" line="+28"/>
       <source>Paste</source>
       <translation>Pegar</translation>
     </message>
@@ -4429,6 +4434,11 @@
       <location line="+1"/>
       <source>Desktop Icons</source>
       <translation>Iconos del escritorio</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enter edit mode</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -4742,7 +4752,7 @@
   <context>
     <name>DesktopAddonsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+19"/>
+      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+20"/>
       <source>Left</source>
       <translation>Izquierda</translation>
     </message>
@@ -4755,6 +4765,26 @@
       <location line="+5"/>
       <source>Right</source>
       <translation>Derecha</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Double Reversed (default)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>User defined</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Single</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Circle</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
@@ -4798,52 +4828,47 @@
       <translation>Visualizador</translation>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Background visualiser</source>
-      <translation>Visualizador de fondo</translation>
+      <location line="+13"/>
+      <source>plasma-audio-visualizer not installed</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show music visualiser on wallpaper (May consume more power)</source>
-      <translation>Mostrar el visualizador de música en el fondo de pantalla (puede consumir más energía)</translation>
+      <source>Download and install plasma-audio-visualizer to enable these settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Enable Visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Show audio visualizer on desktop</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Profile</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visualizer layout and style preset</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Auto-hide visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide visualizer when a window is maximized on active workspace</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+12"/>
-      <source>Blur</source>
-      <translation>Desenfoque</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Rounding</source>
-      <translation>Redondeo</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Spacing</source>
-      <translation>Espaciado</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Size</source>
-      <translation>Tamaño</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Column width multiplier, lower values leave more room in the middle</source>
-      <translation>Multiplicador del ancho de las columnas; valores bajos dejan más espacio en el centro</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Auto-hide visualiser</source>
-      <translation>Ocultar automáticamente el visualizador</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Hide visualiser when a window is fullscreen</source>
-      <translation>Ocultar el visualizador cuando una ventana esté a pantalla completa</translation>
-    </message>
-    <message>
-      <location line="+10"/>
       <source>Hide on all monitors</source>
       <translation>Ocultar en todos los monitores</translation>
     </message>
@@ -4853,7 +4878,17 @@
       <translation>Ocultar también en todos los demás monitores si una ventana lo desactiva</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+13"/>
+      <source>Configure Visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Right click on desktop -&gt; Edit Mode -&gt; Right click visualizer -&gt; Configure</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Media shapes</source>
       <translation type="unfinished"/>
     </message>
@@ -4871,7 +4906,7 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+109"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
       <source>Hide Desktop Icons</source>
       <translation>Ocultar iconos del escritorio</translation>
     </message>
@@ -5075,13 +5110,13 @@
     </message>
     <message>
       <location line="+14"/>
-      <source>Show KDE Desktop</source>
-      <translation>Mostrar escritorio de KDE</translation>
+      <source>Disable Quickshell Desktop</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Disable Caelestia desktop and use native Plasma 6 desktop instead</source>
-      <translation>Desactivar el escritorio de Caelestia y usar en su lugar el escritorio nativo de Plasma 6</translation>
+      <source>Completely disable quickshell desktop features and use plasma desktop.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+16"/>
@@ -5169,7 +5204,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+9"/>
       <source>Right Click Menu</source>
       <translation>Menú del clic derecho</translation>
     </message>
@@ -5399,6 +5434,14 @@ Ahora salir a tocar el pasto</translation>
       <location line="+6"/>
       <source>Cancel</source>
       <translation>Cancelar</translation>
+    </message>
+  </context>
+  <context>
+    <name>EditModeOverlay</name>
+    <message>
+      <location filename="../modules/background/EditModeOverlay.qml" line="+93"/>
+      <source>Exit edit mode</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -7077,6 +7120,74 @@ Ahora salir a tocar el pasto</translation>
       <location line="+8"/>
       <source>Wallpapers</source>
       <translation>Fondos de pantalla</translation>
+    </message>
+  </context>
+  <context>
+    <name>LibraryAndCommunityPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/wallandstyle/LibraryAndCommunityPage.qml" line="+37"/>
+      <source>Library &amp; Community</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Community &amp; Online</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Wallhaven</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Download wallpapers from Wallhaven</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Online Wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Browse and download community wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Library Management</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>skwd-wall not installed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Download and install skwd-wall to enable these settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Tags &amp; Filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Organize library with custom tags</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Open skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch the main wallpaper picker interface</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -9133,7 +9244,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+343"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
       <source>Page under construction</source>
       <translation>Página en construcción</translation>
     </message>
@@ -9217,13 +9328,8 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Slideshow &amp; Order</source>
-      <translation>Presentación y orden</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Video wallpapers</source>
-      <translation>Fondos de pantalla de vídeo</translation>
+      <source>Library &amp; Community</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10038,12 +10144,12 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>PluginSettingsPopup</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+53"/>
+      <location filename="../modules/nexus/pages/PluginSettingsPopup.qml" line="+99"/>
       <source>Settings</source>
       <translation>Configuración</translation>
     </message>
     <message>
-      <location line="+74"/>
+      <location line="+71"/>
       <source>Done</source>
       <translation>Listo</translation>
     </message>
@@ -11176,7 +11282,7 @@ PIN: %1</source>
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+26"/>
+      <location filename="../modules/Shortcuts.qml" line="+25"/>
       <source>Focus the window above</source>
       <translation>Enfocar la ventana superior</translation>
     </message>
@@ -11366,7 +11472,7 @@ PIN: %1</source>
       <translation>Alternar lanzador, panel y OSD</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+12"/>
       <source>Toggle dashboard</source>
       <translation>Alternar panel</translation>
     </message>
@@ -11406,7 +11512,7 @@ PIN: %1</source>
       <translation>Alternar lanzador</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+12"/>
       <source>Interrupt launcher keybind</source>
       <translation>Interrumpir atajo del lanzador</translation>
     </message>
@@ -11431,32 +11537,42 @@ PIN: %1</source>
       <translation>Abrir selector de emojis</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Open clipboard history</source>
       <translation>Abrir historial del portapapeles</translation>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+23"/>
       <source>Open window switcher</source>
       <translation>Abrir selector de ventanas</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+18"/>
       <source>Open window switcher (reverse)</source>
       <translation>Abrir selector de ventanas (inverso)</translation>
     </message>
     <message>
-      <location line="+21"/>
+      <location line="+18"/>
       <source>Open wallpaper picker</source>
       <translation>Abrir selector de fondos de pantalla</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
+      <source>Wallpaper (skwd-wall)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Random wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
       <source>Open keybinds list</source>
       <translation>Abrir lista de atajos</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+5"/>
       <source>Launch Terminal</source>
       <translation>Abrir terminal</translation>
     </message>
@@ -11536,7 +11652,7 @@ PIN: %1</source>
       <translation>Cambiar al espacio de trabajo 10</translation>
     </message>
     <message>
-      <location line="+116"/>
+      <location line="+103"/>
       <source>Open dock entry 1</source>
       <translation>Abrir la entrada 1 del dock</translation>
     </message>
@@ -11738,39 +11854,6 @@ PIN: %1</source>
       <location line="+1"/>
       <source>Show the Caelestia Mode toggle at the bottom of notifications</source>
       <translation>Mostrar el control de modo Caelestia en la parte inferior de las notificaciones</translation>
-    </message>
-  </context>
-  <context>
-    <name>SlideshowAndOrderPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/wallandstyle/SlideshowAndOrderPage.qml" line="+16"/>
-      <source>Slideshow &amp; Order</source>
-      <translation>Presentación y orden</translation>
-    </message>
-    <message>
-      <location line="+20"/>
-      <source>Wallpaper slideshow</source>
-      <translation>Presentación de fondos de pantalla</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Automatically change wallpaper on a timer</source>
-      <translation>Cambiar automáticamente el fondo de pantalla mediante un temporizador</translation>
-    </message>
-    <message>
-      <location line="+11"/>
-      <source>Slideshow interval</source>
-      <translation>Intervalo de la presentación</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Random order</source>
-      <translation>Orden aleatorio</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Affects slideshow and the &apos;Next Wallpaper&apos; right-click menu option</source>
-      <translation>Afecta a la presentación y a la opción &apos;Siguiente fondo de pantalla&apos; del menú de clic derecho</translation>
     </message>
   </context>
   <context>
@@ -13404,44 +13487,6 @@ PIN: %1</source>
     </message>
   </context>
   <context>
-    <name>VideoWallpapersPage</name>
-    <message>
-      <location filename="../modules/nexus/pages/wallandstyle/VideoWallpapersPage.qml" line="+17"/>
-      <source>Video Wallpapers</source>
-      <translation>Fondos de pantalla de vídeo</translation>
-    </message>
-    <message>
-      <location line="+12"/>
-      <source>Pause video wallpapers</source>
-      <translation>Pausar fondos de pantalla de vídeo</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Enable video audio</source>
-      <translation>Activar audio del vídeo</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Pause video on fullscreen</source>
-      <translation>Pausar vídeo en pantalla completa</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Pause video on tiled windows</source>
-      <translation>Pausar vídeo con ventanas en mosaico</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Pause video on all displays</source>
-      <translation>Pausar vídeo en todas las pantallas</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Mute video when media plays</source>
-      <translation>Silenciar vídeo al reproducir contenido multimedia</translation>
-    </message>
-  </context>
-  <context>
     <name>ViewOptions</name>
     <message>
       <location filename="../modules/background/desktopicons/ViewOptions.qml" line="+78"/>
@@ -13613,7 +13658,7 @@ PIN: %1</source>
   <context>
     <name>WallpaperAndStyle</name>
     <message>
-      <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+13"/>
+      <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+14"/>
       <source>Appearance</source>
       <translation>Apariencia</translation>
     </message>
@@ -13634,26 +13679,31 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+6"/>
-      <source>Wallhaven</source>
+      <source>Library &amp; Community</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Download wallpapers from Wallhaven</source>
-      <translation>Descargar fondos de pantalla desde Wallhaven</translation>
+      <source>Wallhaven, online wallpapers, tags and filters</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
-      <source>Open wallpaper folder</source>
-      <translation>Abrir carpeta de fondos de pantalla</translation>
+      <source>Wallpaper Settings</source>
+      <translation>Ajustes del fondo de pantalla</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Add your own wallpapers</source>
-      <translation>Añadir tus propios fondos de pantalla</translation>
+      <source>Configure wallpaper engine, mixer, and effects</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+0"/>
+      <source>Disabled (skwd-walld inactive)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
       <location line="+11"/>
       <source>Lock screen</source>
       <translation>Pantalla de bloqueo</translation>
@@ -13671,8 +13721,8 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+1"/>
-      <source>Dynamic, light and dark palettes</source>
-      <translation>Paletas dinámicas, claras y oscuras</translation>
+      <source>Caelestia owns color management and not skwd-wall.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
@@ -13684,56 +13734,53 @@ PIN: %1</source>
       <source>Islands, Pitch Black, Transparency</source>
       <translation>Islas, negro absoluto y transparencia</translation>
     </message>
+  </context>
+  <context>
+    <name>WallpaperCategory</name>
     <message>
-      <location line="+6"/>
-      <source>Wallpaper options</source>
-      <translation>Opciones del fondo de pantalla</translation>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperCategory.qml" line="+45"/>
+      <location line="+38"/>
+      <source>Videos</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Wallpaper Settings</source>
-      <translation>Ajustes del fondo de pantalla</translation>
+      <location line="-37"/>
+      <location line="+28"/>
+      <source>GIFs</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Display, Recolor, Desktop Icons</source>
-      <translation>Visualización, recoloreado e iconos del escritorio</translation>
+      <location line="-27"/>
+      <location line="+18"/>
+      <source>Images</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+6"/>
-      <source>Slideshow &amp; Order</source>
-      <translation>Presentación y orden</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Slideshow interval and randomization</source>
-      <translation>Intervalo de presentación y orden aleatorio</translation>
-    </message>
-    <message>
-      <location line="+7"/>
-      <source>Video Wallpapers</source>
-      <translation>Fondos de pantalla de vídeo</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Audio and pausing behavior</source>
-      <translation>Audio y comportamiento de pausa</translation>
+      <location line="-17"/>
+      <location line="+8"/>
+      <source>All</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
     <name>WallpaperSelect</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+122"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+113"/>
       <source>Select wallpaper</source>
       <translation>Seleccionar fondo de pantalla</translation>
     </message>
     <message>
-      <location line="+43"/>
+      <location line="+42"/>
+      <source>Current wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+16"/>
       <source>Browse</source>
       <translation>Explorar</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+7"/>
       <source>Select an image</source>
       <translation>Seleccionar una imagen</translation>
     </message>
@@ -13748,43 +13795,36 @@ PIN: %1</source>
       <translation>Aleatorio</translation>
     </message>
     <message>
-      <location line="+15"/>
+      <location line="+7"/>
       <source>Open folder</source>
       <translation>Abrir carpeta</translation>
     </message>
     <message>
-      <location line="+16"/>
-      <source>Featured wallpaper</source>
-      <translation>Fondo de pantalla destacado</translation>
-    </message>
-    <message>
-      <location line="+168"/>
-      <location line="+7"/>
-      <source>All</source>
-      <translation>Todos</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Images</source>
-      <translation>Imágenes</translation>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>GIFs</source>
-      <translation>GIF</translation>
-    </message>
-    <message>
-      <location line="+9"/>
+      <location line="+23"/>
+      <location line="+38"/>
       <source>Videos</source>
       <translation>Vídeos</translation>
     </message>
     <message>
-      <location line="+17"/>
-      <source>Local wallpapers</source>
-      <translation>Fondos de pantalla locales</translation>
+      <location line="-37"/>
+      <location line="+28"/>
+      <source>GIFs</source>
+      <translation>GIF</translation>
     </message>
     <message>
-      <location line="+100"/>
+      <location line="-27"/>
+      <location line="+18"/>
+      <source>Images</source>
+      <translation>Imágenes</translation>
+    </message>
+    <message>
+      <location line="-17"/>
+      <location line="+8"/>
+      <source>All</source>
+      <translation>Todos</translation>
+    </message>
+    <message>
+      <location line="+165"/>
       <source>No local wallpapers found</source>
       <translation>No se encontraron fondos de pantalla locales</translation>
     </message>
@@ -13792,49 +13832,124 @@ PIN: %1</source>
   <context>
     <name>WallpaperSettingsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+18"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+52"/>
       <source>Wallpaper Settings</source>
       <translation>Ajustes del fondo de pantalla</translation>
     </message>
     <message>
-      <location line="+3"/>
-      <source>Crop</source>
-      <translation>Recortar</translation>
+      <location line="+8"/>
+      <source>Sure?</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Reset settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+59"/>
+      <source>Configuration &amp; Tools</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Managed by skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>skwd-wall not installed</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Fit</source>
-      <translation>Ajustar</translation>
+      <source>Wallpaper settings and effects are configured directly through skwd-wall.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Download and install skwd-wall to enable these settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>General Settings</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Stretch</source>
-      <translation>Estirar</translation>
+      <source>Configure wallpaper engine and display options</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+30"/>
-      <source>Wallpaper scaling</source>
-      <translation>Escala del fondo de pantalla</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>How the wallpaper image fits the screen</source>
-      <translation>Cómo se ajusta la imagen del fondo de pantalla a la pantalla</translation>
-    </message>
-    <message>
-      <location line="+17"/>
-      <source>Recolor wallpaper</source>
-      <translation>Recolorear fondo de pantalla</translation>
+      <location line="+8"/>
+      <source>Wallpaper Mixer</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Tint the wallpaper to match static color schemes</source>
-      <translation>Teñir el fondo de pantalla para que coincida con los esquemas de colores estáticos</translation>
+      <source>Blend and layer multiple wallpapers</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+19"/>
-      <source>Recolor strength</source>
-      <translation>Intensidad del recoloreado</translation>
+      <location line="+9"/>
+      <source>Shaders &amp; Effects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Post-processing, blur, and visual filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Playlists &amp; Automation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Playlists &amp; Slideshows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage wallpaper playlists and transition intervals</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Schedule &amp; Timers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Time-based wallpaper rules and schedules</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Shortcuts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>skwd-wall</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch skwd-wall wallpaper changer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Caelestia</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launch Caelestia wallpaper changer</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

@@ -265,4 +265,11 @@ test_visualizer_sh_entrypoint_and_fallbacks() {
         "visualizer.sh must support direct CLI execution"
 }
 
+test_visualizer_effective_enabled_player_condition() {
+    assert_file_contains "$WIDGETS_QML" "readonly property bool isPlayerPlaying:" \
+        "PlasmaWidgets.qml must define isPlayerPlaying condition"
+    assert_file_contains "$WIDGETS_QML" "isPlayerPlaying &&" \
+        "visualizerEffectiveEnabled must require isPlayerPlaying"
+}
+
 run_tests

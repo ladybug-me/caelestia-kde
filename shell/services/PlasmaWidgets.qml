@@ -36,9 +36,19 @@ Singleton {
     readonly property string visualizerProfile: Config.background.visualiser.profile
     readonly property bool visualizerAutoHide: Config.background.visualiser.autoHide
     readonly property bool visualizerHideOnAllMonitors: Config.background.visualiser.hideOnAllMonitors
+    readonly property bool isPlayerPlaying: {
+        if (Players.active?.isPlaying)
+            return true;
+        const list = Players.list;
+        for (let i = 0; i < list.length; i++) {
+            if (list[i]?.isPlaying)
+                return true;
+        }
+        return false;
+    }
     readonly property bool windowHidesVisualizer: (Kwin.windowList, Kwin.activeWsId, Kwin.activeByOutput, Kwin.windowHidesDesktopWidgets(root.primaryScreen ? root.primaryScreen.name : "", visualizerHideOnAllMonitors))
     readonly property bool gameModeSuppressesVisualizer: GameMode.enabled && GlobalConfig.utilities.gameMode.disableVisualizer
-    readonly property bool visualizerEffectiveEnabled: visualizerEnabled && root.hasVisualizer && !gameModeSuppressesVisualizer && (!visualizerAutoHide || !windowHidesVisualizer)
+    readonly property bool visualizerEffectiveEnabled: visualizerEnabled && root.hasVisualizer && isPlayerPlaying && !gameModeSuppressesVisualizer && (!visualizerAutoHide || !windowHidesVisualizer)
 
     property bool hasVisualizer: false
     property bool visualizerActive: false
@@ -230,6 +240,7 @@ Singleton {
     onVisualizerEffectiveEnabledChanged: {
         if (!ready)
             return;
+        visualizerStateTimer.interval = visualizerEffectiveEnabled ? 100 : 1000;
         visualizerStateTimer.restart();
     }
 
@@ -244,7 +255,7 @@ Singleton {
         Qt.callLater(() => {
             root.ready = true;
             root.visualizerActive = root.visualizerEffectiveEnabled;
-            if (root.visualizerAutoHide && !root.visualizerEffectiveEnabled && root.visualizerEnabled) {
+            if (!root.visualizerEffectiveEnabled && root.visualizerEnabled) {
                 root.disableWidget("visualizer");
             } else if (root.visualizerEffectiveEnabled) {
                 root.scheduleSync();

@@ -292,7 +292,7 @@ StyledRect {
                     root.visibilities.utilities = false;
                     execTimer.pendingAction = () => WindowFactory.create(null, {
                         initialPageIdx: pageIdx,
-                        initialSubPageIdx: 6
+                        initialSubPageIdx: 5
                     });
                     execTimer.restart();
                 }

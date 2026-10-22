@@ -1670,7 +1670,7 @@
       <translation>ARPCに追加する開いているウィンドウを選択します</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+107"/>
       <source>Custom label (optional) - use {class}, {title}</source>
       <translation>カスタムラベル (任意) - {class}、 {title}を使用</translation>
     </message>
@@ -1690,7 +1690,7 @@
       <translation>起動中のSteamゲームを選択して配信を阻止する</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Steam App ID: %1</source>
       <translation type="unfinished"/>
     </message>
@@ -2213,17 +2213,17 @@
       <translation>左ゾーン</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>中央ゾーン</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>右ゾーン</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>ライブラリ</translation>
     </message>
@@ -4358,12 +4358,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+238"/>
+      <location line="+239"/>
       <source>Add Shortcut...</source>
       <translation>ショートカットを追加...</translation>
     </message>
     <message>
-      <location line="-154"/>
+      <location line="-155"/>
       <source>Right Click Menu</source>
       <translation>右クリックメニュー</translation>
     </message>
@@ -4383,7 +4383,7 @@
       <translation>空のメニュー</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>ライブラリ</translation>
     </message>
@@ -5458,7 +5458,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
+      <location line="+2"/>
       <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
@@ -9242,7 +9242,7 @@ Now go touch grass</source>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+188"/>
       <source>Page under construction</source>
       <translation>建設中のページ</translation>
     </message>
@@ -11650,7 +11650,7 @@ PIN: %1</source>
       <translation>ワークスペース 10 に切り替える</translation>
     </message>
     <message>
-      <location line="+103"/>
+      <location line="+105"/>
       <source>Open dock entry 1</source>
       <translation type="unfinished"/>
     </message>

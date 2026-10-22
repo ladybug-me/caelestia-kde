@@ -1670,7 +1670,7 @@
       <translation>Sélectionnez une fenêtre ouverte à ajouter à ARPC</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+107"/>
       <source>Custom label (optional) - use {class}, {title}</source>
       <translation>Étiquette personnalisée (facultative) - utiliser {class}, {title}</translation>
     </message>
@@ -1690,7 +1690,7 @@
       <translation>Sélectionnez un jeu Steam ouvert pour l&apos;empêcher de diffuser</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Steam App ID: %1</source>
       <translation>ID d&apos;app Steam : %1</translation>
     </message>
@@ -2213,17 +2213,17 @@
       <translation>Zone de gauche</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Zone du milieu</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Zone de droite</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Bibliothèque</translation>
     </message>
@@ -4358,12 +4358,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+238"/>
+      <location line="+239"/>
       <source>Add Shortcut...</source>
       <translation>Ajouter un raccourci...</translation>
     </message>
     <message>
-      <location line="-154"/>
+      <location line="-155"/>
       <source>Right Click Menu</source>
       <translation>Menu clic droit</translation>
     </message>
@@ -4383,7 +4383,7 @@
       <translation>Menu vide</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Bibliothèque</translation>
     </message>
@@ -5460,7 +5460,7 @@ Allez maintenant prendre l&apos;air</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
+      <location line="+2"/>
       <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
@@ -9244,7 +9244,7 @@ Allez maintenant prendre l&apos;air</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+188"/>
       <source>Page under construction</source>
       <translation>Page en construction</translation>
     </message>
@@ -11656,7 +11656,7 @@ PIN : %1</translation>
       <translation>Basculer vers l&apos;espace de travail 10</translation>
     </message>
     <message>
-      <location line="+103"/>
+      <location line="+105"/>
       <source>Open dock entry 1</source>
       <translation>Ouvrir l&apos;entrée 1 du dock</translation>
     </message>

@@ -1670,7 +1670,7 @@
       <translation>Vyberte otevřené okno pro přidání do ARPC</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+107"/>
       <source>Custom label (optional) - use {class}, {title}</source>
       <translation>Vlastní štítek (volitelné) - použít {class}, {title}</translation>
     </message>
@@ -1690,7 +1690,7 @@
       <translation>Vyberte otevřenou Steam hru, aby se zabránilo vysílání</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Steam App ID: %1</source>
       <translation type="unfinished"/>
     </message>
@@ -2213,17 +2213,17 @@
       <translation>Levá zóna</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Střední zóna</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Pravá zóna</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Knihovna</translation>
     </message>
@@ -4358,12 +4358,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+238"/>
+      <location line="+239"/>
       <source>Add Shortcut...</source>
       <translation>Přidat zkratku...</translation>
     </message>
     <message>
-      <location line="-154"/>
+      <location line="-155"/>
       <source>Right Click Menu</source>
       <translation>Nabídka pravého tlačítka</translation>
     </message>
@@ -4383,7 +4383,7 @@
       <translation>Prázdné menu</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Knihovna</translation>
     </message>
@@ -5458,7 +5458,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
+      <location line="+2"/>
       <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
@@ -9242,7 +9242,7 @@ Now go touch grass</source>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+188"/>
       <source>Page under construction</source>
       <translation>Stránka je ve výstavbě</translation>
     </message>
@@ -11650,7 +11650,7 @@ PIN: %1</source>
       <translation>Přepnout na pracovní prostor 10</translation>
     </message>
     <message>
-      <location line="+103"/>
+      <location line="+105"/>
       <source>Open dock entry 1</source>
       <translation type="unfinished"/>
     </message>

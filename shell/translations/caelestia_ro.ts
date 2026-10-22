@@ -1670,7 +1670,7 @@
       <translation>Selectaţi o fereastră deschisă pentru a adăuga la ARPC</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+107"/>
       <source>Custom label (optional) - use {class}, {title}</source>
       <translation>Etichetă personalizată (opțională) - utilizați {class}, {title}</translation>
     </message>
@@ -1690,7 +1690,7 @@
       <translation>Selectaţi un joc deschis Steam pentru a-l împiedica să difuzeze</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Steam App ID: %1</source>
       <translation>ID-ul aplicației Steam: %1</translation>
     </message>
@@ -2213,17 +2213,17 @@
       <translation>Zonă din stânga</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Zonă mijlocie</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Zona din dreapta</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Bibliotecă</translation>
     </message>
@@ -4358,12 +4358,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+238"/>
+      <location line="+239"/>
       <source>Add Shortcut...</source>
       <translation>Adaugă scurtătură...</translation>
     </message>
     <message>
-      <location line="-154"/>
+      <location line="-155"/>
       <source>Right Click Menu</source>
       <translation>Meniu clic dreapta</translation>
     </message>
@@ -4383,7 +4383,7 @@
       <translation>Meniu gol</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Bibliotecă</translation>
     </message>
@@ -5460,7 +5460,7 @@ Acum atinge iarba</translation>
       <translation>Actualizare Shimeji Cat</translation>
     </message>
     <message>
-      <location line="+3"/>
+      <location line="+2"/>
       <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation>Acum pot fi invocați mai mulți Shimeji Cats simultan. De asemenea, a fost implementată o remediere pentru problema în care pisica se ascundea la clic pe desktop. Actualizează din magazinul de pluginuri pentru a avea acces la noile funcții!</translation>
     </message>
@@ -9244,7 +9244,7 @@ Acum atinge iarba</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+188"/>
       <source>Page under construction</source>
       <translation>Pagină în construcție</translation>
     </message>
@@ -11657,7 +11657,7 @@ PIN: %1</translation>
       <translation>Comutați la spațiul de lucru 10</translation>
     </message>
     <message>
-      <location line="+103"/>
+      <location line="+105"/>
       <source>Open dock entry 1</source>
       <translation>Deschide intrarea 1 în doc</translation>
     </message>
@@ -13929,32 +13929,32 @@ PIN: %1</translation>
     <message>
       <location line="+1"/>
       <source>Time-based wallpaper rules and schedules</source>
-      <translation type="unfinished"/>
+      <translation>Reguli și programe pentru imagini de fundal în funcție de oră</translation>
     </message>
     <message>
       <location line="+8"/>
       <source>Shortcuts</source>
-      <translation type="unfinished"/>
+      <translation>Comenzi rapide</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>skwd-wall</source>
-      <translation type="unfinished"/>
+      <translation>skwd-wall</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Launch skwd-wall wallpaper changer</source>
-      <translation type="unfinished"/>
+      <translation>Lansează schimbătorul imaginii de fundal skwd-wall</translation>
     </message>
     <message>
       <location line="+14"/>
       <source>Caelestia</source>
-      <translation type="unfinished"/>
+      <translation>Caelestia</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>Launch Caelestia wallpaper changer</source>
-      <translation type="unfinished"/>
+      <translation>Lansați schimbătorul imaginii de fundal Caelestia</translation>
     </message>
   </context>
   <context>

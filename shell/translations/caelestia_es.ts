@@ -1670,7 +1670,7 @@
       <translation>Selecciona una ventana abierta para añadirla a ARPC</translation>
     </message>
     <message>
-      <location line="+106"/>
+      <location line="+107"/>
       <source>Custom label (optional) - use {class}, {title}</source>
       <translation>Etiqueta personalizada (opcional): usa {class}, {title}</translation>
     </message>
@@ -1690,7 +1690,7 @@
       <translation>Selecciona un juego de Steam abierto para impedir que se difunda</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Steam App ID: %1</source>
       <translation>ID de aplicación de Steam: %1</translation>
     </message>
@@ -2213,17 +2213,17 @@
       <translation>Zona izquierda</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Middle Zone</source>
       <translation>Zona central</translation>
     </message>
     <message>
-      <location line="+55"/>
+      <location line="+56"/>
       <source>Right Zone</source>
       <translation>Zona derecha</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Biblioteca</translation>
     </message>
@@ -4358,12 +4358,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+238"/>
+      <location line="+239"/>
       <source>Add Shortcut...</source>
       <translation>Añadir acceso directo...</translation>
     </message>
     <message>
-      <location line="-154"/>
+      <location line="-155"/>
       <source>Right Click Menu</source>
       <translation>Menú del clic derecho</translation>
     </message>
@@ -4383,7 +4383,7 @@
       <translation>Menú vacío</translation>
     </message>
     <message>
-      <location line="+60"/>
+      <location line="+61"/>
       <source>Library</source>
       <translation>Biblioteca</translation>
     </message>
@@ -5460,7 +5460,7 @@ Ahora salir a tocar el pasto</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
+      <location line="+2"/>
       <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
       <translation type="unfinished"/>
     </message>
@@ -9244,7 +9244,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+340"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+188"/>
       <source>Page under construction</source>
       <translation>Página en construcción</translation>
     </message>
@@ -11652,7 +11652,7 @@ PIN: %1</source>
       <translation>Cambiar al espacio de trabajo 10</translation>
     </message>
     <message>
-      <location line="+103"/>
+      <location line="+105"/>
       <source>Open dock entry 1</source>
       <translation>Abrir la entrada 1 del dock</translation>
     </message>

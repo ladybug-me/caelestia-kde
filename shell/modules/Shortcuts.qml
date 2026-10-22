@@ -491,10 +491,12 @@ Scope {
             WindowFactory.create();
         }
         function openPage(pageIdx: string, subPageIdx: string): void {
-            const hasSubPage = subPageIdx !== "-1" && subPageIdx !== "";
+            const hasSubPage = subPageIdx !== "-1" && subPageIdx !== "" && subPageIdx !== undefined;
+            const parsedSub = hasSubPage ? (/^\d+$/.test(subPageIdx) ? parseInt(subPageIdx) : subPageIdx) : -1;
+            const parsedPage = /^\d+$/.test(pageIdx) ? parseInt(pageIdx) : pageIdx;
             WindowFactory.create(null, {
-                initialPageIdx: parseInt(pageIdx),
-                initialSubPageIdx: hasSubPage ? parseInt(subPageIdx) : -1
+                initialPageIdx: parsedPage,
+                initialSubPageIdx: parsedSub
             });
         }
         function close(): void {

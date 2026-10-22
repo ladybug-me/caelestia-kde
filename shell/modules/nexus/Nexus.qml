@@ -14,14 +14,14 @@ Item {
     id: root
 
     property int initialPageIdx: 0
-    property int initialSubPageIdx: -1
+    property var initialSubPageIdx: -1
 
     readonly property NexusState nState: NexusState {
         id: nState
 
         currentPageIdx: root.initialPageIdx
         Component.onCompleted: {
-            if (root.initialSubPageIdx !== -1)
+            if (root.initialSubPageIdx !== -1 && root.initialSubPageIdx !== undefined && root.initialSubPageIdx !== "")
                 openSubPage(root.initialSubPageIdx);
         }
 

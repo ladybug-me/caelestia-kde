@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import Caelestia.Config
@@ -8,17 +10,34 @@ StackView {
     id: root
 
     required property NexusState nState
-    default property list<Component> pages
+    default property list<QtObject> pages
     readonly property int animMovement: Tokens.padding.extraExtraLarge * 2
+    readonly property var slotMap: ({})
 
-    function openSubPage(idx: int, immediate: bool): void {
-        const page = pages[idx];
+    function buildSlotMap(): void {
+        for (let i = 0; i < pages.length; i++) {
+            const item = pages[i];
+            if (!item)
+                continue;
+            if (item.component !== undefined) {
+                const s = item.slot >= 0 ? item.slot : i;
+                slotMap[s] = item.component;
+                if (item.key)
+                    slotMap[item.key] = item.component;
+            } else {
+                slotMap[i] = item;
+            }
+        }
+    }
+
+    function openSubPage(target: var, immediate: bool): void {
+        const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
         if (page) {
             push(page, {
                 nState
             }, immediate ? StackView.Immediate : StackView.PushTransition);
         } else {
-            console.warn(logCat, "Attempted to open invalid sub-page index", idx);
+            console.warn(logCat, "Attempted to open invalid sub-page slot/key:", target);
             nState.closeSubPage();
         }
     }
@@ -26,14 +45,15 @@ StackView {
     clip: busy
 
     Component.onCompleted: {
-        openSubPage(0, true);
-        if (nState.pendingSubPageIdx >= 0) {
+        root.buildSlotMap();
+        root.openSubPage(0, true);
+        if (nState.pendingSubPageIdx !== -1 && nState.pendingSubPageIdx !== undefined && nState.pendingSubPageIdx !== "") {
             const pending = nState.pendingSubPageIdx;
             nState.pendingSubPageIdx = -1;
             nState.subPageIdxStack.push(pending);
         }
         for (const page of nState.subPageIdxStack)
-            openSubPage(page, true);
+            root.openSubPage(page, true);
     }
 
     pushEnter: Transition {
@@ -110,8 +130,8 @@ StackView {
     }
 
     Connections {
-        function onSubPageOpened(idx: int): void {
-            root.openSubPage(idx, false);
+        function onSubPageOpened(target: var): void {
+            root.openSubPage(target, false);
         }
 
         function onSubPageClosed(): void {

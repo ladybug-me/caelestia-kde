@@ -18,14 +18,21 @@ Singleton {
         props = props || {};
         if (root.openWindow) {
             const win = root.openWindow;
-            if (props.initialPageIdx !== undefined)
-                win.nexus.nState.goToSubPage(props.initialPageIdx, props.initialSubPageIdx ?? -1);
+            if (props.initialPageIdx !== undefined) {
+                const pageIdx = typeof props.initialPageIdx === "string"
+                    ? PageRegistry.indexForKey(props.initialPageIdx)
+                    : props.initialPageIdx;
+                win.nexus.nState.goToSubPage(pageIdx, props.initialSubPageIdx ?? -1);
+            }
             win.visible = true;
             win.raise();
             Logger.mark("nexus=reused");
             return win;
         }
-        const win = nexusComp.createObject(parent ?? dummy, props);
+        const resolvedProps = Object.assign({}, props);
+        if (typeof resolvedProps.initialPageIdx === "string")
+            resolvedProps.initialPageIdx = PageRegistry.indexForKey(resolvedProps.initialPageIdx);
+        const win = nexusComp.createObject(parent ?? dummy, resolvedProps);
         root.openWindow = win;
         Logger.mark("nexus=created");
         return win;
@@ -49,7 +56,7 @@ Singleton {
             property alias nexus: nexus
 
             property int initialPageIdx: 0
-            property int initialSubPageIdx: -1
+            property var initialSubPageIdx: -1
 
             function raise(): void {
                 const pageTitles = PageRegistry.pages.map(p => p.label);

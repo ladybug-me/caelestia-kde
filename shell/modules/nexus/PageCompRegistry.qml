@@ -27,298 +27,146 @@ QtObject {
     readonly property list<Component> pageComps: [
         Component {
             StackPage {
-                Component {
-                    WallpaperAndStyle {}
-                }
-                Component {
-                    WallpaperSelect {}
-                }
-                Component {
-                    WallpaperCategory {}
-                }
-                Component {
-                    ColourSelect {}
-                }
-                Component {
-                    WallhavenPage {}
-                }
-                Component {
-                    WallpaperSettingsPage {}
-                }
-                Component {
-                    LibraryAndCommunityPage {}
-                }
-                Component {
-                    AppearancePage {}
-                }
-                Component {
-                    LockScreenPage {}
-                }
-                Component {
-                    AdvancedColorsPage {}
-                }
+                SubPage { slot: 0; key: "wallpaperAndStyle"; Component { WallpaperAndStyle {} } }
+                SubPage { slot: 1; key: "wallpaperSelect"; Component { WallpaperSelect {} } }
+                SubPage { slot: 2; key: "wallpaperCategory"; Component { WallpaperCategory {} } }
+                SubPage { slot: 3; key: "colourSelect"; Component { ColourSelect {} } }
+                SubPage { slot: 4; key: "wallhaven"; Component { WallhavenPage {} } }
+                SubPage { slot: 5; key: "wallpaperSettings"; Component { WallpaperSettingsPage {} } }
+                SubPage { slot: 6; key: "libraryAndCommunity"; Component { LibraryAndCommunityPage {} } }
+                SubPage { slot: 7; key: "appearance"; Component { AppearancePage {} } }
+                SubPage { slot: 8; key: "lockScreen"; Component { LockScreenPage {} } }
+                SubPage { slot: 9; key: "advancedColors"; Component { AdvancedColorsPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    DesktopPage {}
-                }
-                Component {
-                    DesktopAddonsPage {}
-                }
-                Component {
-                    ContextMenuPage {}
-                }
-                Component {
-                    KrohnkitePage {}
-                }
+                SubPage { slot: 0; key: "desktop"; Component { DesktopPage {} } }
+                SubPage { slot: 1; key: "desktopAddons"; Component { DesktopAddonsPage {} } }
+                SubPage { slot: 2; key: "contextMenu"; Component { ContextMenuPage {} } }
+                SubPage { slot: 3; key: "krohnkite"; Component { KrohnkitePage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    PanelsPage {}
-                }
-                Component {
-                    DashboardPanel {}
-                }
-                Component {
-                    TaskbarPanel {}
-                }
-                Component {
-                    LauncherPanel {}
-                }
-                Component {
-                    SidebarPanel {}
-                }
-                Component {
-                    UtilitiesPanel {}
-                }
-                Component {
-                    BarComponents {}
-                }
-                Component {
-                    BarWorkspaces {}
-                }
-                Component {
-                    BarGreeter {}
-                }
-                Component {
-                    BarTray {}
-                }
-                Component {
-                    BarStatusIcons {}
-                }
-                Component {
-                    BarClock {}
-                }
-                Component {
-                    BarDock {}
-                }
-                Component {
-                    BarGithub {}
-                }
-                Component {
-                    BarPreviewScales {}
-                }
-                Component {
-                    TaskbarElements {}
-                }
-                Component {
-                    OverviewPanel {}
-                }
-                Component {
-                    BarUpdates {}
-                }
-                Component {
-                    TabSwitcherPanel {}
-                }
-                Component {
-                    BarMedia {}
-                }
-                Component {
-                    BarWeather {}
-                }
-                Component {
-                    BarPerformance {}
-                }
-                Component {
-                    BarScreenCapture {}
-                }
-                Component {
-                    BarKeepAwake {}
-                }
+                SubPage { slot: 0; key: "panels"; Component { PanelsPage {} } }
+                SubPage { slot: 1; key: "dashboard"; Component { DashboardPanel {} } }
+                SubPage { slot: 2; key: "taskbar"; Component { TaskbarPanel {} } }
+                SubPage { slot: 3; key: "launcher"; Component { LauncherPanel {} } }
+                SubPage { slot: 4; key: "sidebar"; Component { SidebarPanel {} } }
+                SubPage { slot: 5; key: "utilitiesPanel"; Component { UtilitiesPanel {} } }
+                SubPage { slot: 6; key: "barComponents"; Component { BarComponents {} } }
+                SubPage { slot: 7; key: "barWorkspaces"; Component { BarWorkspaces {} } }
+                SubPage { slot: 8; key: "barGreeter"; Component { BarGreeter {} } }
+                SubPage { slot: 9; key: "barTray"; Component { BarTray {} } }
+                SubPage { slot: 10; key: "barStatusIcons"; Component { BarStatusIcons {} } }
+                SubPage { slot: 11; key: "barClock"; Component { BarClock {} } }
+                SubPage { slot: 12; key: "barDock"; Component { BarDock {} } }
+                SubPage { slot: 13; key: "barGithub"; Component { BarGithub {} } }
+                SubPage { slot: 14; key: "barPreviewScales"; Component { BarPreviewScales {} } }
+                SubPage { slot: 15; key: "taskbarElements"; Component { TaskbarElements {} } }
+                SubPage { slot: 16; key: "overview"; Component { OverviewPanel {} } }
+                SubPage { slot: 17; key: "barUpdates"; Component { BarUpdates {} } }
+                SubPage { slot: 18; key: "tabSwitcher"; Component { TabSwitcherPanel {} } }
+                SubPage { slot: 19; key: "barMedia"; Component { BarMedia {} } }
+                SubPage { slot: 20; key: "barWeather"; Component { BarWeather {} } }
+                SubPage { slot: 21; key: "barPerformance"; Component { BarPerformance {} } }
+                SubPage { slot: 22; key: "barScreenCapture"; Component { BarScreenCapture {} } }
+                SubPage { slot: 23; key: "barKeepAwake"; Component { BarKeepAwake {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    NetworkPage {}
-                }
-                Component {
-                    EthernetDetailPage {}
-                }
-                Component {
-                    AddNetworkPage {}
-                }
-                Component {
-                    NetworkDetailPage {}
-                }
-                Component {
-                    AddVpnPage {}
-                }
-                Component {
-                    AllNetworksPage {}
-                }
-                Component {
-                    SavedNetworksPage {}
-                }
-                Component {
-                    HotspotPage {}
-                }
+                SubPage { slot: 0; key: "network"; Component { NetworkPage {} } }
+                SubPage { slot: 1; key: "ethernetDetail"; Component { EthernetDetailPage {} } }
+                SubPage { slot: 2; key: "addNetwork"; Component { AddNetworkPage {} } }
+                SubPage { slot: 3; key: "networkDetail"; Component { NetworkDetailPage {} } }
+                SubPage { slot: 4; key: "addVpn"; Component { AddVpnPage {} } }
+                SubPage { slot: 5; key: "allNetworks"; Component { AllNetworksPage {} } }
+                SubPage { slot: 6; key: "savedNetworks"; Component { SavedNetworksPage {} } }
+                SubPage { slot: 7; key: "hotspot"; Component { HotspotPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    BluetoothPage {}
-                }
-                Component {
-                    BtDeviceInfo {}
-                }
-                Component {
-                    BluetoothPairing {}
-                }
+                SubPage { slot: 0; key: "bluetooth"; Component { BluetoothPage {} } }
+                SubPage { slot: 1; key: "btDeviceInfo"; Component { BtDeviceInfo {} } }
+                SubPage { slot: 2; key: "bluetoothPairing"; Component { BluetoothPairing {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    AudioPage {}
-                }
-                Component {
-                    AppVolumes {}
-                }
-                Component {
-                    SoundEffectsPage {}
-                }
-                Component {
-                    NotificationSilencingPage {}
-                }
+                SubPage { slot: 0; key: "audio"; Component { AudioPage {} } }
+                SubPage { slot: 1; key: "appVolumes"; Component { AppVolumes {} } }
+                SubPage { slot: 2; key: "soundEffects"; Component { SoundEffectsPage {} } }
+                SubPage { slot: 3; key: "notificationSilencing"; Component { NotificationSilencingPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    NotificationsPage {}
-                }
-                Component {
-                    NotificationPreferencesPage {}
-                }
-                Component {
-                    ToastPreferencesPage {}
-                }
-                Component {
-                    ToastEventsPage {}
-                }
+                SubPage { slot: 0; key: "notifications"; Component { NotificationsPage {} } }
+                SubPage { slot: 1; key: "notificationPreferences"; Component { NotificationPreferencesPage {} } }
+                SubPage { slot: 2; key: "toastPreferences"; Component { ToastPreferencesPage {} } }
+                SubPage { slot: 3; key: "toastEvents"; Component { ToastEventsPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    UtilitiesPage {}
-                }
-                Component {
-                    GameModePage {}
-                }
-                Component {
-                    GameModeTargetsPage {}
-                }
-                Component {
-                    OsdPage {}
-                }
-                Component {
-                    UtilitiesPanelPage {}
-                }
-                Component {
-                    QuickTogglesPage {}
-                }
-                Component {
-                    QuickSharePage {}
-                }
+                SubPage { slot: 0; key: "utilities"; Component { UtilitiesPage {} } }
+                SubPage { slot: 1; key: "gameMode"; Component { GameModePage {} } }
+                SubPage { slot: 2; key: "gameModeTargets"; Component { GameModeTargetsPage {} } }
+                SubPage { slot: 3; key: "osd"; Component { OsdPage {} } }
+                SubPage { slot: 4; key: "utilitiesPanelPage"; Component { UtilitiesPanelPage {} } }
+                SubPage { slot: 5; key: "quickToggles"; Component { QuickTogglesPage {} } }
+                SubPage { slot: 6; key: "quickShare"; Component { QuickSharePage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    SessionPage {}
-                }
+                SubPage { slot: 0; key: "session"; Component { SessionPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    ShortcutManagerPage {}
-                }
+                SubPage { slot: 0; key: "shortcutManager"; Component { ShortcutManagerPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    AppsPage {}
-                }
-                Component {
-                    AllApps {}
-                }
-                Component {
-                    AppInfo {}
-                }
+                SubPage { slot: 0; key: "apps"; Component { AppsPage {} } }
+                SubPage { slot: 1; key: "allApps"; Component { AllApps {} } }
+                SubPage { slot: 2; key: "appInfo"; Component { AppInfo {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    ServicesPage {}
-                }
-                Component {
-                    ArpcPage {}
-                }
+                SubPage { slot: 0; key: "services"; Component { ServicesPage {} } }
+                SubPage { slot: 1; key: "arpc"; Component { ArpcPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    LanguageAndRegion {}
-                }
+                SubPage { slot: 0; key: "language"; Component { LanguageAndRegion {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    UpdatesPage {}
-                }
+                SubPage { slot: 0; key: "updates"; Component { UpdatesPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    PluginsPage {}
-                }
+                SubPage { slot: 0; key: "plugins"; Component { PluginsPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    AboutPage {}
-                }
+                SubPage { slot: 0; key: "about"; Component { AboutPage {} } }
             }
         },
         Component {
             StackPage {
-                Component {
-                    AiSettingsPage {}
-                }
+                SubPage { slot: 0; key: "ai"; Component { AiSettingsPage {} } }
             }
         }
     ]

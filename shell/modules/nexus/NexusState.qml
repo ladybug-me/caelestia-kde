@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import Quickshell
 import Quickshell.Bluetooth
@@ -7,7 +9,7 @@ QtObject {
     property bool isWindow
     property bool animatingContainer
     property int currentPageIdx
-    property list<int> subPageIdxStack
+    property var subPageIdxStack: []
     property bool searchOpen
     property string searchQuery
 
@@ -22,23 +24,23 @@ QtObject {
 
     property string pendingNetworkSsid: ""
 
-    property int pendingSubPageIdx: -1
+    property var pendingSubPageIdx: -1
 
     signal close
-    signal subPageOpened(idx: int)
+    signal subPageOpened(target: var)
     signal subPageClosed
 
-    function openSubPage(idx: int): void {
-        subPageIdxStack.push(idx);
-        subPageOpened(idx);
+    function openSubPage(target: var): void {
+        subPageIdxStack.push(target);
+        subPageOpened(target);
     }
 
     // Navigation that changes page, such as a search result. Landing on the
     // page that is already showing still opens immediately: nothing to wait for.
-    function goToSubPage(pageIdx: int, subPageIdx: int): void {
+    function goToSubPage(pageIdx: int, subPageIdx: var): void {
         if (pageIdx === currentPageIdx) {
             pendingSubPageIdx = -1;
-            if (subPageIdx >= 0)
+            if (subPageIdx !== -1 && subPageIdx !== undefined && subPageIdx !== "")
                 openSubPage(subPageIdx);
             return;
         }

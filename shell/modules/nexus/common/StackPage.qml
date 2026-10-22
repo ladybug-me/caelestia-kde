@@ -47,7 +47,7 @@ StackView {
     Component.onCompleted: {
         root.buildSlotMap();
         root.openSubPage(0, true);
-        if (nState.pendingSubPageIdx !== -1 && nState.pendingSubPageIdx !== undefined && nState.pendingSubPageIdx !== "") {
+        if (nState.pendingSubPageIdx >= 0) {
             const pending = nState.pendingSubPageIdx;
             nState.pendingSubPageIdx = -1;
             nState.subPageIdxStack.push(pending);

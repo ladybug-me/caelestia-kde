@@ -24,7 +24,7 @@ QtObject {
 
     property string pendingNetworkSsid: ""
 
-    property var pendingSubPageIdx: -1
+    property int pendingSubPageIdx: -1
 
     signal close
     signal subPageOpened(target: var)
@@ -37,10 +37,10 @@ QtObject {
 
     // Navigation that changes page, such as a search result. Landing on the
     // page that is already showing still opens immediately: nothing to wait for.
-    function goToSubPage(pageIdx: int, subPageIdx: var): void {
+    function goToSubPage(pageIdx: int, subPageIdx: int): void {
         if (pageIdx === currentPageIdx) {
             pendingSubPageIdx = -1;
-            if (subPageIdx !== -1 && subPageIdx !== undefined && subPageIdx !== "")
+            if (subPageIdx >= 0)
                 openSubPage(subPageIdx);
             return;
         }

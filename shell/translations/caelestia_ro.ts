@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+230"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+233"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Potriviți de un regex în favoriteApps - editați fișierul de configurare pentru a schimba</translation>
     </message>
@@ -2178,7 +2178,7 @@
       <translation>Meteo</translation>
     </message>
     <message>
-      <location line="+204"/>
+      <location line="+229"/>
       <source>Not detected</source>
       <translation>Nu este detectat</translation>
     </message>
@@ -3194,7 +3194,7 @@
   <context>
     <name>BarTray</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/taskbar/BarTray.qml" line="+11"/>
+      <location filename="../modules/nexus/pages/panels/taskbar/BarTray.qml" line="+15"/>
       <source>Tray</source>
       <translation>Tavă</translation>
     </message>
@@ -3222,6 +3222,36 @@
       <location line="+1"/>
       <source>Show the tray menu popout when hovering</source>
       <translation>Arată pagina din meniu a tăviței când plutește</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Icons</source>
+      <translation>Pictograme</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Every icon stays on the bar while Compact is off, so Collapse applies once it is on.</source>
+      <translation>Fiecare pictogramă rămâne pe bară în timp ce Compact este închis, astfel încât Restrâns se aplică odată ce este pornit.</translation>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Not running</source>
+      <translation>Nu rulează</translation>
+    </message>
+    <message>
+      <location line="+49"/>
+      <source>Forget</source>
+      <translation>Uită</translation>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>No tray icons have been seen yet.</source>
+      <translation>Nici o pictogramă nu a fost văzută încă.</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Drag a row to change the order</source>
+      <translation>Trage un rând pentru a schimba ordinea</translation>
     </message>
   </context>
   <context>
@@ -4050,7 +4080,7 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+85"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+80"/>
       <source>Greeter settings</source>
       <translation>Setări de bun venit</translation>
     </message>
@@ -4307,7 +4337,7 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+195"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+242"/>
       <source>Delete</source>
       <translation>Ștergere</translation>
     </message>
@@ -4358,17 +4388,17 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+239"/>
+      <location line="+267"/>
       <source>Add Shortcut...</source>
       <translation>Adaugă scurtătură...</translation>
     </message>
     <message>
-      <location line="-155"/>
+      <location line="-183"/>
       <source>Right Click Menu</source>
       <translation>Meniu clic dreapta</translation>
     </message>
     <message>
-      <location line="+59"/>
+      <location line="+87"/>
       <source>Active menu items</source>
       <translation>Elemente meniu activ</translation>
     </message>
@@ -4411,24 +4441,9 @@
       <translation>Lipește</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Add Widget</source>
-      <translation>Adaugă widget</translation>
-    </message>
-    <message>
-      <location line="+1"/>
+      <location line="+2"/>
       <source>Arrange Icons</source>
       <translation>Aranjează pictogramele</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Lock Widgets</source>
-      <translation>Blochează widget-urile</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Widget Outlines</source>
-      <translation>Contururi widget</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -4464,6 +4479,27 @@
       <location line="+1"/>
       <source>Add Shortcut...</source>
       <translation>Adaugă scurtătură...</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Add Widget</source>
+      <translation>Adaugă widget</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lock Widgets</source>
+      <translation>Blochează widget-urile</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Widget Outlines</source>
+      <translation>Contururi widget</translation>
+    </message>
+    <message>
+      <location line="+5"/>
+      <location line="+66"/>
+      <source>Widgets</source>
+      <translation>Widget-uri</translation>
     </message>
   </context>
   <context>
@@ -4906,17 +4942,7 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
-      <source>Hide Desktop Icons</source>
-      <translation>Ascunde pictogramele de pe desktop</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Show Desktop Icons</source>
-      <translation>Afișează pictogramele de pe desktop</translation>
-    </message>
-    <message>
-      <location line="+8"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+108"/>
       <source>Lock All Widgets</source>
       <translation>Blochează toate widget-urile</translation>
     </message>
@@ -4924,6 +4950,21 @@
       <location line="+0"/>
       <source>Unlock All Widgets</source>
       <translation>Deblochează toate widget-urile</translation>
+    </message>
+    <message>
+      <location line="+52"/>
+      <source>Widgets</source>
+      <translation>Widget-uri</translation>
+    </message>
+    <message>
+      <location line="+16"/>
+      <source>Hide Desktop Icons</source>
+      <translation>Ascunde pictogramele de pe desktop</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show Desktop Icons</source>
+      <translation>Afișează pictogramele de pe desktop</translation>
     </message>
   </context>
   <context>
@@ -7533,7 +7574,7 @@ Acum atinge iarba</translation>
   <context>
     <name>LyricList</name>
     <message>
-      <location filename="../modules/dashboard/media/LyricList.qml" line="+203"/>
+      <location filename="../modules/dashboard/media/LyricList.qml" line="+209"/>
       <source>Loading lyrics...</source>
       <translation>Se încarcă versurile...</translation>
     </message>
@@ -11473,6 +11514,11 @@ PIN: %1</translation>
     </message>
     <message>
       <location line="+8"/>
+      <source>Go back in nexus</source>
+      <translation>Mergi înapoi în nexus</translation>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Toggle launcher, dashboard and osd</source>
       <translation>Comută lansatorul, tabloul de bord și osd</translation>
     </message>
@@ -11950,6 +11996,29 @@ PIN: %1</translation>
       <location line="+17"/>
       <source>No disks</source>
       <translation>Fără discuri</translation>
+    </message>
+  </context>
+  <context>
+    <name>SubmenuOrderDialog</name>
+    <message>
+      <location filename="../modules/nexus/pages/wallandstyle/SubmenuOrderDialog.qml" line="+87"/>
+      <source>Order the submenu</source>
+      <translation>Ordonează submeniul</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Drag the rows to change the order they unfold in.</source>
+      <translation>Trage rândurile pentru a modifica ordinea în care se afișează.</translation>
+    </message>
+    <message>
+      <location line="+126"/>
+      <source>Cancel</source>
+      <translation>Anulează</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Save</source>
+      <translation>Salvează</translation>
     </message>
   </context>
   <context>
@@ -12613,7 +12682,7 @@ PIN: %1</translation>
   <context>
     <name>TrayItem</name>
     <message>
-      <location filename="../modules/bar/components/TrayItem.qml" line="+34"/>
+      <location filename="../modules/bar/components/TrayItem.qml" line="+35"/>
       <source>Left-click activates, right-click opens the menu, middle-click runs the secondary action.</source>
       <translation>Click-stânga activează, click-dreapta deschide meniul, clicul-mijloc rulează acțiunea secundară.</translation>
     </message>
@@ -12629,6 +12698,24 @@ PIN: %1</translation>
       <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
       <source>Back</source>
       <translation>Înapoi</translation>
+    </message>
+  </context>
+  <context>
+    <name>TrayRegistry</name>
+    <message>
+      <location filename="../services/TrayRegistry.qml" line="+20"/>
+      <source>Always visible</source>
+      <translation>Vizibil mereu</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Collapse</source>
+      <translation>Restrânge</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hidden</source>
+      <translation>Ascuns</translation>
     </message>
   </context>
   <context>

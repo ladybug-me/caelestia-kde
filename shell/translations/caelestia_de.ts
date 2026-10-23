@@ -1262,7 +1262,7 @@
   <context>
     <name>AppTile</name>
     <message>
-      <location filename="../modules/launcher/items/AppTile.qml" line="+230"/>
+      <location filename="../modules/launcher/items/AppTile.qml" line="+233"/>
       <source>Matched by a regex in favouriteApps - edit the config file to change</source>
       <translation>Gepaart mit einem Regex in Favoriten Apps - Bearbeiten Sie die Konfigurationsdatei um sie zu ändern</translation>
     </message>
@@ -2178,7 +2178,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+204"/>
+      <location line="+229"/>
       <source>Not detected</source>
       <translation>Nicht erkannt</translation>
     </message>
@@ -3194,7 +3194,7 @@
   <context>
     <name>BarTray</name>
     <message>
-      <location filename="../modules/nexus/pages/panels/taskbar/BarTray.qml" line="+11"/>
+      <location filename="../modules/nexus/pages/panels/taskbar/BarTray.qml" line="+15"/>
       <source>Tray</source>
       <translation>Ablage</translation>
     </message>
@@ -3222,6 +3222,36 @@
       <location line="+1"/>
       <source>Show the tray menu popout when hovering</source>
       <translation>Popout des Tray-Menüs beim Bewegen anzeigen</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Every icon stays on the bar while Compact is off, so Collapse applies once it is on.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Not running</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+49"/>
+      <source>Forget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>No tray icons have been seen yet.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Drag a row to change the order</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4050,7 +4080,7 @@
   <context>
     <name>Content</name>
     <message>
-      <location filename="../modules/bar/popouts/Content.qml" line="+85"/>
+      <location filename="../modules/bar/popouts/Content.qml" line="+80"/>
       <source>Greeter settings</source>
       <translation type="unfinished"/>
     </message>
@@ -4307,7 +4337,7 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+195"/>
+      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+242"/>
       <source>Delete</source>
       <translation>Löschen</translation>
     </message>
@@ -4358,17 +4388,17 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+239"/>
+      <location line="+267"/>
       <source>Add Shortcut...</source>
       <translation>Verknüpfung hinzufügen...</translation>
     </message>
     <message>
-      <location line="-155"/>
+      <location line="-183"/>
       <source>Right Click Menu</source>
       <translation>Rechtsklick-Menü</translation>
     </message>
     <message>
-      <location line="+59"/>
+      <location line="+87"/>
       <source>Active menu items</source>
       <translation>Aktive Menüpunkte</translation>
     </message>
@@ -4411,23 +4441,8 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Add Widget</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
+      <location line="+2"/>
       <source>Arrange Icons</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Lock Widgets</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Widget Outlines</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -4464,6 +4479,27 @@
       <location line="+1"/>
       <source>Add Shortcut...</source>
       <translation>Verknüpfung hinzufügen...</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Add Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lock Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Widget Outlines</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <location line="+66"/>
+      <source>Widgets</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4906,23 +4942,28 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
-      <source>Hide Desktop Icons</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Show Desktop Icons</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+8"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+108"/>
       <source>Lock All Widgets</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+0"/>
       <source>Unlock All Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+52"/>
+      <source>Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+16"/>
+      <source>Hide Desktop Icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Show Desktop Icons</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -7531,7 +7572,7 @@ Now go touch grass</source>
   <context>
     <name>LyricList</name>
     <message>
-      <location filename="../modules/dashboard/media/LyricList.qml" line="+203"/>
+      <location filename="../modules/dashboard/media/LyricList.qml" line="+209"/>
       <source>Loading lyrics...</source>
       <translation>Lade Songtexte...</translation>
     </message>
@@ -11466,6 +11507,11 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+8"/>
+      <source>Go back in nexus</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Toggle launcher, dashboard and osd</source>
       <translation>Launcher, Dashboard und osd umschalten</translation>
     </message>
@@ -11943,6 +11989,29 @@ PIN: %1</source>
       <location line="+17"/>
       <source>No disks</source>
       <translation>Keine Platten</translation>
+    </message>
+  </context>
+  <context>
+    <name>SubmenuOrderDialog</name>
+    <message>
+      <location filename="../modules/nexus/pages/wallandstyle/SubmenuOrderDialog.qml" line="+87"/>
+      <source>Order the submenu</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Drag the rows to change the order they unfold in.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+126"/>
+      <source>Cancel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Save</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -12606,7 +12675,7 @@ PIN: %1</source>
   <context>
     <name>TrayItem</name>
     <message>
-      <location filename="../modules/bar/components/TrayItem.qml" line="+34"/>
+      <location filename="../modules/bar/components/TrayItem.qml" line="+35"/>
       <source>Left-click activates, right-click opens the menu, middle-click runs the secondary action.</source>
       <translation>Linksklick aktiviert, mit der rechten Maustaste öffnet sich das Menü, mit der mittleren Maustaste wird die sekundäre Aktion ausgeführt.</translation>
     </message>
@@ -12622,6 +12691,24 @@ PIN: %1</source>
       <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
       <source>Back</source>
       <translation>Zurück</translation>
+    </message>
+  </context>
+  <context>
+    <name>TrayRegistry</name>
+    <message>
+      <location filename="../services/TrayRegistry.qml" line="+20"/>
+      <source>Always visible</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Collapse</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hidden</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

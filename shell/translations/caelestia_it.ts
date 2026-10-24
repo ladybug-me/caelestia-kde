@@ -145,6 +145,129 @@
     </message>
   </context>
   <context>
+    <name>AccessibilityPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/services/AccessibilityPage.qml" line="+19"/>
+      <source>Magnifier</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Load KWin&apos;s zoom effect (Meta+= by default)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Invert colours</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Load KWin&apos;s colour inversion effect</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Colour filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Load KWin&apos;s colour blindness correction effect</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>The shell keeps the scale set below, whatever KDE&apos;s text size is</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>KDE&apos;s text is %1 pt, so the shell follows at %2%</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>KDE is using its default text size, so the shell stays at 100%</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Accessibility</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Text</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Follow system text size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Match the text size set in KDE&apos;s settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Font scale</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Multiplier applied to every piece of text the shell draws</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+29"/>
+      <source>Motion</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Reduce motion</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Land every animation immediately instead of animating it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Screen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+32"/>
+      <source>These are KWin effects, so the shortcuts and the filter itself (protanopia, deuteranopia, ...) are set in System Settings -&gt; Accessibility. Switching one on here loads it for the session.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Screen reader</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Orca is installed</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Orca is not installed — install the orca package to use it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Start Orca</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>Actions</name>
     <message>
       <location filename="../modules/launcher/services/Actions.qml" line="+15"/>
@@ -229,6 +352,11 @@
     <message>
       <location line="+1"/>
       <source>Windows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Search Everything</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -324,6 +452,11 @@
     <message>
       <location line="+1"/>
       <source>Switch to another window</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Search files, places, web shortcuts and settings with KRunner</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -1252,6 +1385,27 @@
     </message>
   </context>
   <context>
+    <name>AppList</name>
+    <message>
+      <location filename="../modules/launcher/AppList.qml" line="+64"/>
+      <source>Search %1 for &quot;%2&quot;</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>AppPickerRow</name>
+    <message>
+      <location filename="../modules/nexus/common/AppPickerRow.qml" line="+58"/>
+      <source>Search applications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+68"/>
+      <source>Allow &quot;%1&quot;</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>AppStreamRow</name>
     <message>
       <location filename="../components/controls/AppStreamRow.qml" line="+19"/>
@@ -1288,7 +1442,7 @@
   <context>
     <name>AppearancePage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+21"/>
+      <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+22"/>
       <location line="+6"/>
       <source>Follow system</source>
       <translation type="unfinished"/>
@@ -1394,12 +1548,12 @@
       <translation>Abilita la trasparenza attraverso la shell</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+13"/>
       <source>Base opacity</source>
       <translation>Opacità base</translation>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+11"/>
       <source>Layers opacity</source>
       <translation>Opacità livelli</translation>
     </message>
@@ -1409,7 +1563,7 @@
       <translation>Richiede il riavvio della shell</translation>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+25"/>
       <source>Background Blur</source>
       <translation>Sfocatura Sfondo</translation>
     </message>
@@ -1502,7 +1656,7 @@
   <context>
     <name>AppsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/AppsPage.qml" line="+19"/>
+      <location filename="../modules/nexus/pages/AppsPage.qml" line="+32"/>
       <source>Apps</source>
       <translation>Applicazioni</translation>
     </message>
@@ -1567,7 +1721,22 @@
       <translation>Sfoglia le app installate, imposta preferiti e nascosti</translation>
     </message>
     <message>
-      <location line="+68"/>
+      <location line="+5"/>
+      <source>Search</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Web search engine</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Engine behind the launcher&apos;s web search row</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+78"/>
       <source>System Default</source>
       <translation>Predefinito Di Sistema</translation>
     </message>
@@ -3660,7 +3829,7 @@
   <context>
     <name>Brightness</name>
     <message>
-      <location filename="../services/Brightness.qml" line="+117"/>
+      <location filename="../services/Brightness.qml" line="+134"/>
       <source>Increase brightness</source>
       <translation>Aumenta luminosità</translation>
     </message>
@@ -3812,6 +3981,144 @@
       <location line="+35"/>
       <source>Open in calculator</source>
       <translation>Apri nella calcolatrice</translation>
+    </message>
+  </context>
+  <context>
+    <name>CalendarPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/services/CalendarPage.qml" line="+18"/>
+      <source>7 days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>14 days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>30 days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <location line="+27"/>
+      <location line="+113"/>
+      <source>Calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-124"/>
+      <source>Reading calendars…</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1: %2</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>No calendar added yet</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Not read yet</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Updated %1 · %2 events ahead</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Calendars</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Add the calendar&apos;s iCal address. In Google Calendar that is Settings -&gt; your calendar -&gt; &quot;Secret address in iCal format&quot;; Nextcloud and Fastmail call it an export or subscription link, and a local .ics file works too. The address is read only and re-read every few minutes, so changes made in Google appear here without doing anything.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Work</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>iCal address</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+21"/>
+      <source>Paste the address, then add it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Add</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+66"/>
+      <source>Agenda</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Look ahead</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How far the agenda and the calendar popout look for events</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1 days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+35"/>
+      <source>Refresh</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>CalendarPopout</name>
+    <message>
+      <location filename="../modules/bar/popouts/CalendarPopout.qml" line="+29"/>
+      <source>Today</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+24"/>
+      <source>All day</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>No calendars yet - click to add one</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Could not read %1 - click to check the address</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>No events</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4214,6 +4521,7 @@
     </message>
     <message>
       <location line="+8"/>
+      <location filename="../modules/session/Content.qml" line="+129"/>
       <source>Restart</source>
       <translation>Riavvia</translation>
     </message>
@@ -4228,7 +4536,7 @@
       <translation>Digita &quot;%1&quot; per i comandi</translation>
     </message>
     <message>
-      <location line="+324"/>
+      <location line="+320"/>
       <source>Clear clipboard history?</source>
       <translation>Cancellare la cronologia degli appunti?</translation>
     </message>
@@ -4246,6 +4554,21 @@
       <location line="+5"/>
       <source>Clear</source>
       <translation>Pulisci</translation>
+    </message>
+    <message>
+      <location filename="../modules/session/Content.qml" line="-103"/>
+      <source>Log out</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+21"/>
+      <source>Shut down</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+71"/>
+      <source>Hibernate</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location filename="../modules/sidebar/Content.qml" line="+113"/>
@@ -5093,7 +5416,7 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+672"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+673"/>
       <location line="+3"/>
       <source>Group</source>
       <translation type="unfinished"/>
@@ -5125,7 +5448,70 @@
   <context>
     <name>DesktopPage</name>
     <message>
-      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+17"/>
+      <location filename="../modules/nexus/pages/DesktopPage.qml" line="+12"/>
+      <source>Desktop &amp; Tiling</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Desktop</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Disabled (Plasma)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Icons enabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Icons disabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Desktop Addons</source>
+      <translation>Addons Desktop</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visualiser, auto-hide, styling</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Right Click Menu</source>
+      <translation>Menu Clic Destro</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Configure desktop right click menu</source>
+      <translation>Configura menu clic destro del desktop</translation>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Window Tiling</source>
+      <translation>Finestra Di Piastrellatura</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enabled (Krohnkite)</source>
+      <translation>Abilitato (Krohnkite)</translation>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Disabled</source>
+      <translation>Disabilitato</translation>
+    </message>
+  </context>
+  <context>
+    <name>DesktopSettingsPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/desktop/DesktopSettingsPage.qml" line="+16"/>
       <source>Small</source>
       <translation type="unfinished"/>
     </message>
@@ -5146,11 +5532,11 @@
     </message>
     <message>
       <location line="+5"/>
-      <source>Desktop &amp; Tiling</source>
+      <source>Desktop</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+12"/>
       <source>Disable Quickshell Desktop</source>
       <translation type="unfinished"/>
     </message>
@@ -5162,35 +5548,45 @@
     <message>
       <location line="+16"/>
       <source>Show Desktop Icons</source>
-      <translation>Mostra Icone Desktop</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Enable icons for Caelestia desktop</source>
-      <translation>Abilita le icone per il desktop Caelestia</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+17"/>
+      <location line="+20"/>
       <source>Material You Icons</source>
-      <translation>Icone Material You</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Override the KDE icon theme for desktop icons only</source>
-      <translation>Ignora solo il tema delle icone di KDE per le icone del desktop</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+17"/>
+      <location line="+20"/>
       <source>Vibrant Icons</source>
-      <translation>Icone Vibranti</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Boost saturation of Material You icons for extra vibrancy</source>
-      <translation>Aumenta la saturazione delle icone Material You per una vibrazione extra</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+17"/>
+      <location line="+19"/>
+      <source>Icon Vibrancy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Saturation level of vibrant Material You icons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+23"/>
       <source>Desktop Icon Size</source>
       <translation type="unfinished"/>
     </message>
@@ -5208,51 +5604,6 @@
       <location line="+1"/>
       <source>Keep desktop icons packed; dragging one reorders the rest</source>
       <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Magic Lamp Minimize</source>
-      <translation>Minimizza La Lampada Magica</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enable the magic lamp effect when minimizing windows</source>
-      <translation>Abilita l&apos;effetto lampada magica quando si minimizzano le finestre</translation>
-    </message>
-    <message>
-      <location line="+23"/>
-      <source>Window Tiling</source>
-      <translation>Finestra Di Piastrellatura</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Enabled (Krohnkite)</source>
-      <translation>Abilitato (Krohnkite)</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <source>Disabled</source>
-      <translation>Disabilitato</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Desktop Addons</source>
-      <translation>Addons Desktop</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Visualiser, auto-hide, styling</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+9"/>
-      <source>Right Click Menu</source>
-      <translation>Menu Clic Destro</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Configure desktop right click menu</source>
-      <translation>Configura menu clic destro del desktop</translation>
     </message>
   </context>
   <context>
@@ -5418,6 +5769,137 @@ Now go touch grass</source>
     <message>
       <location line="+1"/>
       <source>GitHub</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>DisplayModesPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/display/DisplayModesPage.qml" line="+22"/>
+      <source>Resolution &amp; refresh rate</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>No screen reports any mode to choose from.</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>DisplayPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/DisplayPage.qml" line="+57"/>
+      <source>Normal</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Left</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Upside down</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Right</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Unknown mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Displays</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>This machine has no kscreen-doctor, so the shell can neither read nor change the screen setup. Install Plasma&apos;s kscreen package to manage displays here.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+22"/>
+      <source>%1 (off)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Enabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Drives a picture for this screen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>The last enabled screen has to stay on</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Resolution &amp; refresh rate</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Scale</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How large everything is drawn</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Rotation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Turn the picture to match how the screen stands</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>HDR</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>High dynamic range, and the wide colour gamut that goes with it</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Input</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Mouse &amp; touchpad</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Speed, tap to click, natural scrolling</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Keyboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Repeat rate, layouts, advanced settings</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -5665,6 +6147,103 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
+    <name>FocusPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/services/FocusPage.qml" line="+61"/>
+      <location line="+2"/>
+      <source>Every day</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Focus sessions are off</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>%1 until %2</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <location line="+33"/>
+      <location line="+77"/>
+      <source>Focus</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-108"/>
+      <source>No session running now</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <location line="+17"/>
+      <source>Focus sessions</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Turn notifications off by themselves on a schedule</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+39"/>
+      <source>Schedules</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+58"/>
+      <source>Name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Deep work</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+49"/>
+      <source>From</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
+      <source>to</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+17"/>
+      <source>Add</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Allowed through</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+15"/>
+      <source>Notifications from these apps still pop up during a focus session.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Allow an application</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Pick it from the applications installed here</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>FolderContents</name>
     <message>
       <location filename="../components/filedialog/FolderContents.qml" line="+63"/>
@@ -5680,7 +6259,7 @@ Now go touch grass</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+170"/>
+      <location line="+171"/>
       <source>Empty folder</source>
       <translation type="unfinished"/>
     </message>
@@ -5906,8 +6485,8 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+1"/>
-      <source>Add a personal access token in Settings → Panels → Taskbar → GitHub.</source>
-      <translation>Aggiungi un token di accesso personale in Impostazioni → Pannelli → Barra delle applicazioni → GitHub.</translation>
+      <source>Add a personal access token in Settings -&gt; Panels -&gt; Taskbar -&gt; GitHub.</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6397,77 +6976,77 @@ Now go touch grass</source>
     <name>KrohnkitePage</name>
     <message>
       <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+20"/>
-      <location line="+57"/>
-      <source>Window Tiling</source>
-      <translation>Finestra Di Piastrellatura</translation>
-    </message>
-    <message>
-      <location line="-52"/>
       <source>BTree</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+271"/>
+      <location line="+299"/>
       <source>Monocle</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-270"/>
-      <location line="+263"/>
+      <location line="-298"/>
+      <location line="+291"/>
       <source>Floating</source>
       <translation>Fluttuante</translation>
     </message>
     <message>
-      <location line="-262"/>
-      <location line="+276"/>
+      <location line="-290"/>
+      <location line="+304"/>
       <source>Quarter</source>
       <translation>Trimestre</translation>
     </message>
     <message>
-      <location line="-275"/>
-      <location line="+289"/>
+      <location line="-303"/>
+      <location line="+317"/>
       <source>Spread</source>
       <translation>Diffusione</translation>
     </message>
     <message>
-      <location line="-288"/>
-      <location line="+295"/>
+      <location line="-316"/>
+      <location line="+323"/>
       <source>Stacked</source>
       <translation>Impilato</translation>
     </message>
     <message>
-      <location line="-294"/>
-      <location line="+301"/>
+      <location line="-322"/>
+      <location line="+329"/>
       <source>Stair</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-300"/>
-      <location line="+329"/>
+      <location line="-328"/>
+      <location line="+357"/>
       <source>Columns</source>
       <translation>Colonne</translation>
     </message>
     <message>
-      <location line="-328"/>
-      <location line="+306"/>
+      <location line="-356"/>
+      <location line="+334"/>
       <source>Three Column</source>
       <translation>Tre Colonna</translation>
     </message>
     <message>
-      <location line="-305"/>
-      <location line="+277"/>
+      <location line="-333"/>
+      <location line="+305"/>
       <source>Spiral</source>
       <translation>Spirale</translation>
     </message>
     <message>
-      <location line="-276"/>
-      <location line="+311"/>
+      <location line="-304"/>
+      <location line="+339"/>
       <source>Tile</source>
       <translation>Piastrelle</translation>
     </message>
     <message>
-      <location line="-301"/>
+      <location line="-332"/>
+      <location line="+37"/>
+      <source>Window Tiling</source>
+      <translation>Finestra Di Piastrellatura</translation>
+    </message>
+    <message>
+      <location line="-32"/>
       <source>Save Changes</source>
       <translation>Salva Modifiche</translation>
     </message>
@@ -6482,7 +7061,7 @@ Now go touch grass</source>
       <translation>Tile automaticamente le finestre usando Krohnkite</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+37"/>
       <source>Switch Layout</source>
       <translation>Cambia Layout</translation>
     </message>
@@ -6497,7 +7076,17 @@ Now go touch grass</source>
       <translation>Seleziona Layout...</translation>
     </message>
     <message>
-      <location line="+27"/>
+      <location line="+13"/>
+      <source>Magic Lamp Minimize</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enable the magic lamp effect when minimizing windows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+40"/>
       <source>Gaps</source>
       <translation type="unfinished"/>
     </message>
@@ -7521,7 +8110,7 @@ Now go touch grass</source>
   <context>
     <name>LockScreenUi</name>
     <message>
-      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/LockScreenUi.qml" line="+113"/>
+      <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/LockScreenUi.qml" line="+111"/>
       <source>Good morning</source>
       <translation type="unfinished"/>
     </message>
@@ -8474,7 +9063,7 @@ Now go touch grass</source>
   <context>
     <name>Notif</name>
     <message>
-      <location filename="../modules/sidebar/Notif.qml" line="+138"/>
+      <location filename="../modules/sidebar/Notif.qml" line="+164"/>
       <source>No body here! :/</source>
       <translation>Nessun corpo qui! :/</translation>
     </message>
@@ -8483,9 +9072,14 @@ Now go touch grass</source>
     <name>NotifData</name>
     <message>
       <location filename="../services/NotifData.qml" line="+19"/>
-      <location line="+196"/>
+      <location line="+200"/>
       <source>now</source>
       <translation>ora</translation>
+    </message>
+    <message>
+      <location line="-164"/>
+      <source>Reply…</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -8771,7 +9365,7 @@ Now go touch grass</source>
   <context>
     <name>NotificationSilencingPage</name>
     <message>
-      <location filename="../modules/nexus/pages/audio/NotificationSilencingPage.qml" line="+28"/>
+      <location filename="../modules/nexus/pages/audio/NotificationSilencingPage.qml" line="+27"/>
       <source>Muted notification apps</source>
       <translation>App di notifica silenziate</translation>
     </message>
@@ -8830,7 +9424,7 @@ Now go touch grass</source>
   <context>
     <name>NotificationsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/services/NotificationsPage.qml" line="+8"/>
+      <location filename="../modules/nexus/pages/services/NotificationsPage.qml" line="+9"/>
       <location line="+16"/>
       <source>Notifications</source>
       <translation>Notifiche</translation>
@@ -8861,7 +9455,7 @@ Now go touch grass</source>
       <translation>Automazione</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Toast events</source>
       <translation>Eventi toast</translation>
     </message>
@@ -8870,16 +9464,31 @@ Now go touch grass</source>
       <source>Choose which system changes show a toast</source>
       <translation>Scegli quali modifiche di sistema mostrano un toast</translation>
     </message>
+    <message>
+      <location line="+7"/>
+      <source>Focus sessions</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Running until %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Do Not Disturb on a schedule</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>Notifs</name>
     <message>
-      <location filename="../services/Notifs.qml" line="+90"/>
+      <location filename="../services/Notifs.qml" line="+96"/>
       <source>Caelestia</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+88"/>
+      <location line="+86"/>
       <source>Do not disturb enabled</source>
       <translation>Non disturbare abilitata</translation>
     </message>
@@ -8899,7 +9508,7 @@ Now go touch grass</source>
       <translation>Le notifiche popup sono ora abilitate</translation>
     </message>
     <message>
-      <location line="+97"/>
+      <location line="+100"/>
       <source>Clear all notifications</source>
       <translation>Cancella tutte le notifiche</translation>
     </message>
@@ -9283,7 +9892,7 @@ Now go touch grass</source>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+188"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+203"/>
       <source>Page under construction</source>
       <translation>Pagina in costruzione</translation>
     </message>
@@ -9322,11 +9931,12 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+1"/>
+      <location line="+275"/>
       <source>Font scale</source>
       <translation>Scala del carattere</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="-274"/>
       <source>Colors</source>
       <translation>Colori</translation>
     </message>
@@ -9397,18 +10007,18 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+3"/>
-      <source>KDE Desktop Integration</source>
-      <translation>Integrazione Desktop Di Kde</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Right Click Menu</source>
-      <translation>Menu Clic Destro</translation>
+      <source>Desktop</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Desktop Addons</source>
       <translation>Addons Desktop</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Right Click Menu</source>
+      <translation>Menu Clic Destro</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -9673,6 +10283,51 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+4"/>
+      <source>Displays</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Resolution, scale, rotation, HDR</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Resolution</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Refresh rate</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Scale</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Rotation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>HDR</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Mouse &amp; touchpad</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keyboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Audio &amp; Sound</source>
       <translation>Audio &amp; Suono</translation>
     </message>
@@ -9730,6 +10385,11 @@ Now go touch grass</source>
       <location line="+1"/>
       <source>Toast events</source>
       <translation>Eventi toast</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Focus sessions</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+4"/>
@@ -9877,6 +10537,11 @@ Now go touch grass</source>
       <translation>Presenza Ricca</translation>
     </message>
     <message>
+      <location line="+1"/>
+      <source>Calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+4"/>
       <source>Language &amp; region</source>
       <translation>Lingua e regione</translation>
@@ -9991,6 +10656,46 @@ Now go touch grass</source>
       <location line="+1"/>
       <source>Providers</source>
       <translation>Fornitori</translation>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Accessibility</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Text size, motion, magnifier, screen reader</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Follow system text size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Reduce motion</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Magnifier</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Invert colours</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Colour filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Screen reader</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10235,7 +10940,7 @@ Now go touch grass</source>
   <context>
     <name>PluginsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/PluginsPage.qml" line="+86"/>
+      <location filename="../modules/nexus/pages/PluginsPage.qml" line="+87"/>
       <source>Plugins</source>
       <translation>Plugin</translation>
     </message>
@@ -11147,7 +11852,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+8"/>
       <source>GPU</source>
       <translation type="unfinished"/>
     </message>
@@ -11160,6 +11865,26 @@ PIN: %1</source>
       <location line="+0"/>
       <source>Override for GPU type</source>
       <translation>Sovrascrivi per il tipo di GPU</translation>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Calendars &amp; agenda</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>%1 calendar(s)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>No calendar added</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11321,7 +12046,7 @@ PIN: %1</source>
   <context>
     <name>Shortcuts</name>
     <message>
-      <location filename="../modules/Shortcuts.qml" line="+25"/>
+      <location filename="../modules/Shortcuts.qml" line="+32"/>
       <source>Focus the window above</source>
       <translation>Focalizza la finestra sopra</translation>
     </message>
@@ -11741,7 +12466,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Open new window of dock entry 1</source>
       <translation type="unfinished"/>
     </message>
@@ -13782,11 +14507,11 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+0"/>
-      <source>Disabled (skwd-walld inactive)</source>
+      <source>Configure scaling, recoloring, video playback, and slideshows</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
       <location line="+11"/>
       <source>Lock screen</source>
       <translation>Schermata di blocco</translation>
@@ -13915,7 +14640,22 @@ PIN: %1</source>
   <context>
     <name>WallpaperSettingsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+52"/>
+      <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+24"/>
+      <source>Crop</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Fit</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Stretch</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+64"/>
       <source>Wallpaper Settings</source>
       <translation>Impostazioni Sfondo</translation>
     </message>
@@ -13930,18 +14670,19 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+59"/>
+      <location line="+60"/>
       <source>Configuration &amp; Tools</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+12"/>
-      <source>Managed by skwd-wall</source>
+      <location line="+0"/>
+      <location line="+19"/>
+      <source>General Settings</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+0"/>
-      <source>skwd-wall not installed</source>
+      <location line="-6"/>
+      <source>Managed by skwd-wall</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -13950,22 +14691,12 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+0"/>
-      <source>Download and install skwd-wall to enable these settings.</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+5"/>
-      <source>General Settings</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
+      <location line="+6"/>
       <source>Configure wallpaper engine and display options</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+6"/>
       <source>Wallpaper Mixer</source>
       <translation type="unfinished"/>
     </message>
@@ -13975,22 +14706,88 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+7"/>
+      <location line="+32"/>
       <source>Shaders &amp; Effects</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="-31"/>
       <source>Post-processing, blur, and visual filters</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
-      <source>Playlists &amp; Automation</source>
+      <location line="+15"/>
+      <source>Managed by Quickshell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>The built-in wallpaper renderer is used because skwd-wall is not installed.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Wallpaper scaling</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>How the wallpaper image fits the screen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Recolor wallpaper</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+10"/>
+      <source>Recolor strength</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
+      <source>Video Wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Pause video wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Enable video audio</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Pause video on fullscreen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Pause video on tiled windows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Pause video on all displays</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Mute video when media plays</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Playlists &amp; Automation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Playlists &amp; Slideshows</source>
       <translation type="unfinished"/>
     </message>
@@ -14000,7 +14797,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+8"/>
       <source>Schedule &amp; Timers</source>
       <translation type="unfinished"/>
     </message>
@@ -14010,7 +14807,27 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+12"/>
+      <source>Wallpaper slideshow</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Slideshow interval</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>%1 min</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Random order</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
       <source>Shortcuts</source>
       <translation type="unfinished"/>
     </message>

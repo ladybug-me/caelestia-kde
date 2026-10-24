@@ -7,6 +7,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SERVICE="$REPO_ROOT/shell/services/Focus.qml"
+CALENDAR="$REPO_ROOT/shell/services/CalendarEvents.qml"
 NOTIFS="$REPO_ROOT/shell/services/Notifs.qml"
 CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/notifsconfig.hpp"
 PAGE="$REPO_ROOT/shell/modules/nexus/pages/services/FocusPage.qml"
@@ -26,6 +27,35 @@ test_schedules_are_configured_as_windows() {
     assert_contains "$config" 'CONFIG_PROPERTY(QString, end' "and an end time"
     assert_contains "$config" 'CONFIG_GLOBAL_PROPERTY(QStringList, focusAllowlist, QStringList())' \
         "apps allowed through the session have to be configurable"
+    assert_contains "$config" 'CONFIG_GLOBAL_PROPERTY(bool, focusCalendar, false)' \
+        "following the calendar has to be opt-in as well"
+}
+
+test_a_running_meeting_can_start_a_session() {
+    local service calendar page
+    service="$(cat "$SERVICE")"
+    calendar="$(cat "$CALENDAR")"
+    page="$(cat "$PAGE")"
+
+    assert_contains "$service" 'readonly property var activeMeeting' \
+        "a meeting in progress is the second source of sessions"
+    assert_contains "$service" 'CalendarEvents.eventsOn(root.now).find(event => !event.allDay && event.start <= root.now && root.now < event.end)' \
+        "an event counts while it runs, and an all-day entry never does"
+    assert_contains "$service" 'readonly property bool active: root.enabled && (root.activeSchedule !== null || root.activeMeeting !== null)' \
+        "either source opens the session"
+    assert_contains "$service" 'root.activeMeeting.summary || qsTr("Meeting")' \
+        "the meeting names the session"
+    assert_contains "$service" 'return Time.clockTime(root.activeMeeting.end)' \
+        "and its end time is formatted the way the bar formats time"
+    assert_contains "$service" 'function onEventsChanged(): void' \
+        "a calendar that has just been read has to be acted on"
+    # The calendar's own cadence belongs to the calendar: focus asks for a refresh instead of
+    # reaching into another service's timer.
+    assert_contains "$service" 'onTriggered: CalendarEvents.refresh()' \
+        "a meeting start is a deadline, so focus asks the calendar to refresh every minute"
+    assert_contains "$service" 'running: root.followCalendar && CalendarEvents.configured' \
+        "and only while it is following that calendar"
+    assert_contains "$page" 'GlobalConfig.notifs.focusCalendar = checked' "and the page can switch it on"
 }
 
 test_overnight_windows_belong_to_the_day_they_started() {

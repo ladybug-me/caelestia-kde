@@ -38,8 +38,10 @@ class NotifsConfig : public settings::ObjectNode {
     CONFIG_GLOBAL_PROPERTY(int, maxNotifs, 50)
 
     // Focus sessions: Do Not Disturb that switches itself on for these windows, and
-    // the apps whose notifications are still allowed through while it is on.
+    // the apps whose notifications are still allowed through while it is on. `followCalendar`
+    // adds the running calendar events as a second source of sessions.
     CONFIG_GLOBAL_PROPERTY(bool, focusEnabled, false)
+    CONFIG_GLOBAL_PROPERTY(bool, focusCalendar, false)
     CONFIG_GLOBAL_LIST(FocusScheduleList, focusSchedules, {})
     CONFIG_GLOBAL_PROPERTY(QStringList, focusAllowlist, QStringList())
 };

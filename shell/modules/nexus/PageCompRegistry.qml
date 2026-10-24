@@ -15,6 +15,7 @@ import qs.modules.nexus.pages.display
 import qs.modules.nexus.pages.network
 import qs.modules.nexus.pages.panels
 import qs.modules.nexus.pages.services
+import qs.modules.nexus.pages.startup
 import qs.modules.nexus.pages.utilities
 import qs.modules.nexus.pages.wallandstyle
 import qs.modules.nexus.pages.panels.taskbar
@@ -161,6 +162,12 @@ QtObject {
         Component {
             StackPage {
                 SubPage { slot: 0; key: "updates"; Component { UpdatesPage {} } }
+            }
+        },
+        Component {
+            StackPage {
+                SubPage { slot: 0; key: "startup"; Component { AutostartPage {} } }
+                SubPage { slot: 1; key: "startupAppPicker"; Component { AutostartAppPicker {} } }
             }
         },
         Component {

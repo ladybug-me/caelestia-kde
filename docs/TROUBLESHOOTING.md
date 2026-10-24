@@ -569,6 +569,23 @@ Input (pointer, touchpad, keyboard) is deliberately not duplicated here: those s
 applied by Plasma's KCMs, so the page opens them rather than keeping a second copy that
 would drift.
 
+### 3.16 A Startup Program Does Not Run
+
+Log-in programs are XDG autostart desktop files. The shell lists `~/.config/autostart` and
+every `XDG_CONFIG_DIRS` directory (usually `/etc/xdg/autostart`), and switches a *system*
+entry off by keeping a copy of its own in `~/.config/autostart` with `Hidden=true` — the same
+mechanism System Settings uses, so the two never disagree about what starts:
+
+```bash
+python3 ~/.config/quickshell/caelestia/scripts/autostart.py --list
+grep -H Hidden ~/.config/autostart/*.desktop
+```
+
+A program that shows as enabled but never starts usually has an `Exec` line that needs a full
+path, or an entry restricted with `OnlyShowIn=` to a desktop the session does not advertise.
+Removing the user's copy (`--remove NAME`, or the bin icon in Nexus, which only appears for
+entries the user owns) restores whatever the package shipped.
+
 ---
 
 ## 4. Runtime Issues — Lock Screen

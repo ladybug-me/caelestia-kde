@@ -248,6 +248,17 @@ QtObject {
             ]
         },
         {
+            label: qsTr("Startup"),
+            key: "startup",
+            icon: "rocket_launch",
+            description: qsTr("Programs that run at log-in"),
+            category: "system",
+            settings: [
+                { label: qsTr("Autostart"), keywords: ["login", "startup", "autostart", "boot", "session"] },
+                { label: qsTr("Add to startup"), keywords: ["add", "application", "login"], pagePath: "startup/AutostartAppPicker.qml", subPageIdx: 1 }
+            ]
+        },
+        {
             label: qsTr("Plugins"),
             key: "plugins",
             icon: "extension",

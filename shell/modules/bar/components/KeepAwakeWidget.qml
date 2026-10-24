@@ -106,7 +106,7 @@ StyledRect {
                     id: text
 
                     anchors.centerIn: parent
-                    text: IdleInhibitor.enabled ? qsTr("Active since %1").arg(Qt.formatTime(IdleInhibitor.enabledSince, Units.twelveHourClock ? "hh:mm a" : "hh:mm")) : qsTr("Inactive")
+                    text: IdleInhibitor.enabled ? qsTr("Active since %1").arg(Time.clockTime(IdleInhibitor.enabledSince)) : qsTr("Inactive")
                     color: Colours.palette.m3onPrimary
                     font: Tokens.font.body.builders.small.size(Math.round(Tokens.font.body.small.pointSize * 0.9)).build()
                 }

@@ -15,6 +15,7 @@ Singleton {
     id: root
 
     readonly property bool enabled: GlobalConfig.notifs.focusEnabled
+    readonly property bool followCalendar: GlobalConfig.notifs.focusCalendar
     readonly property var schedules: GlobalConfig.notifs.focusSchedules.values ?? []
     readonly property var allowlist: GlobalConfig.notifs.focusAllowlist ?? []
 
@@ -31,8 +32,22 @@ Singleton {
         return null;
     }
 
-    readonly property bool active: root.enabled && root.activeSchedule !== null
-    readonly property string activeName: root.activeSchedule?.name ?? ""
+    /// A meeting that is running right now. All-day entries are not meetings: they would
+    /// hold a session open from midnight to midnight.
+    readonly property var activeMeeting: {
+        if (!root.followCalendar || !CalendarEvents.configured)
+            return null;
+
+        return CalendarEvents.eventsOn(root.now).find(event => !event.allDay && event.start <= root.now && root.now < event.end) ?? null;
+    }
+
+    readonly property bool active: root.enabled && (root.activeSchedule !== null || root.activeMeeting !== null)
+    readonly property string activeName: {
+        if (root.activeMeeting)
+            return root.activeMeeting.summary || qsTr("Meeting");
+
+        return root.activeSchedule?.name ?? "";
+    }
     readonly property bool applied: root._applied && root.active && Notifs.dnd
 
     function parseTime(value: string): int {
@@ -73,9 +88,20 @@ Singleton {
         return minutes < end && allowedOn(root.dayToken(yesterday));
     }
 
-    /// The time a running session ends, for the "until" line in Nexus.
+    /// The time a running session ends, for the "until" line in Nexus. A configured window
+    /// only carries "HH:MM", so it is put on today's clock and formatted the same way the
+    /// meeting's end is: one time format, whichever source opened the session.
     function activeEnd(): string {
-        return root.activeSchedule?.end ?? "";
+        if (root.activeMeeting)
+            return Time.clockTime(root.activeMeeting.end);
+
+        const minutes = root.parseTime(root.activeSchedule?.end ?? "");
+        if (minutes < 0)
+            return root.activeSchedule?.end ?? "";
+
+        const at = new Date();
+        at.setHours(Math.floor(minutes / 60), minutes % 60, 0, 0);
+        return Time.clockTime(at);
     }
 
     function allows(appName: string): bool {
@@ -106,7 +132,26 @@ Singleton {
 
     onEnabledChanged: root.sync()
     onSchedulesChanged: root.sync()
+    onFollowCalendarChanged: root.sync()
     Component.onCompleted: root.sync()
+
+    // A meeting starts and ends at minutes the schedule timer does not know about, so the
+    // calendar is watched as well while focus follows it: the events as they arrive, and the
+    // calendar itself, which otherwise refreshes on a cadence too slow to catch a start.
+    Connections {
+        function onEventsChanged(): void {
+            root.sync();
+        }
+
+        target: CalendarEvents
+    }
+
+    Timer {
+        interval: 60 * 1000
+        running: root.followCalendar && CalendarEvents.configured
+        repeat: true
+        onTriggered: CalendarEvents.refresh()
+    }
 
     Timer {
         interval: 30 * 1000

@@ -107,12 +107,22 @@ PageBase {
 
         ToggleRow {
             first: true
-            last: true
             text: qsTr("Focus sessions")
             subtext: qsTr("Turn notifications off by themselves on a schedule")
             checked: GlobalConfig.notifs.focusEnabled
             onToggled: {
                 GlobalConfig.notifs.focusEnabled = checked;
+                GlobalConfig.save();
+            }
+        }
+
+        ToggleRow {
+            last: true
+            text: qsTr("Follow the calendar")
+            subtext: qsTr("Start a session while a calendar event is running")
+            checked: GlobalConfig.notifs.focusCalendar
+            onToggled: {
+                GlobalConfig.notifs.focusCalendar = checked;
                 GlobalConfig.save();
             }
         }

@@ -52,7 +52,7 @@ StyledRect {
         if (event.allDay)
             return qsTr("All day");
         // Same 12/24-hour choice as the bar clock, so the two never disagree.
-        return event.start.toLocaleString(Qt.locale(), Units.twelveHourClock ? "h:mm A" : "HH:mm");
+        return Time.clockTime(event.start);
     }
 
     function agendaHint(): string {

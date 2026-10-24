@@ -19,8 +19,7 @@ Item {
     readonly property var monitor: Kwin.monitorFor(screen)
     readonly property string activeSpecial: (Config.bar.workspaces.perMonitor ? monitor : Kwin.focusedMonitor)?.lastIpcObject.specialWorkspace?.name ?? ""
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
-
+    property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
 
     layer.enabled: true
     layer.effect: Mask {

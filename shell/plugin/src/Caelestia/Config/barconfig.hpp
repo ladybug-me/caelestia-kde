@@ -244,6 +244,25 @@ class BarPreviewFontScales : public settings::ObjectNode {
     CONFIG_PROPERTY(qreal, wirelessPassword, 0.0)
 };
 
+// A secondary bar anchored to a screen edge and drawn as part of the frame.
+// The list of panels is global; each panel names the screens it applies to
+// (empty means every screen). `lengthPercent` 100 spans the whole edge, less
+// makes it a dock of that length, placed with `align`.
+class BarPanel : public settings::ObjectNode {
+    CONFIG_NODE(BarPanel, settings::ObjectNode)
+
+    CONFIG_PROPERTY(QString, name, QString())
+    CONFIG_PROPERTY(bool, enabled, true)
+    CONFIG_PROPERTY(QString, position, u"top"_s)
+    CONFIG_PROPERTY(QStringList, screens, QStringList())
+    CONFIG_PROPERTY(int, lengthPercent, 100)
+    CONFIG_PROPERTY(QString, align, u"center"_s)
+    CONFIG_PROPERTY(bool, persistent, true)
+    CONFIG_PROPERTY(bool, showOnHover, true)
+    CONFIG_PROPERTY(QVariantList, entries, QVariantList())
+};
+CONFIG_LIST_TYPE(BarPanel, BarPanelList)
+
 class BarConfig : public settings::ObjectNode {
     CONFIG_NODE(BarConfig, settings::ObjectNode)
 
@@ -322,6 +341,9 @@ class BarConfig : public settings::ObjectNode {
             vmap({ { u"id"_s, u"keepawake"_s }, { u"enabled"_s, false }, { u"zone"_s, u"right"_s } }),
         }))
     CONFIG_PROPERTY(QStringList, excludedScreens, QStringList())
+    // Secondary panels like the bar, anchored to the other screen edges. An
+    // empty list (the default) means the bar behaves exactly as before.
+    CONFIG_GLOBAL_LIST(BarPanelList, panels, {})
 };
 
 } // namespace caelestia::config

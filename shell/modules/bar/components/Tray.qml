@@ -19,7 +19,7 @@ StyledRect {
     property bool expanded
     property bool pinned: false
     property var popouts
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * Math.max(0.6, !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0))
 
     readonly property bool showArrow: Config.bar.tray.compact && TrayRegistry.collapsedCount > 0

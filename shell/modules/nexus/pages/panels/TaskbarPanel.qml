@@ -236,7 +236,11 @@ PageBase {
             icon: "view_agenda"
             label: qsTr("Toggle & Rearrange")
             status: qsTr("Add, remove or reorder components")
-            onClicked: root.nState.openSubPage(6)
+            onClicked: {
+                // Opened from the taskbar page: always the main bar.
+                root.nState.barComponentsTarget = -1;
+                root.nState.openSubPage("barComponents");
+            }
         }
 
         NavRow {
@@ -245,6 +249,19 @@ PageBase {
             label: qsTr("Elements & Modules")
             status: qsTr("Workspaces, tray, status icons, clock, dock and more")
             onClicked: root.nState.openSubPage(15)
+        }
+
+        SectionHeader {
+            text: qsTr("Extra bars")
+        }
+
+        NavRow {
+            first: true
+            last: true
+            icon: "view_week"
+            label: qsTr("Extra bars")
+            status: GlobalConfig.bar.panels.count === 0 ? qsTr("Add a bar on the edges that have none") : qsTr("%1 configured").arg(GlobalConfig.bar.panels.count)
+            onClicked: root.nState.openSubPage("extraBars")
         }
 
         SectionHeader {

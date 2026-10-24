@@ -145,6 +145,7 @@ Item {
                     Workspace {
                         required property int modelData
 
+                        isHorizontal: root.isHorizontal
                         ws: modelData
                         activeWsId: container.activeWsId
                         occupied: container.occupied
@@ -158,6 +159,7 @@ Item {
                 anchors.verticalCenter: isHorizontal ? parent.verticalCenter : undefined
                 active: Config.bar.workspaces.activeIndicator
                 sourceComponent: ActiveIndicator {
+                    isHorizontal: root.isHorizontal
                     activeWsId: container.activeWsId
                     workspaces: container.pills
                     mask: layout
@@ -214,6 +216,7 @@ Item {
             scale: container.onSpecial ? 1 : 0.5
             opacity: container.onSpecial ? 1 : 0
             sourceComponent: SpecialWorkspaces {
+                isHorizontal: root.isHorizontal
                 screen: root.screen
             }
 

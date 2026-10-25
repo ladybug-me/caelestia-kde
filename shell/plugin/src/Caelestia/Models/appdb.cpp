@@ -12,6 +12,7 @@ namespace caelestia::models {
 AppEntry::AppEntry(QObject* entry, unsigned int frequency, QObject* parent)
     : QObject(parent)
     , m_entry(entry)
+    , m_id(entry->property("id").toString())
     , m_frequency(frequency) {
     const auto mo = m_entry->metaObject();
     const auto tmo = &AppEntry::staticMetaObject;
@@ -33,7 +34,7 @@ void AppEntry::onEntryDestroyed() {
 }
 
 QObject* AppEntry::entry() const {
-    return m_entry;
+    return m_entry.data();
 }
 
 quint32 AppEntry::frequency() const {
@@ -53,10 +54,7 @@ void AppEntry::incrementFrequency() {
 }
 
 QString AppEntry::id() const {
-    if (!m_entry) {
-        return {};
-    }
-    return m_entry->property("id").toString();
+    return m_id;
 }
 
 QString AppEntry::name() const {
@@ -154,15 +152,26 @@ void AppDb::setPath(const QString& path) {
 }
 
 QObjectList AppDb::entries() const {
-    return m_entries;
+    QObjectList result;
+    result.reserve(m_entries.size());
+    for (const auto& entry : m_entries) {
+        if (entry) {
+            result.append(entry.data());
+        }
+    }
+    return result;
 }
 
 void AppDb::setEntries(const QObjectList& entries) {
-    if (m_entries == entries) {
+    if (this->entries() == entries) {
         return;
     }
 
-    m_entries = entries;
+    m_entries.clear();
+    m_entries.reserve(entries.size());
+    for (auto* entry : entries) {
+        m_entries.append(entry);
+    }
     emit entriesChanged();
 
     m_timer->start();
@@ -255,6 +264,22 @@ void AppDb::rebuildRankTree() {
     }
 }
 
+void AppDb::rebuildAlphaApps() {
+    QList<AppEntry*> alphaList = m_apps.values();
+    std::sort(alphaList.begin(), alphaList.end(), [](AppEntry* a, AppEntry* b) {
+        return a->name().localeAwareCompare(b->name()) < 0;
+    });
+
+    m_cachedAlphaApps.clear();
+    m_cachedAlphaApps.reserve(alphaList.size());
+    for (auto* a : std::as_const(alphaList)) {
+        // Never hand QML a raw pointer to a destroyed desktop entry
+        if (auto* entry = a->entry()) {
+            m_cachedAlphaApps.append(QVariant::fromValue(entry));
+        }
+    }
+}
+
 QList<AppEntry*> AppDb::getSortedApps() const {
     QList<AppEntry*> result;
     result.reserve(static_cast<qsizetype>(m_rankTree.size()));
@@ -300,17 +325,24 @@ void AppDb::updateApps() {
     bool dirty = false;
 
     for (const auto& entry : std::as_const(m_entries)) {
+        if (!entry) {
+            continue;
+        }
         const auto id = entry->property("id").toString();
         if (!m_apps.contains(id)) {
             dirty = true;
-            auto* const newEntry = new AppEntry(entry, getFrequency(id), this);
-            QObject::connect(newEntry, &AppEntry::removed, this, [id, this]() {
-                if (auto* a = m_apps.value(id)) {
-                    m_rankTree.erase(makeKey(a));
+            auto* const newEntry = new AppEntry(entry.data(), getFrequency(id), this);
+            QObject::connect(newEntry, &AppEntry::removed, this, [id, newEntry, this]() {
+                // The id may already belong to a newer AppEntry; only drop this one.
+                if (m_apps.value(id) != newEntry) {
+                    return;
                 }
-                if (m_apps.remove(id)) {
-                    emit appsChanged();
-                }
+                m_apps.remove(id);
+                // Rebuild instead of erasing by key: the key's name is gone with the entry.
+                rebuildRankTree();
+                reorderCachedSorted();
+                rebuildAlphaApps();
+                emit appsChanged();
             });
             m_apps.insert(id, newEntry);
         }
@@ -318,7 +350,9 @@ void AppDb::updateApps() {
 
     QSet<QString> newIds;
     for (const auto& entry : std::as_const(m_entries)) {
-        newIds.insert(entry->property("id").toString());
+        if (entry) {
+            newIds.insert(entry->property("id").toString());
+        }
     }
 
     for (auto it = m_apps.begin(); it != m_apps.end();) {
@@ -334,18 +368,7 @@ void AppDb::updateApps() {
     if (dirty) {
         rebuildRankTree();
         reorderCachedSorted();
-
-        QList<AppEntry*> alphaList = m_apps.values();
-        std::sort(alphaList.begin(), alphaList.end(), [](AppEntry* a, AppEntry* b) {
-            return a->name().localeAwareCompare(b->name()) < 0;
-        });
-
-        m_cachedAlphaApps.clear();
-        m_cachedAlphaApps.reserve(alphaList.size());
-        for (auto* a : alphaList) {
-            m_cachedAlphaApps.append(QVariant::fromValue(a->entry()));
-        }
-
+        rebuildAlphaApps();
         emit appsChanged();
     }
 }

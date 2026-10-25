@@ -2,6 +2,7 @@
 
 #include <qhash.h>
 #include <qobject.h>
+#include <qpointer.h>
 #include <qqmlintegration.h>
 #include <qqmllist.h>
 #include <qregularexpression.h>
@@ -79,7 +80,10 @@ signals:
     void removed();
 
 private:
-    QObject* m_entry;
+    // Weak: desktop entries are owned (and deleted) by Quickshell.
+    QPointer<QObject> m_entry;
+    // Cached so the entry can still be identified after m_entry is destroyed.
+    QString m_id;
     quint32 m_frequency;
 
     void onEntryDestroyed();
@@ -126,7 +130,7 @@ private:
 
     const QString m_uuid;
     QString m_path;
-    QObjectList m_entries;
+    QList<QPointer<QObject>> m_entries;
     QStringList m_favouriteApps;
     QList<QRegularExpression> m_favouriteAppsRegex;
     QHash<QString, AppEntry*> m_apps;
@@ -137,6 +141,7 @@ private:
     QString regexifyString(const QString& original) const;
     void rebuildRankTree();
     void reorderCachedSorted();
+    void rebuildAlphaApps();
     [[nodiscard]] AppRankKey makeKey(const AppEntry* app) const;
     QList<AppEntry*> getSortedApps() const;
     bool isFavourite(const AppEntry* app) const;

@@ -222,7 +222,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+29"/>
+      <location line="+33"/>
       <source>Motion</source>
       <translation type="unfinished"/>
     </message>
@@ -577,7 +577,7 @@
   <context>
     <name>AddShortcutDialog</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/AddShortcutDialog.qml" line="+59"/>
+      <location filename="../modules/nexus/pages/desktop/AddShortcutDialog.qml" line="+59"/>
       <source>Add Custom Shortcut</source>
       <translation>Ajouter un raccourci personnalisé</translation>
     </message>
@@ -1603,12 +1603,22 @@
       <translation>Mise à l&apos;échelle</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+10"/>
+      <source>Follow system text size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Match the text size set in KDE&apos;s settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+12"/>
       <source>Font scale</source>
       <translation>Échelle de police</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+15"/>
       <source>Spacing scale</source>
       <translation>Échelle d&apos;espacement</translation>
     </message>
@@ -1959,7 +1969,7 @@
     </message>
     <message>
       <location line="+57"/>
-      <location filename="../services/Audio.qml" line="+117"/>
+      <location filename="../services/Audio.qml" line="+122"/>
       <source>Unknown</source>
       <translation>Inconnu</translation>
     </message>
@@ -2139,6 +2149,47 @@
       <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/AuthHandler.qml" line="+26"/>
       <source>%1 min left</source>
       <translation>%1 min restantes</translation>
+    </message>
+  </context>
+  <context>
+    <name>AutostartAppPicker</name>
+    <message>
+      <location filename="../modules/nexus/pages/startup/AutostartAppPicker.qml" line="+17"/>
+      <source>Add to startup</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>AutostartPage</name>
+    <message>
+      <location filename="../modules/nexus/pages/startup/AutostartPage.qml" line="+18"/>
+      <source>Startup</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>At log-in</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Nothing is set to start at log-in.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+48"/>
+      <source>%1 - from the system, switched here</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+29"/>
+      <source>Add an application</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Pick it from the applications installed here</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -3258,6 +3309,11 @@
       <location filename="../modules/nexus/pages/panels/taskbar/BarStatusIcons.qml" line="+12"/>
       <source>Lock keys</source>
       <translation>Touches de verrouillage</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Privacy</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -4396,7 +4452,7 @@
       <location line="+66"/>
       <location line="+12"/>
       <location line="+12"/>
-      <location line="+144"/>
+      <location line="+151"/>
       <location line="+12"/>
       <location line="+12"/>
       <location line="+12"/>
@@ -4410,7 +4466,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-273"/>
+      <location line="-280"/>
       <source>Clock settings</source>
       <translation>Réglages de l&apos;horloge</translation>
     </message>
@@ -4425,7 +4481,7 @@
       <translation>Réglages des icônes de statut</translation>
     </message>
     <message>
-      <location line="+144"/>
+      <location line="+151"/>
       <source>Workspaces settings</source>
       <translation>Réglages des espaces de travail</translation>
     </message>
@@ -4660,7 +4716,7 @@
   <context>
     <name>ContextMenuPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/ContextMenuPage.qml" line="+242"/>
+      <location filename="../modules/nexus/pages/desktop/ContextMenuPage.qml" line="+242"/>
       <source>Delete</source>
       <translation>Supprimer</translation>
     </message>
@@ -4822,6 +4878,14 @@
       <location line="+5"/>
       <location line="+66"/>
       <source>Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>CurrentItem</name>
+    <message>
+      <location filename="../components/filedialog/CurrentItem.qml" line="+85"/>
+      <source>&quot;%1&quot; selected</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -5111,7 +5175,7 @@
   <context>
     <name>DesktopAddonsPage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/DesktopAddonsPage.qml" line="+20"/>
+      <location filename="../modules/nexus/pages/desktop/DesktopAddonsPage.qml" line="+20"/>
       <source>Left</source>
       <translation>Gauche</translation>
     </message>
@@ -6149,6 +6213,14 @@ Allez maintenant prendre l&apos;air</translation>
     </message>
   </context>
   <context>
+    <name>Focus</name>
+    <message>
+      <location filename="../services/Focus.qml" line="+47"/>
+      <source>Meeting</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>FocusPage</name>
     <message>
       <location filename="../modules/nexus/pages/services/FocusPage.qml" line="+61"/>
@@ -6169,24 +6241,34 @@ Allez maintenant prendre l&apos;air</translation>
     <message>
       <location line="+0"/>
       <location line="+33"/>
-      <location line="+77"/>
+      <location line="+87"/>
       <source>Focus</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-108"/>
+      <location line="-118"/>
       <source>No session running now</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+20"/>
-      <location line="+17"/>
+      <location line="+16"/>
       <source>Focus sessions</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Turn notifications off by themselves on a schedule</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Follow the calendar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Start a session while a calendar event is running</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -9894,7 +9976,7 @@ Allez maintenant prendre l&apos;air</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+203"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+210"/>
       <source>Page under construction</source>
       <translation>Page en construction</translation>
     </message>
@@ -9933,12 +10015,12 @@ Allez maintenant prendre l&apos;air</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+275"/>
+      <location line="+286"/>
       <source>Font scale</source>
       <translation>Échelle de police</translation>
     </message>
     <message>
-      <location line="-274"/>
+      <location line="-285"/>
       <source>Colors</source>
       <translation>Couleurs</translation>
     </message>
@@ -10590,6 +10672,26 @@ Allez maintenant prendre l&apos;air</translation>
     </message>
     <message>
       <location line="+4"/>
+      <source>Startup</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Programs that run at log-in</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Autostart</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Add to startup</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Plugins</source>
       <translation type="unfinished"/>
     </message>
@@ -11043,6 +11145,29 @@ Allez maintenant prendre l&apos;air</translation>
       <location line="+6"/>
       <source>Try switching to a window</source>
       <translation>Essayez de passer à une fenêtre</translation>
+    </message>
+  </context>
+  <context>
+    <name>Privacy</name>
+    <message>
+      <location filename="../modules/bar/popouts/Privacy.qml" line="+26"/>
+      <source>Privacy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Video capture</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+66"/>
+      <source>Nothing is using the microphone or capturing the screen.</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -12725,7 +12850,7 @@ PIN : %1</translation>
   <context>
     <name>SubmenuOrderDialog</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/SubmenuOrderDialog.qml" line="+87"/>
+      <location filename="../modules/nexus/pages/desktop/SubmenuOrderDialog.qml" line="+87"/>
       <source>Order the submenu</source>
       <translation type="unfinished"/>
     </message>

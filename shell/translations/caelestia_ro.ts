@@ -4839,8 +4839,8 @@
     </message>
     <message>
       <location line="+1"/>
-      <source>Enter edit mode</source>
-      <translation>Intră în modul de editare</translation>
+      <source>Edit Plasma Widgets</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -4869,6 +4869,11 @@
     </message>
     <message>
       <location line="+6"/>
+      <source>Edit Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Add Widget</source>
       <translation>Adaugă widget</translation>
     </message>
@@ -5337,7 +5342,17 @@
   <context>
     <name>DesktopContextMenu</name>
     <message>
-      <location filename="../modules/background/DesktopContextMenu.qml" line="+108"/>
+      <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
+      <source>Done Editing Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Edit Widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
       <source>Lock All Widgets</source>
       <translation>Blochează toate widget-urile</translation>
     </message>
@@ -5488,13 +5503,13 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+673"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+681"/>
       <location line="+3"/>
       <source>Group</source>
       <translation>Grup</translation>
     </message>
     <message>
-      <location line="+306"/>
+      <location line="+407"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation>Redenumire eșuată</translation>
@@ -5512,7 +5527,7 @@
       <translation>Operațiunea cu fișierul nu a reușit</translation>
     </message>
     <message>
-      <location line="+504"/>
+      <location line="+522"/>
       <source>%1 could not complete the request</source>
       <translation>%1 nu a putut finaliza cererea</translation>
     </message>
@@ -6044,9 +6059,34 @@ Acum atinge iarba</translation>
   <context>
     <name>EditModeOverlay</name>
     <message>
-      <location filename="../modules/background/EditModeOverlay.qml" line="+93"/>
-      <source>Exit edit mode</source>
-      <translation>Ieșire din modul editare</translation>
+      <location filename="../modules/background/EditModeOverlay.qml" line="+112"/>
+      <source>Exit Plasma edit mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Editing widgets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+19"/>
+      <source>Add widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Lock all</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Unlock all</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Done</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6088,6 +6128,16 @@ Acum atinge iarba</translation>
       <location line="+1"/>
       <source>Desktop widgets can now be locked individually or altogether directly from their context menus, preventing accidental dragging or resizing while interacting with them. In addition, a new widget outlines toggle highlights widget boundaries on your wallpaper, making it effortless to locate empty or conditionally hidden widgets across your desktop.</source>
       <translation>Widget-urile de pe desktop pot fi acum blocate individual sau împreună din meniurile lor contextuale, împiedicând tragerea sau redimensionarea accidentală în timpul interacțiunii cu acestea. În plus, o nouă opțiune de afișare a conturului widget-urilor evidențiază limitele acestora pe fundalul de ecran, facilitând localizarea widget-urilor goale sau ascunse condiționat pe desktop.</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Desktop Widget Edit Mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Desktop widgets now have an edit mode of their own. The controls inside a widget step aside, so the whole card can be dragged from anywhere, every border resizes, the cells are outlined underneath, and each card names itself and its size. A toolbar adds widgets, locks or unlocks all of them, and ends the mode. Right-click the desktop and choose Widgets → Edit Widgets to start; Escape leaves it. Ctrl+C and Ctrl+V copy and paste widgets, and Delete removes them without touching your files.</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -15673,8 +15723,8 @@ PIN: %1</translation>
     </message>
     <message>
       <location line="+64"/>
-      <source>Drag a widget&apos;s corner to resize it; right-click for more</source>
-      <translation>Trage de colțul unui widget pentru a-i modifica dimensiunea; clic dreapta pentru mai multe opțiuni</translation>
+      <source>Drag a widget&apos;s border or corner to resize it; right-click for more</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

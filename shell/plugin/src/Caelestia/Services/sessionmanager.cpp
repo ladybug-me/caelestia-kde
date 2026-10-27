@@ -186,7 +186,14 @@ void SessionManager::call(const QString& path, const QString& iface, const QStri
 
 bool SessionManager::callPlasmaShutdown(const QString& method) {
     auto bus = QDBusConnection::sessionBus();
-    if (!bus.isConnected() || !bus.interface()->isServiceRegistered(PLASMA_SHUTDOWN_SERVICE))
+    if (!bus.isConnected())
+        return false;
+
+    // plasma-shutdown isn't a running daemon: it's D-Bus activated on demand, so on a fresh
+    // session it is only activatable. The message below auto-starts it.
+    const auto* const iface = bus.interface();
+    if (!iface->isServiceRegistered(PLASMA_SHUTDOWN_SERVICE) &&
+        !iface->activatableServiceNames().value().contains(PLASMA_SHUTDOWN_SERVICE))
         return false;
 
     const auto msg =

@@ -222,7 +222,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+33"/>
+      <location line="+22"/>
       <source>Motion</source>
       <translation type="unfinished"/>
     </message>
@@ -242,12 +242,12 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+32"/>
+      <location line="+25"/>
       <source>These are KWin effects, so the shortcuts and the filter itself (protanopia, deuteranopia, ...) are set in System Settings -&gt; Accessibility. Switching one on here loads it for the session.</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+4"/>
       <source>Screen reader</source>
       <translation type="unfinished"/>
     </message>
@@ -1395,7 +1395,7 @@
   <context>
     <name>AppPickerRow</name>
     <message>
-      <location filename="../modules/nexus/common/AppPickerRow.qml" line="+60"/>
+      <location filename="../modules/nexus/common/AppPickerRow.qml" line="+59"/>
       <source>Search applications</source>
       <translation type="unfinished"/>
     </message>
@@ -4180,7 +4180,7 @@
   <context>
     <name>CaptureCard</name>
     <message>
-      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+63"/>
+      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+88"/>
       <source>Screen Capture</source>
       <translation>Captura de pantalla</translation>
     </message>
@@ -4205,13 +4205,13 @@
       <translation>Listo</translation>
     </message>
     <message>
-      <location line="+18"/>
-      <location line="+163"/>
+      <location line="+20"/>
+      <location line="+179"/>
       <source>Record</source>
       <translation>Grabar</translation>
     </message>
     <message>
-      <location line="-162"/>
+      <location line="-178"/>
       <location line="+9"/>
       <location line="+9"/>
       <location line="+9"/>
@@ -4241,13 +4241,13 @@
     </message>
     <message>
       <location line="+9"/>
-      <location line="+82"/>
+      <location line="+84"/>
       <source>Use Spectacle</source>
       <translation>Usar Spectacle</translation>
     </message>
     <message>
-      <location line="-81"/>
-      <location line="+82"/>
+      <location line="-83"/>
+      <location line="+84"/>
       <source>Spectacle</source>
       <translation type="unfinished"/>
     </message>
@@ -4258,12 +4258,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+103"/>
+      <location line="+117"/>
       <source>Capture</source>
       <translation>Capturar</translation>
     </message>
     <message>
-      <location line="-93"/>
+      <location line="-107"/>
       <source>Capture fullscreen</source>
       <translation>Capturar pantalla completa</translation>
     </message>
@@ -4303,7 +4303,7 @@
       <translation>Buscar</translation>
     </message>
     <message>
-      <location line="+183"/>
+      <location line="+198"/>
       <source>Recording %1</source>
       <translation>Grabando %1</translation>
     </message>
@@ -5509,7 +5509,7 @@
       <translation>Agrupar</translation>
     </message>
     <message>
-      <location line="+407"/>
+      <location line="+408"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation>No se pudo renombrar</translation>
@@ -5696,7 +5696,7 @@
   <context>
     <name>Details</name>
     <message>
-      <location filename="../modules/dashboard/media/Details.qml" line="+33"/>
+      <location filename="../modules/dashboard/media/Details.qml" line="+39"/>
       <source>Unknown artist</source>
       <translation>Artista desconocido</translation>
     </message>
@@ -8475,7 +8475,7 @@ Ahora salir a tocar el pasto</translation>
     <name>Media</name>
     <message>
       <location filename="../modules/bar/components/Media.qml" line="+22"/>
-      <location filename="../modules/dashboard/Media.qml" line="+129"/>
+      <location filename="../modules/dashboard/Media.qml" line="+161"/>
       <source>Nothing playing</source>
       <translation>No hay nada reproduciéndose</translation>
     </message>
@@ -9298,12 +9298,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+25"/>
-      <location line="+20"/>
+      <location line="+18"/>
       <source>Search notifications</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+111"/>
+      <location line="+110"/>
       <source>Caelestia Mode</source>
       <translation>Modo Caelestia</translation>
     </message>
@@ -9574,6 +9574,21 @@ Ahora salir a tocar el pasto</translation>
       <location line="+1"/>
       <source>Swipe distance before a notification is dismissed</source>
       <translation>Distancia de deslizamiento necesaria para descartar una notificación</translation>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Related settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Muted notification apps</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage applications with disabled notifications or sounds</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10170,12 +10185,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+288"/>
+      <location line="+244"/>
       <source>Font scale</source>
       <translation>Escala de la fuente</translation>
     </message>
     <message>
-      <location line="-287"/>
+      <location line="-243"/>
       <source>Colors</source>
       <translation>Colores</translation>
     </message>
@@ -10612,6 +10627,36 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+4"/>
+      <source>Storage</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Mount, unmount and eject filesystems</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Mount</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Unmount</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Eject</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Removable media</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Notifications</source>
       <translation>Notificaciones</translation>
     </message>
@@ -10817,6 +10862,46 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
       <location line="+4"/>
+      <source>Accessibility</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Text size, motion, magnifier, screen reader</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Follow system text size</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Reduce motion</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Magnifier</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Invert colours</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Colour filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Screen reader</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
       <source>Updates</source>
       <translation>Actualizaciones</translation>
     </message>
@@ -10925,76 +11010,6 @@ Ahora salir a tocar el pasto</translation>
       <location line="+1"/>
       <source>Providers</source>
       <translation>Proveedores</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Accessibility</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Text size, motion, magnifier, screen reader</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Follow system text size</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Reduce motion</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Magnifier</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Invert colours</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Colour filters</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Screen reader</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Storage</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Mount, unmount and eject filesystems</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Mount</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Unmount</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Eject</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Removable media</source>
-      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11121,7 +11136,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>Performance</name>
     <message>
-      <location filename="../modules/dashboard/Performance.qml" line="+40"/>
+      <location filename="../modules/dashboard/Performance.qml" line="+42"/>
       <source>No widgets enabled</source>
       <translation>No hay widgets activados</translation>
     </message>
@@ -11572,7 +11587,7 @@ PIN: %1</source>
   <context>
     <name>QuickShareList</name>
     <message>
-      <location filename="../modules/utilities/cards/QuickShareList.qml" line="+64"/>
+      <location filename="../modules/utilities/cards/QuickShareList.qml" line="+90"/>
       <source>Quick Share</source>
       <translation type="unfinished"/>
     </message>
@@ -11592,7 +11607,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+33"/>
+      <location line="+37"/>
       <source>Incoming file: %1 from %2</source>
       <translation type="unfinished"/>
     </message>
@@ -11612,7 +11627,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+28"/>
+      <location line="+38"/>
       <source>Recent transfers</source>
       <translation type="unfinished"/>
     </message>
@@ -11876,6 +11891,11 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>EasyEffects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep Awake</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -13755,7 +13775,7 @@ PIN: %1</source>
   <context>
     <name>TimersCard</name>
     <message>
-      <location filename="../modules/utilities/cards/TimersCard.qml" line="+71"/>
+      <location filename="../modules/utilities/cards/TimersCard.qml" line="+100"/>
       <source>Timers</source>
       <translation type="unfinished"/>
     </message>
@@ -13770,7 +13790,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+51"/>
       <source>Timer</source>
       <translation type="unfinished"/>
     </message>
@@ -13780,12 +13800,12 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+18"/>
+      <location line="+16"/>
       <source>25m</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+9"/>
       <source>What is it for?</source>
       <translation type="unfinished"/>
     </message>
@@ -14009,7 +14029,7 @@ PIN: %1</source>
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+283"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+287"/>
       <source>Quick Toggles</source>
       <translation>Atajos rápidos</translation>
     </message>
@@ -14790,16 +14810,6 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+5"/>
-      <source>Keep Awake</source>
-      <translation>Mantener activo</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Show the Keep Awake card</source>
-      <translation>Mostrar la tarjeta Mantener despierto</translation>
-    </message>
-    <message>
-      <location line="+7"/>
       <source>Timers</source>
       <translation type="unfinished"/>
     </message>
@@ -15824,7 +15834,7 @@ PIN: %1</source>
   <context>
     <name>caelestia::services::SessionManager</name>
     <message>
-      <location filename="../plugin/src/Caelestia/Services/sessionmanager.cpp" line="+121"/>
+      <location filename="../plugin/src/Caelestia/Services/sessionmanager.cpp" line="+128"/>
       <source>Hibernate failed</source>
       <translation>No se pudo suspender</translation>
     </message>

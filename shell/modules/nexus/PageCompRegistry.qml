@@ -76,6 +76,7 @@ QtObject {
                 SubPage { slot: 21; key: "barPerformance"; Component { BarPerformance {} } }
                 SubPage { slot: 22; key: "barScreenCapture"; Component { BarScreenCapture {} } }
                 SubPage { slot: 23; key: "barKeepAwake"; Component { BarKeepAwake {} } }
+                SubPage { slot: 24; key: "extraBars"; Component { ExtraBarsPanel {} } }
             }
         },
         Component {

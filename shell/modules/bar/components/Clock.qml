@@ -12,7 +12,9 @@ StyledRect {
     property var bar: null
     readonly property var popouts: bar?.popouts ?? null
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    // A panel on a vertical edge lays the clock out vertically: the bar it
+    // lives in knows its own side, the primary bar falls back to the config.
+    property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property real rawScale: !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0
     readonly property real scaleFactor: rawScale < 1.0 ? Math.sqrt(Math.max(0.1, rawScale)) : rawScale
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * scaleFactor)
@@ -256,8 +258,31 @@ StyledRect {
             }
         }
 
+        // The colon the horizontal clock shows between hours and minutes, laid
+        // on its side so it reads as a separator in the stacked layout.
+        Row {
+            id: dotsRow
+
+            readonly property int dotSize: Math.max(2, Math.round(root.textSize * 0.13))
+
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: -Math.round(parent.spacing * 0.5)
+            spacing: Math.max(3, Math.round(root.textSize * 0.18))
+
+            Repeater {
+                model: 2
+
+                Rectangle {
+                    width: dotsRow.dotSize
+                    height: dotsRow.dotSize
+                    radius: Tokens.rounding.full
+                    color: root.colour
+                }
+            }
+        }
+
         StyledText {
-            Layout.topMargin: -parent.spacing - 4
+            Layout.topMargin: -Math.round(parent.spacing * 0.5)
             Layout.alignment: Qt.AlignHCenter
             text: Time.minuteStr
             font: root.fontFor(text, minMetrics.width)

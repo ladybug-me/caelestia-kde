@@ -26,6 +26,10 @@ Item {
     required property Bar.BarWrapper bar
     required property real borderThickness
     required property real overviewBorderThickness
+    // Per-side frame thickness, supplied by ContentWindow. The panels live
+    // inside the frame, so their insets follow it directly instead of
+    // recomputing it from the bar.
+    required property FrameEdges frameEdges
     property var overviewAnimConfig
     readonly property alias osd: osd
     readonly property alias osdWrapper: osdWrapper
@@ -117,10 +121,10 @@ Item {
     }
 
     anchors.fill: parent
-    anchors.leftMargin: (bar.position === "left" ? bar.implicitWidth + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
-    anchors.rightMargin: (bar.position === "right" ? bar.implicitWidth + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
-    anchors.topMargin: (bar.position === "top" ? bar.implicitHeight + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
-    anchors.bottomMargin: (bar.position === "bottom" ? bar.implicitHeight + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * 2 : 0) : borderThickness + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge : 0))
+    anchors.leftMargin: frameEdges.left + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * (bar.position === "left" ? 2 : 1) : 0)
+    anchors.rightMargin: frameEdges.right + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * (bar.position === "right" ? 2 : 1) : 0)
+    anchors.topMargin: frameEdges.top + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * (bar.position === "top" ? 2 : 1) : 0)
+    anchors.bottomMargin: frameEdges.bottom + (GlobalConfig.appearance.islands ? Tokens.spacing.extraLarge * (bar.position === "bottom" ? 2 : 1) : 0)
     states: [
         State {
             name: "right"
@@ -284,8 +288,8 @@ Item {
     BarPopouts.ClipWrapper {
         id: popoutsWrapper
 
-        property string vAnchor: (bar.position === "top" || bar.position === "bottom") ? bar.position : "none"
-        property string hAnchor: (bar.position === "left" || bar.position === "right") ? bar.position : "none"
+        property string vAnchor: (popoutsWrapper.edge === "top" || popoutsWrapper.edge === "bottom") ? popoutsWrapper.edge : "none"
+        property string hAnchor: (popoutsWrapper.edge === "left" || popoutsWrapper.edge === "right") ? popoutsWrapper.edge : "none"
 
         screen: root.screen
         bar: root.bar

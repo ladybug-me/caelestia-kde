@@ -43,6 +43,35 @@ Singleton {
         if (root.openWindow)
             root.openWindow.destroy();
     }
+    function openBarSettings(target: int): void {
+        const win = root.create(null, {
+            initialPageIdx: "panels"
+        });
+
+        if (!win || !win.nexus)
+            return;
+
+        const nState = win.nexus.nState;
+        nState.extraBarsTarget = target;
+        nState.openSubPage("extraBars");
+    }
+
+    function openBarComponents(target: int): void {
+        const win = root.create(null, {
+            initialPageIdx: "panels"
+        });
+
+        if (!win || !win.nexus)
+            return;
+
+        const nState = win.nexus.nState;
+        nState.barComponentsTarget = target;
+
+        if (target >= 0)
+            nState.openSubPage("extraBars");
+
+        nState.openSubPage("barComponents");
+    }
 
     function goBack(): void {
         if (!root.openWindow)

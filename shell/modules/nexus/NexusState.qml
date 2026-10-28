@@ -27,6 +27,13 @@ QtObject {
 
     property int pendingSubPageIdx: -1
 
+    // Which bar the components page edits: -1 is the main bar, anything else
+    // indexes `bar.panels`.
+    property int barComponentsTarget: -1
+
+    // Which bar the extra bars page selects when it opens: -1 is the main bar.
+    property int extraBarsTarget: -1
+
     signal close
     signal subPageOpened(target: var)
     signal subPageClosed
@@ -79,5 +86,7 @@ QtObject {
     onCurrentPageIdxChanged: {
         subPageIdxStack.length = 0;
         pendingSubPageIdx = -1;
+        barComponentsTarget = -1;
+        extraBarsTarget = -1;
     }
 }

@@ -309,7 +309,7 @@ class ShellSurfaceTests(unittest.TestCase):
             ROOT / "shell" / "modules" / "nexus" / "pages" / "panels" / "taskbar" / "BarComponents.qml"
         ).read_text(encoding="utf-8")
         self.assertIn(
-            "BarWidgets.resetToDefaults(GlobalConfig.bar)",
+            "BarWidgets.resetToDefaults(root.targetNode)",
             page,
             "the editor must reset from the compiled defaults rather than from a copy of them",
         )

@@ -17,6 +17,8 @@ Item {
     required property DrawerVisibilities visibilities
 
     readonly property alias content: content
+    readonly property string edge: content.edge
+    readonly property bool horizontalEdge: root.edge === "top" || root.edge === "bottom"
     readonly property bool isHorizontal: bar.isHorizontal
     readonly property bool hovered: popoutsHover.hovered
     property real offsetScale: content.isDetached || content.hasCurrent ? 0 : 1
@@ -24,7 +26,7 @@ Item {
     readonly property real targetX: {
         if (content.isDetached)
             return (parent.width - content.nonAnimWidth) / 2;
-        if (isHorizontal) {
+        if (root.horizontalEdge) {
             if (content.sidebarOpen && !content.isDockPopout)
                 return parent.width - content.nonAnimWidth;
 
@@ -37,25 +39,25 @@ Item {
                 return Math.max(off + diff, 0);
             return Math.max(off, 0);
         }
-        if (bar.position === "right")
-            return parent.width - implicitWidth;
-        return 0;
+        if (root.edge === "right")
+            return parent.width - implicitWidth - content.inset;
+        return content.inset;
     }
 
     visible: width > 0 && height > 0
     clip: true
 
-    implicitWidth: isHorizontal ? content.implicitWidth : content.implicitWidth * (1 - offsetScale)
-    implicitHeight: isHorizontal ? content.implicitHeight * (1 - offsetScale) : content.implicitHeight
+    implicitWidth: !root.horizontalEdge ? content.implicitWidth * (1 - offsetScale) : content.implicitWidth
+    implicitHeight: !root.horizontalEdge ? content.implicitHeight : content.implicitHeight * (1 - offsetScale)
 
     x: targetX
     y: {
         if (content.isDetached)
             return (parent.height - content.nonAnimHeight) / 2;
-        if (isHorizontal) {
-            if (bar.position === "bottom")
-                return parent.height - implicitHeight;
-            return 0;
+        if (root.horizontalEdge) {
+            if (root.edge === "bottom")
+                return parent.height - implicitHeight - content.inset;
+            return content.inset;
         }
 
         const off = content.currentCenter - parent.topMargin - content.nonAnimHeight / 2;
@@ -70,7 +72,7 @@ Item {
     }
 
     Behavior on x {
-        enabled: content.isDetached || isHorizontal
+        enabled: content.isDetached || root.horizontalEdge
 
         Anim {
             duration: content.animLength
@@ -79,7 +81,7 @@ Item {
     }
 
     Behavior on y {
-        enabled: content.isDetached || (!isHorizontal && root.offsetScale < 1)
+        enabled: content.isDetached || (!root.horizontalEdge && root.offsetScale < 1)
 
         Anim {
             duration: content.animLength
@@ -97,17 +99,17 @@ Item {
         screen: root.screen
         offsetScale: root.offsetScale
         visibilities: root.visibilities
-        underSidebar: !root.isHorizontal || content.currentCenter - root.parent.leftMargin >= root.parent.width - Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width)
+        underSidebar: !bar.isHorizontal || content.currentCenter - root.parent.leftMargin >= root.parent.width - Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width)
 
-        anchors.leftMargin: bar.position === "left" ? (-implicitWidth - 5) * root.offsetScale : 0
-        anchors.rightMargin: bar.position === "right" ? (-implicitWidth - 5) * root.offsetScale : 0
-        anchors.topMargin: bar.position === "top" ? (-implicitHeight - 5) * root.offsetScale : 0
-        anchors.bottomMargin: bar.position === "bottom" ? (-implicitHeight - 5) * root.offsetScale : 0
+        anchors.leftMargin: root.edge === "left" ? (-implicitWidth - 5) * root.offsetScale : 0
+        anchors.rightMargin: root.edge === "right" ? (-implicitWidth - 5) * root.offsetScale : 0
+        anchors.topMargin: root.edge === "top" ? (-implicitHeight - 5) * root.offsetScale : 0
+        anchors.bottomMargin: root.edge === "bottom" ? (-implicitHeight - 5) * root.offsetScale : 0
 
         states: [
             State {
                 name: "left"
-                when: bar.position === "left"
+                when: root.edge === "left"
 
                 AnchorChanges {
                     target: content
@@ -121,7 +123,7 @@ Item {
             },
             State {
                 name: "right"
-                when: bar.position === "right"
+                when: root.edge === "right"
 
                 AnchorChanges {
                     target: content
@@ -135,7 +137,7 @@ Item {
             },
             State {
                 name: "top"
-                when: bar.position === "top"
+                when: root.edge === "top"
 
                 AnchorChanges {
                     target: content
@@ -149,7 +151,7 @@ Item {
             },
             State {
                 name: "bottom"
-                when: bar.position === "bottom"
+                when: root.edge === "bottom"
 
                 AnchorChanges {
                     target: content

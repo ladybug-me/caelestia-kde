@@ -12,7 +12,7 @@ StyledRect {
 
     required property var popouts
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
 
     implicitWidth: isHorizontal ? contentLayout.implicitWidth + Tokens.padding.medium * 2 : Tokens.sizes.bar.innerWidth
     implicitHeight: isHorizontal ? Tokens.sizes.bar.innerWidth : contentLayout.implicitHeight + Tokens.padding.medium * 2

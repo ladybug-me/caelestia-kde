@@ -163,7 +163,7 @@ QObjectList AppDb::entries() const {
 }
 
 void AppDb::setEntries(const QObjectList& entries) {
-    if (this->entries() == entries) {
+    if (m_entries.size() == entries.size() && std::equal(m_entries.cbegin(), m_entries.cend(), entries.cbegin())) {
         return;
     }
 
@@ -239,9 +239,10 @@ void AppDb::incrementFrequency(const QString& id) {
 
     auto* app = m_apps.value(id);
     if (app) {
-        m_rankTree.erase(makeKey(app));
+        m_rankTree.erase(app->key);
         app->incrementFrequency();
-        m_rankTree.insert({ makeKey(app), app });
+        app->key = makeKey(app);
+        m_rankTree.insert({ app->key, app });
         reorderCachedSorted();
         emit appsChanged();
     } else {
@@ -260,7 +261,8 @@ AppRankKey AppDb::makeKey(const AppEntry* app) const {
 void AppDb::rebuildRankTree() {
     m_rankTree.clear();
     for (auto* app : std::as_const(m_apps)) {
-        m_rankTree.insert({ makeKey(app), app });
+        app->key = makeKey(app);
+        m_rankTree.insert({ app->key, app });
     }
 }
 
@@ -273,10 +275,7 @@ void AppDb::rebuildAlphaApps() {
     m_cachedAlphaApps.clear();
     m_cachedAlphaApps.reserve(alphaList.size());
     for (auto* a : std::as_const(alphaList)) {
-        // Never hand QML a raw pointer to a destroyed desktop entry
-        if (auto* entry = a->entry()) {
-            m_cachedAlphaApps.append(QVariant::fromValue(entry));
-        }
+        m_cachedAlphaApps.append(QVariant::fromValue(a->entry()));
     }
 }
 
@@ -325,24 +324,16 @@ void AppDb::updateApps() {
     bool dirty = false;
 
     for (const auto& entry : std::as_const(m_entries)) {
-        if (!entry) {
-            continue;
-        }
         const auto id = entry->property("id").toString();
         if (!m_apps.contains(id)) {
             dirty = true;
             auto* const newEntry = new AppEntry(entry.data(), getFrequency(id), this);
-            QObject::connect(newEntry, &AppEntry::removed, this, [id, newEntry, this]() {
-                // The id may already belong to a newer AppEntry; only drop this one.
-                if (m_apps.value(id) != newEntry) {
-                    return;
+            newEntry->key = makeKey(newEntry);
+            QObject::connect(newEntry, &AppEntry::removed, this, [id, this]() {
+                if (auto* taken = m_apps.take(id)) {
+                    m_rankTree.erase(taken->key);
+                    emit appsChanged();
                 }
-                m_apps.remove(id);
-                // Rebuild instead of erasing by key: the key's name is gone with the entry.
-                rebuildRankTree();
-                reorderCachedSorted();
-                rebuildAlphaApps();
-                emit appsChanged();
             });
             m_apps.insert(id, newEntry);
         }
@@ -350,9 +341,7 @@ void AppDb::updateApps() {
 
     QSet<QString> newIds;
     for (const auto& entry : std::as_const(m_entries)) {
-        if (entry) {
-            newIds.insert(entry->property("id").toString());
-        }
+        newIds.insert(entry->property("id").toString());
     }
 
     for (auto it = m_apps.begin(); it != m_apps.end();) {

@@ -68,6 +68,8 @@ public:
     [[nodiscard]] QString categories() const;
     [[nodiscard]] QString keywords() const;
 
+    AppRankKey key;
+
 signals:
     void frequencyChanged();
     void nameChanged();

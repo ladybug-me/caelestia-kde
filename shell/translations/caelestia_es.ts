@@ -1736,7 +1736,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+5"/>
+      <location line="+7"/>
       <source>Web search engine</source>
       <translation type="unfinished"/>
     </message>
@@ -3738,7 +3738,7 @@
   <context>
     <name>BatteryTank</name>
     <message>
-      <location filename="../modules/dashboard/performance/BatteryTank.qml" line="+77"/>
+      <location filename="../modules/dashboard/performance/BatteryTank.qml" line="+79"/>
       <source>Battery</source>
       <translation>Batería</translation>
     </message>
@@ -6309,12 +6309,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
       <location line="+0"/>
       <location line="+33"/>
-      <location line="+87"/>
+      <location line="+65"/>
       <source>Focus</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-118"/>
+      <location line="-96"/>
       <source>No session running now</source>
       <translation type="unfinished"/>
     </message>
@@ -6330,7 +6330,7 @@ Ahora salir a tocar el pasto</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+9"/>
       <source>Follow the calendar</source>
       <translation type="unfinished"/>
     </message>
@@ -6340,7 +6340,7 @@ Ahora salir a tocar el pasto</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+39"/>
+      <location line="+18"/>
       <source>Schedules</source>
       <translation type="unfinished"/>
     </message>
@@ -6360,7 +6360,7 @@ Ahora salir a tocar el pasto</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+49"/>
+      <location line="+50"/>
       <source>From</source>
       <translation type="unfinished"/>
     </message>
@@ -6380,12 +6380,12 @@ Ahora salir a tocar el pasto</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+17"/>
+      <location line="+6"/>
       <source>Notifications from these apps still pop up during a focus session.</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+7"/>
       <source>Allow an application</source>
       <translation type="unfinished"/>
     </message>
@@ -6687,7 +6687,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>HeroCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+164"/>
+      <location filename="../modules/dashboard/performance/HeroCard.qml" line="+166"/>
       <source>Usage</source>
       <translation>Uso</translation>
     </message>
@@ -8344,7 +8344,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>LyricsAndSelector</name>
     <message>
-      <location filename="../modules/dashboard/media/LyricsAndSelector.qml" line="+31"/>
+      <location filename="../modules/dashboard/media/LyricsAndSelector.qml" line="+33"/>
       <source>Lyrics</source>
       <translation>Letras</translation>
     </message>
@@ -8535,7 +8535,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>MemoryCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/MemoryCard.qml" line="+42"/>
+      <location filename="../modules/dashboard/performance/MemoryCard.qml" line="+44"/>
       <source>Memory</source>
       <translation>Memoria</translation>
     </message>
@@ -8548,9 +8548,9 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>NavPane</name>
     <message>
-      <location filename="../modules/nexus/NavPane.qml" line="+35"/>
-      <source>Search settings</source>
-      <translation>Buscar en configuración</translation>
+      <location filename="../modules/nexus/NavPane.qml" line="+70"/>
+      <source>Press / to Search Settings</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -8639,7 +8639,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>NetworkCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/NetworkCard.qml" line="+42"/>
+      <location filename="../modules/dashboard/performance/NetworkCard.qml" line="+44"/>
       <source>Network</source>
       <translation>Red</translation>
     </message>
@@ -11015,7 +11015,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>PageRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageRegistry.qml" line="+22"/>
+      <location filename="../modules/nexus/PageRegistry.qml" line="+31"/>
       <source>Main Page</source>
       <translation>Página principal</translation>
     </message>
@@ -12128,7 +12128,7 @@ PIN: %1</source>
   <context>
     <name>SearchResults</name>
     <message>
-      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+149"/>
+      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+132"/>
       <source>in </source>
       <translation>en </translation>
     </message>
@@ -13192,7 +13192,7 @@ PIN: %1</source>
   <context>
     <name>StorageCard</name>
     <message>
-      <location filename="../modules/dashboard/performance/StorageCard.qml" line="+74"/>
+      <location filename="../modules/dashboard/performance/StorageCard.qml" line="+76"/>
       <source>Used</source>
       <translation>Usado</translation>
     </message>
@@ -13752,12 +13752,12 @@ PIN: %1</source>
   <context>
     <name>Timers</name>
     <message>
-      <location filename="../services/Timers.qml" line="+34"/>
+      <location filename="../services/Timers.qml" line="+35"/>
       <source>Timers</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+35"/>
+      <location line="+53"/>
       <source>Timer finished</source>
       <translation type="unfinished"/>
     </message>
@@ -13767,7 +13767,7 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+88"/>
+      <location line="+102"/>
       <source>%1 timers finished while the shell was not running.</source>
       <translation type="unfinished"/>
     </message>
@@ -13790,12 +13790,22 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+51"/>
+      <location line="+64"/>
       <source>Timer</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+9"/>
+      <location line="+16"/>
+      <source>Unpin this timer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Pin this timer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>Cancel this timer</source>
       <translation type="unfinished"/>
     </message>

@@ -21,6 +21,9 @@ Item {
     // Wallpaper layer, sampled for the frosted cards of large items.
     property Item wallpaper: null
     readonly property point gridOrigin: Qt.point(gridItem.x, gridItem.y)
+    // The same origin in window coordinates: the layer that draws the cards' edges sits
+    // above whatever a plugin paints over them, so it cannot measure from the grid itself.
+    readonly property point widgetOrigin: Qt.point(root.x + gridOrigin.x, root.y + gridOrigin.y)
     // The wallpaper blurred once for all frosted cards, null when unused.
     readonly property Item glass: glassLoader.item
 
@@ -977,6 +980,16 @@ Item {
         DesktopLayout.addWidgetRequested(screenData.name, gridItem.x + gridItem.width / 2, gridItem.y + gridItem.height / 2);
     }
 
+    /// Opens the settings of one widget, handing over the card's rectangle so the panel
+    /// can open beside it rather than on top of it.
+    function openWidgetSettings(key: string): void {
+        if (!isWidgetKey(key))
+            return;
+        const tile = tiles[key];
+        const rect = tile ? { x: gridItem.x + tile.x, y: gridItem.y + tile.y, width: tile.width, height: tile.height } : { x: gridItem.x, y: gridItem.y, width: 0, height: 0 };
+        DesktopLayout.widgetSettingsRequested(screenData.name, rect, nameOf(key));
+    }
+
     function removeWidgets(keys: var): void {
         const widgets = Object.assign({}, DesktopLayout.widgets);
         const positions = Object.assign({}, DesktopLayout.positions);
@@ -1009,6 +1022,14 @@ Item {
                 closeGroup();
             else
                 WidgetEditor.close();
+        } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            // The way in without the mouse: pick a widget in the editor and open its
+            // settings, the same panel the gear opens.
+            const picked = selectedKeys().filter(isWidgetKey);
+            if (picked.length === 1)
+                openWidgetSettings(picked[0]);
+            else
+                return false;
         } else if (ctrl && event.key === Qt.Key_A) {
             setSelection(Engine.orderedKeys(contextPositions(), rows).filter(isWidgetKey));
         } else if (ctrl && event.key === Qt.Key_C) {
@@ -1944,6 +1965,7 @@ wl-paste --no-newline --type text/uri-list`]
                 onDoubleClicked: mouse => root.tileDoubleClicked(key, mouse)
                 onContextMenuRequested: (x, y) => root.tileContextMenu(key, x, y)
                 onDragRequested: root.beginDrag(key)
+                onSettingsRequested: root.openWidgetSettings(key)
 
                 Behavior on x {
                     Anim {}

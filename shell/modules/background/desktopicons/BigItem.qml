@@ -30,7 +30,15 @@ Item {
             h: Math.max(1, Math.min(raw.h, controller.rows))
         };
     }
-    readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true)
+    readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true || config.background === false)
+    // The card's look, which any widget can override. An unset key falls back to the
+    // theme's value, so the desktop keeps one look until someone changes one widget.
+    readonly property real defaultBackgroundOpacity: controller.widgetCatalog?.defaultBackgroundOpacity ?? 0.4
+    readonly property real backgroundOpacity: typeof config.backgroundOpacity === "number" ? Math.max(0, Math.min(1, config.backgroundOpacity)) : root.defaultBackgroundOpacity
+    readonly property real backgroundRadius: typeof config.backgroundRadius === "number" ? Math.max(0, config.backgroundRadius) : (controller.widgetCatalog?.defaultBackgroundRadius ?? Tokens.rounding.extraLarge)
+    // A widget may step out of the way when it has nothing to show (no track playing).
+    // Editing still shows it, or it could never be brought back.
+    readonly property bool hiddenByContent: !widgetEditMode && content?.wantsHidden === true
     // Locked widgets cannot be dragged or resized from the desktop.
     readonly property bool locked: !isGroup && widget?.locked === true
     // Keeps the outline on every widget while the option is on, so that one that
@@ -38,6 +46,24 @@ Item {
     // follow the desktop icons toggle: widgets stay on the desktop without them.
     // Edit mode outlines every card for the same reason.
     readonly property bool outlined: !isGroup && (DesktopLayout.widgetOutlines || widgetEditMode)
+
+    // The card's edge, and the editor's frame around it, are drawn by WidgetEdges on
+    // top of every background layer: a plugin may paint over the widgets (the wallpaper
+    // depth one redraws the wallpaper's foreground above them), and an edge buried under
+    // it leaves a card with no way to say where it ends.
+    readonly property rect edgeRect: Qt.rect(root.x + card.x, root.y + card.y, card.width, card.height)
+    readonly property real edgeRadius: card.radius
+    // A card with no background still gets its edge: the widget has to say where it
+    // ends, or it dissolves into the wallpaper behind it.
+    readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : 1
+    // Selection brightens the edge instead of darkening it -- the card you are working
+    // on must not be the faintest one on the desktop -- and a frameless card's edge is
+    // drawn stronger, since it has no fill to read against.
+    readonly property color edgeColor: root.selected || root.mergeTarget || root.focusVisible ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)
+    readonly property bool edgeShown: root.opacity > 0.01 && card.width > 0 && card.height > 0
+    // The editor's frame, on every widget while the outlines option is on: it locates
+    // widgets that are empty or hidden by their own condition.
+    readonly property bool frameShown: root.outlined && !root.selected && !root.mergeTarget && !root.focusVisible
 
     property bool selected: false
     property bool focusVisible: false
@@ -74,6 +100,7 @@ Item {
     signal doubleClicked(var mouse)
     signal contextMenuRequested(real x, real y)
     signal dragRequested(real x, real y)
+    signal settingsRequested
 
     function setConfig(patch: var): void {
         if (!isGroup)
@@ -98,11 +125,18 @@ Item {
         return true;
     }
 
-    opacity: (dimmed ? 0.4 : 1) * appear
+    opacity: (dimmed ? 0.4 : 1) * appear * (hiddenByContent ? 0 : 1)
     scale: (0.9 + 0.1 * appear) * (mergeTarget ? 1.02 : 1)
+    enabled: !hiddenByContent
     Component.onCompleted: appear = 1
 
     Behavior on appear {
+        Anim {
+            type: Anim.DefaultEffects
+        }
+    }
+
+    Behavior on opacity {
         Anim {
             type: Anim.DefaultEffects
         }
@@ -152,10 +186,8 @@ Item {
         anchors.rightMargin: root.frameless ? 0 : root.sideGap
         anchors.topMargin: root.frameless ? 0 : root.topGap
         anchors.bottomMargin: root.frameless ? 0 : root.labelHeight
-        radius: root.frameless ? Tokens.rounding.medium : Tokens.rounding.extraLarge
-        color: root.frameless ? "transparent" : (GlobalConfig.appearance.pitchBlack ? Qt.alpha("#000000", 0.7) : Qt.alpha(Colours.palette.m3surfaceContainer, 0.4))
-        border.width: root.selected || root.mergeTarget || root.focusVisible ? 2 : (root.frameless ? 0 : 1)
-        border.color: root.selected || root.mergeTarget || root.focusVisible ? Qt.darker(Colours.palette.m3primary, 1.45) : Qt.alpha(Colours.palette.m3onSurface, 0.12)
+        radius: root.frameless ? Tokens.rounding.medium : root.backgroundRadius
+        color: root.frameless ? "transparent" : Qt.alpha(GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surfaceContainer, root.backgroundOpacity)
 
         // Background of the card: selects, opens, drags and resizes the item.
         // Controls inside the content take their own clicks first. In edit mode the
@@ -279,19 +311,36 @@ Item {
                 }
             }
         }
-    }
 
-    // Outline for every widget while the outlines option is on: locates widgets
-    // that are empty or hidden by their own condition.
-    StyledRect {
-        id: outline
+        // Edit mode: a way into this widget's settings without leaving the mode. It sits
+        // inside the corner grip's reach, or the press would start a resize instead.
+        StyledRect {
+            id: settingsButton
 
-        anchors.fill: card
-        visible: root.outlined && !root.selected && !root.mergeTarget && !root.focusVisible
-        color: "transparent"
-        radius: card.radius
-        border.width: 2
-        border.color: Colours.palette.m3primary
+            visible: root.widgetEditMode && !root.isGroup
+            anchors.top: card.top
+            anchors.right: card.right
+            anchors.margins: root.gripCorner + Tokens.padding.extraSmall
+            implicitWidth: Math.round(Tokens.padding.extraLargeIncreased * 1.15)
+            implicitHeight: implicitWidth
+            radius: Tokens.rounding.full
+            color: Qt.alpha(Colours.palette.m3surfaceContainerHighest, 0.92)
+            border.width: 1
+            border.color: Qt.alpha(Colours.palette.m3outline, 0.3)
+            z: 3
+
+            MaterialIcon {
+                anchors.centerIn: parent
+                text: "tune"
+                color: Colours.palette.m3onSurface
+                fontStyle: Tokens.font.icon.small
+            }
+
+            StateLayer {
+                radius: parent.radius
+                onClicked: root.settingsRequested()
+            }
+        }
     }
 
     // Centred in the gap down to the next row's card (its top gap included), so

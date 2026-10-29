@@ -175,6 +175,14 @@ Variants {
                 }
             }
         }
+        // Above the background widgets a plugin registers: the wallpaper depth
+        // foreground repaints the wallpaper over the cards, so their edges are drawn
+        // over it rather than inside them.
+        WidgetEdges {
+            anchors.fill: parent
+            icons: desktopIcons
+            z: 4096
+        }
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Bottom
         WlrLayershell.keyboardFocus: (!Config.background.disableQuickshellDesktop && desktopIcons.renameActive) ? WlrKeyboardFocus.Exclusive : (!Config.background.disableQuickshellDesktop && desktopIcons.visible) ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None

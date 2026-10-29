@@ -107,6 +107,12 @@ Controls.Menu {
             }
         },
         Controls.MenuItem {
+            text: qsTr("Widget Settings...")
+            icon: "tune"
+            visible: root.single && root.firstWidget !== null
+            onClicked: root.controller?.openWidgetSettings(root.firstKey)
+        },
+        Controls.MenuItem {
             text: qsTr("Change Folder...")
             icon: "drive_folder_upload"
             visible: root.firstWidget?.type === "folder"

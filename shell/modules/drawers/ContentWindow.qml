@@ -39,7 +39,7 @@ StyledWindow {
     // active workspace changes — hasFullscreenOn() filters by workspace, but
     // a plain function call only re-runs when its direct property deps change.
     readonly property bool actualFullscreen: (Kwin.activeWsId, Kwin.hasFullscreenOn(screen?.name ?? ""))
-    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || desktopContextMenu.expanded || desktopIconContextMenu.expanded || dropMenu.expanded || viewOptions.open || widgetGallery.open || visibilities.overview || Visibilities.launcherOpen || visibilities.dashboard || visibilities.session || visibilities.utilities
+    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || desktopContextMenu.expanded || desktopIconContextMenu.expanded || dropMenu.expanded || viewOptions.open || widgetGallery.open || widgetSettings.open || visibilities.overview || Visibilities.launcherOpen || visibilities.dashboard || visibilities.session || visibilities.utilities
     readonly property bool hasOpenOverlay: focusGrabState.active || transientOverlayOpen || visibilities.sidebar
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
     // The launcher is one panel across outputs: a screen that does not show it
@@ -761,6 +761,11 @@ StyledWindow {
                 }
             }
 
+            function onWidgetSettingsRequested(screenName: string, rect: var, id: string): void {
+                if (root.screen.name === screenName)
+                    widgetSettings.openAt(rect, id);
+            }
+
             target: DesktopLayout
         }
         Item {
@@ -793,6 +798,12 @@ StyledWindow {
         }
         WidgetGallery {
             id: widgetGallery
+
+            controller: DesktopLayout.controllerFor(root.screen.name)
+            z: 10000
+        }
+        WidgetSettings {
+            id: widgetSettings
 
             controller: DesktopLayout.controllerFor(root.screen.name)
             z: 10000

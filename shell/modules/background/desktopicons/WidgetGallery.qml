@@ -1,9 +1,11 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
+import qs.components.controls
 import qs.components.effects
 import qs.services
 
@@ -79,59 +81,78 @@ Item {
                     font: Tokens.font.title.medium
                 }
 
-                GridLayout {
-                    columns: 3
-                    rowSpacing: Tokens.spacing.small
-                    columnSpacing: Tokens.spacing.small
+                // The catalogue has more types than fit on a short screen, so the grid
+                // scrolls instead of running off the panel.
+                Flickable {
+                    id: galleryScroll
 
-                    Repeater {
-                        model: root.controller?.widgetCatalog?.types ?? []
+                    Layout.preferredWidth: cards.implicitWidth
+                    Layout.preferredHeight: Math.min(cards.implicitHeight, Math.max(160, root.height * 0.55))
+                    contentWidth: cards.implicitWidth
+                    contentHeight: cards.implicitHeight
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
 
-                        StyledRect {
-                            id: card
+                    ScrollBar.vertical: StyledScrollBar {
+                        flickable: galleryScroll
+                    }
 
-                            required property var modelData
+                    GridLayout {
+                        id: cards
 
-                            implicitWidth: 150
-                            implicitHeight: cardColumn.implicitHeight + Tokens.padding.large * 2
-                            radius: Tokens.rounding.medium
-                            color: cardArea.containsMouse ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
+                        columns: 3
+                        rowSpacing: Tokens.spacing.small
+                        columnSpacing: Tokens.spacing.small
 
-                            ColumnLayout {
-                                id: cardColumn
+                        Repeater {
+                            model: root.controller?.widgetCatalog?.types ?? []
 
-                                anchors.centerIn: parent
-                                spacing: Tokens.spacing.small
+                            StyledRect {
+                                id: card
 
-                                MaterialIcon {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: card.modelData.icon
-                                    color: Colours.palette.m3primary
-                                    fontStyle: Tokens.font.icon.builders.extraLarge.build()
+                                required property var modelData
+
+                                implicitWidth: 150
+                                implicitHeight: cardColumn.implicitHeight + Tokens.padding.large * 2
+                                radius: Tokens.rounding.medium
+                                color: cardArea.containsMouse ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
+
+                                ColumnLayout {
+                                    id: cardColumn
+
+                                    anchors.centerIn: parent
+                                    spacing: Tokens.spacing.small
+
+                                    MaterialIcon {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: card.modelData.icon
+                                        color: Colours.palette.m3primary
+                                        fontStyle: Tokens.font.icon.builders.extraLarge.build()
+                                    }
+
+                                    StyledText {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: card.modelData.name
+                                    }
+
+                                    StyledText {
+                                        Layout.alignment: Qt.AlignHCenter
+                                        text: `${card.modelData.size.w} × ${card.modelData.size.h}`
+                                        color: Colours.palette.m3outline
+                                        font: Tokens.font.label.small
+                                    }
                                 }
 
-                                StyledText {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: card.modelData.name
-                                }
+                                MouseArea {
+                                    id: cardArea
 
-                                StyledText {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: `${card.modelData.size.w} × ${card.modelData.size.h}`
-                                    color: Colours.palette.m3outline
-                                    font: Tokens.font.label.small
-                                }
-                            }
-
-                            MouseArea {
-                                id: cardArea
-
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    root.open = false;
-                                    root.controller.addWidget(card.modelData.type, root.cell);
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        root.open = false;
+                                        root.controller.addWidget(card.modelData.type, root.cell);
+                                    }
                                 }
                             }
                         }
@@ -139,8 +160,11 @@ Item {
                 }
 
                 StyledText {
-                    text: qsTr("Drag a widget's border or corner to resize it; right-click for more")
+                    Layout.preferredWidth: cards.implicitWidth
+                    Layout.maximumWidth: cards.implicitWidth
+                    text: qsTr("Drag a widget's border or corner to resize it; its gear in edit mode opens its settings")
                     color: Colours.palette.m3outline
+                    wrapMode: Text.Wrap
                 }
             }
         }

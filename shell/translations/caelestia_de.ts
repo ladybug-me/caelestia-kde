@@ -857,18 +857,18 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+490"/>
-      <location line="+1011"/>
+      <location line="+502"/>
+      <location line="+1012"/>
       <source>Rate limited - retrying in %1s…</source>
       <translation>Rate limitiert - erneut versuchen in %1s…</translation>
     </message>
     <message>
-      <location line="-661"/>
+      <location line="-662"/>
       <source>(stopped)</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+868"/>
+      <location line="+869"/>
       <source>Chat</source>
       <translation type="unfinished"/>
     </message>
@@ -962,18 +962,18 @@
     </message>
     <message>
       <location line="+27"/>
-      <location line="+529"/>
+      <location line="+545"/>
       <source>Checking…</source>
       <translation>Überprüfe…</translation>
     </message>
     <message>
-      <location line="-527"/>
-      <location line="+506"/>
+      <location line="-543"/>
+      <location line="+522"/>
       <source>Not installed</source>
       <translation>Nicht installiert</translation>
     </message>
     <message>
-      <location line="-497"/>
+      <location line="-513"/>
       <source>Daemon not running - start it with: sudo systemctl start ollama</source>
       <translation>Daemon läuft nicht - starte ihn mit: sudo systemctl start ollama</translation>
     </message>
@@ -1021,36 +1021,36 @@
     </message>
     <message>
       <location line="+9"/>
-      <location line="+150"/>
+      <location line="+166"/>
       <source>Status</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-141"/>
+      <location line="-157"/>
       <source>Download Ollama</source>
       <translation>Ollama herunterladen</translation>
     </message>
     <message>
       <location line="+1"/>
       <location line="+5"/>
-      <location line="+157"/>
+      <location line="+173"/>
       <location line="+18"/>
       <source>Installing…</source>
       <translation>Installiere…</translation>
     </message>
     <message>
-      <location line="-169"/>
+      <location line="-185"/>
       <source>Claude</source>
       <translation>Jörg</translation>
     </message>
     <message>
       <location line="+5"/>
-      <location line="+118"/>
+      <location line="+134"/>
       <source>Claude Code</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-117"/>
+      <location line="-133"/>
       <source>Uses the Claude CLI and your Claude login</source>
       <translation>Verwendet den Claude CLI und deinen Claude Login</translation>
     </message>
@@ -1120,7 +1120,7 @@
       <translation>Kuratierte Kodierungsmodelle, bezahlen, während du gehst</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+7"/>
       <source>opencode Go</source>
       <translation type="unfinished"/>
     </message>
@@ -1130,12 +1130,22 @@
       <translation>Monatliches Abonnement; teilt Zen&apos;s Schlüssel</translation>
     </message>
     <message>
-      <location line="+13"/>
+      <location line="+8"/>
+      <source>Cheaper Inference</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>OpenAI-compatible gateway; one key for models from multiple vendors</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
       <source>API keys</source>
       <translation>API-Schlüssel</translation>
     </message>
     <message>
-      <location line="+61"/>
+      <location line="+68"/>
       <source>Download Claude Code</source>
       <translation>Claude Code herunterladen</translation>
     </message>
@@ -1248,9 +1258,39 @@
     </message>
   </context>
   <context>
+    <name>Animations</name>
+    <message>
+      <location filename="../modules/launcher/services/Animations.qml" line="+16"/>
+      <location line="+18"/>
+      <location line="+70"/>
+      <source>Default (Material-3 Expressive)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-68"/>
+      <source>Reset animations</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Default shell animations restored</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Applied animation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+64"/>
+      <source>Reset to built-in shell animation curves</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>AnimationsList</name>
     <message>
-      <location filename="../modules/launcher/AnimationsList.qml" line="+146"/>
+      <location filename="../modules/launcher/AnimationsList.qml" line="+148"/>
       <source>Use default shell animations</source>
       <translation>Standard Shell-Animationen verwenden</translation>
     </message>
@@ -1442,7 +1482,7 @@
   <context>
     <name>AppearancePage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+22"/>
+      <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+23"/>
       <location line="+6"/>
       <source>Follow system</source>
       <translation type="unfinished"/>
@@ -1623,27 +1663,47 @@
       <translation>Abstand Skala</translation>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+12"/>
       <source>Padding scale</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Animation speed scale</source>
-      <translation>Animationsgeschwindigkeitsmaßstab</translation>
-    </message>
-    <message>
-      <location line="+12"/>
+      <location line="+10"/>
       <source>Animations</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Toggle animations on/off</source>
+      <location line="+11"/>
+      <source>Enable animations</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+1"/>
+      <source>Toggle fluid animations across the shell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Animation preset</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Motion curves and timing profile</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+24"/>
+      <source>Animation speed scale</source>
+      <translation>Animationsgeschwindigkeitsmaßstab</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Speed multiplier applied to all animation durations</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
       <source>Corners &amp; effects</source>
       <translation>Ecken &amp; Effekte</translation>
     </message>
@@ -4635,7 +4695,7 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location filename="../modules/sidebar/Content.qml" line="+113"/>
+      <location filename="../modules/sidebar/Content.qml" line="+114"/>
       <source>Notifications</source>
       <translation>Benachrichtigungen</translation>
     </message>
@@ -7102,17 +7162,27 @@ Now go touch grass</source>
   <context>
     <name>KeyCaptureDialog</name>
     <message>
-      <location filename="../modules/nexus/common/KeyCaptureDialog.qml" line="+153"/>
+      <location filename="../modules/nexus/common/KeyCaptureDialog.qml" line="+192"/>
       <source>Record Keybind</source>
       <translation>Tastaturbelegung</translation>
     </message>
     <message>
-      <location line="+69"/>
+      <location line="+140"/>
       <source>Press keys now...</source>
       <translation>Drücke jetzt Tasten...</translation>
     </message>
     <message>
-      <location line="+50"/>
+      <location line="+64"/>
+      <source>Hold Escape to cancel (%1s)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+39"/>
+      <source>Hold Enter to accept shortcut (%1s)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+25"/>
       <source>Already used by %1</source>
       <translation type="unfinished"/>
     </message>
@@ -7143,93 +7213,98 @@ Now go touch grass</source>
   <context>
     <name>KrohnkitePage</name>
     <message>
-      <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+20"/>
+      <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+24"/>
       <source>BTree</source>
       <translation>Bäume</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+299"/>
+      <location line="+329"/>
       <source>Monocle</source>
       <translation>Monokle</translation>
     </message>
     <message>
-      <location line="-298"/>
-      <location line="+291"/>
+      <location line="-328"/>
+      <location line="+321"/>
       <source>Floating</source>
       <translation>Schweben</translation>
     </message>
     <message>
-      <location line="-290"/>
-      <location line="+304"/>
+      <location line="-320"/>
+      <location line="+334"/>
       <source>Quarter</source>
       <translation>Quartal</translation>
     </message>
     <message>
-      <location line="-303"/>
-      <location line="+317"/>
+      <location line="-333"/>
+      <location line="+347"/>
       <source>Spread</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-316"/>
-      <location line="+323"/>
+      <location line="-346"/>
+      <location line="+353"/>
       <source>Stacked</source>
       <translation>Gestapelt</translation>
     </message>
     <message>
-      <location line="-322"/>
-      <location line="+329"/>
+      <location line="-352"/>
+      <location line="+359"/>
       <source>Stair</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-328"/>
-      <location line="+357"/>
+      <location line="-358"/>
+      <location line="+387"/>
       <source>Columns</source>
       <translation>Spalten</translation>
     </message>
     <message>
-      <location line="-356"/>
-      <location line="+334"/>
+      <location line="-386"/>
+      <location line="+364"/>
       <source>Three Column</source>
       <translation>Drei Spalte</translation>
     </message>
     <message>
-      <location line="-333"/>
-      <location line="+305"/>
+      <location line="-363"/>
+      <location line="+335"/>
       <source>Spiral</source>
       <translation>Spirale</translation>
     </message>
     <message>
-      <location line="-304"/>
-      <location line="+339"/>
+      <location line="-334"/>
+      <location line="+369"/>
       <source>Tile</source>
       <translation>Kachel</translation>
     </message>
     <message>
-      <location line="-332"/>
-      <location line="+37"/>
+      <location line="-350"/>
+      <location line="+78"/>
       <source>Window Tiling</source>
       <translation>Fensterverdrehen</translation>
     </message>
     <message>
-      <location line="-32"/>
-      <source>Save Changes</source>
-      <translation>Änderungen speichern</translation>
+      <location line="-72"/>
+      <source>Updating...</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Logout to Apply Changes</source>
-      <translation>Abmelden, um Änderungen anzuwenden</translation>
+      <location line="+0"/>
+      <source>Update Krohnkite (v%1)</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+23"/>
+      <location line="+0"/>
+      <source>Update Krohnkite</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+73"/>
       <source>Automatically tile windows using Krohnkite</source>
       <translation>Automatisch Kachelfenster mit Krohnkite</translation>
     </message>
     <message>
-      <location line="+37"/>
+      <location line="+14"/>
       <source>Switch Layout</source>
       <translation>Layout wechseln</translation>
     </message>
@@ -8546,7 +8621,7 @@ Now go touch grass</source>
   <context>
     <name>NavPane</name>
     <message>
-      <location filename="../modules/nexus/NavPane.qml" line="+70"/>
+      <location filename="../modules/nexus/NavPane.qml" line="+98"/>
       <source>Press / to Search Settings</source>
       <translation type="unfinished"/>
     </message>
@@ -12123,7 +12198,7 @@ PIN: %1</source>
   <context>
     <name>SearchResults</name>
     <message>
-      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+132"/>
+      <location filename="../modules/nexus/navpane/SearchResults.qml" line="+184"/>
       <source>in </source>
       <translation type="unfinished"/>
     </message>
@@ -12501,7 +12576,7 @@ PIN: %1</source>
       <translation>Verknüpfungen suchen</translation>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+33"/>
       <source>Shell UI</source>
       <translation>Shell-UI</translation>
     </message>
@@ -12529,7 +12604,7 @@ PIN: %1</source>
   <context>
     <name>ShortcutRow</name>
     <message>
-      <location filename="../modules/nexus/common/ShortcutRow.qml" line="+119"/>
+      <location filename="../modules/nexus/common/ShortcutRow.qml" line="+234"/>
       <source>Collides with: </source>
       <translation>kollidiert mit: </translation>
     </message>
@@ -14625,7 +14700,7 @@ PIN: %1</source>
       <translation>Benachrichtigungssymbol in der Taskleiste anzeigen, wenn Updates verfügbar sind</translation>
     </message>
     <message>
-      <location line="+8"/>
+      <location line="+9"/>
       <source>Open Backup Folder</source>
       <translation>Backup-Ordner öffnen</translation>
     </message>

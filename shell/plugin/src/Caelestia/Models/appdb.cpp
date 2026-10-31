@@ -12,6 +12,7 @@ namespace caelestia::models {
 AppEntry::AppEntry(QObject* entry, unsigned int frequency, QObject* parent)
     : QObject(parent)
     , m_entry(entry)
+    , m_id(entry->property("id").toString())
     , m_frequency(frequency) {
     const auto mo = m_entry->metaObject();
     const auto tmo = &AppEntry::staticMetaObject;
@@ -33,7 +34,7 @@ void AppEntry::onEntryDestroyed() {
 }
 
 QObject* AppEntry::entry() const {
-    return m_entry;
+    return m_entry.data();
 }
 
 quint32 AppEntry::frequency() const {
@@ -53,10 +54,7 @@ void AppEntry::incrementFrequency() {
 }
 
 QString AppEntry::id() const {
-    if (!m_entry) {
-        return {};
-    }
-    return m_entry->property("id").toString();
+    return m_id;
 }
 
 QString AppEntry::name() const {
@@ -154,15 +152,26 @@ void AppDb::setPath(const QString& path) {
 }
 
 QObjectList AppDb::entries() const {
-    return m_entries;
+    QObjectList result;
+    result.reserve(m_entries.size());
+    for (const auto& entry : m_entries) {
+        if (entry) {
+            result.append(entry.data());
+        }
+    }
+    return result;
 }
 
 void AppDb::setEntries(const QObjectList& entries) {
-    if (m_entries == entries) {
+    if (m_entries.size() == entries.size() && std::equal(m_entries.cbegin(), m_entries.cend(), entries.cbegin())) {
         return;
     }
 
-    m_entries = entries;
+    m_entries.clear();
+    m_entries.reserve(entries.size());
+    for (auto* entry : entries) {
+        m_entries.append(entry);
+    }
     emit entriesChanged();
 
     m_timer->start();
@@ -230,9 +239,10 @@ void AppDb::incrementFrequency(const QString& id) {
 
     auto* app = m_apps.value(id);
     if (app) {
-        m_rankTree.erase(makeKey(app));
+        m_rankTree.erase(app->key);
         app->incrementFrequency();
-        m_rankTree.insert({ makeKey(app), app });
+        app->key = makeKey(app);
+        m_rankTree.insert({ app->key, app });
         reorderCachedSorted();
         emit appsChanged();
     } else {
@@ -251,7 +261,21 @@ AppRankKey AppDb::makeKey(const AppEntry* app) const {
 void AppDb::rebuildRankTree() {
     m_rankTree.clear();
     for (auto* app : std::as_const(m_apps)) {
-        m_rankTree.insert({ makeKey(app), app });
+        app->key = makeKey(app);
+        m_rankTree.insert({ app->key, app });
+    }
+}
+
+void AppDb::rebuildAlphaApps() {
+    QList<AppEntry*> alphaList = m_apps.values();
+    std::sort(alphaList.begin(), alphaList.end(), [](AppEntry* a, AppEntry* b) {
+        return a->name().localeAwareCompare(b->name()) < 0;
+    });
+
+    m_cachedAlphaApps.clear();
+    m_cachedAlphaApps.reserve(alphaList.size());
+    for (auto* a : std::as_const(alphaList)) {
+        m_cachedAlphaApps.append(QVariant::fromValue(a->entry()));
     }
 }
 
@@ -303,12 +327,11 @@ void AppDb::updateApps() {
         const auto id = entry->property("id").toString();
         if (!m_apps.contains(id)) {
             dirty = true;
-            auto* const newEntry = new AppEntry(entry, getFrequency(id), this);
+            auto* const newEntry = new AppEntry(entry.data(), getFrequency(id), this);
+            newEntry->key = makeKey(newEntry);
             QObject::connect(newEntry, &AppEntry::removed, this, [id, this]() {
-                if (auto* a = m_apps.value(id)) {
-                    m_rankTree.erase(makeKey(a));
-                }
-                if (m_apps.remove(id)) {
+                if (auto* taken = m_apps.take(id)) {
+                    m_rankTree.erase(taken->key);
                     emit appsChanged();
                 }
             });
@@ -334,18 +357,7 @@ void AppDb::updateApps() {
     if (dirty) {
         rebuildRankTree();
         reorderCachedSorted();
-
-        QList<AppEntry*> alphaList = m_apps.values();
-        std::sort(alphaList.begin(), alphaList.end(), [](AppEntry* a, AppEntry* b) {
-            return a->name().localeAwareCompare(b->name()) < 0;
-        });
-
-        m_cachedAlphaApps.clear();
-        m_cachedAlphaApps.reserve(alphaList.size());
-        for (auto* a : alphaList) {
-            m_cachedAlphaApps.append(QVariant::fromValue(a->entry()));
-        }
-
+        rebuildAlphaApps();
         emit appsChanged();
     }
 }

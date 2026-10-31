@@ -286,9 +286,21 @@ Item {
     }
 
     function arranged(positions: var, newKeys: var): var {
-        if (DesktopLayout.sortKey !== "")
-            return Engine.compact(Engine.sortItems(Object.keys(positions).concat(newKeys).map(describe), DesktopLayout.sortKey).map(i => i.key), rows, spans);
-        return Engine.compact(Engine.orderedKeys(positions, rows).concat(newKeys), rows, spans);
+        // Widgets are furniture, not files: automatic arrangement leaves them where
+        // the user put them and packs the icons around them.
+        const movable = key => describe(key).kind !== "widget";
+        const obstacles = {};
+        for (const key of Object.keys(positions)) {
+            if (!movable(key))
+                obstacles[key] = positions[key];
+        }
+        // compact() writes only the keys it was given — obstacles are excluded from
+        // its output but must be present in the return value so that samePositions()
+        // gets the full key set and avoids spurious setPositions() / disk-save calls.
+        const packed = DesktopLayout.sortKey !== ""
+            ? Engine.compact(Engine.sortItems(Object.keys(positions).concat(newKeys).filter(movable).map(describe), DesktopLayout.sortKey).map(i => i.key), rows, spans, obstacles)
+            : Engine.compact(Engine.orderedKeys(positions, rows).filter(movable).concat(newKeys), rows, spans, obstacles);
+        return Object.assign({}, obstacles, packed);
     }
 
     function samePositions(a: var, b: var): bool {
@@ -487,8 +499,14 @@ Item {
     function sortBy(key: string): void {
         DesktopLayout.setSortKey(key);
         const current = contextPositionsTopLevel();
-        const order = Engine.sortItems(Object.keys(current).map(describe), key).map(i => i.key);
-        const next = Engine.compact(order, rows, spans);
+        const movable = k => describe(k).kind !== "widget";
+        const obstacles = {};
+        for (const k of Object.keys(current)) {
+            if (!movable(k))
+                obstacles[k] = current[k];
+        }
+        const order = Engine.sortItems(Object.keys(current).filter(movable).map(describe), key).map(i => i.key);
+        const next = Engine.compact(order, rows, spans, obstacles);
         for (const k in next) {
             if (next[k])
                 next[k] = Object.assign({}, next[k], { screen: screenData.name });
@@ -856,11 +874,45 @@ Item {
         const s = spansWith(key, w, h);
         if (DesktopLayout.autoArrange)
             return Engine.compact(Engine.orderedKeys(current, rows), rows, s);
-        return Engine.planMove(current, [key], key, origin ?? current[key], cols, rows, s);
+        return Engine.planMove(current, [key], key, origin ?? current[key], cols, rows, s, lockedKeys());
     }
 
     function isKeyLocked(key: string): bool {
         return isWidgetKey(key) && DesktopLayout.isWidgetLocked(nameOf(key));
+    }
+
+    // Keys from the current top-level positions that must never be displaced,
+    // i.e. locked widgets. Passed to Engine.planMove as the immovable list.
+    function lockedKeys(): var {
+        const out = [];
+        for (const key of topLevelKeys()) {
+            if (isKeyLocked(key))
+                out.push(key);
+        }
+        return out;
+    }
+
+    // If `place` falls inside any of `occupiedKeys`' footprints (looked up from
+    // `positionMap`), snap it to the nearest free cell outside them.
+    // `movingSpan` is the span of the item being dragged.
+    function snapOutOf(place: var, movingSpan: var, occupiedKeys: var, positionMap: var): var {
+        if (!occupiedKeys || occupiedKeys.length === 0)
+            return place;
+        const occ = {};
+        for (const key of occupiedKeys) {
+            const p = positionMap[key];
+            if (p)
+                Engine.markRect(occ, p, spanOf(key), key);
+        }
+        const s = movingSpan ?? { w: 1, h: 1 };
+        if (Engine.rectFree(occ, place, s))
+            return place;
+        return Engine.nearestFree(occ, place.col, place.row, cols, rows, s);
+    }
+
+    // Convenience: snap away from locked widgets only (icon-drag path).
+    function snapOutOfLocked(place: var, movingSpan: var): var {
+        return snapOutOf(place, movingSpan, lockedKeys(), contextPositionsTopLevel());
     }
 
     function previewResize(key: string, w: int, h: int, origin: var): void {
@@ -1388,7 +1440,41 @@ Item {
             anchor = moving.indexOf(dragAnchor) !== -1 ? dragAnchor : moving[0];
             moving.forEach((k, i) => base[k] = { col: plan.cell.col, row: plan.cell.row + i });
         }
-        const next = DesktopLayout.autoArrange ? Engine.planInsert(base, moving, plan.place, rows, spans) : Engine.planMove(base, moving, anchor, plan.place, cols, rows, spans);
+        // Widgets are placed by hand: auto arrangement must not re-pack them into
+        // the first free cells next to the icons.
+        const widgetMove = moving.some(k => isWidgetKey(k));
+        // Compute the safe drop target:
+        //   – icon drag: snap away from locked-widget cells
+        //   – widget drag: always snap away from locked-widget cells
+        //   – widget drag + autoArrange: also snap away from all icon/group cells
+        let safePlace;
+        let immovable;
+        if (widgetMove && DesktopLayout.autoArrange) {
+            const locked = lockedKeys();
+            const iconKeys = Object.keys(base).filter(k => !isWidgetKey(k));
+            // Avoid both locked widgets AND icon cells; exclude self from avoid list.
+            const avoidKeys = locked.filter(k => !moving.includes(k)).concat(iconKeys);
+            safePlace = snapOutOf(plan.place, spanOf(dragAnchor), avoidKeys, base);
+            immovable = locked.concat(iconKeys);
+        } else if (widgetMove) {
+            // No autoArrange but still must not land on a locked widget.
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor));
+            immovable = lockedKeys();
+        } else {
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor));
+            immovable = lockedKeys();
+        }
+        let next;
+        if (DesktopLayout.autoArrange && !widgetMove) {
+            const iconObstacles = {};
+            for (const k of Object.keys(base)) {
+                if (isWidgetKey(k))
+                    iconObstacles[k] = base[k];
+            }
+            next = Engine.planInsert(base, moving, safePlace, rows, spans, iconObstacles);
+        } else {
+            next = Engine.planMove(base, moving, anchor, safePlace, cols, rows, spans, immovable);
+        }
         dropCells = moving.map(k => Object.assign({}, next[k], spanOf(k)));
         // The dragged items stay faded where they were; only the others move aside.
         const shown = Object.assign({}, DesktopLayout.positions, next);
@@ -1438,7 +1524,38 @@ Item {
             removeFromGroup(fromGroup, keys.filter(k => !isGroupKey(k)).map(nameOf), plan.cell);
             return;
         }
-        const landed = DesktopLayout.autoArrange ? Engine.planInsert(contextPositionsTopLevel(), keys, plan.place, rows, spans) : Engine.planMove(contextPositionsTopLevel(), keys, dragAnchor || keys[0], plan.place, cols, rows, spans);
+        const widgetMove = keys.some(k => isWidgetKey(k));
+        // Non-widget drags must not land inside a locked widget's footprint.
+        // Widget drags must not land on a locked widget; with autoArrange they
+        // also must not displace auto-arranged icons.
+        let safePlace;
+        let immovable;
+        if (widgetMove && DesktopLayout.autoArrange) {
+            const current = contextPositionsTopLevel();
+            const locked = lockedKeys();
+            const iconKeys = Object.keys(current).filter(k => !isWidgetKey(k));
+            const avoidKeys = locked.filter(k => !keys.includes(k)).concat(iconKeys);
+            safePlace = snapOutOf(plan.place, spanOf(dragAnchor || keys[0]), avoidKeys, current);
+            immovable = locked.concat(iconKeys);
+        } else if (widgetMove) {
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor || keys[0]));
+            immovable = lockedKeys();
+        } else {
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor || keys[0]));
+            immovable = lockedKeys();
+        }
+        let landed;
+        if (DesktopLayout.autoArrange && !widgetMove) {
+            const current = contextPositionsTopLevel();
+            const iconObstacles = {};
+            for (const k of Object.keys(current)) {
+                if (isWidgetKey(k))
+                    iconObstacles[k] = current[k];
+            }
+            landed = Engine.planInsert(current, keys, safePlace, rows, spans, iconObstacles);
+        } else {
+            landed = Engine.planMove(contextPositionsTopLevel(), keys, dragAnchor || keys[0], safePlace, cols, rows, spans, immovable);
+        }
         for (const k of keys) {
             if (landed[k])
                 landed[k] = Object.assign({}, landed[k], { screen: screenData.name });
@@ -1836,7 +1953,7 @@ wl-paste --no-newline --type text/uri-list`]
         readonly property bool barEnabled: !Strings.testRegexList(barConfig.excludedScreens, root.screenData.name)
         readonly property string barPosition: barConfig.position ?? Config.bar.position
         readonly property int barZone: barEnabled ? (Visibilities.bars.get(root.screenData.name)?.visualThickness ?? (Tokens.sizes.bar.innerWidth + Math.max(Tokens.padding.small, Config.border.thickness))) : 0
-        readonly property int baseMargin: Math.round(Tokens.padding.large * 2 * root.effectiveScale)
+        readonly property int baseMargin: Math.round(Tokens.padding.large * 0.5 * root.effectiveScale)
         readonly property int marginLeft: barPosition === "left" ? baseMargin + barZone : baseMargin
         readonly property int marginRight: barPosition === "right" ? baseMargin + barZone : baseMargin
         readonly property int marginTop: barPosition === "top" ? baseMargin + barZone : baseMargin
@@ -1846,8 +1963,8 @@ wl-paste --no-newline --type text/uri-list`]
         readonly property real areaWidth: root.width - marginLeft - marginRight
         readonly property real areaHeight: root.height - marginTop - marginBottom
 
-        x: marginLeft + Math.floor((areaWidth - width) / 2)
-        y: marginTop + Math.floor((areaHeight - height) / 2)
+        x: marginLeft
+        y: marginTop
         width: root.cols * root.cellWidth
         height: root.rows * root.cellHeight
 

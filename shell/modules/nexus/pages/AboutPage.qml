@@ -165,9 +165,7 @@ PageBase {
             label: qsTr("Enabled plugins")
             status: root.pluginCount || "…"
             onClicked: {
-                const index = PageRegistry.indexForKey("plugins");
-                if (index >= 0)
-                    root.nState.currentPageIdx = index;
+                root.nState.selectSubCategory(9);
             }
         }
 

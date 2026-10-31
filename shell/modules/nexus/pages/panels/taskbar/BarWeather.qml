@@ -54,9 +54,7 @@ PageBase {
             label: qsTr("Location")
             status: qsTr("Set the weather location")
             onClicked: {
-                const index = PageRegistry.indexForKey("language");
-                if (index >= 0)
-                    root.nState.currentPageIdx = index;
+                root.nState.goToSubPage(7, 4);
             }
         }
     }

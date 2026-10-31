@@ -91,10 +91,11 @@ QtObject {
     }
 
     function indexForKey(key: string): int {
-        for (let i = 0; i < pages.length; i++) {
-            if (pages[i].key === key) return i;
-        }
-        return -1;
+        return PageDictionary.pageIdxFor(key);
+    }
+
+    function defaultSubPageForKey(key: string): int {
+        return PageDictionary.defaultSubPageForKey(key);
     }
 
     Component.onCompleted: {

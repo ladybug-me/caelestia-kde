@@ -42,11 +42,22 @@ StackView {
         }
     }
 
+    function switchToSlot(target: var): void {
+        const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
+        if (page) {
+            root.popToIndex(0, StackView.Immediate);
+            root.replace(page, {
+                nState
+            }, StackView.Immediate);
+        }
+    }
+
     clip: busy
 
     Component.onCompleted: {
         root.buildSlotMap();
-        root.openSubPage(0, true);
+        const baseSlot = nState.activeSubPageSlot;
+        root.openSubPage(baseSlot, true);
         if (nState.pendingSubPageIdx >= 0) {
             const pending = nState.pendingSubPageIdx;
             nState.pendingSubPageIdx = -1;
@@ -130,6 +141,10 @@ StackView {
     }
 
     Connections {
+        function onSubCategorySelected(target: var): void {
+            root.switchToSlot(target);
+        }
+
         function onSubPageOpened(target: var): void {
             root.openSubPage(target, false);
         }

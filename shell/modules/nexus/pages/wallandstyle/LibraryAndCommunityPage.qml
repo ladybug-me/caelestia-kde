@@ -34,18 +34,13 @@ PageBase {
     }
 
     isSubPage: true
-    title: qsTr("Library & Community")
+    title: qsTr("Community & Online")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         width: root.cappedWidth
         spacing: Tokens.spacing.large
-
-        SectionHeader {
-            first: true
-            text: qsTr("Community & Online")
-        }
 
         ColumnLayout {
             Layout.fillWidth: true

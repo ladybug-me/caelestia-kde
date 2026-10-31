@@ -17,28 +17,41 @@ Item {
     property int initialPageIdx: 0
     property var initialSubPageIdx: -1
     readonly property bool windowActive: Window.window ? Window.window.active : false
+    readonly property bool compact: root.width < 1120
 
     readonly property NexusState nState: NexusState {
         id: nState
 
-        currentPageIdx: root.initialPageIdx
-        Component.onCompleted: {
-            if (root.initialSubPageIdx !== -1 && root.initialSubPageIdx !== undefined && root.initialSubPageIdx !== "")
-                openSubPage(root.initialSubPageIdx);
+        compact: root.compact
+        pendingSubPageIdx: {
+            if (root.initialSubPageIdx === -1 || root.initialSubPageIdx === undefined || root.initialSubPageIdx === "")
+                return -1;
+            return (typeof root.initialSubPageIdx === "number")
+                ? root.initialSubPageIdx
+                : PageDictionary.defaultSubPageForKey(root.initialSubPageIdx);
         }
+        currentPageIdx: root.initialPageIdx
 
         onClose: root.requestClose()
         onCurrentPageIdxChanged: {
             if (root.navigatingFromSearch)
                 return;
             root.activePane = 0;
+            subcategoryPane.clearSelection();
             pages.clearSelection();
+        }
+        onCompactSubcategoriesChanged: {
+            if (!compactSubcategories && root.compact && root.activePane === 1) {
+                root.activePane = 0;
+                subcategoryPane.clearSelection();
+            }
         }
     }
     property color blobColour: Colours.tPalette.m3surfaceContainerLow
     property int activePane: 0
     property bool navigatingFromSearch: false
     readonly property bool hasActiveInputField: root.isInputField(Window.window ? Window.window.activeFocusItem : null)
+    readonly property var targetScreen: nState.screen ?? Window.window?.screen ?? Quickshell.screens[0]
 
     signal close
 
@@ -57,7 +70,10 @@ Item {
     }
 
     function focusSearchBar(): void {
+        if (root.compact && root.nState.compactSubcategories)
+            root.nState.exitCompactPage();
         root.activePane = 0;
+        subcategoryPane.clearSelection();
         pages.clearSelection();
         navPane.focusSearchBar();
     }
@@ -68,46 +84,79 @@ Item {
     }
 
     function moveUp(): void {
-        if (root.activePane === 1)
+        if (root.activePane === 2)
             pages.moveUp();
+        else if (root.activePane === 1)
+            subcategoryPane.moveUp();
         else
             navPane.moveUp();
     }
 
     function moveDown(): void {
-        if (root.activePane === 1)
+        if (root.activePane === 2)
             pages.moveDown();
+        else if (root.activePane === 1)
+            subcategoryPane.moveDown();
         else
             navPane.moveDown();
     }
 
     function activateSelected(): void {
-        if (root.activePane === 1) {
+        if (root.activePane === 2) {
             pages.activateSelected();
+        } else if (root.activePane === 1) {
+            subcategoryPane.activateSelected();
+            root.activePane = 2;
+            pages.selectFirst();
         } else {
+            const wasSearchOpen = root.nState.searchOpen;
             navPane.activateSelected();
-            root.activePane = 1;
+            if (!wasSearchOpen) {
+                if (root.compact)
+                    root.nState.enterCompactPage();
+                root.activePane = 1;
+                subcategoryPane.selectCurrentOrFirst();
+            }
         }
     }
 
     function goLeft(): void {
-        if (root.activePane === 1 && pages.stepLeft())
-            return;
-        if (root.nState.subPageIdxStack.length > 0) {
-            WindowFactory.goBack();
+        if (root.activePane === 2) {
+            if (pages.stepLeft())
+                return;
+            if (root.nState.subPageIdxStack.length > 0) {
+                WindowFactory.goBack();
+            } else {
+                root.activePane = 1;
+                pages.clearSelection();
+                subcategoryPane.selectCurrentOrFirst();
+            }
         } else if (root.activePane === 1) {
+            if (root.compact)
+                root.nState.exitCompactPage();
             root.activePane = 0;
-            pages.clearSelection();
+            subcategoryPane.clearSelection();
+            navPane.selectCurrentOrFirst();
         }
     }
 
     function goRight(): void {
-        if (root.activePane === 1) {
+        if (root.activePane === 2) {
             if (!pages.stepRight())
                 pages.activateSelected();
+        } else if (root.activePane === 1) {
+            subcategoryPane.activateSelected();
+            root.activePane = 2;
+            pages.selectFirst();
         } else {
+            const wasSearchOpen = root.nState.searchOpen;
             navPane.activateSelected();
-            root.activePane = 1;
+            if (!wasSearchOpen) {
+                if (root.compact)
+                    root.nState.enterCompactPage();
+                root.activePane = 1;
+                subcategoryPane.selectCurrentOrFirst();
+            }
         }
     }
 
@@ -122,7 +171,7 @@ Item {
     }
 
     function scrollCurrentPage(event: var): bool {
-        if (event.x <= navPane.x + navPane.width)
+        if (event.x <= subcategoryPane.x + subcategoryPane.width)
             return false;
 
         const f = root.currentFlickable();
@@ -142,8 +191,8 @@ Item {
         return true;
     }
 
+    implicitHeight: (targetScreen ? targetScreen.height : 1080) * Tokens.sizes.nexus.heightMult
     implicitWidth: implicitHeight * Tokens.sizes.nexus.ratio
-    implicitHeight: nState.screen.height * Tokens.sizes.nexus.heightMult
 
     Behavior on blobColour {
         CAnim {}
@@ -162,7 +211,7 @@ Item {
         opacity: root.blobColour.a
         radius: Tokens.rounding.large
 
-        borderLeft: navPane.width + navPane.anchors.margins * 2
+        borderLeft: pages.x - Tokens.padding.small
         borderRight: Tokens.padding.medium
         borderTop: Tokens.padding.medium
         borderBottom: Tokens.padding.medium
@@ -177,26 +226,60 @@ Item {
         anchors.margins: Tokens.padding.large
 
         nState: nState
-        width: Math.min(Tokens.sizes.nexus.maxNavWidth, Math.round(root.width / 3))
+        width: root.compact ? Math.min(340, Math.round(root.width * 0.45)) : Math.min(285, Math.round(root.width * 0.21))
+        opacity: root.compact && root.nState.compactSubcategories ? 0 : 1
+        enabled: !root.compact || !root.nState.compactSubcategories
 
         onSearchResultSelected: (entry) => {
             root.navigatingFromSearch = true;
-            root.activePane = 1;
+            root.activePane = 2;
             navPane.clearSelection();
+            subcategoryPane.clearSelection();
             pages.selectEntry(entry);
             root.navigatingFromSearch = false;
+        }
+
+        Behavior on opacity {
+            Anim {
+                type: Anim.DefaultEffects
+            }
+        }
+    }
+
+    SubcategoryPane {
+        id: subcategoryPane
+
+        anchors.left: root.compact ? parent.left : navPane.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: Tokens.padding.large
+        anchors.topMargin: navPane.anchors.margins
+        anchors.bottomMargin: navPane.anchors.margins
+
+        width: root.compact ? Math.min(340, Math.round(root.width * 0.45)) : Math.min(300, Math.round(root.width * 0.22))
+        opacity: root.compact && !root.nState.compactSubcategories ? 0 : 1
+        enabled: !root.compact || root.nState.compactSubcategories
+        z: 1
+        nState: nState
+
+        Behavior on opacity {
+            Anim {
+                type: Anim.DefaultEffects
+            }
         }
     }
 
     Pages {
         id: pages
 
-        anchors.left: navPane.right
+        anchors.left: subcategoryPane.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.leftMargin: navPane.anchors.margins + anchors.margins
-        anchors.margins: Tokens.padding.extraLarge
+        anchors.leftMargin: Tokens.padding.large
+        anchors.topMargin: navPane.anchors.margins
+        anchors.bottomMargin: navPane.anchors.margins
+        anchors.rightMargin: navPane.anchors.margins
 
         nState: nState
     }
@@ -268,6 +351,17 @@ Item {
 
         onTapped: {
             root.activePane = 0;
+            subcategoryPane.clearSelection();
+            pages.clearSelection();
+        }
+    }
+
+    TapHandler {
+        parent: subcategoryPane
+
+        onTapped: {
+            root.activePane = 1;
+            navPane.clearSelection();
             pages.clearSelection();
         }
     }
@@ -276,8 +370,9 @@ Item {
         parent: pages
 
         onTapped: {
-            root.activePane = 1;
+            root.activePane = 2;
             navPane.clearSelection();
+            subcategoryPane.clearSelection();
         }
     }
 
@@ -291,9 +386,16 @@ Item {
                 return;
             if (root.nState.subPageIdxStack.length > 0) {
                 WindowFactory.goBack();
-            } else if (root.activePane === 1) {
-                root.activePane = 0;
+            } else if (root.activePane === 2) {
+                root.activePane = 1;
                 pages.clearSelection();
+                subcategoryPane.selectCurrentOrFirst();
+            } else if (root.activePane === 1) {
+                if (root.compact)
+                    root.nState.exitCompactPage();
+                root.activePane = 0;
+                subcategoryPane.clearSelection();
+                navPane.selectCurrentOrFirst();
             } else {
                 root.requestClose();
             }
@@ -302,7 +404,7 @@ Item {
 
     Shortcut {
         sequence: "Backspace"
-        enabled: root.windowActive && !root.hasActiveInputField && (root.nState.subPageIdxStack.length > 0 || root.activePane === 1)
+        enabled: root.windowActive && !root.hasActiveInputField && (root.nState.subPageIdxStack.length > 0 || root.activePane > 0)
         autoRepeat: false
 
         onActivated: {
@@ -310,16 +412,23 @@ Item {
                 return;
             if (root.nState.subPageIdxStack.length > 0) {
                 WindowFactory.goBack();
-            } else if (root.activePane === 1) {
-                root.activePane = 0;
+            } else if (root.activePane === 2) {
+                root.activePane = 1;
                 pages.clearSelection();
+                subcategoryPane.selectCurrentOrFirst();
+            } else if (root.activePane === 1) {
+                if (root.compact)
+                    root.nState.exitCompactPage();
+                root.activePane = 0;
+                subcategoryPane.clearSelection();
+                navPane.selectCurrentOrFirst();
             }
         }
     }
 
     Shortcut {
         sequence: "Delete"
-        enabled: root.windowActive && !root.hasActiveInputField && root.activePane === 1
+        enabled: root.windowActive && !root.hasActiveInputField && root.activePane === 2
         autoRepeat: false
 
         onActivated: {

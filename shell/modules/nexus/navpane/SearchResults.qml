@@ -33,8 +33,8 @@ VerticalFadeListView {
     function executeSelected(): void {
         if (count > 0 && currentIndex >= 0 && currentIndex < count) {
             const entry = model[currentIndex];
-            root.entrySelected(entry);
             root.nState.goToSubPage(entry.pageIdx, entry.subPageIdx);
+            root.entrySelected(entry);
             root.nState.searchQuery = "";
         }
     }
@@ -126,8 +126,8 @@ VerticalFadeListView {
             onClicked: {
                 root.currentIndex = item.index;
                 const entry = item.modelData;
-                root.entrySelected(entry);
                 root.nState.goToSubPage(item.pageIdx, item.subPageIdx);
+                root.entrySelected(entry);
                 root.nState.searchQuery = "";
             }
         }

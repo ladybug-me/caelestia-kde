@@ -27,6 +27,8 @@ ColumnLayout {
     }
 
     function focusSearchBar(): void {
+        if (root.nState.compact && root.nState.compactSubcategories)
+            root.nState.exitCompactPage();
         navLocations.selectionActive = false;
         searchField.forceActiveFocus();
         searchField.selectAll();
@@ -62,6 +64,11 @@ ColumnLayout {
         navLocations.clearSelection();
     }
 
+    function selectCurrentOrFirst(): void {
+        if (!root.nState.searchOpen)
+            navLocations.selectCurrentOrFirst();
+    }
+
     function isInsideSearchRegion(item: Item, x: real, y: real): bool {
         if (!item)
             return false;
@@ -87,16 +94,17 @@ ColumnLayout {
         return false;
     }
 
-    spacing: Tokens.spacing.large
+    spacing: Tokens.spacing.medium
 
     SearchBar {
         id: searchField
 
         z: 1
         Layout.fillWidth: true
+        Layout.preferredHeight: 46
 
-        placeholderText: qsTr("Press / to Search Settings")
-        font: Tokens.font.body.large
+        placeholderText: qsTr("Press / to Search")
+        font: Tokens.font.body.medium
 
         bg.color: Colours.tPalette.m3surfaceContainerLowest
         bg.border.color: Colours.palette.m3outlineVariant
@@ -184,8 +192,6 @@ ColumnLayout {
 
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Layout.topMargin: -topMargin
-        Layout.bottomMargin: -bottomMargin
         nState: root.nState
     }
 

@@ -119,12 +119,15 @@ PageBase {
             id: searchField
 
             Layout.fillWidth: true
+            Layout.preferredHeight: 38
+            topPadding: Tokens.padding.small
+            bottomPadding: Tokens.padding.small
             placeholderText: qsTr("Search shortcuts")
-            font: Tokens.font.body.medium
+            font: Tokens.font.body.small
             bg.color: Colours.tPalette.m3surfaceContainerLowest
             bg.border.color: Colours.palette.m3outlineVariant
-            searchIcon.fontStyle: Tokens.font.icon.medium
-            clearIcon.font: Tokens.font.icon.medium
+            searchIcon.fontStyle: Tokens.font.icon.small
+            clearIcon.font: Tokens.font.icon.small
             clearIcon.padding: Tokens.padding.extraSmall
             onTextChanged: root.shortcutQuery = text
 

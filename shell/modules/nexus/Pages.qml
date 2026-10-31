@@ -77,6 +77,12 @@ Item {
             page.moveDown();
     }
 
+    function selectFirst(): void {
+        const page = activePage();
+        if (page && typeof page.selectFirst === "function")
+            page.selectFirst();
+    }
+
     function activateSelected(): void {
         const page = activePage();
         if (page && typeof page.activateSelected === "function")

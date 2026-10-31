@@ -58,8 +58,10 @@ Item {
             detachedMode = mode;
             focus = true;
         } else {
-            const pageIdx = PageRegistry.indexForKey(mode);
-            WindowFactory.create(null, { initialPageIdx: pageIdx >= 0 ? pageIdx : 0 });
+            WindowFactory.create(null, {
+                initialPageIdx: mode,
+                initialSubPageIdx: PageRegistry.defaultSubPageForKey(mode)
+            });
             close();
         }
         setAnims(false);

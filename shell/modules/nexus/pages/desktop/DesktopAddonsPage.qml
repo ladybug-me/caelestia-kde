@@ -63,12 +63,8 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.large
 
-        Item {
-            Layout.fillWidth: true
-            Layout.preferredHeight: Tokens.padding.large
-        }
-
         SectionHeader {
+            first: true
             text: qsTr("Desktop clock")
         }
 

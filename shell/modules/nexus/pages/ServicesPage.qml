@@ -201,7 +201,7 @@ PageBase {
             icon: "chat"
             label: qsTr("Discord Rich Presence")
             status: qsTr("Broadcast your status to Vesktop")
-            onClicked: root.nState.openSubPage(1)
+            onClicked: root.nState.openSubPage("arpc")
         }
 
         StepperRow {
@@ -243,7 +243,7 @@ PageBase {
             icon: "calendar_month"
             label: qsTr("Calendars & agenda")
             status: CalendarEvents.configured ? qsTr("%1 calendar(s)").arg(CalendarEvents.sources.length) : qsTr("No calendar added")
-            onClicked: root.nState.openSubPage(2)
+            onClicked: root.nState.openSubPage("calendar")
         }
 
         SectionHeader {

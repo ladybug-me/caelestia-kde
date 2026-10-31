@@ -43,10 +43,22 @@ VerticalFadeFlickable {
             return;
         root.selectionActive = false;
         root.nState.goToPage(pages[root.selectedIndex].pageIdx);
+        if (root.nState.compact)
+            root.nState.enterCompactPage();
     }
 
     function clearSelection(): void {
         root.selectionActive = false;
+    }
+
+    function selectCurrentOrFirst(): void {
+        root.selectionActive = true;
+        const pages = root.filteredPages;
+        if (!pages || pages.length === 0)
+            return;
+        const idx = pages.findIndex(p => p.pageIdx === root.nState.currentPageIdx);
+        root.selectedIndex = idx >= 0 ? idx : 0;
+        ensureVisible(list.itemAt(root.selectedIndex));
     }
 
     function ensureVisible(item: Item): void {
@@ -61,7 +73,7 @@ VerticalFadeFlickable {
         }
     }
 
-    topMargin: Tokens.padding.large
+    topMargin: 0
     bottomMargin: Tokens.padding.large
     contentHeight: content.implicitHeight
     focus: true
@@ -108,7 +120,7 @@ VerticalFadeFlickable {
 
         anchors.left: parent.left
         anchors.right: parent.right
-        spacing: Tokens.spacing.extraSmall
+        spacing: Tokens.spacing.small
 
         Repeater {
             id: list
@@ -125,15 +137,9 @@ VerticalFadeFlickable {
 
                 readonly property bool isCurrentPage: pageIdx === root.nState.currentPageIdx
                 readonly property bool isSelected: root.selectionActive && index === root.selectedIndex
-                readonly property bool isCategoryStart: index === 0 || root.filteredPages[index - 1]?.page?.category !== page?.category
-                readonly property bool isCategoryEnd: index === root.filteredPages.length - 1 || root.filteredPages[index + 1]?.page?.category !== page?.category
 
                 Layout.fillWidth: true
-                Layout.topMargin: index !== 0 && isCategoryStart ? Tokens.spacing.medium : 0
-                implicitHeight: {
-                    const h = layout.implicitHeight + layout.anchors.margins * 2;
-                    return h % 2 === 0 ? h : h + 1;
-                }
+                implicitHeight: 66
 
                 color: isCurrentPage
                     ? Colours.palette.m3secondaryContainer
@@ -143,46 +149,58 @@ VerticalFadeFlickable {
 
                 border.width: isSelected ? 2 : 0
                 border.color: Colours.palette.m3primary
+                radius: stateLayer.pressed ? Tokens.rounding.medium : Tokens.rounding.large
 
-                topLeftRadius: stateLayer.pressed ? Tokens.rounding.medium : (isCurrentPage || isSelected) ? Tokens.rounding.extraLargeIncreased : isCategoryStart ? Tokens.rounding.extraLarge : Tokens.rounding.extraSmall
-                topRightRadius: stateLayer.pressed ? Tokens.rounding.medium : (isCurrentPage || isSelected) ? Tokens.rounding.extraLargeIncreased : isCategoryStart ? Tokens.rounding.extraLarge : Tokens.rounding.extraSmall
-                bottomLeftRadius: stateLayer.pressed ? Tokens.rounding.medium : (isCurrentPage || isSelected) ? Tokens.rounding.extraLargeIncreased : isCategoryEnd ? Tokens.rounding.extraLarge : Tokens.rounding.extraSmall
-                bottomRightRadius: stateLayer.pressed ? Tokens.rounding.medium : (isCurrentPage || isSelected) ? Tokens.rounding.extraLargeIncreased : isCategoryEnd ? Tokens.rounding.extraLarge : Tokens.rounding.extraSmall
-
-                RadiusBehavior on topLeftRadius {}
-                RadiusBehavior on topRightRadius {}
-                RadiusBehavior on bottomLeftRadius {}
-                RadiusBehavior on bottomRightRadius {}
+                Behavior on radius {
+                    Anim {
+                        type: Anim.DefaultEffects
+                    }
+                }
 
                 StateLayer {
                     id: stateLayer
 
                     anchors.fill: parent
-                    topLeftRadius: parent.topLeftRadius
-                    topRightRadius: parent.topRightRadius
-                    bottomLeftRadius: parent.bottomLeftRadius
-                    bottomRightRadius: parent.bottomRightRadius
+                    radius: parent.radius
                     manualHoverOverride: item.isSelected
 
                     onClicked: {
                         root.selectionActive = false;
                         root.selectedIndex = item.index;
                         root.nState.goToPage(item.pageIdx);
+                        if (root.nState.compact)
+                            root.nState.enterCompactPage();
                     }
+                }
+
+                StyledRect {
+                    visible: item.isCurrentPage
+
+                    anchors.left: parent.left
+                    anchors.leftMargin: Tokens.padding.extraSmall
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: 3
+                    height: 22
+                    radius: Tokens.rounding.full
+                    color: Colours.palette.m3primary
                 }
 
                 RowLayout {
                     id: layout
 
                     anchors.fill: parent
-                    anchors.margins: Tokens.padding.large
+                    anchors.leftMargin: Tokens.padding.medium
+                    anchors.rightMargin: Tokens.padding.medium
+                    anchors.topMargin: Tokens.padding.small
+                    anchors.bottomMargin: Tokens.padding.small
                     spacing: Tokens.spacing.medium
 
                     StyledRect {
-                        Layout.fillHeight: true
-                        Layout.topMargin: -1
-                        Layout.bottomMargin: -1
-                        implicitWidth: height
+                        Layout.preferredWidth: 34
+                        Layout.preferredHeight: 34
+                        Layout.alignment: Qt.AlignVCenter
+                        implicitWidth: 34
+                        implicitHeight: 34
 
                         radius: Tokens.rounding.full
                         color: item.isCurrentPage ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
@@ -193,7 +211,7 @@ VerticalFadeFlickable {
 
                             text: item.page.icon
                             color: item.isCurrentPage ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
-                            fontStyle: Tokens.font.icon.builders.medium.weight(Font.Medium).build()
+                            fontStyle: Tokens.font.icon.small
                             grade: 25
                             fill: item.page.noFill ? 0 : 1
                         }
@@ -201,20 +219,22 @@ VerticalFadeFlickable {
 
                     ColumnLayout {
                         Layout.fillWidth: true
-                        spacing: 0
+                        Layout.alignment: Qt.AlignVCenter
+                        spacing: 1
 
                         StyledText {
                             Layout.fillWidth: true
                             text: item.page.label
-                            font: Tokens.font.body.medium
+                            font: Tokens.font.body.builders.medium.size(Math.round(Tokens.font.body.medium.pointSize * 0.92)).build()
+                            color: item.isCurrentPage ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
                             elide: Text.ElideRight
                         }
 
                         StyledText {
                             Layout.fillWidth: true
                             text: item.page.description
-                            color: Colours.palette.m3onSurfaceVariant
-                            font: NexusStyle.secondaryFont
+                            color: item.isCurrentPage ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurfaceVariant
+                            font: Tokens.font.label.builders.small.size(9).build()
                             elide: Text.ElideRight
                         }
                     }

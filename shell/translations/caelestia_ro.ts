@@ -89,7 +89,7 @@
       <translation>Plugin-uri activate</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+8"/>
       <source>Advanced</source>
       <translation>Avansat</translation>
     </message>
@@ -1482,33 +1482,19 @@
   <context>
     <name>AppearancePage</name>
     <message>
-      <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+23"/>
+      <location filename="../modules/nexus/pages/wallandstyle/AppearancePage.qml" line="+30"/>
       <location line="+6"/>
+      <location line="+21"/>
       <source>Follow system</source>
       <translation>Urmează sistemul</translation>
     </message>
     <message>
-      <location line="-5"/>
-      <source>Google Sans Flex</source>
-      <translation>Google Sans Flex</translation>
+      <location line="-6"/>
+      <source>Choose system font…</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Rubik</source>
-      <translation>Rubik</translation>
-    </message>
-    <message>
-      <location line="+5"/>
-      <source>CaskaydiaCove NF</source>
-      <translation>CaskaydiaCove NF</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>JetBrainsMono Nerd Font</source>
-      <translation>JetBrainsMono Nerd Font</translation>
-    </message>
-    <message>
-      <location line="+15"/>
+      <location line="+21"/>
       <source>Theme &amp; Effects</source>
       <translation>Temă și efecte</translation>
     </message>
@@ -1528,17 +1514,34 @@
       <translation>Resetează setările</translation>
     </message>
     <message>
-      <location line="+38"/>
+      <location line="+33"/>
+      <location line="+19"/>
       <source>Font</source>
       <translation>Font</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+1"/>
+      <source>Used by every text style in the shell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+19"/>
+      <location line="+20"/>
       <source>Monospace font</source>
       <translation>Monospace font</translation>
     </message>
     <message>
-      <location line="+19"/>
+      <location line="+1"/>
+      <source>Used by code, terminal previews and fixed width labels</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Theme</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
       <source>Bezel mode (Pitch black)</source>
       <translation>Mod bezel (întuneric închis)</translation>
     </message>
@@ -1721,6 +1724,26 @@
       <location line="+12"/>
       <source>Blur deform</source>
       <translation>Deformare Blur</translation>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>Choose a system font</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Monospace fonts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>System fonts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Apply</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -3860,6 +3883,11 @@
     </message>
     <message>
       <location line="+10"/>
+      <source>Connected Devices</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
       <source>Bluetooth</source>
       <translation>Bluetooth</translation>
     </message>
@@ -5288,7 +5316,7 @@
       <translation>Suplimente desktop</translation>
     </message>
     <message>
-      <location line="+14"/>
+      <location line="+10"/>
       <source>Desktop clock</source>
       <translation>Ceas desktop</translation>
     </message>
@@ -5563,13 +5591,13 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+681"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+699"/>
       <location line="+3"/>
       <source>Group</source>
       <translation>Grup</translation>
     </message>
     <message>
-      <location line="+408"/>
+      <location line="+442"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation>Redenumire eșuată</translation>
@@ -5587,7 +5615,7 @@
       <translation>Operațiunea cu fișierul nu a reușit</translation>
     </message>
     <message>
-      <location line="+522"/>
+      <location line="+587"/>
       <source>%1 could not complete the request</source>
       <translation>%1 nu a putut finaliza cererea</translation>
     </message>
@@ -5683,7 +5711,12 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+12"/>
+      <location line="+11"/>
+      <source>Desktop Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>Disable Quickshell Desktop</source>
       <translation type="unfinished"/>
     </message>
@@ -7999,16 +8032,11 @@ Acum atinge iarba</translation>
     <name>LibraryAndCommunityPage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/LibraryAndCommunityPage.qml" line="+37"/>
-      <source>Library &amp; Community</source>
-      <translation>Bibliotecă și comunitate</translation>
-    </message>
-    <message>
-      <location line="+10"/>
       <source>Community &amp; Online</source>
       <translation>Comunitate și online</translation>
     </message>
     <message>
-      <location line="+10"/>
+      <location line="+15"/>
       <source>Wallhaven</source>
       <translation>Wallhaven</translation>
     </message>
@@ -8623,8 +8651,8 @@ Acum atinge iarba</translation>
   <context>
     <name>NavPane</name>
     <message>
-      <location filename="../modules/nexus/NavPane.qml" line="+98"/>
-      <source>Press / to Search Settings</source>
+      <location filename="../modules/nexus/NavPane.qml" line="+106"/>
+      <source>Press / to Search</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -10221,7 +10249,7 @@ Acum atinge iarba</translation>
   <context>
     <name>PageCompRegistry</name>
     <message>
-      <location filename="../modules/nexus/PageCompRegistry.qml" line="+216"/>
+      <location filename="../modules/nexus/PageCompRegistry.qml" line="+172"/>
       <source>Page under construction</source>
       <translation>Pagină în construcție</translation>
     </message>
@@ -10240,8 +10268,8 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+3"/>
-      <source>Wallpapers, fonts, colors</source>
-      <translation>Fundal, fonturi, culori</translation>
+      <source>Wallpapers, colors, themes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
@@ -10260,12 +10288,11 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+244"/>
       <source>Font scale</source>
       <translation>Scară font</translation>
     </message>
     <message>
-      <location line="-243"/>
+      <location line="+1"/>
       <source>Colors</source>
       <translation>Culori</translation>
     </message>
@@ -10306,8 +10333,8 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Library &amp; Community</source>
-      <translation>Bibliotecă și comunitate</translation>
+      <source>Library &amp; Components</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10331,8 +10358,8 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+3"/>
-      <source>KDE Desktop, addons, right click menu</source>
-      <translation>KDE Desktop, addons, meniu click dreapta</translation>
+      <source>Desktop, addons, tiling</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
@@ -10366,13 +10393,13 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+4"/>
-      <source>Panels</source>
-      <translation>Panouri</translation>
+      <source>Panels &amp; Interface</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Dashboard, taskbar, launcher, sidebar</source>
-      <translation>Dashboard, taskbar, launcher, bara laterală</translation>
+      <source>Dashboard, taskbar, launcher</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
@@ -10542,18 +10569,18 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+4"/>
-      <source>Network</source>
-      <translation>Rețea</translation>
+      <source>Network &amp; Connectivity</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Wi-Fi and VPN connections</source>
-      <translation>Conexiuni Wi-Fi și VPN</translation>
+      <source>Wi-Fi, Bluetooth, network</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Wi-Fi</source>
-      <translation>Wi-Fi</translation>
+      <source>Wi-Fi &amp; Connection</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10591,17 +10618,7 @@ Acum atinge iarba</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
-      <source>Connected devices</source>
-      <translation>Dispozitive conectate</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Bluetooth, pairing, drivers</source>
-      <translation>Bluetooth, asociere, drivere</translation>
-    </message>
-    <message>
-      <location line="+3"/>
+      <location line="+1"/>
       <source>Bluetooth</source>
       <translation>Bluetooth</translation>
     </message>
@@ -10617,32 +10634,32 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Pairing</source>
-      <translation>Se asociază</translation>
+      <source>Pair New Device</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+4"/>
-      <source>Displays</source>
+      <source>Display &amp; Sound</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Resolution, scale, rotation, HDR</source>
+      <source>Displays, audio, notifications</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
+      <source>Layout &amp; Scale</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Resolution</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Refresh rate</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Scale</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10657,33 +10674,8 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Mouse &amp; touchpad</source>
+      <source>Output &amp; Input</source>
       <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Keyboard</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Audio &amp; Sound</source>
-      <translation>Audio &amp; Sunet</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Output, input, app volume, sound effects</source>
-      <translation>Ieșire, intrare, volum aplicație, efecte sonore</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Speakers &amp; Output</source>
-      <translation>Vorbitori &amp; Ieșiri</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Microphones</source>
-      <translation>Microfoane</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10697,53 +10689,13 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Muted Notification Apps</source>
-      <translation>Notificări silențioase</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Storage</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Mount, unmount and eject filesystems</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Mount</source>
+      <source>Notification Silence</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Unmount</source>
+      <source>Preferences</source>
       <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Eject</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Removable media</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Notifications</source>
-      <translation>Notificări</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Alerts, toasts, and delivery behavior</source>
-      <translation>Alerte, prăjiturele și comportamentul de livrare</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Notification behavior</source>
-      <translation>Comportament notificări</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -10762,28 +10714,28 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+4"/>
-      <source>Utilities</source>
-      <translation>Utilități</translation>
+      <source>Utilities &amp; Tools</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Quick controls, game mode</source>
-      <translation>Comenzi rapide, mod joc</translation>
+      <source>Sliders, game mode, AI</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>On-screen Sliders</source>
-      <translation>Slidere pe ecran</translation>
+      <source>On-screen slider</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Utilities Panel</source>
-      <translation>Panoul de utilități</translation>
+      <source>Utilities panel</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Quick Toggles</source>
-      <translation>Comutatoare rapide</translation>
+      <source>Quick toggles</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10797,73 +10749,28 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>Quick Share</source>
-      <translation>Distribuire rapidă</translation>
+      <source>Quick share</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>AI Configuration</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+4"/>
-      <source>Session</source>
-      <translation>Sesiune</translation>
+      <source>Applications &amp; Shortcuts</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Shutdown, logout, and reboot menu</source>
-      <translation>Închidere, deconectare și repornire meniu</translation>
+      <source>Default apps, shortcuts</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>Session Menu</source>
-      <translation>Meniu sesiune</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Session Icons</source>
-      <translation>Pictograme sesiune</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Session Commands</source>
-      <translation>Comenzi sesiune</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Shortcuts</source>
-      <translation>Scurtături</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Keyboard shortcuts, custom keybinds</source>
-      <translation>Scurtături tastatură, tastaturi personalizate se leagă</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>System Shortcuts</source>
-      <translation>Scurtături sistem</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>App Shortcuts</source>
-      <translation>Scurtături aplicație</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Custom Keybinds</source>
-      <translation>Butoane personalizate</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Apps</source>
-      <translation>Aplicații</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Default apps, file types, app details</source>
-      <translation>Aplicații implicite, tipuri de fișiere, detalii aplicație</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Default Apps</source>
-      <translation>Aplicații implicite</translation>
+      <source>Default Applications</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10872,8 +10779,8 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <source>All Apps</source>
-      <translation>Toate aplicațiile</translation>
+      <source>Installed Applications</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10881,133 +10788,58 @@ Acum atinge iarba</translation>
       <translation>Favorite &amp; Ascunse</translation>
     </message>
     <message>
-      <location line="+4"/>
-      <source>Services</source>
-      <translation>Servicii</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Background services, daemon control</source>
-      <translation>Servicii de fond, control somon</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Background Services</source>
-      <translation>Servicii de fundal</translation>
-    </message>
-    <message>
       <location line="+1"/>
-      <source>Visualiser Input</source>
-      <translation>Intrare vizualizator</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Rich Presence</source>
-      <translation>Prezență bogată</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Calendar</source>
+      <source>Keyboard Shortcuts</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
-      <source>Language &amp; region</source>
-      <translation>Limba și regiunea</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Locale, timezone, formats</source>
-      <translation>Locație, fus orar, formate</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Language</source>
-      <translation>Limba</translation>
-    </message>
-    <message>
       <location line="+1"/>
-      <source>Time &amp; Date</source>
-      <translation>Ora și data</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Weather Location</source>
-      <translation>Locație meteo</translation>
+      <source>Custom Keybinds</source>
+      <translation>Butoane personalizate</translation>
     </message>
     <message>
       <location line="+4"/>
+      <source>System &amp; Services</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Session, services, storage, about</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Session settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>System Services</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Remote IPC</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Calendar Integration</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Language &amp; Format</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Accessibility</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
-      <source>Text size, motion, magnifier, screen reader</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Follow system text size</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+2"/>
-      <source>Reduce motion</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
       <location line="+1"/>
-      <source>Magnifier</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Invert colours</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Colour filters</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Screen reader</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Updates</source>
-      <translation>Actualizări</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>System updates</source>
-      <translation>Actualizări de sistem</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Software Updates</source>
-      <translation>Actualizări software</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Firmware Updates</source>
-      <translation>Actualizări firmware</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>Startup</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Programs that run at log-in</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Autostart</source>
+      <source>Startup Applications</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -11016,75 +10848,24 @@ Acum atinge iarba</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+4"/>
-      <source>Plugins</source>
-      <translation>Extensii</translation>
+      <location line="+1"/>
+      <source>Disk &amp; Storage</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+3"/>
-      <location line="+3"/>
-      <source>Personalized desktop experience</source>
-      <translation>Experiență desktop personalizată</translation>
+      <location line="+1"/>
+      <source>Caelestia Plugins</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+0"/>
-      <source>Plugin system</source>
-      <translation>Sistem Plugin</translation>
+      <location line="+1"/>
+      <source>Updates</source>
+      <translation>Actualizări</translation>
     </message>
     <message>
-      <location line="+4"/>
+      <location line="+1"/>
       <source>About System</source>
       <translation>Despre Sistem</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Specs, version, system information</source>
-      <translation>Specificații, versiune, informații de sistem</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Device Info</source>
-      <translation>Informații despre dispozitiv</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>OS Version</source>
-      <translation>Versiune OS</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Uninstall Caelestia</source>
-      <translation>Dezinstalează Caelestia</translation>
-    </message>
-    <message>
-      <location line="+4"/>
-      <source>AI Assistant</source>
-      <translation>AI asistent</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Claude Code, accounts, providers</source>
-      <translation>Cod Claude Cod, conturi, furnizori</translation>
-    </message>
-    <message>
-      <location line="+3"/>
-      <source>Claude Code</source>
-      <translation>Codul Claude</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Let the CLI run its own tools</source>
-      <translation>Lasă CLI să își administreze propriile unelte</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Accounts</source>
-      <translation>Conturi</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Providers</source>
-      <translation>Furnizori</translation>
     </message>
   </context>
   <context>
@@ -12578,7 +12359,7 @@ PIN: %1</translation>
       <translation>Scurtături</translation>
     </message>
     <message>
-      <location line="+40"/>
+      <location line="+43"/>
       <source>Search shortcuts</source>
       <translation>Căutare comenzi rapide</translation>
     </message>
@@ -13329,6 +13110,587 @@ PIN: %1</translation>
     <message>
       <location line="+0"/>
       <source>Power the disk off before unplugging it</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>SubcategoryPane</name>
+    <message>
+      <location filename="../modules/nexus/SubcategoryPane.qml" line="+225"/>
+      <source>Wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Browse and select wallpapers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Library &amp; Components</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Wallhaven, online wallpapers, tags and filters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Wallpaper Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Configure wallpaper engine, mixer, and effects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Configure scaling, recoloring, video playback, and slideshows</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Lock screen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Wallpaper sync and lock screen settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Colors</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Caelestia owns color management and not skwd-wall.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Theme &amp; Effects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Islands, Pitch Black, Transparency</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Desktop</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Disabled (Plasma)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Icons enabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Icons disabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Desktop Addons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visualiser, auto-hide, styling</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Right click menu</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Configure desktop right click menu</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Windows Tiling</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Enabled (Krohnkite)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <location line="+12"/>
+      <location line="+12"/>
+      <location line="+6"/>
+      <location line="+6"/>
+      <location line="+6"/>
+      <location line="+6"/>
+      <location line="+12"/>
+      <location line="+30"/>
+      <source>Disabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-79"/>
+      <source>Dashboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <location line="+12"/>
+      <location line="+6"/>
+      <location line="+6"/>
+      <location line="+6"/>
+      <location line="+48"/>
+      <source>Enabled</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-73"/>
+      <source>Taskbar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Always visible</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Reveal on hover</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Reveal on drag</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Launcher</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Sidebar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Quick toggle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Overview</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Window Switcher</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Current desktop only</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>All desktops</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Wi-Fi &amp; Connection</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Disconnected</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>All Networks</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>%1 available</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Saved Networks</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage known connections</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Active</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Inactive</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Proxy</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Network proxy settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Bluetooth</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Pair New Device</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Search for nearby Bluetooth devices</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Layout &amp; Scale</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>%1 display(s) connected</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Output &amp; Input</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Muted</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1%</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>App Volumes</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>No apps playing audio</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>1 app playing audio</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>%1 apps playing audio</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Sound Effects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Feedback sounds and volume</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Notification Silence</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Applications that send without sound</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Preferences</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Position, timeout, and display behavior</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Toasts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Fullscreen behavior, appearance, and sound</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Toasts Events</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Choose which system changes show a toast</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Focus Sessions</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Running until %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Do Not Disturb on a schedule</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>On-screen slider</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Volume, microphone, brightness, and edge triggers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Utilities panel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Choose the cards shown in the panel</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Quick toggles</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Choose the controls shown in Quick Toggles</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Game Mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Auto-enable rules and performance overrides</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Quick share</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Send files to nearby devices</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>AI Configuration</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Models, providers, and parameters</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Default Applications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Configure system default openers</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Installed Applications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Browse and manage desktop apps</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Keyboard Shortcuts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>View and configure shell keybindings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Session settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Power, lock, and logout options</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>System Services</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Lyrics, GPU, and system integration</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Remote IPC</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Local and network remote procedure calls</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Calendar Integration</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Sync calendar events and accounts</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Language &amp; Format</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>System locale, spellcheck, and formats</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Accessibility</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Vision, hearing, and interaction aids</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Startup Applications</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage apps launched upon login</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Disk &amp; Storage</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Mount points, free space, and drives</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Caelestia Plugins</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Manage installed extensions and add-ons</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Updates</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Check for package and system updates</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>About System</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hardware, OS version, and shell info</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -15404,18 +15766,7 @@ PIN: %1</translation>
       <translation>Resetează setările</translation>
     </message>
     <message>
-      <location line="+60"/>
-      <source>Configuration &amp; Tools</source>
-      <translation>Configurare și instrumente</translation>
-    </message>
-    <message>
-      <location line="+0"/>
-      <location line="+19"/>
-      <source>General Settings</source>
-      <translation>Setări generale</translation>
-    </message>
-    <message>
-      <location line="-6"/>
+      <location line="+68"/>
       <source>Managed by skwd-wall</source>
       <translation>Gestionat de skwd-wall</translation>
     </message>
@@ -15425,7 +15776,12 @@ PIN: %1</translation>
       <translation>Setările de fundal și efectele sunt configurate direct prin intermediul skwd-wall.</translation>
     </message>
     <message>
-      <location line="+6"/>
+      <location line="+5"/>
+      <source>General Settings</source>
+      <translation>Setări generale</translation>
+    </message>
+    <message>
+      <location line="+1"/>
       <source>Configure wallpaper engine and display options</source>
       <translation>Configurare motor imagini de fundal și opțiuni de afișare</translation>
     </message>

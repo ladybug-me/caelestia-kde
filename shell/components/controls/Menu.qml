@@ -1,7 +1,7 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Controls as QtControls
 import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
@@ -257,11 +257,13 @@ MouseArea {
             const item = root.attachTo;
             if (!item || !root.parent)
                 return 0;
-            let off = root.attachSideX === Menu.Left ? 0 : item.width;
-            if (root.thisSideX === Menu.Right)
-                off -= width;
+            const off = root.attachSideX === Menu.Left ? 0 : item.width;
             const pt = item.mapToItem(root.parent, off, 0);
-            return (pt ? pt.x : 0) + root.marginX;
+            const anchorX = (pt ? pt.x : 0) + root.marginX;
+            const fullX = anchorX - (root.thisSideX === Menu.Right ? implicitWidth : 0);
+            const boundedX = Math.max(0, Math.min(fullX, root.parent.width - implicitWidth));
+            // Keep a right-anchored sideways reveal attached as its width grows.
+            return boundedX + (root.thisSideX === Menu.Right ? implicitWidth - width : 0);
         }
         y: {
             watcher.transform;
@@ -277,7 +279,7 @@ MouseArea {
 
         radius: Tokens.rounding.large
         level: root.transparentBackground ? 0 : 2
-        implicitWidth: Math.max(200, column.implicitWidth + Tokens.padding.extraSmall * 2)
+        implicitWidth: Math.min(root.parent.width || Infinity, Math.max(200, column.implicitWidth + Tokens.padding.extraSmall * 2))
         implicitHeight: Math.min(root.maxHeight, column.implicitHeight + Tokens.padding.extraSmall * 2)
         width: root.revealHorizontal ? implicitWidth * animScale : implicitWidth
         height: root.revealHorizontal ? implicitHeight : implicitHeight * animScale
@@ -334,7 +336,7 @@ MouseArea {
 
                 interactive: contentHeight > height
 
-                ScrollBar.vertical: StyledScrollBar {
+                QtControls.ScrollBar.vertical: StyledScrollBar {
                     flickable: flickable
                 }
 
@@ -446,7 +448,7 @@ MouseArea {
 
                 interactive: contentHeight > height
 
-                ScrollBar.vertical: StyledScrollBar {
+                QtControls.ScrollBar.vertical: StyledScrollBar {
                     flickable: submenuFlickable
                 }
 

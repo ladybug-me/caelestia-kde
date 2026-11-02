@@ -17,10 +17,26 @@ Region {
 
     property int steps: Math.max(1, blurQuality)
 
-    function getM(i) { return Math.ceil(i * steps / 100); }
-    function isActive(i) { return GlobalConfig.appearance.blurMask && getM(i) > getM(i - 1); }
-    function getYo(i) { return getM(i) / steps; }
-    function getXVal(i) { return Math.sqrt(1 - Math.pow(getYo(i), 2)); }
+    // The strip geometry depends only on steps, so it is computed once here
+    // instead of in every region binding on every animation frame.
+    readonly property bool masked: GlobalConfig.appearance.blurMask
+    readonly property var strips: {
+        const active = [false], yo = [0], xVal = [1];
+        for (let i = 1; i <= 100; ++i) {
+            const m = Math.ceil(i * steps / 100);
+            const prev = Math.ceil((i - 1) * steps / 100);
+            active.push(m > prev);
+            yo.push(m / steps);
+            // Width at the strip's outer edge, so the steps cover the arc instead
+            // of leaving notches inside it; the region snaps to whole pixels anyway.
+            xVal.push(Math.sqrt(1 - Math.pow(prev / steps, 2)));
+        }
+        return { active, yo, xVal };
+    }
+
+    function isActive(i) { return masked && strips.active[i]; }
+    function getYo(i) { return strips.yo[i]; }
+    function getXVal(i) { return strips.xVal[i]; }
 
     property real rTL: Math.min(rTop, rLeft)
 

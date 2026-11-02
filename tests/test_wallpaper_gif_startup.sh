@@ -2,10 +2,14 @@
 # suite: isolated
 # Exercise the real wallpaper image component with a window that gets its size later.
 set -euo pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
+
+test_wallpaper_loads_after_it_gets_a_size() {
 repo=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 if ! command -v quickshell >/dev/null 2>&1; then
-    echo 'SKIP: quickshell is not installed'
-    exit 0
+    skip_test 'quickshell is not installed'
+    return 0
 fi
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
@@ -55,8 +59,11 @@ for image in "$repo/shell/assets/bongocat.gif" "$repo/shell/assets/kurukuru_stan
     XDG_CACHE_HOME="$tmp/cache" XDG_STATE_HOME="$tmp/state" XDG_DATA_HOME="$tmp/data" \
     QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software QS_DISABLE_CRASH_HANDLER=1 \
     DBUS_SESSION_BUS_ADDRESS="unix:path=$tmp/no-session-bus" timeout 12 quickshell -p "$tmp" >"$tmp/log" 2>&1 || {
-        cat "$tmp/log"; echo "FAIL: $image"; exit 1;
+        cat "$tmp/log"; fail "wallpaper playback failed: $image"; return 0;
     }
-    if ! grep -q 'WALLPAPER_TEST PASS' "$tmp/log"; then cat "$tmp/log"; exit 1; fi
+    if ! grep -q 'WALLPAPER_TEST PASS' "$tmp/log"; then cat "$tmp/log"; fail "wallpaper did not advance: $image"; return 0; fi
     echo "PASS: $(basename "$image")"
 done
+}
+
+run_tests

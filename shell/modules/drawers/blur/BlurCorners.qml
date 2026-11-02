@@ -34,52 +34,34 @@ Region {
         return { active, yo, xVal };
     }
 
-    function isActive(i) { return masked && strips.active[i]; }
-    function getYo(i) { return strips.yo[i]; }
-    function getXVal(i) { return strips.xVal[i]; }
-
     property real rTL: Math.min(rTop, rLeft)
-
     property real rTR: Math.min(rTop, rRight)
-
     property real rBL: Math.min(rBottom, rLeft)
-
     property real rBR: Math.min(rBottom, rRight)
 
-
-
-
     property real tlX: 0
-
     property real tlY: 0
-
     property real tlW: 1
-
     property real tlH: 0
 
     property real trX: -1
-
     property real trY: 0
-
     property real trW: 1
-
     property real trH: 0
 
     property real blX: 0
-
     property real blY: -1
-
     property real blW: 1
-
     property real blH: 1
 
     property real brX: -2
-
     property real brY: -2
-
     property real brW: 2
-
     property real brH: 2
+
+    function isActive(i) { return masked && strips.active[i]; }
+    function getYo(i) { return strips.yo[i]; }
+    function getXVal(i) { return strips.xVal[i]; }
 
     Region { x: isActive(1) ? inLeft - rTL * getXVal(1) + tlX : 0; y: isActive(1) ? inTop - rTL * getYo(1) + tlY : 0; width: isActive(1) ? rTL * getXVal(1) + tlW : 0; height: isActive(1) ? rTL * getYo(1) + tlH : 0 }
     Region { x: isActive(2) ? inLeft - rTL * getXVal(2) + tlX : 0; y: isActive(2) ? inTop - rTL * getYo(2) + tlY : 0; width: isActive(2) ? rTL * getXVal(2) + tlW : 0; height: isActive(2) ? rTL * getYo(2) + tlH : 0 }

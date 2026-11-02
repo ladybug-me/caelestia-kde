@@ -183,7 +183,8 @@ StackView {
 
                             required property var modelData
 
-                            implicitWidth: parent.width
+                            // A rebuild detaches old rows before they are destroyed.
+                            implicitWidth: parent?.width ?? 0
                             implicitHeight: childrenItem.implicitHeight
 
                             radius: Tokens.rounding.full * menu.scaleOffset

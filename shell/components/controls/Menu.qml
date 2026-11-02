@@ -275,9 +275,10 @@ MouseArea {
             if (root.thisSideX === Menu.Right)
                 off -= width;
             const pt = item.mapToItem(root.parent, off, 0);
-            // Keep the whole menu inside the window it is drawn in.
-            const x = (pt ? pt.x : 0) + root.marginX;
-            return Math.max(0, Math.min(x, root.parent.width - width));
+            // Keep the panel inside the window: near the right edge there is no room
+            // to unfold outwards, and it used to end up half off screen.
+            const w = Math.max(menu.implicitWidth, menu.width);
+            return Math.max(0, Math.min(root.parent.width - w, (pt ? pt.x : 0) + root.marginX));
         }
         y: {
             watcher.transform;
@@ -288,7 +289,9 @@ MouseArea {
             if (root.thisSideY === Menu.Bottom)
                 off -= height;
             const pt = item.mapToItem(root.parent, 0, off);
-            return (pt ? pt.y : 0) + root.marginY;
+            // Same for the vertical axis: never leave the window.
+            const h = Math.max(menu.implicitHeight, menu.height);
+            return Math.max(0, Math.min(root.parent.height - h, (pt ? pt.y : 0) + root.marginY));
         }
 
         radius: Tokens.rounding.large

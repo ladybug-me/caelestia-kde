@@ -17,53 +17,51 @@ Region {
 
     property int steps: Math.max(1, blurQuality)
 
-    function getM(i) { return Math.ceil(i * steps / 100); }
-    function isActive(i) { return GlobalConfig.appearance.blurMask && getM(i) > getM(i - 1); }
-    function getYo(i) { return getM(i) / steps; }
-    function getXVal(i) { return Math.sqrt(1 - Math.pow(getYo(i), 2)); }
+    // The strip geometry depends only on steps, so it is computed once here
+    // instead of in every region binding on every animation frame.
+    readonly property bool masked: GlobalConfig.appearance.blurMask
+    readonly property var strips: {
+        const active = [false], yo = [0], xVal = [1];
+        for (let i = 1; i <= 100; ++i) {
+            const m = Math.ceil(i * steps / 100);
+            const prev = Math.ceil((i - 1) * steps / 100);
+            active.push(m > prev);
+            yo.push(m / steps);
+            // Width at the strip's outer edge, so the steps cover the arc instead
+            // of leaving notches inside it; the region snaps to whole pixels anyway.
+            xVal.push(Math.sqrt(1 - Math.pow(prev / steps, 2)));
+        }
+        return { active, yo, xVal };
+    }
 
     property real rTL: Math.min(rTop, rLeft)
-
     property real rTR: Math.min(rTop, rRight)
-
     property real rBL: Math.min(rBottom, rLeft)
-
     property real rBR: Math.min(rBottom, rRight)
 
-
-
-
     property real tlX: 0
-
     property real tlY: 0
-
     property real tlW: 1
-
     property real tlH: 0
 
     property real trX: -1
-
     property real trY: 0
-
     property real trW: 1
-
     property real trH: 0
 
     property real blX: 0
-
     property real blY: -1
-
     property real blW: 1
-
     property real blH: 1
 
     property real brX: -2
-
     property real brY: -2
-
     property real brW: 2
-
     property real brH: 2
+
+    function isActive(i) { return masked && strips.active[i]; }
+    function getYo(i) { return strips.yo[i]; }
+    function getXVal(i) { return strips.xVal[i]; }
 
     Region { x: isActive(1) ? inLeft - rTL * getXVal(1) + tlX : 0; y: isActive(1) ? inTop - rTL * getYo(1) + tlY : 0; width: isActive(1) ? rTL * getXVal(1) + tlW : 0; height: isActive(1) ? rTL * getYo(1) + tlH : 0 }
     Region { x: isActive(2) ? inLeft - rTL * getXVal(2) + tlX : 0; y: isActive(2) ? inTop - rTL * getYo(2) + tlY : 0; width: isActive(2) ? rTL * getXVal(2) + tlW : 0; height: isActive(2) ? rTL * getYo(2) + tlH : 0 }

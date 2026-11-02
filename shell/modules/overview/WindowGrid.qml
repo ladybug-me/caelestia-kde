@@ -51,18 +51,26 @@ Item {
     readonly property real hoverScale: 1.02
     property int selectedIndex: -1
     readonly property var currentWindows: {
-        if (listView.currentIndex < 0)
+        // The trigger and the filter are read here, not inside gridWindows(): a
+        // property read inside a function does not register as a dependency.
+        const _winTrigger = Kwin.windowList;
+        const _appFilter = Visibilities.overviewAppFilter;
+        if (listView.currentIndex < 0 || listView.currentIndex >= Kwin.workspaces.length)
             return [];
-        const wsList = Kwin.workspaces;
-        if (listView.currentIndex >= wsList.length)
-            return [];
-        const wsId = wsList[listView.currentIndex].index;
-        const _ = Kwin.windowList;
-        return Kwin.filterWindows(Kwin.windowsForWorkspace(wsId, false), null, root.screen.name);
+        return root.gridWindows(Kwin.workspaces[listView.currentIndex].index);
     }
 
     signal requestWindowInfo(var client)
     signal requestClose()
+
+    /// What one page lays out: this screen, one workspace, and — when the overview was
+    /// opened from a dock entry — one application. The grid and the selection both ask
+    /// this, so they cannot disagree about what is on a page.
+    function gridWindows(wsId: int): var {
+        const wins = Kwin.filterWindows(Kwin.windowsForWorkspace(wsId, false), null, root.screen.name);
+        const filter = Visibilities.overviewAppFilter;
+        return filter.length === 0 ? wins : wins.filter(w => Kwin.windowMatchesApp(w, filter));
+    }
 
     /// The screen containing a point in global coordinates, or null.
     function screenAtGlobal(gx: real, gy: real): var {
@@ -232,9 +240,11 @@ Item {
             readonly property string wsName: (Kwin.workspaces && index < Kwin.workspaces.length) ? Kwin.workspaces[index].name : wsId.toString()
             property var wsWindows: []
             readonly property var _winTrigger: Kwin.windowList
+            // Read here so a filter change re-runs the page, the way window changes do.
+            readonly property var _appFilter: Visibilities.overviewAppFilter
 
             function _updateWsWindows(): void {
-                const arr = Kwin.filterWindows(Kwin.windowsForWorkspace(wsId, false), null, root.screen.name);
+                const arr = root.gridWindows(wsId);
 
                 let changed = arr.length !== wsWindows.length;
                 if (!changed) {
@@ -254,6 +264,7 @@ Item {
             }
 
             on_WinTriggerChanged: _updateWsWindows()
+            on_AppFilterChanged: _updateWsWindows()
             onWsIdChanged: _updateWsWindows()
 
             width: listView.width

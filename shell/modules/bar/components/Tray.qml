@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import Quickshell
-import Quickshell.Services.SystemTray
 import Caelestia.Config
 import qs.components
 import qs.services
@@ -23,20 +22,36 @@ StyledRect {
     readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * Math.max(0.6, !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0))
 
+    readonly property bool showArrow: Config.bar.tray.compact && TrayRegistry.collapsedCount > 0
+
     readonly property real nonAnimHeight: {
         if (isHorizontal)
             return barThickness;
-        if (!Config.bar.tray.compact)
-            return layout.implicitHeight + padding * 2;
-        return (expanded ? expandIcon.implicitHeight + layout.implicitHeight + spacing : expandIcon.implicitHeight) + padding * 2;
+        const arrow = root.showArrow ? expandIcon.implicitHeight + (layout.implicitHeight > 0 ? spacing : 0) : 0;
+        return layout.implicitHeight + arrow + padding * 2;
     }
 
     readonly property real nonAnimWidth: {
         if (!isHorizontal)
             return barThickness;
-        if (!Config.bar.tray.compact)
-            return layout.implicitWidth + padding * 2;
-        return (expanded ? expandIcon.implicitWidth + layout.implicitWidth + spacing : expandIcon.implicitWidth) + padding * 2;
+        const arrow = root.showArrow ? expandIcon.implicitWidth + (layout.implicitWidth > 0 ? spacing : 0) : 0;
+        return layout.implicitWidth + arrow + padding * 2;
+    }
+
+    // Hit test for the bar's hover routing: the positioner owns the layout, so it
+    // also owns which icon sits under a bar coordinate.
+    function itemAt(pos: real): TrayItem {
+        const local = isHorizontal ? layout.mapFromItem(null, pos, 0) : layout.mapFromItem(null, 0, pos);
+        return layout.childAt(isHorizontal ? local.x : layout.width / 2, isHorizontal ? layout.height / 2 : local.y) as TrayItem;
+    }
+
+    function arrowHit(pos: real): bool {
+        if (!expandIcon.item)
+            return false;
+        const local = isHorizontal ? expandIcon.mapFromItem(null, pos, 0) : expandIcon.mapFromItem(null, 0, pos);
+        const coord = isHorizontal ? local.x : local.y;
+        const size = isHorizontal ? expandIcon.width : expandIcon.height;
+        return coord >= -root.spacing && coord <= size + root.padding;
     }
 
     clip: true
@@ -81,9 +96,6 @@ StyledRect {
 
         spacing: Tokens.spacing.small
 
-        opacity: root.expanded || !Config.bar.tray.compact ? 1 : 0
-        enabled: root.expanded || !Config.bar.tray.compact
-
         add: Transition {
             Anim {
                 properties: "scale"
@@ -108,24 +120,13 @@ StyledRect {
             id: items
 
             model: ScriptModel {
-                // Passive items are hidden by the protocol and by upstream's bar; TrayItem's
-                // trayIndex and the popout names in popouts/Content.qml both come from this
-                // same filter, so it must match the one there exactly.
-                values: SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))
+                values: TrayRegistry.trayItems
             }
 
             TrayItem {
-                required property int index
-
-                trayIndex: index
                 popouts: root.popouts
                 isHorizontal: root.isHorizontal
-            }
-        }
-
-        Behavior on opacity {
-            Anim {
-                type: Anim.DefaultEffects
+                visible: root.expanded || !Config.bar.tray.compact || !TrayRegistry.isCollapsed(modelData)
             }
         }
     }
@@ -133,20 +134,27 @@ StyledRect {
     Loader {
         id: expandIcon
 
-        asynchronous: true
-
         anchors.horizontalCenter: isHorizontal ? undefined : parent.horizontalCenter
         anchors.verticalCenter: isHorizontal ? parent.verticalCenter : undefined
         anchors.bottom: isHorizontal ? undefined : parent.bottom
         anchors.right: isHorizontal ? parent.right : undefined
+        anchors.bottomMargin: isHorizontal ? 0 : root.padding
+        anchors.rightMargin: isHorizontal ? root.padding : 0
 
-        active: Config.bar.tray.compact && items.count > 0
+        active: root.showArrow
 
         sourceComponent: Item {
-            implicitWidth: isHorizontal ? (expandIconInner.implicitWidth - Tokens.padding.small * 2) : expandIconInner.implicitWidth
-            implicitHeight: isHorizontal ? expandIconInner.implicitHeight : (expandIconInner.implicitHeight - Tokens.padding.small * 2)
+            id: arrowContainer
+
+            readonly property real iconDimension: Math.max(expandIconInner.implicitWidth, expandIconInner.implicitHeight)
+
+            implicitWidth: iconDimension
+            implicitHeight: iconDimension
 
             TapHandler {
+                margin: root.padding
+                cursorShape: Qt.PointingHandCursor
+
                 onTapped: {
                     root.pinned = !root.pinned;
                     root.expanded = root.pinned;
@@ -156,29 +164,12 @@ StyledRect {
             MaterialIcon {
                 id: expandIconInner
 
-                anchors.horizontalCenter: isHorizontal ? undefined : parent.horizontalCenter
-                anchors.verticalCenter: isHorizontal ? parent.verticalCenter : undefined
-                anchors.bottom: isHorizontal ? undefined : parent.bottom
-                anchors.right: isHorizontal ? parent.right : undefined
-                anchors.bottomMargin: isHorizontal ? 0 : (Config.bar.tray.background ? Tokens.padding.extraSmall : -Tokens.padding.extraSmall)
-                anchors.rightMargin: isHorizontal ? (Config.bar.tray.background ? Tokens.padding.extraSmall : -Tokens.padding.extraSmall) : 0
+                anchors.centerIn: parent
                 text: "expand_less"
                 fontStyle: Tokens.font.icon.large
                 rotation: isHorizontal ? (root.expanded ? 270 : 90) : (root.expanded ? 180 : 0)
 
                 Behavior on rotation {
-                    Anim {}
-                }
-
-                Behavior on anchors.bottomMargin {
-                    enabled: !isHorizontal
-
-                    Anim {}
-                }
-
-                Behavior on anchors.rightMargin {
-                    enabled: isHorizontal
-
                     Anim {}
                 }
             }

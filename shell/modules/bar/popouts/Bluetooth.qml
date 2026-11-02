@@ -87,7 +87,7 @@ ColumnLayout {
 
             Repeater {
                 model: ScriptModel {
-                    values: [...Bluetooth.devices.values].sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired) || a.name.localeCompare(b.name)).slice(0, 5) // qmllint disable unresolved-type
+                    values: [...Bluetooth.devices.values].sort((a, b) => (b.connected - a.connected) || (b.paired - a.paired) || a.name.localeCompare(b.name)) // qmllint disable unresolved-type
                 }
 
                 Item {

@@ -289,7 +289,7 @@ test_press_and_lift_scales_are_named() {
     assert_file_contains "$SHELL_DIR/modules/nexus/common/NexusStyle.qml" \
         'readonly property real dragScale: 1.05' \
         "the drag lift should be named once"
-    assert_file_contains "$SHELL_DIR/modules/nexus/pages/wallandstyle/ContextMenuPage.qml" \
+    assert_file_contains "$SHELL_DIR/modules/nexus/pages/desktop/ContextMenuPage.qml" \
         'scale: NexusStyle.dragScale' \
         "the reorder drag should use the named lift"
     assert_file_contains "$SHELL_DIR/modules/nexus/pages/panels/taskbar/BarComponents.qml" \
@@ -337,13 +337,17 @@ test_the_calendars_animate_months_reversibly() {
     assert_file_matches "$shared" 'const parked = offset .* \? 1 : -1' \
         "the shared month motion must park the incoming month opposite the scroll direction"
 
+    # One month view now serves both surfaces, so the motion is asserted where it lives
+    # and the callers are asserted to stay out of it.
+    assert_file_contains "$COMPONENTS/CalendarMonth.qml" 'CalendarMonthSlide {' \
+        "the shared month view should own the month motion"
     for file in "$SHELL_DIR/modules/bar/popouts/CalendarPopout.qml" "$SHELL_DIR/modules/dashboard/dash/Calendar.qml"; do
-        assert_file_contains "$file" 'CalendarMonthSlide {' \
-            "$(basename "$file") should share the month motion"
         assert_file_not_contains "$file" 'animRepositioning' \
             "$(basename "$file") should not keep its own copy of the parking protocol"
         assert_file_not_contains "$file" '_prevDate' \
             "$(basename "$file") should leave tracking the previous month to the shared motion"
+        assert_file_not_contains "$file" 'MonthGrid {' \
+            "$(basename "$file") should draw the month through the shared view"
     done
 }
 
@@ -364,7 +368,7 @@ test_the_dialogs_share_one_transition_with_a_shorter_exit() {
     for dialog in \
         "$SHELL_DIR/modules/nexus/common/KeyCaptureDialog.qml" \
         "$SHELL_DIR/modules/nexus/common/UninstallDialog.qml" \
-        "$SHELL_DIR/modules/nexus/pages/wallandstyle/AddShortcutDialog.qml"; do
+        "$SHELL_DIR/modules/nexus/pages/desktop/AddShortcutDialog.qml"; do
         assert_file_contains "$dialog" 'enter: DialogTransition { }' \
             "$(basename "$dialog") should use the shared entrance"
         assert_file_contains "$dialog" 'exit: DialogTransition {' \
@@ -404,11 +408,6 @@ test_no_dead_icon_asset_needs_a_colour_baked_in() {
     if [[ -n "$hits" ]]; then
         fail "an icon SVG bakes in a colour instead of currentColor: $(printf '%s' "$hits" | paste -sd', ' -)"
     fi
-}
-
-test_no_element_holds_an_offscreen_layer_it_never_animates() {
-    assert_file_not_contains "$SHELL_DIR/modules/background/BadAppleVideo.qml" 'layer.enabled: true' \
-        "the video output has nothing reading its texture"
 }
 
 run_tests

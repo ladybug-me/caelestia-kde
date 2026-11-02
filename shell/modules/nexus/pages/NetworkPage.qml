@@ -56,9 +56,27 @@ PageBase {
             }
         }
 
+        // Only present when NetworkManager's own probe landed on a login page: most
+        // networks never show it, and a permanent row would be noise.
+        SectionHeader {
+            first: true
+            visible: Connectivity.portal
+            text: qsTr("Sign-in required")
+        }
+
+        NavRow {
+            visible: Connectivity.portal
+            first: true
+            last: true
+            icon: "wifi_tethering"
+            label: Connectivity.working ? qsTr("Looking for the sign-in page...") : qsTr("Open sign-in page")
+            status: Connectivity.portalUrl || Connectivity.lastError || qsTr("This network asks you to sign in before it lets traffic through")
+            onClicked: Connectivity.signIn()
+        }
+
         ToggleRow {
             Layout.topMargin: Nmcli.hasAvailableEthernet ? Tokens.spacing.large : 0
-            first: true
+            first: !Connectivity.portal
             text: qsTr("Wi-Fi")
             font: Tokens.font.body.medium
             horizontalPadding: Tokens.padding.largeIncreased
@@ -480,6 +498,19 @@ PageBase {
                 root.nState.editingVpnIndex = -1;
                 root.nState.openSubPage(4); // Add/edit provider sub-page
             }
+        }
+
+        SectionHeader {
+            text: qsTr("Advanced")
+        }
+
+        NavRow {
+            first: true
+            last: true
+            icon: "lan"
+            label: qsTr("Proxy")
+            status: Proxy.summary
+            onClicked: root.nState.openSubPage(8)
         }
     }
 }

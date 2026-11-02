@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Caelestia.Config
+import Caelestia.Images
 
 Singleton {
     id: root
@@ -33,6 +34,19 @@ Singleton {
     function exec(command: list<string>): void {
         if (command.length > 0)
             Quickshell.execDetached(root.wrap(command));
+    }
+
+    /// Whether KDE ships a settings module by this name. Printing, the on-screen
+    /// keyboard and the accessibility options stay KDE's to own: the shell gives them a
+    /// front door, and says so when the module is missing rather than opening a dead page.
+    function kcmAvailable(name: string): bool {
+        const dirs = ["/usr/lib/qt6/plugins/plasma/kcms/systemsettings", "/usr/lib64/qt6/plugins/plasma/kcms/systemsettings"];
+        return dirs.some(dir => IUtils.fileExists(`${dir}/${name}.so`));
+    }
+
+    /// Opens one of those modules.
+    function kcm(name: string): void {
+        root.exec(["systemsettings", name]);
     }
 
     function terminalCommand(command: list<string>): list<string> {

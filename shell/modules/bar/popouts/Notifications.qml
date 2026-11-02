@@ -49,12 +49,12 @@ ColumnLayout {
                 fontScale: root.fontScale
                 rightMargin: Tokens.padding.small * root.scaleOffset
                 label: qsTr("Do not disturb")
-                checked: Notifs.dnd
+                checked: Notifs.quiet
                 toggle.onToggled: Notifs.dnd = checked
             }
 
             StyledText {
-                text: Notifs.dnd ? qsTr("Notifications off") : qsTr("%1 unread").arg(Notifs.openCount)
+                text: Notifs.quiet ? qsTr("Notifications off") : qsTr("%1 unread").arg(Notifs.openCount)
                 color: Colours.palette.m3onSurfaceVariant
                 font.pointSize: Tokens.font.body.small.pointSize * root.fontScale
             }

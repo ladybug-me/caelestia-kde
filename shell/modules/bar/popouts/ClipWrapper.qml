@@ -18,6 +18,7 @@ Item {
 
     readonly property alias content: content
     readonly property bool isHorizontal: bar.isHorizontal
+    readonly property bool hovered: popoutsHover.hovered
     property real offsetScale: content.isDetached || content.hasCurrent ? 0 : 1
     // Where x is heading; x itself animates towards it.
     readonly property real targetX: {
@@ -84,6 +85,10 @@ Item {
             duration: content.animLength
             easing: content.animCurve
         }
+    }
+
+    HoverHandler {
+        id: popoutsHover
     }
 
     Wrapper {

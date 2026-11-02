@@ -10,13 +10,19 @@ Item {
     required property M3Variants.Variant modelData
     required property var list
 
+    /// The one activation this row has, so the launcher can trigger it from the
+    /// keyboard without knowing which kind of row it is.
+    function activate(): void {
+        root.modelData?.onClicked(root.list);
+    }
+
     implicitHeight: Tokens.sizes.launcher.itemHeight
 
     width: parent ? parent.width : 0
 
     StateLayer {
         radius: Tokens.rounding.large
-        onClicked: root.modelData?.onClicked(root.list)
+        onClicked: root.activate()
     }
 
     Item {

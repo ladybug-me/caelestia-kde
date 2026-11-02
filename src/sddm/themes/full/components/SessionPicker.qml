@@ -5,44 +5,24 @@ Item {
     id: root
 
     property bool expanded: false
-    property int count: sessionModel ? sessionModel.count : 0
-    property var items: []
-    property int selectedIndex: 0
-    property string currentText
-    Component.onCompleted: {
-        root.currentText = sessionArray.sessions[root.selectedIndex].name;
-        const arr = [];
-        for (let i = 0; i < sessionArray.sessions.length; i++) {
-            arr.push(sessionArray.sessions[i].name);
-        }
-        root.items = arr;
+    readonly property int count: sessionModel ? sessionModel.count : 0
+    // SDDM exposes session names through SessionModel::NameRole, which is not
+    // addressable by name outside a delegate.
+    readonly property int sessionNameRole: Qt.UserRole + 4
+    readonly property var items: {
+        const names = [];
+        for (let i = 0; i < root.count; ++i)
+            names.push(sessionModel.data(sessionModel.index(i, 0), root.sessionNameRole));
+
+        return names;
     }
-    onSelectedIndexChanged: {
-        root.currentText = sessionArray.sessions[root.selectedIndex].name;
-    }
+    readonly property string currentText: root.items[root.selectedIndex] ?? ""
+    property int selectedIndex: sessionModel ? sessionModel.lastIndex : 0
 
     width: labelRect.width + expandBtn.width
     height: 40
     opacity: root.count > 0 ? 1 : 0
     enabled: root.count > 0
-
-    Instantiator {
-        id: sessionArray
-        model: sessionModel
-        property var sessions: []
-
-        delegate: Item {
-            required property int index
-            required property var model
-
-            Component.onCompleted: {
-                sessionArray.sessions.push({
-                    index: index,
-                    name: model.name
-                });
-            }
-        }
-    }
 
     Rectangle {
         id: labelRect
@@ -233,7 +213,6 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: {
                         root.selectedIndex = delegateItem.index;
-                        root.currentText = root.items[delegateItem.index];
                         root.expanded = false;
                     }
                 }

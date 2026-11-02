@@ -18,14 +18,15 @@ Controls.Menu {
     property string screenName: ""
     property var itemPool: ({})
     property var entryByKey: ({})
+    property var submenuRows: ({})
     readonly property bool iconsEnabled: screenName ? ContextMenuStore.iconsShownOn(screenName) : GlobalConfig.background.desktopIconsEnabled
-    readonly property bool iconsShown: (screenName ? GlobalConfig.forScreen(screenName) : GlobalConfig).background.wallpaperEnabled && (screenName ? GlobalConfig.forScreen(screenName) : GlobalConfig).background.desktopIconsEnabled
+    readonly property bool iconsShown: (screenName ? GlobalConfig.forScreen(screenName) : GlobalConfig).background.desktopIconsEnabled
 
     function executeEntryByKey(key) {
         let entry = root.entryByKey[key];
         if (!entry) return;
 
-        root.expanded = false;
+        root.close();
 
         // In-shell state changes run right away; anything that opens a window
         // or spawns a process waits for the menu to finish closing.
@@ -43,6 +44,19 @@ Controls.Menu {
         }
         if (entry.action === "ToggleDesktopIcons") {
             ContextMenuStore.toggleIcons(root.screenName);
+            return;
+        }
+        if (entry.action === "EnterEditMode") {
+            WidgetEditor.close();
+            ContextMenuStore.editMode = true;
+            return;
+        }
+        if (entry.action === "EditWidgets") {
+            WidgetEditor.toggle();
+            // The menu held the keyboard while it was open, so the desktop has to
+            // take it back for Escape and Delete to reach the editor.
+            if (WidgetEditor.active)
+                DesktopLayout.controllerFor(root.screenName)?.grabKeyboard();
             return;
         }
         if (entry.action === "ToggleWidgetLock") {
@@ -83,6 +97,43 @@ Controls.Menu {
         execTimer.restart();
     }
 
+    function isGroupEntry(entry) {
+        return entry.type === "group" && entry.children && entry.children.length > 0;
+    }
+
+    function submenuEntry(key, entry) {
+        let item = root.submenuRows[key];
+        if (!item) {
+            item = menuItemComp.createObject(root);
+            item.clicked.connect(() => root.executeEntryByKey(key));
+            root.submenuRows[key] = item;
+        }
+
+        if (entry.action === "EditWidgets") {
+            item.text = Qt.binding(() => WidgetEditor.active ? qsTr("Done Editing Widgets") : (entry.label || qsTr("Edit Widgets")));
+            item.icon = Qt.binding(() => WidgetEditor.active ? "check" : (entry.icon || "edit"));
+            item.visible = Qt.binding(() => !Config.background.disableQuickshellDesktop);
+        } else if (entry.action === "AddWidget") {
+            item.text = entry.label;
+            item.icon = entry.icon || "widgets";
+            item.visible = Qt.binding(() => root.iconsShown);
+        } else if (entry.action === "ToggleWidgetLock") {
+            item.text = Qt.binding(() => DesktopLayout.anyWidgetUnlocked() ? qsTr("Lock All Widgets") : qsTr("Unlock All Widgets"));
+            item.icon = Qt.binding(() => DesktopLayout.anyWidgetUnlocked() ? "lock" : "lock_open");
+            item.visible = true;
+        } else if (entry.action === "ToggleWidgetOutlines") {
+            item.text = entry.label;
+            item.icon = Qt.binding(() => DesktopLayout.widgetOutlines ? "check_box" : "check_box_outline_blank");
+            item.visible = true;
+        } else {
+            item.text = entry.label;
+            item.icon = entry.icon || "widgets";
+            item.visible = true;
+        }
+
+        return item;
+    }
+
     function applyEntries(entries, sourceName) {
         const buildStartedAt = Date.now();
         const normalized = (!entries || entries.length === 0)
@@ -90,6 +141,7 @@ Controls.Menu {
             : ContextMenuStore.cloneEntries(entries);
         const newArr = [];
         const nextEntryByKey = {};
+        const nextSubmenuKeys = {};
 
         for (let i = 0; i < normalized.length; i++) {
             let entry = normalized[i];
@@ -97,6 +149,34 @@ Controls.Menu {
 
             let key = (entry.id && entry.id.length > 0) ? entry.id : ("idx_" + i);
             nextEntryByKey[key] = entry;
+
+            if (root.isGroupEntry(entry)) {
+                const children = [];
+                for (let c = 0; c < entry.children.length; c++) {
+                    const child = entry.children[c];
+                    if (!child || child.enabled === false) continue;
+
+                    const childKey = (child.id && child.id.length > 0) ? child.id : (key + "_" + c);
+                    nextEntryByKey[childKey] = child;
+                    nextSubmenuKeys[childKey] = true;
+                    children.push(root.submenuEntry(childKey, child));
+                }
+
+                if (children.length === 0) continue;
+
+                let item = root.itemPool[key];
+                if (!item) {
+                    item = menuItemComp.createObject(root);
+                    root.itemPool[key] = item;
+                }
+
+                item.text = entry.label || qsTr("Widgets");
+                item.icon = entry.icon || "widgets";
+                item.visible = true;
+                item.submenu = children;
+                newArr.push(item);
+                continue;
+            }
 
             let item = root.itemPool[key];
             if (!item) {
@@ -113,14 +193,6 @@ Controls.Menu {
                 item.text = entry.label;
                 item.icon = entry.icon || "content_paste";
                 item.visible = Qt.binding(() => root.iconsShown && DesktopLayout.clipboardHasFiles);
-            } else if (entry.action === "ToggleWidgetLock") {
-                item.text = Qt.binding(() => DesktopLayout.anyWidgetUnlocked() ? qsTr("Lock All Widgets") : qsTr("Unlock All Widgets"));
-                item.icon = Qt.binding(() => DesktopLayout.anyWidgetUnlocked() ? "lock" : "lock_open");
-                item.visible = true;
-            } else if (entry.action === "ToggleWidgetOutlines") {
-                item.text = entry.label;
-                item.icon = Qt.binding(() => DesktopLayout.widgetOutlines ? "check_box" : "check_box_outline_blank");
-                item.visible = true;
             } else if (entry.action === "AddWidget") {
                 item.text = entry.label;
                 item.icon = entry.icon || "widgets";
@@ -140,6 +212,12 @@ Controls.Menu {
             if (!nextEntryByKey.hasOwnProperty(k)) {
                 root.itemPool[k].destroy();
                 delete root.itemPool[k];
+            }
+        }
+        for (const k in root.submenuRows) {
+            if (!nextSubmenuKeys.hasOwnProperty(k)) {
+                root.submenuRows[k].destroy();
+                delete root.submenuRows[k];
             }
         }
 

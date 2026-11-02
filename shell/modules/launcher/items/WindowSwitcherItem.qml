@@ -19,12 +19,12 @@ Item {
     required property var modelData
     required property var list
 
-    function clicked(): void {
+    function activate(): void {
         Kwin.focusWindow(root.modelData.address);
         root.list.visibilities.launcher = false;
     }
 
-    // Unlike clicked(), stays in the switcher rather than closing the launcher —
+    // Unlike activate(), stays in the switcher rather than closing the launcher —
     // the point is closing several windows in a row without re-opening it each time.
     function closeWindow(): void {
         Windows.closeWindow(root.modelData.address);
@@ -51,7 +51,7 @@ Item {
         anchors.leftMargin: -Tokens.padding.large
         anchors.rightMargin: -Tokens.padding.large
         radius: Tokens.rounding.medium
-        onClicked: root.clicked()
+        onClicked: root.activate()
     }
 
     StyledRect {
@@ -143,7 +143,6 @@ Item {
         width: previewBox.maxW - Tokens.padding.medium * 2
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
-        renderType: Text.QtRendering
         text: {
             const title = root.modelData?.title || "";
             if (root.modelData?.minimized) return `(${title})`;

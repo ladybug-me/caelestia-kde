@@ -11,9 +11,13 @@ TextFieldBase {
 
     enum TextFieldType {
         Outlined,
-        Filled
+        Filled,
+        Boxed
     }
 
+    /// Outlined is the M3 field with a floating label; Filled is the same with a tone;
+    /// Boxed is the compact field that draws its own box and keeps the placeholder in
+    /// place, for rows that hold one value next to a button.
     property int type: StyledTextField.Outlined
 
     property int smallFontSize: Tokens.font.label.small.pointSize
@@ -63,7 +67,7 @@ TextFieldBase {
         anchors.fill: parent
         anchors.bottomMargin: root.supportingTextOffset
 
-        sourceComponent: root.type === StyledTextField.Filled ? filledComp : outlineComp
+        sourceComponent: root.type === StyledTextField.Filled ? filledComp : root.type === StyledTextField.Boxed ? boxedComp : outlineComp
 
         StateLayer {
             id: stateLayer
@@ -71,6 +75,10 @@ TextFieldBase {
             topLeftRadius: root.clampedRadius
             topRightRadius: root.clampedRadius
             radius: root.type === StyledTextField.Outlined ? root.clampedRadius : 0
+
+            // Boxed draws the box itself and tints it on hover, so an inset tint as well
+            // would read as a second rectangle inside the first.
+            showHoverBackground: root.type !== StyledTextField.Boxed
 
             cursorShape: Qt.IBeamCursor
             disabled: root.activeFocus
@@ -97,7 +105,6 @@ TextFieldBase {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: root.leftPadding
             anchors.topMargin: Tokens.padding.extraSmall
-            renderType: Text.QtRendering
 
             text: root.placeholderText
             color: root.isError ? Colours.palette.m3error : (root.activeFocus ? Colours.palette.m3primary : root.text ? Colours.palette.m3outline : root.placeholderTextColor)
@@ -273,6 +280,25 @@ TextFieldBase {
                 Behavior on strokeColor {
                     CAnim {}
                 }
+            }
+        }
+    }
+
+    Component {
+        id: boxedComp
+
+        StyledRect {
+            radius: Math.min(Tokens.rounding.medium, Math.min(width, height) / 2)
+            color: stateLayer.containsMouse || root.activeFocus ? Colours.layer(Colours.palette.m3surfaceContainer, 3) : Colours.layer(Colours.palette.m3surfaceContainer, 2)
+            border.width: 1
+            border.color: root.isError ? Colours.palette.m3error : (root.activeFocus ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3outline, 0.3))
+            opacity: root.enabled ? 1 : 0.5
+
+            Behavior on color {
+                CAnim {}
+            }
+            Behavior on border.color {
+                CAnim {}
             }
         }
     }

@@ -21,6 +21,7 @@ Item {
     property int iconSize: 64
     property bool materialYou: false
     property bool vibrant: false
+    property real vibrancy: 1.0
     property bool pointingCursor: false
 
     property bool selected: false
@@ -145,6 +146,7 @@ Item {
                     entry: root.entry
                     materialYou: root.materialYou
                     vibrant: root.vibrant
+                    vibrancy: root.vibrancy
                 }
 
                 Grid {
@@ -164,6 +166,7 @@ Item {
                             entry: modelData
                             materialYou: root.materialYou
                             vibrant: root.vibrant
+                            vibrancy: root.vibrancy
                         }
                     }
                 }

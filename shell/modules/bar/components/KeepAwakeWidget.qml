@@ -33,7 +33,7 @@ StyledRect {
 
         onClicked: {
             if (mouse.button === Qt.LeftButton) {
-                IdleInhibitor.enabled = !IdleInhibitor.enabled;
+                IdleInhibitor.setEnabled(!IdleInhibitor.enabled);
             } else if (mouse.button === Qt.RightButton) {
                 root.popouts.currentName = "keepawakecontext";
                 root.popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
@@ -88,7 +88,7 @@ StyledRect {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: IdleInhibitor.enabled = !IdleInhibitor.enabled
+                onClicked: IdleInhibitor.setEnabled(!IdleInhibitor.enabled)
             }
         }
 
@@ -106,7 +106,7 @@ StyledRect {
                     id: text
 
                     anchors.centerIn: parent
-                    text: IdleInhibitor.enabled ? qsTr("Active since %1").arg(Qt.formatTime(IdleInhibitor.enabledSince, Units.twelveHourClock ? "hh:mm a" : "hh:mm")) : qsTr("Inactive")
+                    text: IdleInhibitor.enabled ? qsTr("Active since %1").arg(Time.clockTime(IdleInhibitor.enabledSince)) : qsTr("Inactive")
                     color: Colours.palette.m3onPrimary
                     font: Tokens.font.body.builders.small.size(Math.round(Tokens.font.body.small.pointSize * 0.9)).build()
                 }

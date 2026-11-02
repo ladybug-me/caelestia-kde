@@ -55,6 +55,8 @@ StyledRect {
         switch (id) {
         case "lockStatus":
             return Kwin.capsLock || Kwin.numLock;
+        case "privacy":
+            return Privacy.inUse;
         case "kbLayout":
             return (Kwin.kbLayout || "").length > 0;
         case "network":
@@ -213,6 +215,7 @@ StyledRect {
                         sourceComponent: {
                             switch(name) {
                                 case "lockStatus": return lockstatusComp;
+                                case "privacy": return privacyComp;
                                 case "audio": return audioComp;
                                 case "microphone": return microphoneComp;
                                 case "kbLayout": return kblayoutComp;
@@ -388,6 +391,16 @@ StyledRect {
     }
 
     Component {
+        id: privacyComp
+
+        MaterialIcon {
+            animate: true
+            text: Privacy.microphoneApps.length > 0 ? "mic" : "videocam"
+            color: root.colour
+        }
+    }
+
+    Component {
         id: kblayoutComp
 
         StyledText {
@@ -403,7 +416,7 @@ StyledRect {
 
         MaterialIcon {
             animate: true
-            text: Nmcli.active ? Icons.getNetworkIcon(Nmcli.active.strength ?? 0) : "wifi_off"
+            text: Nmcli.active ? Icons.getNetworkIcon(WifiSignal.strength) : "wifi_off"
             color: root.colour
         }
     }
@@ -556,7 +569,7 @@ StyledRect {
             id: notifIcon
 
             text: {
-                if (Notifs.dnd)
+                if (Notifs.quiet)
                     return "notifications_off";
                 if (Notifs.openCount > 0)
                     return "notifications_unread";

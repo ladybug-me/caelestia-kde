@@ -1496,6 +1496,7 @@ void NmQt::refreshWirelessDeviceDetails(const QString& interfaceName) {
     details[QStringLiteral("dns")] = QVariantList();
     details[QStringLiteral("subnet")] = {};
     details[QStringLiteral("macAddress")] = wifiDev->hardwareAddress();
+    details[QStringLiteral("interface")] = wifiDev->interfaceName();
 
     const auto activeConns = NetworkManager::activeConnectionsPaths();
     for (const auto& path : activeConns) {

@@ -22,11 +22,11 @@ PageBase {
 
         ToggleRow {
             first: true
-            text: qsTr("Keep Awake")
-            subtext: qsTr("Show the Keep Awake card")
-            reset: ({ node: GlobalConfig.utilities, setting: "showKeepAwake" })
-            checked: Config.utilities.showKeepAwake
-            onToggled: GlobalConfig.utilities.showKeepAwake = checked
+            text: qsTr("Timers")
+            subtext: qsTr("Show the countdown timers card")
+            reset: ({ node: GlobalConfig.utilities, setting: "showTimers" })
+            checked: Config.utilities.showTimers
+            onToggled: GlobalConfig.utilities.showTimers = checked
         }
 
         ToggleRow {

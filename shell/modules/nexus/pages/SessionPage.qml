@@ -150,7 +150,8 @@ PageBase {
                 color: Colours.palette.m3onSurface
                 Layout.preferredWidth: 128
             }
-            StyledInputField {
+            StyledTextField {
+                type: StyledTextField.Boxed
                 Layout.fillWidth: true
                 horizontalAlignment: TextInput.AlignLeft
                 text: field.value

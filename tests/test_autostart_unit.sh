@@ -42,6 +42,15 @@ test_the_ordering_the_entry_phase_provided_is_kept() {
     assert_contains "$(cat "$PACKAGED_UNIT")" 'Before=xdg-desktop-autostart.target' "and so should the package's"
 }
 
+test_the_units_keep_mangohud_out_of_the_shell() {
+    assert_contains "$(cat "$AUTOSTART_SCRIPT")" 'Environment=DISABLE_MANGOHUD=1' \
+        "the checkout's unit should opt the shell out of MangoHud"
+    assert_contains "$(cat "$PACKAGED_UNIT")" 'Environment=DISABLE_MANGOHUD=1' \
+        "and so should the package's"
+    assert_contains "$(cat "$REPO_ROOT/src/bin/caelestia")" 'export DISABLE_MANGOHUD=1' \
+        "and the CLI, so a shell started by hand is opted out too"
+}
+
 test_the_wrapper_takes_its_paths_from_the_install_layout() {
     # These paths used to be written out in three places, which is how the command
     # came to name a checkout's directories on a packaged machine. They come from

@@ -14,6 +14,7 @@ Before=xdg-desktop-autostart.target
 Type=exec
 Environment=CAELESTIA_SHELL_CONFIG=/etc/xdg/quickshell/caelestia/shell.qml
 Environment=CAELESTIA_BIN_DIR=/usr/bin
+Environment=DISABLE_MANGOHUD=1
 ExecStart=/usr/bin/caelestia-autostart
 # Retried, but not in a tight loop: systemd gives up on a unit that starts five times in
 # ten seconds and leaves it failed, which is a state an install then has to clear.

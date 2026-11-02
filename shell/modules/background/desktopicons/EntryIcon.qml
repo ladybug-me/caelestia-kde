@@ -15,6 +15,7 @@ Item {
     required property var entry
     property bool materialYou: false
     property bool vibrant: false
+    property real vibrancy: 1.0
     property bool rounded: DesktopLayout.roundIcons
     property bool failed: false
 
@@ -40,7 +41,7 @@ Item {
             colorizationColor: {
                 const c = Colours.palette.m3primary;
                 if (root.vibrant)
-                    return Qt.hsla(c.hslHue, 1.0, Math.max(0.4, Math.min(0.6, c.hslLightness)), c.a);
+                    return Qt.hsla(c.hslHue, Math.max(0.0, Math.min(1.0, root.vibrancy)), Math.max(0.4, Math.min(0.6, c.hslLightness)), c.a);
                 return c;
             }
         }

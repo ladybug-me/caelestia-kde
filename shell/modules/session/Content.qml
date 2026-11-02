@@ -23,6 +23,7 @@ Column {
     SessionButton {
         id: logout
 
+        label: qsTr("Log out")
         icon: Config.session.icons.logout
         command: ["sh", "-c", "qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null"]
 
@@ -43,6 +44,7 @@ Column {
     SessionButton {
         id: shutdown
 
+        label: qsTr("Shut down")
         icon: Config.session.icons.shutdown
         command: Config.session.commands.shutdown
 
@@ -113,6 +115,7 @@ Column {
     SessionButton {
         id: hibernate
 
+        label: qsTr("Hibernate")
         icon: Config.session.icons.hibernate
         command: Config.session.commands.hibernate
 
@@ -123,16 +126,19 @@ Column {
     SessionButton {
         id: reboot
 
+        label: qsTr("Restart")
         icon: Config.session.icons.reboot
         command: Config.session.commands.reboot
 
         KeyNavigation.up: hibernate
     }
 
-    component SessionButton: IconButton {
+    component SessionButton: ButtonBase {
         id: button
 
         required property list<string> command
+        required property string label
+        property string icon
 
         function exec(): void {
             if (!SessionManager.exec(command))
@@ -140,12 +146,11 @@ Column {
         }
 
         implicitWidth: Tokens.sizes.session.button
-        implicitHeight: Tokens.sizes.session.button
+        implicitHeight: content.implicitHeight + Tokens.padding.medium * 2
 
         inactiveColour: activeFocus ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
         inactiveOnColour: activeFocus ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
         radius: pressed ? Tokens.rounding.medium : activeFocus ? Tokens.rounding.extraLarge : Tokens.rounding.largeIncreased
-        font: Tokens.font.icon.builders.large.scale(1.3).build()
         onClicked: exec()
 
         Keys.onEnterPressed: exec()
@@ -171,6 +176,28 @@ Column {
                     KeyNavigation.up.focus = true;
                     event.accepted = true;
                 }
+            }
+        }
+
+        Column {
+            id: content
+
+            anchors.centerIn: parent
+            spacing: Tokens.spacing.extraSmall
+
+            MaterialIcon {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: button.icon
+                color: button.onColour
+                fontStyle: Tokens.font.icon.builders.large.scale(1.3).build()
+            }
+
+            StyledText {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: button.label
+                color: button.onColour
+                font: Tokens.font.label.small
+                horizontalAlignment: Text.AlignHCenter
             }
         }
     }

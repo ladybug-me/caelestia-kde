@@ -18,7 +18,10 @@ StyledRect {
     required property Flickable container
     required property DrawerVisibilities visibilities
 
-    readonly property list<var> notifs: Notifs.list.filter(n => n.appName === modelData)
+    /// What the list is being narrowed to, empty when nothing is.
+    property string filter: ""
+
+    readonly property list<var> notifs: Notifs.list.filter(n => n.appName === modelData && Notifs.matchesQuery(n, root.filter))
     readonly property list<var> activeNotifs: notifs.filter(n => !n.closed)
     readonly property int notifCount: activeNotifs.length
     readonly property string image: activeNotifs.find(n => n.image.length > 0)?.image ?? ""

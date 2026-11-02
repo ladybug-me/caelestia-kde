@@ -55,8 +55,13 @@ Item {
     readonly property bool keptOpen: Config.bar.persistent && !dodging
     readonly property int exclusiveZone: !disabled && !dodgeEnabled && (Config.bar.persistent || visibilities.bar) ? contentWidth : Config.border.thickness
     readonly property int visualThickness: !disabled && (Config.bar.persistent || visibilities.bar) ? contentWidth : Config.border.thickness
-    readonly property bool shouldBeVisible: !fullscreen && !disabled && !visibilities.overview && (keptOpen || visibilities.bar || isHovered)
-    property bool isHovered
+    readonly property bool shouldBeVisible: !fullscreen && !disabled && !visibilities.overview && (keptOpen || visibilities.bar || hovered || popouts.hasCurrent || visibilities.launcher)
+    // Written by Interactions from the pointer position: a collapsed bar is
+    // invisible and cannot report hover itself, so its reach is computed instead.
+    // The timer only covers reports that go stale because no further pointer
+    // events arrive, e.g. once a bar item takes the hover.
+    property bool pointerInReach: false
+    readonly property bool hovered: barHover.hovered || pointerInReach
     readonly property bool isHorizontal: root.position === "top" || root.position === "bottom"
     readonly property int clampedThickness: Math.max(Config.border.minThickness, isHorizontal ? implicitHeight : implicitWidth)
     readonly property int clampedWidth: isHorizontal ? root.width : clampedThickness
@@ -197,4 +202,13 @@ Item {
             }
         ]
     }
+
+    Timer {
+        id: barUnhoverTimer
+
+        interval: 400
+        running: root.pointerInReach && !barHover.hovered
+        onTriggered: root.pointerInReach = false
+    }
+    HoverHandler { id: barHover }
 }

@@ -65,6 +65,13 @@ class LauncherConfig : public settings::ObjectNode {
     CONFIG_GLOBAL_LIST(LauncherActionList, actions,
         DEFAULT_ARG({
             vmap({
+                { u"name"_s, u"Search Everything"_s },
+                { u"icon"_s, u"search"_s },
+                { u"description"_s, u"Search files, places, web shortcuts and settings with KRunner"_s },
+                { u"command"_s, QStringList{ u"autocomplete"_s, u"search"_s } },
+                { u"enabled"_s, true },
+            }),
+            vmap({
                 { u"name"_s, u"Wallpaper"_s },
                 { u"icon"_s, u"image"_s },
                 { u"description"_s, u"Change the current wallpaper"_s },
@@ -182,7 +189,6 @@ class LauncherConfig : public settings::ObjectNode {
                 { u"description"_s, u"Read the Caelestia release notes"_s },
                 { u"command"_s, QStringList{ u"caelestia"_s, u"shell"_s, u"whatsnew"_s, u"open"_s } },
             }),
-
         }))
 };
 

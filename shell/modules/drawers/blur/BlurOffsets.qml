@@ -1,6 +1,7 @@
 import QtQuick
 import QtCore
 import Caelestia.Config
+import qs.utils
 
 Item {
     id: root
@@ -49,7 +50,7 @@ Item {
     property real bY: useMasks ? tY + deformOffsetY + sTop * dm22 : 0
     property real bW: (isActive && useMasks) ? Math.max(0, tW * dm11 - sLeft * dm11 - sRight * dm11) : 0
     property real bH: (isActive && useMasks) ? Math.max(0, tH * dm22 - sTop * dm22 - sBottom * dm22) : 0
-    property real r: (isActive && useMasks) ? Tokens.rounding.extraLarge * animScale : 0
+    property real r: (isActive && useMasks) ? Surface.panelRounding * animScale : 0
     property bool isIsland: GlobalConfig.appearance.islands
     property real rTop: (!isIsland && (vAnchor === "top" || vAnchor === "both")) ? 0 : r
     property real rBottom: (!isIsland && (vAnchor === "bottom" || vAnchor === "both")) ? 0 : r

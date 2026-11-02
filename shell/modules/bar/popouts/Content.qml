@@ -19,11 +19,7 @@ Item {
     required property DrawerVisibilities visibilities
     readonly property Popout currentPopout: content.children.find(c => c.shouldBeActive) ?? null
     readonly property Item current: currentPopout?.item ?? null
-
-    readonly property var trayItemsToIndices: SystemTray.items.values.filter(i => i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id)).reduce((acc, item, i) => {
-        acc[item.id] = i;
-        return acc;
-    }, {})
+    readonly property bool currentIsContext: currentPopout?.isContext ?? false
 
     readonly property real contentMargin: Tokens.padding.large * (currentPopout?.item?.scaleOffset ?? 1.0)
     readonly property real availableWidth: Math.max(0, ((QsWindow.window as QsWindow)?.screen?.width ?? 0) - contentMargin * 2 - Tokens.padding.extraLargeIncreased * (currentPopout?.item?.scaleOffset ?? 1.0))
@@ -77,6 +73,7 @@ Item {
 
         Popout {
             name: "greetercontext"
+            isContext: true
             previewKey: "greeter"
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
@@ -142,6 +139,7 @@ Item {
 
         Popout {
             name: "clockcontext"
+            isContext: true
             previewKey: "clock"
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
@@ -154,6 +152,7 @@ Item {
 
         Popout {
             name: "osiconcontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Launcher settings")
@@ -165,6 +164,7 @@ Item {
 
         Popout {
             name: "statusiconscontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Status icons settings")
@@ -261,6 +261,13 @@ Item {
         }
 
         Popout {
+            name: "privacy"
+            sourceComponent: Privacy {
+                popouts: root.popouts
+            }
+        }
+
+        Popout {
             name: "nightlight"
             sourceComponent: NightLight {
                 popouts: root.popouts
@@ -299,6 +306,7 @@ Item {
 
         Popout {
             name: "dockcontext"
+            isContext: true
             previewKey: "dock"
             sourceComponent: DockContext {
                 popouts: root.popouts
@@ -307,6 +315,7 @@ Item {
 
         Popout {
             name: "workspacescontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Workspaces settings")
@@ -318,6 +327,7 @@ Item {
 
         Popout {
             name: "traycontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Tray settings")
@@ -329,6 +339,7 @@ Item {
 
         Popout {
             name: "githubcontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("GitHub settings")
@@ -340,6 +351,7 @@ Item {
 
         Popout {
             name: "mediacontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Media settings")
@@ -351,6 +363,7 @@ Item {
 
         Popout {
             name: "performancecontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Performance settings")
@@ -361,6 +374,7 @@ Item {
         }
         Popout {
             name: "weathercontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Weather settings")
@@ -371,6 +385,7 @@ Item {
         }
         Popout {
             name: "screencapturecontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Screen Capture settings")
@@ -381,6 +396,7 @@ Item {
         }
         Popout {
             name: "keepawakecontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Keep Awake settings")
@@ -392,6 +408,7 @@ Item {
 
         Popout {
             name: "dockbgcontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Dock settings")
@@ -403,6 +420,7 @@ Item {
 
         Popout {
             name: "elementscontext"
+            isContext: true
             sourceComponent: BarComponentContext {
                 popouts: root.popouts
                 label: qsTr("Elements & Modules")
@@ -431,7 +449,7 @@ Item {
 
         Repeater {
             model: ScriptModel {
-                values: SystemTray.items.values.filter(i => i.hasMenu && i.status !== Status.Passive && !GlobalConfig.bar.tray.hiddenIcons.includes(i.id))
+                values: QsServices.TrayRegistry.trayItems.filter(item => item.hasMenu)
             }
 
             Popout {
@@ -439,7 +457,7 @@ Item {
 
                 required property SystemTrayItem modelData
 
-                name: `traymenu${root.trayItemsToIndices[modelData.id]}`
+                name: QsServices.TrayRegistry.popoutNameOf(modelData)
                 previewKey: "trayMenu"
                 sourceComponent: trayMenuComp
 
@@ -471,6 +489,7 @@ Item {
         id: popout
 
         required property string name
+        property bool isContext: false
         property string previewKey: name
         property real minScale: 0.1
         readonly property bool shouldBeActive: root.popouts.currentName === name

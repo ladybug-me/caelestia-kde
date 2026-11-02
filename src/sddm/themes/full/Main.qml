@@ -32,7 +32,7 @@ Rectangle {
     }
     property bool capsLockOn: false
     property bool mainCardBgBlur: config.mainCardBgBlur === "true"
-    property int sessionIndex
+    property int sessionIndex: sessionPickerBtn.selectedIndex
     property real largeRadius: mainCard.radius
     property real midRadius: mainCard.radius / 1.4
     property real smallRadius: mainCard.radius / 2
@@ -288,7 +288,7 @@ Rectangle {
                     CaelestiaFetch {
                         firstInput: root.firstInput
                         currentUser: userPicker.currentText
-                        currentSession: sessionPickerBtn.currentText
+                        currentSessionName: sessionPickerBtn.currentText
                         rectHeight: middleLeftRect.height
                     }
 
@@ -372,7 +372,7 @@ Rectangle {
                     isLoading: root.loading
                     buffer: root.buffer
                     currentUser: userPicker.currentText
-                    currentSession: root.sessionIndex
+                    sessionIndex: root.sessionIndex
                 }
 
                 Text {
@@ -475,13 +475,8 @@ Rectangle {
             anchors.top: parent.top
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.topMargin: mainCard.height - 100
-            currentText: sessionPickerBtn.items.length > 0 ? sessionPickerBtn.items[0] : ""
-            selectedIndex: 0
             opacity: root.firstInput ? 0 : root.mainCardComponentsOpacity
             visible: root.sessionPickerEnabled
-            onSelectedIndexChanged: {
-                root.sessionIndex = sessionPickerBtn.selectedIndex;
-            }
 
             Behavior on opacity {
                 NumberAnimation {

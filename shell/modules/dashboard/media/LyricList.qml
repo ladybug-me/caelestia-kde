@@ -168,6 +168,12 @@ Item {
             root.reloadTrack();
         }
 
+        // Browser track fields may arrive after the track-change notification.
+        function onTrackTitleChanged() { root.reloadTrack(); }
+        function onTrackArtistChanged() { root.reloadTrack(); }
+        function onTrackAlbumChanged() { root.reloadTrack(); }
+        function onLengthChanged() { root.reloadTrack(); }
+
         target: Players.active
         ignoreUnknownSignals: true
     }

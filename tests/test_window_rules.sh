@@ -20,10 +20,11 @@ have_python() {
 }
 
 RULES_FILE="kwinrulesrc"
-RULE_GROUPS=(caelestia-xwaylandvideobridge caelestia-pip caelestia-dialogs caelestia-opacity)
-# The index a fresh file has to end up with: our four groups, in the order the
-# script writes them, and no other name.
-FRESH_INDEX="caelestia-xwaylandvideobridge,caelestia-pip,caelestia-dialogs,caelestia-opacity"
+RULE_GROUPS=(caelestia-shell-opacity caelestia-xwaylandvideobridge caelestia-pip caelestia-dialogs caelestia-opacity)
+# The index a fresh file has to end up with: our five groups, in the order the
+# script writes them, and no other name. The shell's exemption heads the list
+# because KWin takes the first matching rule for a key.
+FRESH_INDEX="caelestia-shell-opacity,caelestia-xwaylandvideobridge,caelestia-pip,caelestia-dialogs,caelestia-opacity"
 
 SANDBOX=""
 STUB_DIR=""
@@ -170,12 +171,18 @@ run_window_rules_without_kwriteconfig6() {
 }
 
 # The frozen interface: group, key, value, in the order the script writes them. The
-# index pair comes after the three groups and before the single reload. Only the
+# index pair comes after the five groups and before the single reload. Only the
 # writer and the reload are recorded, so the two reads the script makes per changed
 # key - before the write, and back after it - are not part of the sequence below.
 expected_calls() {
     local opacity="$1" index="${2:-$FRESH_INDEX}"
     printf '%s\n' \
+        "--file $RULES_FILE --group caelestia-shell-opacity --key Description Caelestia: keep the shell's own windows opaque" \
+        "--file $RULES_FILE --group caelestia-shell-opacity --key types 33" \
+        "--file $RULES_FILE --group caelestia-shell-opacity --key wmclass quickshell" \
+        "--file $RULES_FILE --group caelestia-shell-opacity --key wmclassmatch 2" \
+        "--file $RULES_FILE --group caelestia-shell-opacity --key opacityinactive 100" \
+        "--file $RULES_FILE --group caelestia-shell-opacity --key opacityinactiverule 2" \
         "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key Description Caelestia: hide xwaylandvideobridge" \
         "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key wmclass xwaylandvideobridge" \
         "--file $RULES_FILE --group caelestia-xwaylandvideobridge --key wmclassmatch 2" \
@@ -310,11 +317,12 @@ EOF
 }
 
 # uninstall.sh runs from top to bottom and cannot be sourced, so its revert of the window
-# rules is cut out by its own first and last lines - the first delete through the line that
-# reports it - and run against the same stubs the installer step is tested with.
+# rules is cut out by its own first and last lines - the block that walks the shared table
+# through to the line that reports it - and run against the same stubs the installer step is
+# tested with. The table itself comes from the shared library, which is sourced alongside.
 extract_uninstall_revert() {
     awk '
-        /^kwriteconfig6 .*--group "caelestia-opacity"/ { inside = 1 }
+        /^for rule_entry in/ { inside = 1 }
         inside { print }
         inside && /^ok "Removed the Caelestia window rules/ { exit }
     ' "$UNINSTALL_SCRIPT"
@@ -325,6 +333,7 @@ run_uninstall_revert() {
     {
         printf 'set -uo pipefail\n'
         printf 'ok() { printf "  [OK]    %%s\\n" "$*"; }\n'
+        printf 'source %q\n' "$REPO_ROOT/scripts/lib/kwin-rules.sh"
         extract_uninstall_revert
     } > "$revert"
     : > "$CALLS"
@@ -332,7 +341,7 @@ run_uninstall_revert() {
     STATUS=$?
 }
 
-test_a_fresh_run_writes_every_key_of_the_four_groups() {
+test_a_fresh_run_writes_every_key_of_the_five_groups() {
     have_python || return 0
     setup_sandbox
     run_window_rules
@@ -349,7 +358,7 @@ test_the_written_file_carries_the_groups_and_their_values() {
 
     local file="$SANDBOX/$RULES_FILE"
     assert_file_exists "$file"
-    assert_eq "4" "$(grep -c '^\[caelestia-' "$file")" "the file should hold exactly the four named groups"
+    assert_eq "5" "$(grep -c '^\[caelestia-' "$file")" "the file should hold exactly the five named groups"
 
     local content
     content="$(cat "$file")"
@@ -387,16 +396,16 @@ test_the_written_file_carries_the_groups_and_their_values() {
     done
 }
 
-test_a_fresh_file_names_exactly_the_four_groups() {
+test_a_fresh_file_names_exactly_the_five_groups() {
     have_python || return 0
     setup_sandbox
     run_window_rules
 
     local file="$SANDBOX/$RULES_FILE"
     assert_eq "$FRESH_INDEX" "$(ini_value "$file" General rules)" \
-        "a fresh file should name our four groups, in the order they were written"
-    assert_eq "4" "$(ini_value "$file" General count)" "and count them"
-    assert_eq "4" "$(grep -c '^\[caelestia-' "$file")" \
+        "a fresh file should name our five groups, in the order they were written"
+    assert_eq "5" "$(ini_value "$file" General count)" "and count them"
+    assert_eq "5" "$(grep -c '^\[caelestia-' "$file")" \
         "the index should name what the file holds, and nothing else"
 }
 
@@ -421,7 +430,7 @@ test_only_our_groups_and_the_index_are_written() {
         group="$(printf '%s\n' "$call" | awk '{ for (i = 1; i < NF; i++) if ($i == "--group") print $(i + 1) }')"
         case " ${RULE_GROUPS[*]} General " in
             *" $group "*) ;;
-            *) fail "kwriteconfig6 was called outside the four caelestia-* groups and the index: $call" ;;
+            *) fail "kwriteconfig6 was called outside the five caelestia-* groups and the index: $call" ;;
         esac
     done < <(calls_to "$CALLS" kwriteconfig6)
 
@@ -429,7 +438,7 @@ test_only_our_groups_and_the_index_are_written() {
     # rewriting it would reorder the user's own rules.
     assert_eq "$(printf '%s\n' \
         "--file $RULES_FILE --group General --key rules $FRESH_INDEX" \
-        "--file $RULES_FILE --group General --key count 4")" \
+        "--file $RULES_FILE --group General --key count $(count_index "$FRESH_INDEX")")" \
         "$(calls_to "$CALLS" kwriteconfig6 | grep -F -- '--group General')" \
         "the index pair should be the only General keys written"
     assert_not_contains "$(cat "$CALLS")" "--key Order" "Order belongs to KWin and reordering the user's rules is not ours to do"
@@ -447,7 +456,7 @@ test_a_second_run_finds_nothing_to_do() {
         "a config that already holds every value should need no writes"
     assert_contains "$OUTPUT" "already in place" "the second run should report the rules as already in place"
     assert_not_contains "$OUTPUT" "Window rules applied." "the second run should not claim to have applied anything"
-    assert_contains "$OUTPUT" "Rule index names 4 group(s)." \
+    assert_contains "$OUTPUT" "Rule index names 5 group(s)." \
         "the rollup should still report the index a re-run did not have to rebuild"
 }
 
@@ -537,8 +546,8 @@ test_a_group_the_file_holds_is_added_to_the_index() {
     local file="$SANDBOX/$RULES_FILE"
     assert_status 0 "$STATUS" "a file with a group of its own should still succeed"
     assert_eq "steam,$FRESH_INDEX" "$(ini_value "$file" General rules)" \
-        "the group the file holds should be named, before our four"
-    assert_eq "5" "$(ini_value "$file" General count)" "and counted with them"
+        "the group the file holds should be named, before our five"
+    assert_eq "6" "$(ini_value "$file" General count)" "and counted with them"
     assert_eq "steamwebhelper" "$(ini_value "$file" steam wmclass)" \
         "the user's group should be left as it was"
 }
@@ -554,12 +563,30 @@ test_a_user_rule_keeps_its_place_in_the_index() {
     assert_status 0 "$STATUS" "a file with a user rule should still succeed"
     assert_eq "user-rule,$FRESH_INDEX" "$(ini_value "$file" General rules)" \
         "the user's name should keep its place and ours should be appended"
-    assert_eq "5" "$(ini_value "$file" General count)" "count should cover both"
+    assert_eq "6" "$(ini_value "$file" General count)" "count should cover both"
     assert_eq "user-rule" "$(ini_value "$file" General Order)" \
         "Order is KWin's own key and should not be rewritten"
     assert_eq "keepme" "$(ini_value "$file" user-rule wmclass)" "the user's rule should not be touched"
     assert_not_contains "$(ini_value "$file" General rules)" '$Version' \
         "a group whose name starts with a dollar is KWin's metadata and is not named"
+}
+
+# The groups and their order are written down once, in a file both scripts source. A second
+# copy is how a group gets written into kwinrulesrc but never evaluated, or how a revert
+# leaves one behind.
+test_the_rule_names_are_written_down_once() {
+    local shared="$REPO_ROOT/scripts/lib/kwin-rules.sh"
+
+    assert_file_exists "$shared"
+    assert_eq "${RULE_GROUPS[*]}" \
+        "$("$BASH_BIN" -c 'source "$1"; printf "%s" "${CAELESTIA_RULE_GROUPS[*]}"' _ "$shared")" \
+        "the shared list is the order the index is written in, shell exemption first"
+    assert_file_contains "$SCRIPT" 'lib/kwin-rules.sh' "the installer step reads it"
+    assert_file_contains "$UNINSTALL_SCRIPT" 'lib/kwin-rules.sh' "and so does the uninstaller"
+    assert_not_contains "$(cat "$SCRIPT")" 'caelestia-opacity|caelestia-shell-opacity' \
+        "the installer step keeps no list of its own"
+    assert_not_contains "$(cat "$UNINSTALL_SCRIPT")" 'caelestia-opacity|caelestia-shell-opacity' \
+        "and neither does the uninstaller"
 }
 
 # uninstall.sh strips our names out of the index and leaves the user's rules alone:
@@ -568,7 +595,7 @@ test_a_user_rule_keeps_its_place_in_the_index() {
 test_the_revert_keeps_the_users_names_and_strips_ours() {
     have_python || return 0
     setup_sandbox
-    write_installed_fixture "user-rule,$FRESH_INDEX" 5
+    write_installed_fixture "user-rule,$FRESH_INDEX" 6
 
     run_uninstall_revert
 
@@ -587,7 +614,7 @@ test_the_revert_keeps_the_users_names_and_strips_ours() {
 test_the_revert_removes_the_index_when_no_names_are_left() {
     have_python || return 0
     setup_sandbox
-    write_installed_fixture "$FRESH_INDEX" 4
+    write_installed_fixture "$FRESH_INDEX" 5
 
     run_uninstall_revert
 

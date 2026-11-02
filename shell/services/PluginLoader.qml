@@ -167,6 +167,23 @@ Item {
         }
     }
 
+    // A plugin reads its settings when its objects are created, so writing them from the
+    // Nexus is not enough: rebuild the plugin and the widgets it contributes, which also
+    // re-registers them so their instances pick the new values up.
+    function applySettings(id): void {
+        for (let i = 0; i < discovered.length; i++) {
+            const meta = discovered[i];
+            if ((meta.id || meta.name) !== id)
+                continue;
+
+            unloadPlugin(id);
+            loadPlugin(meta);
+            syncBarWidgets(meta, meta.enabled);
+            syncBackgroundWidgets(meta, meta.enabled);
+            return;
+        }
+    }
+
     function setPluginEnabled(name, enable) {
         // Must slice() to create a new array instance, otherwise assigning it back
         // to pluginSettings.disabledPlugins won't trigger the QML change signal or save it.

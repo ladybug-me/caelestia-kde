@@ -16,8 +16,10 @@ Item {
     property bool isAuthenticating: false
     property bool capsLockOn: false
     property int currentUserIndex: 0
-    property int currentSessionIndex: 0
-    property var sessionNames: []
+    // SDDM exposes session names through SessionModel::NameRole, which is not
+    // addressable by name outside a delegate.
+    readonly property int sessionNameRole: Qt.UserRole + 4
+    property int currentSessionIndex: sessionsModel && sessionsModel.count > 0 ? sessionsModel.lastIndex : 0
 
     function getUserName(idx) {
         if (!usersModel || usersModel.count <= 0 || idx < 0 || idx >= usersModel.count)
@@ -28,10 +30,10 @@ Item {
     }
 
     function getSessionName(idx) {
-        if (!sessionNames || idx < 0 || idx >= sessionNames.length)
+        if (!sessionsModel || idx < 0 || idx >= sessionsModel.count)
             return "";
 
-        return sessionNames[idx];
+        return sessionsModel.data(sessionsModel.index(idx, 0), root.sessionNameRole);
     }
 
     function showError(msg) {
@@ -63,12 +65,6 @@ Item {
             currentUserIndex = (uIdx >= 0 && uIdx < usersModel.count) ? uIdx : 0;
         }
     }
-    onSessionsModelChanged: {
-        if (sessionsModel && sessionsModel.count > 0) {
-            const sIdx = sessionsModel.lastIndex;
-            currentSessionIndex = (sIdx >= 0 && sIdx < sessionsModel.count) ? sIdx : 0;
-        }
-    }
     onCapsLockOnChanged: {
         if (capsLockOn && !isAuthenticating) {
             toast.show("Caps Lock is on", "warning");
@@ -85,25 +81,6 @@ Item {
         if (usersModel && usersModel.count > 0) {
             const uIdx = usersModel.lastIndex;
             currentUserIndex = (uIdx >= 0 && uIdx < usersModel.count) ? uIdx : 0;
-        }
-        if (sessionsModel && sessionsModel.count > 0) {
-            const sIdx = sessionsModel.lastIndex;
-            currentSessionIndex = (sIdx >= 0 && sIdx < sessionsModel.count) ? sIdx : 0;
-        }
-    }
-
-    Instantiator {
-        model: root.sessionsModel
-
-        delegate: Item {
-            required property int index
-            required property var model
-
-            Component.onCompleted: {
-                const arr = root.sessionNames.slice();
-                arr[index] = model.name;
-                root.sessionNames = arr;
-            }
         }
     }
 

@@ -142,7 +142,7 @@ PageBase {
                     Layout.alignment: Qt.AlignVCenter
                     icon: "settings"
                     type: IconButton.Tonal
-                    onClicked: root.nState.openSubPage(10)
+                    onClicked: root.nState.openSubPage(9)
                 }
             }
         }

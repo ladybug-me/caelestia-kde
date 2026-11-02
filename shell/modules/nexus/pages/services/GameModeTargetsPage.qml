@@ -152,6 +152,7 @@ PageBase {
                 spacing: Tokens.spacing.small
                 model: GlobalConfig.utilities.gameMode.autoEnableRegexes
                 clip: true
+                interactive: contentHeight > height
 
                 move: Transition { Anim { properties: "y"; type: Anim.FastSpatial } }
                 moveDisplaced: Transition { Anim { properties: "y"; type: Anim.FastSpatial } }

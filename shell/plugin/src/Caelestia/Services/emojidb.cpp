@@ -288,63 +288,123 @@ QVariantList EmojiDb::getSortedItems(const QStringList& favourites, int limit) c
     return result;
 }
 
-QVariantList EmojiDb::search(const QString& text, int limit) const {
+namespace {
+
+int emojiMatchScore(const EmojiEntry& e, const QString& lower) {
+    if (e.name.compare(lower, Qt::CaseInsensitive) == 0)
+        return 0;
+    if (e.name.startsWith(lower, Qt::CaseInsensitive))
+        return 1;
+    if (e.name.contains(QLatin1Char(' ') + lower, Qt::CaseInsensitive) ||
+        e.name.contains(QLatin1Char('-') + lower, Qt::CaseInsensitive))
+        return 2;
+    if (e.name.contains(lower, Qt::CaseInsensitive))
+        return 3;
+    return 4;
+}
+
+struct ScoredCandidate {
+    int index;
+    int score;
+    bool isFav;
+    int freq;
+    int nameLen;
+};
+
+} // namespace
+
+QVariantList EmojiDb::search(const QString& text, int limit, const QStringList& favourites) const {
     if (m_emojis.isEmpty())
         return {};
     if (text.isEmpty())
-        return getSortedItems({});
+        return getSortedItems(favourites, limit);
 
     const QString lower = text.toLower();
     const int queryLen = lower.size();
-    QVariantList result;
-    result.reserve(std::min(limit, static_cast<int>(m_emojis.size())));
+
+    QVector<int> matchedIndices;
 
     if (queryLen < 3 || m_trigramIndex.isEmpty()) {
-        for (const auto& e : m_emojis) {
-            if (e.nameLower.contains(lower)) {
-                result.append(QVariantMap{
-                    { QStringLiteral("ch"), e.ch },
-                    { QStringLiteral("name"), e.name },
-                    { QStringLiteral("nameLower"), e.nameLower },
-                });
-                if (result.size() >= limit)
-                    break;
+        matchedIndices.reserve(m_emojis.size());
+        for (int i = 0; i < m_emojis.size(); ++i) {
+            if (m_emojis[i].nameLower.contains(lower)) {
+                matchedIndices.append(i);
             }
         }
-        return result;
-    }
-
-    QSet<int> candidates;
-    bool first = true;
-    for (int i = 0; i + 2 < queryLen; ++i) {
-        const QString trigram = lower.mid(i, 3);
-        const auto it = m_trigramIndex.constFind(trigram);
-        if (it == m_trigramIndex.constEnd()) {
-            return {};
-        }
-        const QVector<int>& postings = it.value();
-        if (first) {
-            candidates = QSet<int>(postings.begin(), postings.end());
-            first = false;
-        } else {
-            QSet<int> posting_set(postings.begin(), postings.end());
-            candidates.intersect(posting_set);
-            if (candidates.isEmpty())
+    } else {
+        QSet<int> candidates;
+        bool first = true;
+        for (int i = 0; i + 2 < queryLen; ++i) {
+            const QString trigram = lower.mid(i, 3);
+            const auto it = m_trigramIndex.constFind(trigram);
+            if (it == m_trigramIndex.constEnd()) {
                 return {};
+            }
+            const QVector<int>& postings = it.value();
+            if (first) {
+                candidates = QSet<int>(postings.begin(), postings.end());
+                first = false;
+            } else {
+                QSet<int> posting_set(postings.begin(), postings.end());
+                candidates.intersect(posting_set);
+                if (candidates.isEmpty())
+                    return {};
+            }
+        }
+
+        matchedIndices.reserve(candidates.size());
+        for (int idx : std::as_const(candidates)) {
+            if (m_emojis[idx].nameLower.contains(lower)) {
+                matchedIndices.append(idx);
+            }
         }
     }
 
-    for (int idx : std::as_const(candidates)) {
+    if (matchedIndices.isEmpty())
+        return {};
+
+    const QSet<QString> favSet(favourites.begin(), favourites.end());
+
+    // Score each candidate once — avoid re-evaluating inside the comparator.
+    QVector<ScoredCandidate> scored;
+    scored.reserve(matchedIndices.size());
+    for (int idx : std::as_const(matchedIndices)) {
         const auto& e = m_emojis[idx];
-        if (e.nameLower.contains(lower)) {
-            result.append(QVariantMap{
-                { QStringLiteral("ch"), e.ch },
-                { QStringLiteral("name"), e.name },
-                { QStringLiteral("nameLower"), e.nameLower },
-            });
-            if (result.size() >= limit)
-                break;
-        }
+        scored.append({
+            idx,
+            emojiMatchScore(e, lower),
+            favSet.contains(e.ch),
+            m_frequencies.value(e.ch, 0),
+            static_cast<int>(e.name.size()),
+        });
+    }
+
+    const int actualLimit =
+        (limit <= 0) ? static_cast<int>(scored.size()) : std::min(limit, static_cast<int>(scored.size()));
+
+    // partial_sort: only the top `actualLimit` items reach their final position.
+    auto cmp = [](const ScoredCandidate& a, const ScoredCandidate& b) {
+        if (a.score != b.score)
+            return a.score < b.score;
+        if (a.isFav != b.isFav)
+            return a.isFav;
+        if (a.freq != b.freq)
+            return a.freq > b.freq;
+        if (a.nameLen != b.nameLen)
+            return a.nameLen < b.nameLen;
+        return a.index < b.index;
+    };
+    std::partial_sort(scored.begin(), scored.begin() + actualLimit, scored.end(), cmp);
+
+    QVariantList result;
+    result.reserve(actualLimit);
+    for (int i = 0; i < actualLimit; ++i) {
+        const auto& e = m_emojis[scored[i].index];
+        result.append(QVariantMap{
+            { QStringLiteral("ch"), e.ch },
+            { QStringLiteral("name"), e.name },
+            { QStringLiteral("nameLower"), e.nameLower },
+        });
     }
     return result;
 }

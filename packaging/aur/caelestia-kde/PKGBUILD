@@ -69,7 +69,7 @@ source=("$_source_url"
         'caelestia-shell.service')
 sha256sums=("$_source_sum"
             '378569eb38a781d827570afdd08a8452dfcf36caabd373642080482918c151c6'
-            '5798e775cef744e8dbaca16cc30cebcb830ee9eb18b702d9adec4402db69897f')
+            '7eec27f5765551fe786c41a66eed0fa2e5f170ce52ebb08e5dabfe7a93b87de8')
 
 prepare() {
     cd "$srcdir/$pkgname-$pkgver"

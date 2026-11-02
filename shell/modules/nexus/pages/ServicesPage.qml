@@ -201,7 +201,7 @@ PageBase {
             icon: "chat"
             label: qsTr("Discord Rich Presence")
             status: qsTr("Broadcast your status to Vesktop")
-            onClicked: root.nState.openSubPage(1)
+            onClicked: root.nState.openSubPage("arpc")
         }
 
         StepperRow {
@@ -225,13 +225,52 @@ PageBase {
 
         SelectRow {
             Layout.fillWidth: true
-            last: true
             label: qsTr("GPU")
             subtext: Gpu.name ? qsTr("Monitoring: %1").arg(Gpu.name) : qsTr("Override for GPU type")
             menuOnTop: true
             menuItems: root.gpuItems
             active: root.gpuItems[root.gpuKeyToIndex(GlobalConfig.services.gpuType)]
             onSelected: item => GlobalConfig.services.gpuType = root.gpuValues[root.gpuItems.indexOf(item)]
+        }
+
+        SectionHeader {
+            text: qsTr("Calendar")
+        }
+
+        NavRow {
+            first: true
+            last: true
+            icon: "calendar_month"
+            label: qsTr("Calendars & agenda")
+            status: CalendarEvents.configured ? qsTr("%1 calendar(s)").arg(CalendarEvents.sources.length) : qsTr("No calendar added")
+            onClicked: root.nState.openSubPage("calendar")
+        }
+
+        SectionHeader {
+            text: qsTr("System")
+        }
+
+        NavRow {
+            first: true
+            icon: "print"
+            label: qsTr("Printers")
+            status: Launch.kcmAvailable("kcm_printer_manager") ? qsTr("Add and manage printers") : qsTr("Install print-manager to enable printing")
+            onClicked: Launch.kcm("kcm_printer_manager")
+        }
+
+        NavRow {
+            icon: "keyboard_alt"
+            label: qsTr("On-screen keyboard")
+            status: Launch.kcmAvailable("kcm_virtualkeyboard") ? qsTr("Touch keyboard, activation and layout") : qsTr("Install plasma-desktop to configure it")
+            onClicked: Launch.kcm("kcm_virtualkeyboard")
+        }
+
+        NavRow {
+            last: true
+            icon: "accessibility_new"
+            label: qsTr("System accessibility")
+            status: qsTr("Screen reader, sticky keys, bounce keys")
+            onClicked: Launch.kcm("kcm_access")
         }
     }
 }

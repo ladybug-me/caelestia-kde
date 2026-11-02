@@ -15,14 +15,38 @@ StyledRect {
 
     required property var props
     required property DrawerVisibilities visibilities
+    property bool expanded: false
+    readonly property bool isExpanded: root.expanded || Recorder.running
     readonly property bool shotMode: root.props.captureMode === "shot"
-    readonly property real nonAnimHeight: btnLayout.implicitHeight + modeRow.implicitHeight + listOrControls.implicitHeight + layout.spacing * 2 + layout.anchors.margins * 2
+    readonly property real collapsedHeight: btnLayout.implicitHeight + layout.anchors.margins * 2
+    readonly property real expandedHeight: btnLayout.implicitHeight + layout.spacing + bodyLayout.implicitHeight + layout.anchors.margins * 2
+    readonly property real nonAnimHeight: root.isExpanded ? expandedHeight : collapsedHeight
 
     Layout.fillWidth: true
-    implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
+    implicitHeight: nonAnimHeight
 
     radius: Tokens.rounding.large
     color: Colours.tPalette.m3surfaceContainer
+    clip: true
+
+    Behavior on implicitHeight {
+        Anim {}
+    }
+
+    Connections {
+        function onUtilitiesChanged(): void {
+            if (!root.visibilities.utilities)
+                root.expanded = false;
+        }
+
+        target: root.visibilities
+    }
+
+    StateLayer {
+        anchors.fill: parent
+        radius: root.radius
+        onClicked: root.expanded = !root.isExpanded
+    }
 
     ColumnLayout {
         id: layout
@@ -34,48 +58,51 @@ StyledRect {
         RowLayout {
             id: btnLayout
 
+            Layout.fillWidth: true
             spacing: Tokens.spacing.medium
 
-            StyledRect {
-                implicitWidth: implicitHeight
-                implicitHeight: icon.implicitHeight + Tokens.padding.small * 2
+                StyledRect {
+                    implicitWidth: implicitHeight
+                    implicitHeight: icon.implicitHeight + Tokens.padding.small * 2
 
-                radius: Tokens.rounding.full
-                color: Recorder.running ? Colours.palette.m3secondary : Colours.palette.m3secondaryContainer
+                    radius: Tokens.rounding.full
+                    color: Recorder.running ? Colours.palette.m3secondary : Colours.palette.m3secondaryContainer
 
-                MaterialIcon {
-                    id: icon
+                    MaterialIcon {
+                        id: icon
 
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: Centering.pixelAlign(parent.height, height)
-                    text: root.shotMode && !Recorder.running ? "screenshot_region" : "screen_record"
-                    color: Recorder.running ? Colours.palette.m3onSecondary : Colours.palette.m3onSecondaryContainer
-                    fontStyle: Tokens.font.icon.large
+                        anchors.centerIn: parent
+                        anchors.verticalCenterOffset: Centering.pixelAlign(parent.height, height)
+                        text: root.shotMode && !Recorder.running ? "screenshot_region" : "screen_record"
+                        color: Recorder.running ? Colours.palette.m3onSecondary : Colours.palette.m3onSecondaryContainer
+                        fontStyle: Tokens.font.icon.large
+                    }
                 }
-            }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 0
-
-                StyledText {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    text: qsTr("Screen Capture")
-                    font: Tokens.font.body.medium
-                    elide: Text.ElideRight
-                }
+                    spacing: 0
 
-                StyledText {
-                    Layout.fillWidth: true
-                    text: root.shotMode ? qsTr("Capture, OCR and image search") : Recorder.paused ? qsTr("Paused") : Recorder.running ? qsTr("Running...") : qsTr("Ready")
-                    color: Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                    animate: true
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: qsTr("Screen Capture")
+                        font: Tokens.font.body.medium
+                        elide: Text.ElideRight
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: root.shotMode ? qsTr("Capture, OCR and image search") : Recorder.paused ? qsTr("Paused") : Recorder.running ? qsTr("Running...") : qsTr("Ready")
+                        color: Colours.palette.m3onSurfaceVariant
+                        font: Tokens.font.body.small
+                        elide: Text.ElideRight
+                        animate: true
+                    }
                 }
-            }
 
             SplitButton {
+                id: recordSplitBtn
+
                 visible: !root.shotMode
                 disabled: Recorder.running
 
@@ -142,6 +169,8 @@ StyledRect {
             }
 
             SplitButton {
+                id: shotSplitBtn
+
                 visible: root.shotMode
                 disabled: Recorder.running
 
@@ -226,92 +255,107 @@ StyledRect {
             }
         }
 
-        ButtonRow {
-            id: modeRow
+        ColumnLayout {
+            id: bodyLayout
 
             Layout.fillWidth: true
-            spacing: Tokens.spacing.small
+            visible: opacity > 0
+            opacity: root.isExpanded ? 1 : 0
+            spacing: Tokens.spacing.medium
 
-            // Scroll over the switcher to flip Record/Capture, like the Quick Toggles card
-            WheelHandler {
-                acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-                onWheel: event => {
-                    const d = event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x;
-                    if (d < 0)
-                        root.props.captureMode = "shot";
-                    else if (d > 0)
-                        root.props.captureMode = "record";
+            Behavior on opacity {
+                Anim {
+                    type: Anim.DefaultEffects
                 }
             }
 
-            // No isToggle: the checked binding alone drives the colour, so clicking the
-            // already selected mode can't leave it looking deselected
-            TextButton {
+            ButtonRow {
+                id: modeRow
+
                 Layout.fillWidth: true
-                text: qsTr("Record")
-                type: TextButton.Tonal
-                checked: !root.shotMode
-                onClicked: root.props.captureMode = "record"
+                spacing: Tokens.spacing.small
+
+                // Scroll over the switcher to flip Record/Capture, like the Quick Toggles card
+                WheelHandler {
+                    acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+                    onWheel: event => {
+                        const d = event.angleDelta.y !== 0 ? event.angleDelta.y : event.angleDelta.x;
+                        if (d < 0)
+                            root.props.captureMode = "shot";
+                        else if (d > 0)
+                            root.props.captureMode = "record";
+                    }
+                }
+
+                // No isToggle: the checked binding alone drives the colour, so clicking the
+                // already selected mode can't leave it looking deselected
+                TextButton {
+                    Layout.fillWidth: true
+                    text: qsTr("Record")
+                    type: TextButton.Tonal
+                    checked: !root.shotMode
+                    onClicked: root.props.captureMode = "record"
+                }
+
+                TextButton {
+                    Layout.fillWidth: true
+                    text: qsTr("Capture")
+                    type: TextButton.Tonal
+                    checked: root.shotMode
+                    onClicked: root.props.captureMode = "shot"
+                }
             }
 
-            TextButton {
+            Loader {
+                id: listOrControls
+
+                property bool running: Recorder.running
+
+                asynchronous: true
                 Layout.fillWidth: true
-                text: qsTr("Capture")
-                type: TextButton.Tonal
-                checked: root.shotMode
-                onClicked: root.props.captureMode = "shot"
-            }
-        }
+                Layout.preferredHeight: implicitHeight
+                sourceComponent: running ? recordingControls : root.shotMode ? screenshotList : recordingList
+                clip: Layout.preferredHeight < implicitHeight
 
-        Loader {
-            id: listOrControls
+                Behavior on Layout.preferredHeight {
+                    id: locHeightAnim
 
-            property bool running: Recorder.running
+                    enabled: false
 
-            asynchronous: true
-            Layout.fillWidth: true
-            Layout.preferredHeight: implicitHeight
-            sourceComponent: running ? recordingControls : root.shotMode ? screenshotList : recordingList
-            clip: Layout.preferredHeight < implicitHeight
+                    Anim {}
+                }
 
-            Behavior on Layout.preferredHeight {
-                id: locHeightAnim
-
-                enabled: false
-
-                Anim {}
-            }
-
-            Behavior on running {
-                SequentialAnimation {
-                    Anim {
-                        target: listOrControls
-                        property: "opacity"
-                        to: 0
-                        type: Anim.DefaultEffects
-                    }
-                    PropertyAction {
-                        target: locHeightAnim
-                        property: "enabled"
-                        value: true
-                    }
-                    PropertyAction {}
-                    ParallelAnimation {
-                        SequentialAnimation {
-                            PauseAnimation {
-                                duration: 100
-                            }
-                            PropertyAction {
-                                target: locHeightAnim
-                                property: "enabled"
-                                value: false
-                            }
-                        }
+                Behavior on running {
+                    SequentialAnimation {
                         Anim {
                             target: listOrControls
                             property: "opacity"
-                            to: 1
-                            type: Anim.SlowEffects
+                            to: 0
+                            type: Anim.DefaultEffects
+                        }
+                        PropertyAction {
+                            target: locHeightAnim
+                            property: "enabled"
+                            value: true
+                        }
+                        PropertyAction {}
+                        ParallelAnimation {
+                            SequentialAnimation {
+                                PauseAnimation {
+                                    duration: 100
+                                }
+                                PropertyAction {
+                                    target: locHeightAnim
+                                    property: "enabled"
+                                    value: false
+                                }
+                            }
+                            Anim {
+                                target: listOrControls
+                                property: "opacity"
+                                to: 1
+                                type: Anim.SlowEffects
+                            }
                         }
                     }
                 }

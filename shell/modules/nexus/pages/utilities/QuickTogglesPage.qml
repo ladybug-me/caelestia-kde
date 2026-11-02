@@ -23,7 +23,6 @@ PageBase {
         { id: "overview", label: qsTr("Overview") },
         { id: "dashboard", label: qsTr("Dashboard") },
         { id: "wallpaper", label: qsTr("Wallpaper") },
-        { id: "badapple", label: qsTr("Bad Apple") },
     ]
     readonly property var systemToggles: [
         { id: "mic", label: qsTr("Microphone") },
@@ -33,6 +32,7 @@ PageBase {
         { id: "visualiser", label: qsTr("Audio Visualiser") },
         { id: "nightlight", label: qsTr("Night Light") },
         { id: "easyeffects", label: qsTr("EasyEffects") },
+        { id: "keepAwake", label: qsTr("Keep Awake") },
         { id: "restartShell", label: qsTr("Restart Shell") },
     ]
 

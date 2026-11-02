@@ -16,7 +16,7 @@ Item {
 
     readonly property bool isPinned: root.modelData?.isPinned ?? false
 
-    function clicked() {
+    function activate(): void {
         if (!root.modelData)
             return;
         root.list.visibilities.launcher = false;
@@ -67,7 +67,7 @@ Item {
 
     StateLayer {
         radius: Tokens.rounding.large
-        onClicked: root.clicked()
+        onClicked: root.activate()
     }
 
     Item {

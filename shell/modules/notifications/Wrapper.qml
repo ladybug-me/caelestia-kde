@@ -12,9 +12,9 @@ Item {
     required property DrawerVisibilities visibilities
     required property Item sidebarPanel
     property ShellScreen screen
-    property alias osdPanel: content.osdPanel
-    property alias sessionPanel: content.sessionPanel
-    property alias utilitiesPanel: content.utilitiesPanel
+    /// How much room the panels open beside the stack leave it: the window that owns all
+    /// of them is the only one that can measure it.
+    property real room: Number.POSITIVE_INFINITY
     readonly property real baseTopMargin: -5
 
     readonly property bool isTargetScreen: {
@@ -38,6 +38,6 @@ Item {
         id: content
 
         anchors.topMargin: -root.baseTopMargin
-        visibilities: root.visibilities
+        room: root.room
     }
 }

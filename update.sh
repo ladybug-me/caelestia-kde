@@ -184,6 +184,7 @@ elif command -v systemd-run >/dev/null 2>&1; then
         --setenv=QS_DISABLE_CRASH_HANDLER=1 \
         --setenv=QSG_RENDER_LOOP=threaded \
         --setenv=QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000 \
+        --setenv=DISABLE_MANGOHUD=1 \
         -- "$QUICKSHELL_PATH" -n -p "$HOME/.config/quickshell/caelestia/shell.qml" &
 else
     export QML2_IMPORT_PATH="$HOME/.local/lib/qt6/qml:$HOME/.config/quickshell/caelestia"
@@ -193,6 +194,7 @@ else
     export QS_DISABLE_CRASH_HANDLER=1
     export QSG_RENDER_LOOP=threaded
     export QT_QUICK_FLICKABLE_WHEEL_DECELERATION=10000
+    export DISABLE_MANGOHUD=1
     stdbuf -oL -eL "$QUICKSHELL_PATH" -n -p "$HOME/.config/quickshell/caelestia/shell.qml" >/dev/null 2>&1 &
 fi
 

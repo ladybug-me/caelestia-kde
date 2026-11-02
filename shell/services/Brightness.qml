@@ -22,6 +22,15 @@ Singleton {
     readonly property list<Monitor> monitors: variants.instances // qmllint disable incompatible-type
     property bool appleDisplayPresent: false
 
+    /// KWin resets a panel to full brightness after a colour or mode change, and the watcher
+    /// then reports that value back as if someone had set it. Hand the screens their own
+    /// brightness again once the change has settled, so a layout change does not silently
+    /// undo the brightness the user chose.
+    function reassertBrightness(): void {
+        for (const monitor of root.monitors)
+            monitor.scheduleReassert();
+    }
+
     function getMonitorForScreen(screen: ShellScreen): var {
         return monitors.find(m => m.modelData === screen); // qmllint disable missing-property
     }
@@ -97,7 +106,7 @@ Singleton {
 
         function onBrightnessChanged(outputName: string, value: real): void {
             const monitor = root.getMonitor(outputName);
-            if (monitor && monitor.brightness !== value) {
+            if (monitor && !monitor.reasserting && monitor.brightness !== value) {
                 monitor.brightness = value;
             }
         }
@@ -107,6 +116,14 @@ Singleton {
             if (monitor && monitor.dimming !== value) {
                 monitor.dimming = value;
             }
+        }
+    }
+
+    Connections {
+        target: Displays
+
+        function onLayoutApplied(): void {
+            root.reassertBrightness();
         }
     }
 
@@ -201,6 +218,10 @@ Singleton {
         readonly property real effectiveBrightness: brightness * dimming
         property real queuedBrightness: NaN
         property bool verifying: false
+        /// Set while a layout change is being undone, so KWin's reset is not mistaken for
+        /// the user moving the brightness slider.
+        property bool reasserting: false
+        property int reassertSteps: 0
 
         readonly property Process readProc: Process {
             stdout: StdioCollector {
@@ -247,6 +268,41 @@ Singleton {
                     monitor.timer.restart();
                 }
             }
+        }
+
+        /// One percent is the smallest step that survives the whole-percent rounding on the
+        /// way to KWin, so it is what a nudge has to be to count as a change.
+        readonly property real reassertNudge: 0.01
+
+        /// KWin applies a colour or mode change asynchronously and pins the panel to full
+        /// brightness when it does, and it ignores a write that matches the value it already
+        /// holds. So the panel is nudged off that value first, and the whole thing repeated
+        /// for a few seconds in case KWin overtakes us again.
+        readonly property Timer reassertTimer: Timer {
+            interval: 400
+            onTriggered: {
+                const settling = monitor.reassertSteps <= 1;
+                const target = monitor.brightness;
+                const value = settling ? target : (target >= 1 ? target - monitor.reassertNudge : target + monitor.reassertNudge);
+
+                monitor.syncKwinRecord(Math.round(value * 100) / 100);
+                monitor.writeBrightness(value);
+
+                monitor.reassertSteps -= 1;
+
+                if (settling) {
+                    monitor.reasserting = false;
+                    return;
+                }
+
+                monitor.reassertTimer.restart();
+            }
+        }
+
+        function scheduleReassert(): void {
+            reasserting = true;
+            reassertSteps = 10;
+            reassertTimer.restart();
         }
 
         function syncKwinRecord(value: real): void {

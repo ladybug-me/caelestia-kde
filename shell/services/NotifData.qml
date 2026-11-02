@@ -50,6 +50,10 @@ QtObject {
     property bool shellRaised
     property list<var> actions
 
+    /// Only notifications whose sender offered a reply field can be answered.
+    readonly property bool hasInlineReply: notif.notification?.hasInlineReply ?? false
+    readonly property string inlineReplyPlaceholder: notif.notification?.inlineReplyPlaceholder || qsTr("Reply…")
+
     readonly property bool hasFullscreen: Kwin.hasFullscreen()
 
     readonly property Timer timer: Timer {
@@ -237,6 +241,15 @@ QtObject {
             image = "file://" + image.slice("image://icon/".length);
         if (image && !image.startsWith("image://icon/") && !image.startsWith(Paths.notifimagecache))
             dummyImageLoader.active = true;
+    }
+
+    /// Answers a notification whose sender offered a reply field. The notification
+    /// stays put: the sender usually replaces it with the answer.
+    function sendReply(text: string): void {
+        const trimmed = (text ?? "").trim();
+        if (!notification || !hasInlineReply || !trimmed)
+            return;
+        notification.sendInlineReply(trimmed);
     }
 
     function lock(item: Item): void {

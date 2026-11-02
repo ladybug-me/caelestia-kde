@@ -9,17 +9,31 @@ import qs.components
 import qs.components.containers
 import qs.components.widgets
 import qs.services
-import qs.modules.utilities as Utilities
 
 Item {
     id: root
 
-    required property DrawerVisibilities visibilities
-    required property Item osdPanel
-    required property Item sessionPanel
-    required property Item utilitiesPanel
+    /// How much room the panels open beside the stack leave it, measured by the window
+    /// that owns all of them.
+    property real room: Number.POSITIVE_INFINITY
     readonly property int padding: Tokens.padding.large
     readonly property int clampedPadding: CUtils.clamp(padding - Config.border.thickness, 0, padding)
+
+    /// Nothing to show: the stack is not there at all, rather than a strip of padding.
+    readonly property bool empty: list.count === 0
+
+    /// How tall the notifications themselves want to be.
+    readonly property real contentHeight: {
+        if (root.empty)
+            return 0;
+
+        const count = list.count;
+        let height = (count - 1) * Tokens.spacing.medium;
+        for (let i = 0; i < count; i++)
+            height += (list.itemAtIndex(i) as NotifWrapper)?.nonAnimHeight ?? 0;
+
+        return height;
+    }
 
     anchors.top: parent.top
     anchors.bottom: parent.bottom
@@ -39,35 +53,9 @@ Item {
     }
 
     implicitWidth: Tokens.sizes.notifs.width
-    implicitHeight: {
-        const count = list.count;
-        if (count === 0)
-            return 0;
-
-        let height = (count - 1) * Tokens.spacing.medium;
-        for (let i = 0; i < count; i++)
-            height += (list.itemAtIndex(i) as NotifWrapper)?.nonAnimHeight ?? 0;
-
-        if (visibilities.osd) {
-            const h = osdPanel.y - clampedPadding;
-            if (height > h)
-                height = h;
-        }
-
-        if (visibilities.session) {
-            const h = sessionPanel.y - clampedPadding;
-            if (height > h)
-                height = h;
-        }
-
-        if (visibilities.utilities) {
-            const h = ((QsWindow.window as QsWindow)?.screen.height ?? 0) - (utilitiesPanel as Utilities.Wrapper).nonAnimHeight - Config.border.thickness * 2 - padding * 2 - Tokens.spacing.extraLarge;
-            if (height > h)
-                height = h;
-        }
-
-        return Math.min(((QsWindow.window as QsWindow)?.screen?.height ?? 0) + padding - clampedPadding * 2 - Config.border.thickness, height + padding + clampedPadding);
-    }
+    /// And how tall it may be: the panels beside it only leave so much, and a stack that
+    /// does not fit waits rather than drawing half a notification.
+    implicitHeight: root.empty ? 0 : Math.min(root.contentHeight + root.padding + root.clampedPadding, root.room)
 
     ClippingWrapperRectangle {
         anchors.fill: parent

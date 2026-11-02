@@ -5,6 +5,8 @@
 #include <qnetworkaccessmanager.h>
 #include <qnetworkreply.h>
 
+#include <functional>
+
 #include "lyriccandidate.hpp"
 
 namespace caelestia::services {
@@ -70,6 +72,7 @@ signals:
     void trackChanged();
 
 private:
+    friend class LyricsTest;
     void setBackend(LyricsBackend::Backend value);
     void setLoading(bool value);
     void setLines(QVector<LyricLine> lines, LyricsBackend::Backend source);
@@ -82,12 +85,15 @@ private:
     void cancelInFlight();
     int newRequestId();
 
+    void tryPreferred(int reqId);
+    void candidateFailed(int reqId);
+    bool retryRequest(QNetworkReply* reply, int reqId, std::function<void()> retry);
     void tryLocal(int reqId);
     void tryLrclib(int reqId);
     void tryNetEase(int reqId);
     void chainNext(LyricsBackend::Backend just_failed, int reqId);
 
-    void searchLrclibCandidates(int reqId);
+    void searchLrclibCandidates(int reqId, bool fallback = false);
     void searchNetEaseCandidates(int reqId);
 
     void fetchLrclibById(const QString& id, int reqId);
@@ -142,6 +148,8 @@ private:
     QJsonObject m_lyricsMap;
     bool m_lyricsMapLoaded = false;
     bool m_settingFromPrefs = false;
+    bool m_restoringCandidate = false;
+    QHash<QUrl, int> m_retries;
 };
 
 } // namespace caelestia::services

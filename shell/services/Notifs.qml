@@ -10,6 +10,7 @@ import Caelestia.Config
 import qs.components.misc
 import qs.services
 import qs.utils
+import "notifquery.js" as NotifQuery
 
 Singleton {
     id: root
@@ -20,11 +21,31 @@ Singleton {
 
     readonly property int notifCap: Math.max(1, GlobalConfig.notifs.maxNotifs)
 
+    /// The user's own switch, and the only thing the toggle surfaces write.
     property alias dnd: props.dnd
+    /// Why another feature wants quiet: a game, a focus session, a stream. Reasons are
+    /// named so they cannot clobber one another, and none of them touch `dnd`.
+    property var dndHolders: ({})
+    /// What popups, sounds and the indicators read: quiet for any reason at all.
+    readonly property bool quiet: props.dnd || Object.keys(root.dndHolders).length > 0
     property string lastSavedState: ""
-
     property string activeTargetOutput: ""
     property bool loaded
+
+    /// Claim or release a named reason to stay quiet. Idempotent, so callers can call it
+    /// on every state change instead of remembering whether they already hold.
+    function setDndHold(reason: string, held: bool): void {
+        if (reason === "" || (reason in root.dndHolders) === held)
+            return;
+
+        const next = Object.assign({}, root.dndHolders);
+        if (held)
+            next[reason] = true;
+        else
+            delete next[reason];
+
+        root.dndHolders = next;
+    }
 
     function getCursorOutputName(): string {
         const monitor = Kwin.monitors.find(m => m.name === Kwin.cursorOutputName()) || Kwin.focusedMonitor;
@@ -83,7 +104,7 @@ Singleton {
         root.activeTargetOutput = root.getTargetOutput();
 
         const comp = notifComp.createObject(root, {
-            popup: root.shouldShowPopup(),
+            popup: root.shouldShowPopup(params.appName ?? ""),
             shellRaised: true,
             image: "",
             hints: ({}),
@@ -101,44 +122,84 @@ Singleton {
         return comp;
     }
 
-    function shouldShowPopup(): bool {
-        if (props.dnd || [...Visibilities.screens.values()].some(v => v.sidebar))
-            return false;
-        if (GlobalConfig.notifs.fullscreen === "off") {
-            if (GlobalConfig.notifs.monitor === "focused") {
-                const targetName = root.activeTargetOutput || root.getTargetOutput();
-                if (targetName === "" || Kwin.hasFullscreenOn(targetName))
-                    return false;
-            } else {
-                const scrList = Screens.screens || [];
-                if (scrList.length > 0 && scrList.every(s => Kwin.hasFullscreenOn(s.name)))
-                    return false;
-                if (scrList.length === 0 && hasFullscreen())
-                    return false;
-            }
+    /// Whether this app's notifications are turned off entirely.
+    function isMuted(appName: string): bool {
+        return GlobalConfig.notifs.mutedApps.includes(appName);
+    }
+
+    /// Turns an app's notifications off and drops what is already in the list: the
+    /// answer has to be visible immediately, or the next banner looks like the mute
+    /// did not stick.
+    function muteApp(appName: string): void {
+        if (appName === "")
+            return;
+
+        if (!root.isMuted(appName)) {
+            GlobalConfig.notifs.mutedApps = Array.from(GlobalConfig.notifs.mutedApps).concat([appName]);
+            GlobalConfig.save();
         }
-        return true;
+
+        const dropped = root.list.filter(n => n.appName === appName);
+        if (dropped.length === 0)
+            return;
+
+        root.list = root.list.filter(n => n.appName !== appName);
+        // Closing is what keeps the count honest: NotifData reports its own close, so
+        // decrementing here as well would count the same notification twice.
+        for (const notif of dropped)
+            notif.close();
+    }
+
+    function unmuteApp(appName: string): void {
+        if (!root.isMuted(appName))
+            return;
+
+        GlobalConfig.notifs.mutedApps = Array.from(GlobalConfig.notifs.mutedApps).filter(name => name !== appName);
+        GlobalConfig.save();
+    }
+
+    /// Whether a search for `query` should show this notification. The fields it reads
+    /// are stated in notifquery.js, where a test can run them without a shell.
+    function matchesQuery(notif: NotifData, query: string): bool {
+        return NotifQuery.matches(notif.appName, notif.summaryPlain, notif.bodyPlain, query);
+    }
+
+    /// Whether this app's notification must stay quiet right now. Both the popup and
+    /// the sound ask this, so the DND/focus policy and the fullscreen rule are stated
+    /// once rather than copied into each decision.
+    function isSilenced(appName: string): bool {
+        if (root.isMuted(appName))
+            return true;
+
+        if (root.quiet && !Focus.allows(appName))
+            return true;
+        if (GlobalConfig.notifs.fullscreen !== "off")
+            return false;
+
+        if (GlobalConfig.notifs.monitor === "focused") {
+            const targetName = root.activeTargetOutput || root.getTargetOutput();
+            return targetName === "" || Kwin.hasFullscreenOn(targetName);
+        }
+
+        const scrList = Screens.screens || [];
+        if (scrList.length > 0)
+            return scrList.every(s => Kwin.hasFullscreenOn(s.name));
+
+        return hasFullscreen();
+    }
+
+    function shouldShowPopup(appName: string): bool {
+        if ([...Visibilities.screens.values()].some(v => v.sidebar))
+            return false;
+
+        return !root.isSilenced(appName);
     }
 
     function shouldPlaySound(notif: Notification): bool {
-        if (props.dnd)
-            return false;
         if (notif.appName === "caelestia-cli" || GlobalConfig.audio.sounds.disabledNotifApps.includes(notif.appName))
             return false;
-        if (GlobalConfig.notifs.fullscreen === "off") {
-            if (GlobalConfig.notifs.monitor === "focused") {
-                const targetName = root.activeTargetOutput || root.getTargetOutput();
-                if (targetName === "" || Kwin.hasFullscreenOn(targetName))
-                    return false;
-            } else {
-                const scrList = Screens.screens || [];
-                if (scrList.length > 0 && scrList.every(s => Kwin.hasFullscreenOn(s.name)))
-                    return false;
-                if (scrList.length === 0 && hasFullscreen())
-                    return false;
-            }
-        }
-        return true;
+
+        return !root.isSilenced(notif.appName);
     }
 
     function clear(): void {
@@ -153,8 +214,8 @@ Singleton {
         storage.setText("[]");
     }
 
-    function serializeState(): string {
-        return JSON.stringify(root.notClosed().filter(n => !n.shellRaised).map(n => ({
+    function toPlainList(): var {
+        return root.notClosed().filter(n => !n.shellRaised).map(n => ({
                         time: n.time,
                         id: n.id,
                         summary: n.summary,
@@ -167,7 +228,11 @@ Singleton {
                         resident: n.resident,
                         hasActionIcons: n.hasActionIcons,
                         actions: n.actions
-                    })));
+                    }));
+    }
+
+    function persistedJson(): string {
+        return JSON.stringify(root.toPlainList());
     }
 
     onDndChanged: {
@@ -190,7 +255,7 @@ Singleton {
 
         interval: Math.min(10000, 3000 + root.list.length * 10)
         onTriggered: {
-            const serialized = root.serializeState();
+            const serialized = root.persistedJson();
             if (serialized === root.lastSavedState)
                 return;
             root.lastSavedState = serialized;
@@ -216,13 +281,25 @@ Singleton {
         bodyMarkupSupported: true
         imageSupported: true
         persistenceSupported: true
+        // Lets clients offer reply-from-the-notification. The shell answers it in
+        // the sidebar dock; a passive toast cannot take keyboard focus.
+        inlineReplySupported: true
 
         onNotification: notif => {
             notif.tracked = true;
 
+            // A muted app is answered and dismissed rather than filed: the sender sees a
+            // normal close, and the list, the unread count and the sound never see it.
+            // No NotifData is built for it, because filing is what counts a
+            // notification and this one is never filed.
+            if (root.isMuted(notif.appName)) {
+                notif.dismiss();
+                return;
+            }
+
             root.activeTargetOutput = root.getTargetOutput();
 
-            const showPopup = root.shouldShowPopup();
+            const showPopup = root.shouldShowPopup(notif.appName);
             const comp = notifComp.createObject(root, {
                 popup: showPopup,
                 notification: notif
@@ -258,7 +335,7 @@ Singleton {
 
             root.openCount = root.list.filter(n => !n.closed).length;
             root.popupCount = root.list.filter(n => n.popup).length;
-            root.lastSavedState = root.serializeState();
+            root.lastSavedState = root.persistedJson();
             root.loaded = true;
         }
         onLoadFailed: err => {
@@ -279,12 +356,48 @@ Singleton {
     }
 
     IpcHandler {
+        /// Live snapshot of the list plus the quiet state, for out-of-process views
+        /// (the lock screen) that cannot read the in-process model. Same `toPlainList()`
+        /// the persisted history uses, so both views describe the same notifications.
+        function list(): string {
+            return JSON.stringify({
+                quiet: root.quiet,
+                items: root.toPlainList()
+            });
+        }
+
         function clear(): void {
             root.clear();
         }
 
+        /// The apps whose notifications are turned off, as JSON.
+        function mutedApps(): string {
+            return JSON.stringify(GlobalConfig.notifs.mutedApps);
+        }
+
+        function mute(appName: string): void {
+            root.muteApp(appName);
+        }
+
+        function unmute(appName: string): void {
+            root.unmuteApp(appName);
+        }
+
+        /// What the notification search would show, so the filter can be checked
+        /// without a pointer.
+        function search(query: string): string {
+            return JSON.stringify(root.list.filter(n => root.matchesQuery(n, query)).map(n => n.appName));
+        }
+
+        /// The quiet state, whoever asked for it.
         function isDndEnabled(): bool {
-            return props.dnd;
+            return root.quiet;
+        }
+
+        /// Claim or release a named reason to stay quiet. The lock screen's game is
+        /// the caller that cannot touch the model directly.
+        function setDndHold(reason: string, held: bool): void {
+            root.setDndHold(reason, held);
         }
 
         function toggleDnd(): void {

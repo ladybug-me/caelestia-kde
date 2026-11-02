@@ -149,6 +149,7 @@ Item {
                         entry: entry
                         materialYou: root.controller.materialYou
                         vibrant: root.controller.vibrant
+                        vibrancy: root.controller.vibrancy
                     }
 
                     StyledText {

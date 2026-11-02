@@ -23,7 +23,7 @@ StyledRect {
 
         anchors.centerIn: parent
         text: {
-            if (Notifs.dnd)
+            if (Notifs.quiet)
                 return "notifications_off";
             if (Notifs.openCount > 0)
                 return "notifications_unread";

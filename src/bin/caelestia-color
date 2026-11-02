@@ -721,6 +721,159 @@ def cmd_konsole_scheme(scheme_file: str, out: str) -> int:
     return 0
 
 
+def relative_luminance(color: str) -> float:
+    """WCAG relative luminance of an `RRGGBB` colour, for choosing readable text."""
+
+    def channel(index: int) -> float:
+        value = int(color[index:index + 2], 16) / 255
+        return value / 12.92 if value <= 0.03928 else ((value + 0.055) / 1.055) ** 2.4
+
+    return 0.2126 * channel(0) + 0.7152 * channel(2) + 0.0722 * channel(4)
+
+
+def cmd_kde_selection(scheme_file: str, colors_file: str) -> int:
+    """Set a dynamic scheme's KDE selection text to a colour that reads on the selection.
+
+    The KDE template speaks the selection's text in `secondary_fixed`, which a Material
+    palette renders light, on a `primary` background a dark mode also renders light, so a
+    dynamic scheme's selected item is washed out. The template is vendored, and a named
+    scheme's text colour belongs to its file, so only a dynamic scheme is rewritten here,
+    against the bar it draws: black on a light `primary`, white on a dark one. The
+    palette's own `onPrimary` is a tint of the primary and reads as muddy on the bar.
+    """
+    data = json.loads(pathlib.Path(scheme_file).read_text(encoding="utf-8"))
+    if data.get("name") != "dynamic":
+        return 0
+
+    primary = str(data.get("colours", {}).get("primary", "")).lstrip("#").strip()
+    if len(primary) != 6:
+        return 0
+
+    # 0.179 is where black and white swap places on the WCAG contrast curve: above it
+    # black reads better on the bar, below it white does.
+    foreground = "000000" if relative_luminance(primary) > 0.179 else "ffffff"
+
+    path = pathlib.Path(colors_file)
+    lines = path.read_text(encoding="utf-8").splitlines()
+    in_selection = False
+    for index, line in enumerate(lines):
+        if line.startswith("["):
+            in_selection = line.strip() == "[Colors:Selection]"
+        elif in_selection and line.startswith("ForegroundNormal="):
+            lines[index] = f"ForegroundNormal=#{foreground}"
+            atomic_write(path, "\n".join(lines) + "\n")
+            return 0
+    return 0
+
+
+def is_thumbnail(p: pathlib.Path) -> bool:
+    if p.name in ("first_frame.png", "first_frame_hifi.png"):
+        return True
+    parts = p.parts
+    if any(part in ("thumbs", "video-thumbs", "thumbs-sm", "remote-thumbs") for part in parts):
+        return True
+    p_str = str(p)
+    cache_home = os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache"))
+    if p_str.startswith(os.path.join(cache_home, "skwd-wall")) or p_str.startswith(
+        os.path.join(cache_home, "caelestia")
+    ):
+        return True
+    return False
+
+
+def cmd_resolve_thumb(thumb_path: str) -> int:
+    import sqlite3
+
+    if not thumb_path:
+        return 1
+
+    thumb_p = pathlib.Path(thumb_path)
+    if not is_thumbnail(thumb_p):
+        print(thumb_path)
+        return 0
+
+    # 1. Quickshell video preview thumb
+    if thumb_p.name in ("first_frame.png", "first_frame_hifi.png"):
+        src = thumb_p.parent / "source_path"
+        if src.is_file():
+            val = src.read_text(encoding="utf-8").strip()
+            if os.path.exists(val):
+                print(val)
+                return 0
+
+    cache_home = os.environ.get("XDG_CACHE_HOME", os.path.expanduser("~/.cache"))
+    data_home = os.environ.get("XDG_DATA_HOME", os.path.expanduser("~/.local/share"))
+    wall_dir = os.environ.get(
+        "CAELESTIA_WALLPAPERS_DIR", os.path.expanduser("~/Pictures/Wallpapers")
+    )
+
+    # 2. skwd-wall last-wallpaper.json
+    last_wall = pathlib.Path(cache_home) / "skwd-wall-v2" / "last-wallpaper.json"
+    if last_wall.is_file():
+        try:
+            with open(last_wall, encoding="utf-8") as f:
+                d = json.load(f)
+            t = d.get("thumb")
+            p = d.get("path")
+            if p and os.path.exists(p) and (t == thumb_path or not t or thumb_p.stem in str(t)):
+                print(p)
+                return 0
+        except Exception:
+            pass
+
+    # 3. skwd-wall wall.sqlite
+    db_path = pathlib.Path(data_home) / "skwd-wall-v2" / "wall.sqlite"
+    if db_path.is_file():
+        try:
+            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT video_file, name, type FROM meta WHERE thumb = ? OR thumb_sm = ?",
+                (thumb_path, thumb_path),
+            )
+            row = cur.fetchone()
+            if not row:
+                cur.execute(
+                    "SELECT video_file, name, type FROM meta WHERE thumb LIKE ? OR name LIKE ?",
+                    (f"%{thumb_p.stem}%", f"%{thumb_p.stem}%"),
+                )
+                row = cur.fetchone()
+            if row:
+                vfile, name, kind = row
+                if kind == "video" and vfile and os.path.exists(vfile):
+                    print(vfile)
+                    return 0
+                if name:
+                    if os.path.isabs(name) and os.path.exists(name):
+                        print(name)
+                        return 0
+                    cand = pathlib.Path(wall_dir) / name
+                    if cand.exists():
+                        print(str(cand))
+                        return 0
+        except Exception:
+            pass
+
+    # 4. skwd-wall outputs.json / last-applied.json
+    for jname in ("outputs.json", "last-applied.json"):
+        jp = pathlib.Path(cache_home) / "skwd-wall-v2" / jname
+        if jp.is_file():
+            try:
+                with open(jp, encoding="utf-8") as f:
+                    data = json.load(f)
+                for v in data.values():
+                    if isinstance(v, dict):
+                        p = v.get("path")
+                        if p and os.path.exists(p):
+                            print(p)
+                            return 0
+            except Exception:
+                pass
+
+    print(thumb_path)
+    return 0
+
+
 def main(argv: list[str]) -> int:
     command, args = argv[0], argv[1:]
     if command == "config-dump":
@@ -755,6 +908,10 @@ def main(argv: list[str]) -> int:
         return cmd_smart_variant(*args)
     if command == "konsole-scheme":
         return cmd_konsole_scheme(*args)
+    if command == "kde-selection":
+        return cmd_kde_selection(*args)
+    if command == "resolve-thumb":
+        return cmd_resolve_thumb(*args)
     raise SystemExit(f"unknown python helper: {command}")
 
 
@@ -1063,6 +1220,9 @@ apply_kde() {
     local scheme="$DATA_HOME/color-schemes/Matugen.colors" current="" target
 
     [[ -f "$scheme" ]] || return 0
+    # Before the tools are asked for: the file a reader could apply by hand later is
+    # rewritten either way, and the copy to the alternate name below comes after it.
+    py kde-selection "$SCHEME_FILE" "$scheme" || warn "could not set the dynamic scheme's selection text"
     if ! command -v plasma-apply-colorscheme >/dev/null 2>&1 ||
         ! command -v kreadconfig6 >/dev/null 2>&1 ||
         ! command -v kwriteconfig6 >/dev/null 2>&1; then
@@ -1080,9 +1240,9 @@ apply_kde() {
     kwriteconfig6 --file kdeglobals --group General --key AccentColor --delete 2>/dev/null || true
     kwriteconfig6 --file kdeglobals --group General --key AccentColorFromWallpaper --delete 2>/dev/null || true
 
-    if [[ "$target" != "Matugen" ]]; then
-        cp -f "$scheme" "$DATA_HOME/color-schemes/$target.colors"
-    fi
+    # Both names are written, not only the one applied below: the copy the next change
+    # rotates to would otherwise hold the palette of the change before it.
+    cp -f "$scheme" "$DATA_HOME/color-schemes/Matugen Alt.colors"
     plasma-apply-colorscheme "$target" >/dev/null 2>&1 || warn "could not apply the Plasma color scheme"
 }
 
@@ -1158,22 +1318,30 @@ defer_to_desktop() {
     return 0
 }
 
-# A failing hook is reported, not fatal: the palette is already on disk.
+# A failing hook is reported, not fatal: the palette is already on disk. Its own output
+# is the only clue to why, so the first line of it goes into the warning: "hook failed"
+# alone cannot tell a missing helper from a refused sudo from a typo in the command.
 run_hook() {
     local label="$1" command="$2"
     shift 2
     [[ -n "$command" ]] || return 0
 
-    if env "$@" \
+    local output
+    output="$(env "$@" \
         SCHEME_NAME="$META_NAME" \
         SCHEME_FLAVOUR="$META_FLAVOUR" \
         SCHEME_MODE="$META_MODE" \
         SCHEME_VARIANT="$META_VARIANT" \
         SCHEME_COLOURS="$META_COLOURS" \
-        sh -c "$command" >/dev/null 2>&1; then
-        return 0
+        sh -c "$command" 2>&1)" && return 0
+
+    local reason="${output%%$'\n'*}"
+    reason="${reason#"${reason%%[![:space:]]*}"}"
+    if [[ -n "$reason" ]]; then
+        warn "the $label hook failed: $reason"
+    else
+        warn "the $label hook failed"
     fi
-    warn "the $label hook failed"
 }
 
 run_theme_hook() {
@@ -1186,11 +1354,120 @@ run_wallpaper_hook() {
         "WALLPAPER_PATH=$wallpaper" "THUMBNAIL_PATH=$wallpaper"
 }
 
+is_video() {
+    local file="$1"
+    case "${file,,}" in
+        *.mp4|*.webm|*.mkv|*.mov|*.avi|*.flv|*.wmv|*.m4v) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+video_thumbnail() {
+    local video="$1"
+    local hash thumb_dir thumb
+    command -v ffmpeg >/dev/null 2>&1 || return 1
+    hash="$(sha256sum "$video" 2>/dev/null | awk '{print $1}')"
+    [[ -n "$hash" ]] || return 1
+    thumb_dir="$CACHE_HOME/caelestia/wallpapers/$hash"
+    thumb="$thumb_dir/first_frame.png"
+    mkdir -p "$thumb_dir"
+    printf '%s' "$video" > "$thumb_dir/source_path"
+    if [[ ! -s "$thumb" ]]; then
+        ffmpeg -y -loglevel error -i "$video" -vf "thumbnail,scale=640:-1" -frames:v 1 "$thumb" >/dev/null 2>&1 || return 1
+    fi
+    printf '%s' "$thumb"
+}
+
+# Inspect parent process arguments for any video path parameter (e.g. from Quickshell)
+_find_parent_video_arg() {
+    local pid="$BASHPID" ppid arg
+    while true; do
+        ppid="$(ps -p "$pid" -o ppid= 2>/dev/null | tr -d ' ')" || break
+        [[ -n "$ppid" && "$ppid" -gt 1 ]] || break
+        if [[ -r "/proc/$ppid/cmdline" ]]; then
+            while IFS= read -r -d '' arg; do
+                case "${arg,,}" in
+                    *.mp4|*.webm|*.mkv|*.mov|*.avi|*.flv|*.wmv|*.m4v)
+                        if [[ -f "$arg" ]]; then
+                            printf '%s' "$arg"
+                            return 0
+                        fi
+                        ;;
+                esac
+            done < "/proc/$ppid/cmdline"
+        fi
+        pid="$ppid"
+    done
+    return 1
+}
+
+# Return 0 (true) if any ancestor process in the current process tree is skwd-walld.
+# This detects the re-entrant call skwd-walld -> caelestia-color and is used to skip
+# the skwd-helm apply that would feed back into skwd-walld, creating an infinite loop.
+_called_from_skwd_walld() {
+    [[ -n "${SKWD_WALLD:-}" ]] && return 0
+    local pid="$BASHPID" ppid comm
+    while true; do
+        ppid="$(ps -p "$pid" -o ppid= 2>/dev/null | tr -d ' ')" || break
+        [[ -n "$ppid" && "$ppid" -gt 1 ]] || break
+        comm="$(ps -p "$ppid" -o comm= 2>/dev/null | tr -d ' ')" || break
+        [[ "$comm" == "skwd-walld" ]] && return 0
+        pid="$ppid"
+    done
+    return 1
+}
+
+resolve_actual_wallpaper() {
+    local candidate="$1"
+    [[ -n "$candidate" ]] || return 1
+
+    local resolved
+    if resolved="$(py resolve-thumb "$candidate" 2>/dev/null)"; then
+        if [[ -n "$resolved" && -f "$resolved" ]]; then
+            printf '%s\n' "$resolved"
+            return 0
+        fi
+    fi
+
+    if [[ "$candidate" == */first_frame.png || "$candidate" == */first_frame_hifi.png ]]; then
+        local dir source_video
+        dir="$(dirname -- "$candidate")"
+        if [[ -f "$dir/source_path" ]]; then
+            source_video="$(<"$dir/source_path")"
+            if [[ -n "$source_video" && -f "$source_video" ]]; then
+                printf '%s\n' "$source_video"
+                return 0
+            fi
+        fi
+        source_video="$(_find_parent_video_arg)"
+        if [[ -n "$source_video" && -f "$source_video" ]]; then
+            printf '%s\n' "$source_video"
+            return 0
+        fi
+    fi
+
+    printf '%s\n' "$candidate"
+}
+
 write_wallpaper_state() {
     local wallpaper="$1"
+    wallpaper="$(resolve_actual_wallpaper "$wallpaper")"
+
     mkdir -p "$(dirname -- "$WALLPAPER_FILE")"
     printf '%s' "$wallpaper" > "$WALLPAPER_FILE"
     ln -sfn "$wallpaper" "$WALLPAPER_LINK"
+
+    # Skip skwd-helm apply when we were already invoked by skwd-walld (its caelestia
+    # theme authority called us). Calling skwd-helm apply here would tell skwd-walld
+    # to apply the same wallpaper again, which triggers the theme authority again,
+    # creating an infinite loop. The wallpaper state is written above regardless.
+    if command -v skwd-helm >/dev/null 2>&1 && ! _called_from_skwd_walld; then
+        local curr_helm
+        curr_helm="$(skwd-helm current 2>/dev/null | cut -f2- || true)"
+        if [[ "$curr_helm" != "$wallpaper" ]]; then
+            skwd-helm apply "$wallpaper" >/dev/null 2>&1 || true
+        fi
+    fi
 }
 
 stored_wallpaper() {
@@ -1198,13 +1475,21 @@ stored_wallpaper() {
     local wallpaper
     wallpaper="$(<"$WALLPAPER_FILE")"
     [[ -n "$wallpaper" && -f "$wallpaper" ]] || return 1
+    wallpaper="$(resolve_actual_wallpaper "$wallpaper")"
     printf '%s\n' "$wallpaper"
 }
 
 derive_from_wallpaper() {
     local wallpaper="$1" flavour="$2" mode="$3" variant="$4"
     local variant_smart="$5" mode_smart="$6"
-    render_image "$wallpaper" "$flavour" "$mode" "$variant" true "$RENDER_FILE" \
+    local palette_source="$wallpaper"
+    if is_video "$wallpaper"; then
+        local vthumb
+        if vthumb="$(video_thumbnail "$wallpaper")"; then
+            palette_source="$vthumb"
+        fi
+    fi
+    render_image "$palette_source" "$flavour" "$mode" "$variant" true "$RENDER_FILE" \
         "$variant_smart" "$mode_smart"
     commit "$RENDER_FILE"
     defer_to_desktop "$META_MODE"
@@ -1358,7 +1643,14 @@ cmd_scheme_set() {
                 fail_or_notify "$notify" "no wallpaper has been set yet"
                 return 1
             fi
-            render_image "$wallpaper" "$flavour" "$mode" "$variant" false "$PREVIEW_FILE" \
+            local preview_wallpaper="$wallpaper"
+            if is_video "$wallpaper"; then
+                local vthumb
+                if vthumb="$(video_thumbnail "$wallpaper")"; then
+                    preview_wallpaper="$vthumb"
+                fi
+            fi
+            render_image "$preview_wallpaper" "$flavour" "$mode" "$variant" false "$PREVIEW_FILE" \
                 "$variant_smart" "$mode_smart"
             cat "$PREVIEW_FILE"
             printf '\n'
@@ -1424,11 +1716,12 @@ cmd_scheme() {
 }
 
 cmd_wallpaper() {
-    local file="" print=0 print_path="" random=0 random_dir="" no_smart=0 smart="true"
+    local file="" apply_file="" print=0 print_path="" random=0 random_dir="" no_smart=0 smart="true"
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -f|--file) file="${2:-}"; [[ -n "$file" ]] || die "-f needs a path"; shift 2 ;;
+            -a|--apply-path) apply_file="${2:-}"; [[ -n "$apply_file" ]] || die "-a needs a path"; shift 2 ;;
             -p|--print)
                 print=1
                 shift
@@ -1453,6 +1746,12 @@ cmd_wallpaper() {
         esac
     done
 
+    if ! ((no_smart)); then
+        local _shell_cfg="${XDG_CONFIG_HOME:-$HOME/.config}/caelestia/shell.json"
+        local _shell_smart
+        _shell_smart="$(py config-dump "$_shell_cfg" 2>/dev/null | awk -F'\t' '$1=="services.smartScheme"{print $2}')" || true
+        [[ "$_shell_smart" == "false" ]] && no_smart=1
+    fi
     ((no_smart)) && smart="false"
     read_meta
 
@@ -1460,7 +1759,14 @@ cmd_wallpaper() {
         local source="$print_path"
         [[ -n "$source" ]] || source="$(stored_wallpaper)" || die "no wallpaper has been set yet"
         [[ -f "$source" ]] || die "no such wallpaper: $source"
-        render_image "$source" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" "${META_VARIANT:-tonalspot}" \
+        local preview_source="$source"
+        if is_video "$source"; then
+            local vthumb
+            if vthumb="$(video_thumbnail "$source")"; then
+                preview_source="$vthumb"
+            fi
+        fi
+        render_image "$preview_source" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" "${META_VARIANT:-tonalspot}" \
             false "$PREVIEW_FILE" "$smart" "$smart"
         cat "$PREVIEW_FILE"
         printf '\n'
@@ -1475,15 +1781,26 @@ cmd_wallpaper() {
     [[ -f "$file" ]] || die "no such wallpaper: $file"
     file="$(realpath -- "$file")"
 
-    write_wallpaper_state "$file"
+    local palette_source="$file"
+    if is_video "$file"; then
+        local video_thumb
+        if video_thumb="$(video_thumbnail "$file")"; then
+            palette_source="$video_thumb"
+        fi
+    fi
+
+    local state_file="${apply_file:-$file}"
+    state_file="$(resolve_actual_wallpaper "$state_file")"
+
+    write_wallpaper_state "$state_file"
 
     # Only a dynamic scheme follows the wallpaper; a named one stays.
     if [[ -z "${META_NAME:-}" || "${META_NAME}" == "dynamic" ]]; then
-        derive_from_wallpaper "$file" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" \
+        derive_from_wallpaper "$palette_source" "${META_FLAVOUR:-default}" "${META_MODE:-dark}" \
             "${META_VARIANT:-tonalspot}" "$smart" "$smart"
     fi
 
-    run_wallpaper_hook "$file"
+    run_wallpaper_hook "$state_file"
 }
 
 pick_random_wallpaper() {

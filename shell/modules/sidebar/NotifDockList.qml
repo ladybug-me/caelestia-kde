@@ -14,6 +14,9 @@ LazyListView {
     required property Flickable container
     required property DrawerVisibilities visibilities
 
+    /// What the list is being narrowed to, empty when nothing is.
+    property string filter: ""
+
     anchors.left: parent?.left
     anchors.right: parent?.right
     implicitHeight: contentHeight
@@ -38,9 +41,9 @@ LazyListView {
     model: ScriptModel {
         values: {
             const map = new Map();
-            for (const n of Notifs.list.filter(n => !n.closed))
+            for (const n of Notifs.list.filter(n => !n.closed && Notifs.matchesQuery(n, root.filter)))
                 map.set(n.appName, null);
-            for (const n of Notifs.list)
+            for (const n of Notifs.list.filter(n => Notifs.matchesQuery(n, root.filter)))
                 map.set(n.appName, null);
             return [...map.keys()];
         }
@@ -103,6 +106,7 @@ LazyListView {
                 props: root.props
                 container: root.container
                 visibilities: root.visibilities
+                filter: root.filter
             }
         }
     }

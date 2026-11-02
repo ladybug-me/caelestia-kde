@@ -23,8 +23,6 @@ Item {
 
     property bool isGameOver: DinoGameBackend.isGameOver
 
-    property bool _previousDnd: false
-
     implicitWidth: Math.max(250, parent.width * 0.8)
 
     implicitHeight: 200
@@ -41,20 +39,15 @@ Item {
         target: DinoGameBackend
 
         function onGameStarted() {
-            _previousDnd = Notifs.dnd;
-            if (!Notifs.dnd) Notifs.dnd = true;
+            Notifs.setDndHold("game", true);
         }
 
         function onGameDied() {
-            if (!_previousDnd) Notifs.dnd = false;
+            Notifs.setDndHold("game", false);
         }
     }
 
-    Component.onDestruction: {
-        if (isPlaying && !_previousDnd) {
-            Notifs.dnd = false;
-        }
-    }
+    Component.onDestruction: Notifs.setDndHold("game", false)
 
     Shortcut {
         sequence: "Space"

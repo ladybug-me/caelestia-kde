@@ -43,7 +43,7 @@ render_primary() {
     if [[ "$kind" == "json" ]]; then
         python3 -c 'import json, sys; print(json.load(open(sys.argv[1]))["colors"]["primary"]["dark"]["color"].lstrip("#"))' "$source"
     else
-        printf '92cef5'
+        printf '%s' "${STUB_PRIMARY:-92cef5}"
     fi
 }
 
@@ -71,7 +71,8 @@ awk '
         "background": "101417",
         "onSurface": "dfe6ed",
         "surface": "0a0f12",
-        "primary": "92cef5",
+        "primary": "${STUB_PRIMARY:-92cef5}",
+        "onPrimary": "0c3953",
         "term0": "333a40"
     }
 }
@@ -81,6 +82,15 @@ EOF
             palettes.json.tmpl)
                 # What the real template renders: every palette, every shade.
                 printf '%s' '{"primary": {"50": "227cbb"}, "secondary": {"50": "677987"}, "tertiary": {"50": "6e759f"}, "neutral": {"50": "74777a"}, "neutral_variant": {"50": "71787e"}}' > "$output"
+                ;;
+            Matugen.colors)
+                # What the real template renders for the roles the tests below read: a
+                # selection whose text colour the dynamic-scheme rewrite can speak to.
+                cat > "$output" <<EOF
+[Colors:Selection]
+BackgroundNormal=#$(render_primary)
+ForegroundNormal=#e8f4fd
+EOF
                 ;;
             *)
                 printf 'primary %s\n' "$(render_primary)" > "$output"
@@ -652,6 +662,20 @@ test_the_hooks_run_with_the_scheme_in_their_environment() {
     assert_contains "$logged" "wallpaper $image" "the wallpaper hook saw the wallpaper"
 }
 
+test_a_failing_hook_says_why_it_failed() {
+    # "the theme hook failed" on its own leaves the user guessing: a helper that is not
+    # installed, a sudo rule that is gone and a typo all look identical. The hook's own
+    # first line of output is the one thing that tells them apart.
+    setup_sandbox
+    set_cli_config '{"theme": {"postHook": "caelestia-no-such-helper --posthook"}}'
+
+    run_color wallpaper -f "$(wallpaper_image wall.png)"
+
+    assert_status 0 "$STATUS" "a failing hook must not stop the wallpaper being applied"
+    assert_contains "$OUTPUT" "the theme hook failed" "the failure is still reported"
+    assert_contains "$OUTPUT" "caelestia-no-such-helper" "and the warning carries the reason"
+}
+
 test_the_wallpaper_preview_changes_nothing() {
     setup_sandbox
     local first
@@ -705,6 +729,42 @@ test_the_palette_reaches_the_desktop() {
         "and so is Plasma deriving one from the wallpaper"
 }
 
+test_a_dynamic_scheme_selection_text_is_black_on_a_light_bar() {
+    setup_sandbox
+    run_color wallpaper -f "$(wallpaper_image one.png)"
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    local plasma="$XDG_DATA_HOME/color-schemes/Matugen.colors"
+    assert_contains "$(cat "$plasma")" "BackgroundNormal=#92cef5" \
+        "the selection background carries the palette's primary"
+    assert_contains "$(cat "$plasma")" "ForegroundNormal=#000000" \
+        "on a light bar the selection text is black, not the light fixed colour nor a tint of the primary"
+}
+
+test_a_dynamic_scheme_selection_text_is_white_on_a_dark_bar() {
+    setup_sandbox
+    export STUB_PRIMARY=1a2b3c
+    run_color wallpaper -f "$(wallpaper_image one.png)"
+    unset STUB_PRIMARY
+    assert_status 0 "$STATUS" "setting a wallpaper should succeed"
+
+    local plasma="$XDG_DATA_HOME/color-schemes/Matugen.colors"
+    assert_contains "$(cat "$plasma")" "BackgroundNormal=#1a2b3c" \
+        "the selection background carries the dark primary"
+    assert_contains "$(cat "$plasma")" "ForegroundNormal=#ffffff" \
+        "on a dark bar the selection text flips to white instead of staying black"
+}
+
+test_a_named_scheme_selection_text_is_the_template_s_own() {
+    setup_sandbox
+    run_color scheme set -n catppuccin -f mocha -m dark
+    assert_status 0 "$STATUS" "the switch should succeed"
+
+    assert_contains "$(cat "$XDG_DATA_HOME/color-schemes/Matugen.colors")" \
+        "ForegroundNormal=#e8f4fd" \
+        "a named scheme keeps the text colour its file speaks; the rewrite is the dynamic scheme's"
+}
+
 test_the_applied_name_rotates_so_a_change_is_an_apply() {
     setup_sandbox
     run_color wallpaper -f "$(wallpaper_image one.png)"
@@ -718,6 +778,17 @@ test_the_applied_name_rotates_so_a_change_is_an_apply() {
     assert_eq "$(cat "$XDG_DATA_HOME/color-schemes/Matugen.colors")" \
         "$(cat "$XDG_DATA_HOME/color-schemes/Matugen Alt.colors")" \
         "both names carry the palette that was just generated"
+}
+
+test_the_name_not_applied_is_refreshed_too() {
+    setup_sandbox
+    run_color wallpaper -f "$(wallpaper_image one.png)"
+    assert_status 0 "$STATUS" "the first change should succeed"
+
+    assert_contains "$(cat "$KDE_CALLS")" "apply Matugen" "the first change applies Matugen"
+    assert_eq "$(cat "$XDG_DATA_HOME/color-schemes/Matugen.colors")" \
+        "$(cat "$XDG_DATA_HOME/color-schemes/Matugen Alt.colors")" \
+        "the name that is not applied is refreshed too, so it cannot lag a change behind"
 }
 
 test_konsole_gets_a_scheme_in_its_own_format() {
@@ -945,7 +1016,7 @@ test_the_whole_desktop_follows_the_intensity_not_just_the_shell() {
     assert_ne "92cef5" "$scaled" "the palette the shell reads was scaled"
     assert_eq "primary $scaled" "$(cat "$gtk")" \
         "the fan out was rendered from the scaled palette, not from matugen's own"
-    assert_eq "primary $scaled" "$(cat "$plasma")" \
+    assert_contains "$(cat "$plasma")" "BackgroundNormal=#$scaled" \
         "and so was the scheme the desktop is applied"
 }
 
@@ -982,6 +1053,46 @@ print("the file is the palette")
 PY
 )"
     assert_contains "$described" "the file is the palette" "$described"
+}
+
+test_wallpaper_resolves_first_frame_thumbnail_to_source_video() {
+    setup_sandbox
+    local video="$SANDBOX/video.mp4"
+    touch "$video"
+    local thumb_dir="$XDG_CACHE_HOME/wallpapers/abc123"
+    mkdir -p "$thumb_dir"
+    local thumb="$thumb_dir/first_frame.png"
+    touch "$thumb"
+    printf '%s' "$video" > "$thumb_dir/source_path"
+
+    run_color wallpaper -f "$thumb"
+    assert_status 0 "$STATUS" "setting wallpaper with thumbnail should succeed"
+    assert_eq "$video" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt should contain original video, not first_frame.png thumbnail"
+}
+
+test_wallpaper_resolves_skwd_wall_thumbnail_to_actual_file() {
+    setup_sandbox
+    local video="$SANDBOX/samurai.mp4"
+    touch "$video"
+    local thumb_dir="$XDG_CACHE_HOME/skwd-wall-v2/video-thumbs"
+    mkdir -p "$thumb_dir"
+    local thumb="$thumb_dir/samurai.webp"
+    touch "$thumb"
+
+    mkdir -p "$XDG_CACHE_HOME/skwd-wall-v2"
+    cat > "$XDG_CACHE_HOME/skwd-wall-v2/last-wallpaper.json" <<EOF
+{
+    "thumb": "$thumb",
+    "path": "$video",
+    "type": "video"
+}
+EOF
+
+    run_color wallpaper -f "$thumb"
+    assert_status 0 "$STATUS" "setting wallpaper with skwd thumbnail should succeed"
+    assert_eq "$video" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt should contain actual video from skwd-wall, not webp thumbnail"
 }
 
 run_tests

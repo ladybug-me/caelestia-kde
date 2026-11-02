@@ -26,8 +26,11 @@ Item {
 
     readonly property var screenConfig: GlobalConfig.forScreen(screenData.name).background
     readonly property bool iconsEnabled: screenConfig.desktopIconsEnabled
+    // Widget editing is desktop-wide state owned by the editor; this screen follows it.
+    readonly property bool widgetEditMode: WidgetEditor.active
     readonly property bool materialYou: screenConfig.materialYouIconsEnabled
     readonly property bool vibrant: screenConfig.materialYouIconsVibrant
+    readonly property real vibrancy: screenConfig.materialYouIconsVibrancy
     readonly property string desktopDir: Paths.home + "/Desktop"
 
     // Multi-monitor scaling and density adaptation
@@ -121,6 +124,8 @@ Item {
     }
     // Sizes shown while a resize is being dragged.
     property var previewSpans: null
+    // Cell the resized item is held to while its left or top edge is dragged.
+    property var previewOrigin: null
     readonly property var displaySpans: previewSpans ?? spans
     readonly property WidgetCatalog widgetCatalog: WidgetCatalog {}
 
@@ -281,9 +286,21 @@ Item {
     }
 
     function arranged(positions: var, newKeys: var): var {
-        if (DesktopLayout.sortKey !== "")
-            return Engine.compact(Engine.sortItems(Object.keys(positions).concat(newKeys).map(describe), DesktopLayout.sortKey).map(i => i.key), rows, spans);
-        return Engine.compact(Engine.orderedKeys(positions, rows).concat(newKeys), rows, spans);
+        // Widgets are furniture, not files: automatic arrangement leaves them where
+        // the user put them and packs the icons around them.
+        const movable = key => describe(key).kind !== "widget";
+        const obstacles = {};
+        for (const key of Object.keys(positions)) {
+            if (!movable(key))
+                obstacles[key] = positions[key];
+        }
+        // compact() writes only the keys it was given — obstacles are excluded from
+        // its output but must be present in the return value so that samePositions()
+        // gets the full key set and avoids spurious setPositions() / disk-save calls.
+        const packed = DesktopLayout.sortKey !== ""
+            ? Engine.compact(Engine.sortItems(Object.keys(positions).concat(newKeys).filter(movable).map(describe), DesktopLayout.sortKey).map(i => i.key), rows, spans, obstacles)
+            : Engine.compact(Engine.orderedKeys(positions, rows).filter(movable).concat(newKeys), rows, spans, obstacles);
+        return Object.assign({}, obstacles, packed);
     }
 
     function samePositions(a: var, b: var): bool {
@@ -482,8 +499,14 @@ Item {
     function sortBy(key: string): void {
         DesktopLayout.setSortKey(key);
         const current = contextPositionsTopLevel();
-        const order = Engine.sortItems(Object.keys(current).map(describe), key).map(i => i.key);
-        const next = Engine.compact(order, rows, spans);
+        const movable = k => describe(k).kind !== "widget";
+        const obstacles = {};
+        for (const k of Object.keys(current)) {
+            if (!movable(k))
+                obstacles[k] = current[k];
+        }
+        const order = Engine.sortItems(Object.keys(current).filter(movable).map(describe), key).map(i => i.key);
+        const next = Engine.compact(order, rows, spans, obstacles);
         for (const k in next) {
             if (next[k])
                 next[k] = Object.assign({}, next[k], { screen: screenData.name });
@@ -620,6 +643,10 @@ Item {
     }
 
     function openKeys(keys: var): void {
+        // Edit mode arranges the desktop; launching something from it is never
+        // what the click meant.
+        if (widgetEditMode)
+            return;
         let launched = false;
         for (const key of keys) {
             if (isWidgetKey(key))
@@ -840,44 +867,87 @@ Item {
         return out;
     }
 
-    function resizePlan(key: string, w: int, h: int): var {
+    // `origin` is the cell the item keeps while a drag grows it from its left or
+    // top edge; without one it stays where it is placed.
+    function resizePlan(key: string, w: int, h: int, origin: var): var {
         const current = contextPositionsTopLevel();
         const s = spansWith(key, w, h);
         if (DesktopLayout.autoArrange)
             return Engine.compact(Engine.orderedKeys(current, rows), rows, s);
-        return Engine.planMove(current, [key], key, current[key], cols, rows, s);
+        return Engine.planMove(current, [key], key, origin ?? current[key], cols, rows, s, lockedKeys());
     }
 
     function isKeyLocked(key: string): bool {
         return isWidgetKey(key) && DesktopLayout.isWidgetLocked(nameOf(key));
     }
 
-    function previewResize(key: string, w: int, h: int): void {
+    // Keys from the current top-level positions that must never be displaced,
+    // i.e. locked widgets. Passed to Engine.planMove as the immovable list.
+    function lockedKeys(): var {
+        const out = [];
+        for (const key of topLevelKeys()) {
+            if (isKeyLocked(key))
+                out.push(key);
+        }
+        return out;
+    }
+
+    // If `place` falls inside any of `occupiedKeys`' footprints (looked up from
+    // `positionMap`), snap it to the nearest free cell outside them.
+    // `movingSpan` is the span of the item being dragged.
+    function snapOutOf(place: var, movingSpan: var, occupiedKeys: var, positionMap: var): var {
+        if (!occupiedKeys || occupiedKeys.length === 0)
+            return place;
+        const occ = {};
+        for (const key of occupiedKeys) {
+            const p = positionMap[key];
+            if (p)
+                Engine.markRect(occ, p, spanOf(key), key);
+        }
+        const s = movingSpan ?? { w: 1, h: 1 };
+        if (Engine.rectFree(occ, place, s))
+            return place;
+        return Engine.nearestFree(occ, place.col, place.row, cols, rows, s);
+    }
+
+    // Convenience: snap away from locked widgets only (icon-drag path).
+    function snapOutOfLocked(place: var, movingSpan: var): var {
+        return snapOutOf(place, movingSpan, lockedKeys(), contextPositionsTopLevel());
+    }
+
+    function previewResize(key: string, w: int, h: int, origin: var): void {
         if (isKeyLocked(key))
             return;
         if (!DesktopLayout.positions[key])
             return;
         const span = previewSpans?.[key];
-        if (span && span.w === w && span.h === h)
-            return;
-        const next = resizePlan(key, w, h);
+        if (span && span.w === w && span.h === h) {
+            // A drag from a left or top edge moves the item as well, so the same
+            // span can still be a different plan.
+            const sameOrigin = origin === undefined || (previewOrigin !== null && previewOrigin.col === origin.col && previewOrigin.row === origin.row);
+            if (sameOrigin)
+                return;
+        }
+        const next = resizePlan(key, w, h, origin);
         previewSpans = spansWith(key, w, h);
+        previewOrigin = origin ?? null;
         previewPositions = Object.assign({}, DesktopLayout.positions, next);
     }
 
     function endResizePreview(): void {
         previewSpans = null;
+        previewOrigin = null;
         previewPositions = null;
     }
 
-    function resizeItem(key: string, w: int, h: int): void {
+    function resizeItem(key: string, w: int, h: int, origin: var): void {
         endResizePreview();
         if (isKeyLocked(key))
             return;
         const pos = DesktopLayout.positions[key];
         if (!pos)
             return;
-        const next = Object.assign({}, DesktopLayout.positions, resizePlan(key, w, h));
+        const next = Object.assign({}, DesktopLayout.positions, resizePlan(key, w, h, origin));
         if (isGroupKey(key)) {
             const id = nameOf(key);
             const groups = Object.assign({}, DesktopLayout.groups);
@@ -897,24 +967,66 @@ Item {
         Qt.callLater(syncEntries);
     }
 
+    // Writes every spec at once: the widgets and their cells land in one go, so a
+    // paste of several can never save a widget without a cell. Returns the keys.
+    function placeWidgets(specs: var, from: var): var {
+        if (!specs || specs.length === 0)
+            return [];
+        const cells = Engine.placeSpecs(contextPositionsTopLevel(), from, specs, cols, rows, spans);
+        const widgets = Object.assign({}, DesktopLayout.widgets);
+        const positions = Object.assign({}, DesktopLayout.positions);
+        const placed = {};
+        const keys = [];
+        for (let i = 0; i < specs.length; i++) {
+            let id;
+            do
+                id = DesktopLayout.newGroupId();
+            while (id in widgets);
+            const key = DesktopLayout.widgetKey(id);
+            widgets[id] = {
+                type: specs[i].type,
+                size: { w: cells[i].w, h: cells[i].h },
+                // A spec is a template: each paste gets its own config to edit.
+                config: Object.assign({}, specs[i].config ?? {})
+            };
+            placed[key] = { col: cells[i].col, row: cells[i].row, screen: screenData.name };
+            positions[key] = placed[key];
+            keys.push(key);
+        }
+        DesktopLayout.setWidgets(widgets);
+        let next = positions;
+        if (DesktopLayout.autoArrange) {
+            next = arranged(Object.assign(contextPositionsTopLevel(), placed), []);
+            for (const key in next)
+                next[key] = Object.assign({}, next[key], { screen: screenData.name });
+            next = Object.assign(positions, next);
+        }
+        DesktopLayout.setPositions(next);
+        Qt.callLater(() => {
+            syncEntries();
+            setSelection(keys);
+        });
+        return keys;
+    }
+
     function addWidget(type: string, cell: var): void {
         const info = widgetCatalog.infoForGrid(type, cols, rows);
         if (!info.type)
             return;
-        const id = DesktopLayout.newGroupId();
-        const key = DesktopLayout.widgetKey(id);
-        const widgets = Object.assign({}, DesktopLayout.widgets);
-        widgets[id] = { type, size: { w: info.size.w, h: info.size.h }, config: Object.assign({}, info.config ?? {}) };
-        const occ = Engine.occupancy(contextPositionsTopLevel(), null, spans);
-        const at = cell ? Engine.nearestFree(occ, cell.col, cell.row, cols, rows, info.size) : Engine.firstFree(occ, cols, rows, info.size);
-        const posWithScreen = Object.assign({}, at, { screen: screenData.name });
-        const positions = Object.assign({}, DesktopLayout.positions, { [key]: posWithScreen });
-        DesktopLayout.setWidgets(widgets);
-        DesktopLayout.setPositions(DesktopLayout.autoArrange ? Object.assign(positions, arranged(Object.assign(contextPositionsTopLevel(), { [key]: posWithScreen }), [])) : positions);
-        Qt.callLater(() => {
-            syncEntries();
-            setSelection([key]);
-        });
+        placeWidgets([
+            {
+                type: type,
+                w: info.size.w,
+                h: info.size.h,
+                config: info.config ?? {}
+            }
+        ], cell);
+    }
+
+    // Where a widget added from outside the grid should be offered: the middle of
+    // the cells, so the gallery opens in view whatever the pointer did last.
+    function requestWidgetGallery(): void {
+        DesktopLayout.addWidgetRequested(screenData.name, gridItem.x + gridItem.width / 2, gridItem.y + gridItem.height / 2);
     }
 
     function removeWidgets(keys: var): void {
@@ -933,6 +1045,57 @@ Item {
         DesktopLayout.setWidgets(widgets);
         DesktopLayout.setPositions(positions);
         Qt.callLater(syncEntries);
+    }
+
+    // Keys the widget editor owns. False hands the key back to the normal desktop,
+    // so the rest of the key handler stays a plain list of cases rather than
+    // growing a mode check per shortcut.
+    function editModeKey(event: var, ctrl: bool): bool {
+        if (!widgetEditMode)
+            return false;
+        if (event.key === Qt.Key_Delete || event.key === Qt.Key_Backspace) {
+            // The mode is explicit, so notes go with the rest of the widgets.
+            removeWidgets(selectedKeys().filter(isWidgetKey));
+        } else if (event.key === Qt.Key_Escape) {
+            if (openGroupId !== "")
+                closeGroup();
+            else
+                WidgetEditor.close();
+        } else if (ctrl && event.key === Qt.Key_A) {
+            setSelection(Engine.orderedKeys(contextPositions(), rows).filter(isWidgetKey));
+        } else if (ctrl && event.key === Qt.Key_C) {
+            copyWidgets(selectedKeys());
+        } else if (ctrl && event.key === Qt.Key_V) {
+            pasteWidgets();
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    // Edit mode copies widgets, not files: type, size and config travel, ids do not.
+    function copyWidgets(keys: var): void {
+        const specs = [];
+        for (const key of keys) {
+            const widget = widgetOf(key);
+            if (!widget)
+                continue;
+            specs.push({
+                type: widget.type,
+                size: { w: widget.size?.w ?? 1, h: widget.size?.h ?? 1 },
+                config: Object.assign({}, widget.config ?? {})
+            });
+        }
+        WidgetEditor.clipboard = specs;
+    }
+
+    function pasteWidgets(): void {
+        const specs = WidgetEditor.clipboard;
+        if (specs.length === 0)
+            return;
+        // Land next to whatever is selected, so a paste reads as a duplicate.
+        const anchor = selectedKeys().map(key => DesktopLayout.positions[key]).find(pos => !!pos);
+        placeWidgets(specs, anchor ? { col: anchor.col + 1, row: anchor.row } : null);
     }
 
     // ---- Renaming ---------------------------------------------------------
@@ -1277,7 +1440,41 @@ Item {
             anchor = moving.indexOf(dragAnchor) !== -1 ? dragAnchor : moving[0];
             moving.forEach((k, i) => base[k] = { col: plan.cell.col, row: plan.cell.row + i });
         }
-        const next = DesktopLayout.autoArrange ? Engine.planInsert(base, moving, plan.place, rows, spans) : Engine.planMove(base, moving, anchor, plan.place, cols, rows, spans);
+        // Widgets are placed by hand: auto arrangement must not re-pack them into
+        // the first free cells next to the icons.
+        const widgetMove = moving.some(k => isWidgetKey(k));
+        // Compute the safe drop target:
+        //   – icon drag: snap away from locked-widget cells
+        //   – widget drag: always snap away from locked-widget cells
+        //   – widget drag + autoArrange: also snap away from all icon/group cells
+        let safePlace;
+        let immovable;
+        if (widgetMove && DesktopLayout.autoArrange) {
+            const locked = lockedKeys();
+            const iconKeys = Object.keys(base).filter(k => !isWidgetKey(k));
+            // Avoid both locked widgets AND icon cells; exclude self from avoid list.
+            const avoidKeys = locked.filter(k => !moving.includes(k)).concat(iconKeys);
+            safePlace = snapOutOf(plan.place, spanOf(dragAnchor), avoidKeys, base);
+            immovable = locked.concat(iconKeys);
+        } else if (widgetMove) {
+            // No autoArrange but still must not land on a locked widget.
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor));
+            immovable = lockedKeys();
+        } else {
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor));
+            immovable = lockedKeys();
+        }
+        let next;
+        if (DesktopLayout.autoArrange && !widgetMove) {
+            const iconObstacles = {};
+            for (const k of Object.keys(base)) {
+                if (isWidgetKey(k))
+                    iconObstacles[k] = base[k];
+            }
+            next = Engine.planInsert(base, moving, safePlace, rows, spans, iconObstacles);
+        } else {
+            next = Engine.planMove(base, moving, anchor, safePlace, cols, rows, spans, immovable);
+        }
         dropCells = moving.map(k => Object.assign({}, next[k], spanOf(k)));
         // The dragged items stay faded where they were; only the others move aside.
         const shown = Object.assign({}, DesktopLayout.positions, next);
@@ -1327,7 +1524,38 @@ Item {
             removeFromGroup(fromGroup, keys.filter(k => !isGroupKey(k)).map(nameOf), plan.cell);
             return;
         }
-        const landed = DesktopLayout.autoArrange ? Engine.planInsert(contextPositionsTopLevel(), keys, plan.place, rows, spans) : Engine.planMove(contextPositionsTopLevel(), keys, dragAnchor || keys[0], plan.place, cols, rows, spans);
+        const widgetMove = keys.some(k => isWidgetKey(k));
+        // Non-widget drags must not land inside a locked widget's footprint.
+        // Widget drags must not land on a locked widget; with autoArrange they
+        // also must not displace auto-arranged icons.
+        let safePlace;
+        let immovable;
+        if (widgetMove && DesktopLayout.autoArrange) {
+            const current = contextPositionsTopLevel();
+            const locked = lockedKeys();
+            const iconKeys = Object.keys(current).filter(k => !isWidgetKey(k));
+            const avoidKeys = locked.filter(k => !keys.includes(k)).concat(iconKeys);
+            safePlace = snapOutOf(plan.place, spanOf(dragAnchor || keys[0]), avoidKeys, current);
+            immovable = locked.concat(iconKeys);
+        } else if (widgetMove) {
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor || keys[0]));
+            immovable = lockedKeys();
+        } else {
+            safePlace = snapOutOfLocked(plan.place, spanOf(dragAnchor || keys[0]));
+            immovable = lockedKeys();
+        }
+        let landed;
+        if (DesktopLayout.autoArrange && !widgetMove) {
+            const current = contextPositionsTopLevel();
+            const iconObstacles = {};
+            for (const k of Object.keys(current)) {
+                if (isWidgetKey(k))
+                    iconObstacles[k] = current[k];
+            }
+            landed = Engine.planInsert(current, keys, safePlace, rows, spans, iconObstacles);
+        } else {
+            landed = Engine.planMove(contextPositionsTopLevel(), keys, dragAnchor || keys[0], safePlace, cols, rows, spans, immovable);
+        }
         for (const k of keys) {
             if (landed[k])
                 landed[k] = Object.assign({}, landed[k], { screen: screenData.name });
@@ -1365,6 +1593,9 @@ Item {
             [Qt.Key_Down]: "down"
         };
         event.accepted = true;
+
+        if (editModeKey(event, ctrl))
+            return;
 
         if (event.key in dirs) {
             if (current === "")
@@ -1430,7 +1661,7 @@ Item {
     }
 
     anchors.fill: parent
-    visible: GlobalConfig.forScreen(screenData.name).background.enabled && GlobalConfig.forScreen(screenData.name).background.wallpaperEnabled
+    visible: !root.screenConfig.disableQuickshellDesktop && root.screenConfig.enabled && !ContextMenuStore.editMode
     focus: true
     Keys.onPressed: event => handleKey(event)
 
@@ -1442,6 +1673,21 @@ Item {
                 renamingDelegate.cancelRename();
             clearSelection();
         }
+    }
+
+    // The mode is a property, not a command aimed at this screen, so the settling
+    // happens here: no group popup over the grid, no half-finished rename, and no
+    // selection left over from before that a Delete would act on.
+    onWidgetEditModeChanged: {
+        if (widgetEditMode) {
+            if (openGroupId !== "")
+                closeGroup();
+            if (renameActive)
+                renamingDelegate.commitRename();
+            clearSelection();
+        }
+        endResizePreview();
+        clearDropPreview();
     }
 
     onColsChanged: {
@@ -1707,7 +1953,7 @@ wl-paste --no-newline --type text/uri-list`]
         readonly property bool barEnabled: !Strings.testRegexList(barConfig.excludedScreens, root.screenData.name)
         readonly property string barPosition: barConfig.position ?? Config.bar.position
         readonly property int barZone: barEnabled ? (Visibilities.bars.get(root.screenData.name)?.visualThickness ?? (Tokens.sizes.bar.innerWidth + Math.max(Tokens.padding.small, Config.border.thickness))) : 0
-        readonly property int baseMargin: Math.round(Tokens.padding.large * 2 * root.effectiveScale)
+        readonly property int baseMargin: Math.round(Tokens.padding.large * 0.5 * root.effectiveScale)
         readonly property int marginLeft: barPosition === "left" ? baseMargin + barZone : baseMargin
         readonly property int marginRight: barPosition === "right" ? baseMargin + barZone : baseMargin
         readonly property int marginTop: barPosition === "top" ? baseMargin + barZone : baseMargin
@@ -1717,10 +1963,45 @@ wl-paste --no-newline --type text/uri-list`]
         readonly property real areaWidth: root.width - marginLeft - marginRight
         readonly property real areaHeight: root.height - marginTop - marginBottom
 
-        x: marginLeft + Math.floor((areaWidth - width) / 2)
-        y: marginTop + Math.floor((areaHeight - height) / 2)
+        x: marginLeft
+        y: marginTop
         width: root.cols * root.cellWidth
         height: root.rows * root.cellHeight
+
+        // Edit mode shows the cells the widgets snap to, which is what makes the
+        // grid readable while dragging. Only built while the mode is on.
+        Loader {
+            anchors.fill: parent
+            active: root.widgetEditMode
+
+            sourceComponent: Item {
+                Repeater {
+                    model: root.cols + 1
+
+                    StyledRect {
+                        required property int index
+
+                        x: index * root.cellWidth
+                        width: 1
+                        height: parent.height
+                        color: Qt.alpha(Colours.palette.m3outline, 0.12)
+                    }
+                }
+
+                Repeater {
+                    model: root.rows + 1
+
+                    StyledRect {
+                        required property int index
+
+                        y: index * root.cellHeight
+                        width: parent.width
+                        height: 1
+                        color: Qt.alpha(Colours.palette.m3outline, 0.12)
+                    }
+                }
+            }
+        }
 
         // Where the dragged items would land.
         Repeater {
@@ -1749,6 +2030,7 @@ wl-paste --no-newline --type text/uri-list`]
                 readonly property var pos: root.displayPositions[key] ?? DesktopLayout.positions[key] ?? null
 
                 controller: root
+                widgetEditMode: root.widgetEditMode
                 visible: (!isGroup || root.iconsEnabled) && pos !== null
                 width: span.w * root.cellWidth
                 height: span.h * root.cellHeight
@@ -1821,6 +2103,7 @@ wl-paste --no-newline --type text/uri-list`]
                 iconSize: root.iconSize
                 materialYou: root.materialYou
                 vibrant: root.vibrant
+                vibrancy: root.vibrancy
                 pointingCursor: DesktopLayout.singleClick
                 selected: root.selection[key] === true && root.openGroupId === ""
                 focusVisible: root.keyboardActive && root.focusKey === key && root.openGroupId === ""

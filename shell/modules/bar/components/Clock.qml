@@ -33,6 +33,37 @@ StyledRect {
         return root.font.width(scale * 100).letterSpacing(scale).build();
     }
 
+    function centerFor(): real {
+        return root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
+    }
+
+    function openPopout(name: string): void {
+        const popouts = root.popouts;
+        if (!popouts)
+            return;
+
+        popouts.currentName = name;
+        popouts.currentCenter = root.centerFor();
+        popouts.hasCurrent = true;
+    }
+
+    /// Hover opens the calendar the way the other bar widgets open theirs, but after a
+    /// short pause: the clock sits before the tray, and a calendar this size should not
+    /// appear just because the pointer crossed it. Closing is not handled here — a
+    /// popout left behind is dismissed by the drawers' own hide timer once the pointer
+    /// is outside both the bar and the popout, which keeps hover and click identical.
+    function hoverOpen(): void {
+        const popouts = root.popouts;
+        if (!Config.bar.showOnHover || !Config.bar.popouts.clock || !popouts || popouts.hasCurrent)
+            return;
+
+        hoverTimer.restart();
+    }
+
+    function hoverClose(): void {
+        hoverTimer.stop();
+    }
+
     implicitWidth: isHorizontal ? (horizontalLayout.implicitWidth + root.padding * 2) : barThickness
     implicitHeight: isHorizontal ? barThickness : (verticalLayout.implicitHeight + root.padding * 2)
 
@@ -43,29 +74,46 @@ StyledRect {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         acceptedButtons: Qt.LeftButton | Qt.RightButton
+        hoverEnabled: true
+
+        onEntered: root.hoverOpen()
+        onExited: root.hoverClose()
 
         onClicked: mouse => {
             const popouts = root.popouts;
             if (!popouts)
                 return;
 
+            // A click settles any pending hover move first, so it is not reopened a
+            // moment after it was deliberately closed.
+            hoverTimer.stop();
+
             if (mouse.button === Qt.RightButton) {
                 if (popouts.hasCurrent && popouts.currentName === "clockcontext") {
                     popouts.hasCurrent = false;
                 } else {
-                    popouts.currentName = "clockcontext";
-                    popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
-                    popouts.hasCurrent = true;
+                    root.openPopout("clockcontext");
                 }
             } else if (mouse.button === Qt.LeftButton) {
                 if (popouts.hasCurrent && (popouts.currentName === "clock" || popouts.currentName === "clockcontext")) {
                     popouts.hasCurrent = false;
                 } else if (Config.bar.popouts.clock) {
-                    popouts.currentName = "clock";
-                    popouts.currentCenter = root.isHorizontal ? root.mapToItem(null, root.implicitWidth / 2, 0).x : (root.mapToItem(null, 0, root.implicitHeight / 2).y ?? 0);
-                    popouts.hasCurrent = true;
+                    root.openPopout("clock");
                 }
             }
+        }
+    }
+
+    Timer {
+        id: hoverTimer
+
+        interval: 150
+        onTriggered: {
+            const popouts = root.popouts;
+            if (!popouts || popouts.hasCurrent)
+                return;
+
+            root.openPopout("clock");
         }
     }
 

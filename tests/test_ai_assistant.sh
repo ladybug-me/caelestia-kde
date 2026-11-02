@@ -8,7 +8,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SIDEBAR="$REPO_ROOT/shell/modules/sidebar"
 
 # The assistant's logic that does not need Qt lives in .pragma library files
-# (shell/modules/sidebar/ai/*.js). run_js loads them as ClaudeCode, Sessions
+# (shell/modules/sidebar/ai/*.js). run_ai_js loads them as ClaudeCode, Sessions
 # and Attachments, runs the given script with node's assert, and prints "ok"
 # when every assertion held.
 JS_PRELUDE='
@@ -34,13 +34,13 @@ const delta = text => ({ type: "stream_event", event: { type: "content_block_del
 const messageStart = { type: "stream_event", event: { type: "message_start" } };
 '
 
-run_js() {
+run_ai_js() {
     AI_DIR="$SIDEBAR/ai" node -e "$JS_PRELUDE"$'\n'"$1"$'\n''console.log("ok");' 2>&1
 }
 
-check_js() {
+check_ai_js() {
     local message="$1" script="$2" out
-    out="$(run_js "$script")"
+    out="$(run_ai_js "$script")"
     [[ "$out" == "ok" ]] || fail_with_output "$message" "$out"
 }
 
@@ -50,7 +50,7 @@ have_node() {
 
 test_text_around_a_tool_call_stays_in_separate_paragraphs() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "text before and after a tool call should not run together, and the card sits between them" '
+    check_ai_js "text before and after a tool call should not run together, and the card sits between them" '
 const r = stream([
     { type: "system", subtype: "init", session_id: "S1" },
     messageStart,
@@ -77,7 +77,7 @@ assert.strictEqual(r.of("toolsDone").length, 1);
 
 test_a_backgrounded_subagent_is_waited_for() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "a backgrounded subagent should finish the reply only after its notification" '
+    check_ai_js "a backgrounded subagent should finish the reply only after its notification" '
 const r = stream([
     { type: "assistant", message: { content: [{ type: "tool_use", id: "a1", name: "Agent", input: { description: "Find the config" } }] } },
     { type: "user", message: { content: [{ type: "tool_result", tool_use_id: "a1", content: "started" }] }, tool_use_result: { isAsync: true } },
@@ -110,7 +110,7 @@ assert.strictEqual(usage[0].text, "3 turns · 16 in / 4 out · $0.040");
 
 test_subagent_steps_are_listed_on_its_card() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "a subagent tool call should become a step on the subagent card" '
+    check_ai_js "a subagent tool call should become a step on the subagent card" '
 const r = stream([
     { type: "assistant", message: { content: [{ type: "tool_use", id: "a1", name: "Task", input: { description: "Look around" } }] } },
     { type: "assistant", parent_tool_use_id: "a1", message: { content: [{ type: "tool_use", id: "s1", name: "Grep", input: { pattern: "width" } }] } },
@@ -126,7 +126,7 @@ assert.strictEqual(r.of("progress").pop().text, "Reading files");
 
 test_failures_become_a_readable_reply() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "auth problems and crashes should explain themselves" '
+    check_ai_js "auth problems and crashes should explain themselves" '
 const auth = stream([{ type: "result", is_error: true, result: "Invalid API key · Please run /login" }]);
 assert.strictEqual(auth.of("finished")[0].reply.text, ClaudeCode.authHint);
 
@@ -143,7 +143,7 @@ assert.strictEqual(ClaudeCode.handleExit(stopped, 143, true).text, "", "a stoppe
 
 test_the_command_line_follows_the_chat_settings() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "permission mode, model, effort, attachments and resume should map to CLI flags" '
+    check_ai_js "permission mode, model, effort, attachments and resume should map to CLI flags" '
 const base = { bin: "claude", prompt: "hi", allowedTools: ["Bash", "Read"] };
 const cmd = ClaudeCode.replyCommand(Object.assign({}, base, {
     attachments: ["/tmp/a/x.png", "/tmp/a/y.txt"],
@@ -166,7 +166,7 @@ assert.ok(haiku.indexOf("--effort") === -1, "a model without effort levels gets 
 
 test_a_fresh_session_is_seeded_with_the_conversation() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "the transcript should carry over earlier messages and attachments" '
+    check_ai_js "the transcript should carry over earlier messages and attachments" '
 const one = [Sessions.newMessage({ isUser: true, text: "hello" })];
 assert.strictEqual(ClaudeCode.transcript(one), "", "a first message needs no transcript");
 const msgs = [
@@ -183,7 +183,7 @@ assert.ok(t.indexOf("Assistant: OK\n\nUser: What word?") !== -1, "an unfinished 
 
 test_stored_chats_load_finished_and_save_without_view_state() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "loading and saving chats should keep ids and drop what only the view needs" '
+    check_ai_js "loading and saving chats should keep ids and drop what only the view needs" '
 const loaded = Sessions.parseStored(JSON.stringify([
     { id: "chat_1", title: "x", claudeCodeCwd: "/tmp", messages: [
         { isUser: true, text: "a" },
@@ -217,7 +217,7 @@ assert.strictEqual(Sessions.withoutChats(JSON.stringify(saved), ["chat_1"]), "[]
 
 test_the_open_chat_view_follows_its_session() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "every message edit should reach the session and the same row of the open chat's view" '
+    check_ai_js "every message edit should reach the session and the same row of the open chat's view" '
 // Stands in for the ListModel: append copies a message into a row, set
 // changes only the given roles.
 function fakeView() {
@@ -270,7 +270,7 @@ test_only_the_chat_sessions_module_writes_the_open_chat_view() {
 
 test_history_rows() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "the history list should match, order and preview chats" '
+    check_ai_js "the history list should match, order and preview chats" '
 const msg = (isUser, text) => Sessions.newMessage({ isUser, text });
 const sessions = [
     { id: "chat_1000", title: "Old", messages: [msg(true, "find the needle here"), msg(false, "**bold** reply")] },
@@ -303,7 +303,7 @@ assert.strictEqual(Sessions.asMarkdown(sessions[1]), "# Pinned one\n\n**You:**\n
 
 test_history_sections_and_ages() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "history rows should be grouped and dated by their last activity" '
+    check_ai_js "history rows should be grouped and dated by their last activity" '
 const now = new Date(2026, 9, 4, 12, 0);
 const at = (d, h, m) => new Date(2026, 9, d, h, m || 0).getTime();
 const section = ts => Sessions.historySection(false, ts, now);
@@ -339,7 +339,7 @@ test_the_history_list_is_its_own_component() {
 
 test_attachment_paths() {
     have_node || { skip_test "node is not installed"; return 0; }
-    check_js "dropped URLs should become local paths" '
+    check_ai_js "dropped URLs should become local paths" '
 assert.strictEqual(Attachments.localPath("file:///home/u/My%20Shot.png"), "/home/u/My Shot.png");
 assert.strictEqual(Attachments.isImagePath("/a/b.JPEG"), true);
 assert.strictEqual(Attachments.isImagePath("/a/b.txt"), false);

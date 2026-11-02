@@ -11,6 +11,11 @@
 
 set -euo pipefail
 
+case "${LC_ALL:-${LC_CTYPE:-${LANG:-}}}" in
+    *[Uu][Tt][Ff]-8* | *[Uu][Tt][Ff]8*) ;;
+    *) export LC_ALL=C.UTF-8 ;;
+esac
+
 _quickshell() {
     if command -v quickshell >/dev/null 2>&1; then
         command -v quickshell

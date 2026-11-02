@@ -24,6 +24,11 @@ Singleton {
 
     property list<PwNode> appStreams: []
 
+    // The capture half of `streams`: applications recording rather than playing. The
+    // nodes only exist while something is recording, which is what makes them readable
+    // as "who is listening".
+    readonly property var captureStreams: root.streams.filter(stream => stream.properties?.["media.class"] === "Stream/Input/Audio")
+
     readonly property string selfAppName: "caelestia-shell"
 
     readonly property PwNode sink: Pipewire.defaultAudioSink

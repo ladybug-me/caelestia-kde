@@ -23,6 +23,7 @@ Item {
         iconSize: root.controller.iconSize
         materialYou: root.controller.materialYou
         vibrant: root.controller.vibrant
+        vibrancy: root.controller.vibrancy
         isGroup: root.isGroup
         entry: root.controller.entryOf(root.key)
         groupName: ""

@@ -6,13 +6,13 @@ Item {
     id: root
 
     required property bool firstInput
-    required property string currentSession
+    required property string currentSessionName
     required property string currentUser
     required property int rectHeight
 
-    property string os: (config.os || "Arch").split(" ")[0]
+    property string os: (config.os || "Linux").split(" ")[0]
     property string host: config.host || "localhost"
-    property string session: (root.currentSession || "Hyprland").split(" ")[0]
+    property string session: (root.currentSessionName || "Hyprland").split(" ")[0]
 
     RowLayout {
         Rectangle {

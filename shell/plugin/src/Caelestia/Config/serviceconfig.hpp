@@ -22,6 +22,17 @@ class PlayerAlias : public settings::ObjectNode {
 };
 CONFIG_LIST_TYPE(PlayerAlias, PlayerAliasList)
 
+// One calendar the agenda reads: a name to show and the iCalendar address to read
+// it from. Google Calendar hands that address out as "secret address in iCal
+// format", which is also what Nextcloud and Fastmail call their export link.
+class CalendarSource : public settings::ObjectNode {
+    CONFIG_NODE(CalendarSource, settings::ObjectNode)
+
+    CONFIG_PROPERTY(QString, name, {})
+    CONFIG_PROPERTY(QString, url, {})
+};
+CONFIG_LIST_TYPE(CalendarSource, CalendarSourceList)
+
 class ServiceConfig : public settings::ObjectNode {
     CONFIG_NODE(ServiceConfig, settings::ObjectNode)
 
@@ -58,6 +69,10 @@ private:
 
     CONFIG_GLOBAL_PROPERTY(bool, useSystemd, false)
     CONFIG_GLOBAL_PROPERTY(QString, wallhavenApiKey, QString())
+
+    // Calendars the agenda reads, and how far ahead it looks.
+    CONFIG_GLOBAL_LIST(CalendarSourceList, calendarSources, {})
+    CONFIG_GLOBAL_PROPERTY(int, calendarDays, 14)
 
     CONFIG_GLOBAL_PROPERTY(bool, autoSchemeEnabled, false)
     CONFIG_GLOBAL_PROPERTY(QString, autoSchemeMode, u"solar"_s)

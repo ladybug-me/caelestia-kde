@@ -250,6 +250,9 @@ class AppearanceFont : public settings::ObjectNode {
     CONFIG_NODE(AppearanceFont, settings::ObjectNode)
 
     CONFIG_PROPERTY(qreal, scale, 1)
+    // Keeps that scale in step with KDE's font size, so text enlarged system-wide is
+    // enlarged in the shell too instead of the two drifting apart.
+    CONFIG_PROPERTY(bool, followSystemScale, true)
     CONFIG_SUBOBJECT(FontStyleHeadline, headline)
     CONFIG_SUBOBJECT(FontStyleTitle, title)
     CONFIG_SUBOBJECT(FontStyleBody, body)

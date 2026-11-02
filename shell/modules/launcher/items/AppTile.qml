@@ -34,7 +34,11 @@ Item {
     // A long name reads in full rather than as an ellipsis; hovering with the shrink
     // overflow mode halves the icon and buys it a line more.
     readonly property int labelLines: root.shrunk ? 3 : 2
-    readonly property int baseIconSize: Math.round(root.implicitWidth * 0.42)
+    // The icon takes whatever height is left once the label has its lines, so
+    // a large font or a long name can no longer push the block past the tile.
+    readonly property int lineHeight: Math.max(1, Math.round(nameMetrics.height))
+    readonly property int labelHeight: root.lineHeight * root.labelLines
+    readonly property int baseIconSize: Math.min(Math.round(root.implicitWidth * 0.5), Math.max(16, root.implicitHeight - root.labelHeight - Tokens.spacing.extraSmall * 2))
 
     implicitWidth: Tokens.sizes.launcher.browseTileWidth
     implicitHeight: Tokens.sizes.launcher.browseTileHeight
@@ -106,7 +110,7 @@ Item {
                 id: content
 
                 anchors.horizontalCenter: parent.horizontalCenter
-                y: (page.height - height) / 2
+                y: Tokens.spacing.extraSmall
                 spacing: Tokens.spacing.extraSmall
 
                 Item {
@@ -139,18 +143,17 @@ Item {
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     clip: true
-                    implicitWidth: name.width
-                    implicitHeight: name.implicitHeight
+                    implicitWidth: root.implicitWidth
 
-                    Behavior on implicitHeight {
-                        Anim {
-                            type: Anim.FastSpatial
-                        }
-                    }
+                    // Fixed room for both lines, so every tile keeps its icon at the
+                    // same height whether the name needs one line or two.
+                    implicitHeight: root.labelHeight
 
                     NameLabel {
                         id: name
 
+                        anchors.top: parent.top
+                        anchors.horizontalCenter: parent.horizontalCenter
                         maxLines: root.labelLines
                     }
                 }
@@ -236,7 +239,7 @@ Item {
 
         text: root.modelData?.name ?? ""
         color: root.selected ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
-        font: root.simple ? Tokens.font.label.builders.medium.size(9).build() : Tokens.font.label.large
+        font: root.simple ? Tokens.font.label.builders.medium.size(9).build() : Tokens.font.label.medium
         elide: Text.ElideRight
         wrapMode: Text.Wrap
         maximumLineCount: maxLines

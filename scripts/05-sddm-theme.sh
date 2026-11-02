@@ -64,7 +64,7 @@ ALL_OK=true
 register_greeter_sync() {
     local label="${1:-Login screen configured.}"
 
-    POSTHOOK_CMD="sudo $SYNC_SCRIPT --posthook"
+    POSTHOOK_CMD="sudo -n $SYNC_SCRIPT --posthook"
     CLI_JSON="$HOME/.config/caelestia/cli.json"
 
     if command -v python3 &>/dev/null; then
@@ -86,7 +86,7 @@ if os.path.exists(cli_path):
 # Only the two helpers this installer owns are recognised, the pair
 # uninstall.sh recognises too: matching any `--posthook` command would delete a
 # posthook the user wrote for a tool of their own.
-HELPERS = r"sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook"
+HELPERS = r"sudo\s+(?:-\S+\s+)*\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook"
 ours = re.compile(
     r"\s*&&\s*" + HELPERS
     + r"|" + HELPERS + r"\s*&&\s*"

@@ -14,6 +14,24 @@ Item {
     property bool flag
     required property DrawerVisibilities visibilities
 
+    /// Which edges the stack hangs from, and which way it grows. The corner itself is the
+    /// selector's business: a stack only needs to know its two sides.
+    required property bool fromTop
+    required property bool fromLeft
+
+    /// How far down (or up) the toast at `index` sits, from the toasts that are already
+    /// in front of it.
+    function offsetFor(index: int): real {
+        root.flag;
+        let offset = 0;
+        for (let i = 0; i < index; i++) {
+            const item = repeater.itemAt(i) as ToastWrapper;
+            if (item && !item.modelData.closed && !item.previewHidden)
+                offset += item.implicitHeight + root.spacing;
+        }
+        return offset;
+    }
+
     function shouldShowToast(toast: Toast): bool {
         if (!Notifs.hasFullscreen())
             return true;
@@ -80,19 +98,12 @@ Item {
         }
         opacity: modelData.closed || previewHidden ? 0 : 1
         scale: modelData.closed || previewHidden ? 0.7 : 1
-        anchors.bottomMargin: {
-            root.flag;
-            let y = 0;
-            for (let i = 0; i < index; i++) {
-                const item = repeater.itemAt(i) as ToastWrapper;
-                if (item && !item.modelData.closed && !item.previewHidden)
-                    y += item.implicitHeight + root.spacing;
-            }
-            return y;
-        }
+        anchors.topMargin: root.fromTop ? root.offsetFor(index) : 0
+        anchors.bottomMargin: root.fromTop ? 0 : root.offsetFor(index)
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.top: root.fromTop ? parent.top : undefined
+        anchors.bottom: root.fromTop ? undefined : parent.bottom
         implicitHeight: toastInner.implicitHeight
         acceptedButtons: Qt.LeftButton | Qt.MiddleButton | Qt.RightButton
         onClicked: modelData.close()
@@ -109,7 +120,12 @@ Item {
         }
         ParallelAnimation {
             running: toast.modelData.closed
-            onStarted: toast.anchors.bottomMargin = toast.anchors.bottomMargin
+            onStarted: {
+                if (root.fromTop)
+                    toast.anchors.topMargin = toast.anchors.topMargin;
+                else
+                    toast.anchors.bottomMargin = toast.anchors.bottomMargin;
+            }
             onFinished: toast.modelData.unlock(toast)
 
             Anim {
@@ -134,9 +150,15 @@ Item {
                 type: Anim.DefaultEffects
             }
         }
+
         Behavior on scale {
             Anim {}
         }
+
+        Behavior on anchors.topMargin {
+            Anim {}
+        }
+
         Behavior on anchors.bottomMargin {
             Anim {}
         }

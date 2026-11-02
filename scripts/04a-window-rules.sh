@@ -3,13 +3,13 @@
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/kwin-rules.sh"
 
 RULES_FILE="kwinrulesrc"
 # kwriteconfig6 resolves a relative file name inside the user's config directory, and
 # KConfig has no query that lists the groups of a file, so the index below is built
 # from the file itself, read at the same path the tools write.
 RULES_PATH="${XDG_CONFIG_HOME:-$HOME/.config}/$RULES_FILE"
-RULE_GROUPS=(caelestia-xwaylandvideobridge caelestia-pip caelestia-dialogs caelestia-opacity)
 RULE_INDEX=""
 RULE_INDEX_COUNT=0
 WINDOW_OPACITY="${WINDOW_OPACITY:-95}"
@@ -108,12 +108,23 @@ add_to_rule_index() {
     RULE_INDEX_COUNT=$((RULE_INDEX_COUNT + 1))
 }
 
+# Whether a name is one of ours. `lib/kwin-rules.sh` is the only place the names are
+# written, in evaluation order, because an order that drifts is a rule that stops
+# applying without saying so.
+is_our_rule() {
+    local candidate="$1" name
+    for name in "${CAELESTIA_RULE_GROUPS[@]}"; do
+        [[ "$candidate" == "$name" ]] && return 0
+    done
+    return 1
+}
+
 # The index is what makes the groups take effect. KWin builds its rule book from the
 # names in [General] rules= alone, so a group that is present in the file but left
 # out of that list is never loaded, and the next time KWin saves the rule book it
 # deletes every group the list does not name. Both KWin 6.7 and master read this
 # key, master as the ordered group list, so the list is rebuilt as the union of the
-# current value, every group the file holds and our three groups. Naming only our
+# current value, every group the file holds and our own groups. Naming only our
 # own would hand KWin a list that drops the user's rules.
 build_rule_index() {
     local current="$1" groups="$2" name
@@ -122,20 +133,20 @@ build_rule_index() {
     while IFS= read -r name; do
         name="$(trim_rule_name "$name")"
         [[ -n "$name" ]] || continue
-        case "$name" in
-            caelestia-opacity|caelestia-dialogs|caelestia-pip|caelestia-xwaylandvideobridge) continue ;;
-        esac
+        if is_our_rule "$name"; then
+            continue
+        fi
         add_to_rule_index "$name"
     done <<< "$(printf '%s' "$current" | tr ',' '\n')"
     while IFS= read -r name; do
         name="$(trim_rule_name "$name")"
         [[ -n "$name" ]] || continue
-        case "$name" in
-            caelestia-opacity|caelestia-dialogs|caelestia-pip|caelestia-xwaylandvideobridge) continue ;;
-        esac
+        if is_our_rule "$name"; then
+            continue
+        fi
         add_to_rule_index "$name"
     done <<< "$groups"
-    for name in "${RULE_GROUPS[@]}"; do
+    for name in "${CAELESTIA_RULE_GROUPS[@]}"; do
         add_to_rule_index "$name"
     done
 }
@@ -154,6 +165,20 @@ if [[ "${APPLY_WINDOW_RULES:-true}" == "true" ]]; then
     # KWin evaluates rules top to bottom and resolves attribute conflicts by first
     # match wins. Specific rules must come before general catch-all rules so their
     # properties are not overridden.
+
+    # The shell's own toplevels - Nexus, the what's-new window, file dialogs - are not
+    # applications. When the launcher takes the keyboard they go inactive while nothing
+    # was switched away from, and at 95% the wallpaper bleeds through the settings
+    # window: it visibly lightens over a bright wallpaper. They stay opaque instead.
+    # This rule heads the list because the catch-all below sets the same keys and the
+    # first matching rule wins, so an exemption written after it would never be reached.
+    apply_rule_group "caelestia-shell-opacity" "opaque shell windows" \
+        Description "Caelestia: keep the shell's own windows opaque" \
+        types 33 \
+        wmclass quickshell \
+        wmclassmatch 2 \
+        opacityinactive 100 \
+        opacityinactiverule 2
 
     # xwaylandvideobridge creates an idle dummy window marked as a dialog (types=32)
     # or normal window (types=1) with a black background. Force it completely

@@ -357,6 +357,7 @@ PageBase {
         }
 
         NavRow {
+            last: true
             visible: !root.branchDataLoading
             icon: "folder"
             label: qsTr("Open Backup Folder")

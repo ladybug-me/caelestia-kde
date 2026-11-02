@@ -10,6 +10,17 @@ QtObject {
     // { id, name, z, componentUrl, pluginId }
     property var widgets: []
 
+    // Bumped on every change of `widgets`. Desktops follow it to reload their
+    // widget loaders, since a Repeater bound to a plain array keeps its delegates.
+    property int revision: 0
+
+    // Copy of `widgets` whose identity changes with `revision`, so a Repeater
+    // rebuilds its delegates instead of keeping the ones of the previous list.
+    readonly property var widgetList: {
+        root.revision;
+        return root.widgets.slice();
+    }
+
     readonly property var byId: {
         const map = {};
         for (const widget of root.widgets)
@@ -32,13 +43,16 @@ QtObject {
         for (const spec of (specs ?? []))
             next.push(Object.assign({ pluginId: pluginId }, spec));
         root.widgets = next;
+        root.revision++;
     }
 
     function unregister(pluginId: string): void {
         root.widgets = root.widgets.filter(widget => widget.pluginId !== pluginId);
+        root.revision++;
     }
 
     function clear(): void {
         root.widgets = [];
+        root.revision++;
     }
 }

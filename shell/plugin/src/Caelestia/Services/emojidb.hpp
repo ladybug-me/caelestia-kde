@@ -32,7 +32,7 @@ public:
     [[nodiscard]] int count() const;
 
     Q_INVOKABLE QVariantList getSortedItems(const QStringList& favourites, int limit = 500) const;
-    Q_INVOKABLE QVariantList search(const QString& text, int limit = 500) const;
+    Q_INVOKABLE QVariantList search(const QString& text, int limit = 500, const QStringList& favourites = {}) const;
     Q_INVOKABLE void recordUsage(const QString& ch);
     Q_INVOKABLE int getFrequency(const QString& ch) const;
 

@@ -8,6 +8,7 @@ import Caelestia
 import Caelestia.Config
 import qs.components
 import qs.components.containers
+import qs.components.controls
 import qs.services
 import qs.utils
 import qs.modules.launcher.services
@@ -15,6 +16,18 @@ import qs.modules.nexus.common
 
 PageBase {
     id: root
+
+    // Not an Item, so it cannot be a child of the ColumnLayout that PageBase is.
+    readonly property Variants webSearchOptions: Variants {
+        model: WebSearch.providers
+
+        MenuItem {
+            required property var modelData
+
+            text: modelData.name
+            value: modelData.id
+        }
+    }
 
     title: qsTr("Apps")
 
@@ -114,6 +127,29 @@ PageBase {
             label: qsTr("All apps")
             status: qsTr("Browse installed apps, set favorites and hidden")
             onClicked: root.nState.openSubPage(1)
+        }
+
+        SectionHeader {
+            text: qsTr("Search")
+        }
+
+        SelectRow {
+            first: true
+            last: true
+            Layout.fillWidth: true
+            label: qsTr("Web search engine")
+            subtext: qsTr("Engine behind the launcher's web search row")
+            fallbackIcon: "travel_explore"
+            fallbackText: WebSearch.currentName
+            active: {
+                const options = webSearchOptions.instances;
+                for (let i = 0; i < options.length; i++)
+                    if (options[i].value === WebSearch.currentId)
+                        return options[i];
+                return null;
+            }
+            menuItems: webSearchOptions.instances
+            onSelected: item => WebSearch.setProvider(item.value)
         }
     }
 

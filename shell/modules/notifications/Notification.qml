@@ -439,7 +439,7 @@ StyledRect {
                 }
             }
 
-            ButtonRow {
+            Column {
                 id: actions
 
                 anchors.left: body.left
@@ -456,26 +456,15 @@ StyledRect {
                     }
                 }
 
-                IconButton {
-                    isRound: true
-                    shapeMorph: true
-                    fillWidth: root.modelData.actions.length === 0
-                    inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
-                    inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
-                    icon: "close"
-                    padding: Tokens.padding.extraSmall
-                    onClicked: root.modelData.close()
-                }
-
                 Repeater {
                     model: root.modelData.actions
 
                     TextButton {
                         required property var modelData
 
+                        width: actions.width
                         isRound: true
                         shapeMorph: true
-                        fillWidth: true
                         inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
                         inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
                         text: modelData.text
@@ -491,24 +480,54 @@ StyledRect {
                     }
                 }
 
-                IconButton {
-                    isRound: true
-                    shapeMorph: true
-                    fillWidth: root.modelData.actions.length === 0
-                    inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
-                    inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
-                    icon: copyTimer.running ? "inventory" : "content_copy"
-                    padding: Tokens.padding.extraSmall
-                    onClicked: {
-                        Quickshell.clipboardText = root.modelData.body;
-                        copyTimer.restart();
+                ButtonRow {
+                    width: actions.width
+
+                    spacing: Tokens.spacing.extraSmall
+
+                    IconButton {
+                        isRound: true
+                        shapeMorph: true
+                        fillWidth: root.modelData.actions.length === 0
+                        inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+                        inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
+                        icon: "notifications_off"
+                        padding: Tokens.padding.extraSmall
+                        onClicked: Notifs.muteApp(root.modelData.appName)
+                        label.animate: true
+                        Accessible.name: qsTr("Turn off notifications from %1").arg(root.modelData.appName)
                     }
-                    label.animate: true
 
-                    Timer {
-                        id: copyTimer
+                    IconButton {
+                        isRound: true
+                        shapeMorph: true
+                        fillWidth: root.modelData.actions.length === 0
+                        inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+                        inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
+                        icon: "close"
+                        padding: Tokens.padding.extraSmall
+                        onClicked: root.modelData.close()
+                    }
 
-                        interval: 3000
+                    IconButton {
+                        isRound: true
+                        shapeMorph: true
+                        fillWidth: root.modelData.actions.length === 0
+                        inactiveColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+                        inactiveOnColour: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurfaceVariant
+                        icon: copyTimer.running ? "inventory" : "content_copy"
+                        padding: Tokens.padding.extraSmall
+                        onClicked: {
+                            Quickshell.clipboardText = root.modelData.body;
+                            copyTimer.restart();
+                        }
+                        label.animate: true
+
+                        Timer {
+                            id: copyTimer
+
+                            interval: 3000
+                        }
                     }
                 }
             }

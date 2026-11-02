@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="80" alt="Caelestia logo" />
+<img src="assets/caelestia.svg" width="80" alt="Caelestia logo" />
 
 # caelestia-kde
 
@@ -9,6 +9,7 @@
 [![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?logo=ubuntu&logoColor=white&style=for-the-badge&labelColor=101418)](https://ubuntu.com)
 [![KDE Plasma](https://img.shields.io/badge/Plasma_6-1D99F3?logo=kde&logoColor=white&style=for-the-badge&labelColor=101418)](https://kde.org/plasma-desktop)
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-9bd0cc?style=for-the-badge&labelColor=101418)](LICENSE)
+[![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white&style=for-the-badge&labelColor=101418)](https://discord.gg/C6ECdUJcAS)
 
 </div>
 
@@ -55,23 +56,24 @@ instead.
 
 | Shortcut | Action |
 | --- | --- |
-| `Super` | App launcher |
-| `Super + /` | Keybind cheatsheet |
-| `Super + Enter` | Terminal |
-| `Super + Tab` | Overview |
-| `Super + 1-5` | Switch workspace |
-| `Super + B` | Notification sidebar |
-| `Super + V` | Clipboard history |
-| `Super + Shift + S` | Screenshot |
-| `Super + Shift + A` | Google Lens |
-| `Super + Shift + D` | Text recognition |
-| `Super + Ctrl + S` | Screen recorder |
-| `Super + Shift + C` | Color picker |
-| `Super + Shift + V` | Emoji selector |
+| `Meta` | App launcher |
+| `Meta + /` | Keybind cheatsheet |
+| `Meta + X` | Wallpaper Switcher |
+| `Meta + Enter` | Terminal |
+| `Meta + Tab` | Overview |
+| `Meta + 1-5` | Switch workspace |
+| `Meta + B` | Notification sidebar |
+| `Meta + V` | Clipboard history |
+| `Meta + Shift + S` | Screenshot |
+| `Meta + Shift + A` | Google Lens |
+| `Meta + Shift + D` | Text recognition |
+| `Meta + Ctrl + S` | Screen recorder |
+| `Meta + Shift + C` | Color picker |
+| `Meta + Shift + V` | Emoji selector |
 
 ## Configuring
 
-Open Nexus (`Super`, then `>Settings`).
+Open Nexus (`Meta`, then `>Settings`).
 
 - Appearance: wallpaper, colors, fonts, and the wallpaper slideshow
 - Panels: every bar element, dashboard, launcher, sidebar and overview
@@ -130,9 +132,11 @@ assets/        the logo and screenshots used by the docs
 - [Bali10050](https://github.com/Bali10050/Darkly) - Darkly Qt
 - [wrymt](https://github.com/wrymt/darkly-gtk) - Darkly GTK
 - [Haidir](https://bitbucket.org/dirn-typo/yet-another-monochrome-icon-set) - icon set
+- [liixini](https://github.com/liixini/skwd-wall) - skwd-wall
+- [luisbocanegra](https://github.com/luisbocanegra/plasma-audio-visualizer) - plasma-audio-visualizer
 - [dim-ghub](https://github.com/dim-ghub/caelestia-shell) - v2.0.0 features
 - [dharmx](https://github.com/dharmx/walls) - default wallpapers
-  
+
 ## License
 
 GPL-3.0-or-later - see [LICENSE](LICENSE).

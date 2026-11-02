@@ -81,7 +81,7 @@ StyledRect {
         BarComponents.GithubStore.tokenNoticeShown = true;
         console.warn("[GitHubWidget] no token configured");
         Toaster.toast(qsTr("GitHub widget needs a token"),
-            qsTr("Add a personal access token in Settings → Panels → Taskbar → GitHub."),
+            qsTr("Add a personal access token in Settings -> Panels -> Taskbar -> GitHub."),
             "key_off", Toast.Warning);
     }
 

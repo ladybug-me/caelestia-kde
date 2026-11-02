@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls
 import Caelestia.Config
@@ -8,32 +10,61 @@ StackView {
     id: root
 
     required property NexusState nState
-    default property list<Component> pages
+    default property list<QtObject> pages
     readonly property int animMovement: Tokens.padding.extraExtraLarge * 2
+    readonly property var slotMap: ({})
 
-    function openSubPage(idx: int, immediate: bool): void {
-        const page = pages[idx];
+    function buildSlotMap(): void {
+        for (let i = 0; i < pages.length; i++) {
+            const item = pages[i];
+            if (!item)
+                continue;
+            if (item.component !== undefined) {
+                const s = item.slot >= 0 ? item.slot : i;
+                slotMap[s] = item.component;
+                if (item.key)
+                    slotMap[item.key] = item.component;
+            } else {
+                slotMap[i] = item;
+            }
+        }
+    }
+
+    function openSubPage(target: var, immediate: bool): void {
+        const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
         if (page) {
             push(page, {
                 nState
             }, immediate ? StackView.Immediate : StackView.PushTransition);
         } else {
-            console.warn(logCat, "Attempted to open invalid sub-page index", idx);
+            console.warn(logCat, "Attempted to open invalid sub-page slot/key:", target);
             nState.closeSubPage();
+        }
+    }
+
+    function switchToSlot(target: var): void {
+        const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
+        if (page) {
+            root.popToIndex(0, StackView.Immediate);
+            root.replace(page, {
+                nState
+            }, StackView.Immediate);
         }
     }
 
     clip: busy
 
     Component.onCompleted: {
-        openSubPage(0, true);
+        root.buildSlotMap();
+        const baseSlot = nState.activeSubPageSlot;
+        root.openSubPage(baseSlot, true);
         if (nState.pendingSubPageIdx >= 0) {
             const pending = nState.pendingSubPageIdx;
             nState.pendingSubPageIdx = -1;
             nState.subPageIdxStack.push(pending);
         }
         for (const page of nState.subPageIdxStack)
-            openSubPage(page, true);
+            root.openSubPage(page, true);
     }
 
     pushEnter: Transition {
@@ -110,8 +141,12 @@ StackView {
     }
 
     Connections {
-        function onSubPageOpened(idx: int): void {
-            root.openSubPage(idx, false);
+        function onSubCategorySelected(target: var): void {
+            root.switchToSlot(target);
+        }
+
+        function onSubPageOpened(target: var): void {
+            root.openSubPage(target, false);
         }
 
         function onSubPageClosed(): void {
@@ -120,6 +155,10 @@ StackView {
                 return;
             }
             root.pop();
+        }
+
+        function onSubPagesCleared(): void {
+            root.popToIndex(0, StackView.Immediate);
         }
 
         target: root.nState

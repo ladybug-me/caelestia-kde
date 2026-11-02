@@ -221,6 +221,16 @@ THEME_CONF_DEST="$THEME_DIR/theme.conf"
 MAX_THEME_CONF_BYTES=$((1024 * 1024))
 
 if copy_user_file "$THEME_CONF_SRC" "$THEME_CONF_DEST" "$MAX_THEME_CONF_BYTES"; then
+    chmod 644 "$THEME_CONF_DEST"
+    echo "✓ Synced theme.conf"
+else
+    echo "No exported theme.conf, keeping the installed one."
+fi
+
+# The shipped theme.conf says Linux, so the system information is written even
+# when the user never exported a theme: otherwise the login screen would show a
+# stale name and host on every other machine.
+if [[ -f "$THEME_CONF_DEST" ]]; then
     sys_os="Linux"
     if [[ -f /etc/os-release ]]; then
         sys_os=$(grep -oP '^PRETTY_NAME="\K[^"]+' /etc/os-release || grep -oP '^PRETTY_NAME=\K.+' /etc/os-release || echo "Linux")
@@ -232,11 +242,6 @@ if copy_user_file "$THEME_CONF_SRC" "$THEME_CONF_DEST" "$MAX_THEME_CONF_BYTES"; 
 
     sed -i "s/^os=.*/os=$sys_os_escaped/" "$THEME_CONF_DEST"
     sed -i "s/^host=.*/host=$sys_host_escaped/" "$THEME_CONF_DEST"
-
-    chmod 644 "$THEME_CONF_DEST"
-    echo "✓ Synced theme.conf"
-else
-    echo "No theme.conf found, leaving existing theme.conf unchanged."
 fi
 
 WALLPAPER_SRC="$CAEL_STATE/wallpaper/current"

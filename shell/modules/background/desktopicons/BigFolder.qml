@@ -131,6 +131,7 @@ Item {
                 entry: slotItem.modelData
                 materialYou: root.controller.materialYou
                 vibrant: root.controller.vibrant
+                vibrancy: root.controller.vibrancy
                 scale: slotArea.pressed ? 0.92 : slotArea.containsMouse ? 1.08 : 1
 
                 Behavior on scale {
@@ -235,6 +236,7 @@ Item {
                     visible: !!entry
                     materialYou: root.controller.materialYou
                     vibrant: root.controller.vibrant
+                    vibrancy: root.controller.vibrancy
                 }
             }
         }

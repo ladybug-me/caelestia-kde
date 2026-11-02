@@ -14,6 +14,12 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/darkly.sh"
 # shellcheck source=scripts/lib/matugen.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/matugen.sh"
+# shellcheck source=scripts/lib/skwd-wall.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/skwd-wall.sh"
+# shellcheck source=scripts/lib/plasma-audio-visualizer.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/plasma-audio-visualizer.sh"
+# shellcheck source=scripts/lib/fonts.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/fonts.sh"
 
 darkly_rpm_asset_url() {
     local release_json ver url
@@ -54,6 +60,8 @@ CORE_PACKAGES=(
     kf6-networkmanager-qt-devel kpipewire kpipewire-devel
     libepoxy-devel libdrm-devel
 
+    kf6-krunner-devel kf6-baloo
+
     libqalculate libqalculate-devel libsecret vulkan-headers ksshaskpass libX11-devel
 
     protobuf-devel protobuf-compiler openssl-devel avahi
@@ -70,14 +78,15 @@ THEME_PACKAGES=(
 )
 
 UTILITY_PACKAGES=(
-    fuzzel swappy ddcutil NetworkManager ImageMagick
+    fuzzel swappy ddcutil NetworkManager iw ImageMagick
     tesseract tesseract-langpack-eng spectacle gpu-screen-recorder
     slurp grim brightnessctl power-profiles-daemon
     xdg-utils sassc bat ripgrep xdg-user-dirs
+    plasma-print-manager plasma-keyboard
 )
 
 COPR_CORE=(app2unit libcava)
-COPR_SHELL=(quickshell-git matugen)
+COPR_SHELL=(quickshell-git matugen skwd-wall-v2 skwd-lens skwd-paper-plasma plasma-audio-visualizer)
 COPR_UTILS=()
 
 PACKAGES=()
@@ -88,7 +97,7 @@ case "$PACKAGE_GROUP" in
     themes) PACKAGES=("${THEME_PACKAGES[@]}");  COPR_PKGS=() ;;
     utils)  PACKAGES=("${UTILITY_PACKAGES[@]}"); COPR_PKGS=("${COPR_UTILS[@]}") ;;
     all|*)  PACKAGES=("${CORE_PACKAGES[@]}" "${SHELL_PACKAGES[@]}" "${THEME_PACKAGES[@]}" "${UTILITY_PACKAGES[@]}")
-            COPR_PKGS=("quickshell-git" "gpu-screen-recorder" "app2unit" "starship" "libcava" "wl-clip-persist" "matugen") ;;
+            COPR_PKGS=("quickshell-git" "gpu-screen-recorder" "app2unit" "starship" "libcava" "wl-clip-persist" "matugen" "skwd-wall-v2" "plasma-audio-visualizer") ;;
 esac
 
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "core" ]]; then
@@ -200,6 +209,16 @@ for pkg in "${COPR_PKGS[@]}"; do
                 COPR_FAILED="no"
             fi
             ;;
+        skwd-wall-v2|skwd-wall|skwd-lens|skwd-paper-plasma)
+            if install_skwd_wall_fedora; then
+                COPR_FAILED="no"
+            fi
+            ;;
+        plasma-audio-visualizer)
+            if install_plasma_audio_visualizer_fedora; then
+                COPR_FAILED="no"
+            fi
+            ;;
         gpu-screen-recorder)
             # Install the package that was asked for: the COPR also ships -ui, and
             # reporting success for it would leave gpu-screen-recorder itself missing.
@@ -302,6 +321,10 @@ unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/font
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
 
 fc-cache -f
+
+# SDDM runs as its own user and never reads the user's font directory, so the
+# fonts above are mirrored system-wide.
+mirror_login_fonts || FAILED_PKGS+=("Login screen fonts")
 
 info "Installing Darkly KDE Theme from COPR..."
 if [[ "$INSTALL_DARKLY" == "true" ]]; then

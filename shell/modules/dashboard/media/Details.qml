@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Services.Mpris
@@ -10,7 +12,11 @@ import qs.services
 ColumnLayout {
     id: root
 
+    property bool textAnimated: false
+
     spacing: Tokens.spacing.extraSmall
+
+    Component.onCompleted: Qt.callLater(() => root.textAnimated = true)
 
     Timer {
         running: Players.active?.isPlaying ?? false
@@ -25,7 +31,7 @@ ColumnLayout {
         text: Players.active?.trackTitle ?? ""
         font: Tokens.font.title.large
         elide: Text.ElideRight
-        animate: true
+        animate: root.textAnimated
     }
 
     StyledText {
@@ -34,7 +40,7 @@ ColumnLayout {
         color: Colours.palette.m3onSurfaceVariant
         font: Tokens.font.title.medium
         elide: Text.ElideRight
-        animate: true
+        animate: root.textAnimated
     }
 
     StyledText {
@@ -43,7 +49,7 @@ ColumnLayout {
         color: Colours.palette.m3secondary
         font: Tokens.font.title.medium
         elide: Text.ElideRight
-        animate: true
+        animate: root.textAnimated
     }
 
     RowLayout {

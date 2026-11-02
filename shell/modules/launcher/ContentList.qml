@@ -128,7 +128,7 @@ Item {
     }
 
     Behavior on state {
-        enabled: root.visibilities.launcher && !root.visibilities.skipLauncherAnim && root.opacity === 1 && !Visibilities.launcherInitialSearch
+        enabled: root.visibilities.launcher && !root.visibilities.skipLauncherAnim && root.opacity === 1
 
         SequentialAnimation {
             Anim {

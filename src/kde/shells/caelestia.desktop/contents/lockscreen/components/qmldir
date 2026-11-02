@@ -1,6 +1,8 @@
 WeatherCard 1.0 WeatherCard.qml
 CaelestiafetchCard 1.0 CaelestiafetchCard.qml
 MediaCard 1.0 MediaCard.qml
+ShellCall 1.0 ShellCall.qml
+NotifSync 1.0 NotifSync.qml
 ResourcesCard 1.0 ResourcesCard.qml
 NotifDock 1.0 NotifDock.qml
 ClockWidget 1.0 ClockWidget.qml

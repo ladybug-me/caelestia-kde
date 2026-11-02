@@ -113,7 +113,7 @@ ColumnLayout {
                 if (a.active !== b.active)
                     return b.active - a.active;
                 return b.strength - a.strength;
-            }).slice(0, 8)
+            })
         }
 
         StyledRect {

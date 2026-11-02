@@ -59,6 +59,8 @@ export QML2_IMPORT_PATH="$QML_IMPORT_DEFAULT${QML2_IMPORT_PATH:+:$QML2_IMPORT_PA
 export CAELESTIA_LIB_DIR="${CAELESTIA_LIB_DIR:-$LIB_DIR_DEFAULT}"
 export CAELESTIA_SHELL_CONFIG="${CAELESTIA_SHELL_CONFIG:-$SHELL_CONFIG_DEFAULT}"
 
+export DISABLE_MANGOHUD=1
+
 # helper <name> [args...]
 #
 # Runs the command implementing a subcommand. They live beside this file in both installs.

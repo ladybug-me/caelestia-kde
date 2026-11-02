@@ -105,8 +105,10 @@ test_the_popup_renders_every_type_a_manifest_can_declare() {
         "a field for a text setting"
     assert_contains "$popup" 'visible: delegateRow.modelData.type === "number"' \
         "and a spinner for a number"
-    assert_contains "$popup" 'pSettings.setValue(delegateRow.modelData.id' \
+    assert_contains "$popup" 'root.setValue(delegateRow.modelData.id' \
         "every row should store its value under the setting's own id"
+    assert_contains "$popup" 'root.valueOf(delegateRow.modelData.id' \
+        "and read it back from the values the popup keeps, so the row follows the change"
 }
 
 test_the_settings_schema_is_documented() {

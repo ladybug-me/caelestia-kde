@@ -15,11 +15,10 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    property bool showLogout: false
-
-    title: qsTr("Window Tiling")
-    isSubPage: true
-
+    readonly property string setupScript: Quickshell.shellPath("scripts/krohnkite_setup.sh")
+    property bool updateAvailable: false
+    property bool updating: false
+    property string latestVersion: ""
 
     property list<MenuItem> layoutItems: [
         MenuItem { text: qsTr("BTree"); visible: KrohnkiteConfig.binaryTreeLayoutEnabled },
@@ -34,34 +33,89 @@ PageBase {
         MenuItem { text: qsTr("Spiral"); visible: KrohnkiteConfig.spiralLayoutEnabled },
         MenuItem { text: qsTr("Tile"); visible: KrohnkiteConfig.tileLayoutEnabled }
     ]
-
     property list<string> layoutValues: [
         "BTree", "Monocle", "Floating", "Quarter", "Spread",
         "Stacked", "Stair", "Columns", "ThreeColumn", "Spiral", "Tile"
     ]
 
+    function checkForUpdates(): void {
+        if (!checkProc.running)
+            checkProc.running = true;
+    }
+
+    function triggerUpdate(): void {
+        if (!root.updating && !updateProc.running) {
+            root.updating = true;
+            updateProc.running = true;
+        }
+    }
+
+    title: qsTr("Window Tiling")
+    isSubPage: true
+
     headerActions: [
         IconTextButton {
-            text: qsTr("Save Changes")
-            icon: "check"
+            visible: root.updateAvailable
+            text: root.updating ? qsTr("Updating...") : (root.latestVersion !== "" ? qsTr("Update Krohnkite (v%1)").arg(root.latestVersion) : qsTr("Update Krohnkite"))
+            icon: "update"
             type: TextButton.Filled
-            onClicked: {
-                KrohnkiteConfig.apply()
-                showLogout = true;
+            enabled: !root.updating
+            onClicked: root.triggerUpdate()
+        }
+    ]
+
+    Component.onCompleted: {
+        root.checkForUpdates();
+    }
+
+    resources: [
+        Process {
+            id: checkProc
+
+            command: ["bash", root.setupScript, "--check-update"]
+            stdout: StdioCollector {
+                onStreamFinished: {
+                    const out = text.trim();
+                    if (out !== "") {
+                        try {
+                            const info = JSON.parse(out);
+                            root.updateAvailable = Boolean(info.update_available);
+                            root.latestVersion = info.latest || "";
+                        } catch (e) {
+                            root.updateAvailable = false;
+                        }
+                    }
+                }
             }
         },
-        IconTextButton {
-            visible: showLogout
-            text: qsTr("Logout to Apply Changes")
-            icon: "logout"
-            type: TextButton.Filled
-            onClicked: restartProcess.running = true
 
-            Process {
-                id: restartProcess
+        Process {
+            id: updateProc
 
-                command: ["bash", "-c", "nohup bash -c 'qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null || true' >/dev/null 2>&1"]
+            command: ["bash", root.setupScript, "--update"]
+            onExited: exitCode => {
+                root.updating = false;
+                if (exitCode === 0) {
+                    root.updateAvailable = false;
+                    root.checkForUpdates();
+                }
             }
+        },
+
+        Process {
+            id: installProc
+
+            command: ["bash", root.setupScript, "--install"]
+            onExited: exitCode => {
+                if (exitCode === 0)
+                    root.checkForUpdates();
+            }
+        },
+
+        Process {
+            id: disableProc
+
+            command: ["bash", root.setupScript, "--disable"]
         }
     ]
 
@@ -80,39 +134,15 @@ PageBase {
             onToggled: {
                 GlobalConfig.general.krohnkiteEnabled = checked;
                 GlobalConfig.save();
-                showLogout = true;
-                Quickshell.execDetached(["bash", "-c", `
-                    if [[ "${checked ? 'true' : 'false'}" == "true" ]]; then
-                        qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript "krohnkite" 2>/dev/null || true
-                        if ! kpackagetool6 -t KWin/Script -s krohnkite >/dev/null 2>&1; then
-                            if command -v kpackagetool6 >/dev/null 2>&1; then
-                                notify-send "Installing Krohnkite..." "Please stay connected to the internet..."
-                                tmpdir="$(mktemp -d)"
-                                kwinscript_url="$(curl -sL https://codeberg.org/api/v1/repos/anametologin/Krohnkite/releases/latest | grep -oP '"browser_download_url":\\s*"\\K[^"]+\\.kwinscript' | head -1)"
-                                if [[ -n "$kwinscript_url" ]] && curl -sL "$kwinscript_url" -o "$tmpdir/krohnkite.kwinscript"; then
-                                    kpackagetool6 -t KWin/Script -i "$tmpdir/krohnkite.kwinscript" 2>/dev/null || true
-                                    notify-send "Installation Completed..." "Krohnkite has been installed successfully..."
-                                else
-                                    notify-send "Installation Failed..." "Krohnkite could not be downloaded. Please try again..."
-                                fi
-                                rm -rf "$tmpdir"
-                            fi
-                        fi
-                        kwriteconfig6 --file kwinrc --group "Plugins" --key "krohnkiteEnabled" "true" 2>/dev/null || true
-                        qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
-                    else
-                        qdbus6 org.kde.kglobalaccel /component/kwin org.kde.kglobalaccel.Component.invokeShortcut "KrohnkiteFloatAll" 2>/dev/null || true
-                        sleep 0.1
-                        qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript "krohnkite" 2>/dev/null || true
-                        kwriteconfig6 --file kwinrc --group "Plugins" --key "krohnkiteEnabled" "false" 2>/dev/null || true
-                        qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
-                    fi
-                `]);
+                if (checked) {
+                    installProc.running = true;
+                } else {
+                    disableProc.running = true;
+                }
             }
         }
 
         SelectRow {
-            last: true
             label: qsTr("Switch Layout")
             subtext: qsTr("Triggers the KWin shortcut to switch layout")
             menuItems: root.layoutItems
@@ -127,6 +157,33 @@ PageBase {
                 GlobalConfig.general.krohnkiteLastLayout = layoutName;
                 GlobalConfig.save();
                 Quickshell.execDetached(["qdbus6", "org.kde.kglobalaccel", "/component/kwin", "org.kde.kglobalaccel.Component.invokeShortcut", "Krohnkite" + layoutName + "Layout"]);
+            }
+        }
+
+        ToggleRow {
+            Layout.fillWidth: true
+            last: true
+            text: qsTr("Magic Lamp Minimize")
+            subtext: qsTr("Enable the magic lamp effect when minimizing windows")
+            reset: ({
+                node: GlobalConfig.general,
+                setting: "magicLampEnabled"
+            })
+            checked: Config.general.magicLampEnabled
+            onToggled: {
+                GlobalConfig.general.magicLampEnabled = checked;
+                GlobalConfig.save();
+                Quickshell.execDetached(["bash", "-c", `
+                    kwriteconfig6 --file kwinrc --group "Plugins" --key "magiclampEnabled" "${checked ? 'true' : 'false'}" 2>/dev/null || true
+                    if [[ "${checked ? 'true' : 'false'}" == "true" ]]; then
+                        kwriteconfig6 --file kwinrc --group "Plugins" --key "squashEnabled" "false" 2>/dev/null || true
+                        qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect "squash" 2>/dev/null || true
+                        qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.loadEffect "magiclamp" 2>/dev/null || true
+                    else
+                        qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.unloadEffect "magiclamp" 2>/dev/null || true
+                    fi
+                    qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
+                `]);
             }
         }
 

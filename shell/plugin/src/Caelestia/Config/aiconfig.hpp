@@ -72,6 +72,11 @@ class AiConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, enableOpencodeGo, false)
     CONFIG_PROPERTY(QString, opencodeGoUrl, u"https://opencode.ai/zen/go/v1"_s)
     CONFIG_PROPERTY(QString, defaultOpencodeGoModel, u""_s)
+
+    CONFIG_PROPERTY(bool, enableCheaperInference, false)
+    CONFIG_PROPERTY(QString, cheaperInferenceApiKey, u""_s)
+    CONFIG_PROPERTY(QString, cheaperInferenceUrl, u"https://api.cheaperinference.com/v1"_s)
+    CONFIG_PROPERTY(QString, defaultCheaperInferenceModel, u""_s)
 };
 
 } // namespace caelestia::config

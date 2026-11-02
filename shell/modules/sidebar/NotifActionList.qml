@@ -97,7 +97,8 @@ Item {
         RowLayout {
             id: actionList
 
-            anchors.fill: parent
+            width: flickable.contentWidth
+            height: flickable.height
             spacing: Tokens.spacing.small
 
             Repeater {
@@ -116,7 +117,7 @@ Item {
 
                     required property var modelData
 
-                    Layout.fillWidth: true
+                    Layout.fillWidth: actionList.implicitWidth <= flickable.width
                     Layout.fillHeight: true
                     implicitWidth: actionInner.implicitWidth + Tokens.padding.medium * 2
                     implicitHeight: actionInner.implicitHeight + Tokens.padding.small

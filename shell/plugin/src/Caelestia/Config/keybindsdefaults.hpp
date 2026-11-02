@@ -6,8 +6,9 @@
 namespace caelestia::config {
 
 inline QJsonObject defaultKeybinds() {
-    return QJsonObject{ { QStringLiteral("nexus"), QStringLiteral("") },
-        { QStringLiteral("showall"), QStringLiteral("") }, { QStringLiteral("dashboard"), QStringLiteral("") },
+    return QJsonObject{ { QStringLiteral("nexus"), QStringLiteral("Meta+U") },
+        { QStringLiteral("nexusBack"), QStringLiteral("Alt+Left") }, { QStringLiteral("showall"), QStringLiteral("") },
+        { QStringLiteral("dashboard"), QStringLiteral("") },
         { QStringLiteral("screenshot"), QStringLiteral("Meta+Shift+S") },
         { QStringLiteral("overview"), QStringLiteral("Meta+Tab") },
         { QStringLiteral("googleLens"), QStringLiteral("Meta+Shift+A") },
@@ -30,6 +31,8 @@ inline QJsonObject defaultKeybinds() {
         { QStringLiteral("github-desktop"), QStringLiteral("Meta+G") },
         { QStringLiteral("nemo"), QStringLiteral("Meta+Alt+E") },
         { QStringLiteral("kcolorpicker"), QStringLiteral("Meta+Shift+C") },
+        { QStringLiteral("skwd-wall"), QStringLiteral("Meta+X") },
+        { QStringLiteral("wallpaperRandom"), QStringLiteral("Meta+Shift+X") },
         { QStringLiteral("krohnkiteFocusUp"), QStringLiteral("Meta+Up") },
         { QStringLiteral("krohnkiteFocusDown"), QStringLiteral("Meta+Down") },
         { QStringLiteral("krohnkiteFocusLeft"), QStringLiteral("Meta+Left") },

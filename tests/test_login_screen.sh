@@ -11,7 +11,7 @@ UNINSTALL_SCRIPT="$REPO_ROOT/uninstall.sh"
 SYNC_SCRIPT="$REPO_ROOT/src/sddm/sync.sh"
 CLI="$REPO_ROOT/src/bin/caelestia"
 
-PLASMA_LOGIN_HOOK="sudo /usr/local/bin/caelestia-greeter-sync --posthook"
+PLASMA_LOGIN_HOOK="sudo -n /usr/local/bin/caelestia-greeter-sync --posthook"
 SDDM_HOOK="sudo /usr/share/sddm/themes/caelestia/scripts/sync.sh --posthook"
 
 extract_python_block() {
@@ -101,6 +101,34 @@ test_installer_replaces_its_own_hook_in_place() {
     python3 "$dir/install.py" "$dir/cli.json" "$PLASMA_LOGIN_HOOK" >/dev/null 2>&1
     assert_eq "$wallpaper" "$(json_get "$dir/cli.json" wallpaper postHook)" "a second run should be idempotent"
     assert_eq "True" "$(json_get "$dir/cli.json" unrelated keep)" "keys this script does not know should be left alone"
+}
+
+test_the_registered_hook_cannot_block_on_a_password_prompt() {
+    # A wallpaper change runs the hook with no terminal of its own. `sudo` without -n
+    # tries to prompt there and either fails with nothing useful in the log or waits,
+    # so the hook is registered in a form that only ever succeeds or fails.
+    assert_contains "$(cat "$SDDM_SCRIPT")" 'POSTHOOK_CMD="sudo -n $SYNC_SCRIPT --posthook"' \
+        "the hook must be registered with sudo -n, in that exact form"
+}
+
+test_a_hook_written_before_sudo_n_is_still_recognised() {
+    have_python || return 0
+
+    local dir
+    dir="$(new_tmpdir)"
+    printf '%s\n' '{
+    "wallpaper": { "postHook": "sudo /usr/local/bin/caelestia-greeter-sync --posthook" },
+    "theme": { "postHook": "sudo -n /usr/local/bin/caelestia-greeter-sync --posthook" }
+}' > "$dir/cli.json"
+
+    extract_python_block "$SDDM_SCRIPT" postHook > "$dir/install.py" || {
+        fail "05-sddm-theme.sh no longer has a posthook python block"
+        return 0
+    }
+    python3 "$dir/install.py" "$dir/cli.json" "$PLASMA_LOGIN_HOOK" >/dev/null 2>&1
+
+    assert_eq "$PLASMA_LOGIN_HOOK" "$(json_get "$dir/cli.json" wallpaper postHook)" \
+        "an install from before -n must not gain a second copy of the helper"
 }
 
 test_uninstall_removes_the_same_hooks_the_installer_writes() {

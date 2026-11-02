@@ -84,11 +84,7 @@ Item {
     readonly property int liveTemp: Math.round(Cpu.temperature ?? 0)
     readonly property int liveRam: Math.round((Memory.percentage ?? 0) * 100)
     readonly property int liveDisk: Math.round((Storage.percentage ?? 0) * 100)
-    readonly property string ipcBin: "PATH=\"${CAELESTIA_BIN_DIR:-$HOME/.local/bin}:$PATH\" caelestia-shell-ipc"
     property var liveMedia: ({})
-    property var liveNotifs: []
-    property double notifsClearedAt: 0
-    property bool isClearingNotifs: false
     property var greetingInfo: getGreeting()
 
     function getLuminance(c) {
@@ -256,25 +252,15 @@ Item {
         }
     }
 
-    Plasma5Support.DataSource {
+    ShellCall {
         id: mprisSource
 
-        function poll() {
-            connectSource(lockScreenUi.ipcBin + " call mpris status");
-        }
-
-        engine: "executable"
-        connectedSources: []
-        onNewData: (source, data) => {
-            var stdout = data["stdout"] || "";
-            disconnectSource(source);
-            if (!stdout) return;
+        onReplied: output => {
             try {
-                var info = JSON.parse(stdout);
-                if (info && typeof info === "object") {
+                const info = JSON.parse(output);
+                if (info && typeof info === "object")
                     lockScreenUi.liveMedia = info;
-                }
-            } catch(e) {}
+            } catch (e) {}
         }
     }
 
@@ -285,87 +271,26 @@ Item {
         repeat: true
         running: true
         triggeredOnStart: true
-        onTriggered: mprisSource.poll()
+        onTriggered: mprisSource.send("mpris status")
     }
 
-    Plasma5Support.DataSource {
+    ShellCall {
         id: mediaActionSource
 
-        readonly property var actionCmds: ({
-            "previous":  lockScreenUi.ipcBin + " call mpris previous",
-            "playPause": lockScreenUi.ipcBin + " call mpris playPause",
-            "next":      lockScreenUi.ipcBin + " call mpris next"
-        })
+        readonly property var actions: ["previous", "playPause", "next"]
 
-        function send(action) {
-            var cmd = actionCmds[action];
-            if (cmd) connectSource(cmd);
+        function sendAction(action) {
+            if (root.actions.includes(action))
+                root.send("mpris " + action);
         }
 
-        engine: "executable"
-        connectedSources: []
-        onNewData: (source, data) => {
-            disconnectSource(source);
-            mprisSource.poll();
-        }
+        onReplied: mprisSource.send("mpris status")
     }
 
-    Plasma5Support.DataSource {
-        id: notifLoader
+    NotifSync {
+        id: notifSync
 
-        function poll() {
-            connectSource("cat ~/.local/state/caelestia/notifs.json 2>/dev/null");
-        }
-
-        engine: "executable"
-        connectedSources: ["cat ~/.local/state/caelestia/notifs.json 2>/dev/null"]
-        onNewData: (source, data) => {
-            var stdout = data["stdout"] || "";
-            disconnectSource(source);
-            if (!stdout) return;
-            if (lockScreenUi.isClearingNotifs) return;
-            try {
-                var arr = JSON.parse(stdout);
-                if (Array.isArray(arr)) {
-                    if (lockScreenUi.notifsClearedAt > 0) {
-                        arr = arr.filter(function(n) {
-                            if (!n || !n.time) return false;
-                            var t = new Date(n.time).getTime();
-                            return !isNaN(t) && t > lockScreenUi.notifsClearedAt;
-                        });
-                    }
-                    lockScreenUi.liveNotifs = arr;
-                }
-            } catch(e) {}
-        }
-    }
-
-    Timer {
-        id: notifTimer
-
-        interval: 3000
-        repeat: true
-        running: true
-        onTriggered: notifLoader.poll()
-    }
-
-    Plasma5Support.DataSource {
-        id: notifActionSource
-
-        function clearAll() {
-            lockScreenUi.notifsClearedAt = Date.now();
-            lockScreenUi.liveNotifs = [];
-            lockScreenUi.isClearingNotifs = true;
-            connectSource(lockScreenUi.ipcBin + " call notifs clear");
-        }
-
-        engine: "executable"
-        connectedSources: []
-        onNewData: (source, data) => {
-            disconnectSource(source);
-            lockScreenUi.isClearingNotifs = false;
-            notifLoader.poll();
-        }
+        active: !lockScreenUi.hideNotifs
     }
 
     Timer {
@@ -690,9 +615,9 @@ Item {
                         clSurfaceFg: lockScreenUi.clSurfaceFg
                         clSurfaceVariantFg: lockScreenUi.clSurfaceVariantFg
                         clPrimary: lockScreenUi.clPrimary
-                        onPreviousRequested: mediaActionSource.send("previous")
-                        onPlayPauseRequested: mediaActionSource.send("playPause")
-                        onNextRequested: mediaActionSource.send("next")
+                        onPreviousRequested: mediaActionSource.sendAction("previous")
+                        onPlayPauseRequested: mediaActionSource.sendAction("playPause")
+                        onNextRequested: mediaActionSource.sendAction("next")
                     }
                 }
 
@@ -901,7 +826,7 @@ Item {
                         Layout.preferredHeight: Math.max(0, landscapeContent.rightCardPool - resourcesCard.Layout.preferredHeight)
                         cardRadius: lockScreenUi.cardRadius
                         centerScale: lockScreenUi.centerScale
-                        liveNotifs: lockScreenUi.liveNotifs
+                        liveNotifs: notifSync.items
                         isCaelestiaMode: lockScreenUi.isCaelestiaMode
                         hideNotifs: lockScreenUi.hideNotifs
                         clSurfaceContainer: lockScreenUi.clCardBg
@@ -911,7 +836,8 @@ Item {
                         clSurfaceFg: lockScreenUi.clSurfaceFg
                         clSurfaceVariantFg: lockScreenUi.clSurfaceVariantFg
                         clOutline: lockScreenUi.clOutline
-                        onClearAllRequested: notifActionSource.clearAll()
+                        onClearAllRequested: notifSync.clearAll()
+                        onDndRequested: enabled => notifSync.setGameQuiet(enabled)
                     }
                 }
             }

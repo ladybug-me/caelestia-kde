@@ -8,7 +8,7 @@ Loader {
 
     property string name: ""
     property string description: ""
-    property string key: ""
+    property var key
     property bool enabled: true
 
     signal pressed()
@@ -35,11 +35,15 @@ Loader {
 
         Caelestia.GlobalShortcut {
             name: root.name
-            key: root.key
             description: root.description
             onActivated: {
                 root.pressed()
                 root.released()
+            }
+
+            Binding on key {
+                when: root.key !== undefined
+                value: root.key ?? ""
             }
         }
     }

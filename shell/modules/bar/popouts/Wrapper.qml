@@ -24,12 +24,16 @@ Item {
     readonly property Item current: (content.item as Content)?.current ?? null
     readonly property bool isDetached: detachedMode.length > 0
     readonly property bool sidebarOpen: popoutState.sidebarOpen
+    // Right-click menus are transient. The type is keyed on currentName so it
+    // survives the close animation; isContextPopout also requires one to be open.
+    readonly property bool currentIsContext: (content.item as Content)?.currentIsContext ?? false
+    readonly property bool isContextPopout: hasCurrent && currentIsContext
     // Popouts excluded from pushing the notification column / sidebar out of the
     // way (Panels.qml) and from visually merging with the sidebar (ContentWindow.qml):
     // hover previews and context menus are transient, so shoving panels around for
     // them feels jittery. The clock popout is deliberately NOT here — the calendar
     // is a real panel-sized popout and displaces notifications like audio/network do.
-    readonly property bool isDockPopout: currentName === "dockhover" || currentName === "dockcontext" || currentName === "dockbgcontext" || currentName === "greeter" || currentName === "greetercontext" || currentName === "activewindow" || currentName === "github" || currentName === "clockcontext" || currentName === "statusiconscontext" || currentName === "workspacescontext" || currentName === "traycontext" || currentName === "githubcontext"
+    readonly property bool isDockPopout: currentName === "dockhover" || currentName === "greeter" || currentName === "activewindow" || currentName === "github" || currentIsContext
     property alias currentName: popoutState.currentName
     property alias hasCurrent: popoutState.hasCurrent
     property alias dockModel: popoutState.dockModel
@@ -54,8 +58,10 @@ Item {
             detachedMode = mode;
             focus = true;
         } else {
-            const pageIdx = PageRegistry.indexForKey(mode);
-            WindowFactory.create(null, { initialPageIdx: pageIdx >= 0 ? pageIdx : 0 });
+            WindowFactory.create(null, {
+                initialPageIdx: mode,
+                initialSubPageIdx: PageRegistry.defaultSubPageForKey(mode)
+            });
             close();
         }
         setAnims(false);

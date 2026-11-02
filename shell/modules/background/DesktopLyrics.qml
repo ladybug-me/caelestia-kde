@@ -32,7 +32,7 @@ Item {
     readonly property string sansFont: GlobalConfig.appearance.font.body.family
     readonly property int alignment: Config.background.desktopLyrics.alignment
     readonly property bool autoHide: Config.background.desktopLyrics.autoHide
-    readonly property bool windowHidesLyrics: Kwin.windowHidesDesktopWidgets(root.screen ? root.screen.name : "", Config.background.visualiser.hideOnAllMonitors)
+    readonly property bool windowHidesLyrics: Kwin.windowHidesDesktopWidgets(root.screen ? root.screen.name : "", false)
     readonly property bool allWindowsFloating: !windowHidesLyrics
     readonly property bool shouldHide: autoHide && windowHidesLyrics
     readonly property bool isPlaying: Players.active?.isPlaying ?? false
@@ -197,6 +197,12 @@ Item {
         function onPostTrackChanged() {
             root.reloadTrack();
         }
+
+        // Browser track fields may arrive after the track-change notification.
+        function onTrackTitleChanged() { root.reloadTrack(); }
+        function onTrackArtistChanged() { root.reloadTrack(); }
+        function onTrackAlbumChanged() { root.reloadTrack(); }
+        function onLengthChanged() { root.reloadTrack(); }
 
         ignoreUnknownSignals: true
 

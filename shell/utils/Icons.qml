@@ -258,10 +258,17 @@ Singleton {
         return name[0].toUpperCase();
     }
 
-    function getTrayIcon(id: string, icon: string): string {
-        for (const sub of GlobalConfig.bar.tray.iconSubs.values)
-            if (sub.id === id)
-                return sub.image ? Qt.resolvedUrl(sub.image) : Quickshell.iconPath(sub.icon);
+    // `key` is the stable alias TrayRegistry names tray icons by; ConfigMigrations
+    // rewrites substitutions written against a notifier id into that form.
+    function getTrayIcon(key: string, icon: string): string {
+        for (const sub of GlobalConfig.bar.tray.iconSubs.values) {
+            if (sub.id !== key)
+                continue;
+            if (sub.image)
+                return Qt.resolvedUrl(sub.image);
+            if (sub.icon)
+                return Quickshell.iconPath(sub.icon);
+        }
 
         if (icon.startsWith("image://icon/"))
             return icon;

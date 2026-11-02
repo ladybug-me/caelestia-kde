@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 
 QtObject {
@@ -7,6 +9,7 @@ QtObject {
     property string activeIcon: icon
     property string activeText: text
     property bool visible: true
+    property var submenu: []
     property var value
 
     signal clicked

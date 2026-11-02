@@ -72,14 +72,17 @@ Variants {
         screen: modelData
         name: "background"
         isDesktopWidget: true
-        color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp) ? "black" : "transparent"
+        color: (Config.background.wallpaperEnabled && wallpaperHasBeenUp && !ContextMenuStore.editMode && !Config.background.disableQuickshellDesktop) ? "black" : "transparent"
         surfaceFormat.opaque: false
         mask: {
-            if (Config.background.wallpaperEnabled || BadApplePlayer.shouldPlay)
-                return null;
-            if (widgetRegions.length > 0)
-                return compositeWidgetMask;
-            return emptyRegion;
+            if (ContextMenuStore.editMode)
+                return emptyRegion;
+            if (Config.background.disableQuickshellDesktop) {
+                if (widgetRegions.length > 0)
+                    return compositeWidgetMask;
+                return emptyRegion;
+            }
+            return null;
         }
         anchors.top: true
         anchors.bottom: true
@@ -99,10 +102,13 @@ Variants {
         }
         TapHandler {
             acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
+            enabled: !Config.background.disableQuickshellDesktop
             onTapped: (eventPoint, button) => {
+                if (Config.background.disableQuickshellDesktop)
+                    return;
                 if (desktopIcons.renameActive)
                     desktopIcons.renamingDelegate?.commitRename();
-                const onEmptyDesktop = Config.background.wallpaperEnabled && !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y);
+                const onEmptyDesktop = !desktopIcons.iconAt(eventPoint.position.x, eventPoint.position.y) && !ContextMenuStore.editMode;
                 if (button === Qt.RightButton && onEmptyDesktop) {
                     ContextMenuStore.openDesktopContextMenu(eventPoint.position.x, eventPoint.position.y, win.modelData.name);
                 } else if (button === Qt.MiddleButton && onEmptyDesktop) {
@@ -125,25 +131,9 @@ Variants {
 
                 asynchronous: true
                 anchors.fill: parent
-                active: Config.background.wallpaperEnabled
+                active: Config.background.wallpaperEnabled && !ContextMenuStore.editMode && !Config.background.disableQuickshellDesktop
+                visible: !ContextMenuStore.editMode
                 sourceComponent: Wallpaper {
-                    screen: win.modelData
-                }
-            }
-            Visualiser {
-                anchors.fill: parent
-                screen: win.modelData
-                wallpaper: wallpaper
-                z: 2
-                visible: true
-            }
-            Loader {
-                id: badApple
-
-                anchors.fill: parent
-                active: BadApplePlayer.shouldPlay
-                z: 2.5
-                sourceComponent: BadAppleOverlay {
                     screen: win.modelData
                 }
             }
@@ -158,12 +148,14 @@ Variants {
         Repeater {
             id: bgWidgetsRepeater
 
-            model: BackgroundWidgetRegistry.widgets
+            model: BackgroundWidgetRegistry.widgetList
 
             Loader {
                 id: bgWidgetLoader
 
                 required property var modelData
+
+                readonly property int revision: BackgroundWidgetRegistry.revision
 
                 anchors.fill: parent
                 z: modelData.z ?? 4
@@ -173,10 +165,18 @@ Variants {
                     win.applyWidgetContext(item);
                     win.widgetUpdateTrigger++;
                 }
+                onRevisionChanged: {
+                    // Widgets read their settings once, when they are created: reload the
+                    // component so a change made in Nexus takes effect without a restart.
+                    active = false;
+                    Qt.callLater(() => {
+                        active = true;
+                    });
+                }
             }
         }
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Bottom
-        WlrLayershell.keyboardFocus: desktopIcons.renameActive ? WlrKeyboardFocus.Exclusive : desktopIcons.visible ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
+        WlrLayershell.keyboardFocus: (!Config.background.disableQuickshellDesktop && desktopIcons.renameActive) ? WlrKeyboardFocus.Exclusive : (!Config.background.disableQuickshellDesktop && desktopIcons.visible) ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
     }
 }

@@ -266,7 +266,7 @@ StyledRect {
             Item {
                 id: mediaItem
                 Layout.fillWidth: true
-                Layout.preferredHeight: root.mediaUrl ? 220 : 0
+                Layout.preferredHeight: (root.mediaUrl && root.isExpanded) ? 220 : 0
 
                 visible: true
                 clip: true
@@ -284,8 +284,8 @@ StyledRect {
 
                     anchors.fill: parent
                     anchors.margins: Tokens.padding.small
-                    source: root.mediaUrl
-                    visible: !root.isVideo(root.mediaUrl)
+                    source: (!root.isVideo(root.mediaUrl) && root.isExpanded) ? root.mediaUrl : ""
+                    visible: !root.isVideo(root.mediaUrl) && root.isExpanded
                     fillMode: Image.PreserveAspectFit
                     playing: visible
                 }
@@ -295,7 +295,7 @@ StyledRect {
 
                     anchors.fill: parent
                     anchors.margins: Tokens.padding.small
-                    visible: root.isVideo(root.mediaUrl)
+                    visible: root.isVideo(root.mediaUrl) && root.isExpanded
                     fillMode: VideoOutput.PreserveAspectFit
                 }
             }
@@ -318,23 +318,24 @@ StyledRect {
             }
 
             AudioOutput {
-                    id: aOut
+                id: aOut
 
-                    muted: true
+                muted: true
+            }
+
+            MediaPlayer {
+                id: mediaPlay
+
+                videoOutput: vidOut
+                audioOutput: aOut
+                source: (root.isVideo(root.mediaUrl) && root.isExpanded) ? root.mediaUrl : ""
+                loops: MediaPlayer.Infinite
+
+                onSourceChanged: {
+                    if (root.isVideo(root.mediaUrl) && root.isExpanded) play()
+                    else pause()
                 }
-                MediaPlayer {
-                    id: mediaPlay
-
-                    videoOutput: vidOut
-                    audioOutput: aOut
-                    source: root.isVideo(root.mediaUrl) ? root.mediaUrl : ""
-                    loops: MediaPlayer.Infinite
-
-                    onSourceChanged: {
-                        if (root.isVideo(root.mediaUrl) && root.isExpanded) play()
-                        else pause()
-                    }
-                }
+            }
         }
     }
 }

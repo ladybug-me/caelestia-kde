@@ -11,21 +11,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    function addApp() {
-        const appName = appInput.text.trim();
-        if (appName === "")
-            return;
-
-        const mutedApps = Array.from(GlobalConfig.audio.sounds.disabledNotifApps);
-        if (!mutedApps.includes(appName)) {
-            mutedApps.push(appName);
-            GlobalConfig.audio.sounds.disabledNotifApps = mutedApps;
-            GlobalConfig.save();
-        }
-        appInput.text = "";
-    }
-
-    title: qsTr("Muted notification apps")
+    title: qsTr("Muted apps")
     isSubPage: true
 
     ColumnLayout {
@@ -34,72 +20,108 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        SectionHeader {
+        PolicySection {
             first: true
-            text: qsTr("Muted apps")
+            title: qsTr("Notifications turned off")
+            description: qsTr("Nothing arrives from these applications: no banner, no sound, and nothing added to the notification list.")
+            status: qsTr("Turn its notifications off completely")
+            apps: GlobalConfig.notifs.mutedApps
+            write: apps => {
+                GlobalConfig.notifs.mutedApps = apps;
+                GlobalConfig.save();
+            }
         }
 
-        RowLayout {
+        PolicySection {
+            title: qsTr("Notifications without sound")
+            description: qsTr("These applications still show their notifications. Only the sound is skipped.")
+            status: qsTr("Keep its notifications, drop the sound")
+            apps: GlobalConfig.audio.sounds.disabledNotifApps
+            write: apps => {
+                GlobalConfig.audio.sounds.disabledNotifApps = apps;
+                GlobalConfig.save();
+            }
+        }
+    }
+
+    /// One per-app policy: the list it edits, and everything the page says about it.
+    /// Which config list a section owns is one line where the section is used, so there
+    /// is no name for every function to dispatch on and no branch to keep in step.
+    component PolicySection: ColumnLayout {
+        id: section
+
+        required property string title
+        required property string description
+        required property string status
+        /// The applications this policy applies to, and what writing them means.
+        required property var apps
+        required property var write
+
+        property bool first
+
+        function add(name: string): void {
+            const wanted = name.trim();
+            if (wanted === "" || section.apps.includes(wanted))
+                return;
+
+            section.write([...section.apps, wanted]);
+        }
+
+        function remove(name: string): void {
+            section.write(section.apps.filter(app => app !== name));
+        }
+
+        Layout.fillWidth: true
+        spacing: Tokens.spacing.extraSmall / 2
+
+        SectionHeader {
+            first: section.first
+            text: section.title
+        }
+
+        ConnectedRect {
             Layout.fillWidth: true
-            spacing: Tokens.spacing.small
+            first: true
+            implicitHeight: helper.implicitHeight + Tokens.padding.medium * 2
 
-            StyledInputField {
-                id: appInput
+            StyledText {
+                id: helper
 
-                Layout.fillWidth: true
-                onEditingFinished: root.addApp()
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.topMargin: Tokens.padding.medium
+                anchors.leftMargin: Tokens.padding.largeIncreased
+                anchors.rightMargin: Tokens.padding.largeIncreased
+                text: section.description
+                color: Colours.palette.m3onSurfaceVariant
+                font: NexusStyle.secondaryFont
+                wrapMode: Text.Wrap
             }
+        }
 
-            IconTextButton {
-                text: qsTr("Add")
-                icon: "add"
-                onClicked: root.addApp()
-            }
+        AppPickerRow {
+            last: true
+            icon: "add"
+            label: qsTr("Add an application")
+            status: section.status
+            exclude: Array.from(section.apps)
+            onSelected: name => section.add(name)
         }
 
         Flow {
             Layout.fillWidth: true
+            visible: section.apps.length > 0
             spacing: Tokens.spacing.small
 
             Repeater {
-                model: GlobalConfig.audio.sounds.disabledNotifApps
+                model: section.apps
 
-                delegate: StyledRect {
+                delegate: RemovableChip {
                     required property string modelData
-                    required property int index
 
-                    width: implicitWidth
-                    height: implicitHeight
-                    implicitWidth: chipLayout.implicitWidth + Tokens.padding.medium * 2
-                    implicitHeight: chipLayout.implicitHeight + Tokens.padding.extraSmall * 2
-                    color: Colours.layer(Colours.palette.m3surfaceContainer, 2)
-                    radius: Tokens.rounding.large
-
-                    RowLayout {
-                        id: chipLayout
-
-                        x: Tokens.padding.medium
-                        y: Tokens.padding.extraSmall
-                        spacing: Tokens.spacing.extraSmall
-
-                        StyledText {
-                            text: modelData
-                        }
-
-                        MaterialIcon {
-                            text: "close"
-                            font: Tokens.font.icon.small
-
-                            StateLayer {
-                                onClicked: {
-                                    const mutedApps = Array.from(GlobalConfig.audio.sounds.disabledNotifApps);
-                                    mutedApps.splice(index, 1);
-                                    GlobalConfig.audio.sounds.disabledNotifApps = mutedApps;
-                                    GlobalConfig.save();
-                                }
-                            }
-                        }
-                    }
+                    label: modelData
+                    onRemoved: section.remove(modelData)
                 }
             }
         }

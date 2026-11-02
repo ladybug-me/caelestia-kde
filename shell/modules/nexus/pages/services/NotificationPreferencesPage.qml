@@ -215,5 +215,20 @@ PageBase {
             value: GlobalConfig.notifs.clearThreshold
             onMoved: value => GlobalConfig.notifs.clearThreshold = value
         }
+
+        SectionHeader {
+            text: qsTr("Related settings")
+        }
+
+        RelatedRow {
+            first: true
+            last: true
+            nState: root.nState
+            pageKey: "audio"
+            subPageIdx: 3
+            icon: "notifications_off"
+            label: qsTr("Muted notification apps")
+            status: qsTr("Manage applications with disabled notifications or sounds")
+        }
     }
 }

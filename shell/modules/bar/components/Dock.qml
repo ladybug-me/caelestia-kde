@@ -876,35 +876,16 @@ Item {
             let pinnedCapped = false;
             if (!ungrouped) {
                 for (const app of apps) {
-                    const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
+                    if (!Kwin.classNamesApp(appClass, [app.id, app.appClass]))
+                        continue;
 
-                    if (isToplevelSteamGame) {
-                        if (app.appClass.toLowerCase() === appClass.toLowerCase()) {
-                            if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
-                                pinnedCapped = true;
-                            else {
-                                app.toplevels.push(toplevel);
-                                found = true;
-                            }
-                            break;
-                        }
-                    } else {
-                        const isAppSteamGame = app.id.toLowerCase().startsWith("steam_app_") || app.appClass.toLowerCase().startsWith("steam_app_");
-                        if (isAppSteamGame) continue;
-
-                        const baseId = app.id.toLowerCase().replace(".desktop", "");
-                        if (app.appClass.toLowerCase() === appClass.toLowerCase() ||
-                            app.id.toLowerCase().includes(appClass.toLowerCase()) ||
-                            appClass.toLowerCase().includes(baseId)) {
-                            if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
-                                pinnedCapped = true;
-                            else {
-                                app.toplevels.push(toplevel);
-                                found = true;
-                            }
-                            break;
-                        }
+                    if (pinnedFirst && app.isPinned && app.toplevels.length > 0)
+                        pinnedCapped = true;
+                    else {
+                        app.toplevels.push(toplevel);
+                        found = true;
                     }
+                    break;
                 }
             }
 
@@ -920,10 +901,7 @@ Item {
                 } else {
                     entry = DesktopEntries.heuristicLookup(appClass) || null;
                     if (!entry) {
-                        entry = DesktopEntries.applications.values.find(e => {
-                            const eBase = e.id.toLowerCase().replace(".desktop", "");
-                            return e.id.toLowerCase().includes(appClass.toLowerCase()) || appClass.toLowerCase().includes(eBase);
-                        }) || null;
+                        entry = DesktopEntries.applications.values.find(e => Kwin.classNamesApp(appClass, [e.id])) || null;
                     }
                     if (entry)
                         iconName = entry.id;

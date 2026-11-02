@@ -751,6 +751,13 @@ echo "$INSTALLED|$LATEST"
         onExited: root.claudeCodeChecking = false
     }
 
+    FileView {
+        path: `${Quickshell.env("HOME")}/.config/quickshell/caelestia/.current_commit`
+        watchChanges: true
+        printErrors: false
+        onFileChanged: root.reload()
+    }
+
     Timer {
         id: autoCheckTimer
 

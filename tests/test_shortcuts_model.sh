@@ -100,4 +100,17 @@ test_the_fullscreen_ipc_guards_read_a_live_source() {
     assert_not_contains "$qml" 'hasFullscreen: false' "hasFullscreen must not be hardcoded off"
 }
 
+# A language-dependent value in the table resets the Instantiator on every language
+# change: the delegates are recreated after their replacements registered, and
+# KGlobalAccel deactivates the actions, so the krohnkite keybinds stay dead until the
+# shell restarts. Descriptions are translated in the delegate instead.
+test_the_table_stays_out_of_the_translation_system() {
+    assert_eq "0" "$(model_entries | grep -c 'qsTr(')" \
+        "the instantiator model must not translate its descriptions"
+    assert_eq "36" "$(model_entries | grep -c 'QT_TR_NOOP(')" \
+        "every description should be marked for extraction instead"
+    assert_file_contains "$QML" 'description: qsTr(modelData.description)' \
+        "the delegate should translate the extracted source text"
+}
+
 run_tests

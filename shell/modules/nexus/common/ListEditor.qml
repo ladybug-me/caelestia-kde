@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Widgets
 import Caelestia.Config
 import qs.components
 import qs.components.controls
@@ -15,6 +16,9 @@ ListView {
     property alias values: valuesModel.values
     property bool first
     property bool allowRemove: true
+    property bool allowToggle: true
+    // A control that sits between the label and the switch, e.g. a per-row menu.
+    property Component trailingComponent
 
     signal itemMoved(from: int, to: int)
     signal itemRemoved(index: int)
@@ -26,6 +30,14 @@ ListView {
 
     function toggledFor(item: var): bool {
         return false;
+    }
+
+    function iconFor(item: var): string {
+        return "";
+    }
+
+    function subtextFor(item: var): string {
+        return "";
     }
 
     function dampOvershoot(overshoot: real, maxOvershoot: real): real {
@@ -290,22 +302,63 @@ ListView {
                     id: dragIcon
 
                     text: "drag_indicator"
-                    color: Qt.alpha(Colours.palette.m3onSurfaceVariant, enabledSwitch.checked ? 1 : 0.5)
+                    color: Qt.alpha(Colours.palette.m3onSurfaceVariant, root.allowToggle && !enabledSwitch.checked ? 0.5 : 1)
                     fontStyle: Tokens.font.icon.medium
                 }
 
-                StyledText {
-                    id: label
+                IconImage {
+                    id: rowIcon
 
+                    readonly property string iconSource: root.iconFor(item.modelData)
+
+                    visible: iconSource !== ""
+                    Layout.alignment: Qt.AlignVCenter
+                    implicitSize: Tokens.font.icon.large.pointSize * 1.5
+                    source: iconSource
+                }
+
+                ColumnLayout {
                     Layout.fillWidth: true
-                    text: root.labelFor(item.modelData)
-                    color: Qt.alpha(Colours.palette.m3onSurface, enabledSwitch.checked ? 1 : 0.5)
-                    elide: Text.ElideRight
+                    spacing: 0
+
+                    StyledText {
+                        id: label
+
+                        Layout.fillWidth: true
+                        text: root.labelFor(item.modelData)
+                        color: Qt.alpha(Colours.palette.m3onSurface, root.allowToggle && !enabledSwitch.checked ? 0.5 : 1)
+                        elide: Text.ElideRight
+                    }
+
+                    StyledText {
+                        id: subtext
+
+                        readonly property string value: root.subtextFor(item.modelData)
+
+                        Layout.fillWidth: true
+                        visible: value !== ""
+                        text: value
+                        color: Qt.alpha(Colours.palette.m3onSurfaceVariant, root.allowToggle && !enabledSwitch.checked ? 0.5 : 1)
+                        font: NexusStyle.secondaryFont
+                        elide: Text.ElideRight
+                    }
+                }
+
+                Loader {
+                    id: trailingLoader
+
+                    sourceComponent: root.trailingComponent
+
+                    onLoaded: {
+                        trailingLoader.item.modelData = Qt.binding(() => item.modelData);
+                        trailingLoader.item.isLast = Qt.binding(() => item.DelegateModel.itemsIndex === root.count - 1);
+                    }
                 }
 
                 StyledSwitch {
                     id: enabledSwitch
 
+                    visible: root.allowToggle
                     checked: root.toggledFor(item.modelData)
                     font: Tokens.font.icon.medium
                     onToggled: root.itemToggled(item.DelegateModel.itemsIndex, checked)

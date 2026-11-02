@@ -9,7 +9,7 @@ Rectangle {
     id: passwordRoot
     color: "transparent"
 
-    property alias currentSession: inputRect.currentSession
+    property alias sessionIndex: inputRect.sessionIndex
     property alias currentUser: inputRect.currentUser
     property alias buffer: inputRect.buffer
 
@@ -52,7 +52,7 @@ Rectangle {
         property bool isLoading
         property string buffer
         property string currentUser
-        property int currentSession
+        property int sessionIndex
         anchors.horizontalCenter: parent.horizontalCenter
 
         onIsLoadingChanged: {
@@ -434,7 +434,7 @@ Rectangle {
                         shape.scale = 0.7;
                     }
                     onClicked: {
-                        sddm.login(inputRect.currentUser, inputRect.buffer, inputRect.currentSession);
+                        sddm.login(inputRect.currentUser, inputRect.buffer, inputRect.sessionIndex);
                         inputRect.isLoading = true;
                         inputRect.buffer = "";
                     }

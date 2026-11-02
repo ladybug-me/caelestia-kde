@@ -68,7 +68,7 @@ PageBase {
                     spacing: Tokens.spacing.medium
 
                     MaterialIcon {
-                        text: saved.ap ? Icons.getNetworkIcon(saved.ap.strength, !["", "none"].includes(saved.profile.security)) : "signal_wifi_off"
+                        text: saved.ap ? Icons.getNetworkIcon(saved.isActive ? WifiSignal.strength : saved.ap.strength, !["", "none"].includes(saved.profile.security)) : "signal_wifi_off"
                         color: saved.isActive ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                         fontStyle: Tokens.font.icon.medium
                     }

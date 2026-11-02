@@ -24,4 +24,13 @@ test_kde_emoji_dict_merges_without_overwriting_or_discarding_database() {
         "EmojiDb must merge entries by character rather than overwriting the whole list"
 }
 
+test_emoji_search_ranks_by_relevance_and_frequency() {
+    local content
+    content="$(cat "$EMOJI_CPP")"
+    assert_contains "$content" 'emojiMatchScore' \
+        "EmojiDb must score candidates by relevance"
+    assert_contains "$content" 'std::partial_sort(scored.begin()' \
+        "EmojiDb must sort matched indices by score, favourites, and frequency"
+}
+
 run_tests

@@ -228,6 +228,7 @@ Item {
                             iconSize: root.controller.iconSize
                             materialYou: root.controller.materialYou
                             vibrant: root.controller.vibrant
+                            vibrancy: root.controller.vibrancy
                             pointingCursor: DesktopLayout.singleClick
                             selected: root.controller.selection[tileKey] === true && root.open
                             focusVisible: root.controller.keyboardActive && root.controller.focusKey === tileKey && root.open

@@ -100,7 +100,9 @@ PageBase {
             first: true
             icon: "signal_wifi_4_bar"
             label: qsTr("Signal")
-            value: root.ap ? qsTr("%1%").arg(root.ap.strength) : qsTr("—")
+            // The connection's own strength, from the same reading the bar's icon uses:
+            // NetworkManager's snapshot of the associated access point reads low on 6 GHz.
+            value: root.ap ? qsTr("%1%").arg(root.isActive ? WifiSignal.strength : root.ap.strength) : qsTr("—")
             visible: root.isActive
         }
 

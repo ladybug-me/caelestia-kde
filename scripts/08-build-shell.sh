@@ -556,6 +556,21 @@ ws_record_install() {
     ws_signature "$built" "$installed" > "$WS_STAMP"
 }
 
+# A run that could not put the plugin in place must not leave KWin loading an effect
+# that is not on disk: KWin reports nothing, and the shell's guard turns it into a
+# warning toast on every login. Switch the effect off and drop the stamp, so the next
+# run rebuilds instead of trusting a file that is missing.
+ws_leave_effect_off() {
+    ws_installed_path kwin_workspace_tracker.so >/dev/null 2>&1 && return 0
+
+    rm -f "$WS_STAMP"
+    if command -v kwriteconfig6 >/dev/null 2>&1; then
+        kwriteconfig6 --file kwinrc --group Plugins --key kwin_workspace_trackerEnabled false
+    fi
+    qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
+    info "Workspace tracking is off until the effect can be installed."
+}
+
 info "Building and installing workspace-tracker KWin Effect..."
 ws_target_kwin_ver="$(kwin_plugin_version)"
 if ws_prev_built="$(ws_built_effect 2>/dev/null)"; then
@@ -596,6 +611,8 @@ if [[ $WS_INSTALLED -eq 1 ]]; then
         qdbus6 org.kde.KWin /KWin reconfigure 2>/dev/null || true
         ok "Installed workspace-tracker to KDE."
     fi
+else
+    ws_leave_effect_off
 fi
 
 QML_BASE="$HOME/.local/lib/qt6/qml"

@@ -17,15 +17,38 @@ StyledRect {
 
     required property var props
     required property DrawerVisibilities visibilities
+    property bool expanded: false
 
     readonly property real listHeight: (Tokens.font.body.large.pointSize + Tokens.padding.small) * (root.props.quickShareListExpanded ? 10 : 3)
-    readonly property real nonAnimHeight: layout.implicitHeight - transfersList.implicitHeight + root.listHeight + layout.anchors.margins * 2
+    readonly property real collapsedHeight: headerRow.implicitHeight + (QuickShare.pendingIncoming ? incomingRow.implicitHeight + layout.spacing : 0) + layout.anchors.margins * 2
+    readonly property real expandedHeight: headerRow.implicitHeight + (QuickShare.pendingIncoming ? incomingRow.implicitHeight + layout.spacing : 0) + layout.spacing + transfersColumn.implicitHeight + layout.anchors.margins * 2
+    readonly property real nonAnimHeight: root.expanded ? expandedHeight : collapsedHeight
 
     Layout.fillWidth: true
-    implicitHeight: layout.implicitHeight + layout.anchors.margins * 2
+    implicitHeight: nonAnimHeight
 
     radius: Tokens.rounding.large
     color: Colours.tPalette.m3surfaceContainer
+    clip: true
+
+    Behavior on implicitHeight {
+        Anim {}
+    }
+
+    Connections {
+        function onUtilitiesChanged(): void {
+            if (!root.visibilities.utilities)
+                root.expanded = false;
+        }
+
+        target: root.visibilities
+    }
+
+    StateLayer {
+        anchors.fill: parent
+        radius: root.radius
+        onClicked: root.expanded = !root.expanded
+    }
 
     ColumnLayout {
         id: layout
@@ -35,58 +58,65 @@ StyledRect {
         spacing: Tokens.spacing.medium
 
         RowLayout {
+            id: headerRow
+
+            Layout.fillWidth: true
             spacing: Tokens.spacing.medium
 
-            StyledRect {
-                implicitWidth: implicitHeight
-                implicitHeight: icon.implicitHeight + Tokens.padding.small * 2
+                StyledRect {
+                    implicitWidth: implicitHeight
+                    implicitHeight: icon.implicitHeight + Tokens.padding.small * 2
 
-                radius: Tokens.rounding.full
-                color: QuickShareService.isEnabled ? Colours.palette.m3secondary : Colours.palette.m3secondaryContainer
+                    radius: Tokens.rounding.full
+                    color: QuickShareService.isEnabled ? Colours.palette.m3secondary : Colours.palette.m3secondaryContainer
 
-                MaterialIcon {
-                    id: icon
+                    MaterialIcon {
+                        id: icon
 
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: Centering.pixelAlign(parent.height, height)
-                    text: "near_me"
-                    color: QuickShareService.isEnabled ? Colours.palette.m3onSecondary : Colours.palette.m3onSecondaryContainer
-                    fontStyle: Tokens.font.icon.large
+                        anchors.centerIn: parent
+                        anchors.verticalCenterOffset: Centering.pixelAlign(parent.height, height)
+                        text: "near_me"
+                        color: QuickShareService.isEnabled ? Colours.palette.m3onSecondary : Colours.palette.m3onSecondaryContainer
+                        fontStyle: Tokens.font.icon.large
+                    }
                 }
-            }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 0
-
-                StyledText {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    text: qsTr("Quick Share")
-                    font: Tokens.font.body.medium
-                    elide: Text.ElideRight
+                    spacing: 0
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: qsTr("Quick Share")
+                        font: Tokens.font.body.medium
+                        elide: Text.ElideRight
+                    }
+
+                    StyledText {
+                        Layout.fillWidth: true
+                        text: !QuickShareService.isEnabled ? qsTr("Disabled") : QuickShareService.isVisible ? qsTr("Visible to nearby devices") : qsTr("Hidden")
+                        color: Colours.palette.m3onSurfaceVariant
+                        font: Tokens.font.body.small
+                        elide: Text.ElideRight
+                        animate: true
+                    }
                 }
 
-                StyledText {
-                    Layout.fillWidth: true
-                    text: !QuickShareService.isEnabled ? qsTr("Disabled") : QuickShareService.isVisible ? qsTr("Visible to nearby devices") : qsTr("Hidden")
-                    color: Colours.palette.m3onSurfaceVariant
-                    font: Tokens.font.body.small
-                    elide: Text.ElideRight
-                    animate: true
-                }
-            }
+                IconButton {
+                    id: sendBtn
 
-            IconButton {
-                icon: "send"
-                type: IconButton.Filled
-                onClicked: root.props.quickShareDeviceSelectorOpen = true
-            }
+                    icon: "send"
+                    type: IconButton.Filled
+                    onClicked: root.props.quickShareDeviceSelectorOpen = true
+                }
         }
 
         // The request the prompt could not finish. Dismissing the prompt leaves no
         // other Accept / Decline, so the card carries them until the request is
         // answered — including the PIN, which the sender's side needs.
         RowLayout {
+            id: incomingRow
+
             Layout.fillWidth: true
             visible: QuickShare.pendingIncoming
             spacing: Tokens.spacing.small
@@ -125,8 +155,18 @@ StyledRect {
         }
 
         ColumnLayout {
+            id: transfersColumn
+
             Layout.fillWidth: true
+            visible: opacity > 0
+            opacity: root.expanded ? 1 : 0
             spacing: 0
+
+            Behavior on opacity {
+                Anim {
+                    type: Anim.DefaultEffects
+                }
+            }
 
             WrapperMouseArea {
                 Layout.fillWidth: true

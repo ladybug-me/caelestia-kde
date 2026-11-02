@@ -29,6 +29,7 @@ Searcher {
         "Emoji": qsTr("Emoji"),
         "Clipboard": qsTr("Clipboard"),
         "Windows": qsTr("Windows"),
+        "Search Everything": qsTr("Search Everything"),
         "Keybinds": qsTr("Keybinds"),
         "Animations": qsTr("Animations"),
         "Do simple math equations (powered by Qalc)": qsTr("Do simple math equations (powered by Qalc)"),
@@ -48,6 +49,7 @@ Searcher {
         "Pick an emoji to copy": qsTr("Pick an emoji to copy"),
         "View clipboard history": qsTr("View clipboard history"),
         "Switch to another window": qsTr("Switch to another window"),
+        "Search files, places, web shortcuts and settings with KRunner": qsTr("Search files, places, web shortcuts and settings with KRunner"),
         "View all keybinds": qsTr("View all keybinds"),
         "Switch your animation style": qsTr("Switch your animation style"),
     })

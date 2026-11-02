@@ -155,6 +155,31 @@ with_path() {
     )
 }
 
+# A QML `.pragma library` module is plain JS, so its behaviour can be run rather than
+# grepped. run_js evaluates one the way the engine does — the pragma stripped, its
+# top-level functions and vars exposed as one object under the given namespace — and runs
+# the given script with node's assert available. Prints "ok" when every assertion held.
+#
+#   run_js <module.js> <Namespace> <script>
+run_js() {
+    local module="$1" ns="$2" script="$3"
+    JS_MODULE="$module" JS_NS="$ns" node -e '
+const fs = require("fs");
+const assert = require("assert");
+const src = fs.readFileSync(process.env.JS_MODULE, "utf8").replace(/^\.pragma library$/m, "");
+const names = [...src.matchAll(/^(?:function|var) (\w+)/gm)].map(m => m[1]);
+globalThis[process.env.JS_NS] = new Function(src + "\nreturn {" + names.join(",") + "};")();
+'"$script"'
+console.log("ok");' 2>&1
+}
+
+# check_js <message> <module.js> <Namespace> <script>
+check_js() {
+    local message="$1" out
+    out="$(run_js "$2" "$3" "$4")"
+    [[ "$out" == "ok" ]] || fail_with_output "$message" "$out"
+}
+
 run_tests() {
     local fn
     while IFS= read -r fn; do

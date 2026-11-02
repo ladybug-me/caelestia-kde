@@ -233,6 +233,44 @@ bash scripts/04a-window-rules.sh
 
 The rule uses substring matching (`wmclassmatch 2`), omits `types` (matching both Dialog and Normal window types), enforces `placement 0` (NoPlacement to prevent centering), forces 0% active and inactive opacity, and marks the window to stay below others while skipping taskbars, pagers, and window switchers.
 
+### 3.3.3 Shell Crash-Loops When MangoHud Is Enabled Session-Wide ([#940](https://github.com/ladybug-me/caelestia-kde/issues/940))
+
+With `MANGOHUD=1` set for the whole session (common on gaming distributions, e.g. in
+`~/.config/environment.d/`), the shell dies seconds after it starts and
+`caelestia-shell.service` restarts it in a loop — the "What's new" window reappears each
+time and shortcuts stop working.
+
+**Cause:**
+MangoHud installs an implicit Vulkan layer, which the loader adds to *every* process in
+the session. QtMultimedia's FFmpeg backend creates a Vulkan device for hardware decode as
+soon as a `MediaPlayer` exists, and MangoHud crashes inside `vkCreateDevice`. The
+backtrace ends in `libMangoHud.so` ← `vkCreateDevice` ← `libavutil` ←
+`libffmpegmediaplugin.so`, and the same crash happens outside the shell with
+`MANGOHUD=1 qml6 player.qml`.
+
+**Fix:**
+The shell's unit opts out of MangoHud with `Environment=DISABLE_MANGOHUD=1`, so the layer
+is never loaded into the shell while games keep their overlay. That is shipped since this
+change; an existing install gets it by re-running:
+
+```bash
+bash scripts/10-autostart.sh
+```
+
+For an older install, the same thing without touching the shell:
+
+```ini
+# ~/.config/systemd/user/caelestia-shell.service.d/no-mangohud.conf
+[Service]
+Environment=DISABLE_MANGOHUD=1
+```
+
+**Verify:**
+```bash
+systemctl --user show -p NRestarts --value caelestia-shell.service   # stays at 0
+journalctl --user -u caelestia-shell.service | grep -c core-dump     # no new entries
+```
+
 ### 3.4 Colors Not Applying
 
 | Symptom | Fix |
@@ -372,7 +410,347 @@ Any other application that crashes when pasting its own content while the
 service runs belongs to the same class: report it so its format can be added to
 the filter.
 
+### 3.10 Launcher Search Mode Finds Nothing
+
+The launcher's system-wide search (`>search <query>`) is powered by KDE's
+KRunner, which reaches files, places, web shortcuts, the dictionary, unit and
+currency conversion and settings modules. KRunner's D-Bus service only exposes
+UI control methods, so the shell talks to the library instead, and the bridge is
+built only when the development package is present:
+
+```bash
+pacman -Q kf6-krunner          # Arch: the runtime is usually already there
+pacman -S kf6-krunner          # headers + CMake config the bridge needs
+dnf install kf6-krunner-devel  # Fedora
+apt install libkf6runner-dev   # Debian and Ubuntu
+```
+
+The indexer behind *Files* results is a separate package (`baloo` on Arch,
+`kf6-baloo` on Fedora, `baloo6` on Debian); the installers pull in both.
+
+If `>search` shows nothing at all while `>calc` still works, the shell was
+compiled without it. Check what the installed plugin was built against:
+
+```bash
+ldd ~/.local/lib/qt6/qml/Caelestia/lib/libcaelestia-services.so | grep -i runner
+```
+
+No `libKF6Runner` line means the plugin predates KRunner or was built on a
+machine without the headers; reinstall the shell after installing the package.
+A build with KRunner gets `search` in the launcher's action list, and
+`KRunnerBridge.available` is `false` without it, so the mode simply has no
+results rather than erroring.
+
+Empty results with the bridge in place usually mean the runner itself is not
+enabled. Turn the relevant one on in *System Settings → Search → Plasma Search*
+(in particular *Files* for Baloo), and check that the file index exists:
+
+```bash
+balooctl6 status                # "indexing" or "idle" is healthy
+```
+
+Results that say *Search DuckDuckGo for …* are web searches: KRunner's *Web
+Search Keywords* runner offers the configured engine once nothing else matches,
+and search mode adds the same row itself when KRunner has not. The engine is
+KDE's choice, stored as `DefaultWebShortcut` in `~/.config/kuriikwsfilterrc`;
+with no such file the built-in default applies, which is DuckDuckGo. Providers
+ship with `kio` as `/usr/share/kf6/searchproviders/*.desktop`, and the value is
+the *file name* of the provider (`google`, `duckduckgo`, …) rather than one of
+the aliases on its `Keys=` line. Those aliases only apply to what you type, so
+`ddg:cats` searches directly whichever engine is configured.
+
+Pick the engine in *Nexus → Apps → Web search engine*, from KDE's own page in
+*System Settings → Search → Web Search Keywords* (`kcmshell6 kcm_webshortcuts`),
+or set it once:
+
+```bash
+kwriteconfig6 --file kuriikwsfilterrc --group General --key DefaultWebShortcut google
+```
+
+Until Baloo has an index the web row is often the only match for a filename, which makes the shortcut look
+like a bug rather than a fallback.
+
+### 3.11 The Calendar Agenda Stays Empty
+
+The agenda reads iCalendar (`.ics`) sources; the shell has no PIM stack of its own.
+It lives in the clock popout — hover the clock or click it. The month grid marks the
+days that have events, and the list under it shows the day you have selected: click
+any day to see its events, with times and locations. If the popout says
+*No calendars yet*, nothing is configured: click that row, or go to
+*Nexus → Services → Calendars & agenda*. For Google Calendar the address is
+**Settings → the calendar → "Secret address in iCal format"**; Nextcloud, Fastmail
+and KOrganizer all hand out an equivalent export link, and a local `.ics` path works
+too.
+
+If the popout does not appear at all, the *Calendar popout* switch is off in
+*Nexus → Panels → Clock* — it is on by default, but a `shell.json` written before
+that default may still carry `bar.popouts.clock: false`.
+
+If sources are configured but no events appear:
+
+```bash
+# What the shell runs, and what it gets back
+python3 ~/.config/quickshell/caelestia/scripts/calendar_events.py \
+  --days 14 --source 'Work=https://calendar.google.com/…/basic.ics'
+```
+
+* `No time zone found with key …` means the system tz database is missing — install
+  `tzdata`.
+* A `[[errors]]` entry names the source that failed; the others still load, so one
+  bad link cannot empty the agenda.
+* Recurring events are expanded here, and only `DAILY`, `WEEKLY`, `MONTHLY` and
+  `YEARLY` rules are understood. A calendar relying on exotic `BY*` combinations will
+  show the master event and its plain recurrences, not every exception.
+* Fetched URLs are cached for five minutes under `~/.cache/caelestia/calendar`, and the
+  cache is revalidated with the calendar's `ETag` rather than downloaded again. The
+  agenda re-reads on its own every five minutes and whenever the popout is opened, so
+  an edit in Google shows up within a few minutes; *Refresh* in Nexus forces a re-fetch.
+* The address Google hands out is **read only**: the shell can show the calendar, not
+  write to it. Editing stays in Google Calendar or whatever client you already use.
+
+### 3.12 Focus Sessions Turn Notifications Off at the Wrong Time
+
+A focus session is a window (days plus start and end) during which the shell turns
+Do Not Disturb on itself. A window whose end is before its start runs overnight and
+belongs to the day it started on — `22:00–07:00` on a Monday covers Tuesday morning.
+
+* If DND will not clear, check whether a session is still running:
+  *Nexus → Notifications → Focus sessions* names the window and the time it ends.
+* Turning DND off by hand during a session keeps it off until the window ends; the
+  shell only clears a DND it turned on itself.
+* An app that should still reach you goes in *Allowed through*; the name has to match
+  the application name the notification carries, which is what
+  `notify-send -a <name>` and most messaging apps set.
+
+### 3.12.1 An Application's Notifications Stopped Arriving
+
+Two per-app lists can silence an application, and they answer different questions.
+*Nexus → Audio → Muted notification apps* shows both:
+
+* **Notifications turned off** — nothing arrives: no banner, no sound, nothing added to
+  the notification list, and nothing counted as unread. This is what the bell-with-a-slash
+  button on a notification does, so an application can be turned off from the notification
+  itself without opening settings.
+* **Notifications without sound** — the notification still arrives and is still listed;
+  only the chime is skipped.
+
+The first list is `mutedApps` in the notifications config, the second is
+`audio.sounds.disabledNotifApps`; an application can be in both and the stronger answer
+wins. Neither is the same thing as Do Not Disturb, which is a session-wide switch with an
+end time, or as the focus allow-list, which decides who gets through while DND is on:
+
+```bash
+caelestia shell notifs mutedApps                   # the apps that send nothing, as JSON
+caelestia shell notifs mute firefox                # turn one off
+caelestia shell notifs unmute firefox              # and back on
+caelestia shell notifs search invoice              # what the search box would show
+```
+
+The list in the sidebar can be searched: the magnifier beside "Notifications" narrows the
+history (kept across restarts, up to *Nexus → Notifications → Max stored notifications*) by
+application name, summary and body text.
+
+### 3.13 Shell Text Does Not Follow the System Text Size
+
+The shell draws with its own type tokens, so KDE's font size does not reach it
+unless *Nexus → Accessibility → Follow system text size* is on (it is by default).
+With it on, the shell reads `[General] font` from `~/.config/kdeglobals` and uses its
+point size as the scale, against a 10 pt base:
+
+```bash
+kreadconfig6 --file kdeglobals --group General --key font   # e.g. "Noto Sans,11,-1,5,…"
+```
+
+An absent key means KDE is running its default, which is the 10 pt base, so the shell
+stays at 100%. If a different size is wanted in the shell alone, switch the toggle off
+and use *Font scale* instead.
+
+### 3.14 Magnifier, Colour Filters or Screen Reader Do Nothing
+
+Those are not shell features: the magnifier, colour inversion and colour-blindness
+correction are **KWin effects**, so the shell can only load or unload them, and the
+shortcuts and filter choice live in *System Settings → Accessibility*. Check what
+KWin reports:
+
+```bash
+qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.isEffectLoaded zoom
+qdbus6 org.kde.KWin /Effects org.kde.kwin.Effects.listOfEffects | tr ',' '\n' | grep -i colour
+```
+
+The screen reader is Orca, which has to be installed (`orca` on Arch, `gnome-orca`
+elsewhere). The page reports it as missing rather than offering a button that cannot
+work.
+
+### 3.15 Displays Page Is Empty or Changes Do Not Stick
+
+Nexus reads and writes the screen layout through **KScreen**, the same component System
+Settings uses, so what it shows is the real layout and every change is applied by KScreen
+rather than by the shell:
+
+```bash
+kscreen-doctor -j | head -20        # what the page reads
+kscreen-doctor output.eDP-1.scale.1.5   # what the page runs for a change
+```
+
+If the page shows the "no kscreen-doctor" note, the package is missing (`kscreen` on
+Arch, `kscreen5`/`libkscreen` elsewhere). A change that reverts after a moment means KScreen
+rejected it — for example disabling the only enabled output, which the enabled switch
+refuses to do on purpose. Rotation is reported by KScreen as a bit flag (1 none, 2 left,
+4 upside down, 8 right), so the page names it before showing it.
+
+Input (pointer, touchpad, keyboard) is deliberately not duplicated here: those settings are
+applied by Plasma's KCMs, so the page opens them rather than keeping a second copy that
+would drift.
+
+### 3.16 A Startup Program Does Not Run
+
+Log-in programs are XDG autostart desktop files. The shell lists `~/.config/autostart` and
+every `XDG_CONFIG_DIRS` directory (usually `/etc/xdg/autostart`), and switches a *system*
+entry off by keeping a copy of its own in `~/.config/autostart` with `Hidden=true` — the same
+mechanism System Settings uses, so the two never disagree about what starts:
+
+```bash
+python3 ~/.config/quickshell/caelestia/scripts/autostart.py --list
+grep -H Hidden ~/.config/autostart/*.desktop
+```
+
+A program that shows as enabled but never starts usually has an `Exec` line that needs a full
+path, or an entry restricted with `OnlyShowIn=` to a desktop the session does not advertise.
+Removing the user's copy (`--remove NAME`, or the bin icon in Nexus, which only appears for
+entries the user owns) restores whatever the package shipped.
+
+### 3.17 The Privacy Indicator Does Not Appear
+
+The privacy icon in the status area is only drawn while an application is capturing, which is
+why it is missing most of the time. It reports two things:
+
+- **Microphone** — every PipeWire capture stream (`media.class` of `Stream/Input/Audio`). These
+  nodes exist only while an application is recording, so the list is the answer; the shell's own
+  capture is excluded so the icon means "somebody else is listening".
+- **Video capture** — the client video streams `PipewireStreamWatcher` reports: screen sharing and
+  apps that open a camera. Camera *devices* are excluded on purpose, because a `Video/Source` node
+  exists even when nothing is looking through it.
+
+```bash
+pw-dump | grep -B4 'Stream/Input/Audio'      # what the microphone row is built from
+pactl -f json list source-outputs            # the same capture streams as PulseAudio sees them
+```
+
+An application that opens the camera or microphone **through V4L2/ALSA directly** rather than
+through PipeWire is invisible to this: the shell can only see what the sound and video servers
+know about. Applications routed through `xdg-desktop-portal` — Firefox, Chromium, Zoom, OBS — are
+reported for as long as they hold a stream open. If the icon is enabled in *Nexus → Panels → Status
+icons* but never appears, check `pw-dump` for a `Stream/Input/Audio` node while the application
+claims to be recording — a node that is not there is a capture the shell was not told about.
+
+### 3.18 Storage Page Is Empty or a Mount Does Nothing
+
+The page lists what `lsblk` reports and mounts through `udisksctl`, the same path GNOME Disks
+and Dolphin use, so the answer is always a polkit prompt or a refusal instead of a half-mounted
+filesystem:
+
+```bash
+python3 ~/.config/quickshell/caelestia/scripts/disks.py    # what the page shows
+udisksctl mount -b /dev/sdb1                               # what a toggle runs
+journalctl -u polkit --since "5 min ago"                   # when it was refused
+```
+
+Loop devices, zram, swap and device-mapper internals are filtered out on purpose, and
+filesystems the system is running from (anything mounted at `/`, `/boot`, `/usr`, `/var`) are
+shown with the switch disabled: unmounting those is not a settings-page action.
+
+The list is one row per disk with its filesystems under it, because every action the page
+offers is a disk action: **Eject** runs `udisksctl power-off -b` on the disk, and a removable
+disk with no filesystem at all — a stick that was never formatted — is still listed and
+ejectable. An optical drive with no disc in it is not, since there is nothing to act on.
+
+A page that says *No disks were reported by lsblk* and a page that shows an error are
+different answers: the script prints nothing and fails when `python3`, `lsblk` or the script
+itself is missing, and that failure is shown rather than reported as an empty machine.
+
+### 3.19 A Captive Portal Is Not Detected or Its Page Does Not Open
+
+Detection is NetworkManager's own verdict, and the sign-in address is found the way plasma-nm
+finds it — ask a known URL and read where the redirect went:
+
+```bash
+nmcli -t -f CONNECTIVITY general                            # full | portal | limited | none
+curl -sS -m 6 -o /dev/null -w '%{url_effective}' http://networkcheck.kde.org/
+```
+
+The **Open sign-in page** row in *Nexus → Network* only appears while NetworkManager reports
+`portal`. If it appears and nothing opens, the second command above tells you why: a URL that
+is still the check URL means nothing intercepted the request (so there is no page to open), and
+the row's own status line then shows curl's message. A hotspot that gates traffic on a DNS
+answer without redirecting HTTP cannot be followed automatically; open its address by hand.
+
+### 3.20 The Dock Menu Lists No Recent Files
+
+The jump list is the application's own history from `~/.local/share/recently-used.xbel`, the
+freedesktop list every toolkit writes to and Plasma's recent-documents runner reads. A file only
+appears under an application that registered itself when it opened it, so a program that does not
+add bookmarks has no jump list at all:
+
+```bash
+python3 ~/.config/quickshell/caelestia/scripts/recents.py --limit 5 --app org.kde.spectacle
+grep -c '<bookmark ' ~/.local/share/recently-used.xbel
+```
+
+Entries whose file has since been deleted are dropped, and so are `http://` bookmarks, because
+a jump list is a list of things that can be opened again. The menu asks for five.
+
+The list is that application's own history in that application's own order: when the same file
+was opened by two applications, each records its own visit, and the jump list keeps the visit
+that application made rather than dropping the file because something else opened it later.
+
 ---
+
+### 3.21 A Timer Did Not Fire, or Disappeared
+
+Timers are countdowns, and they live in the utilities drawer (*the card titled Timers*),
+in `~/.local/state/caelestia/timers.json` between shell restarts, and on the CLI:
+
+```bash
+caelestia shell timers startFor 25m "take the bread out"   # same parser as the card
+caelestia shell timers list                                # what is running, seconds left
+caelestia shell timers cancel <id>                         # the id from list
+caelestia shell timers clear                               # all of them
+```
+
+A duration is read the way it is typed: `25` and `25m` are minutes, `90s` is ninety
+seconds, `1h30` is an hour and a half.
+
+What is stored is the moment a timer *ends*, not the time it has left, so restarting the
+shell does not restart the countdown. A timer whose end passed while the shell was not
+running is reported once on the next start ("2 timers finished while the shell was not
+running") instead of replaying every one of them. Timers that end while the shell is
+running are each announced with their own message, since that message is still news.
+
+A timer that ends while the shell is running raises a notification as *Timers*, which
+means it follows the same rules as any other: a banner and a chime, unless Do Not Disturb
+is on.
+
+Typing a duration and pressing Enter starts the timer; leaving the field alone does not,
+so a click elsewhere cannot start a timer nobody asked for. The buttons under the field
+(5m, 10m, 25m, 45m) start one in a press.
+The card can be hidden entirely with *Nexus → Utilities panel → Timers*; the timers keep
+running, they are simply not in the drawer.
+
+### 3.22 Where Unit and Currency Conversion Lives
+
+In the launcher. Its calculator is powered by `libqalculate`, which answers unit and
+currency questions as expressions: typing `10 km to miles`, `3 tbsp in ml` or
+`20 usd in eur` gives the converted value, and <kbd>Enter</kbd> copies it.
+
+```bash
+qalc "10 km to miles"        # the same answer from a terminal
+```
+
+`libqalculate` is a hard dependency of the shell's plugin, so this works wherever the
+shell itself does. Currency rates come from the sources `qalc` knows about and go stale
+when it cannot reach them; `qalc -e "20 usd in eur"` prints the rate it used when asked to
+show its work.
+
 
 ## 4. Runtime Issues — Lock Screen
 
@@ -454,6 +832,70 @@ A file an older version left at `~/.config/caelestia/` because it ignored `XDG_C
 
 If `keyd` is active and manages Meta+1..5, the tweak script skips KWin bindings for those combos to avoid conflicts.
 
+### 5.5 Keep Awake Comes Back After a Restart — How to Turn It Off for Good
+
+"Keep awake" is stored outside the config, in
+`${XDG_RUNTIME_DIR:-/tmp/caelestia-$USER}/caelestia-keepawake.json`, because it is runtime state rather
+than a setting: the shell writes it on every toggle and reads it back on start, so restarting (or crashing
+and restarting) the shell does not quietly hand the machine back to the idle timers while a long build is
+running. The runtime directory is per boot, so a reboot or a new login starts with it off — an inhibitor
+that outlived a reboot would stop the machine from ever sleeping.
+
+```bash
+caelestia shell idleInhibitor isEnabled    # what the shell currently believes
+caelestia shell idleInhibitor disable      # the normal way, writes the file
+rm -f "${XDG_RUNTIME_DIR:-/tmp/caelestia-$USER}/caelestia-keepawake.json"   # or forget it until the next restart
+```
+
+The inhibitor is a Wayland idle inhibitor, so it shows up in neither `systemd-inhibit --list` nor the power
+settings; only the shell knows about it.
+
+### 5.6 The Proxy Page Changes Nothing for a Program
+*Nexus → Network → Proxy* writes `[Proxy Settings]` in `${XDG_CONFIG_HOME:-~/.config}/kioslaverc`,
+because that is the file KIO applications read — Plasma, Dolphin, Konsole and everything else
+built on KIO:
+
+```bash
+python3 ~/.config/quickshell/caelestia/scripts/proxy.py --get
+grep -A6 '\[Proxy Settings\]' ~/.config/kioslaverc
+```
+
+Programs started from a shell inherit `http_proxy` and friends instead, so they keep whatever
+their environment says until they are restarted; changing the mode to *Use environment variables*
+makes KDE read those too. The page edits only the keys it owns and leaves every other section,
+comment and unknown key in the file alone, and it replaces the file in one step: a failed write
+leaves the old `kioslaverc` intact and says so on the page instead of emptying it.
+
+### 5.7 Toasts Appear in the Wrong Corner
+
+Toasts stack in one corner of the focused screen. *Nexus → Notifications → Toasts →
+Corner* offers **automatic**, top-left, top-right, bottom-left and bottom-right;
+**automatic** is the corner the shell has always used — the bottom, on the left when the
+bar runs along the bottom, and away from the bar when it runs along a side — so nothing
+moves until the row is changed. The reset button on the row deletes the key and hands the
+choice back to automatic.
+
+The stack grows away from the edge it is anchored to: from a top corner downwards, from a
+bottom corner upwards, newest outermost. A left- or right-hand corner steps aside for the
+sidebar when it is open on that side, and a bottom corner steps aside for the utilities
+drawer when that is open along the bottom.
+
+### 5.8 Where the Corner Radii Come From
+
+There are two classes of corner, and each has one owner:
+
+* **The shell's own surfaces.** The drawer's frame and the surface drawn inside it use
+  the same value, `border.rounding` (25 by default, `border.smoothing` for the fillet).
+  They are deliberately one number: a frame rounded differently from the panel inside it
+  leaves a sliver of wallpaper at every corner, which is what a mismatch of 25 against a
+  hard-coded 28 does. Changing `border.rounding` moves both.
+* **Cards and rows inside a surface** use `Tokens.rounding.*` (16 for a card, 28 for a
+  grouped list, `full` for a pill). These follow the appearance rounding scale, so they
+  move together when the scale changes.
+
+Anything that is its own surface — the bar island when *islands* is on — keeps a token
+radius, because there is no frame around it to line up with.
+
 ## 6. Network & Proxy Issues
 
 ### 6.1 Package Repository Problems
@@ -494,6 +936,39 @@ export http_proxy=http://proxy:port
 export https_proxy=http://proxy:port
 export ALL_PROXY=http://proxy:port
 ```
+
+### 6.4 The Wi-Fi Icon Never Shows Full Strength
+
+The bar reads the link's signal from the driver (`iw dev <interface> link`), not from
+NetworkManager, because the two disagree:
+
+```bash
+nmcli -t -f IN-USE,SIGNAL,SSID device wifi list | grep '^\*'   # NetworkManager's view
+iw dev wlan0 link | grep signal                                 # the driver's view
+```
+
+NetworkManager publishes the strength of the *associated* access point as a snapshot
+taken when that BSS was last scanned. On a 6 GHz link that snapshot can read far lower
+than the link really is — a station 40 cm from the router at -45 dBm was published as
+73 %, and 73 % is a three-bar icon. The same SSID's 2.4 GHz radio usually reads 100 %,
+which is what makes the icon look wrong: that is a different BSSID on a different band.
+
+So the icon now follows the driver: -50 dBm and better is full, -100 dBm and worse is
+empty, linear in between. If the driver cannot answer, the shell falls back to
+NetworkManager's percentage — that is also what the first second after the shell starts
+shows, before the first reading lands.
+
+The installer ships `iw` with the other utility packages, so a fresh install needs
+nothing. An install made before it did keeps working, on the old percentage:
+
+```bash
+sudo pacman -S iw      # Arch
+sudo dnf install iw    # Fedora
+sudo apt install iw    # Debian / Ubuntu
+```
+
+A connection whose link quality is genuinely poor still shows fewer bars, and so does a
+roaming client sitting on a weak radio of a strong network.
 
 ---
 
@@ -629,7 +1104,8 @@ themes that ask for it, which is what that optional dependency is for.
 
 ### 7.7 Installer Window Rules
 
-The installer writes four groups into `~/.config/kwinrulesrc` in priority order:
+The installer writes five groups into `~/.config/kwinrulesrc` in priority order:
+`caelestia-shell-opacity` keeps the shell's own toplevels at full opacity,
 `caelestia-xwaylandvideobridge` keeps `xwaylandvideobridge` transparent and uncentered
 out of switchers and taskbars (resolving a black centered box glitch on distros like Fedora; see [issue #1006](https://github.com/ladybug-me/caelestia-kde/issues/1006)),
 `caelestia-pip` keeps windows whose title matches `Picture(-| )in(-| )[Pp]icture` above others,
@@ -640,16 +1116,30 @@ conflicts using first-match-wins. Opacity is a per-activation-state key, so a wi
 while it is not focused, and the dialog rule is the one that can disagree with a placement policy
 chosen in System Settings.
 
+`caelestia-opacity` is a catch-all: it dims every normal window and dialog nobody has
+focused, including the shell's own toplevels, which are windows too. The launcher runs
+inside the shell, so opening it takes the keyboard from Nexus without anything being
+switched away from, and Nexus dims to 95 percent over the wallpaper behind it: over a
+bright wallpaper the settings window visibly lightens while the launcher is open and
+darkens again when it closes. `caelestia-shell-opacity` matches those windows by
+`wmclass` (`quickshell`, a substring match) and forces the same keys to 100 percent.
+It has to come first in both the file and the index, because the catch-all forces the
+same opacity keys and the first rule that matches a key wins; a copy of it written
+after `caelestia-opacity` never applies.
+
 A group only takes effect if the index names it. `[General] rules=` is the list KWin
 loads its rule groups from, and a group that is present in the file but missing from
 that list is never loaded, and is removed the next time KWin saves the file. The
 installer writes the list with the user's existing rules first, followed by Caelestia's
 rules in priority order, with `count` set to the number of entries, so the user's own
-rules are preserved and keep precedence.
+rules are preserved and keep precedence. The group names and their order are written down
+once, in `scripts/lib/kwin-rules.sh`, which both the installer step and `uninstall.sh`
+read: a second copy is how a group gets written into the file but never evaluated.
 
 To read a value back:
 
 ```bash
+kreadconfig6 --file kwinrulesrc --group caelestia-shell-opacity --key opacityinactive
 kreadconfig6 --file kwinrulesrc --group caelestia-opacity --key opacityinactive
 kreadconfig6 --file kwinrulesrc --group caelestia-dialogs --key placement
 kreadconfig6 --file kwinrulesrc --group caelestia-pip --key above
@@ -657,14 +1147,16 @@ kreadconfig6 --file kwinrulesrc --group caelestia-xwaylandvideobridge --key opac
 kreadconfig6 --file kwinrulesrc --group General --key rules
 ```
 
-To remove the rules, delete the four `[caelestia-...]` sections out of the file, or
+To remove the rules, delete the five `[caelestia-...]` sections out of the file, or
 delete the key that switches each group on. A group that is deleted has to leave the
 index with it, or the list keeps a name whose group is gone and `count` no longer
-matches it. `uninstall.sh` removes the keys, strips the four names out of the list,
+matches it. `uninstall.sh` removes the keys, strips the five names out of the list,
 rewrites `count`, and deletes both index keys once no name is left. KWin does not
 watch kwinrulesrc, so the reload is not optional:
 
 ```bash
+kwriteconfig6 --file kwinrulesrc --group caelestia-shell-opacity \
+    --key opacityinactiverule --delete
 kwriteconfig6 --file kwinrulesrc --group caelestia-opacity \
     --key opacityinactiverule --delete
 kwriteconfig6 --file kwinrulesrc --group caelestia-dialogs \

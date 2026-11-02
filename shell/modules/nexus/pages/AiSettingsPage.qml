@@ -48,8 +48,10 @@ PageBase {
                     font: Tokens.font.body.small
                     color: Colours.palette.m3onSurface
                 }
-                StyledInputField {
+                StyledTextField {
                     id: keyInput
+
+                    type: StyledTextField.Boxed
 
                     Layout.fillWidth: true
                     horizontalAlignment: TextInput.AlignLeft
@@ -205,7 +207,7 @@ PageBase {
     }
 
     function loadStoredKeys() {
-        const provs = ["claude", "openai", "gemini", "openrouter", "opencode"];
+        const provs = ["claude", "openai", "gemini", "openrouter", "opencode", "cheaperinference"];
         for (let i = 0; i < provs.length; i++)
             keyLoadComp.createObject(root, { provider: provs[i] });
     }
@@ -615,12 +617,20 @@ exit $status`]
         }
 
         ToggleRow {
-            last: true
             text: qsTr("opencode Go")
             subtext: qsTr("Monthly subscription; shares Zen's key")
             reset: ({ node: GlobalConfig.ai, setting: "enableOpencodeGo" })
             checked: GlobalConfig.ai.enableOpencodeGo
             onToggled: GlobalConfig.ai.enableOpencodeGo = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: qsTr("Cheaper Inference")
+            subtext: qsTr("OpenAI-compatible gateway; one key for models from multiple vendors")
+            reset: ({ node: GlobalConfig.ai, setting: "enableCheaperInference" })
+            checked: GlobalConfig.ai.enableCheaperInference
+            onToggled: GlobalConfig.ai.enableCheaperInference = checked
         }
 
         SectionHeader {
@@ -630,6 +640,7 @@ exit $status`]
                      || GlobalConfig.ai.enableOpenrouter
                      || GlobalConfig.ai.enableOpencode
                      || GlobalConfig.ai.enableOpencodeGo
+                     || GlobalConfig.ai.enableCheaperInference
             text: qsTr("API keys")
         }
 
@@ -668,6 +679,13 @@ exit $status`]
             onCommitted: v => root.storeApiKey("opencode", v)
         }
 
+        ApiKeyField {
+            visible: GlobalConfig.ai.enableCheaperInference
+            value: root.apiKeyFor("cheaperinference")
+            envName: "CHEAPER_INFERENCE_API_KEY"
+            onCommitted: v => root.storeApiKey("cheaperinference", v)
+        }
+
         SectionHeader {
             visible: GlobalConfig.ai.enableClaudeCode
             text: qsTr("Claude Code")
@@ -681,7 +699,7 @@ exit $status`]
                 if (!root.claudeInstalled)
                     return qsTr("Not installed");
                 if (UpdateChecker.claudeCodeHasUpdate)
-                    return root.claudeVersionShort + " → " + UpdateChecker.claudeCodeLatestVersion;
+                    return root.claudeVersionShort + " -> " + UpdateChecker.claudeCodeLatestVersion;
                 return root.claudeVersionShort;
             }
         }

@@ -10,6 +10,7 @@ source "$LIB_DIR/log.sh"
 source "$LIB_DIR/packages.sh"
 source "$LIB_DIR/panels.sh"
 source "$LIB_DIR/privileges.sh"
+source "$LIB_DIR/kwin-rules.sh"
 source "$LIB_DIR/selection.sh"
 
 section() {
@@ -446,39 +447,15 @@ kwriteconfig6 --file kwinrc --group "Plugins" --key "krohnkiteEnabled"          
 kwriteconfig6 --file kwinrc --group "Plugins" --key "kwin_workspace_trackerEnabled" "false" 2>/dev/null || true
 ok "Disabled KWin plugins: quickshell-kde-bridge, krohnkite, kwin_workspace_tracker"
 
-kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "Description"         --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "types"               --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "opacityinactive"     --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-opacity" --key "opacityinactiverule" --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-dialogs" --key "Description"         --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-dialogs" --key "types"               --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-dialogs" --key "placement"           --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-dialogs" --key "placementrule"       --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "Description"         --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "title"               --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "titlematch"          --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "above"               --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-pip"     --key "aboverule"           --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "Description"         --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "wmclass"             --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "wmclassmatch"        --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "types"               --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityactive"       --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityactiverule"   --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityinactive"     --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "opacityinactiverule" --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "placement"           --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "placementrule"       --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "below"               --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "belowrule"           --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skiptaskbar"         --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skiptaskbarrule"     --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skippager"           --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skippagerrule"       --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skipswitcher"        --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "skipswitcherrule"     --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "noborder"           --delete 2>/dev/null || true
-kwriteconfig6 --file kwinrulesrc --group "caelestia-xwaylandvideobridge" --key "noborderrule"       --delete 2>/dev/null || true
+# The groups and the keys each one writes come from scripts/lib/kwin-rules.sh, the same
+# list the installer applies them from. Deleting the action key is what removes a rule: a
+# group left with only its match keys is empty as far as KWin is concerned.
+for rule_entry in "${CAELESTIA_RULE_KEYS[@]}"; do
+    rule_group="${rule_entry%%|*}"
+    for rule_key in ${rule_entry#*|}; do
+        kwriteconfig6 --file kwinrulesrc --group "$rule_group" --key "$rule_key" --delete 2>/dev/null || true
+    done
+done
 
 KEPT_RULE_NAMES=()
 KEPT_RULE_COUNT=0
@@ -486,8 +463,8 @@ while IFS= read -r rule_name; do
     rule_name="${rule_name#"${rule_name%%[![:space:]]*}"}"
     rule_name="${rule_name%"${rule_name##*[![:space:]]}"}"
     [[ -n "$rule_name" ]] || continue
-    case "$rule_name" in
-        caelestia-opacity|caelestia-dialogs|caelestia-pip|caelestia-xwaylandvideobridge) continue ;;
+    case " ${CAELESTIA_RULE_GROUPS[*]} " in
+        *" $rule_name "*) continue ;;
     esac
     KEPT_RULE_NAMES+=("$rule_name")
     KEPT_RULE_COUNT=$((KEPT_RULE_COUNT + 1))
@@ -511,6 +488,24 @@ kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group n
 kwriteconfig6 --file kscreenlockerrc --group Greeter --group LnF --group General --key alwaysShowClock --delete 2>/dev/null || true
 kwriteconfig6 --file kscreenlockerrc --group Greeter --group LnF --group General --key showMediaControls --delete 2>/dev/null || true
 ok "Restored stock KDE lock screen configuration."
+
+_sync_wallpaper_script=""
+for _candidate in \
+    "$BUNDLE_DIR/shell/scripts/sync-kde-wallpaper-layout.sh" \
+    "$HOME/.config/quickshell/caelestia/scripts/sync-kde-wallpaper-layout.sh"; do
+    if [[ -f "$_candidate" ]]; then
+        _sync_wallpaper_script="$_candidate"
+        break
+    fi
+done
+
+if [[ -n "$_sync_wallpaper_script" ]]; then
+    if bash "$_sync_wallpaper_script" folder >/dev/null 2>&1; then
+        ok "Switched KDE desktop layout to Folder View"
+    else
+        warn "Could not switch KDE desktop layout to Folder View"
+    fi
+fi
 
 if [[ "$THEME_RESTORED_FROM_BACKUP" != "true" ]]; then
     kwriteconfig6 --file kwinrc --group "Desktops" --key "Number" "1" 2>/dev/null || true
@@ -780,9 +775,9 @@ with open(cli_path) as f:
     config = json.load(f)
 changed = False
 ours = re.compile(
-    r'\s*&&\s*sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook'
-    r'|sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook\s*&&\s*'
-    r'|sudo\s+\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook'
+    r'\s*&&\s*sudo\s+(?:-\S+\s+)*\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook'
+    r'|sudo\s+(?:-\S+\s+)*\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook\s*&&\s*'
+    r'|sudo\s+(?:-\S+\s+)*\S*(?:sync\.sh|caelestia-greeter-sync)\s+--posthook'
 )
 for section in ("wallpaper", "theme"):
     hook = config.get(section, {}).get("postHook", "")

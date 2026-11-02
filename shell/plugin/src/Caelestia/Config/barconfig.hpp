@@ -27,7 +27,9 @@ class BarPopouts : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, greeter, false)
     CONFIG_PROPERTY(bool, tray, true)
     CONFIG_PROPERTY(bool, statusIcons, true)
-    CONFIG_PROPERTY(bool, clock, false)
+    // On by default: the popout is the only way to reach the calendar, and the month
+    // grid with its agenda is the whole point of the clock being clickable.
+    CONFIG_PROPERTY(bool, clock, true)
 };
 
 class BarWorkspaces : public settings::ObjectNode {
@@ -113,6 +115,8 @@ class BarTray : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, compact, true)
     CONFIG_GLOBAL_LIST(BarTrayIconSubList, iconSubs, {})
     CONFIG_GLOBAL_PROPERTY(QStringList, hiddenIcons, QStringList())
+    CONFIG_GLOBAL_PROPERTY(QStringList, alwaysVisible, QStringList())
+    CONFIG_GLOBAL_PROPERTY(QStringList, order, QStringList())
 };
 
 class BarStatus : public settings::ObjectNode {
@@ -270,6 +274,7 @@ class BarConfig : public settings::ObjectNode {
     CONFIG_LIST(EntryList, statusIcons,
         DEFAULT_ARG({
             LIST_ENTRY(lockStatus, true),
+            LIST_ENTRY(privacy, true),
             LIST_ENTRY(microphone, false),
             LIST_ENTRY(kbLayout, false),
             LIST_ENTRY(network, true),

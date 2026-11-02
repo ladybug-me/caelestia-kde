@@ -140,6 +140,29 @@ Singleton {
         }
     }
 
+    // Tray icon settings used to be keyed by the notifier id, which changes when an
+    // app restarts. `aliases` maps the ids of the running notifiers to their stable
+    // aliases; TrayRegistry calls this whenever those ids become known. Idempotent:
+    // anything it cannot map is left alone, and nothing is written unless a key moves.
+    function migrateTrayIcons(aliases: var): void {
+        const tray = GlobalConfig.bar.tray;
+
+        const rewrite = list => {
+            const next = [...new Set(list.map(key => aliases[key] ?? key))];
+            return next.length === list.length && next.every((key, i) => key === list[i]) ? null : next;
+        };
+
+        for (const name of ["alwaysVisible", "hiddenIcons", "order"]) {
+            const next = rewrite(tray[name]);
+            if (next)
+                tray[name] = next;
+        }
+
+        for (const sub of tray.iconSubs.values)
+            if (aliases[sub.id])
+                sub.id = aliases[sub.id];
+    }
+
     Component.onCompleted: {
         root.migrateWorkspaceDisplay();
         root.migrateQuickToggles();

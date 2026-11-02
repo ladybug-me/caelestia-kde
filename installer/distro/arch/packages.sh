@@ -12,6 +12,10 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/packages.sh"
 # shellcheck source=scripts/lib/darkly.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/darkly.sh"
+# shellcheck source=scripts/lib/skwd-wall.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/skwd-wall.sh"
+# shellcheck source=scripts/lib/plasma-audio-visualizer.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/plasma-audio-visualizer.sh"
 
 info "Installing Arch packages..."
 
@@ -45,6 +49,8 @@ CORE_PACKAGES=(
 
     kglobalaccel kglobalacceld kguiaddons kwindowsystem
     kcoreaddons kconfig networkmanager-qt kpipewire kwin
+    
+    krunner baloo
 
     ffmpeg libqalculate libsecret ksshaskpass libx11 vulkan-headers
 
@@ -53,6 +59,8 @@ CORE_PACKAGES=(
 
 SHELL_PACKAGES=(
     quickshell matugen python
+    skwd-wall-v2-bin skwd-lens-bin skwd-paper-plasma
+    plasma6-applets-audio-visualizer
     foot eza fastfetch starship btop bash
     pciutils
 )
@@ -63,9 +71,10 @@ THEME_PACKAGES=(
 )
 
 UTILITY_PACKAGES=(
-    fuzzel swappy ddcutil networkmanager imagemagick tesseract tesseract-data-eng
+    fuzzel swappy ddcutil networkmanager iw imagemagick tesseract tesseract-data-eng
     satty spectacle gpu-screen-recorder slurp grim brightnessctl power-profiles-daemon
     xdg-utils sassc bat ripgrep lazygit xdg-user-dirs
+    print-manager plasma-keyboard
 )
 
 PACKAGES=()

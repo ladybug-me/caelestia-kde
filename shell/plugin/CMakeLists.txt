@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 project(Caelestia)
 
+option(CAELESTIA_BUILD_LYRICS_TESTS "Build offline lyrics regression tests" OFF)
+if(CAELESTIA_BUILD_LYRICS_TESTS)
+    enable_testing()
+    find_package(Qt6 REQUIRED COMPONENTS Test)
+endif()
+
 # Unity builds compile many small translation units together, which speeds up
 # cold builds of the plugin. Opt-in: the installer enables it, while CI and
 # packaging keep per-TU builds for cache friendliness.

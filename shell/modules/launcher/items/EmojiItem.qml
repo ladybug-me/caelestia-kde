@@ -12,7 +12,7 @@ Item {
     required property var modelData
     required property var list
 
-    function clicked() {
+    function activate() {
         if (!root.modelData)
             return;
         root.list.visibilities.launcher = false;
@@ -29,7 +29,7 @@ Item {
 
     StateLayer {
         radius: Tokens.rounding.large
-        onClicked: root.clicked()
+        onClicked: root.activate()
     }
 
     Item {

@@ -23,6 +23,11 @@ Singleton {
         return clock.date.toLocaleString(Qt.locale(), fmt);
     }
 
+    /// A clock time in whichever of the two the user picked for the bar.
+    function clockTime(when: date): string {
+        return when.toLocaleString(Qt.locale(), Units.twelveHourClock ? "h:mm A" : "HH:mm");
+    }
+
     SystemClock {
         id: clock
 

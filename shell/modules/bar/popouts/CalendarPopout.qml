@@ -3,13 +3,16 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import M3Shapes
 import Caelestia.Config
 import qs.components
 import qs.components.controls
-import qs.components.effects
 import qs.services
+import qs.modules.nexus
 
+/// The clock's calendar: a month at a glance, and the events of the day picked in it.
+///
+/// The month itself belongs to `CalendarMonth`, so this only holds the selection and
+/// renders that day's agenda.
 StyledRect {
     id: root
 
@@ -19,15 +22,74 @@ StyledRect {
     property real fontScale: 1.0
 
     property date viewDate: new Date()
-    readonly property int currMonth: viewDate.getMonth()
-    readonly property int currYear: viewDate.getFullYear()
+    /// The day whose events are listed under the grid. Picking a day moves it, which is
+    /// what makes the grid and the list one control instead of two.
+    property date selectedDate: new Date()
+    readonly property var selectedEvents: CalendarEvents.eventsOn(root.selectedDate)
+    readonly property string selectedLabel: root.isToday(root.selectedDate) ? qsTr("Today") : Qt.locale().toString(root.selectedDate, "ddd d MMM")
+
+    function isToday(date: date): bool {
+        const now = new Date();
+        return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth() && date.getDate() === now.getDate();
+    }
+
+    function select(date: date): void {
+        root.selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        // A trailing day belongs to the month it is shown in, so follow it there.
+        if (date.getMonth() !== root.viewDate.getMonth() || date.getFullYear() !== root.viewDate.getFullYear())
+            root.viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
+    }
 
     function shiftMonth(delta: int): void {
-        root.viewDate = new Date(root.currYear, root.currMonth + delta, 1);
+        root.viewDate = new Date(root.viewDate.getFullYear(), root.viewDate.getMonth() + delta, 1);
     }
 
     function goToToday(): void {
         root.viewDate = new Date();
+    }
+
+    function eventTime(event: var): string {
+        if (event.allDay)
+            return qsTr("All day");
+        // Same 12/24-hour choice as the bar clock, so the two never disagree.
+        return Time.clockTime(event.start);
+    }
+
+    function agendaHint(): string {
+        if (!CalendarEvents.configured)
+            return qsTr("No calendars yet - click to add one");
+        if (CalendarEvents.errors.length > 0)
+            return qsTr("Could not read %1 - click to check the address").arg(CalendarEvents.errors[0].source);
+
+        return qsTr("No events");
+    }
+
+    /// Cheap when nothing changed: the script reuses its copy of the calendar and only
+    /// revalidates it, so this is safe to run every time the popout is opened.
+    function refreshOnOpen(): void {
+        const popouts = root.popouts;
+        if (!popouts)
+            return;
+        // Name first or flag first depends on how the popout was opened, so either
+        // changing is enough for it to count as opened.
+        if (popouts.currentName !== "clock")
+            return;
+        CalendarEvents.refresh();
+    }
+
+    /// The empty agenda is the only place a first-time user meets this feature, so it
+    /// leads to the page that fills it rather than naming a menu they have to find.
+    function openCalendarSettings(): void {
+        const pageIdx = PageDictionary.pageIdxFor("services");
+        if (pageIdx < 0)
+            return;
+
+        if (root.popouts)
+            root.popouts.hasCurrent = false;
+        WindowFactory.create(null, {
+            initialPageIdx: pageIdx,
+            initialSubPageIdx: PageDictionary.subPageIdxFor("services/CalendarPage.qml")
+        });
     }
 
     implicitWidth: 497 * root.scaleOffset
@@ -35,11 +97,18 @@ StyledRect {
     radius: Tokens.rounding.extraLarge * root.scaleOffset
     color: Colours.tPalette.m3surfaceContainer
 
-    CalendarMonthSlide {
-        id: monthSlide
+    // Opening the calendar is the moment its contents matter, so that is when a stale
+    // copy is re-read rather than only on the background timer.
+    Connections {
+        function onHasCurrentChanged(): void {
+            root.refreshOnOpen();
+        }
 
-        shownDate: root.viewDate
-        offset: Tokens.padding.extraLarge * root.scaleOffset
+        function onCurrentNameChanged(): void {
+            root.refreshOnOpen();
+        }
+
+        target: root.popouts
     }
 
     CustomMouseArea {
@@ -69,175 +138,107 @@ StyledRect {
         width: root.width - Tokens.padding.large * 2 * root.scaleOffset
         spacing: Tokens.spacing.extraSmall * root.scaleOffset
 
-        RowLayout {
-            id: monthNavigationRow
-
+        CalendarMonth {
             Layout.fillWidth: true
-            spacing: Tokens.spacing.extraSmall * root.scaleOffset
 
-            IconButton {
-                isRound: true
-                icon: "chevron_left"
-                type: IconButton.Text
-                font: Tokens.font.icon.builders.small.weight(Font.Bold).size(Tokens.font.icon.builders.small.build().pointSize * root.fontScale).build()
-                padding: Tokens.padding.small * root.scaleOffset
-                onClicked: root.shiftMonth(-1)
-            }
+            viewDate: root.viewDate
+            highlightedDate: root.selectedDate
+            selectable: true
+            scaleOffset: root.scaleOffset
+            fontScale: root.fontScale
 
-            Item {
+            onMonthShifted: delta => root.shiftMonth(delta)
+            onTodayRequested: root.goToToday()
+            onDayClicked: date => root.select(date)
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.topMargin: Tokens.spacing.medium * root.scaleOffset
+            implicitHeight: 1
+            color: Colours.palette.m3outlineVariant
+        }
+
+        // The day the indicator sits on, so the list below reads as that cell opened up
+        // rather than as a separate feed.
+        StyledText {
+            Layout.fillWidth: true
+            Layout.topMargin: Tokens.spacing.medium * root.scaleOffset
+            text: root.selectedLabel
+            color: Colours.palette.m3onSurface
+            font: Tokens.font.body.builders.small.size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).weight(Font.Medium).build()
+            elide: Text.ElideRight
+        }
+
+        Repeater {
+            model: root.selectedEvents.length > 0 ? root.selectedEvents : [null]
+
+            delegate: Item {
+                id: eventRow
+
+                required property var modelData
+
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.topMargin: Tokens.spacing.extraSmall * root.scaleOffset
+                implicitHeight: eventRow.modelData ? eventText.implicitHeight : hint.implicitHeight
 
-                implicitWidth: monthYearDisplay.implicitWidth + Tokens.padding.large * 2 * root.scaleOffset
-                implicitHeight: monthYearDisplay.implicitHeight + Tokens.padding.extraSmall * 2 * root.scaleOffset
+                Column {
+                    id: eventText
 
-                StateLayer {
-                    color: Colours.palette.m3primary
-                    radius: pressed ? Tokens.rounding.small * root.scaleOffset : height / 2
-                    disabled: {
-                        const now = new Date();
-                        return root.currMonth === now.getMonth() && root.currYear === now.getFullYear();
-                    }
-                    onClicked: root.goToToday()
+                    width: parent.width
+                    spacing: 0
+                    visible: eventRow.modelData !== null
 
-                    Behavior on radius {
-                        Anim {
-                            type: Anim.DefaultEffects
+                    Row {
+                        width: parent.width
+                        spacing: Tokens.spacing.small * root.scaleOffset
+
+                        StyledText {
+                            width: 74 * root.scaleOffset
+                            text: eventRow.modelData ? root.eventTime(eventRow.modelData) : ""
+                            color: Colours.palette.m3primary
+                            font: Tokens.font.label.builders.small.size(Tokens.font.label.small.pointSize * root.fontScale).build()
+                            elide: Text.ElideRight
                         }
+
+                        StyledText {
+                            width: parent.width - 74 * root.scaleOffset - parent.spacing
+                            text: eventRow.modelData?.summary ?? ""
+                            color: Colours.palette.m3onSurface
+                            font: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    StyledText {
+                        width: parent.width - 74 * root.scaleOffset - Tokens.spacing.small * root.scaleOffset
+                        x: 74 * root.scaleOffset + Tokens.spacing.small * root.scaleOffset
+                        text: eventRow.modelData?.location ?? ""
+                        color: Colours.palette.m3onSurfaceVariant
+                        font: Tokens.font.label.builders.small.size(Tokens.font.label.small.pointSize * root.fontScale).build()
+                        elide: Text.ElideRight
+                        visible: text.length > 0
                     }
                 }
 
                 StyledText {
-                    id: monthYearDisplay
+                    id: hint
 
-                    opacity: monthSlide.animOpacity
-                    transform: Translate {
-                        x: monthSlide.animTranslate
-                    }
-
-                    anchors.centerIn: parent
-                    text: grid.title
-                    color: Colours.palette.m3primary
-                    font: Tokens.font.title.builders.small.capitalisation(Font.Capitalize).size(Tokens.font.title.builders.small.build().pointSize * root.fontScale).build()
-                }
-            }
-
-            IconButton {
-                isRound: true
-                icon: "chevron_right"
-                type: IconButton.Text
-                font: Tokens.font.icon.builders.small.weight(Font.Bold).size(Tokens.font.icon.builders.small.build().pointSize * root.fontScale).build()
-                padding: Tokens.padding.small * root.scaleOffset
-                onClicked: root.shiftMonth(1)
-            }
-        }
-
-        DayOfWeekRow {
-            id: daysRow
-
-            Layout.fillWidth: true
-            locale: grid.locale
-
-            delegate: StyledText {
-                required property var model
-
-                horizontalAlignment: Text.AlignHCenter
-                text: model.shortName
-                font: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
-                color: (model.day === 0 || model.day === 6) ? Colours.palette.m3tertiary : Colours.palette.m3onSurface
-                renderType: Text.QtRendering
-            }
-        }
-
-        Item {
-            Layout.fillWidth: true
-            implicitHeight: grid.implicitHeight
-
-            opacity: monthSlide.animOpacity
-            transform: Translate {
-                x: monthSlide.animTranslate
-            }
-
-            MonthGrid {
-                id: grid
-
-                month: root.currMonth
-                year: root.currYear
-
-                anchors.fill: parent
-
-                spacing: 3 * root.scaleOffset
-                locale: Qt.locale()
-
-                delegate: Item {
-                    id: dayItem
-
-                    required property var model
-
-                    implicitWidth: implicitHeight
-                    implicitHeight: text.implicitHeight + Tokens.padding.small * root.scaleOffset
-
-                    StyledText {
-                        id: text
-
-                        anchors.centerIn: parent
-
-                        horizontalAlignment: Text.AlignHCenter
-                        text: grid.locale.toString(dayItem.model.day)
-                        color: {
-                            const dayOfWeek = dayItem.model.date.getDay();
-                            if (dayOfWeek === 0 || dayOfWeek === 6)
-                                return Colours.palette.m3tertiary;
-
-                            return Colours.palette.m3onSurfaceVariant;
-                        }
-                        opacity: dayItem.model.today || dayItem.model.month === grid.month ? 1 : 0.4
-                        font: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
-                        renderType: Text.QtRendering
-                    }
-                }
-            }
-
-            MaterialShape {
-                id: todayIndicator
-
-                readonly property Item todayItem: grid.contentItem.children.find(c => c.model.today) ?? null
-                property Item today
-
-                onTodayItemChanged: {
-                    if (todayItem)
-                        today = todayItem;
+                    width: parent.width
+                    visible: eventRow.modelData === null
+                    text: root.agendaHint()
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+                    wrapMode: Text.Wrap
                 }
 
-                x: today ? today.x + (today.width - implicitWidth) / 2 : 0
-                y: today ? today.y + (today.height - implicitHeight) / 2 : 0
-
-                implicitSize: today ? Math.max(today.implicitWidth, today.implicitHeight) + Tokens.padding.extraSmall * 2 * root.scaleOffset : 0
-                shape: MaterialShape.Sunny
-
-                clip: true
-                color: Colours.palette.m3primary
-
-                opacity: todayItem ? 1 : 0
-
-                Colouriser {
-                    x: -todayIndicator.x
-                    y: -todayIndicator.y
-
-                    implicitWidth: grid.width
-                    implicitHeight: grid.height
-
-                    source: grid
-                    sourceColor: Colours.palette.m3onSurface
-                    colorizationColor: Colours.palette.m3onPrimary
-                }
-
-                Behavior on x {
-                    Anim {}
-                }
-
-                Behavior on y {
-                    Anim {}
+                // Last, so it takes the click rather than the text above it, and it has
+                // to be given the row's size: it is not positioned by the layout.
+                StateLayer {
+                    anchors.fill: parent
+                    radius: Tokens.rounding.medium
+                    disabled: eventRow.modelData !== null || CalendarEvents.configured
+                    onClicked: root.openCalendarSettings()
                 }
             }
         }

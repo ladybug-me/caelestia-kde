@@ -110,6 +110,7 @@ Before=xdg-desktop-autostart.target
 
 [Service]
 Type=exec
+Environment=DISABLE_MANGOHUD=1
 ExecStart=%h/.local/bin/caelestia-autostart.sh
 # A shell that cannot start is retried, but not in a tight loop: systemd gives up on
 # a unit that starts five times in ten seconds, and clearing that state falls to an

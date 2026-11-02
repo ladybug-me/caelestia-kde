@@ -22,6 +22,13 @@ Item {
     // delegate is created, and the requested icon size is fixed at that moment.
     readonly property real iconSize: (Tokens.sizes.launcher.itemHeight - Tokens.padding.small * 2) * 0.8
 
+    /// The one activation this row has, so the launcher can trigger it from the
+    /// keyboard without knowing which kind of row it is.
+    function activate(): void {
+        Apps.launch(root.modelData);
+        root.visibilities.launcher = false;
+    }
+
     implicitHeight: Tokens.sizes.launcher.itemHeight
 
     anchors.left: parent?.left
@@ -36,8 +43,7 @@ Item {
             if (mouse.button === Qt.RightButton) {
                 root.list.openContextMenu(root.modelData, root);
             } else {
-                Apps.launch(root.modelData);
-                root.visibilities.launcher = false;
+                root.activate();
             }
         }
 

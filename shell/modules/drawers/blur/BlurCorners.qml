@@ -42,12 +42,12 @@ Region {
     property real tlX: 0
     property real tlY: 0
     property real tlW: 1
-    property real tlH: 0
+    property real tlH: 1
 
     property real trX: -1
     property real trY: 0
     property real trW: 1
-    property real trH: 0
+    property real trH: 1
 
     property real blX: 0
     property real blY: -1
@@ -109,6 +109,7 @@ Region {
     Region { x: isActive(44) ? inLeft - rTL * getXVal(44) + tlX : 0; y: isActive(44) ? inTop - rTL * getYo(44) + tlY : 0; width: isActive(44) ? rTL * getXVal(44) + tlW : 0; height: isActive(44) ? rTL * getYo(44) + tlH : 0 }
     Region { x: isActive(45) ? inLeft - rTL * getXVal(45) + tlX : 0; y: isActive(45) ? inTop - rTL * getYo(45) + tlY : 0; width: isActive(45) ? rTL * getXVal(45) + tlW : 0; height: isActive(45) ? rTL * getYo(45) + tlH : 0 }
     Region { x: isActive(46) ? inLeft - rTL * getXVal(46) + tlX : 0; y: isActive(46) ? inTop - rTL * getYo(46) + tlY : 0; width: isActive(46) ? rTL * getXVal(46) + tlW : 0; height: isActive(46) ? rTL * getYo(46) + tlH : 0 }
+    Region { x: isActive(47) ? inLeft - rTL * getXVal(47) + tlX : 0; y: isActive(47) ? inTop - rTL * getYo(47) + tlY : 0; width: isActive(47) ? rTL * getXVal(47) + tlW : 0; height: isActive(47) ? rTL * getYo(47) + tlH : 0 }
     Region { x: isActive(48) ? inLeft - rTL * getXVal(48) + tlX : 0; y: isActive(48) ? inTop - rTL * getYo(48) + tlY : 0; width: isActive(48) ? rTL * getXVal(48) + tlW : 0; height: isActive(48) ? rTL * getYo(48) + tlH : 0 }
     Region { x: isActive(49) ? inLeft - rTL * getXVal(49) + tlX : 0; y: isActive(49) ? inTop - rTL * getYo(49) + tlY : 0; width: isActive(49) ? rTL * getXVal(49) + tlW : 0; height: isActive(49) ? rTL * getYo(49) + tlH : 0 }
     Region { x: isActive(50) ? inLeft - rTL * getXVal(50) + tlX : 0; y: isActive(50) ? inTop - rTL * getYo(50) + tlY : 0; width: isActive(50) ? rTL * getXVal(50) + tlW : 0; height: isActive(50) ? rTL * getYo(50) + tlH : 0 }

@@ -110,6 +110,7 @@ MouseArea {
         closeTimer.stop();
         submenuRow = row;
         submenuItems = entries ?? [];
+        root.positionSubmenu();
         submenuOpen = true;
         Qt.callLater(root.positionSubmenu);
     }
@@ -119,9 +120,7 @@ MouseArea {
         if (!row || !submenu)
             return;
         const panelRight = menu.x + menu.implicitWidth;
-        const overlap = Tokens.padding.extraSmall / 2;
         submenu.opensRight = panelRight + submenu.implicitWidth <= root.width;
-        submenu.x = submenu.opensRight ? panelRight - overlap : menu.x - submenu.implicitWidth + overlap;
         const rowTop = row.mapToItem(root, 0, 0).y;
         const rowBottom = rowTop + row.height;
         const panelBottom = menu.y + menu.implicitHeight;
@@ -157,6 +156,7 @@ MouseArea {
         if (expanded) {
             closeTimer.stop();
         } else {
+            submenuOpen = false;
             submenuRow = null;
             submenuItems = [];
         }
@@ -356,6 +356,7 @@ MouseArea {
     Elevation {
         id: submenu
 
+        readonly property real overlap: Tokens.padding.extraSmall / 2
         property bool opensRight: true
         property real hScale: root.submenuOpen ? 1 : 0
         property bool flushTop: false
@@ -370,6 +371,7 @@ MouseArea {
         level: root.transparentBackground ? 0 : 2
         implicitWidth: Math.max(200, submenuColumn.implicitWidth + Tokens.padding.extraSmall * 2)
         implicitHeight: Math.min(root.maxHeight, submenuColumn.implicitHeight + Tokens.padding.extraSmall * 2)
+        x: opensRight ? (menu.x + menu.implicitWidth - overlap) : (menu.x + overlap - width)
         width: implicitWidth * hScale
         height: implicitHeight
         clip: true

@@ -334,6 +334,16 @@ elif [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
     info "Shell build skipped; the recorded revision still describes the running shell."
 fi
 
+# 7. Restart the shell so the new build is the one actually running.
+#
+# The running process keeps the QML it parsed at startup, and the compiled plugin
+# (.so) cannot be swapped under it, so an update only shows up after a restart.
+# Doing it here avoids leaving a live shell that mixes the new QML with the old one.
+if [[ "${CAELESTIA_SKIP_BUILD:-0}" != "1" ]] && systemctl --user is-active --quiet caelestia-shell.service; then
+    info "Restarting the shell to load the new build..."
+    systemctl --user restart caelestia-shell.service || warn "Could not restart caelestia-shell.service; restart it manually."
+fi
+
 echo "PROGRESS: done: Update completed successfully"
 echo
 echo "---------------------------------------------"

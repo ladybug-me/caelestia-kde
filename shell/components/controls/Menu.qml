@@ -212,13 +212,14 @@ MouseArea {
     // drawer or popout that hides that item. Close it along with the item.
     Connections {
         function onVisibleChanged(): void {
-            if (!root.attachTo.visible) {
+            if (!root.attachTo || !root.attachTo.visible) {
                 root.closeSubmenu();
                 closeTimer.stop();
                 root.expanded = false;
             }
         }
 
+        enabled: root.expanded
         target: root.attachTo
     }
 

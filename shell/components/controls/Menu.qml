@@ -208,6 +208,20 @@ MouseArea {
         }
     }
 
+    // The menu lives outside the item it is attached to, so it would outlast a
+    // drawer or popout that hides that item. Close it along with the item.
+    Connections {
+        function onVisibleChanged(): void {
+            if (!root.attachTo.visible) {
+                root.closeSubmenu();
+                closeTimer.stop();
+                root.expanded = false;
+            }
+        }
+
+        target: root.attachTo
+    }
+
     Timer {
         id: closeTimer
 
@@ -261,7 +275,9 @@ MouseArea {
             if (root.thisSideX === Menu.Right)
                 off -= width;
             const pt = item.mapToItem(root.parent, off, 0);
-            return (pt ? pt.x : 0) + root.marginX;
+            // Keep the whole menu inside the window it is drawn in.
+            const x = (pt ? pt.x : 0) + root.marginX;
+            return Math.max(0, Math.min(x, root.parent.width - width));
         }
         y: {
             watcher.transform;

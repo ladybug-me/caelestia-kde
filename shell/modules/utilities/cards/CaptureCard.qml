@@ -35,8 +35,12 @@ StyledRect {
 
     Connections {
         function onUtilitiesChanged(): void {
-            if (!root.visibilities.utilities)
+            if (!root.visibilities.utilities) {
                 root.expanded = false;
+                // Close the option menus as the drawer starts to slide away.
+                recordSplitBtn.expanded = false;
+                shotSplitBtn.expanded = false;
+            }
         }
 
         target: root.visibilities

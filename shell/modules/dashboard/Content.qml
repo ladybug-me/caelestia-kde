@@ -161,16 +161,21 @@ Item {
 
                         sourceComponent: modelData.component
 
-                        Component.onCompleted: active = Qt.binding(() => {
-                            if (!root.visibilities.dashboard)
-                                return false;
-                            if (active) return true;
-                            if (index === view.currentIndex)
-                                return true;
+                        // Stays loaded once shown, so switching tabs does not rebuild it.
+                        property bool keepLoaded: false
+
+                        readonly property bool inView: {
                             const vx = Math.floor(view.visibleArea.xPosition * view.contentWidth);
                             const vex = Math.floor(vx + view.visibleArea.widthRatio * view.contentWidth);
                             return (vx >= x && vx <= x + implicitWidth) || (vex >= x && vex <= x + implicitWidth);
-                        })
+                        }
+
+                        active: root.visibilities.dashboard && (keepLoaded || index === view.currentIndex || inView)
+
+                        onActiveChanged: {
+                            if (active)
+                                keepLoaded = true;
+                        }
                     }
                 }
             }

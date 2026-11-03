@@ -21,7 +21,7 @@ Item {
     readonly property bool isOverAmplified: !isMuted && value > 1.0
     readonly property Item panelItem: bgRect
 
-    implicitWidth: vertical ? 36 : 300
+    implicitWidth: vertical ? 28 : 300
     implicitHeight: vertical ? 200 : 28
     width: implicitWidth
     height: implicitHeight
@@ -86,36 +86,17 @@ Item {
                     }
                 }
             }
-
-            StyledText {
-                text: root.isMuted ? qsTr("Muted") : `${Math.round(root.value * 100)}%`
-                font: Tokens.font.label.small
-                color: root.isMuted ? Colours.palette.m3error : (root.isOverAmplified ? Colours.palette.m3tertiary : Colours.palette.m3onSurface)
-            }
         }
 
         Item {
             visible: root.vertical
             anchors.fill: parent
 
-            StyledText {
-                id: vTopText
-
-                anchors.top: parent.top
-                anchors.topMargin: Tokens.padding.large
-                anchors.horizontalCenter: parent.horizontalCenter
-                width: parent.width
-                horizontalAlignment: Text.AlignHCenter
-                text: root.isMuted ? qsTr("0%") : `${Math.round(root.value * 100)}%`
-                font: Tokens.font.label.small
-                color: root.isMuted ? Colours.palette.m3error : (root.isOverAmplified ? Colours.palette.m3tertiary : Colours.palette.m3onSurface)
-            }
-
             Item {
                 id: vBarContainer
 
-                anchors.top: vTopText.bottom
-                anchors.topMargin: Tokens.spacing.medium
+                anchors.top: parent.top
+                anchors.topMargin: Tokens.padding.large
                 anchors.bottom: vBottomIcon.top
                 anchors.bottomMargin: Tokens.spacing.medium
                 anchors.horizontalCenter: parent.horizontalCenter

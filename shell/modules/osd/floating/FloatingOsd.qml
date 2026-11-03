@@ -113,27 +113,38 @@ Item {
         readonly property string vAnchor: "none"
         readonly property string hAnchor: "none"
         readonly property real offsetScale: root.offsetScale
+        readonly property real slideDistanceY: (height > 0 ? height : 60) + 60
+        readonly property real slideDistanceX: (width > 0 ? width : 200) + 60
 
         width: item ? item.implicitWidth : implicitWidth
         height: item ? item.implicitHeight : implicitHeight
 
-        anchors.horizontalCenter: (isBottom || isTop || isCenter) ? parent.horizontalCenter : undefined
-        anchors.verticalCenter: (isRight || isLeft || isCenter) ? parent.verticalCenter : undefined
-        anchors.verticalCenterOffset: isCenter ? (root.shown ? 0 : 20) : 0
+        x: {
+            if (isLeft) {
+                const barOffset = root.bar.position === "left" ? root.bar.clampedThickness : 0;
+                return barOffset + 36 - 16 * root.offsetScale;
+            }
+            if (isRight) {
+                const barOffset = root.bar.position === "right" ? root.bar.clampedThickness : 0;
+                return parent.width - width - (barOffset + 36 - 16 * root.offsetScale);
+            }
+            return (parent.width - width) / 2;
+        }
 
-        anchors.top: isTop ? parent.top : undefined
-        anchors.topMargin: isTop ? ((root.bar.position === "top" ? root.bar.clampedThickness : 0) + (root.shown ? 36 : 16)) : 0
+        y: {
+            if (isTop) {
+                const barOffset = root.bar.position === "top" ? root.bar.clampedThickness : 0;
+                return barOffset + 36 - 16 * root.offsetScale;
+            }
+            if (isBottom) {
+                const barOffset = root.bar.position === "bottom" ? root.bar.clampedThickness : 0;
+                return parent.height - height - (barOffset + 44 - 16 * root.offsetScale);
+            }
+            return (parent.height - height) / 2 + 16 * root.offsetScale;
+        }
 
-        anchors.bottom: isBottom ? parent.bottom : undefined
-        anchors.bottomMargin: isBottom ? ((root.bar.position === "bottom" ? root.bar.clampedThickness : 0) + (root.shown ? 44 : 24)) : 0
-
-        anchors.right: isRight ? parent.right : undefined
-        anchors.rightMargin: isRight ? ((root.bar.position === "right" ? root.bar.clampedThickness : 0) + (root.shown ? 36 : 16)) : 0
-
-        anchors.left: isLeft ? parent.left : undefined
-        anchors.leftMargin: isLeft ? ((root.bar.position === "left" ? root.bar.clampedThickness : 0) + (root.shown ? 36 : 16)) : 0
-
-        opacity: 1 - root.offsetScale
+        scale: Math.max(0, 1 - root.offsetScale)
+        opacity: Math.max(0, Math.min(1, 1 - root.offsetScale))
         visible: root.active
 
         sourceComponent: {
@@ -144,36 +155,6 @@ Item {
                 case "card": return cardComp;
                 case "bar": return barComp;
                 default: return null;
-            }
-        }
-
-        Behavior on anchors.bottomMargin {
-            Anim {
-                type: Anim.Emphasized
-            }
-        }
-
-        Behavior on anchors.topMargin {
-            Anim {
-                type: Anim.Emphasized
-            }
-        }
-
-        Behavior on anchors.rightMargin {
-            Anim {
-                type: Anim.Emphasized
-            }
-        }
-
-        Behavior on anchors.leftMargin {
-            Anim {
-                type: Anim.Emphasized
-            }
-        }
-
-        Behavior on anchors.verticalCenterOffset {
-            Anim {
-                type: Anim.Emphasized
             }
         }
     }

@@ -1010,7 +1010,7 @@ StyledWindow {
             deformMatrix: contextSubmenuBg.deformMatrix
         }
         BlurMask {
-            target: (panels.floatingOsd.active && panels.floatingOsd.contentLoader.item) ? panels.floatingOsd.panelItem : null
+            target: (panels.floatingOsd.active && panels.floatingOsd.contentLoader.item && panels.floatingOsd.contentLoader.scale > 0.001) ? panels.floatingOsd.panelItem : null
             contentItem: root.contentItem
             blurOffsetTop: root.blurOffsetTop
             blurOffsetBottom: root.blurOffsetBottom

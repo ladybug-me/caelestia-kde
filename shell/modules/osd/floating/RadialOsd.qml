@@ -23,6 +23,8 @@ Item {
 
     implicitWidth: 120
     implicitHeight: 120
+    width: implicitWidth
+    height: implicitHeight
 
     StyledRect {
         id: bgRect

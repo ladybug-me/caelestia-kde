@@ -5,6 +5,7 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.utils
 import qs.modules.bar as Bar
 import qs.modules.bar.popouts as BarPopouts
 
@@ -53,13 +54,13 @@ CustomMouseArea {
     function withinPanelHeight(panel: Item, x: real, y: real, span = 100): bool {
         const panelY = panels.topMargin + panel.y;
         const panelHeight = panel.content ? panel.content.nonAnimHeight : panel.height;
-        const b = spanBounds(panelY - Config.border.rounding - panels.topMargin, panelY + panelHeight + Config.border.rounding + panels.bottomMargin, span);
+        const b = spanBounds(panelY - Surface.panelRounding - panels.topMargin, panelY + panelHeight + Surface.panelRounding + panels.bottomMargin, span);
         return y >= b.x && y <= b.y;
     }
     function withinPanelWidth(panel: Item, x: real, y: real, span = 100): bool {
         const panelX = panels.leftMargin + panel.x;
         const panelWidth = panel.content ? panel.content.nonAnimWidth : panel.width;
-        const b = spanBounds(panelX - Config.border.rounding - panels.leftMargin, panelX + panelWidth + Config.border.rounding + panels.rightMargin, span);
+        const b = spanBounds(panelX - Surface.panelRounding - panels.leftMargin, panelX + panelWidth + Surface.panelRounding + panels.rightMargin, span);
         return x >= b.x && x <= b.y;
     }
     function inLeftPanel(panel: Item, x: real, y: real): bool {
@@ -79,7 +80,7 @@ CustomMouseArea {
     // Next to the open sidebar a popout doesn't always cover the bar item that
     // opened it; keep the strip straight above the item so it can be reached.
     function abovePopoutItem(panel: Item, x: real): bool {
-        return panel === panels.popoutsWrapper && !popouts.isDetached && Math.abs(x - popouts.currentCenter) <= Config.border.rounding;
+        return panel === panels.popoutsWrapper && !popouts.isDetached && Math.abs(x - popouts.currentCenter) <= Surface.panelRounding;
     }
     function inRightPanel(panel: Item, x: real, y: real, edge = 0, span = 100): bool {
         const onLeft = bar.position === "right";

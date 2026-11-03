@@ -228,28 +228,6 @@ PageBase {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
             }
-            StepperRow {
-                reset: ({ node: GlobalConfig.border, setting: "thickness" })
-                label: qsTr("Border thickness")
-                subtext: qsTr("Thickness of the shell border in pixels. Set to 0 for a borderless look")
-                value: GlobalConfig.border.thickness
-                from: 0
-                to: 50
-                stepSize: 1
-                onMoved: v => GlobalConfig.border.thickness = v
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-            }
-            StepperRow {
-                reset: ({ node: GlobalConfig.appearance.rounding, setting: "scale" })
-                label: qsTr("Corner radius scale")
-                subtext: qsTr("Multiplies the shell's corner rounding")
-                value: GlobalConfig.appearance.rounding.scale
-                from: 0.5
-                to: 2.0
-                stepSize: 0.1
-                onMoved: v => GlobalConfig.appearance.rounding.scale = v
-                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-            }
             ToggleRow {
                 reset: ({ node: GlobalConfig.appearance.transparency, setting: "enabled" })
                 text: qsTr("Transparency")
@@ -487,8 +465,20 @@ PageBase {
             spacing: 0
 
             StepperRow {
-                reset: ({ node: GlobalConfig.border, setting: "rounding" })
+                reset: ({ node: GlobalConfig.border, setting: "thickness" })
                 first: true
+                Layout.fillWidth: true
+                label: qsTr("Border thickness")
+                subtext: qsTr("Thickness of the shell border in pixels. Set to 0 for a borderless look")
+                value: GlobalConfig.border.thickness
+                from: 0
+                to: 50
+                stepSize: 1
+                onMoved: v => GlobalConfig.border.thickness = v
+            }
+
+            StepperRow {
+                reset: ({ node: GlobalConfig.border, setting: "rounding" })
                 Layout.fillWidth: true
                 label: qsTr("Border rounding")
                 value: GlobalConfig.border.rounding
@@ -507,6 +497,18 @@ PageBase {
                 to: 100
                 stepSize: 1
                 onMoved: v => GlobalConfig.border.smoothing = v
+            }
+
+            StepperRow {
+                reset: ({ node: GlobalConfig.appearance.rounding, setting: "scale" })
+                Layout.fillWidth: true
+                label: qsTr("Corner radius scale")
+                subtext: qsTr("Multiplies the shell's corner rounding")
+                value: GlobalConfig.appearance.rounding.scale
+                from: 0.5
+                to: 2.0
+                stepSize: 0.1
+                onMoved: v => GlobalConfig.appearance.rounding.scale = v
             }
 
             StepperRow {

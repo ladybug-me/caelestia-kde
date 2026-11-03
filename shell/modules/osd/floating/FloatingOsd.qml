@@ -31,14 +31,14 @@ Item {
         if (!GlobalConfig.osd.enabled || osdStyle === "default")
             return;
 
-        if (!osdFunctions.isEnabled(type))
+        if (!Osd.OsdFunctions.isEnabled(type))
             return;
 
         root.activeType = type;
         root.activeValue = val;
         root.isMuted = muted;
-        root.activeTitle = osdFunctions.getTitle(type);
-        root.activeIcon = osdFunctions.getIcon(type, val, muted);
+        root.activeTitle = Osd.OsdFunctions.getTitle(type);
+        root.activeIcon = Osd.OsdFunctions.getIcon(type, val, muted);
 
         root.shown = true;
         hideTimer.restart();
@@ -46,10 +46,6 @@ Item {
 
     anchors.fill: parent
     z: 100
-
-    Osd.Content.Functions {
-        id: osdFunctions
-    }
 
     Behavior on offsetScale {
         Anim {

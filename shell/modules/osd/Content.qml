@@ -22,35 +22,31 @@ Item {
     required property real brightness
 
     function getVolumeIcon(value: real, muted: bool): string {
-        return functions.getVolumeIcon(value, muted);
+        return OsdFunctions.getVolumeIcon(value, muted);
     }
 
     function getMicIcon(value: real, muted: bool): string {
-        return functions.getMicIcon(value, muted);
+        return OsdFunctions.getMicIcon(value, muted);
     }
 
     function getBrightnessIcon(value: real): string {
-        return functions.getBrightnessIcon(value);
+        return OsdFunctions.getBrightnessIcon(value);
     }
 
     function getIcon(type: string, value: real, muted: bool): string {
-        return functions.getIcon(type, value, muted);
+        return OsdFunctions.getIcon(type, value, muted);
     }
 
     function getTitle(type: string): string {
-        return functions.getTitle(type);
+        return OsdFunctions.getTitle(type);
     }
 
     function isEnabled(type: string): bool {
-        return functions.isEnabled(type);
+        return OsdFunctions.isEnabled(type);
     }
 
     implicitWidth: layout.implicitWidth + Tokens.padding.large * 2
     implicitHeight: layout.implicitHeight + Tokens.padding.large * 2
-
-    Functions {
-        id: functions
-    }
 
     ColumnLayout {
         id: layout
@@ -173,50 +169,6 @@ Item {
             Anim {
                 type: Anim.DefaultEffects
             }
-        }
-    }
-
-    component Functions: QtObject {
-        function getVolumeIcon(value: real, muted: bool): string {
-            return Icons.getVolumeIcon(value, muted);
-        }
-
-        function getMicIcon(value: real, muted: bool): string {
-            return Icons.getMicVolumeIcon(value, muted);
-        }
-
-        function getBrightnessIcon(value: real): string {
-            return `brightness_${(Math.round(value * 6) + 1)}`;
-        }
-
-        function getIcon(type: string, value: real, muted: bool): string {
-            if (type === "volume")
-                return getVolumeIcon(value, muted);
-            if (type === "mic")
-                return getMicIcon(value, muted);
-            if (type === "brightness")
-                return getBrightnessIcon(value);
-            return "";
-        }
-
-        function getTitle(type: string): string {
-            if (type === "volume")
-                return qsTr("Volume");
-            if (type === "mic")
-                return qsTr("Microphone");
-            if (type === "brightness")
-                return qsTr("Brightness");
-            return "";
-        }
-
-        function isEnabled(type: string): bool {
-            if (type === "volume")
-                return GlobalConfig.osd.enableVolume;
-            if (type === "mic")
-                return GlobalConfig.osd.enableMicrophone;
-            if (type === "brightness")
-                return GlobalConfig.osd.enableBrightness;
-            return false;
         }
     }
 }

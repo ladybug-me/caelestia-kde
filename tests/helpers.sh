@@ -54,8 +54,8 @@ assert_file_missing() {
 }
 
 assert_is_dir() {
-    local path="$1"
-    [[ -d "$path" ]] || fail "expected a directory: $path"
+    local path="$1" message="${2:-expected a directory}"
+    [[ -d "$path" ]] || fail "$message: $path"
 }
 
 assert_contains() {

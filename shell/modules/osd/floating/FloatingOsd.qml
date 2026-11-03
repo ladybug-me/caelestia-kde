@@ -15,6 +15,10 @@ Item {
     required property Bar.BarWrapper bar
     readonly property Brightness.Monitor monitor: Brightness.getMonitorForScreen(root.screen)
     property bool shown: false
+    property real offsetScale: shown ? 0 : 1
+    readonly property bool active: shown || offsetScale < 0.99
+    readonly property alias panelItem: contentLoader
+    readonly property alias contentLoader: contentLoader
     property real activeValue: 0
     property bool isMuted: false
     property string activeType: "volume"
@@ -55,6 +59,12 @@ Item {
 
     anchors.fill: parent
     z: 100
+
+    Behavior on offsetScale {
+        Anim {
+            type: Anim.Emphasized
+        }
+    }
 
     Connections {
         function onVolumeChanged(): void {
@@ -100,12 +110,16 @@ Item {
         readonly property bool isCenter: pos === "center"
         readonly property bool isRight: pos === "right"
         readonly property bool isLeft: pos === "left"
+        readonly property string vAnchor: "none"
+        readonly property string hAnchor: "none"
+        readonly property real offsetScale: root.offsetScale
 
         width: item ? item.implicitWidth : implicitWidth
         height: item ? item.implicitHeight : implicitHeight
 
         anchors.horizontalCenter: (isBottom || isTop || isCenter) ? parent.horizontalCenter : undefined
         anchors.verticalCenter: (isRight || isLeft || isCenter) ? parent.verticalCenter : undefined
+        anchors.verticalCenterOffset: isCenter ? (root.shown ? 0 : 20) : 0
 
         anchors.top: isTop ? parent.top : undefined
         anchors.topMargin: isTop ? ((root.bar.position === "top" ? root.bar.clampedThickness : 0) + (root.shown ? 36 : 16)) : 0
@@ -114,14 +128,13 @@ Item {
         anchors.bottomMargin: isBottom ? ((root.bar.position === "bottom" ? root.bar.clampedThickness : 0) + (root.shown ? 44 : 24)) : 0
 
         anchors.right: isRight ? parent.right : undefined
-        anchors.rightMargin: isRight ? ((root.bar.position === "right" ? root.bar.clampedThickness : 0) + 32) : 0
+        anchors.rightMargin: isRight ? ((root.bar.position === "right" ? root.bar.clampedThickness : 0) + (root.shown ? 36 : 16)) : 0
 
         anchors.left: isLeft ? parent.left : undefined
-        anchors.leftMargin: isLeft ? ((root.bar.position === "left" ? root.bar.clampedThickness : 0) + 32) : 0
+        anchors.leftMargin: isLeft ? ((root.bar.position === "left" ? root.bar.clampedThickness : 0) + (root.shown ? 36 : 16)) : 0
 
-        opacity: root.shown ? 1 : 0
-        scale: root.shown ? 1 : 0.88
-        visible: opacity > 0.001
+        opacity: 1 - root.offsetScale
+        visible: root.active
 
         sourceComponent: {
             switch (GlobalConfig.osd.style) {
@@ -134,18 +147,6 @@ Item {
             }
         }
 
-        Behavior on opacity {
-            Anim {
-                duration: Tokens.anim.durations.expressiveFastEffects
-            }
-        }
-
-        Behavior on scale {
-            Anim {
-                type: Anim.Emphasized
-            }
-        }
-
         Behavior on anchors.bottomMargin {
             Anim {
                 type: Anim.Emphasized
@@ -153,6 +154,24 @@ Item {
         }
 
         Behavior on anchors.topMargin {
+            Anim {
+                type: Anim.Emphasized
+            }
+        }
+
+        Behavior on anchors.rightMargin {
+            Anim {
+                type: Anim.Emphasized
+            }
+        }
+
+        Behavior on anchors.leftMargin {
+            Anim {
+                type: Anim.Emphasized
+            }
+        }
+
+        Behavior on anchors.verticalCenterOffset {
             Anim {
                 type: Anim.Emphasized
             }

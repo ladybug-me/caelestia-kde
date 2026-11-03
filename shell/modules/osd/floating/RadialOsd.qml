@@ -6,6 +6,7 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.utils
 
 Item {
     id: root
@@ -18,13 +19,16 @@ Item {
     readonly property real maxValue: type === "brightness" ? 1.0 : Math.max(1.0, GlobalConfig.services.maxVolume)
     readonly property real progress: isMuted ? 0 : Math.max(0, Math.min(1, maxValue > 0 ? (value / maxValue) : 0))
     readonly property bool isOverAmplified: !isMuted && value > 1.0
+    readonly property Item panelItem: bgRect
 
     implicitWidth: 120
     implicitHeight: 120
 
     StyledRect {
+        id: bgRect
+
         anchors.fill: parent
-        radius: Tokens.rounding.extraLargeIncreased
+        radius: Surface.panelRounding
         color: Colours.layer(Colours.tPalette.m3surfaceContainerHigh, 1)
         border.width: 1
         border.color: Colours.palette.m3outlineVariant

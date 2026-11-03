@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
 import qs.services
+import qs.utils
 
 Item {
     id: root
@@ -20,6 +21,7 @@ Item {
     StyledRect {
         anchors.fill: parent
         radius: Tokens.rounding.large
+        clip: true
         color: Colours.layer(Colours.tPalette.m3surfaceContainerLowest, 1)
         border.width: 1
         border.color: Colours.palette.m3outlineVariant
@@ -105,65 +107,78 @@ Item {
         id: defaultComp
 
         Item {
-            implicitWidth: 260
-            implicitHeight: 90
+            implicitWidth: 320
+            implicitHeight: 140
 
             RowLayout {
-                anchors.centerIn: parent
-                spacing: Tokens.spacing.large
+                anchors.left: parent.left
+                anchors.leftMargin: Tokens.padding.extraLarge
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: Tokens.spacing.small
 
-                StyledRect {
-                    Layout.preferredWidth: 42
-                    Layout.preferredHeight: 70
-                    radius: Tokens.rounding.full
-                    color: Colours.layer(Colours.tPalette.m3surfaceContainerHigh, 1)
-                    border.width: 1
-                    border.color: Colours.palette.m3outlineVariant
-
-                    ColumnLayout {
-                        anchors.fill: parent
-                        anchors.margins: Tokens.padding.extraSmall
-                        spacing: 4
-
-                        MaterialIcon {
-                            Layout.alignment: Qt.AlignHCenter
-                            text: "volume_up"
-                            fontStyle: Tokens.font.icon.small
-                            color: Colours.palette.m3primary
-                        }
-
-                        StyledRect {
-                            Layout.alignment: Qt.AlignHCenter
-                            Layout.fillHeight: true
-                            Layout.preferredWidth: 6
-                            radius: Tokens.rounding.full
-                            color: Colours.palette.m3surfaceContainerHighest
-
-                            StyledRect {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.bottom: parent.bottom
-                                height: parent.height * 0.72
-                                radius: Tokens.rounding.full
-                                color: Colours.palette.m3primary
-                            }
-                        }
-                    }
+                MaterialIcon {
+                    text: "dock_to_right"
+                    fontStyle: Tokens.font.icon.small
+                    color: Colours.palette.m3primary
                 }
 
-                ColumnLayout {
-                    spacing: 4
+                StyledText {
+                    text: qsTr("Edge Drawer")
+                    font: Tokens.font.title.small
+                    color: Colours.palette.m3onSurface
+                }
+            }
 
-                    StyledText {
-                        text: qsTr("Edge Drawer")
-                        font: Tokens.font.title.small
-                        color: Colours.palette.m3onSurface
+            StyledRect {
+                anchors.right: parent.right
+                anchors.rightMargin: GlobalConfig.appearance.islands ? Tokens.padding.small : 0
+                anchors.verticalCenter: parent.verticalCenter
+                width: 46
+                height: 106
+                topLeftRadius: Surface.panelRounding
+                bottomLeftRadius: Surface.panelRounding
+                topRightRadius: GlobalConfig.appearance.islands ? Surface.panelRounding : 0
+                bottomRightRadius: GlobalConfig.appearance.islands ? Surface.panelRounding : 0
+                color: Colours.layer(Colours.tPalette.m3surfaceContainerHigh, 1)
+                border.width: 1
+                border.color: Colours.palette.m3outlineVariant
+
+                Item {
+                    anchors.centerIn: parent
+                    width: 28
+                    height: 88
+
+                    StyledRect {
+                        anchors.fill: parent
+                        radius: Tokens.rounding.full
+                        color: Colours.layer(Colours.palette.m3surfaceContainer, 2)
+
+                        StyledRect {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: parent.height - volHandle.y
+                            radius: parent.radius
+                            color: Colours.palette.m3secondary
+                        }
                     }
 
-                    StyledText {
-                        text: qsTr("Slides out from the right screen edge")
-                        font: Tokens.font.body.small
-                        color: Colours.palette.m3outline
+                    StyledRect {
+                        id: volHandle
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        y: Math.round((1 - root.sampleValue) * (parent.height - height))
+                        width: 28
+                        height: 28
+                        radius: Tokens.rounding.full
+                        color: Colours.palette.m3inverseSurface
+
+                        MaterialIcon {
+                            anchors.centerIn: parent
+                            text: "volume_up"
+                            fontStyle: Tokens.font.icon.small
+                            color: Colours.palette.m3inverseOnSurface
+                        }
                     }
                 }
             }

@@ -88,7 +88,7 @@ Item {
             StyledText {
                 text: root.isMuted ? qsTr("Muted") : `${Math.round(root.value * 100)}%`
                 font: Tokens.font.label.small
-                color: root.isMuted ? Colours.palette.m3error : (root.isOverAmplified ? Colours.palette.m3tertiary : Colours.palette.m3outline)
+                color: root.isMuted ? Colours.palette.m3error : (root.isOverAmplified ? Colours.palette.m3tertiary : Colours.palette.m3onSurface)
             }
         }
     }

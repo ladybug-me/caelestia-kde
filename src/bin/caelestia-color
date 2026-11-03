@@ -1401,17 +1401,19 @@ _find_parent_video_arg() {
     return 1
 }
 
-# Return 0 (true) if any ancestor process in the current process tree is skwd-walld.
+# Return 0 (true) if any ancestor process in the current process tree is skwd-walld,
+# if SKWD_WALLD is set in the environment, or if an apply path (-a) was passed from skwd-wall.
 # This detects the re-entrant call skwd-walld -> caelestia-color and is used to skip
 # the skwd-helm apply that would feed back into skwd-walld, creating an infinite loop.
 _called_from_skwd_walld() {
     [[ -n "${SKWD_WALLD:-}" ]] && return 0
+    [[ -n "${apply_file:-}" ]] && return 0
     local pid="$BASHPID" ppid comm
     while true; do
         ppid="$(ps -p "$pid" -o ppid= 2>/dev/null | tr -d ' ')" || break
         [[ -n "$ppid" && "$ppid" -gt 1 ]] || break
         comm="$(ps -p "$ppid" -o comm= 2>/dev/null | tr -d ' ')" || break
-        [[ "$comm" == "skwd-walld" ]] && return 0
+        [[ "$comm" == "skwd-walld" || "$comm" == "skwd-wall"* ]] && return 0
         pid="$ppid"
     done
     return 1
@@ -1464,7 +1466,7 @@ write_wallpaper_state() {
     if command -v skwd-helm >/dev/null 2>&1 && ! _called_from_skwd_walld; then
         local curr_helm
         curr_helm="$(skwd-helm current 2>/dev/null | cut -f2- || true)"
-        if [[ "$curr_helm" != "$wallpaper" ]]; then
+        if [[ -z "$curr_helm" ]] || ! grep -qxF "$wallpaper" <<< "$curr_helm"; then
             skwd-helm apply "$wallpaper" >/dev/null 2>&1 || true
         fi
     fi

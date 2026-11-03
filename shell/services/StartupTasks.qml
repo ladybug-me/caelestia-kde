@@ -30,6 +30,7 @@ Item {
                 "05-matugen"
                 "06-kde-desktop-mode"
                 "07-export-plasma-config"
+                "08-skwd-wall-hook"
             )
 
             for script_name in "\${TASKS[@]}"; do

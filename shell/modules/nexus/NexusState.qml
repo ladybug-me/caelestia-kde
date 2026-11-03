@@ -43,7 +43,7 @@ QtObject {
         case 2: return 1; // Panels & Interface: Dashboard
         case 3: return 0; // Network & Connectivity: Wi-Fi & Connection
         case 4: return 0; // Display & Sound: Layout & Scale
-        case 5: return 3; // Utilities & Tools: On-screen slider
+        case 5: return 4; // Utilities & Tools: Utilities panel
         case 6: return 0; // Applications & Shortcuts: Default Applications
         case 7: return 0; // System & Services: Session settings
         default: return 0;

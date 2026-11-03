@@ -24,8 +24,10 @@ Item {
     property real brightness
 
     function show(): void {
-        visibilities.osd = true;
-        timer.restart();
+        if (GlobalConfig.osd.style === "default") {
+            visibilities.osd = true;
+            timer.restart();
+        }
     }
 
     function refreshBrightness(): void {

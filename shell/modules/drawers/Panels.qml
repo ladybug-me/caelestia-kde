@@ -13,6 +13,7 @@ import qs.modules.session as Session
 import qs.modules.sidebar as Sidebar
 import qs.modules.utilities as Utilities
 import qs.modules.bar.popouts as BarPopouts
+import qs.modules.osd.floating as FloatingOsd
 import qs.modules.utilities.toasts as Toasts
 import "../utilities/toasts/corner.js" as Corner
 
@@ -29,6 +30,7 @@ Item {
     property var overviewAnimConfig
     readonly property alias osd: osd
     readonly property alias osdWrapper: osdWrapper
+    readonly property alias floatingOsd: floatingOsd
     readonly property alias notifications: notifications
     readonly property alias session: session
     readonly property alias sessionWrapper: sessionWrapper
@@ -364,5 +366,11 @@ Item {
         screen: root.screen
         visibilities: root.visibilities
         panels: root
+    }
+    FloatingOsd.FloatingOsd {
+        id: floatingOsd
+
+        screen: root.screen
+        bar: root.bar
     }
 }

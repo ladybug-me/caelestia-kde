@@ -58,6 +58,13 @@ StackView {
         required property real scaleOffset
         required property real fontScale
 
+        // On horizontal bars, fits the longest label, between the configured width and twice it.
+        property real widestRow: 0
+        readonly property real rowWidth: {
+            const base = Tokens.sizes.bar.trayMenuWidth * scaleOffset;
+            return root.popouts.isHorizontal ? Math.min(Math.max(widestRow, base), base * 2) : base;
+        }
+
         padding: Tokens.padding.small * scaleOffset
         spacing: Tokens.spacing.small * scaleOffset
 
@@ -90,13 +97,6 @@ StackView {
         }
 
         property var itemGroups: []
-
-        // On horizontal bars, fits the longest label, between the configured width and twice it.
-        property real widestRow: 0
-        readonly property real rowWidth: {
-            const base = Tokens.sizes.bar.trayMenuWidth * scaleOffset;
-            return root.popouts.isHorizontal ? Math.min(Math.max(widestRow, base), base * 2) : base;
-        }
 
         function updateRowWidth() {
             let w = 0;

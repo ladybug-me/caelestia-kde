@@ -17,7 +17,9 @@ StyledRect {
     required property DrawerVisibilities visibilities
     property bool expanded: false
     readonly property bool isExpanded: root.expanded || Recorder.running
-    readonly property bool shotMode: root.props.captureMode === "shot"
+    // The utilities card persisted an empty mode, which used to fall back to
+    // the recorder; only an explicit "record" should do that.
+    readonly property bool shotMode: root.props.captureMode !== "record"
     readonly property real collapsedHeight: btnLayout.implicitHeight + layout.anchors.margins * 2
     readonly property real expandedHeight: btnLayout.implicitHeight + layout.spacing + bodyLayout.implicitHeight + layout.anchors.margins * 2
     readonly property real nonAnimHeight: root.isExpanded ? expandedHeight : collapsedHeight
@@ -90,13 +92,32 @@ StyledRect {
                         elide: Text.ElideRight
                     }
 
-                    StyledText {
+                    RowLayout {
                         Layout.fillWidth: true
-                        text: root.shotMode ? qsTr("Capture, OCR and image search") : Recorder.paused ? qsTr("Paused") : Recorder.running ? qsTr("Running...") : qsTr("Ready")
-                        color: Colours.palette.m3onSurfaceVariant
-                        font: Tokens.font.body.small
-                        elide: Text.ElideRight
-                        animate: true
+                        spacing: Tokens.spacing.extraSmall
+
+                        // Both modes are one click away while the card is collapsed,
+                        // instead of being hidden inside the expanded body.
+                        ModeButton {
+                            active: root.shotMode
+                            icon: "photo_camera"
+                            mode: "shot"
+                        }
+
+                        ModeButton {
+                            active: !root.shotMode
+                            icon: "videocam"
+                            mode: "record"
+                        }
+
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: Recorder.running ? (Recorder.paused ? qsTr("Paused") : qsTr("Running...")) : ""
+                            color: Colours.palette.m3onSurfaceVariant
+                            font: Tokens.font.body.small
+                            elide: Text.ElideRight
+                            animate: true
+                        }
                     }
                 }
 
@@ -477,6 +498,33 @@ StyledRect {
                     }
                 }
             }
+        }
+    }
+
+    component ModeButton: StyledRect {
+        id: modeBtn
+
+        required property bool active
+        required property string icon
+        required property string mode
+
+        implicitWidth: 24
+        implicitHeight: 20
+        radius: Tokens.rounding.full
+        color: modeBtn.active ? Colours.palette.m3secondaryContainer : "transparent"
+        opacity: Recorder.running ? 0.4 : 1
+
+        StateLayer {
+            radius: parent.radius
+            enabled: !Recorder.running
+            onClicked: root.props.captureMode = modeBtn.mode
+        }
+
+        MaterialIcon {
+            anchors.centerIn: parent
+            text: modeBtn.icon
+            color: modeBtn.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurfaceVariant
+            fontStyle: Tokens.font.icon.small
         }
     }
 }

@@ -7,6 +7,7 @@ import qs.components
 import qs.services
 import qs.utils
 import qs.modules.bar as Bar
+import qs.modules.osd as Osd
 
 Item {
     id: root
@@ -30,28 +31,14 @@ Item {
         if (!GlobalConfig.osd.enabled || osdStyle === "default")
             return;
 
-        if (type === "volume" && !GlobalConfig.osd.enableVolume)
-            return;
-        if (type === "mic" && !GlobalConfig.osd.enableMicrophone)
-            return;
-        if (type === "brightness" && !GlobalConfig.osd.enableBrightness)
+        if (!osdFunctions.isEnabled(type))
             return;
 
         root.activeType = type;
         root.activeValue = val;
         root.isMuted = muted;
-
-        if (type === "volume") {
-            root.activeTitle = qsTr("Volume");
-            root.activeIcon = Icons.getVolumeIcon(val, muted);
-        } else if (type === "mic") {
-            root.activeTitle = qsTr("Microphone");
-            root.activeIcon = Icons.getMicVolumeIcon(val, muted);
-        } else if (type === "brightness") {
-            root.activeTitle = qsTr("Brightness");
-            const step = Math.min(7, Math.max(1, Math.round(val * 6) + 1));
-            root.activeIcon = `brightness_${step}`;
-        }
+        root.activeTitle = osdFunctions.getTitle(type);
+        root.activeIcon = osdFunctions.getIcon(type, val, muted);
 
         root.shown = true;
         hideTimer.restart();
@@ -59,6 +46,10 @@ Item {
 
     anchors.fill: parent
     z: 100
+
+    Osd.Content.Functions {
+        id: osdFunctions
+    }
 
     Behavior on offsetScale {
         Anim {

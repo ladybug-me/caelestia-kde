@@ -106,7 +106,7 @@ StyledWindow {
     anchors.left: true
     anchors.right: true
     WlrLayershell.exclusionMode: ExclusionMode.Ignore
-    WlrLayershell.layer: !wantsKeyboard && (capturesOverlayInput || (actualFullscreen && fsTransitionProg < 1) || (fsTransitionProg > 0 && Config.general.showOverFullscreen) || (panels.notifications.visible && panels.notifications.height > 0 && GlobalConfig.notifs.fullscreen === "on") || (((monitor?.lastIpcObject?.specialWorkspace?.name?.length ?? 0) > 0) && (monitor?.activeWorkspace?.toplevels?.values?.some(t => (t?.lastIpcObject?.fullscreen ?? 0) > 1) ?? false))) ? WlrLayer.Overlay : WlrLayer.Top
+    WlrLayershell.layer: !wantsKeyboard && (capturesOverlayInput || panels.osdActive || (actualFullscreen && fsTransitionProg < 1) || (fsTransitionProg > 0 && Config.general.showOverFullscreen) || (panels.notifications.visible && panels.notifications.height > 0 && GlobalConfig.notifs.fullscreen === "on") || (((monitor?.lastIpcObject?.specialWorkspace?.name?.length ?? 0) > 0) && (monitor?.activeWorkspace?.toplevels?.values?.some(t => (t?.lastIpcObject?.fullscreen ?? 0) > 1) ?? false))) ? WlrLayer.Overlay : WlrLayer.Top
     WlrLayershell.keyboardFocus: wantsKeyboard ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
     // A pinned sidebar gets out of the way of fullscreen windows (games, video)
@@ -1008,6 +1008,17 @@ StyledWindow {
             vAnchor: desktopContextMenu.submenuPanel.vAnchor
             hAnchor: desktopContextMenu.submenuPanel.hAnchor
             deformMatrix: contextSubmenuBg.deformMatrix
+        }
+        BlurMask {
+            target: (panels.floatingOsd.active && panels.floatingOsd.contentLoader.item && panels.floatingOsd.contentLoader.scale > 0.001) ? panels.floatingOsd.panelItem : null
+            contentItem: root.contentItem
+            blurOffsetTop: root.blurOffsetTop
+            blurOffsetBottom: root.blurOffsetBottom
+            blurOffsetLeft: root.blurOffsetLeft
+            blurOffsetRight: root.blurOffsetRight
+            vAnchor: "none"
+            hAnchor: "none"
+            offsetScale: panels.floatingOsd.offsetScale
         }
     }
 

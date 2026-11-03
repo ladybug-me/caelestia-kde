@@ -23,13 +23,6 @@ PageBase {
 
         NavRow {
             first: true
-            icon: "volume_up"
-            label: qsTr("On-screen sliders")
-            status: qsTr("Volume, microphone, brightness, and edge triggers")
-            onClicked: root.nState.openSubPage(3)
-        }
-
-        NavRow {
             icon: "widgets"
             label: qsTr("Utilities panel")
             status: qsTr("Choose the cards shown in the panel")

@@ -4268,7 +4268,7 @@
   <context>
     <name>CaptureCard</name>
     <message>
-      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+88"/>
+      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+92"/>
       <source>Screen Capture</source>
       <translation>Captura de pantalla</translation>
     </message>
@@ -14655,7 +14655,7 @@ PIN: %1</source>
   <context>
     <name>TrayMenu</name>
     <message>
-      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
+      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+340"/>
       <source>Back</source>
       <translation>Atrás</translation>
     </message>

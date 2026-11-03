@@ -12,7 +12,7 @@ Following options are the most important changes done in our config.json
     ```json
     "postProcessing": [
         {
-            "command": "PATH=$HOME/.local/bin:$PATH caelestia-color wallpaper -f %thumb% -a %path%",
+            "command": "SKWD_WALLD=1 PATH=$HOME/.local/bin:$PATH caelestia-color wallpaper -f %thumb% -a %path%",
             "type": "all"
         }
     ]

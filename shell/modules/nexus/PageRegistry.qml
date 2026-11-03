@@ -10,10 +10,19 @@ QtObject {
     readonly property list<var> pages: PageDictionary.pages
 
     property var searchIndex: []
+    property var allPages: []
+    property var _entriesFinder: null
+    property var _pagesFinder: null
 
-    function buildIndex() {
+    function buildIndex(): void {
         let index = [];
+        let indexedPages = [];
         pages.forEach((page, pageIdx) => {
+            indexedPages.push({
+                page: page,
+                pageIdx: pageIdx
+            });
+
             index.push({
                 settingLabel: page.label,
                 settingDescription: page.description || "",
@@ -38,54 +47,58 @@ QtObject {
                 });
             });
         });
+        allPages = indexedPages;
         searchIndex = index;
-    }
-
-    Component.onCompleted: {
-        buildIndex();
+        _entriesFinder = new Fzf.Finder(searchIndex, {
+            selector: e => e.searchText
+        });
+        _pagesFinder = new Fzf.Finder(allPages, {
+            selector: e => [e.page.label, e.page.description, e.page.category].filter(Boolean).join(" ")
+        });
     }
 
     function fuzzyPages(query: string): list<var> {
-        const indexed = pages.map((page, pageIdx) => ({
-            page,
-            pageIdx
-        }));
-
         const search = query.trim().replace(/\s+/g, " ");
         if (!search)
-            return indexed;
+            return allPages;
+        if (!_pagesFinder)
+            return [];
 
-        const selector = e => [e.page.label, e.page.description, e.page.category].filter(Boolean).join(" ");
-        const finder = new Fzf.Finder(indexed, {
-            selector
-        });
-        return finder.find(search).sort((a, b) => {
-            if (a.score === b.score)
-                return selector(a.item).trim().length - selector(b.item).trim().length;
+        const results = _pagesFinder.find(search);
+        results.sort((a, b) => {
+            if (a.score === b.score) {
+                const aLen = [a.item.page.label, a.item.page.description, a.item.page.category].filter(Boolean).join(" ").length;
+                const bLen = [b.item.page.label, b.item.page.description, b.item.page.category].filter(Boolean).join(" ").length;
+                return aLen - bLen;
+            }
             return b.score - a.score;
-        }).map(r => r.item);
+        });
+        return results.slice(0, 30).map(r => r.item);
     }
 
     function fuzzyEntries(query: string): list<var> {
         const search = query.trim().replace(/\s+/g, " ");
-        if (!search)
+        if (!search || !_entriesFinder)
             return [];
 
-        const selector = e => e.searchText;
-        const finder = new Fzf.Finder(searchIndex, {
-            selector
-        });
-        return finder.find(search).sort((a, b) => {
+        const results = _entriesFinder.find(search);
+        results.sort((a, b) => {
             if (a.score === b.score)
-                return selector(a.item).trim().length - selector(b.item).trim().length;
+                return a.item.searchText.trim().length - b.item.searchText.trim().length;
             return b.score - a.score;
-        }).map(r => r.item);
+        });
+        return results.slice(0, 30).map(r => r.item);
     }
 
     function indexForKey(key: string): int {
-        for (let i = 0; i < pages.length; i++) {
-            if (pages[i].key === key) return i;
-        }
-        return -1;
+        return PageDictionary.pageIdxFor(key);
+    }
+
+    function defaultSubPageForKey(key: string): int {
+        return PageDictionary.defaultSubPageForKey(key);
+    }
+
+    Component.onCompleted: {
+        buildIndex();
     }
 }

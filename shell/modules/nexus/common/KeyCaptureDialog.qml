@@ -19,6 +19,15 @@ Popup {
     property string currentKey: ""
     property string capturedKey: ""
     property var targetItem: null
+    property real popupX: 0
+    property real popupY: 0
+    property bool isClosing: false
+    property bool escHolding: false
+    property real escHoldProgress: 0
+    property string escHeldMods: ""
+    property bool enterHolding: false
+    property real enterHoldProgress: 0
+    property string enterHeldMods: ""
     readonly property var conflictInfo: {
         if (capturedKey === "")
             return null;
@@ -50,13 +59,46 @@ Popup {
     signal clear(string name)
     signal unblocked()
 
+    function confirmAndClose(): void {
+        if (root.capturedKey === "")
+            return;
+        let finalKey = root.capturedKey;
+        if (root.targetItem && root.currentKey !== "") {
+            finalKey = root.currentKey + "; " + root.capturedKey;
+        }
+        if (root.conflict !== "") {
+            const otherKey = KeybindsModel.getKey(root.conflict);
+            if (otherKey !== "") {
+                const parts = otherKey.split(";").map(s => s.trim()).filter(s => s.length > 0 && s !== root.capturedKey);
+                KeybindsModel.setKey(root.conflict, parts.join("; "));
+            }
+        }
+        root.isClosing = true;
+        root.close();
+        root.confirm(root.shortcutName, finalKey);
+    }
+
+    function updatePosition(): void {
+        if (!parent || root.isClosing)
+            return;
+        if (targetItem) {
+            root.popupX = Math.min(parent.width - width - 16, Math.max(16, targetItem.mapToItem(parent, targetItem.width - width, targetItem.height + 8).x));
+            root.popupY = Math.min(parent.height - height - 16, Math.max(16, targetItem.mapToItem(parent, 0, targetItem.height + 8).y));
+        } else {
+            root.popupX = Math.round((parent.width - width) / 2);
+            root.popupY = Math.round((parent.height - height) / 2);
+        }
+    }
+
+    x: root.popupX
+    y: root.popupY
     width: 300
     padding: 16
     height: contentColumn.implicitHeight + 28
 
     modal: true
     focus: true
-    closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+    closePolicy: Popup.CloseOnPressOutside
     parent: Overlay.overlay
 
     enter: DialogTransition { }
@@ -64,48 +106,22 @@ Popup {
         exiting: true
     }
 
-    x: targetItem && parent ? Math.min(parent.width - width - 16, Math.max(16, targetItem.mapToItem(parent, targetItem.width - width, targetItem.height + 8).x)) : (parent ? Math.round((parent.width - width) / 2) : 0)
-    y: targetItem && parent ? Math.min(parent.height - height - 16, Math.max(16, targetItem.mapToItem(parent, 0, targetItem.height + 8).y)) : (parent ? Math.round((parent.height - height) / 2) : 0)
+    onAboutToShow: {
+        root.isClosing = false;
+        updatePosition();
+    }
+    onAboutToHide: {
+        root.isClosing = true;
+    }
+
+    onTargetItemChanged: updatePosition()
+    onHeightChanged: updatePosition()
+    onWidthChanged: updatePosition()
 
     onConflictChanged: {
         // The error text below is what names the conflict; the shake only drives it home.
         if (root.conflict !== "" && Tokens.anim.enabled)
             shakeAnim.start();
-    }
-
-    SequentialAnimation {
-        id: shakeAnim
-
-        NumberAnimation {
-            target: shakeTr
-            property: "x"
-            to: -8
-            duration: 50
-        }
-        NumberAnimation {
-            target: shakeTr
-            property: "x"
-            to: 8
-            duration: 50
-        }
-        NumberAnimation {
-            target: shakeTr
-            property: "x"
-            to: -5
-            duration: 50
-        }
-        NumberAnimation {
-            target: shakeTr
-            property: "x"
-            to: 5
-            duration: 50
-        }
-        NumberAnimation {
-            target: shakeTr
-            property: "x"
-            to: 0
-            duration: 50
-        }
     }
 
     background: Item {
@@ -132,12 +148,35 @@ Popup {
     }
 
     onOpened: {
-        capturedKey = ""
-        blockShortcutsProc.running = true
+        root.isClosing = false;
+        updatePosition();
+        capturedKey = "";
+        escHoldAnim.stop();
+        enterHoldAnim.stop();
+        root.escHolding = false;
+        root.escHoldProgress = 0;
+        root.escHeldMods = "";
+        root.enterHolding = false;
+        root.enterHoldProgress = 0;
+        root.enterHeldMods = "";
+        blockShortcutsProc.running = true;
     }
 
     onClosed: {
-        unblockShortcutsProc.running = true
+        root.isClosing = false;
+        escHoldAnim.stop();
+        enterHoldAnim.stop();
+        root.escHolding = false;
+        root.escHoldProgress = 0;
+        root.escHeldMods = "";
+        root.enterHolding = false;
+        root.enterHoldProgress = 0;
+        root.enterHeldMods = "";
+        unblockShortcutsProc.running = true;
+    }
+
+    Component.onDestruction: {
+        Quickshell.execDetached(["bash", "-c", "gdbus call --session --dest=org.kde.kglobalaccel --object-path=/kglobalaccel --method=org.kde.KGlobalAccel.blockGlobalShortcuts 'false'"]);
     }
 
     contentItem: ColumnLayout {
@@ -163,6 +202,57 @@ Popup {
             Layout.preferredHeight: 40
 
             Keys.onPressed: (event) => {
+                if (event.key === Qt.Key_Escape) {
+                    if (root.enterHolding) {
+                        enterHoldAnim.stop()
+                        root.enterHolding = false
+                        root.enterHoldProgress = 0
+                    }
+                    if (!event.isAutoRepeat) {
+                        let modifiers = ""
+                        if (event.modifiers & Qt.MetaModifier) modifiers += "Meta+"
+                        if (event.modifiers & Qt.ControlModifier) modifiers += "Ctrl+"
+                        if (event.modifiers & Qt.AltModifier) modifiers += "Alt+"
+                        if (event.modifiers & Qt.ShiftModifier) modifiers += "Shift+"
+                        root.escHeldMods = modifiers
+                        root.escHolding = true
+                        root.escHoldProgress = 0
+                        escHoldAnim.restart()
+                    }
+                    event.accepted = true
+                    return
+                } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    if (root.escHolding) {
+                        escHoldAnim.stop()
+                        root.escHolding = false
+                        root.escHoldProgress = 0
+                    }
+                    if (!event.isAutoRepeat) {
+                        let modifiers = ""
+                        if (event.modifiers & Qt.MetaModifier) modifiers += "Meta+"
+                        if (event.modifiers & Qt.ControlModifier) modifiers += "Ctrl+"
+                        if (event.modifiers & Qt.AltModifier) modifiers += "Alt+"
+                        if (event.modifiers & Qt.ShiftModifier) modifiers += "Shift+"
+                        root.enterHeldMods = modifiers
+                        root.enterHolding = true
+                        root.enterHoldProgress = 0
+                        enterHoldAnim.restart()
+                    }
+                    event.accepted = true
+                    return
+                } else {
+                    if (root.escHolding) {
+                        escHoldAnim.stop()
+                        root.escHolding = false
+                        root.escHoldProgress = 0
+                    }
+                    if (root.enterHolding) {
+                        enterHoldAnim.stop()
+                        root.enterHolding = false
+                        root.enterHoldProgress = 0
+                    }
+                }
+
                 let modifiers = ""
                 if (event.modifiers & Qt.MetaModifier) modifiers += "Meta+"
                 if (event.modifiers & Qt.ControlModifier) modifiers += "Ctrl+"
@@ -180,10 +270,6 @@ Popup {
                         keyStr = String.fromCharCode(event.key)
                     } else if (event.key === Qt.Key_Space) {
                         keyStr = "Space"
-                    } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-                        keyStr = "Return"
-                    } else if (event.key === Qt.Key_Escape) {
-                        keyStr = "Escape"
                     } else if (event.key === Qt.Key_Tab) {
                         keyStr = "Tab"
                     } else if (event.key === Qt.Key_Up) {
@@ -207,6 +293,30 @@ Popup {
                     root.capturedKey = mods + keyStr
                 }
                 event.accepted = true
+            }
+
+            Keys.onReleased: (event) => {
+                if (event.key === Qt.Key_Escape) {
+                    if (!event.isAutoRepeat) {
+                        if (root.escHolding) {
+                            escHoldAnim.stop()
+                            root.escHolding = false
+                            root.escHoldProgress = 0
+                            root.capturedKey = root.escHeldMods + "Escape"
+                        }
+                    }
+                    event.accepted = true
+                } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                    if (!event.isAutoRepeat) {
+                        if (root.enterHolding) {
+                            enterHoldAnim.stop()
+                            root.enterHolding = false
+                            root.enterHoldProgress = 0
+                            root.capturedKey = root.enterHeldMods + "Return"
+                        }
+                    }
+                    event.accepted = true
+                }
             }
 
             Rectangle {
@@ -266,6 +376,84 @@ Popup {
             }
         }
 
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall
+            visible: root.escHolding
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Tokens.spacing.extraSmall
+
+                MaterialIcon {
+                    text: "cancel"
+                    fontStyle: Tokens.font.icon.small
+                    color: Colours.palette.m3error
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Hold Escape to cancel (%1s)").arg((1.5 * (1 - root.escHoldProgress)).toFixed(1))
+                    color: Colours.palette.m3error
+                    font: NexusStyle.secondaryFont
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 3
+                radius: Tokens.rounding.full
+                color: Colours.palette.m3surfaceVariant
+                clip: true
+
+                Rectangle {
+                    width: parent.width * root.escHoldProgress
+                    height: parent.height
+                    radius: parent.radius
+                    color: Colours.palette.m3error
+                }
+            }
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall
+            visible: root.enterHolding
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Tokens.spacing.extraSmall
+
+                MaterialIcon {
+                    text: "check_circle"
+                    fontStyle: Tokens.font.icon.small
+                    color: Colours.palette.m3primary
+                }
+
+                StyledText {
+                    Layout.fillWidth: true
+                    text: qsTr("Hold Enter to accept shortcut (%1s)").arg((1.5 * (1 - root.enterHoldProgress)).toFixed(1))
+                    color: Colours.palette.m3primary
+                    font: NexusStyle.secondaryFont
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                height: 3
+                radius: Tokens.rounding.full
+                color: Colours.palette.m3surfaceVariant
+                clip: true
+
+                Rectangle {
+                    width: parent.width * root.enterHoldProgress
+                    height: parent.height
+                    radius: parent.radius
+                    color: Colours.palette.m3primary
+                }
+            }
+        }
+
         StyledText {
             Layout.fillWidth: true
             visible: root.conflict !== ""
@@ -289,22 +477,77 @@ Popup {
             Controls.TextButton {
                 text: root.conflict !== "" ? qsTr("Replace") : qsTr("Confirm")
                 enabled: root.capturedKey !== ""
-                onClicked: {
-                    let finalKey = root.capturedKey
-                    if (root.targetItem && root.currentKey !== "") {
-                        finalKey = root.currentKey + "; " + root.capturedKey
-                    }
-                    if (root.conflict !== "") {
-                        const otherKey = KeybindsModel.getKey(root.conflict)
-                        if (otherKey !== "") {
-                            const parts = otherKey.split(";").map(s => s.trim()).filter(s => s.length > 0 && s !== root.capturedKey)
-                            KeybindsModel.setKey(root.conflict, parts.join("; "))
-                        }
-                    }
-                    root.confirm(root.shortcutName, finalKey)
-                    root.close()
-                }
+                onClicked: root.confirmAndClose()
             }
+        }
+    }
+
+    SequentialAnimation {
+        id: shakeAnim
+
+        NumberAnimation {
+            target: shakeTr
+            property: "x"
+            to: -8
+            duration: 50
+        }
+        NumberAnimation {
+            target: shakeTr
+            property: "x"
+            to: 8
+            duration: 50
+        }
+        NumberAnimation {
+            target: shakeTr
+            property: "x"
+            to: -5
+            duration: 50
+        }
+        NumberAnimation {
+            target: shakeTr
+            property: "x"
+            to: 5
+            duration: 50
+        }
+        NumberAnimation {
+            target: shakeTr
+            property: "x"
+            to: 0
+            duration: 50
+        }
+    }
+
+    NumberAnimation {
+        id: escHoldAnim
+
+        target: root
+        property: "escHoldProgress"
+        from: 0
+        to: 1
+        duration: 1500
+        onFinished: {
+            root.escHolding = false
+            root.escHoldProgress = 0
+            root.capturedKey = ""
+            root.close()
+        }
+    }
+
+    NumberAnimation {
+        id: enterHoldAnim
+
+        target: root
+        property: "enterHoldProgress"
+        from: 0
+        to: 1
+        duration: 1500
+        onFinished: {
+            root.enterHolding = false
+            root.enterHoldProgress = 0
+            if (root.capturedKey === "") {
+                root.capturedKey = root.enterHeldMods + "Return"
+            }
+            root.confirmAndClose()
         }
     }
 

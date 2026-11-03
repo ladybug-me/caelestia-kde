@@ -581,14 +581,13 @@ FloatingWindow {
                                 icon: "settings"
                                 text: qsTr("Open in Settings")
                                 onClicked: {
-                                    const pageIdx = PageRegistry.indexForKey(featureData.settingsPage);
-                                    if (pageIdx >= 0) {
-                                        WindowFactory.create(null, {
-                                            initialPageIdx: pageIdx,
-                                            initialSubPageIdx: featureData.settingsSubPage ?? -1
-                                        });
-                                        root.dismiss();
-                                    }
+                                    const pageKey = featureData.settingsPage;
+                                    const subIdx = featureData.settingsSubPage ?? PageRegistry.defaultSubPageForKey(pageKey);
+                                    WindowFactory.create(null, {
+                                        initialPageIdx: pageKey,
+                                        initialSubPageIdx: subIdx
+                                    });
+                                    root.dismiss();
                                 }
                             }
                         }

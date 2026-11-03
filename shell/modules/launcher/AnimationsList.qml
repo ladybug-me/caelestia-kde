@@ -41,12 +41,14 @@ StyledListView {
 
     onVisibleChanged: {
         if (visible) {
+            Animations.refresh();
             refreshModel();
         }
     }
 
     onStateChanged: {
         if (state === "animations") {
+            Animations.refresh();
             refreshModel();
         }
     }
@@ -99,14 +101,14 @@ StyledListView {
 
         required property var modelData
 
-        implicitHeight: Tokens.sizes.launcher.itemHeight
-        width: root.width
-
-        function activate() {
+        function activate(): void {
             if (!modelData || !modelData.onClicked)
                 return;
             modelData.onClicked(root);
         }
+
+        implicitHeight: Tokens.sizes.launcher.itemHeight
+        width: root.width
 
         StateLayer {
             radius: Tokens.rounding.large
@@ -143,7 +145,7 @@ StyledListView {
                 }
 
                 StyledText {
-                    text: modelData ? (modelData.path === "default" ? qsTr("Use default shell animations") : qsTr("Click to apply animation")) : ""
+                    text: modelData ? (modelData.description || (modelData.path === "default" ? qsTr("Use default shell animations") : qsTr("Click to apply animation"))) : ""
                     font: Tokens.font.body.small
                     color: Colours.palette.m3onSurfaceVariant
                     elide: Text.ElideRight

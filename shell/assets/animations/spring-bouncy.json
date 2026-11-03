@@ -1,0 +1,22 @@
+{
+    "name": "Spring Bouncy",
+    "description": "Lively tactile spring bounce with physical recoil",
+    "appearance": {
+        "curves": {
+            "expressiveDefaultSpatial": [0.18, 1.32, 0.25, 1.00, 1.0, 1.0],
+            "expressiveFastSpatial": [0.22, 1.45, 0.18, 0.95, 1.0, 1.0],
+            "expressiveSlowSpatial": [0.20, 1.25, 0.30, 1.00, 1.0, 1.0],
+            "expressiveDefaultEffects": [0.25, 1.00, 0.30, 1.00, 1.0, 1.0],
+            "expressiveFastEffects": [0.20, 0.95, 0.30, 1.00, 1.0, 1.0],
+            "expressiveSlowEffects": [0.25, 1.00, 0.35, 1.00, 1.0, 1.0]
+        },
+        "animDurations": {
+            "expressiveDefaultSpatial": 480,
+            "expressiveFastSpatial": 340,
+            "expressiveSlowSpatial": 620,
+            "expressiveDefaultEffects": 200,
+            "expressiveFastEffects": 150,
+            "expressiveSlowEffects": 280
+        }
+    }
+}

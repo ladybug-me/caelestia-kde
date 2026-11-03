@@ -22,7 +22,7 @@
   },
   "postProcessing": [
     {
-      "command": "PATH=$HOME/.local/bin:$PATH caelestia-color wallpaper -f %thumb% -a %path%",
+      "command": "SKWD_WALLD=1 PATH=$HOME/.local/bin:$PATH caelestia-color wallpaper -f %thumb% -a %path%",
       "type": "all"
     }
   ],

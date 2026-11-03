@@ -80,7 +80,7 @@ test_the_search_reaches_the_list_it_narrows() {
         "one definition of what a search matches, over the type it matches"
     assert_file_contains "$NOTIFS" 'NotifQuery.matches(notif.appName, notif.summaryPlain, notif.bodyPlain, query)' \
         "the app, the summary, and the body without its markup"
-    assert_file_contains "$DOCK" 'onTextEdited: text => root.query = text' "the dock owns the query"
+    assert_file_contains "$DOCK" 'onTextEdited: root.query = searchField.text' "the dock owns the query"
     assert_file_contains "$DOCK" 'filter: root.query' "and passes it to the list"
     assert_file_contains "$DOCK_LIST" 'Notifs.matchesQuery(n, root.filter)' "the app list is filtered"
     assert_file_contains "$GROUP" 'Notifs.matchesQuery(n, root.filter)' "and so are the notifications inside an app"

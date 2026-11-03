@@ -186,11 +186,22 @@ QString KeybindsModel::getKey(const QString& name) const {
     return defaults.value(name).toString();
 }
 
-QVariantList KeybindsModel::query(const QString& searchText) const {
+QVariantList KeybindsModel::query(const QString& searchText, bool boundOnly) const {
     QList<GlobalShortcut*> matches;
     const auto lower = searchText.toLower();
 
     for (GlobalShortcut* sc : m_rows) {
+        if (!sc) {
+            continue;
+        }
+
+        if (boundOnly) {
+            const QString key = sc->key().trimmed();
+            if (key.isEmpty() || key.compare(QLatin1String("none"), Qt::CaseInsensitive) == 0) {
+                continue;
+            }
+        }
+
         if (searchText.isEmpty()) {
             matches.append(sc);
         } else {

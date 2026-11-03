@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import "dash"
 import QtQuick.Layouts
 import Caelestia.Config

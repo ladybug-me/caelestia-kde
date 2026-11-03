@@ -25,6 +25,7 @@ Singleton {
     /// the sequence, so an array of them taken before `list` is reassigned silently reads
     /// the *new* contents afterwards. That is how the wrong timer got announced.
     property var list: []
+    property string pinnedId: ""
     /// Read so that every view showing a countdown recomputes with the ticker.
     property double now: Date.now()
     property bool loaded: false
@@ -32,6 +33,12 @@ Singleton {
 
     readonly property int count: root.list.length
     readonly property string appName: qsTr("Timers")
+
+    readonly property var pinnedTimer: {
+        if (root.count === 0 || root.pinnedId === "")
+            return null;
+        return root.list.find(timer => timer.id === root.pinnedId) ?? null;
+    }
 
     function remaining(timer: var): int {
         return Math.max(0, Math.ceil((timer.ends - root.now) / 1000));
@@ -47,14 +54,26 @@ Singleton {
             message: message.trim()
         };
         root.list = [...root.list, timer].sort((a, b) => a.ends - b.ends);
+        if (root.list.length === 1)
+            root.pinnedId = timer.id;
     }
 
     function cancel(id: string): void {
         root.list = root.list.filter(timer => timer.id !== id);
+        if (root.pinnedId === id)
+            root.pinnedId = root.list.length === 1 ? root.list[0].id : "";
+        else if (root.list.length === 1 && !root.pinnedId)
+            root.pinnedId = root.list[0].id;
     }
 
     function clear(): void {
         root.list = [];
+        root.pinnedId = "";
+    }
+
+    function pin(id: string): void {
+        root.pinnedId = root.pinnedId === id ? "" : id;
+        root.save();
     }
 
     /// Reads a duration the way someone types one. The grammar lives in duration.js, so a
@@ -84,6 +103,11 @@ Singleton {
 
         const finished = split.due.map(timer => String(timer.message));
         root.list = split.running;
+        if (split.due.some(t => t.id === root.pinnedId))
+            root.pinnedId = root.list.length === 1 ? root.list[0].id : "";
+        else if (root.list.length === 1 && !root.pinnedId)
+            root.pinnedId = root.list[0].id;
+
         // One notification per timer that ends while the shell is running: each message
         // is still news. The load path below batches instead, because those timers ended
         // while nobody was watching and their messages are one fact, not several.
@@ -95,7 +119,8 @@ Singleton {
         return JSON.stringify(root.list.map(timer => ({
                         id: timer.id,
                         ends: timer.ends,
-                        message: timer.message
+                        message: timer.message,
+                        pinned: timer.id === root.pinnedId
                     })));
     }
 
@@ -142,13 +167,21 @@ Singleton {
             data = data.filter(timer => timer && isFinite(Number(timer.ends))).map(timer => ({
                             id: String(timer.id ?? timer.ends),
                             ends: Number(timer.ends),
-                            message: String(timer.message ?? "")
+                            message: String(timer.message ?? ""),
+                            pinned: Boolean(timer.pinned)
                         }));
 
             // A timer that ran out while the shell was down already happened: say so
             // once, rather than firing a burst of toasts the moment the shell starts.
             const ended = data.filter(timer => timer.ends <= Date.now());
             root.list = data.filter(timer => timer.ends > Date.now()).sort((a, b) => a.ends - b.ends);
+            const savedPinned = root.list.find(timer => timer.pinned);
+            if (savedPinned)
+                root.pinnedId = savedPinned.id;
+            else if (root.list.length === 1)
+                root.pinnedId = root.list[0].id;
+            else
+                root.pinnedId = "";
             root.loaded = true;
             root.savedState = root.serialize();
 

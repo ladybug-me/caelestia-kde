@@ -1,3 +1,5 @@
+pragma ComponentBehavior: Bound
+
 import "performance"
 import QtQuick
 import QtQuick.Layouts

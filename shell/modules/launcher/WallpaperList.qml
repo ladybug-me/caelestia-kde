@@ -76,7 +76,7 @@ PathView {
             }
         }
 
-        const maxWidth = screen.width - Config.border.rounding * 4 - (barMargins + outerMargins) * 2;
+        const maxWidth = screen.width - Surface.panelRounding * 4 - (barMargins + outerMargins) * 2;
 
         if (maxWidth <= 0)
             return 0;

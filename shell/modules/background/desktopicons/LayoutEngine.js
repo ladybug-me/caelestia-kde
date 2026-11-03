@@ -19,6 +19,8 @@ function inGrid(pos, cols, rows, span) {
 }
 
 function markRect(occ, pos, span, key) {
+    if (!pos)
+        return;
     for (let c = 0; c < span.w; c++)
         for (let r = 0; r < span.h; r++)
             occ[cellId(pos.col + c, pos.row + r)] = key;
@@ -26,7 +28,7 @@ function markRect(occ, pos, span, key) {
 
 function occupancy(positions, excludeKeys, spans) {
     const occ = {};
-    for (const key in positions) {
+    for (const key of Object.keys(positions)) {
         if (excludeKeys && excludeKeys.indexOf(key) !== -1)
             continue;
         markRect(occ, positions[key], spanOf(spans, key), key);
@@ -90,7 +92,7 @@ function nearestFree(occ, col, row, cols, rows, span) {
 
 function copyPositions(positions) {
     const out = {};
-    for (const key in positions)
+    for (const key of Object.keys(positions))
         out[key] = Object.assign({}, positions[key]);
     return out;
 }
@@ -103,8 +105,9 @@ function rectsOverlap(a, sa, b, sb) {
 // relative placement. The shift is clamped so every moved item stays on the
 // grid. Items overlapping a destination step aside to the free place nearest
 // to where they were. `spans` may give new sizes, which also makes this the
-// resize operation.
-function planMove(positions, moving, anchor, target, cols, rows, spans) {
+// resize operation. `immovable` is an optional array of keys that must never
+// be displaced, e.g. locked widgets; they stay in place and block movers.
+function planMove(positions, moving, anchor, target, cols, rows, spans, immovable) {
     const out = copyPositions(positions);
     const from = positions[anchor];
     if (!from)
@@ -122,7 +125,16 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
         dr = Math.min(dr, Math.max(-p.row, rows - s.h - p.row));
     }
 
+    // Mark immovable cells first so the mover's landing zone can't overlap them.
     const occ = {};
+    if (immovable) {
+        for (const key of immovable) {
+            const p = positions[key];
+            if (p)
+                markRect(occ, p, spanOf(spans, key), key);
+        }
+    }
+
     const moved = [];
     for (const key of moving) {
         const p = positions[key];
@@ -134,10 +146,15 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
     }
 
     // Everyone that is not moving keeps their place unless a mover covers it.
+    // Immovable items are never displaced; they stay locked in their cell.
     const displaced = [];
     for (const key of orderedKeys(positions, rows)) {
         if (moving.indexOf(key) !== -1)
             continue;
+        if (immovable && immovable.indexOf(key) !== -1) {
+            markRect(occ, positions[key], spanOf(spans, key), key);
+            continue;
+        }
         const s = spanOf(spans, key);
         if (moved.some(m => rectsOverlap(positions[key], s, out[m], spanOf(spans, m))))
             displaced.push(key);
@@ -155,9 +172,12 @@ function planMove(positions, moving, anchor, target, cols, rows, spans) {
 }
 
 // Packs the keys in column-major order, each into the first place it fits.
-function compact(keys, rows, spans) {
+function compact(keys, rows, spans, obstacles) {
     const out = {};
     const occ = {};
+    if (obstacles)
+        for (const key of Object.keys(obstacles))
+            markRect(occ, obstacles[key], spanOf(spans, key), key);
     for (const key of keys) {
         const s = spanOf(spans, key);
         const pos = firstFree(occ, Infinity, rows, s);
@@ -168,14 +188,17 @@ function compact(keys, rows, spans) {
 }
 
 // Auto-arrange drop: pulls the moving keys out of the order and inserts them
-// where `target` is, then packs everything again.
-function planInsert(positions, moving, target, rows, spans) {
+// where `target` is, then packs everything again. `obstacles` are widget
+// positions that must stay put and are never included in the packing order.
+function planInsert(positions, moving, target, rows, spans, obstacles) {
     const order = orderedKeys(positions, rows);
     const targetIndex = orderIndex(target, rows);
     const rest = [];
     let insertAt = -1;
     for (const key of order) {
         if (moving.indexOf(key) !== -1)
+            continue;
+        if (obstacles && key in obstacles)
             continue;
         if (insertAt === -1 && orderIndex(positions[key], rows) >= targetIndex)
             insertAt = rest.length;
@@ -185,12 +208,12 @@ function planInsert(positions, moving, target, rows, spans) {
         insertAt = rest.length;
     const movers = order.filter(k => moving.indexOf(k) !== -1);
     rest.splice(insertAt, 0, ...movers);
-    return compact(rest, rows, spans);
+    return compact(rest, rows, spans, obstacles);
 }
 
 function overflowCount(positions, cols, rows, spans) {
     let n = 0;
-    for (const key in positions)
+    for (const key of Object.keys(positions))
         if (!inGrid(positions[key], cols, rows, spanOf(spans, key)))
             n++;
     return n;
@@ -258,7 +281,7 @@ function navigate(positions, fromKey, dir, spans) {
     const fy = from.row + fs.h / 2;
     let best = null;
     let bestScore = Infinity;
-    for (const key in positions) {
+    for (const key of Object.keys(positions)) {
         if (key === fromKey)
             continue;
         const p = positions[key];
@@ -304,7 +327,7 @@ function rangeBetween(positions, a, b, rows) {
 // Keys whose rectangle intersects the given pixel rectangle.
 function keysInRect(positions, rect, cellWidth, cellHeight, inset, spans) {
     const out = [];
-    for (const key in positions) {
+    for (const key of Object.keys(positions)) {
         const p = positions[key];
         const s = spanOf(spans, key);
         const x = p.col * cellWidth + inset;
@@ -319,7 +342,7 @@ function keysInRect(positions, rect, cellWidth, cellHeight, inset, spans) {
 
 // Key covering the cell, if any.
 function occupantAt(positions, col, row, exclude, spans) {
-    for (const key in positions) {
+    for (const key of Object.keys(positions)) {
         if (exclude && exclude.indexOf(key) !== -1)
             continue;
         const p = positions[key];

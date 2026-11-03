@@ -79,7 +79,7 @@ test_accessibility_page_is_a_top_level_page() {
 
     assert_contains "$page" 'title: qsTr("Accessibility")' "the page needs its own title"
     assert_contains "$registry" 'Component { AccessibilityPage {} }' "the page must be registered"
-    assert_contains "$dictionary" 'key: "accessibility"' "and listed in the settings index"
+    assert_contains "$dictionary" '"accessibility":' "and listed in the settings index"
     assert_not_contains "$page" 'isSubPage: true' "it is a top level page, not a sub page"
 }
 

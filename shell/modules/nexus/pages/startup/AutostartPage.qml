@@ -110,7 +110,7 @@ PageBase {
             icon: "add"
             label: qsTr("Add an application")
             status: qsTr("Pick it from the applications installed here")
-            onClicked: root.nState.openSubPage(1)
+            onClicked: root.nState.openSubPage("startupAppPicker")
         }
     }
 }

@@ -5,6 +5,7 @@ import Quickshell
 import Caelestia.Config
 import qs.components.controls
 import qs.services
+import qs.utils
 import "items"
 import "services"
 
@@ -31,7 +32,7 @@ ListView {
             outerMargins = panels.popouts.nonAnimWidth;
         if ((visibilities.utilities || visibilities.sidebar) && panels.utilities.implicitWidth > outerMargins)
             outerMargins = panels.utilities.implicitWidth;
-        const maxWidth = screen.width - Config.border.rounding * 4 - (barMargins + outerMargins) * 2;
+        const maxWidth = screen.width - Surface.panelRounding * 4 - (barMargins + outerMargins) * 2;
 
         if (maxWidth <= 0)
             return 0;

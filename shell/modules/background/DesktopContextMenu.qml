@@ -242,6 +242,7 @@ Controls.Menu {
 
     // Called when the menu is requested again while already open.
     function reopen() {
+        closeSubmenu();
         refresh();
         replayReveal();
     }

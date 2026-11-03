@@ -23,11 +23,20 @@ Item {
     property real star2Scale: introSkipped ? 1.0 : 0.0
     property real star3Scale: introSkipped ? 1.0 : 0.0
 
+    property real badgeOpacity: introSkipped ? 1.0 : 0.0
+    property real badgeScale: introSkipped ? 1.0 : 0.0
+
     readonly property alias topShape: topShape
     readonly property alias bottomShape: bottomShape
     readonly property alias star1: star1
     readonly property alias star2: star2
     readonly property alias star3: star3
+    readonly property alias badge: badgeGroup
+
+    property color badgeColour: Colours.palette.m3primary
+    property color badgeIconColour: Colours.palette.m3onPrimary
+    property color badgeStrokeColour: Colours.palette.m3surface
+    property bool showBadge: true
 
     readonly property bool onScreen: Window.window ? Window.window.visible : false
 
@@ -74,6 +83,8 @@ Item {
             root.star2.scale = Qt.binding(() => root.star2Scale);
             root.star3.opacity = Qt.binding(() => root.star3Opacity);
             root.star3.scale = Qt.binding(() => root.star3Scale);
+            badgeGroup.opacity = Qt.binding(() => root.badgeOpacity);
+            badgeGroup.scale = Qt.binding(() => 1.2423 * root.badgeScale);
         }
 
         Behavior on topColour {
@@ -167,6 +178,67 @@ Item {
 
                 PathSvg {
                     path: "m112.69,65.22c-.19,1.01-.86,3.15-3.2,3.57-.08.01-.08.13,0,.14,2.34.42,3.01,2.56,3.2,3.57.01.08.13.08.14,0,.19-1.01.86-3.15,3.2-3.57.08-.01.08-.13,0-.14-2.34-.42-3.01-2.56-3.2-3.57-.01-.08-.13-.08-.14,0Z"
+                }
+            }
+        }
+
+        Item {
+            id: badgeGroup
+
+            visible: root.showBadge
+            opacity: root.badgeOpacity
+            scale: 1.2423 * root.badgeScale
+            x: 77.08
+            y: 65.23
+            width: 41
+            height: 41
+            transformOrigin: Item.Center
+
+            Shape {
+                preferredRendererType: Shape.CurveRenderer
+
+                ShapePath {
+                    fillColor: root.badgeColour
+                    strokeColor: root.badgeStrokeColour
+                    strokeWidth: 0.8
+                    startX: 20.5
+                    startY: 0
+
+                    PathArc {
+                        x: 20.5
+                        y: 41
+                        radiusX: 20.5
+                        radiusY: 20.5
+                    }
+
+                    PathArc {
+                        x: 20.5
+                        y: 0
+                        radiusX: 20.5
+                        radiusY: 20.5
+                    }
+                }
+            }
+
+            Item {
+                id: badgeGearGroup
+
+                x: -1.3667
+                y: -1.3667
+                scale: 0.683333
+                transformOrigin: Item.TopLeft
+
+                Shape {
+                    preferredRendererType: Shape.CurveRenderer
+
+                    ShapePath {
+                        fillColor: root.badgeIconColour
+                        strokeColor: "transparent"
+
+                        PathSvg {
+                            path: "m 36,11.00001 -8,1.210938 v 28.9375 L 36,39.00001 V 27.820322 l 8,13.179688 8,-3 -10,-12 L 52.003906,13.003916 44.242188,11.00001 36,24.117198 Z m -16.289062,7.847656 c -0.189184,0 -0.378371,0.07368 -0.523438,0.21875 l -3.144531,3.144532 c -0.290135,0.290134 -0.220288,0.704614 0,1.05078 l 3.253906,5.109376 c -0.241085,0.500442 -0.449846,1.01582 -0.625,1.542968 -0.0077,0.02268 -0.01978,0.04368 -0.02734,0.0664 l -5.902344,1.3125 C 12.341647,31.381998 12,31.624856 12,32.035166 v 1.964844 1.964844 c 0,0.41031 0.341647,0.65318 0.742188,0.742188 l 5.902343,1.3125 c 0.01292,0.0388 0.03357,0.07462 0.04687,0.11328 0.17049,0.512084 0.372704,1.013054 0.605469,1.5 l -3.253906,5.10547 c -0.220288,0.346166 -0.290135,0.760646 0,1.05078 l 3.144532,3.144532 c 0.290135,0.290134 0.756735,0.290134 1.046876,0 l 5.101562,-3.25 c 0.501518,0.243898 1.01821,0.455272 1.546874,0.632812 0.0347,0.0122 0.06678,0.03108 0.10156,0.04296 l 1.308592,5.898436 C 28.29296,52.668124 28.62484,53 29.035148,53 h 4.441406 c 0.41031,0 0.65318,-0.341648 0.742188,-0.742188 l 1.308594,-6.078124 c 0.601208,-0.226026 1.184836,-0.496298 1.746094,-0.808594 l 4.980468,3.5625 c 0.290136,0.290134 0.756742,0.290134 1.046876,0 l 3.14453,-3.144532 c 0.290136,-0.290134 0.220288,-0.704614 0,-1.05078 l -1.89453,-2.875 -0.19922,0.07422 c -0.450502,0.16922 -0.95765,-0.0064 -1.20703,-0.417968 l -1.99218,-3.281242 C 39.492472,42.208682 35.572478,45.00001 31,45.00001 c -6.075132,0 -11,-4.924868 -11,-11 0,-4.66184 2.905598,-8.6367 7,-10.238282 v -2.191406 l -0.0156,0.07032 c -0.04416,0.015 -0.0849,0.03914 -0.1289,0.05468 -0.52165,0.17324 -1.03179,0.379376 -1.527344,0.617188 l -5.09378,-3.246094 c -0.145072,-0.145067 -0.334254,-0.21875 -0.523438,-0.21875 z"
+                        }
+                    }
                 }
             }
         }
@@ -371,6 +443,43 @@ Item {
                             from: 1.08
                             to: 1.0
                             duration: 400
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
+                }
+            }
+
+            SequentialAnimation {
+                PauseAnimation {
+                    duration: 1900
+                }
+
+                ParallelAnimation {
+                    NumberAnimation {
+                        target: root
+                        property: "badgeOpacity"
+                        from: 0.0
+                        to: 1.0
+                        duration: 600
+                        easing.type: Easing.OutCubic
+                    }
+
+                    SequentialAnimation {
+                        NumberAnimation {
+                            target: root
+                            property: "badgeScale"
+                            from: 0.0
+                            to: 1.08
+                            duration: 400
+                            easing.type: Easing.OutQuad
+                        }
+
+                        NumberAnimation {
+                            target: root
+                            property: "badgeScale"
+                            from: 1.08
+                            to: 1.0
+                            duration: 200
                             easing.type: Easing.InOutQuad
                         }
                     }

@@ -21,6 +21,23 @@ ConnectedRect {
 
     signal moved(value: real)
 
+    function stepLeft(): void {
+        const step = root.stepSize;
+        const decimals = step < 1 ? Math.max(1, Math.ceil(-Math.log10(step))) : 0;
+        let v = Math.max(root.from, root.value - step);
+        v = Math.round(v * Math.pow(10, decimals)) / Math.pow(10, decimals);
+        if (v !== root.value)
+            root.moved(v);
+    }
+
+    function stepRight(): void {
+        const step = root.stepSize;
+        const decimals = step < 1 ? Math.max(1, Math.ceil(-Math.log10(step))) : 0;
+        let v = Math.min(root.to, root.value + step);
+        v = Math.round(v * Math.pow(10, decimals)) / Math.pow(10, decimals);
+        if (v !== root.value)
+            root.moved(v);
+    }
 
     Layout.fillWidth: true
     implicitHeight: rowLayout.implicitHeight + rowLayout.anchors.margins * 2

@@ -32,6 +32,9 @@ Item {
         if (!GlobalConfig.osd.enabled || osdStyle === "default")
             return;
 
+        if (!GlobalConfig.osd.showInFullscreen && root.screen && Kwin.hasFullscreenOn(root.screen.name))
+            return;
+
         if (!Osd.OsdFunctions.isEnabled(type))
             return;
 

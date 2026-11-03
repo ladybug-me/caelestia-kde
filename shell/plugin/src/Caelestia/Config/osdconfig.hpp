@@ -21,6 +21,7 @@ class OsdConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(bool, enableVolume, true)
     CONFIG_PROPERTY(QString, style, u"default"_s)
     CONFIG_PROPERTY(QString, position, u"bottom"_s)
+    CONFIG_PROPERTY(bool, showInFullscreen, true)
 };
 
 } // namespace caelestia::config

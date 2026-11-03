@@ -14,7 +14,8 @@ Item {
     required property bool sidebarOrSessionVisible
     property bool hovered
     readonly property Brightness.Monitor monitor: Brightness.getMonitorForScreen(root.screen)
-    readonly property bool shouldBeActive: visibilities.osd && Config.osd.enabled && !(visibilities.utilities && Config.utilities.enabled) && !visibilities.overview
+    readonly property bool shouldBeActive: visibilities.osd && Config.osd.enabled && !(visibilities.utilities && Config.utilities.enabled) && !visibilities.overview && (Config.osd.showInFullscreen || !Kwin.hasFullscreenOn(root.screen?.name ?? ""))
+    readonly property bool active: shouldBeActive || offsetScale < 0.99
     property real offsetScale: shouldBeActive ? 0 : 1
     property real sidebarOffset: sidebarOrSessionVisible ? 12 : 0
     property real volume
@@ -25,6 +26,8 @@ Item {
 
     function show(): void {
         if (GlobalConfig.osd.style === "default") {
+            if (!GlobalConfig.osd.showInFullscreen && root.screen && Kwin.hasFullscreenOn(root.screen.name))
+                return;
             visibilities.osd = true;
             timer.restart();
         }

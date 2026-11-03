@@ -167,12 +167,20 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: qsTr("Brightness")
             subtext: qsTr("Show indicator on display brightness changes")
             reset: ({ node: GlobalConfig.osd, setting: "enableBrightness" })
             checked: Config.osd.enableBrightness
             onToggled: GlobalConfig.osd.enableBrightness = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: qsTr("Show in fullscreen")
+            subtext: qsTr("Display indicator over fullscreen applications")
+            reset: ({ node: GlobalConfig.osd, setting: "showInFullscreen" })
+            checked: Config.osd.showInFullscreen
+            onToggled: GlobalConfig.osd.showInFullscreen = checked
         }
 
         SectionHeader {

@@ -42,6 +42,7 @@ Item {
     readonly property alias toasts: toasts
     readonly property alias sidebar: sidebar
     readonly property alias overview: overview
+    readonly property bool osdActive: (GlobalConfig.osd.showInFullscreen || !Kwin.hasFullscreenOn(root.screen?.name ?? "")) && (osd.active || floatingOsd.active)
     readonly property real leftMargin: anchors.leftMargin
     readonly property real rightMargin: anchors.rightMargin
     readonly property real topMargin: anchors.topMargin

@@ -188,6 +188,40 @@ cleanup_legacy_fonts() {
     done
 }
 
+# `cmake --install` copies the tree and never deletes. A file dropped from
+# shell/ (say services/Audio.qml) stayed behind in the config directory and
+# quickshell kept loading it, so the running shell mixed two revisions. Mirror
+# the directories the install owns, so what is deployed is exactly what was
+# built.
+prune_stale_shell_files() {
+    local dest="${1:-$(install_shell_config)}"
+    local src="${2:-$SHELL_DIR}"
+    local sub rel removed=()
+
+    [[ -d "$dest" && -d "$src" ]] || return 0
+
+    for sub in assets components modules services utils scripts translations; do
+        [[ -d "$dest/$sub" && -d "$src/$sub" ]] || continue
+
+        while IFS= read -r rel; do
+            rel="${rel#"$dest/$sub/"}"
+            [[ -e "$src/$sub/$rel" ]] && continue
+            rm -f "$dest/$sub/$rel" || continue
+            removed+=("$sub/$rel")
+        done < <(find "$dest/$sub" -type f -print)
+
+        find "$dest/$sub" -mindepth 1 -type d -empty -delete 2>/dev/null || true
+    done
+
+    if [[ ${#removed[@]} -gt 0 ]]; then
+        ok "Removed ${#removed[@]} file(s) the new revision no longer ships."
+        printf '     %s\n' "${removed[@]:0:5}"
+        if [[ ${#removed[@]} -gt 5 ]]; then
+            printf '     ... and %s more\n' "$(( ${#removed[@]} - 5 ))"
+        fi
+    fi
+}
+
 install_lockscreen_greeter() {
     local src="$BUNDLE_DIR/src/kde/shells/caelestia.desktop"
     local dest="$HOME/.local/share/plasma/shells/caelestia.desktop"
@@ -487,6 +521,8 @@ else
         err "Installation failed. Full log: $BUILD_LOG"
         exit 1
     fi
+
+    prune_stale_shell_files
 fi
 
 kwin_plugin_version() {

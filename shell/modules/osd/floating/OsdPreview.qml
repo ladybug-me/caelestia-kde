@@ -11,6 +11,7 @@ Item {
     id: root
 
     property string style: Config.osd.style
+    readonly property bool isVertical: GlobalConfig.osd.position === "left" || GlobalConfig.osd.position === "right"
     property real sampleValue: 0.72
     property bool sampleMuted: false
     property string sampleType: "volume"
@@ -30,6 +31,10 @@ Item {
             id: loader
 
             anchors.centerIn: parent
+            width: item ? item.implicitWidth : implicitWidth
+            height: item ? item.implicitHeight : implicitHeight
+            scale: (root.isVertical && height > 100) ? (100 / height) : 1
+            transformOrigin: Item.Center
             sourceComponent: {
                 switch (root.style) {
                     case "pill": return pillComp;
@@ -52,6 +57,7 @@ Item {
             icon: "volume_up"
             title: qsTr("Volume")
             type: root.sampleType
+            vertical: root.isVertical
         }
     }
 
@@ -64,6 +70,7 @@ Item {
             icon: "volume_up"
             title: qsTr("Volume")
             type: root.sampleType
+            vertical: root.isVertical
         }
     }
 
@@ -88,6 +95,7 @@ Item {
             icon: "volume_up"
             title: qsTr("Volume")
             type: root.sampleType
+            vertical: root.isVertical
         }
     }
 
@@ -100,6 +108,7 @@ Item {
             icon: "volume_up"
             title: qsTr("Volume")
             type: root.sampleType
+            vertical: root.isVertical
         }
     }
 

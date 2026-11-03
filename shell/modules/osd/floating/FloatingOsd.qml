@@ -20,6 +20,7 @@ Item {
     readonly property bool active: shown || offsetScale < 0.99
     readonly property alias panelItem: contentLoader
     readonly property alias contentLoader: contentLoader
+    readonly property bool isVertical: GlobalConfig.osd.position === "left" || GlobalConfig.osd.position === "right"
     property real activeValue: 0
     property bool isMuted: false
     property string activeType: "volume"
@@ -127,7 +128,9 @@ Item {
                 const barOffset = root.bar.position === "bottom" ? root.bar.clampedThickness : 0;
                 return parent.height - height - (barOffset + 44 - 16 * root.offsetScale);
             }
-            return (parent.height - height) / 2 + 16 * root.offsetScale;
+            if (isCenter)
+                return (parent.height - height) / 2 + 16 * root.offsetScale;
+            return (parent.height - height) / 2;
         }
 
         scale: Math.max(0, 1 - root.offsetScale)
@@ -155,6 +158,7 @@ Item {
             icon: root.activeIcon
             title: root.activeTitle
             type: root.activeType
+            vertical: root.isVertical
         }
     }
 
@@ -167,6 +171,7 @@ Item {
             icon: root.activeIcon
             title: root.activeTitle
             type: root.activeType
+            vertical: root.isVertical
         }
     }
 
@@ -191,6 +196,7 @@ Item {
             icon: root.activeIcon
             title: root.activeTitle
             type: root.activeType
+            vertical: root.isVertical
         }
     }
 
@@ -203,6 +209,7 @@ Item {
             icon: root.activeIcon
             title: root.activeTitle
             type: root.activeType
+            vertical: root.isVertical
         }
     }
 }

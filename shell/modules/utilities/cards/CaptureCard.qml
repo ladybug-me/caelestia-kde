@@ -312,18 +312,18 @@ StyledRect {
                 // already selected mode can't leave it looking deselected
                 TextButton {
                     Layout.fillWidth: true
-                    text: qsTr("Record")
-                    type: TextButton.Tonal
-                    checked: !root.shotMode
-                    onClicked: root.props.captureMode = "record"
-                }
-
-                TextButton {
-                    Layout.fillWidth: true
                     text: qsTr("Capture")
                     type: TextButton.Tonal
                     checked: root.shotMode
                     onClicked: root.props.captureMode = "shot"
+                }
+
+                TextButton {
+                    Layout.fillWidth: true
+                    text: qsTr("Record")
+                    type: TextButton.Tonal
+                    checked: !root.shotMode
+                    onClicked: root.props.captureMode = "record"
                 }
             }
 

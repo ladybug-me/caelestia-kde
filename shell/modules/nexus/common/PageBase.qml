@@ -280,6 +280,11 @@ ColumnLayout {
             item.isExpanded = !item.isExpanded;
         } else if (typeof item.toggle === "function") {
             item.toggle();
+            // if missing, onToggled / onClicked action is missed and only the switch flips with no action.
+            if (typeof item.toggled === "function")
+                item.toggled();
+            if (typeof item.clicked === "function")
+                item.clicked();
         } else if (typeof item.clicked === "function") {
             item.clicked();
         } else if (typeof item.toggled === "function") {

@@ -207,7 +207,7 @@ PageBase {
     }
 
     function loadStoredKeys() {
-        const provs = ["claude", "openai", "gemini", "openrouter", "opencode", "cheaperinference"];
+        const provs = ["claude", "openai", "gemini", "openrouter", "opencode", "cheaperinference", "cheapaimodel"];
         for (let i = 0; i < provs.length; i++)
             keyLoadComp.createObject(root, { provider: provs[i] });
     }
@@ -625,12 +625,20 @@ exit $status`]
         }
 
         ToggleRow {
-            last: true
             text: qsTr("Cheaper Inference")
             subtext: qsTr("OpenAI-compatible gateway; one key for models from multiple vendors")
             reset: ({ node: GlobalConfig.ai, setting: "enableCheaperInference" })
             checked: GlobalConfig.ai.enableCheaperInference
             onToggled: GlobalConfig.ai.enableCheaperInference = checked
+        }
+
+        ToggleRow {
+            last: true
+            text: qsTr("cheapaimodel")
+            subtext: qsTr("OpenAI-compatible gateway; pay per token from a prepaid USD balance")
+            reset: ({ node: GlobalConfig.ai, setting: "enableCheapaimodel" })
+            checked: GlobalConfig.ai.enableCheapaimodel
+            onToggled: GlobalConfig.ai.enableCheapaimodel = checked
         }
 
         SectionHeader {
@@ -641,6 +649,7 @@ exit $status`]
                      || GlobalConfig.ai.enableOpencode
                      || GlobalConfig.ai.enableOpencodeGo
                      || GlobalConfig.ai.enableCheaperInference
+                     || GlobalConfig.ai.enableCheapaimodel
             text: qsTr("API keys")
         }
 
@@ -684,6 +693,13 @@ exit $status`]
             value: root.apiKeyFor("cheaperinference")
             envName: "CHEAPER_INFERENCE_API_KEY"
             onCommitted: v => root.storeApiKey("cheaperinference", v)
+        }
+
+        ApiKeyField {
+            visible: GlobalConfig.ai.enableCheapaimodel
+            value: root.apiKeyFor("cheapaimodel")
+            envName: "CHEAPAIMODEL_API_KEY"
+            onCommitted: v => root.storeApiKey("cheapaimodel", v)
         }
 
         SectionHeader {

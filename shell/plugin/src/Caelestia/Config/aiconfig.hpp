@@ -77,6 +77,11 @@ class AiConfig : public settings::ObjectNode {
     CONFIG_PROPERTY(QString, cheaperInferenceApiKey, u""_s)
     CONFIG_PROPERTY(QString, cheaperInferenceUrl, u"https://api.cheaperinference.com/v1"_s)
     CONFIG_PROPERTY(QString, defaultCheaperInferenceModel, u""_s)
+
+    CONFIG_PROPERTY(bool, enableCheapaimodel, false)
+    CONFIG_PROPERTY(QString, cheapaimodelApiKey, u""_s)
+    CONFIG_PROPERTY(QString, cheapaimodelUrl, u"https://api.cheapaimodel.ai/v1"_s)
+    CONFIG_PROPERTY(QString, defaultCheapaimodelModel, u""_s)
 };
 
 } // namespace caelestia::config

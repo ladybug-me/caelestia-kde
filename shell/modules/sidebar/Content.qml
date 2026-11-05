@@ -22,7 +22,7 @@ Item {
     // or one of the shell's file dialogs is open (clicking into a dialog can close
     // the sidebar, and unloading it would destroy the dialog's owner with it).
     readonly property bool keepLoaded: (aiLoader.item?.busy ?? false) || Visibilities.openDialogs > 0
-    readonly property bool aiEnabled: GlobalConfig.ai.enableAiAssistant && (GlobalConfig.ai.enableOllama || GlobalConfig.ai.enableClaudeCode || GlobalConfig.ai.enableClaude || GlobalConfig.ai.enableOpenai || GlobalConfig.ai.enableGemini || GlobalConfig.ai.enableOpenrouter || GlobalConfig.ai.enableOpencode || GlobalConfig.ai.enableOpencodeGo || GlobalConfig.ai.enableCheaperInference)
+    readonly property bool aiEnabled: GlobalConfig.ai.enableAiAssistant && (GlobalConfig.ai.enableOllama || GlobalConfig.ai.enableClaudeCode || GlobalConfig.ai.enableClaude || GlobalConfig.ai.enableOpenai || GlobalConfig.ai.enableGemini || GlobalConfig.ai.enableOpenrouter || GlobalConfig.ai.enableOpencode || GlobalConfig.ai.enableOpencodeGo || GlobalConfig.ai.enableCheaperInference || GlobalConfig.ai.enableCheapaimodel)
 
     function checkAiTab(): void {
         if (!root.aiEnabled && root.activeTab === "ai") {
@@ -56,6 +56,7 @@ Item {
         function onEnableOpencodeChanged(): void { checkAiTab(); }
         function onEnableOpencodeGoChanged(): void { checkAiTab(); }
         function onEnableCheaperInferenceChanged(): void { checkAiTab(); }
+        function onEnableCheapaimodelChanged(): void { checkAiTab(); }
         function onShowNewsChanged(): void { checkAiTab(); }
 
         target: GlobalConfig.ai

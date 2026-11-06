@@ -14,7 +14,8 @@ StyledRect {
 
     required property var popouts
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+
     readonly property string pill: String(Config.bar.performance?.pill ?? "").trim().toLowerCase()
     readonly property string widgetStyle: String(Config.bar.performance?.widgetStyle ?? "classic").trim().toLowerCase()
     readonly property bool widgetShowText: typeof Config.bar.performance !== "undefined" && Config.bar.performance.widgetShowText !== undefined ? Config.bar.performance.widgetShowText : true
@@ -89,6 +90,7 @@ StyledRect {
         id: cpuPill
 
         PerfCpu {
+            isHorizontal: root.isHorizontal
             showText: root.widgetShowText
             pillStyle: root.widgetPillStyle
         }
@@ -98,6 +100,7 @@ StyledRect {
         id: gpuPill
 
         PerfGpu {
+            isHorizontal: root.isHorizontal
             showText: root.widgetShowText
             pillStyle: root.widgetPillStyle
         }
@@ -107,6 +110,7 @@ StyledRect {
         id: memoryPill
 
         PerfMemory {
+            isHorizontal: root.isHorizontal
             showText: root.widgetShowText
             pillStyle: root.widgetPillStyle
         }
@@ -116,6 +120,7 @@ StyledRect {
         id: storagePill
 
         PerfStorage {
+            isHorizontal: root.isHorizontal
             showText: root.widgetShowText
             pillStyle: root.widgetPillStyle
         }
@@ -125,6 +130,7 @@ StyledRect {
         id: networkPill
 
         PerfNetwork {
+            isHorizontal: root.isHorizontal
             showText: root.widgetShowText
             pillStyle: root.widgetPillStyle
         }
@@ -134,6 +140,7 @@ StyledRect {
         id: batteryPill
 
         PerfBattery {
+            isHorizontal: root.isHorizontal
             showText: root.widgetShowText
             pillStyle: root.widgetPillStyle
         }

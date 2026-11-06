@@ -76,11 +76,11 @@ test_the_editor_labels_every_registered_widget() {
 }
 
 test_resetting_the_layout_asks_the_schema_for_its_defaults() {
-    assert_file_contains "$EDITOR" 'BarWidgets.resetToDefaults(GlobalConfig.bar)' \
+    assert_file_contains "$EDITOR" 'BarWidgets.resetToDefaults(root.targetNode)' \
         "the reset button has to go back to the schema's own defaults"
     assert_file_not_contains "$EDITOR" '{ id: "dock", enabled: true, zone: "middle" }' \
         "and must not grow another copy of the default layout - that copy is how resetting lost media"
-    assert_file_contains "$EDITOR" 'BarWidgets.zoneFor(Config.bar, id)' \
+    assert_file_contains "$EDITOR" 'BarWidgets.zoneFor(root.targetNode, id)' \
         "a widget dragged out of the bar keeps the zone it had, or it comes back on the left"
 }
 

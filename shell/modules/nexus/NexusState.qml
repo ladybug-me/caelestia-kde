@@ -30,6 +30,13 @@ QtObject {
     property bool compact: false
     property bool compactSubcategories: false
 
+    // Which bar the components page edits: -1 is the main bar, anything else
+    // indexes `bar.panels`.
+    property int barComponentsTarget: -1
+
+    // Which bar the extra bars page selects when it opens: -1 is the main bar.
+    property int extraBarsTarget: -1
+
     signal close
     signal subPageOpened(target: var)
     signal subPageClosed
@@ -194,6 +201,8 @@ QtObject {
             return;
         compactSubcategories = compact;
         subPageIdxStack.length = 0;
+        barComponentsTarget = -1;
+        extraBarsTarget = -1;
         if (pendingSubPageIdx >= 0) {
             const target = pendingSubPageIdx;
             pendingSubPageIdx = -1;

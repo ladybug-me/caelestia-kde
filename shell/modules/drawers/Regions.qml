@@ -10,13 +10,15 @@ Region {
 
     required property Bar.BarWrapper bar
     required property Panels panels
+    required property FrameEdges frameEdges
     required property var win
+    required property var panelStrips
     readonly property real borderThickness: Config.border.thickness
     readonly property real clampedThickness: Config.border.clampedThickness
-    readonly property real barLeftWidth: bar.position === "left" ? bar.clampedThickness : clampedThickness
-    readonly property real barRightWidth: bar.position === "right" ? bar.clampedThickness : clampedThickness
-    readonly property real barTopHeight: bar.position === "top" ? bar.clampedThickness : clampedThickness
-    readonly property real barBottomHeight: bar.position === "bottom" ? bar.clampedThickness : clampedThickness
+    readonly property real leftEdge: Math.max(root.frameEdges.left, root.clampedThickness)
+    readonly property real rightEdge: Math.max(root.frameEdges.right, root.clampedThickness)
+    readonly property real topEdge: Math.max(root.frameEdges.top, root.clampedThickness)
+    readonly property real bottomEdge: Math.max(root.frameEdges.bottom, root.clampedThickness)
     // A closed panel's input region must be at least as deep as its hover trigger,
     // otherwise the pointer never reaches the area Interactions tests against.
 
@@ -24,10 +26,10 @@ Region {
         return Math.max(borderThickness, hoverThickness);
     }
 
-    x: barLeftWidth + win.dragMaskPadding
-    y: barTopHeight + win.dragMaskPadding
-    width: win.width - barLeftWidth - barRightWidth - win.dragMaskPadding * 2
-    height: win.height - barTopHeight - barBottomHeight - win.dragMaskPadding * 2
+    x: root.leftEdge + win.dragMaskPadding
+    y: root.topEdge + win.dragMaskPadding
+    width: win.width - root.leftEdge - root.rightEdge - win.dragMaskPadding * 2
+    height: win.height - root.topEdge - root.bottomEdge - win.dragMaskPadding * 2
     intersection: Intersection.Xor
 
     R {
@@ -72,6 +74,10 @@ Region {
     R {
         panel: root.panels.popoutsWrapper
         width: panel.width * (1 - root.panels.popoutsWrapper.offsetScale)
+    }
+    Region {
+        intersection: Intersection.Subtract
+        regions: root.panelStrips
     }
     Region {
         x: 0; y: 0

@@ -243,6 +243,21 @@ QtObject {
             dummyImageLoader.active = true;
     }
 
+    /// Runs the sender's default action, or opens the sending app when it has none.
+    /// Returns false if there was nothing to do.
+    function activate(): bool {
+        const action = actions.find(a => a.identifier === "default") ?? (actions.length === 1 ? actions[0] : null);
+        if (action) {
+            action.invoke();
+            return true;
+        }
+        const entry = DesktopEntries.heuristicLookup(hints?.["desktop-entry"] || appName);
+        if (!entry)
+            return false;
+        Launch.launchEntry(entry);
+        return true;
+    }
+
     /// Answers a notification whose sender offered a reply field. The notification
     /// stays put: the sender usually replaces it with the answer.
     function sendReply(text: string): void {

@@ -72,6 +72,11 @@ LazyListView {
 
             onExpandRequested: expanded => notifInner.toggleExpand(expanded)
             onCloseRequested: closeAnim.restart()
+            // Collapsed group: open the newest notification (expanded groups handle clicks per notification)
+            onActivateRequested: {
+                if (GlobalConfig.notifs.actionOnClick && !notifInner.expanded && notifInner.activeNotifs[0]?.activate() && !Visibilities.sidebarPinned)
+                    root.visibilities.sidebar = false;
+            }
 
             ParallelAnimation {
                 id: closeAnim

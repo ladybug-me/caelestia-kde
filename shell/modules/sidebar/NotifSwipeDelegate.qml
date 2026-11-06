@@ -11,9 +11,12 @@ MouseArea {
     property bool allowExpandGesture: true
     property bool closed: false
     property int startY: 0
+    property bool swiped: false
 
     signal closeRequested()
     signal expandRequested(expanded: bool)
+    /// Plain left click, not the end of a swipe.
+    signal activateRequested()
 
     hoverEnabled: true
     cursorShape: pressed ? Qt.ClosedHandCursor : undefined
@@ -40,7 +43,13 @@ MouseArea {
         }
     }
 
+    onClicked: event => {
+        if (event.button === Qt.LeftButton && !root.swiped)
+            root.activateRequested();
+    }
+
     onReleased: event => {
+        root.swiped = Math.abs(x) > drag.threshold;
         if (Math.abs(x) < width * Config.notifs.clearThreshold)
             x = 0;
         else

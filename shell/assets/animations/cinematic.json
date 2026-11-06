@@ -1,0 +1,22 @@
+{
+    "name": "Cinematic Glider",
+    "description": "Deep, sweeping float for large displays",
+    "appearance": {
+        "curves": {
+            "expressiveDefaultSpatial": [0.08, 0.85, 0.15, 1.02, 1.0, 1.0],
+            "expressiveFastSpatial": [0.12, 0.90, 0.20, 1.04, 1.0, 1.0],
+            "expressiveSlowSpatial": [0.05, 0.80, 0.10, 1.00, 1.0, 1.0],
+            "expressiveDefaultEffects": [0.10, 0.90, 0.25, 1.00, 1.0, 1.0],
+            "expressiveFastEffects": [0.12, 0.85, 0.25, 1.00, 1.0, 1.0],
+            "expressiveSlowEffects": [0.08, 0.95, 0.20, 1.00, 1.0, 1.0]
+        },
+        "animDurations": {
+            "expressiveDefaultSpatial": 620,
+            "expressiveFastSpatial": 420,
+            "expressiveSlowSpatial": 820,
+            "expressiveDefaultEffects": 260,
+            "expressiveFastEffects": 180,
+            "expressiveSlowEffects": 380
+        }
+    }
+}

@@ -12,6 +12,7 @@ StyledSwitch {
     property var reset
     property alias first: bg.first
     property alias last: bg.last
+    property alias isSelected: bg.isSelected
     readonly property alias bg: bg
 
     Layout.fillWidth: true
@@ -38,6 +39,7 @@ StyledSwitch {
 
             disabled: !root.enabled
             manualPressOverride: root.pressed
+            manualHoverOverride: bg.isSelected
         }
     }
 

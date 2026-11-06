@@ -139,7 +139,7 @@ Item {
                 }
 
                 StyledText {
-                    text: qsTr("Drag a widget's corner to resize it; right-click for more")
+                    text: qsTr("Drag a widget's border or corner to resize it; right-click for more")
                     color: Colours.palette.m3outline
                 }
             }

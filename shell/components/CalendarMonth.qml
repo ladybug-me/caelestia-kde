@@ -134,7 +134,6 @@ ColumnLayout {
             text: model.shortName
             font: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
             color: (model.day === 0 || model.day === 6) ? Colours.palette.m3tertiary : Colours.palette.m3onSurface
-            renderType: Text.QtRendering
         }
     }
 
@@ -185,7 +184,6 @@ ColumnLayout {
                     }
                     opacity: root.isToday(dayItem.model.date) || dayItem.model.month === grid.month ? 1 : 0.4
                     font: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
-                    renderType: Text.QtRendering
                 }
 
                 Rectangle {

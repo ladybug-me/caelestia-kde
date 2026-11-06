@@ -20,21 +20,40 @@ Singleton {
         if (root.openWindow) {
             const win = root.openWindow;
             if (props.initialPageIdx !== undefined) {
-                const pageIdx = typeof props.initialPageIdx === "string"
+                const isKey = typeof props.initialPageIdx === "string";
+                const pageIdx = isKey
                     ? PageRegistry.indexForKey(props.initialPageIdx)
                     : props.initialPageIdx;
-                win.nexus.nState.goToSubPage(pageIdx, props.initialSubPageIdx ?? -1);
+                const rawSub = (props.initialSubPageIdx !== undefined && props.initialSubPageIdx !== -1)
+                    ? props.initialSubPageIdx
+                    : (isKey ? PageRegistry.defaultSubPageForKey(props.initialPageIdx) : -1);
+                const subIdx = (typeof rawSub === "number") ? rawSub : PageDictionary.defaultSubPageForKey(rawSub);
+                win.nexus.nState.goToSubPage(pageIdx, subIdx);
             }
             win.visible = true;
             win.raise();
+            win.nexus.forceActiveFocus();
             Logger.mark("nexus=reused");
             return win;
         }
         const resolvedProps = Object.assign({}, props);
-        if (typeof resolvedProps.initialPageIdx === "string")
-            resolvedProps.initialPageIdx = PageRegistry.indexForKey(resolvedProps.initialPageIdx);
+        if (typeof resolvedProps.initialPageIdx === "string") {
+            const key = resolvedProps.initialPageIdx;
+            resolvedProps.initialPageIdx = PageRegistry.indexForKey(key);
+            if (resolvedProps.initialSubPageIdx === undefined || resolvedProps.initialSubPageIdx === -1)
+                resolvedProps.initialSubPageIdx = PageRegistry.defaultSubPageForKey(key);
+        }
+        if (typeof resolvedProps.initialSubPageIdx === "string") {
+            const mapped = PageDictionary.defaultSubPageForKey(resolvedProps.initialSubPageIdx);
+            if (mapped >= 0)
+                resolvedProps.initialSubPageIdx = mapped;
+        }
         const win = nexusComp.createObject(parent ?? dummy, resolvedProps);
         root.openWindow = win;
+        if (win) {
+            win.visible = true;
+            Qt.callLater(win.raise);
+        }
         Logger.mark("nexus=created");
         return win;
     }
@@ -92,7 +111,6 @@ Singleton {
             id: win
 
             property alias nexus: nexus
-
             property int initialPageIdx: 0
             property var initialSubPageIdx: -1
 
@@ -102,6 +120,8 @@ Singleton {
                 if (target?.address)
                     Kwin.focusWindow(target.address);
             }
+
+            visible: true
 
             Component.onDestruction: {
                 Logger.mark("nexus=destroyed");
@@ -128,13 +148,13 @@ Singleton {
             implicitWidth: nexus.implicitWidth
             implicitHeight: nexus.implicitHeight
 
-            minimumSize.width: Tokens.sizes.nexus.minWidth
+            minimumSize.width: Math.max(1050, Tokens.sizes.nexus.minWidth)
             minimumSize.height: Tokens.sizes.nexus.minHeight
 
-            contentItem.Config.screen: screen.name
-            contentItem.Tokens.screen: screen.name
+            contentItem.Config.screen: screen ? screen.name : (Screens.activeScreen?.name ?? "")
+            contentItem.Tokens.screen: screen ? screen.name : (Screens.activeScreen?.name ?? "")
 
-            title: PageRegistry.pages[nexus.nState.currentPageIdx].label
+            title: PageRegistry.pages[nexus.nState.currentPageIdx] ? PageRegistry.pages[nexus.nState.currentPageIdx].label : "Nexus"
 
             Nexus {
                 id: nexus
@@ -142,7 +162,7 @@ Singleton {
                 anchors.fill: parent
                 initialPageIdx: win.initialPageIdx
                 initialSubPageIdx: win.initialSubPageIdx
-                nState.screen: win.screen
+                nState.screen: win.screen ?? Screens.activeScreen ?? Quickshell.screens[0]
                 nState.isWindow: true
                 onClose: win.destroy()
             }

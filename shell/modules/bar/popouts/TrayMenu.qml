@@ -19,8 +19,17 @@ StackView {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    implicitWidth: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitWidth : -Tokens.padding.extraLargeIncreased * root.scaleOffset
-    implicitHeight: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitHeight : -Tokens.padding.extraLargeIncreased * root.scaleOffset
+    // A pushed submenu can be empty until the app fills it in. Until then, the popout keeps
+    // the previous menu's size so it does not shrink out from under the cursor and close.
+    readonly property bool _loadingSubMenu: (currentItem as SubMenu)?.isSubMenu === true && !(currentItem as SubMenu).hasChildren
+    property real _shownWidth
+    property real _shownHeight
+
+    implicitWidth: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitWidth : _loadingSubMenu ? _shownWidth : -Tokens.padding.extraLargeIncreased * root.scaleOffset
+    implicitHeight: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitHeight : _loadingSubMenu ? _shownHeight : -Tokens.padding.extraLargeIncreased * root.scaleOffset
+
+    onImplicitWidthChanged: if ((currentItem as SubMenu)?.hasChildren) _shownWidth = implicitWidth
+    onImplicitHeightChanged: if ((currentItem as SubMenu)?.hasChildren) _shownHeight = implicitHeight
 
     initialItem: SubMenu {
         handle: root.trayItem
@@ -183,7 +192,8 @@ StackView {
 
                             required property var modelData
 
-                            implicitWidth: parent.width
+                            // A rebuild detaches old rows before they are destroyed.
+                            implicitWidth: parent?.width ?? 0
                             implicitHeight: childrenItem.implicitHeight
 
                             radius: Tokens.rounding.full * menu.scaleOffset

@@ -105,7 +105,6 @@ TextFieldBase {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: root.leftPadding
             anchors.topMargin: Tokens.padding.extraSmall
-            renderType: Text.QtRendering
 
             text: root.placeholderText
             color: root.isError ? Colours.palette.m3error : (root.activeFocus ? Colours.palette.m3primary : root.text ? Colours.palette.m3outline : root.placeholderTextColor)

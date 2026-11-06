@@ -20,6 +20,12 @@ endif()
 # UI control, so this needs the library, and a distribution without libKF6Runner
 # should still build a shell whose launcher simply lacks that one mode.
 find_package(KF6Runner QUIET)
+if(NOT KF6Runner_FOUND)
+    # Say it out loud: the installers' package lists are the only thing keeping this
+    # from happening quietly, and a distro they do not know about would lose the
+    # launcher's search mode with nothing in the build output to show for it.
+    message(STATUS "KF6Runner not found: the launcher will build without system search")
+endif()
 
 qml_module(caelestia-services
     URI Caelestia.Services

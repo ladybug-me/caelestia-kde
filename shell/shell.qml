@@ -1,5 +1,10 @@
 pragma ComponentBehavior: Bound
 
+// Qt's own default render type is QtRendering, and the Rubik font draws nothing
+// through it on Qt 6.11. Making native the process default keeps every text item
+// drawing, including the bare Text items that no component pins a type on.
+//@ pragma NativeTextRendering
+
 // Environment variables originally set via //@ pragma directives moved to
 // the launcher scripts (08-build-shell.sh, 10-autostart.sh) for broader
 // quickshell version compatibility.

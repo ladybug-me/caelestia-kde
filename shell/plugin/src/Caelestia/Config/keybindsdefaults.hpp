@@ -6,7 +6,7 @@
 namespace caelestia::config {
 
 inline QJsonObject defaultKeybinds() {
-    return QJsonObject{ { QStringLiteral("nexus"), QStringLiteral("") },
+    return QJsonObject{ { QStringLiteral("nexus"), QStringLiteral("Meta+U") },
         { QStringLiteral("nexusBack"), QStringLiteral("Alt+Left") }, { QStringLiteral("showall"), QStringLiteral("") },
         { QStringLiteral("dashboard"), QStringLiteral("") },
         { QStringLiteral("screenshot"), QStringLiteral("Meta+Shift+S") },

@@ -1,0 +1,22 @@
+{
+    "name": "Snappy Tactile",
+    "description": "Crisp, instantaneous response without overshoot",
+    "appearance": {
+        "curves": {
+            "expressiveDefaultSpatial": [0.10, 1.00, 0.10, 1.00, 1.0, 1.0],
+            "expressiveFastSpatial": [0.08, 1.00, 0.10, 1.00, 1.0, 1.0],
+            "expressiveSlowSpatial": [0.15, 1.00, 0.15, 1.00, 1.0, 1.0],
+            "expressiveDefaultEffects": [0.00, 0.00, 0.20, 1.00, 1.0, 1.0],
+            "expressiveFastEffects": [0.00, 0.00, 0.15, 1.00, 1.0, 1.0],
+            "expressiveSlowEffects": [0.05, 0.00, 0.20, 1.00, 1.0, 1.0]
+        },
+        "animDurations": {
+            "expressiveDefaultSpatial": 320,
+            "expressiveFastSpatial": 220,
+            "expressiveSlowSpatial": 420,
+            "expressiveDefaultEffects": 140,
+            "expressiveFastEffects": 100,
+            "expressiveSlowEffects": 200
+        }
+    }
+}

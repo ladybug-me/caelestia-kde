@@ -60,6 +60,8 @@ CORE_PACKAGES=(
     kf6-networkmanager-qt-devel kpipewire kpipewire-devel
     libepoxy-devel libdrm-devel
 
+    kf6-krunner-devel kf6-baloo
+
     libqalculate libqalculate-devel libsecret vulkan-headers ksshaskpass libX11-devel
 
     protobuf-devel protobuf-compiler openssl-devel avahi
@@ -80,6 +82,7 @@ UTILITY_PACKAGES=(
     tesseract tesseract-langpack-eng spectacle gpu-screen-recorder
     slurp grim brightnessctl power-profiles-daemon
     xdg-utils sassc bat ripgrep xdg-user-dirs
+    plasma-print-manager plasma-keyboard
 )
 
 COPR_CORE=(app2unit libcava)

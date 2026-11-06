@@ -47,7 +47,16 @@ Controls.Menu {
             return;
         }
         if (entry.action === "EnterEditMode") {
+            WidgetEditor.close();
             ContextMenuStore.editMode = true;
+            return;
+        }
+        if (entry.action === "EditWidgets") {
+            WidgetEditor.toggle();
+            // The menu held the keyboard while it was open, so the desktop has to
+            // take it back for Escape and Delete to reach the editor.
+            if (WidgetEditor.active)
+                DesktopLayout.controllerFor(root.screenName)?.grabKeyboard();
             return;
         }
         if (entry.action === "ToggleWidgetLock") {
@@ -100,7 +109,11 @@ Controls.Menu {
             root.submenuRows[key] = item;
         }
 
-        if (entry.action === "AddWidget") {
+        if (entry.action === "EditWidgets") {
+            item.text = Qt.binding(() => WidgetEditor.active ? qsTr("Done Editing Widgets") : (entry.label || qsTr("Edit Widgets")));
+            item.icon = Qt.binding(() => WidgetEditor.active ? "check" : (entry.icon || "edit"));
+            item.visible = Qt.binding(() => !Config.background.disableQuickshellDesktop);
+        } else if (entry.action === "AddWidget") {
             item.text = entry.label;
             item.icon = entry.icon || "widgets";
             item.visible = Qt.binding(() => root.iconsShown);
@@ -229,6 +242,7 @@ Controls.Menu {
 
     // Called when the menu is requested again while already open.
     function reopen() {
+        closeSubmenu();
         refresh();
         replayReveal();
     }

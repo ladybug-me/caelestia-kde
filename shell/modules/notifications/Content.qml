@@ -19,12 +19,15 @@ Item {
     readonly property int padding: Tokens.padding.large
     readonly property int clampedPadding: CUtils.clamp(padding - Config.border.thickness, 0, padding)
 
+    /// Nothing to show: the stack is not there at all, rather than a strip of padding.
+    readonly property bool empty: list.count === 0
+
     /// How tall the notifications themselves want to be.
     readonly property real contentHeight: {
-        const count = list.count;
-        if (count === 0)
+        if (root.empty)
             return 0;
 
+        const count = list.count;
         let height = (count - 1) * Tokens.spacing.medium;
         for (let i = 0; i < count; i++)
             height += (list.itemAtIndex(i) as NotifWrapper)?.nonAnimHeight ?? 0;
@@ -52,7 +55,7 @@ Item {
     implicitWidth: Tokens.sizes.notifs.width
     /// And how tall it may be: the panels beside it only leave so much, and a stack that
     /// does not fit waits rather than drawing half a notification.
-    implicitHeight: Math.min(root.contentHeight + root.padding + root.clampedPadding, root.room)
+    implicitHeight: root.empty ? 0 : Math.min(root.contentHeight + root.padding + root.clampedPadding, root.room)
 
     ClippingWrapperRectangle {
         anchors.fill: parent

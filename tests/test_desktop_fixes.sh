@@ -102,4 +102,41 @@ test_startup_task_reads_disabled_quickshell_desktop_mode() {
     assert_eq "folder" "$(cat "$tmp/mode" 2>/dev/null)" "mode should be folder when disableQuickshellDesktop is true"
 }
 
+test_skwd_wall_hook_startup_task_updates_config() {
+    local task="$REPO_ROOT/shell/services/startuptasks/08-skwd-wall-hook.sh"
+    local tmp; tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/config/skwd-wall-v2"
+    cat > "$tmp/config/skwd-wall-v2/config.json" <<'EOF'
+{
+  "postProcessing": [
+    {
+      "command": "PATH=$HOME/.local/bin:$PATH caelestia-color wallpaper -f %thumb% -a %path%",
+      "type": "all"
+    }
+  ]
+}
+EOF
+    (
+        export XDG_CONFIG_HOME="$tmp/config"
+        bash "$task"
+    ) || fail "skwd-wall-hook startup task failed"
+
+    assert_contains "$(cat "$tmp/config/skwd-wall-v2/config.json")" "SKWD_WALLD=1 PATH=" \
+        "post-processing command should have SKWD_WALLD=1 prepended"
+
+    # Test idempotency
+    (
+        export XDG_CONFIG_HOME="$tmp/config"
+        bash "$task"
+    ) || fail "skwd-wall-hook startup task failed on second run"
+    assert_not_contains "$(cat "$tmp/config/skwd-wall-v2/config.json")" "SKWD_WALLD=1 SKWD_WALLD=1" \
+        "should not duplicate SKWD_WALLD=1 on subsequent runs"
+}
+
+test_startup_tasks_qml_registers_skwd_wall_hook() {
+    local qml_file="$REPO_ROOT/shell/services/StartupTasks.qml"
+    assert_contains "$(cat "$qml_file")" '"08-skwd-wall-hook"' \
+        "StartupTasks.qml should register 08-skwd-wall-hook in TASKS array"
+}
+
 run_tests

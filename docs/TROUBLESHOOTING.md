@@ -421,7 +421,12 @@ built only when the development package is present:
 ```bash
 pacman -Q kf6-krunner          # Arch: the runtime is usually already there
 pacman -S kf6-krunner          # headers + CMake config the bridge needs
+dnf install kf6-krunner-devel  # Fedora
+apt install libkf6runner-dev   # Debian and Ubuntu
 ```
+
+The indexer behind *Files* results is a separate package (`baloo` on Arch,
+`kf6-baloo` on Fedora, `baloo6` on Debian); the installers pull in both.
 
 If `>search` shows nothing at all while `>calc` still works, the shell was
 compiled without it. Check what the installed plugin was built against:

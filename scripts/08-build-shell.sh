@@ -188,6 +188,36 @@ cleanup_legacy_fonts() {
     done
 }
 
+SHELL_PRUNE_KEEP=(
+    shell.json
+    .current_commit
+    .current_version
+    .update_branch
+    .checkout
+    assets/fonts
+    assets/icons/yet-another-monochrome-icon-set
+)
+
+prune_deployed_shell() {
+    local listing="$1" prefix="$2"
+    local root pruned
+    local -a removed=()
+
+    root="$(dirname -- "$(install_shell_config)")"
+
+    pruned="$(prune_install_root "$root" "$listing" "$prefix" "${SHELL_PRUNE_KEEP[@]}")" \
+        || warn "Could not remove everything an older revision left in $root."
+
+    [[ -n "$pruned" ]] || return 0
+    mapfile -t removed <<< "$pruned"
+
+    ok "Removed ${#removed[@]} path(s) the new revision no longer ships."
+    printf '     %s\n' "${removed[@]:0:5}"
+    if [[ ${#removed[@]} -gt 5 ]]; then
+        printf '     ... and %s more\n' "$(( ${#removed[@]} - 5 ))"
+    fi
+}
+
 install_lockscreen_greeter() {
     local src="$BUNDLE_DIR/src/kde/shells/caelestia.desktop"
     local dest="$HOME/.local/share/plasma/shells/caelestia.desktop"
@@ -351,7 +381,7 @@ checkout_may_use_prebuilt() {
 }
 
 try_download_prebuilt_shell() {
-    local arch qt_abi tag tmp_archive url checksum_status asset candidate
+    local arch qt_abi tag tmp_archive url checksum_status asset candidate listing
     arch="$(uname -m)"
     [[ "$arch" == "x86_64" ]] || return 1
     [[ -f /etc/arch-release ]] || return 1
@@ -398,28 +428,27 @@ try_download_prebuilt_shell() {
 
     info "Extracting prebuilt shell artifacts..."
     mkdir -p "$HOME/.local" "$HOME/.config"
-    if ! tar -C "$HOME/.local" -xzf "$tmp_archive" lib; then
-        warn "Failed to extract lib from prebuilt shell archive"
+    listing="$(mktemp)" || {
         rm -f "$tmp_archive"
         return 1
-    fi
-    if ! tar -C "$HOME/.config" -xzf "$tmp_archive" quickshell; then
-        warn "Failed to extract quickshell from prebuilt shell archive"
-        rm -f "$tmp_archive"
-        return 1
-    fi
-    if ! tar -tzf "$tmp_archive" bin/ >/dev/null 2>&1 \
-        || ! tar -tzf "$tmp_archive" lib/caelestia/ >/dev/null 2>&1; then
+    }
+    if ! tar -tzf "$tmp_archive" > "$listing" \
+        || ! grep -q '^bin/' "$listing" \
+        || ! grep -q '^lib/caelestia/' "$listing"; then
         warn "Prebuilt shell artifact has no CMake-owned CLI/data tree - falling back to a local build."
-        rm -f "$tmp_archive"
+        rm -f "$listing" "$tmp_archive"
         return 1
     fi
-    if ! tar -C "$HOME/.local" -xzf "$tmp_archive" bin; then
-        warn "Failed to extract CMake-owned CLI files"
-        rm -f "$tmp_archive"
+    if ! tar -C "$HOME/.local" -xzf "$tmp_archive" lib bin \
+        || ! tar -C "$HOME/.config" -xzf "$tmp_archive" quickshell; then
+        warn "Failed to extract the prebuilt shell archive"
+        rm -f "$listing" "$tmp_archive"
         return 1
     fi
     rm -f "$tmp_archive"
+
+    prune_deployed_shell "$listing" "quickshell/caelestia"
+    rm -f "$listing"
     return 0
 }
 
@@ -487,6 +516,8 @@ else
         err "Installation failed. Full log: $BUILD_LOG"
         exit 1
     fi
+
+    prune_deployed_shell build/install_manifest.txt "$(dirname -- "$(install_shell_config)")"
 fi
 
 kwin_plugin_version() {

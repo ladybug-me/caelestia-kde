@@ -32,16 +32,11 @@ Item {
         anchors.fill: parent
         spacing: Tokens.spacing.medium
 
-        IdleInhibit {
-            id: idleInhibit
-
-            visible: Config.utilities.showKeepAwake
-        }
-
         TimersCard {
             id: timers
 
             visible: Config.utilities.showTimers
+            visibilities: root.visibilities
         }
 
         CaptureCard {

@@ -424,7 +424,7 @@ Item {
     // and it authenticates with x-api-key. See opencodeWire() and setAuthHeader().
     readonly property bool isOpencode: provider === "opencode" || provider === "opencode-go"
 
-    readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go"]
+    readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go", "cheaperinference"]
 
     function openaiCompatBase(p) {
         const which = p || provider;
@@ -436,6 +436,8 @@ Item {
             return GlobalConfig.ai.opencodeUrl || "https://opencode.ai/zen/v1";
         if (which === "opencode-go")
             return GlobalConfig.ai.opencodeGoUrl || "https://opencode.ai/zen/go/v1";
+        if (which === "cheaperinference")
+            return GlobalConfig.ai.cheaperInferenceUrl || "https://api.cheaperinference.com/v1";
         return GlobalConfig.ai.openaiUrl || "https://api.openai.com/v1";
     }
 
@@ -567,6 +569,9 @@ Item {
         } else if (which === "opencode" || which === "opencode-go") {
             envName = "OPENCODE_API_KEY";
             configured = GlobalConfig.ai.opencodeApiKey;
+        } else if (which === "cheaperinference") {
+            envName = "CHEAPER_INFERENCE_API_KEY";
+            configured = GlobalConfig.ai.cheaperInferenceApiKey;
         }
         const envKey = Quickshell.env(envName);
         if (envKey && envKey.trim() !== "")
@@ -583,7 +588,8 @@ Item {
         "openai": "openaiApiKey",
         "gemini": "geminiApiKey",
         "openrouter": "openrouterApiKey",
-        "opencode": "opencodeApiKey"
+        "opencode": "opencodeApiKey",
+        "cheaperinference": "cheaperInferenceApiKey"
     })
 
     function loadAllKeys() {
@@ -619,6 +625,8 @@ Item {
             return "defaultOpencodeModel";
         if (which === "opencode-go")
             return "defaultOpencodeGoModel";
+        if (which === "cheaperinference")
+            return "defaultCheaperInferenceModel";
         return "defaultOpenaiModel";
     }
 
@@ -640,6 +648,8 @@ Item {
             l.push("opencode");
         if (GlobalConfig.ai.enableOpencodeGo)
             l.push("opencode-go");
+        if (GlobalConfig.ai.enableCheaperInference)
+            l.push("cheaperinference");
         if (l.length === 0)
             l.push("ollama");
         return l;
@@ -660,6 +670,8 @@ Item {
             return "opencode Zen";
         if (p === "opencode-go")
             return "opencode Go";
+        if (p === "cheaperinference")
+            return "Cheaper Inference";
         return "Ollama";
     }
 
@@ -1402,7 +1414,8 @@ Item {
                 "gemini": "GEMINI_API_KEY",
                 "openrouter": "OPENROUTER_API_KEY",
                 "opencode": "OPENCODE_API_KEY",
-                "opencode-go": "OPENCODE_API_KEY"
+                "opencode-go": "OPENCODE_API_KEY",
+                "cheaperinference": "CHEAPER_INFERENCE_API_KEY"
             };
             addAiMessage("⚠️ No " + root.providerLabel(root.provider) + " API key configured. Set the "
                 + (envNames[root.provider] || "API") + " environment variable, or add a key in the AI settings.");

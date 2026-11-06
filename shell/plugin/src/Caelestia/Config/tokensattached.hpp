@@ -67,7 +67,6 @@ private:
     void componentComplete() override;
 
     void propagateScreen();
-    void bindAnim();
     void bindFont();
 
     bool m_complete = false;

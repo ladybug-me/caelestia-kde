@@ -111,16 +111,14 @@ Item {
     StyledTextField {
         id: searchField
 
-        type: StyledTextField.Boxed
-
         anchors.top: title.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: Tokens.spacing.small
+        anchors.topMargin: Tokens.spacing.medium
         visible: false
         placeholderText: qsTr("Search notifications")
         horizontalAlignment: TextInput.AlignLeft
-        onTextEdited: text => root.query = text
+        onTextEdited: root.query = searchField.text
     }
 
     ClippingRectangle {
@@ -139,14 +137,13 @@ Item {
         Loader {
             id: loader
 
+            property bool gameIsActive: item && item.hasOwnProperty("isPlaying") && item.isPlaying
+
             asynchronous: true
             anchors.centerIn: parent
             active: opacity > 0
             opacity: (root.notifCount > 0 && !gameIsActive) ? 0 : 1
             z: (root.notifCount > 0 && !gameIsActive) ? -1 : 1
-
-            property bool gameIsActive: item && item.hasOwnProperty("isPlaying") && item.isPlaying
-
             width: clipRect.width
             height: 250
 

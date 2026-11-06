@@ -20,6 +20,7 @@ ConnectedRect {
     implicitHeight: navLayout.implicitHeight + navLayout.anchors.margins * 2
 
     StateLayer {
+        manualHoverOverride: root.isSelected
         onClicked: root.clicked()
     }
 

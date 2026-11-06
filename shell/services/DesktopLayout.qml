@@ -209,32 +209,86 @@ Singleton {
                 if (it && typeof it.name === "string")
                     nextPositions[fileKey(it.name)] = { col: it.col | 0, row: it.row | 0 };
         } else if (data && typeof data === "object") {
-            for (const it of data.items ?? [])
-                if (it && typeof it.key === "string") {
-                    const itemPos = { col: it.col | 0, row: it.row | 0 };
-                    if (typeof it.screen === "string" && it.screen.length > 0)
-                        itemPos.screen = it.screen;
-                    nextPositions[it.key] = itemPos;
+            if (Array.isArray(data.items)) {
+                for (const it of data.items)
+                    if (it && typeof it.key === "string") {
+                        const itemPos = { col: it.col | 0, row: it.row | 0 };
+                        if (typeof it.screen === "string" && it.screen.length > 0)
+                            itemPos.screen = it.screen;
+                        nextPositions[it.key] = itemPos;
+                    }
+            } else if (data.positions && typeof data.positions === "object") {
+                for (const key in data.positions) {
+                    const it = data.positions[key];
+                    if (it && typeof it === "object") {
+                        const itemPos = { col: it.col | 0, row: it.row | 0 };
+                        if (typeof it.screen === "string" && it.screen.length > 0)
+                            itemPos.screen = it.screen;
+                        nextPositions[key] = itemPos;
+                    }
                 }
-            for (const g of data.groups ?? [])
-                if (g && typeof g.id === "string" && Array.isArray(g.members))
-                    nextGroups[g.id] = { name: String(g.name ?? ""), members: g.members.filter(m => typeof m === "string"), size: size(g.size) };
-            for (const w of data.widgets ?? [])
-                if (w && typeof w.id === "string" && typeof w.type === "string")
-                    nextWidgets[w.id] = {
-                        type: w.type,
-                        size: size(w.size),
-                        config: w.config && typeof w.config === "object" ? w.config : {},
-                        locked: w.locked === true
-                    };
-            const prefs = data.prefs ?? {};
-            if (iconSizes.indexOf(prefs.iconSize) !== -1)
-                iconSize = prefs.iconSize;
-            autoArrange = prefs.autoArrange === true;
-            roundIcons = prefs.roundIcons !== false;
-            widgetOutlines = prefs.widgetOutlines === true;
-            sortKey = typeof prefs.sortKey === "string" ? prefs.sortKey : "";
-            defaultsSeeded = prefs.defaultsSeeded === true;
+            }
+            if (Array.isArray(data.groups)) {
+                for (const g of data.groups)
+                    if (g && typeof g.id === "string" && Array.isArray(g.members))
+                        nextGroups[g.id] = { name: String(g.name ?? ""), members: g.members.filter(m => typeof m === "string"), size: size(g.size) };
+            } else if (data.groups && typeof data.groups === "object") {
+                for (const id in data.groups) {
+                    const g = data.groups[id];
+                    if (g && Array.isArray(g.members))
+                        nextGroups[id] = { name: String(g.name ?? ""), members: g.members.filter(m => typeof m === "string"), size: size(g.size) };
+                }
+            }
+            if (Array.isArray(data.widgets)) {
+                for (const w of data.widgets)
+                    if (w && typeof w.id === "string" && typeof w.type === "string")
+                        nextWidgets[w.id] = {
+                            type: w.type,
+                            size: size(w.size),
+                            config: w.config && typeof w.config === "object" ? w.config : {},
+                            locked: w.locked === true
+                        };
+            } else if (data.widgets && typeof data.widgets === "object") {
+                for (const id in data.widgets) {
+                    const w = data.widgets[id];
+                    if (w && typeof w.type === "string")
+                        nextWidgets[id] = {
+                            type: w.type,
+                            size: size(w.size),
+                            config: w.config && typeof w.config === "object" ? w.config : {},
+                            locked: w.locked === true
+                        };
+                }
+            }
+            const prefs = (data.prefs && typeof data.prefs === "object") ? data.prefs : {};
+            const resolvedIconSize = prefs.iconSize ?? data.iconSize ?? data.icon_size;
+            if (iconSizes.indexOf(resolvedIconSize) !== -1)
+                iconSize = resolvedIconSize;
+            if (prefs.autoArrange !== undefined)
+                autoArrange = prefs.autoArrange === true;
+            else if (data.autoArrange !== undefined)
+                autoArrange = data.autoArrange === true;
+            else if (data.auto_arrange !== undefined)
+                autoArrange = data.auto_arrange === true;
+
+            if (prefs.roundIcons !== undefined)
+                roundIcons = prefs.roundIcons !== false;
+            else if (data.roundIcons !== undefined)
+                roundIcons = data.roundIcons !== false;
+            else if (data.round_icons !== undefined)
+                roundIcons = data.round_icons !== false;
+
+            if (prefs.widgetOutlines !== undefined)
+                widgetOutlines = prefs.widgetOutlines === true;
+            else if (data.widgetOutlines !== undefined)
+                widgetOutlines = data.widgetOutlines === true;
+            else if (data.widget_outlines !== undefined)
+                widgetOutlines = data.widget_outlines === true;
+
+            const resolvedSortKey = prefs.sortKey ?? data.sortKey ?? data.sort_key;
+            if (typeof resolvedSortKey === "string")
+                sortKey = resolvedSortKey;
+            defaultsSeeded = prefs.defaultsSeeded === true || data.defaultsSeeded === true || data.defaults_seeded === true;
         }
         if (data === null || (!defaultsSeeded && Object.keys(nextWidgets).length === 0))
             defaultsNeeded = true;

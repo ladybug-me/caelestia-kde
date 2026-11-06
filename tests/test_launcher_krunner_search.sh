@@ -25,6 +25,9 @@ test_bridge_is_optional_at_build_time() {
         "the bridge must be compiled in only when KF6Runner is found"
     assert_contains "$cmake" 'krunnerbridge.cpp' \
         "the bridge source must always be part of the module"
+    # Optionality that says nothing is how Fedora and Debian shipped without search.
+    assert_contains "$cmake" 'message(STATUS "KF6Runner not found' \
+        "a build without KF6Runner has to say so instead of silently losing the mode"
 }
 
 test_bridge_identifies_results_by_match_id() {

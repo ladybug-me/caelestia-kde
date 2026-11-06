@@ -1,5 +1,8 @@
 #include "tokensattached.hpp"
 
+#include <qhash.h>
+#include <qpointer.h>
+#include <qqmlengine.h>
 #include <qquickitem.h>
 
 #include "anim.hpp"
@@ -20,13 +23,39 @@ const AppearanceConfig* resolveAppearance(ConfigRoot* config, bool complete, con
     return ConfigSingleton::instance()->appearance();
 }
 
+// Every item that reads Tokens gets its own attached object, so the font and
+// animation tokens are shared: building them per item (fonts, easing curves and
+// their connections) made creating delegates slow.
+AnimTokens* sharedAnimTokens() {
+    static AnimTokens* const s_anim = [] {
+        auto* const tokens = new AnimTokens;
+        QQmlEngine::setObjectOwnership(tokens, QQmlEngine::CppOwnership);
+        auto* const anim = ConfigSingleton::instance()->appearance()->anim();
+        tokens->bindDurations(anim->durations());
+        tokens->bindAnim(anim);
+        tokens->bindCurves(TokensSingleton::instance()->appearance()->curves());
+        return tokens;
+    }();
+    return s_anim;
+}
+
+FontTokens* sharedFontTokens(AppearanceFont* font, AppearanceTokens* appearanceTokens) {
+    static QHash<std::pair<AppearanceFont*, AppearanceTokens*>, QPointer<FontTokens>> s_fonts;
+    auto& tokens = s_fonts[{ font, appearanceTokens }];
+    if (!tokens) {
+        // Owned by the config node it reads, so it goes away with that screen's config.
+        tokens = new FontTokens(font);
+        tokens->bindFont(font);
+        tokens->bindTokens(appearanceTokens);
+    }
+    return tokens;
+}
+
 } // namespace
 
 Tokens::Tokens(QObject* parent)
     : QQuickAttachedPropertyPropagator(parent)
-    , m_font(new FontTokens(this))
-    , m_anim(new AnimTokens(this)) {
-    bindAnim();
+    , m_anim(sharedAnimTokens()) {
     bindFont();
     initialize();
 }
@@ -77,18 +106,10 @@ void Tokens::attachedParentChange(
         inheritScreen(tokens->screen());
 }
 
-void Tokens::bindAnim() {
-    auto* const anim = ConfigSingleton::instance()->appearance()->anim();
-    m_anim->bindDurations(anim->durations());
-    m_anim->bindAnim(anim);
-    m_anim->bindCurves(TokensSingleton::instance()->appearance()->curves());
-}
-
 void Tokens::bindFont() {
     auto* appearance = m_config ? m_config->appearance() : ConfigSingleton::instance()->appearance();
     auto* tokens = m_tokens ? m_tokens->appearance() : TokensSingleton::instance()->appearance();
-    m_font->bindFont(appearance->font());
-    m_font->bindTokens(tokens);
+    m_font = sharedFontTokens(appearance->font(), tokens);
 }
 
 #define TOKENS_ATTACHED_GETTER(Type, name)                                                                             \

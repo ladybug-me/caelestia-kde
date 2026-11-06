@@ -81,6 +81,8 @@ CORE_PACKAGES=(
     libkf6config-dev libkf6networkmanagerqt-dev libkpipewire-dev
     libepoxy-dev libdrm-dev
 
+    libkf6runner-dev baloo6
+
     ffmpeg libavcodec-dev libavformat-dev libavutil-dev libswscale-dev
     libqalculate-dev qalc libvulkan-dev libsecret-1-dev ksshaskpass libx11-dev
     libsecret-tools
@@ -102,6 +104,7 @@ UTILITY_PACKAGES=(
     tesseract-ocr tesseract-ocr-eng kde-spectacle slurp grim
     brightnessctl power-profiles-daemon
     xdg-utils sassc python3-venv uv konsave
+    print-manager plasma-keyboard
 )
 
 FALLBACK_PKGS=(

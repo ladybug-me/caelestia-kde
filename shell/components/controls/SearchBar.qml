@@ -9,11 +9,13 @@ TextFieldBase {
     readonly property alias bg: bg
     readonly property alias searchIcon: searchIcon
     readonly property alias clearIcon: clearIcon
+    readonly property alias placeholder: placeholder
 
+    implicitHeight: Math.max(46, contentHeight + Tokens.padding.medium * 2)
     leftPadding: searchIcon.width + searchIcon.anchors.leftMargin + Tokens.spacing.medium
     rightPadding: clearIcon.width + clearIcon.anchors.rightMargin + Tokens.spacing.medium
-    topPadding: Tokens.padding.large
-    bottomPadding: Tokens.padding.large
+    topPadding: 0
+    bottomPadding: 0
 
     onPressed: {
         if (!stateLayer.disabled)
@@ -41,12 +43,15 @@ TextFieldBase {
         id: placeholder
 
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: root.leftPadding
+        anchors.rightMargin: Tokens.padding.large
 
         text: root.placeholderText
         color: root.placeholderTextColor
         font: root.font
+        elide: Text.ElideRight
 
         opacity: root.text ? 0 : 1
 

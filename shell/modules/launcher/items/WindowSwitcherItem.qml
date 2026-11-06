@@ -143,7 +143,6 @@ Item {
         width: previewBox.maxW - Tokens.padding.medium * 2
         horizontalAlignment: Text.AlignHCenter
         elide: Text.ElideRight
-        renderType: Text.QtRendering
         text: {
             const title = root.modelData?.title || "";
             if (root.modelData?.minimized) return `(${title})`;

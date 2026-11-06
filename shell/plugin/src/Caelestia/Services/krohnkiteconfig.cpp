@@ -41,6 +41,7 @@ void KrohnkiteConfig::setKWinConfig(const QMap<QString, QString>& values) {
         group.writeEntry(it.key(), it.value());
     }
     config->sync();
+    apply();
 }
 
 // Table of all layout keys paired with their default order position.

@@ -31,7 +31,11 @@ test_the_stack_takes_one_room_measurement() {
 
     assert_contains "$panels" 'readonly property real notifRoom:' \
         "the panels are the only place that holds every panel in one coordinate space"
-    assert_contains "$notifs" 'implicitHeight: Math.min(root.contentHeight + root.padding + root.clampedPadding, root.room)' \
+    assert_contains "$notifs" 'readonly property bool empty: list.count === 0' \
+        "an empty stack is a state the stack itself names"
+    assert_contains "$notifs" 'implicitHeight: root.empty ? 0 :' \
+        "and while it is empty the stack collapses to nothing, rather than to its padding"
+    assert_contains "$notifs" 'Math.min(root.contentHeight + root.padding + root.clampedPadding, root.room)' \
         "the stack clamps what it wants to the room it is given, and says both plainly"
     assert_not_contains "$notifs" 'osdPanel' \
         "it must not measure the panels itself"

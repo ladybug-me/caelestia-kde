@@ -16,7 +16,7 @@ TextField {
     selectedTextColor: color
 
     font: Tokens.font.body.small
-    renderType: echoMode === TextField.Password ? TextField.QtRendering : TextField.NativeRendering
+    renderType: TextField.NativeRendering
     cursorVisible: !readOnly
     verticalAlignment: TextInput.AlignVCenter
 

@@ -153,7 +153,10 @@ Item {
                     }
                 }
             }
-            if (icon) {
+            // The bell and the sidebar are the two halves of the same notification
+            // panel: hovering it must not stack the small popout on top of the
+            // sidebar, or the two panels animate against each other.
+            if (icon && !(icon.name === "notifications" && root.visibilities.sidebar)) {
                 popouts.currentName = icon.popoutName ?? icon.name;
                 popouts.currentCenter = isHorizontal ? icon.mapToItem(null, icon.width / 2, 0).x : icon.mapToItem(null, 0, icon.height / 2).y;
                 popouts.hasCurrent = true;

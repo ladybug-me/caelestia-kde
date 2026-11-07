@@ -33,26 +33,26 @@ Region {
     R {
         panel: root.panels.dashboard
         y: 0
-        height: panel.height * (1 - root.panels.dashboard.offsetScale) + root.edgeExtent(root.Config.dashboard.hoverThickness)
+        height: root.Config.dashboard.enabled ? panel.height * (1 - root.panels.dashboard.offsetScale) + root.edgeExtent(root.Config.dashboard.hoverThickness) : 0
     }
     R {
         panel: root.panels.launcher
         y: root.win.height - height
-        height: panel.height * (1 - root.panels.launcher.offsetScale) + root.edgeExtent(root.Config.launcher.hoverThickness)
+        height: root.Config.launcher.enabled ? panel.height * (1 - root.panels.launcher.offsetScale) + root.edgeExtent(root.Config.launcher.hoverThickness) : 0
     }
     R {
         id: sessionRegion
 
         panel: root.panels.sessionWrapper
         x: root.bar.position === "right" ? 0 : root.win.width - sessionRegion.width
-        width: panel.width * (1 - root.panels.session.offsetScale) + root.borderThickness + sidebarRegion.width
+        width: root.Config.session.enabled ? panel.width * (1 - root.panels.session.offsetScale) + root.borderThickness + sidebarRegion.width : sidebarRegion.width
     }
     R {
         id: sidebarRegion
 
         panel: root.panels.sidebar
         x: root.bar.position === "right" ? 0 : root.win.width - sidebarRegion.width
-        width: panel.width * (1 - root.panels.sidebar.offsetScale) + root.borderThickness
+        width: root.Config.sidebar.enabled ? panel.width * (1 - root.panels.sidebar.offsetScale) + root.borderThickness : 0
     }
     R {
         id: osdRegion
@@ -67,7 +67,7 @@ Region {
     R {
         panel: root.panels.utilities
         y: root.bar.position === "bottom" ? 0 : root.win.height - height
-        height: panel.height * (1 - root.panels.utilities.offsetScale) + root.edgeExtent(root.Config.utilities.hoverThickness)
+        height: root.Config.utilities.enabled ? panel.height * (1 - root.panels.utilities.offsetScale) + root.edgeExtent(root.Config.utilities.hoverThickness) : 0
     }
     R {
         panel: root.panels.popoutsWrapper

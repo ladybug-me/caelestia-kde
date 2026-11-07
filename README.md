@@ -17,8 +17,10 @@ https://github.com/user-attachments/assets/38b24e7f-fdd9-43db-872b-8c0ac23a44fd
 
 > [!NOTE]
 > This repo is the KDE Plasma port of [`caelestia-dots/shell`](https://github.com/caelestia-dots/shell).
-> Upstream runs on Hyprland; the port runs the same shell on KWin and Plasma. For the original
+> For the original
 > Hyprland dotfiles, see [`caelestia-dots/caelestia`](https://github.com/caelestia-dots/caelestia).
+
+> Please do not contact the official Caelestia hyprland developers with questions regarding this KDE port.
 
 ## Installation
 

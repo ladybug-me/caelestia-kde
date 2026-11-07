@@ -67,7 +67,7 @@ Region {
     R {
         panel: root.panels.utilities
         y: root.bar.position === "bottom" ? 0 : root.win.height - height
-        height: panel.height * (1 - root.panels.utilities.offsetScale) + root.edgeExtent(root.Config.utilities.hoverThickness)
+        height: root.Config.utilities.enabled ? panel.height * (1 - root.panels.utilities.offsetScale) + root.edgeExtent(root.Config.utilities.hoverThickness) : 0
     }
     R {
         panel: root.panels.popoutsWrapper

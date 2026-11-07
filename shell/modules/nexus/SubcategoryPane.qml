@@ -336,6 +336,22 @@ ColumnLayout {
                     status: !Config.tabSwitch.enabled ? qsTr("Disabled") : (Config.tabSwitch.currentDesktopOnly ? qsTr("Current desktop only") : qsTr("All desktops"))
                     slot: 18
                 }
+                SubcategoryCard {
+                    icon: "tune"
+                    label: qsTr("OSD")
+                    status: {
+                        if (!GlobalConfig.osd.enabled) return qsTr("Disabled");
+                        switch (GlobalConfig.osd.style) {
+                            case "pill": return qsTr("Pill");
+                            case "compact": return qsTr("Compact");
+                            case "radial": return qsTr("Radial");
+                            case "card": return qsTr("Card");
+                            case "bar": return qsTr("Minimal Bar");
+                            default: return qsTr("Default (Edge)");
+                        }
+                    }
+                    slot: 24
+                }
             }
 
             // Page 3: Network & Connectivity
@@ -450,12 +466,6 @@ ColumnLayout {
             ColumnLayout {
                 spacing: Tokens.spacing.small
 
-                SubcategoryCard {
-                    icon: "volume_up"
-                    label: qsTr("On-screen slider")
-                    status: qsTr("Volume, microphone, brightness, and edge triggers")
-                    slot: 3
-                }
                 SubcategoryCard {
                     icon: "widgets"
                     label: qsTr("Utilities panel")

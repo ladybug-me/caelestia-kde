@@ -127,7 +127,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: searchField.visible ? searchField.bottom : title.bottom
-        anchors.bottom: clearLoader.opacity > 0 ? clearLoader.top : toggleRect.top
+        anchors.bottom: clearLoader.opacity > 0 ? clearLoader.top : (toggleRect.visible ? toggleRect.top : parent.bottom)
         anchors.bottomMargin: Tokens.padding.medium
         anchors.topMargin: Tokens.spacing.medium
 
@@ -193,6 +193,9 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: clearLoader.opacity > 0 ? clearLoader.width + Tokens.padding.medium * 2 : 0
 
+        // The Caelestia Mode toggle is optional: without this the setting hid
+        // nothing, because the card was laid out unconditionally.
+        visible: GlobalConfig.ai.showCaelestiaMode
         height: toggleLayout.implicitHeight + Tokens.padding.large * 2
         radius: Tokens.rounding.large
         color: Colours.tPalette.m3surfaceContainer

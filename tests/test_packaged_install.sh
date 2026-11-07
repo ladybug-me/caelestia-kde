@@ -171,11 +171,11 @@ test_shared_runtime_files_have_one_cmake_owner() {
         "the source installer must not copy CLI wrappers outside CMake"
     assert_not_contains "$build_script" 'cp -r "$BUNDLE_DIR/src/matugen"' \
         "the source installer must not copy color data outside CMake"
-    assert_contains "$build_script" 'tar -tzf "$tmp_archive" bin/' \
+    assert_contains "$build_script" "grep -q '^bin/' \"\$listing\"" \
         "prebuilt installs should require the CMake-owned CLI tree"
-    assert_contains "$build_script" 'tar -tzf "$tmp_archive" lib/caelestia/' \
+    assert_contains "$build_script" "grep -q '^lib/caelestia/' \"\$listing\"" \
         "prebuilt installs should require the source data tree"
-    assert_contains "$build_script" 'tar -C "$HOME/.local" -xzf "$tmp_archive" bin' \
+    assert_contains "$build_script" 'tar -C "$HOME/.local" -xzf "$tmp_archive" lib bin' \
         "prebuilt installs should extract the CMake-owned CLI tree"
     assert_not_contains "$build_script" 'bin share' \
         "prebuilt installs should not introduce a second data layout"

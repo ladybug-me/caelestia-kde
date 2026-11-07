@@ -19,8 +19,17 @@ StackView {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    implicitWidth: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitWidth : -Tokens.padding.extraLargeIncreased * root.scaleOffset
-    implicitHeight: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitHeight : -Tokens.padding.extraLargeIncreased * root.scaleOffset
+    // A pushed submenu can be empty until the app fills it in. Until then, the popout keeps
+    // the previous menu's size so it does not shrink out from under the cursor and close.
+    readonly property bool _loadingSubMenu: (currentItem as SubMenu)?.isSubMenu === true && !(currentItem as SubMenu).hasChildren
+    property real _shownWidth
+    property real _shownHeight
+
+    implicitWidth: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitWidth : _loadingSubMenu ? _shownWidth : -Tokens.padding.extraLargeIncreased * root.scaleOffset
+    implicitHeight: (currentItem as SubMenu)?.hasChildren ? currentItem.implicitHeight : _loadingSubMenu ? _shownHeight : -Tokens.padding.extraLargeIncreased * root.scaleOffset
+
+    onImplicitWidthChanged: if ((currentItem as SubMenu)?.hasChildren) _shownWidth = implicitWidth
+    onImplicitHeightChanged: if ((currentItem as SubMenu)?.hasChildren) _shownHeight = implicitHeight
 
     initialItem: SubMenu {
         handle: root.trayItem
@@ -58,6 +67,13 @@ StackView {
         required property real scaleOffset
         required property real fontScale
 
+        // On horizontal bars, fits the longest label, between the configured width and twice it.
+        property real widestRow: 0
+        readonly property real rowWidth: {
+            const base = Tokens.sizes.bar.trayMenuWidth * scaleOffset;
+            return root.popouts.isHorizontal ? Math.min(Math.max(widestRow, base), base * 2) : base;
+        }
+
         padding: Tokens.padding.small * scaleOffset
         spacing: Tokens.spacing.small * scaleOffset
 
@@ -90,6 +106,16 @@ StackView {
         }
 
         property var itemGroups: []
+
+        function updateRowWidth() {
+            let w = 0;
+            for (let g = 0; g < groupRepeater.count; ++g) {
+                const rows = groupRepeater.itemAt(g)?.rows;
+                for (let r = 0; r < (rows?.count ?? 0); ++r)
+                    w = Math.max(w, rows.itemAt(r)?.naturalWidth ?? 0);
+            }
+            widestRow = w;
+        }
 
         function updateGroups() {
             const rebuildStartedAt = Date.now();
@@ -153,14 +179,17 @@ StackView {
         }
 
         Repeater {
+            id: groupRepeater
+
             model: menu.itemGroups
 
             StyledRect {
                 id: groupCard
 
                 required property var modelData
+                property alias rows: rowRepeater
 
-                implicitWidth: Tokens.sizes.bar.trayMenuWidth * menu.scaleOffset + Tokens.padding.medium * 2 * menu.scaleOffset
+                implicitWidth: menu.rowWidth + Tokens.padding.medium * 2 * menu.scaleOffset
                 implicitHeight: groupLayout.implicitHeight + Tokens.padding.medium * 2 * menu.scaleOffset
 
                 radius: Tokens.rounding.medium * menu.scaleOffset
@@ -176,14 +205,20 @@ StackView {
                     spacing: Tokens.spacing.small * menu.scaleOffset
 
                     Repeater {
+                        id: rowRepeater
+
                         model: groupCard.modelData
 
                         StyledRect {
                             id: item
 
                             required property var modelData
+                            readonly property real naturalWidth: childrenItem.item?.naturalWidth ?? 0
 
-                            implicitWidth: parent.width
+                            onNaturalWidthChanged: Qt.callLater(menu.updateRowWidth)
+
+                            // A rebuild detaches old rows before they are destroyed.
+                            implicitWidth: parent?.width ?? 0
                             implicitHeight: childrenItem.implicitHeight
 
                             radius: Tokens.rounding.full * menu.scaleOffset
@@ -197,6 +232,15 @@ StackView {
                                 anchors.right: parent.right
 
                                 sourceComponent: Item {
+                                    id: rowContent
+
+                                    // Some apps send icons Quickshell cannot decode (Tailscale's avatar is a JPEG),
+                                    // so the row only makes room for an icon that loaded.
+                                    readonly property bool iconShown: icon.item?.status === Image.Ready
+                                    readonly property real iconSpace: iconShown ? icon.implicitWidth + Tokens.spacing.medium * menu.scaleOffset : 0
+                                    readonly property real expandSpace: expand.active ? expand.implicitWidth + Tokens.spacing.medium * menu.scaleOffset : 0
+                                    readonly property real naturalWidth: iconSpace + Math.ceil(labelMetrics.advanceWidth) + expandSpace
+
                                     implicitHeight: label.implicitHeight
 
                                     StateLayer {
@@ -230,6 +274,7 @@ StackView {
                                         anchors.left: parent.left
 
                                         active: item.modelData.icon !== ""
+                                        visible: rowContent.iconShown
 
                                         sourceComponent: IconImage {
                                             asynchronous: true
@@ -242,15 +287,14 @@ StackView {
                                     StyledText {
                                         id: label
 
-                                        anchors.left: icon.right
-                                        anchors.leftMargin: icon.active ? Tokens.spacing.medium * menu.scaleOffset : 0
+                                        anchors.left: parent.left
+                                        anchors.leftMargin: rowContent.iconSpace
 
                                         text: labelMetrics.elidedText
                                         color: item.modelData.enabled ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
                                         font.pointSize: Tokens.font.body.medium.pointSize * menu.fontScale
                                     }
 
-                                    property int trayMenuWidth: Tokens.sizes.bar.trayMenuWidth * menu.scaleOffset
                                     TextMetrics {
                                         id: labelMetrics
 
@@ -258,7 +302,7 @@ StackView {
                                         font: label.font
 
                                         elide: Text.ElideRight
-                                        elideWidth: root.popouts.isHorizontal ? trayMenuWidth - (icon.active ? icon.implicitWidth + label.anchors.leftMargin : 0) - (expand.active ? expand.implicitWidth + Tokens.spacing.medium * menu.scaleOffset : 0) : 200 * menu.scaleOffset
+                                        elideWidth: root.popouts.isHorizontal ? menu.rowWidth - rowContent.iconSpace - rowContent.expandSpace : 200 * menu.scaleOffset
                                     }
 
                                     Loader {

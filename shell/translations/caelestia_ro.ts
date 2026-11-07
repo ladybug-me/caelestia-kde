@@ -1562,26 +1562,6 @@
     </message>
     <message>
       <location line="+8"/>
-      <source>Border thickness</source>
-      <translation>Grosimea chenarului</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Thickness of the shell border in pixels. Set to 0 for a borderless look</source>
-      <translation>Grosimea marginilor în pixeli. Setează la 0 pentru un aspect fără margini</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Corner radius scale</source>
-      <translation>Scară rază de colț</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Multiplies the shell&apos;s corner rounding</source>
-      <translation>Multiplică colțul cartușului&apos;s rotunjit</translation>
-    </message>
-    <message>
-      <location line="+10"/>
       <source>Transparency</source>
       <translation>Transparență</translation>
     </message>
@@ -1712,6 +1692,16 @@
     </message>
     <message>
       <location line="+11"/>
+      <source>Border thickness</source>
+      <translation>Grosimea chenarului</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Thickness of the shell border in pixels. Set to 0 for a borderless look</source>
+      <translation>Grosimea marginilor în pixeli. Setează la 0 pentru un aspect fără margini</translation>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Border rounding</source>
       <translation>Rotunjire frontieră</translation>
     </message>
@@ -1719,6 +1709,16 @@
       <location line="+11"/>
       <source>Border smoothing</source>
       <translation>netezire frontieră</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Corner radius scale</source>
+      <translation>Scară rază de colț</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Multiplies the shell&apos;s corner rounding</source>
+      <translation>Multiplică colțul cartușului&apos;s rotunjit</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -4268,17 +4268,12 @@
   <context>
     <name>CaptureCard</name>
     <message>
-      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+88"/>
+      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+94"/>
       <source>Screen Capture</source>
       <translation>Captură de ecran</translation>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Capture, OCR and image search</source>
-      <translation>Captură, OCR și căutare de imagini</translation>
-    </message>
-    <message>
-      <location line="+0"/>
+      <location line="+25"/>
       <source>Paused</source>
       <translation>Întrerupt</translation>
     </message>
@@ -4288,18 +4283,13 @@
       <translation>Rulează...</translation>
     </message>
     <message>
-      <location line="+0"/>
-      <source>Ready</source>
-      <translation>Pregătit</translation>
-    </message>
-    <message>
-      <location line="+20"/>
-      <location line="+179"/>
+      <location line="+21"/>
+      <location line="+187"/>
       <source>Record</source>
       <translation>Înregistrare</translation>
     </message>
     <message>
-      <location line="-178"/>
+      <location line="-186"/>
       <location line="+9"/>
       <location line="+9"/>
       <location line="+9"/>
@@ -4346,12 +4336,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+117"/>
+      <location line="+109"/>
       <source>Capture</source>
       <translation>Capturează</translation>
     </message>
     <message>
-      <location line="-107"/>
+      <location line="-99"/>
       <source>Capture fullscreen</source>
       <translation>Capturează ecranul complet</translation>
     </message>
@@ -4394,6 +4384,19 @@
       <location line="+198"/>
       <source>Recording %1</source>
       <translation>Înregistrare %1</translation>
+    </message>
+  </context>
+  <context>
+    <name>CardOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/CardOsd.qml" line="+72"/>
+      <source>Muted</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+98"/>
+      <source>0%</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -4526,6 +4529,19 @@
       <location line="+19"/>
       <source>Variants</source>
       <translation>Variante</translation>
+    </message>
+  </context>
+  <context>
+    <name>CompactOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/CompactOsd.qml" line="+129"/>
+      <source>MUTED</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+16"/>
+      <source>0%</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6194,42 +6210,192 @@ Acum atinge iarba</translation>
     <name>Entries</name>
     <message>
       <location filename="../modules/whatsnew/Entries.qml" line="+14"/>
-      <source>Shimeji Cat update</source>
-      <translation>Actualizare Shimeji Cat</translation>
+      <source>Cheaper Inference AI Provider</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+2"/>
-      <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
-      <translation>Acum pot fi invocați mai mulți Shimeji Cats simultan. De asemenea, a fost implementată o remediere pentru problema în care pisica se ascundea la clic pe desktop. Actualizează din magazinul de pluginuri pentru a avea acces la noile funcții!</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>Multi-Monitor Desktop Support</source>
-      <translation>Suport pentru desktop cu mai multe monitoare</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Desktop icons and widgets now fully support multi-monitor setups with screen-aware positioning. Each connected display maintains its own grid layout and arrangement independently, ensuring widgets and icons stay pinned to their designated monitor across display reconnections and resolution changes without overlapping or shifting between screens.</source>
-      <translation>Pictogramele de pe desktop și widget-urile sunt acum pe deplin compatibile cu configurațiile cu mai multe monitoare, oferind o poziționare adaptată la ecran. Fiecare ecran conectat își păstrează în mod independent propria structură de grilă și propria dispunere, asigurându-se astfel că widget-urile și pictogramele rămân fixate pe monitorul desemnat chiar și în cazul reconectării ecranelor sau al modificării rezoluției, fără a se suprapune sau a se deplasa între ecrane.</translation>
+      <location line="+3"/>
+      <source>Added Cheaper Inference as a supported assistant provider in AI settings, allowing seamless integration with cost-effective cloud AI inference models alongside existing local and cloud providers.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Widget Locking &amp; Outlines</source>
-      <translation>Blocarea widget-urilor și contururile acestora</translation>
+      <source>Accessibility Controls</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Desktop widgets can now be locked individually or altogether directly from their context menus, preventing accidental dragging or resizing while interacting with them. In addition, a new widget outlines toggle highlights widget boundaries on your wallpaper, making it effortless to locate empty or conditionally hidden widgets across your desktop.</source>
-      <translation>Widget-urile de pe desktop pot fi acum blocate individual sau împreună din meniurile lor contextuale, împiedicând tragerea sau redimensionarea accidentală în timpul interacțiunii cu acestea. În plus, o nouă opțiune de afișare a conturului widget-urilor evidențiază limitele acestora pe fundalul de ecran, facilitând localizarea widget-urilor goale sau ascunse condiționat pe desktop.</translation>
+      <location line="+3"/>
+      <source>A dedicated Accessibility page in Nexus provides instant controls for screen magnification, colour inversion, high-contrast filters, reduced motion, and on-screen keyboard options to suit your workflow.</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
-      <source>Desktop Widget Edit Mode</source>
+      <source>Captive Portal &amp; Proxy Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>The shell now automatically detects public and hotel captive Wi-Fi portals with one-click sign-in prompts, alongside comprehensive system proxy configuration options in Network settings.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Dock Recent Files &amp; Jump Lists</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Desktop widgets now have an edit mode of their own. The controls inside a widget step aside, so the whole card can be dragged from anywhere, every border resizes, the cells are outlined underneath, and each card names itself and its size. A toolbar adds widgets, locks or unlocks all of them, and ends the mode. Right-click the desktop and choose Widgets → Edit Widgets to start; Escape leaves it. Ctrl+C and Ctrl+V copy and paste widgets, and Delete removes them without touching your files.</source>
+      <source>Pinned and running applications on the dock now display their recently accessed documents and jump-list actions directly in their right-click context menus for faster resumption.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Nexus Keyboard Navigation</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Nexus settings now offers full keyboard accessibility: press Meta+U to open Nexus, &apos;/&apos; to jump immediately into search, arrow keys and Tab to navigate categories and controls, and hold-to-confirm key captures.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Instant Window Tiling Reload</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Krohnkite window tiling settings now reload and apply dynamically in real time without requiring a session logout or restart when tweaking tiling layouts, rules, and window gaps.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Toast Positioning &amp; Corner Rounding</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Toast notification banners can now be anchored to any corner of the screen (top-left, top-right, bottom-left, bottom-right) with configurable corner radii and independent surface styling rules.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Startup Applications Manager</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Easily manage programs that run when you log in through Nexus. View all configured autostart entries, toggle individual background services, and add new apps with the integrated application picker.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Disk &amp; Storage Management</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Nexus now includes a dedicated Disk &amp; Storage settings page to inspect mounted drives, monitor filesystem capacity and partition health, and safely mount, unmount, or eject external USB media.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Countdown Timers &amp; Quick Toggles</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>The Utilities drawer introduces persistent countdown timers that survive shell restarts, pin active timers directly to the taskbar, and convert utilities like Keep Awake into persistent quick toggles.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>System Tray Ordering &amp; Renaming</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>The taskbar system tray now provides granular per-icon control: set icons to Always Visible, Collapsible, or Hidden, drag and drop to reorder pinned tray items, and assign custom display names and tooltips.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Shell Animation Presets</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Fine-tune interface motion with new shell animation presets, allowing you to choose between expressive motion, standard timing, snappy transitions, or instant response across all panels and drawers. You can also switch animation profiles from launcher by typing &gt; and selecting Animations.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Display &amp; HDR Management</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Manage multiple monitors seamlessly within Nexus: configure display resolutions, refresh rates, monitor rotation, fractional HiDPI scaling, and High Dynamic Range (HDR) toggles all in one place.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Focus Sessions &amp; Meeting DND</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Focus Sessions let you schedule distraction-free work periods that automatically silence notifications and dim background distractions, with optional automated start whenever calendar meetings begin.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Calendar Agenda &amp; Google Calendar Sync</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>The taskbar calendar synchronizes with Google Calendar and remote ICS feeds to display upcoming meeting agendas and event schedules, with hover activation and direct link access right from the bar.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>KRunner System Search in Launcher</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>The launcher now integrates with KDE&apos;s KRunner search service to execute math equations, locate system files and browser bookmarks, look up system settings, and configure custom web search engines. Type &gt; to open commands and select Search everything.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Three-Panel Nexus Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Nexus settings has been overhauled with a three-panel layout displaying sections, subcategories, and active settings side by side. It folds smoothly into two panels on compact screens, and introduces an integrated system font picker previewing every installed typeface.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>Plasma Audio Visualizer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Desktop audio visualization is now powered by the native Plasma Audio Visualizer with multi-monitor positioning, idle auto-hiding, responsive geometry calculations, and multiple profiles.</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>New Wallpaper Engine</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Deep integration with the skwd-wall daemon brings high-performance animated and video wallpapers with thumbnail caching, automatic Material You smart color extraction via caelestia-color, and a new Library and Community wallpapers browser. Press Meta + X to open the new Wallpaper Switcher.</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -6371,6 +6537,14 @@ Acum atinge iarba</translation>
       <location line="+0"/>
       <source>Select a file</source>
       <translation>Selectați un fișier</translation>
+    </message>
+  </context>
+  <context>
+    <name>FloatingOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/FloatingOsd.qml" line="+28"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -9894,96 +10068,231 @@ Acum atinge iarba</translation>
     </message>
   </context>
   <context>
-    <name>OsdPage</name>
+    <name>OsdFunctions</name>
     <message>
-      <location filename="../modules/nexus/pages/utilities/OsdPage.qml" line="+9"/>
-      <source>On-screen sliders</source>
-      <translation>Slider pe ecran</translation>
+      <location filename="../modules/osd/OsdFunctions.qml" line="+36"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Brightness</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>OsdPanel</name>
+    <message>
+      <location filename="../modules/nexus/pages/panels/OsdPanel.qml" line="+19"/>
+      <source>Default (Edge Drawer)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Pill / Dynamic Island</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Compact Slider</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Radial Dial HUD</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Modern Elevated Card</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Minimal Bar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Bottom Center</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Top Center</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Center</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Right Side</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Left Side</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>On-screen display (OSD)</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+11"/>
-      <source>Sliders</source>
-      <translation>Glisoare</translation>
+      <source>Design &amp; Style</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Design</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visual style for hardware buttons (volume, brightness)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+25"/>
+      <source>Test OSD on screen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Trigger a live test of the current OSD design</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Position</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Screen placement for the floating indicator</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Monitors</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
       <source>Enabled</source>
-      <translation>Activat</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the on-screen sliders</source>
-      <translation>Arată glisoarele pe ecran</translation>
+      <source>Enable on-screen display popups</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
       <source>Volume</source>
-      <translation>Volum</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the volume slider</source>
-      <translation>Arată glisorul de volum</translation>
+      <source>Show indicator on speaker volume changes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
       <source>Microphone</source>
-      <translation>Microfon</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the microphone slider</source>
-      <translation>Arată glisorul pentru microfon</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Brightness</source>
-      <translation>Luminozitate</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Show the brightness slider</source>
-      <translation>Arată glisorul de luminozitate</translation>
+      <source>Show indicator on microphone volume changes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
-      <source>Edge trigger</source>
-      <translation>Declanșator margine</translation>
-    </message>
-    <message>
-      <location line="+5"/>
-      <source>Depth</source>
-      <translation>Adâncime</translation>
+      <source>Brightness</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Distance from the screen edge</source>
-      <translation>Distanța de la marginea ecranului</translation>
+      <source>Show indicator on display brightness changes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Height</source>
-      <translation>Înălțime</translation>
+      <location line="+8"/>
+      <source>Show in fullscreen</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Portion of the edge that responds</source>
-      <translation>Porţiunea de margine care răspunde</translation>
+      <source>Display indicator over fullscreen applications</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Behavior</source>
-      <translation>Comportament</translation>
+      <location line="+7"/>
+      <source>Timing</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
       <source>Hide delay</source>
-      <translation>Ascunde întârzierea</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Seconds before the slider hides</source>
-      <translation>Secunde inainte de slider ascunde</translation>
+      <source>Seconds before the indicator hides</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Edge Drawer (Mouse Trigger)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Depth</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Distance from the screen edge to trigger the drawer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Height</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Portion of the edge that responds to hover</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>OsdPreview</name>
+    <message>
+      <location filename="../modules/osd/floating/OsdPreview.qml" line="+58"/>
+      <location line="+13"/>
+      <location line="+13"/>
+      <location line="+12"/>
+      <location line="+13"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+26"/>
+      <source>Edge Drawer</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10513,12 +10822,12 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Performance</source>
       <translation>Performanță</translation>
     </message>
     <message>
-      <location line="-6"/>
+      <location line="-7"/>
       <source>Screen Capture</source>
       <translation>Captură de ecran</translation>
     </message>
@@ -10526,6 +10835,11 @@ Acum atinge iarba</translation>
       <location line="+1"/>
       <source>Keep Awake</source>
       <translation>Păstrează treaz</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>OSD</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
@@ -10719,16 +11033,11 @@ Acum atinge iarba</translation>
     </message>
     <message>
       <location line="+3"/>
-      <source>Sliders, game mode, AI</source>
+      <source>Utilities panel, toggles, game mode, AI</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>On-screen slider</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
       <source>Utilities panel</source>
       <translation type="unfinished"/>
     </message>
@@ -10903,12 +11212,13 @@ Acum atinge iarba</translation>
       <location line="+6"/>
       <location line="+6"/>
       <location line="+6"/>
-      <location line="+7"/>
+      <location line="+6"/>
+      <location line="+8"/>
       <source>Disabled</source>
       <translation>Dezactivat</translation>
     </message>
     <message>
-      <location line="-32"/>
+      <location line="-39"/>
       <source>Taskbar</source>
       <translation>Bară de activități</translation>
     </message>
@@ -10948,7 +11258,7 @@ Acum atinge iarba</translation>
       <translation>Prezentare generală</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Window Switcher</source>
       <translation>Comutator fereastră</translation>
     </message>
@@ -10961,6 +11271,41 @@ Acum atinge iarba</translation>
       <location line="+0"/>
       <source>All desktops</source>
       <translation>Toate desktop-urile</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>OSD</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Pill</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Compact</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Radial</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Card</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Minimal Bar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Default (Edge)</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11010,6 +11355,19 @@ Acum atinge iarba</translation>
       <location line="+20"/>
       <source>GPU</source>
       <translation>GPU</translation>
+    </message>
+  </context>
+  <context>
+    <name>PillOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/PillOsd.qml" line="+101"/>
+      <source>Muted</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>0%</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11800,6 +12158,14 @@ PIN: %1</translation>
       <location line="+17"/>
       <source>System</source>
       <translation>Sistem</translation>
+    </message>
+  </context>
+  <context>
+    <name>RadialOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/RadialOsd.qml" line="+60"/>
+      <source>MUTED</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -13238,13 +13604,14 @@ PIN: %1</translation>
       <location line="+6"/>
       <location line="+6"/>
       <location line="+6"/>
-      <location line="+12"/>
+      <location line="+7"/>
+      <location line="+21"/>
       <location line="+30"/>
       <source>Disabled</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-79"/>
+      <location line="-95"/>
       <source>Dashboard</source>
       <translation type="unfinished"/>
     </message>
@@ -13254,12 +13621,12 @@ PIN: %1</translation>
       <location line="+6"/>
       <location line="+6"/>
       <location line="+6"/>
-      <location line="+48"/>
+      <location line="+64"/>
       <source>Enabled</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-73"/>
+      <location line="-89"/>
       <source>Taskbar</source>
       <translation type="unfinished"/>
     </message>
@@ -13314,7 +13681,42 @@ PIN: %1</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+5"/>
+      <source>OSD</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Pill</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Compact</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Radial</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Card</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Minimal Bar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Default (Edge)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
       <source>Wi-Fi &amp; Connection</source>
       <translation type="unfinished"/>
     </message>
@@ -13495,16 +13897,6 @@ PIN: %1</translation>
     </message>
     <message>
       <location line="+11"/>
-      <source>On-screen slider</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Volume, microphone, brightness, and edge triggers</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+5"/>
       <source>Utilities panel</source>
       <translation type="unfinished"/>
     </message>
@@ -14478,7 +14870,107 @@ PIN: %1</translation>
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+287"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+132"/>
+      <source>Wi-Fi</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Bluetooth</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Colour picker</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launcher</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Overview</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Dashboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Game mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Pause wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Audio visualiser</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Night light</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>EasyEffects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep awake</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Restart shell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Do not disturb</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>VPN</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Quick share</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+169"/>
       <source>Quick Toggles</source>
       <translation>Comutatoare rapide</translation>
     </message>
@@ -14507,7 +14999,7 @@ PIN: %1</translation>
   <context>
     <name>TrayMenu</name>
     <message>
-      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
+      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+340"/>
       <source>Back</source>
       <translation>Înapoi</translation>
     </message>
@@ -15125,16 +15617,6 @@ PIN: %1</translation>
       <location line="+10"/>
       <source>Quick controls</source>
       <translation>Comenzi rapide</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>On-screen sliders</source>
-      <translation>Slider pe ecran</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Volume, microphone, brightness, and edge triggers</source>
-      <translation>Volum, microfon, luminozitate și declanșatoare de margine</translation>
     </message>
     <message>
       <location line="+6"/>

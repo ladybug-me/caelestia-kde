@@ -44,6 +44,9 @@ StyledRect {
             },
             {
                 id: "easyeffects"
+            },
+            {
+                id: "keepAwake"
             }
         ].filter(t => !disabledIds.has(t.id));
 
@@ -84,6 +87,13 @@ StyledRect {
     property bool dragging: false
     property var dragOrder: []
     property string dragId: ""
+    // The toggles are icon only and several glyphs are not obvious on their own,
+    // so hovering one names it after a moment. The label is drawn inside the card
+    // on purpose: a popup tooltip would sit outside the drawer and close it.
+    property string hoverLabel: ""
+    property bool hoverLabelShown: false
+    property real hoverX: 0
+    property real hoverY: 0
     property real ghostX: 0
     property real ghostY: 0
     property double lastEdgeSwitch: 0
@@ -108,11 +118,38 @@ StyledRect {
         case "visualiser": return "equalizer";
         case "easyeffects": return "graphic_eq";
         case "nightlight": return "bedtime";
+        case "keepAwake": return "coffee";
         case "hotspot": return "wifi_tethering";
         case "dnd": return "notifications_off";
         case "vpn": return "vpn_key";
         case "quickShare": return "near_me";
         default: return "toggle_on";
+        }
+    }
+
+    function labelFor(id: string): string {
+        switch (id) {
+        case "wifi": return qsTr("Wi-Fi");
+        case "hotspot": return qsTr("Hotspot");
+        case "bluetooth": return qsTr("Bluetooth");
+        case "mic": return qsTr("Microphone");
+        case "settings": return qsTr("Settings");
+        case "colorpicker": return qsTr("Colour picker");
+        case "launcher": return qsTr("Launcher");
+        case "overview": return qsTr("Overview");
+        case "dashboard": return qsTr("Dashboard");
+        case "wallpaper": return qsTr("Wallpaper");
+        case "gameMode": return qsTr("Game mode");
+        case "pauseWallpaper": return qsTr("Pause wallpaper");
+        case "visualiser": return qsTr("Audio visualiser");
+        case "nightlight": return qsTr("Night light");
+        case "easyeffects": return qsTr("EasyEffects");
+        case "keepAwake": return qsTr("Keep awake");
+        case "restartShell": return qsTr("Restart shell");
+        case "dnd": return qsTr("Do not disturb");
+        case "vpn": return qsTr("VPN");
+        case "quickShare": return qsTr("Quick share");
+        default: return "";
         }
     }
 
@@ -343,6 +380,45 @@ StyledRect {
                     }
                 }
             }
+        }
+    }
+
+    Timer {
+        id: hoverTimer
+
+        interval: 600
+        onTriggered: {
+            if (root.hoverLabel !== "")
+                root.hoverLabelShown = true;
+        }
+    }
+
+    StyledRect {
+        id: hoverTip
+
+        z: 10
+        visible: opacity > 0
+        opacity: root.hoverLabelShown ? 1 : 0
+        x: Math.max(Tokens.padding.extraSmall, Math.min(root.width - width - Tokens.padding.extraSmall, root.hoverX - width / 2))
+        y: Math.min(root.height - height - Tokens.padding.extraSmall, root.hoverY + Tokens.spacing.medium)
+        implicitWidth: hoverTipLabel.implicitWidth + Tokens.padding.medium * 2
+        implicitHeight: hoverTipLabel.implicitHeight + Tokens.padding.extraSmall * 2
+        radius: Tokens.rounding.full
+        color: Qt.rgba(0, 0, 0, 0.85)
+
+        Behavior on opacity {
+            Anim {
+                type: Anim.FastEffects
+            }
+        }
+
+        StyledText {
+            id: hoverTipLabel
+
+            anchors.centerIn: parent
+            text: root.hoverLabel
+            color: "white"
+            font: Tokens.font.label.small
         }
     }
 
@@ -653,12 +729,26 @@ StyledRect {
                         }
                     }
                 }
+                DelegateChoice {
+                    roleValue: "keepAwake"
+                    delegate: Toggle {
+                        icon: "coffee"
+                        checked: IdleInhibitor.enabled
+                        onClicked: IdleInhibitor.setEnabled(!IdleInhibitor.enabled)
+                    }
+                }
             }
         }
     }
 
     component Toggle: IconButton {
+        id: toggle
+
         required property var modelData
+
+        // The toggles are icon only, and several glyphs are not obvious on their
+        // own, so hovering one names it after a short delay.
+        readonly property string tooltip: root.labelFor(modelData.id)
 
         inactiveColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
         fillWidth: true
@@ -675,6 +765,34 @@ StyledRect {
         Behavior on y {
             Anim {
                 type: Anim.SlowSpatial
+            }
+        }
+
+        HoverHandler {
+            id: toggleHover
+
+            onPointChanged: {
+                if (!hovered)
+                    return;
+                const p = toggle.mapToItem(root, point.position.x, point.position.y);
+                root.hoverX = p.x;
+                root.hoverY = p.y;
+            }
+
+            onHoveredChanged: {
+                if (hovered) {
+                    if (root.dragging)
+                        return;
+                    const p = toggle.mapToItem(root, point.position.x, point.position.y);
+                    root.hoverX = p.x;
+                    root.hoverY = p.y;
+                    root.hoverLabel = toggle.tooltip;
+                    hoverTimer.restart();
+                } else if (root.hoverLabel === toggle.tooltip) {
+                    hoverTimer.stop();
+                    root.hoverLabelShown = false;
+                    root.hoverLabel = "";
+                }
             }
         }
     }

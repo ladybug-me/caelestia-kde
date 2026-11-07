@@ -247,7 +247,12 @@ Item {
 
             sourceComponent: MultiEffect {
                 source: ShaderEffectSource {
-                    sourceItem: root.wallpaper
+                    id: wallpaperSource
+
+                    // Set only while this source has a window: Qt takes an extra reference on the source
+                    // item's window if this is set before the effect places it in a window, and never
+                    // releases it, which crashes the shell when the screen goes away.
+                    sourceItem: wallpaperSource.Window.window ? root.wallpaper : null
                     sourceRect: Qt.rect(root.absX, root.absY, root.width, root.height)
                 }
                 maskSource: backgroundPlate

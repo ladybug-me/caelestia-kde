@@ -25,6 +25,11 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
+        SectionHeader {
+            first: true
+            text: qsTr("Connected Devices")
+        }
+
         ToggleRow {
             first: true
             text: qsTr("Bluetooth")
@@ -150,7 +155,7 @@ PageBase {
 
                                     onClicked: {
                                         root.nState.selectedBtDevice = device.modelData;
-                                        root.nState.openSubPage(1);
+                                        root.nState.openSubPage("btDeviceInfo");
                                     }
                                 }
                             }
@@ -175,7 +180,7 @@ PageBase {
 
             StateLayer {
                 disabled: !root.btEnabled
-                onClicked: root.nState.openSubPage(2)
+                onClicked: root.nState.openSubPage("bluetoothPairing")
             }
 
             RowLayout {

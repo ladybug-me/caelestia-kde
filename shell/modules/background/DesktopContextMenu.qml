@@ -244,6 +244,7 @@ Controls.Menu {
     // a new one unfolds where the pointer is now, instead of the open panel hopping
     // sideways under the cursor.
     function reopen() {
+        closeSubmenu();
         refresh();
         root.expanded = false;
         reopenTimer.restart();

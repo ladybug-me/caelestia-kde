@@ -184,7 +184,7 @@ test_mounting_goes_through_udisks() {
 
 test_the_page_is_reachable() {
     assert_file_exists "$PAGE"
-    assert_file_contains "$DICTIONARY" 'key: "storage"' "the page needs a dictionary entry"
+    assert_file_contains "$DICTIONARY" '"storage":' "the page needs a dictionary entry"
     assert_file_contains "$REGISTRY" 'key: "storage"' "and a component slot"
     assert_file_contains "$PAGE" 'Disks.refresh()' "the list is re-read when the page is shown"
     assert_file_contains "$PAGE" 'Disks.eject(diskSection.disk.device)' "ejecting asks for the disk, not one of its filesystems"

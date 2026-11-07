@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/logo.svg" width="80" alt="Caelestia logo" />
+<img src="assets/caelestia.svg" width="80" alt="Caelestia logo" />
 
 # caelestia-kde
 
@@ -55,23 +55,24 @@ instead.
 
 | Shortcut | Action |
 | --- | --- |
-| `Super` | App launcher |
-| `Super + /` | Keybind cheatsheet |
-| `Super + Enter` | Terminal |
-| `Super + Tab` | Overview |
-| `Super + 1-5` | Switch workspace |
-| `Super + B` | Notification sidebar |
-| `Super + V` | Clipboard history |
-| `Super + Shift + S` | Screenshot |
-| `Super + Shift + A` | Google Lens |
-| `Super + Shift + D` | Text recognition |
-| `Super + Ctrl + S` | Screen recorder |
-| `Super + Shift + C` | Color picker |
-| `Super + Shift + V` | Emoji selector |
+| `Meta` | App launcher |
+| `Meta + /` | Keybind cheatsheet |
+| `Meta + X` | Wallpaper Switcher |
+| `Meta + Enter` | Terminal |
+| `Meta + Tab` | Overview |
+| `Meta + 1-5` | Switch workspace |
+| `Meta + B` | Notification sidebar |
+| `Meta + V` | Clipboard history |
+| `Meta + Shift + S` | Screenshot |
+| `Meta + Shift + A` | Google Lens |
+| `Meta + Shift + D` | Text recognition |
+| `Meta + Ctrl + S` | Screen recorder |
+| `Meta + Shift + C` | Color picker |
+| `Meta + Shift + V` | Emoji selector |
 
 ## Configuring
 
-Open Nexus (`Super`, then `>Settings`).
+Open Nexus (`Meta`, then `>Settings`).
 
 - Appearance: wallpaper, colors, fonts, and the wallpaper slideshow
 - Panels: every bar element, dashboard, launcher, sidebar and overview

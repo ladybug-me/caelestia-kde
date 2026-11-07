@@ -135,7 +135,7 @@ test_the_page_and_service_drive_the_script() {
     assert_contains "$page" 'Autostart.setEnabled(entryRow.modelData.id, checked)' "and toggles it"
     assert_contains "$page" 'visible: entryRow.modelData.own' "only the user's own entry can be removed"
     assert_contains "$picker" 'Autostart.add(appRow.modelData.id)' "adding copies an installed application in"
-    assert_contains "$dictionary" 'key: "startup"' "the page exists in the dictionary"
+    assert_contains "$dictionary" '"startup":' "the page exists in the dictionary"
     assert_contains "$dictionary" 'category: "system"' "among the system pages"
     assert_contains "$registry" 'Component { AutostartPage {} }' "and is registered"
     assert_contains "$registry" 'Component { AutostartAppPicker {} }' "with its application picker"

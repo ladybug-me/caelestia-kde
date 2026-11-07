@@ -325,13 +325,108 @@ fi
 
 # 6. Record which revision is actually installed.
 #
+# The previous value is kept first: comparing the two afterwards is how step 7 knows
+# whether the update touched the shell or only the rest of the config.
+QUICKSHELL_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/quickshell/caelestia"
+PREV_REV="$(cat "$QUICKSHELL_DIR/.current_commit" 2>/dev/null || true)"
+#
 # record_installed_revision() refuses under CAELESTIA_SKIP_BUILD=1: the checkout moved
 # but the shell was deliberately not rebuilt, so the new revision would describe a state
 # nobody can see (#651). The previous value stays, still naming the running shell.
-if record_installed_revision "$BUNDLE_DIR" "$HOME/.config/quickshell/caelestia"; then
-    info "Saved commit hash: $(cat "$HOME/.config/quickshell/caelestia/.current_commit" 2>/dev/null || true)"
+if record_installed_revision "$BUNDLE_DIR" "$QUICKSHELL_DIR"; then
+    info "Saved commit hash: $(cat "$QUICKSHELL_DIR/.current_commit" 2>/dev/null || true)"
 elif [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
     info "Shell build skipped; the recorded revision still describes the running shell."
+fi
+
+# 7. Offer to apply the update (#1238).
+#
+# Nothing is restarted silently: a shell restart is not always the right answer.
+# When the update touched shell/, the compiled plugin (.so) cannot be swapped under
+# the running process, so the shell would come back mixing the new QML with the old
+# plugin - logging out is the only safe way. When only the rest of the config changed,
+# restarting the shell is enough. The choice is the user's, so we ask, and we also
+# leave a notification: the prompt is easy to miss in a terminal that scrolls.
+ask_yes_no() {
+    local prompt="${1:-}" answer=""
+    [[ "${CAELESTIA_ASSUME_NO:-0}" == "1" ]] && return 1
+    # Check if a controlling terminal exists and can be opened for bidirectional I/O
+    if ! (exec < /dev/tty > /dev/tty) 2>/dev/null; then
+        return 1
+    fi
+    printf '%s' "$prompt" > /dev/tty 2>/dev/null || return 1
+    read -r answer < /dev/tty 2>/dev/null || return 1
+    [[ "$answer" =~ ^[Yy]([Ee][Ss])?$ ]]
+}
+
+notify_update() {
+    command -v notify-send >/dev/null 2>&1 || return 0
+    notify-send -a "Caelestia Update" -i system-software-update -u normal "Caelestia updated" "${1:-}" 2>/dev/null || true
+}
+
+log_out_now() {
+    if [[ -n "${CAELESTIA_LOGOUT_CMD:-}" ]]; then
+        eval "$CAELESTIA_LOGOUT_CMD"
+    elif command -v qdbus6 >/dev/null 2>&1; then
+        qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout
+    elif command -v qdbus >/dev/null 2>&1; then
+        qdbus org.kde.Shutdown /Shutdown org.kde.Shutdown.logout
+    else
+        return 1
+    fi
+}
+
+restart_shell_now() {
+    local restart_script="${QUICKSHELL_DIR}/scripts/restart_shell.sh"
+    if [[ -x "$restart_script" ]]; then
+        bash "$restart_script"
+    elif [[ -f "$BUNDLE_DIR/shell/scripts/restart_shell.sh" ]]; then
+        bash "$BUNDLE_DIR/shell/scripts/restart_shell.sh"
+    elif command -v systemctl >/dev/null 2>&1; then
+        systemctl --user restart caelestia-shell.service
+    else
+        return 1
+    fi
+}
+
+NEW_REV="$(cat "$QUICKSHELL_DIR/.current_commit" 2>/dev/null || true)"
+SHELL_CHANGED=0
+if [[ -z "$PREV_REV" || -z "$NEW_REV" ]]; then
+    # Cannot compare revisions (missing state files or fresh install): assume the shell moved
+    # to avoid running new QML on an old plugin.
+    SHELL_CHANGED=1
+elif [[ "$PREV_REV" != "$NEW_REV" ]]; then
+    # Validate commit hashes to prevent git option injection
+    if [[ "$PREV_REV" =~ ^[0-9a-fA-F]{7,40}$ && "$NEW_REV" =~ ^[0-9a-fA-F]{7,40}$ ]] && \
+       CHANGED_FILES="$(git -C "$BUNDLE_DIR" diff --name-only "$PREV_REV" "$NEW_REV" 2>/dev/null)"; then
+        if grep -q '^shell/' <<< "$CHANGED_FILES"; then
+            SHELL_CHANGED=1
+        fi
+    else
+        # Cannot compare the two revisions (missing objects, shallow checkout, or invalid hash):
+        # assume the shell moved. Offering a logout is noisy, leaving a mixed shell is worse.
+        SHELL_CHANGED=1
+    fi
+fi
+
+if [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
+    info "Build skipped; the running shell is already what is installed."
+elif [[ "$SHELL_CHANGED" -eq 1 ]]; then
+    notify_update "Log out to load the new shell: it was rebuilt and a restart alone leaves it on the old plugin."
+    if ask_yes_no "The shell itself was rebuilt. Restarting it is not enough, so log out to load it. Log out now? [y/N] "; then
+        info "Logging out..."
+        log_out_now || warn "Could not log out automatically; log out manually to load the new shell."
+    else
+        info "Log out when convenient to load the new shell."
+    fi
+else
+    notify_update "Restart the shell to load it."
+    if ask_yes_no "Restart the Caelestia shell to load the update? [y/N] "; then
+        info "Restarting the shell..."
+        restart_shell_now || warn "Could not restart the shell automatically; restart it manually."
+    else
+        info "The update will apply the next time the shell starts."
+    fi
 fi
 
 echo "PROGRESS: done: Update completed successfully"

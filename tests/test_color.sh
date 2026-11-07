@@ -167,6 +167,7 @@ run_color() {
         MATUGEN_CALLS="$CALLS" \
         KDE_CALLS="$KDE_CALLS" \
         FFMPEG_PATTERN="${FFMPEG_PATTERN:-gray}" \
+        SKWD_WALLD="${SKWD_WALLD:-}" \
         PATH="$PATH" \
         bash "$COLOR" "$@" 2>&1
     )"
@@ -1093,6 +1094,80 @@ EOF
     assert_status 0 "$STATUS" "setting wallpaper with skwd thumbnail should succeed"
     assert_eq "$video" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
         "path.txt should contain actual video from skwd-wall, not webp thumbnail"
+}
+
+test_skwd_helm_not_called_when_skwd_walld_env_set() {
+    setup_sandbox
+    local img; img="$(wallpaper_image "wall.png")"
+    cat > "$STUB_DIR/skwd-helm" <<STUB
+#!/usr/bin/env bash
+if [[ "\$1" == "current" ]]; then
+    printf 'DP-1\t/other/wall.jpg\n'
+elif [[ "\$1" == "apply" ]]; then
+    printf '%s\n' "\$2" >> "$SANDBOX/helm_calls.txt"
+fi
+STUB
+    chmod +x "$STUB_DIR/skwd-helm"
+
+    SKWD_WALLD=1 run_color wallpaper -f "$img"
+    assert_status 0 "$STATUS" "setting wallpaper with SKWD_WALLD should succeed"
+    assert_file_missing "$SANDBOX/helm_calls.txt" "skwd-helm apply should not be called when SKWD_WALLD=1"
+}
+
+test_skwd_helm_not_called_when_apply_path_flag_passed() {
+    setup_sandbox
+    local thumb; thumb="$(wallpaper_image "thumb.png")"
+    local actual; actual="$(wallpaper_image "actual.png")"
+    cat > "$STUB_DIR/skwd-helm" <<STUB
+#!/usr/bin/env bash
+if [[ "\$1" == "current" ]]; then
+    printf 'DP-1\t/other/wall.jpg\n'
+elif [[ "\$1" == "apply" ]]; then
+    printf '%s\n' "\$2" >> "$SANDBOX/helm_calls.txt"
+fi
+STUB
+    chmod +x "$STUB_DIR/skwd-helm"
+
+    run_color wallpaper -f "$thumb" -a "$actual"
+    assert_status 0 "$STATUS" "setting wallpaper with -a flag should succeed"
+    assert_file_missing "$SANDBOX/helm_calls.txt" "skwd-helm apply should not be called when -a is passed"
+}
+
+test_skwd_helm_not_called_when_multi_monitor_already_has_wallpaper() {
+    setup_sandbox
+    local img; img="$(wallpaper_image "wall.png")"
+    cat > "$STUB_DIR/skwd-helm" <<STUB
+#!/usr/bin/env bash
+if [[ "\$1" == "current" ]]; then
+    printf 'DP-2\t%s\nHDMI-A-1\t%s\n' "$img" "$img"
+elif [[ "\$1" == "apply" ]]; then
+    printf '%s\n' "\$2" >> "$SANDBOX/helm_calls.txt"
+fi
+STUB
+    chmod +x "$STUB_DIR/skwd-helm"
+
+    run_color wallpaper -f "$img"
+    assert_status 0 "$STATUS" "setting wallpaper should succeed"
+    assert_file_missing "$SANDBOX/helm_calls.txt" "skwd-helm apply should not be called when already applied across monitors"
+}
+
+test_skwd_helm_called_when_regular_wallpaper_change() {
+    setup_sandbox
+    local img; img="$(wallpaper_image "wall.png")"
+    cat > "$STUB_DIR/skwd-helm" <<STUB
+#!/usr/bin/env bash
+if [[ "\$1" == "current" ]]; then
+    printf 'DP-1\t/other/wall.jpg\n'
+elif [[ "\$1" == "apply" ]]; then
+    printf '%s\n' "\$2" >> "$SANDBOX/helm_calls.txt"
+fi
+STUB
+    chmod +x "$STUB_DIR/skwd-helm"
+
+    run_color wallpaper -f "$img"
+    assert_status 0 "$STATUS" "setting wallpaper should succeed"
+    assert_file_exists "$SANDBOX/helm_calls.txt" "skwd-helm apply should be called when wallpaper differs"
+    assert_eq "$img" "$(cat "$SANDBOX/helm_calls.txt")" "applied wallpaper should match"
 }
 
 run_tests

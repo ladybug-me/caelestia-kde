@@ -163,7 +163,12 @@ Item {
 
         sourceComponent: MultiEffect {
             source: ShaderEffectSource {
-                sourceItem: root.controller.glass
+                id: glassSource
+
+                // Set only while this source has a window: Qt takes an extra reference on the source
+                // item's window if this is set before the effect places it in a window, and never
+                // releases it, which crashes the shell when the screen goes away.
+                sourceItem: glassSource.Window.window ? root.controller.glass : null
                 sourceRect: Qt.rect(root.controller.gridOrigin.x + root.x + card.x, root.controller.gridOrigin.y + root.y + card.y, card.width, card.height)
             }
             maskSource: cardMask

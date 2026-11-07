@@ -129,7 +129,7 @@ test_focus_page_is_reachable_from_notifications() {
     assert_contains "$page" 'AppPickerRow {' "apps are picked from the installed ones"
     assert_contains "$page" 'onSelected: name => root.addAllowedApp(name)' "not typed in from memory"
     assert_not_contains "$page" 'allowInput' "the free-text allow field is gone"
-    assert_contains "$hub" 'root.nState.openSubPage(4)' "the hub must link to it"
+    assert_contains "$hub" 'root.nState.openSubPage("focus")' "the hub must link to it"
     assert_contains "$registry" 'Component { FocusPage {} }' "the page must be registered"
 }
 

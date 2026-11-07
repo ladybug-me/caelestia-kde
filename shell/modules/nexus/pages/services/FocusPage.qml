@@ -117,7 +117,6 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: qsTr("Follow the calendar")
             subtext: qsTr("Start a session while a calendar event is running")
             checked: GlobalConfig.notifs.focusCalendar
@@ -127,34 +126,13 @@ PageBase {
             }
         }
 
-        ConnectedRect {
-            Layout.fillWidth: true
-            first: true
+        InfoRow {
             last: true
-            implicitHeight: focusStatus.implicitHeight + Tokens.padding.medium * 2
-
-            RowLayout {
-                id: focusStatus
-
-                anchors.fill: parent
-                anchors.margins: Tokens.padding.medium
-                anchors.leftMargin: Tokens.padding.largeIncreased
-                anchors.rightMargin: Tokens.padding.largeIncreased
-                spacing: Tokens.spacing.medium
-
-                MaterialIcon {
-                    text: Focus.active ? "do_not_disturb_on" : "do_not_disturb"
-                    fontStyle: Tokens.font.icon.small
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: root.statusText()
-                    color: Focus.active ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
-                    font: NexusStyle.secondaryFont
-                    elide: Text.ElideRight
-                }
-            }
+            subtext: root.statusText()
+            subtextColour: Focus.active ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+            icon: Focus.active ? "do_not_disturb_on" : "do_not_disturb"
+            iconColour: Focus.active ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+            wrapSubtext: true
         }
 
         SectionHeader {
@@ -271,6 +249,7 @@ PageBase {
         }
 
         ConnectedRect {
+            last: true
             Layout.fillWidth: true
             implicitHeight: addRow.implicitHeight + Tokens.padding.medium * 2
 
@@ -330,25 +309,11 @@ PageBase {
             text: qsTr("Allowed through")
         }
 
-        ConnectedRect {
-            Layout.fillWidth: true
+        InfoRow {
             first: true
-            implicitHeight: allowHelper.implicitHeight + Tokens.padding.medium * 2
-
-            StyledText {
-                id: allowHelper
-
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.topMargin: Tokens.padding.medium
-                anchors.leftMargin: Tokens.padding.largeIncreased
-                anchors.rightMargin: Tokens.padding.largeIncreased
-                text: qsTr("Notifications from these apps still pop up during a focus session.")
-                color: Colours.palette.m3onSurfaceVariant
-                font: NexusStyle.secondaryFont
-                wrapMode: Text.Wrap
-            }
+            icon: "info"
+            subtext: qsTr("Notifications from these apps still pop up during a focus session.")
+            wrapSubtext: true
         }
 
         AppPickerRow {

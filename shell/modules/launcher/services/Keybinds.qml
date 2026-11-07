@@ -9,22 +9,22 @@ QtObject {
     readonly property var keybinds: KeybindsModel.keybinds
     readonly property bool initialized: KeybindsModel.initialized
     property Connections _conn: Connections {
-        target: KeybindsModel
-
         function onLoaded(): void { root.loaded(); }
+
+        target: KeybindsModel
     }
 
     signal loaded
 
-    function loadKeybinds() {
+    function loadKeybinds(): void {
         if (KeybindsModel.initialized && KeybindsModel.keybinds.length > 0) {
             return;
         }
         KeybindsModel.load();
     }
 
-    function query(searchText) {
-        return KeybindsModel.query(searchText);
+    function query(searchText: string): var {
+        return KeybindsModel.query(searchText, true);
     }
 
     Component.onCompleted: loadKeybinds()

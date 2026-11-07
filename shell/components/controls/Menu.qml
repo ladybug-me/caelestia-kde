@@ -23,10 +23,29 @@ MouseArea {
     }
 
     required property Item attachTo
+    property bool autoFlipY: true
+    readonly property real _menuH: menu && menu.implicitHeight > 0 ? menu.implicitHeight : 200
+    readonly property bool flippedY: {
+        if (!autoFlipY || !attachTo || !parent)
+            return false;
+        watcher.transform;
+        try {
+            const pt = attachTo.mapToItem(parent, 0, attachTo.height);
+            if (!pt)
+                return false;
+            const spaceBelow = parent.height - pt.y;
+            const ptTop = attachTo.mapToItem(parent, 0, 0);
+            const spaceAbove = ptTop ? ptTop.y : 0;
+            return (spaceBelow < _menuH + Tokens.spacing.small + Tokens.padding.small) && (spaceAbove > spaceBelow);
+        } catch (e) {
+            return false;
+        }
+    }
+
     property int attachSideX: Menu.Right
-    property int attachSideY: Menu.Bottom
+    property int attachSideY: autoFlipY && flippedY ? Menu.Top : Menu.Bottom
     property int thisSideX: Menu.Right
-    property int thisSideY: Menu.Top
+    property int thisSideY: autoFlipY && flippedY ? Menu.Bottom : Menu.Top
     property real marginX
     property real marginY
 
@@ -81,6 +100,7 @@ MouseArea {
         closeTimer.stop();
         submenuRow = row;
         submenuItems = entries ?? [];
+        root.positionSubmenu();
         submenuOpen = true;
         Qt.callLater(root.positionSubmenu);
     }
@@ -90,9 +110,7 @@ MouseArea {
         if (!row || !submenu)
             return;
         const panelRight = menu.x + menu.implicitWidth;
-        const overlap = Tokens.padding.extraSmall / 2;
         submenu.opensRight = panelRight + submenu.implicitWidth <= root.width;
-        submenu.x = submenu.opensRight ? panelRight - overlap : menu.x - submenu.implicitWidth + overlap;
         const rowTop = row.mapToItem(root, 0, 0).y;
         const rowBottom = rowTop + row.height;
         const panelBottom = menu.y + menu.implicitHeight;
@@ -128,6 +146,7 @@ MouseArea {
         if (expanded) {
             closeTimer.stop();
         } else {
+            submenuOpen = false;
             submenuRow = null;
             submenuItems = [];
         }
@@ -177,6 +196,21 @@ MouseArea {
         Anim {
             type: root.revealHorizontal ? Anim.FastEffects : Anim.DefaultEffects
         }
+    }
+
+    // The menu lives outside the item it is attached to, so it would outlast a
+    // drawer or popout that hides that item. Close it along with the item.
+    Connections {
+        function onVisibleChanged(): void {
+            if (!root.attachTo || !root.attachTo.visible) {
+                root.closeSubmenu();
+                closeTimer.stop();
+                root.expanded = false;
+            }
+        }
+
+        enabled: root.expanded
+        target: root.attachTo
     }
 
     Timer {
@@ -232,7 +266,10 @@ MouseArea {
             if (root.thisSideX === Menu.Right)
                 off -= width;
             const pt = item.mapToItem(root.parent, off, 0);
-            return (pt ? pt.x : 0) + root.marginX;
+            // Keep the panel inside the window: near the right edge there is no room
+            // to unfold outwards, and it used to end up half off screen.
+            const w = Math.max(menu.implicitWidth, menu.width);
+            return Math.max(0, Math.min(root.parent.width - w, (pt ? pt.x : 0) + root.marginX));
         }
         y: {
             watcher.transform;
@@ -243,7 +280,9 @@ MouseArea {
             if (root.thisSideY === Menu.Bottom)
                 off -= height;
             const pt = item.mapToItem(root.parent, 0, off);
-            return (pt ? pt.y : 0) + root.marginY;
+            // Same for the vertical axis: never leave the window.
+            const h = Math.max(menu.implicitHeight, menu.height);
+            return Math.max(0, Math.min(root.parent.height - h, (pt ? pt.y : 0) + root.marginY));
         }
 
         radius: Tokens.rounding.large
@@ -327,10 +366,13 @@ MouseArea {
     Elevation {
         id: submenu
 
+        readonly property real overlap: Tokens.padding.extraSmall / 2
         property bool opensRight: true
         property real hScale: root.submenuOpen ? 1 : 0
         property bool flushTop: false
         property bool flushBottom: false
+        property string vAnchor: "none"
+        property string hAnchor: opensRight ? "left" : "right"
 
         /* Same stacking and backdrop as the menu itself: over it, and drawn by
            whoever paints the menu background when that one is transparent. */
@@ -339,6 +381,7 @@ MouseArea {
         level: root.transparentBackground ? 0 : 2
         implicitWidth: Math.max(200, submenuColumn.implicitWidth + Tokens.padding.extraSmall * 2)
         implicitHeight: Math.min(root.maxHeight, submenuColumn.implicitHeight + Tokens.padding.extraSmall * 2)
+        x: opensRight ? (menu.x + menu.implicitWidth - overlap) : (menu.x + overlap - width)
         width: implicitWidth * hScale
         height: implicitHeight
         clip: true

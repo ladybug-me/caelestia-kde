@@ -111,16 +111,14 @@ Item {
     StyledTextField {
         id: searchField
 
-        type: StyledTextField.Boxed
-
         anchors.top: title.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.topMargin: Tokens.spacing.small
+        anchors.topMargin: Tokens.spacing.medium
         visible: false
         placeholderText: qsTr("Search notifications")
         horizontalAlignment: TextInput.AlignLeft
-        onTextEdited: text => root.query = text
+        onTextEdited: root.query = searchField.text
     }
 
     ClippingRectangle {
@@ -129,7 +127,7 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: searchField.visible ? searchField.bottom : title.bottom
-        anchors.bottom: clearLoader.opacity > 0 ? clearLoader.top : toggleRect.top
+        anchors.bottom: clearLoader.opacity > 0 ? clearLoader.top : (toggleRect.visible ? toggleRect.top : parent.bottom)
         anchors.bottomMargin: Tokens.padding.medium
         anchors.topMargin: Tokens.spacing.medium
 
@@ -139,14 +137,13 @@ Item {
         Loader {
             id: loader
 
+            property bool gameIsActive: item && item.hasOwnProperty("isPlaying") && item.isPlaying
+
             asynchronous: true
             anchors.centerIn: parent
             active: opacity > 0
             opacity: (root.notifCount > 0 && !gameIsActive) ? 0 : 1
             z: (root.notifCount > 0 && !gameIsActive) ? -1 : 1
-
-            property bool gameIsActive: item && item.hasOwnProperty("isPlaying") && item.isPlaying
-
             width: clipRect.width
             height: 250
 
@@ -196,6 +193,9 @@ Item {
         anchors.right: parent.right
         anchors.rightMargin: clearLoader.opacity > 0 ? clearLoader.width + Tokens.padding.medium * 2 : 0
 
+        // The Caelestia Mode toggle is optional: without this the setting hid
+        // nothing, because the card was laid out unconditionally.
+        visible: GlobalConfig.ai.showCaelestiaMode
         height: toggleLayout.implicitHeight + Tokens.padding.large * 2
         radius: Tokens.rounding.large
         color: Colours.tPalette.m3surfaceContainer

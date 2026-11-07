@@ -30,6 +30,22 @@ Item {
     // screen-tall panel and a long one still fits.
     readonly property real formHeight: form.item ? form.item.implicitHeight : 0
     readonly property real maxFormHeight: Math.max(120, root.height * 0.55)
+    /// Beside the card when the desktop has room, otherwise under or over it, and always
+    /// clamped to the screen. The card keeps its own space, so its gear stays clickable.
+    readonly property point place: {
+        const gap = Tokens.padding.medium;
+        const w = panel.width;
+        const h = panel.height;
+        const a = root.anchorRect;
+        const edge = Tokens.padding.large;
+        const besideRight = a.x + a.width + gap;
+        const besideLeft = a.x - w - gap;
+        const under = a.y + a.height + gap;
+        const over = a.y - h - gap;
+        const x = besideRight + w <= root.width - edge ? besideRight : besideLeft >= edge ? besideLeft : a.x + a.width - w;
+        const y = under + h <= root.height - edge ? under : over >= edge ? over : a.y;
+        return Qt.point(Math.max(edge, Math.min(root.width - w - edge, x)), Math.max(edge, Math.min(root.height - h - edge, y)));
+    }
 
     function openAt(rect: var, id: string): void {
         anchorRect = rect;
@@ -58,23 +74,6 @@ Item {
 
     anchors.fill: parent
     visible: panel.opacity > 0
-
-    /// Beside the card when the desktop has room, otherwise under or over it, and always
-    /// clamped to the screen. The card keeps its own space, so its gear stays clickable.
-    readonly property point place: {
-        const gap = Tokens.padding.medium;
-        const w = panel.width;
-        const h = panel.height;
-        const a = root.anchorRect;
-        const edge = Tokens.padding.large;
-        const besideRight = a.x + a.width + gap;
-        const besideLeft = a.x - w - gap;
-        const under = a.y + a.height + gap;
-        const over = a.y - h - gap;
-        const x = besideRight + w <= root.width - edge ? besideRight : besideLeft >= edge ? besideLeft : a.x + a.width - w;
-        const y = under + h <= root.height - edge ? under : over >= edge ? over : a.y;
-        return Qt.point(Math.max(edge, Math.min(root.width - w - edge, x)), Math.max(edge, Math.min(root.height - h - edge, y)));
-    }
 
     onWidgetChanged: {
         // The widget was removed while its settings were open; there is nothing left

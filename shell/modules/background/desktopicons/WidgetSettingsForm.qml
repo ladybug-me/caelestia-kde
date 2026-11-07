@@ -27,8 +27,6 @@ ColumnLayout {
     // with what the drag wrote, so the fields reload from the config instead.
     property int reloadTick: 0
 
-    spacing: Tokens.spacing.medium
-
     /// An unset key falls back to the type's default, which is what the widget
     /// itself draws with, so the form never shows a value the desktop is not using.
     function read(key: string): var {
@@ -54,6 +52,8 @@ ColumnLayout {
     function percentValue(v: real): string {
         return `${Math.round(v * 100)}%`;
     }
+
+    spacing: Tokens.spacing.medium
 
     Repeater {
         model: root.settings
@@ -121,11 +121,11 @@ ColumnLayout {
                 onToggled: root.write(toggleRow.field.key, checked)
 
                 Connections {
-                    target: root
-
                     function onReloadTickChanged(): void {
                         toggle.checked = root.read(toggleRow.field.key) !== false;
                     }
+
+                    target: root
                 }
             }
         }
@@ -172,11 +172,11 @@ ColumnLayout {
                 onInteraction: v => root.write(sliderRow.field.key, sliderRow.whole ? Math.round(v) : v)
 
                 Connections {
-                    target: root
-
                     function onReloadTickChanged(): void {
                         slider.value = sliderRow.current;
                     }
+
+                    target: root
                 }
             }
         }
@@ -248,11 +248,11 @@ ColumnLayout {
                 onTextEdited: root.write(textRow.field.key, text)
 
                 Connections {
-                    target: root
-
                     function onReloadTickChanged(): void {
                         input.text = textRow.current;
                     }
+
+                    target: root
                 }
             }
         }

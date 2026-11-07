@@ -55,7 +55,7 @@ Item {
             anchors.verticalCenter: parent.verticalCenter
             text: catRoot.modelData?.name ?? ""
             color: catRoot.selected ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
-            font: Tokens.font.label.large
+            font: Tokens.font.label.builders.large.vaxis("wght", 450).build()
             elide: Text.ElideRight
             width: catRoot.width - Tokens.padding.medium * 2 - 24 - Tokens.spacing.medium
         }

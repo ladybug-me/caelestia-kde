@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtCore
 import Quickshell
 import Caelestia.Config
 import qs.components
@@ -20,6 +21,7 @@ Item {
     property bool sidebarFocused: false
     property var visibleCategories: []
 
+    readonly property string sortLabel: sortSettings.sortMode === "alpha" ? qsTr("A-Z") : qsTr("Most used")
     readonly property var currentItem: grid.currentItem
     readonly property int count: grid.count
 
@@ -42,14 +44,31 @@ Item {
         return true;
     }
 
+    function sortedApps(list: var): var {
+        if (sortSettings.sortMode !== "alpha")
+            return list;
+        const favourites = GlobalConfig.launcher.favouriteApps ?? [];
+        const isFavourite = app => favourites.includes(app.id);
+        const byName = (a, b) => (a.name ?? "").localeCompare(b.name ?? "", undefined, { sensitivity: "base" });
+        return list.filter(a => isFavourite(a)).sort(byName).concat(list.filter(a => !isFavourite(a)).sort(byName));
+    }
+
     function refresh(): void {
         const all = Apps.allApps();
         const nextCategories = Categories.visibleCategories(all);
-        const nextApps = Categories.appsFor(root.currentCategory, all);
+        const nextApps = root.sortedApps(Categories.appsFor(root.currentCategory, all));
         if (!sameItems(root.visibleCategories, nextCategories))
             root.visibleCategories = nextCategories;
         if (!sameItems(gridModel.values, nextApps))
             gridModel.values = nextApps;
+    }
+
+    function setSortMode(mode: string): void {
+        if (sortSettings.sortMode === mode)
+            return;
+        sortSettings.sortMode = mode;
+        root.refresh();
+        grid.currentIndex = grid.count > 0 ? 0 : -1;
     }
 
     function launch(app): void {
@@ -147,6 +166,46 @@ Item {
         target: GlobalConfig.launcher
     }
 
+    Settings {
+        id: sortSettings
+
+        property string sortMode: "most-used"
+
+        category: "Launcher"
+    }
+
+    Menu {
+        id: sortMenu
+
+        attachTo: expandBtn
+        attachSideX: Menu.Right
+        attachSideY: Menu.Bottom
+        thisSideX: Menu.Right
+        thisSideY: Menu.Top
+        marginY: Tokens.spacing.extraSmall
+
+        items: [
+            MenuItem {
+                text: qsTr("A-Z")
+                icon: "sort_by_alpha"
+                trailingIcon: sortSettings.sortMode === "alpha" ? "check" : ""
+                onClicked: {
+                    sortMenu.expanded = false;
+                    root.setSortMode("alpha");
+                }
+            },
+            MenuItem {
+                text: qsTr("Most used")
+                icon: "trending_up"
+                trailingIcon: sortSettings.sortMode === "most-used" ? "check" : ""
+                onClicked: {
+                    sortMenu.expanded = false;
+                    root.setSortMode("most-used");
+                }
+            }
+        ]
+    }
+
     AppContextMenu {
         id: contextMenu
 
@@ -188,53 +247,139 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            GridView {
-                id: grid
-
+            ColumnLayout {
                 anchors.fill: parent
+                spacing: Tokens.spacing.small
 
-                model: ScriptModel {
-                    id: gridModel
+                RowLayout {
+                    Layout.fillWidth: true
 
-                    values: []
-                    onValuesChanged: grid.currentIndex = grid.count > 0 ? 0 : -1
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    Row {
+                        spacing: Math.floor(Tokens.spacing.extraSmall / 2)
+
+                        StyledRect {
+                            id: sortBtn
+
+                            implicitWidth: sortBtnRow.implicitWidth + Tokens.padding.medium * 2
+                            implicitHeight: expandBtn.implicitHeight
+                            radius: implicitHeight / 2 * Math.min(1, Tokens.rounding.scale)
+                            topRightRadius: Tokens.rounding.medium / 2
+                            bottomRightRadius: Tokens.rounding.medium / 2
+                            color: Colours.palette.m3secondaryContainer
+
+                            StateLayer {
+                                topRightRadius: parent.topRightRadius
+                                bottomRightRadius: parent.bottomRightRadius
+                                color: Colours.palette.m3onSecondaryContainer
+
+                                onClicked: sortMenu.expanded = !sortMenu.expanded
+                            }
+
+                            RowLayout {
+                                id: sortBtnRow
+
+                                anchors.centerIn: parent
+                                spacing: Tokens.spacing.small
+
+                                MaterialIcon {
+                                    text: sortSettings.sortMode === "alpha" ? "sort_by_alpha" : "trending_up"
+                                    color: Colours.palette.m3onSecondaryContainer
+                                    fontStyle: Tokens.font.icon.small
+                                }
+
+                                StyledText {
+                                    text: root.sortLabel
+                                    color: Colours.palette.m3onSecondaryContainer
+                                    font: Tokens.font.label.medium
+                                }
+                            }
+                        }
+
+                        StyledRect {
+                            id: expandBtn
+
+                            implicitWidth: implicitHeight
+                            implicitHeight: sortBtnRow.implicitHeight + Tokens.padding.small * 2
+                            radius: implicitHeight / 2 * Math.min(1, Tokens.rounding.scale)
+                            topLeftRadius: Tokens.rounding.medium / 2
+                            bottomLeftRadius: Tokens.rounding.medium / 2
+                            color: Colours.palette.m3secondaryContainer
+
+                            StateLayer {
+                                topLeftRadius: parent.topLeftRadius
+                                bottomLeftRadius: parent.bottomLeftRadius
+                                color: Colours.palette.m3onSecondaryContainer
+
+                                onClicked: sortMenu.expanded = !sortMenu.expanded
+                            }
+
+                            MaterialIcon {
+                                anchors.centerIn: parent
+                                text: sortMenu.expanded ? "expand_less" : "expand_more"
+                                color: Colours.palette.m3onSecondaryContainer
+                                fontStyle: Tokens.font.icon.small
+                            }
+                        }
+                    }
                 }
 
-                cellWidth: root.tileCellWidth
-                cellHeight: root.tileCellHeight
-                clip: true
+                Item {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
 
-                currentIndex: -1
-                highlightFollowsCurrentItem: false
-                cacheBuffer: root.tileCellHeight * 4
+                    GridView {
+                        id: grid
 
-                StyledScrollBar.vertical: StyledScrollBar {
-                    flickable: grid
-                }
+                        anchors.fill: parent
 
-                delegate: AppTile {
-                    browser: root
-                    selected: grid.currentIndex === index
-                }
-            }
+                        model: ScriptModel {
+                            id: gridModel
 
-            Column {
-                anchors.centerIn: parent
-                spacing: Tokens.spacing.medium
-                visible: grid.count === 0
+                            values: []
+                            onValuesChanged: grid.currentIndex = grid.count > 0 ? 0 : -1
+                        }
 
-                MaterialIcon {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: "apps"
-                    color: Colours.palette.m3outline
-                    fontStyle: Tokens.font.icon.extraLarge
-                }
+                        cellWidth: root.tileCellWidth
+                        cellHeight: root.tileCellHeight
+                        clip: true
 
-                StyledText {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTr("No apps in this category")
-                    color: Colours.palette.m3outline
-                    font: Tokens.font.body.builders.large.weight(Font.Medium).build()
+                        currentIndex: -1
+                        highlightFollowsCurrentItem: false
+                        cacheBuffer: root.tileCellHeight * 4
+
+                        StyledScrollBar.vertical: StyledScrollBar {
+                            flickable: grid
+                        }
+
+                        delegate: AppTile {
+                            browser: root
+                            selected: grid.currentIndex === index
+                        }
+                    }
+
+                    Column {
+                        anchors.centerIn: parent
+                        spacing: Tokens.spacing.medium
+                        visible: grid.count === 0
+
+                        MaterialIcon {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: "apps"
+                            color: Colours.palette.m3outline
+                            fontStyle: Tokens.font.icon.extraLarge
+                        }
+
+                        StyledText {
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: qsTr("No apps in this category")
+                            color: Colours.palette.m3outline
+                            font: Tokens.font.body.builders.large.weight(Font.Medium).build()
+                        }
+                    }
                 }
             }
         }

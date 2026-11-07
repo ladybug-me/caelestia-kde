@@ -239,7 +239,7 @@ Item {
 
         text: root.modelData?.name ?? ""
         color: root.selected ? Colours.palette.m3onSurface : Colours.palette.m3onSurfaceVariant
-        font: root.simple ? Tokens.font.label.builders.medium.size(9).build() : Tokens.font.label.medium
+        font: root.simple ? Tokens.font.label.builders.medium.size(9).build() : Tokens.font.label.builders.medium.vaxis("wght", 450).build()
         elide: Text.ElideRight
         wrapMode: Text.Wrap
         maximumLineCount: maxLines

@@ -1,12 +1,13 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Caelestia.Config
 import qs.services
 
-// Where every desktop card ends. A plugin may paint over the widgets -- the wallpaper
-// depth one redraws the wallpaper's foreground above them -- so an edge drawn inside a
-// card disappears along with the card. Drawn here instead, above every background
-// layer, a widget behind a hill keeps its content hidden but still shows its outline.
+// The desktop's own chrome, drawn above every background layer: the edge of each card
+// and the box a drag selects with. A plugin may repaint the wallpaper over the widgets
+// -- the wallpaper depth one redraws its foreground above them -- so anything drawn
+// inside the icons layer disappears wherever that foreground covers it.
 Item {
     id: root
 
@@ -49,5 +50,19 @@ Item {
                 border.color: Colours.palette.m3primary
             }
         }
+    }
+
+    Rectangle {
+        readonly property rect band: root.icons ? root.icons.bandRect : Qt.rect(0, 0, 0, 0)
+
+        visible: root.icons ? root.icons.bandShown : false
+        x: root.origin.x + band.x
+        y: root.origin.y + band.y
+        width: band.width
+        height: band.height
+        radius: Tokens.rounding.small
+        color: Qt.alpha(Colours.palette.m3primary, 0.18)
+        border.width: 1
+        border.color: Qt.alpha(Colours.palette.m3primary, 0.7)
     }
 }

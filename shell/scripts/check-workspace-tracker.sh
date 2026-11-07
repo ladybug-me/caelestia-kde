@@ -42,9 +42,9 @@ explain_not_loaded() {
     fi
 
     if [[ -n "$built" && -n "$running" && "$built" != "$running" ]]; then
-        printf 'it was built for KWin %s, but KWin %s is running' "$built" "$running"
+        printf 'built for KWin %s, KWin %s running' "$built" "$running"
     else
-        printf 'KWin never registered it'
+        printf 'not registered by KWin'
     fi
 }
 

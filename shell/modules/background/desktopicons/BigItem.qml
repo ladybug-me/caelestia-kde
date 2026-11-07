@@ -47,7 +47,7 @@ Item {
     // Edit mode outlines every card for the same reason.
     readonly property bool outlined: !isGroup && (DesktopLayout.widgetOutlines || widgetEditMode)
 
-    // The card's edge, and the editor's frame around it, are drawn by WidgetEdges on
+    // The card's edge, and the editor's frame around it, are drawn by DesktopOverlay on
     // top of every background layer: a plugin may paint over the widgets (the wallpaper
     // depth one redraws the wallpaper's foreground above them), and an edge buried under
     // it leaves a card with no way to say where it ends.

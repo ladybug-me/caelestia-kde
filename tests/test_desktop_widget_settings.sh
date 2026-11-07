@@ -86,18 +86,32 @@ test_the_form_starts_afresh_for_each_opening() {
 
 test_the_card_edge_is_drawn_above_what_plugins_paint() {
     # The wallpaper depth plugin redraws the wallpaper's foreground above the widgets,
-    # so an edge drawn inside a card vanishes under it. The edges live in their own
-    # layer, above every background widget.
-    local edges="$DESKTOP/WidgetEdges.qml"
-    assert_file_exists "$edges"
+    # so anything drawn inside the icons layer vanishes under it. The desktop's own
+    # chrome lives in its own layer, above every background widget.
+    local overlay="$DESKTOP/DesktopOverlay.qml"
+    assert_file_exists "$overlay"
     assert_file_contains "$BIG" 'readonly property rect edgeRect' "a card must report where its edge goes"
     assert_file_contains "$BIG" 'readonly property bool frameShown' "the editor's frame is drawn the same way"
     assert_file_not_contains "$BIG" 'id: cardEdge' "the edge must not be buried inside the card"
     assert_file_not_contains "$BIG" 'id: outline' "the frame must not be buried inside the card either"
-    assert_file_contains "$edges" 'model: root.cards' "one edge per card"
-    assert_file_contains "$edges" 'border.color: slot.modelData.edgeColor' "the edge takes the card's own colour"
-    assert_file_contains "$DESKTOP/Background.qml" 'icons: desktopIcons' "the edge layer needs the cards it draws"
-    assert_file_contains "$DESKTOP/Background.qml" 'z: 4096' "the edges must sit above the plugin background widgets"
+    assert_file_contains "$overlay" 'model: root.cards' "one edge per card"
+    assert_file_contains "$overlay" 'border.color: slot.modelData.edgeColor' "the edge takes the card's own colour"
+    assert_file_contains "$DESKTOP/Background.qml" 'icons: desktopIcons' "the overlay needs the desktop it draws"
+    assert_file_contains "$DESKTOP/Background.qml" 'z: 4096' "the overlay must sit above the plugin background widgets"
+}
+
+test_the_selection_box_is_drawn_above_what_plugins_paint() {
+    # Dragging on the desktop draws a selection box. It sat at z: 50 inside the icons
+    # layer, which is still below the wallpaper depth foreground's z: 8 -- a different
+    # layer, so no z inside the icons could win.
+    local overlay="$DESKTOP/DesktopOverlay.qml"
+    assert_file_contains "$ICONS" 'readonly property bool bandShown: bandArea.bandShown' "the drag must report whether the box is up"
+    assert_file_contains "$ICONS" 'readonly property rect bandRect: bandArea.bandRect' "and where it is"
+    assert_file_contains "$ICONS" 'readonly property rect bandRect: {' "the geometry must come from the drag, not a second copy"
+    assert_file_not_contains "$ICONS" 'Qt.alpha(Colours.palette.m3primary, 0.18)' "the box must not be painted inside the icons layer"
+    assert_file_contains "$overlay" 'Qt.alpha(Colours.palette.m3primary, 0.18)' "the overlay paints the box instead"
+    assert_file_contains "$overlay" 'root.icons.bandRect' "the overlay draws it from the reported rectangle"
+    assert_file_contains "$overlay" 'visible: root.icons ? root.icons.bandShown : false' "and only while the drag is active"
 }
 
 test_the_panel_never_swallows_a_click_meant_for_something_else() {

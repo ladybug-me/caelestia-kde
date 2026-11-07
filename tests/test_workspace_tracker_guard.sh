@@ -150,7 +150,7 @@ test_a_missing_effect_says_why_it_is_missing() {
     stub_tools "$stubs" true 1
 
     out="$(PATH="$stubs" "$BASH" "$GUARD" 2>/dev/null)"
-    assert_contains "$out" "KWin never registered it" "the reason must survive with no plugin and no kwin_wayland to read"
+    assert_contains "$out" "not registered by KWin" "the reason must survive with no plugin and no kwin_wayland to read"
 }
 
 test_the_guard_shows_what_the_script_said() {
@@ -160,11 +160,15 @@ test_the_guard_shows_what_the_script_said() {
     assert_file_contains "$guard" '.arg(detail)' "and it must be interpolated into the sentence"
 }
 
-test_the_toast_names_the_cost_and_the_way_back() {
-    local guard="$REPO_ROOT/shell/services/WorkspaceTrackerGuard.qml"
-    assert_file_contains "$guard" 'Desktop tracking is off' "the title must say what the user loses, in one elided line"
-    assert_file_contains "$guard" 'per-output desktops and swipes' "the body must say what stopped working"
+test_the_toast_stays_short_enough_to_read() {
+    # One elided title line above a box about 410px wide. A message that runs past it
+    # is a message nobody finishes.
+    local guard="$REPO_ROOT/shell/services/WorkspaceTrackerGuard.qml" body
+    assert_file_contains "$guard" 'Desktop tracking is off' "the title must say what the user loses, in one line"
     assert_file_contains "$guard" 'caelestia update' "and how to fix it"
+    body="$(grep -o 'KWin refused the workspace tracker.*caelestia update\.' "$guard")"
+    assert_ne "" "$body" "the body must stay one sentence"
+    [ -n "$body" ] && assert_eq "1" "$([ "${#body}" -le 90 ] && echo 1 || echo 0)" "the body is $([ -n "$body" ] && echo ${#body}) characters; keep it under 90 so it fits two lines"
 }
 
 run_tests

@@ -228,13 +228,16 @@ test_the_gallery_hint_points_at_the_settings() {
 }
 
 test_a_card_edge_is_always_visible() {
-    # A frameless card has no fill to read against, so its edge is the only thing
-    # that says where the widget ends. It must be drawn, and drawn stronger.
-    assert_file_contains "$BIG" '? (root.widgetEditMode ? 3 : 2) : (root.backgroundOff ? 0 : 1)' "a card that keeps its background always keeps an edge"
-    assert_file_contains "$BIG" 'Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)' "a card with no fill needs a stronger edge"
+    # The edge of a card that has a background must be drawn above whatever a plugin
+    # paints, but a widget whose type is frameless never had one and gains nothing from
+    # being outlined when the outlines option is off.
+    assert_file_contains "$BIG" '? (root.widgetEditMode ? 3 : 2) : (root.frameless ? 0 : 1)' "only a card that has a background carries an edge"
+    assert_file_contains "$BIG" 'Qt.alpha(Colours.palette.m3onSurface, 0.22)' "and it is one colour, not a per-kind brightness"
+    assert_file_not_contains "$BIG" 'root.frameless ? 0.42 : 0.22' "a frameless widget must not be outlined behind the option's back"
     # Selection brightens the edge: the card being edited must not be the faintest.
     assert_file_not_contains "$BIG" 'Qt.darker(Colours.palette.m3primary, 1.45)' "selection must not dim the edge"
     assert_file_contains "$BIG" '? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface' "a selected card's edge must stay at full strength"
+    assert_file_contains "$BIG" 'readonly property bool outlined: !isGroup && (DesktopLayout.widgetOutlines || widgetEditMode)' "the outlines option is what draws a frame"
 }
 
 test_a_card_with_no_background_draws_no_border() {
@@ -242,8 +245,8 @@ test_a_card_with_no_background_draws_no_border() {
     # own frameless widgets are a different case and keep theirs.
     assert_file_contains "$BIG" 'readonly property bool backgroundOff: !isGroup && (config.background === false || config.frameless === true)' "the user's toggle must be told apart from the type's own look"
     assert_file_contains "$BIG" 'readonly property bool frameless: !isGroup && (info.frameless === true || root.backgroundOff)' "a turned-off background is still frameless"
-    assert_file_contains "$BIG" '(root.backgroundOff ? 0 : 1)' "and it must draw no edge of its own"
-    assert_file_contains "$BIG" 'Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)' "a frameless type keeps the stronger edge it needs"
+    assert_file_contains "$BIG" '(root.frameless ? 0 : 1)' "and a card with no background draws no edge of its own"
+    assert_file_contains "$BIG" 'readonly property bool frameless: !isGroup && (info.frameless === true || root.backgroundOff)' "a frameless type and a turned-off background both count"
 }
 
 test_a_second_right_click_closes_and_reopens_the_desktop_menu() {

@@ -57,14 +57,12 @@ Item {
     // it leaves a card with no way to say where it ends.
     readonly property rect edgeRect: Qt.rect(root.x + card.x, root.y + card.y, card.width, card.height)
     readonly property real edgeRadius: card.radius
-    // A card with no background still gets an edge: the widget has to say where it ends,
-    // or it dissolves into the wallpaper behind it. One the user switched the background
-    // off for gets none, unless a selection or the editor is asking for one.
-    readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : (root.backgroundOff ? 0 : 1)
-    // Selection brightens the edge instead of darkening it -- the card you are working
-    // on must not be the faintest one on the desktop -- and a frameless card's edge is
-    // drawn stronger, since it has no fill to read against.
-    readonly property color edgeColor: root.selected || root.mergeTarget || root.focusVisible ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)
+    // A card with a background gets an edge, because the edge is what says where that
+    // card ends. One the user turned the background off for has no card to outline, and a
+    // widget whose type is frameless never had one -- those stay clean unless a selection,
+    // the editor or the outlines option asks for something.
+    readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : (root.frameless ? 0 : 1)
+    readonly property color edgeColor: root.selected || root.mergeTarget || root.focusVisible ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, 0.22)
     readonly property bool edgeShown: root.opacity > 0.01 && card.width > 0 && card.height > 0
     // The editor's frame, on every widget while the outlines option is on: it locates
     // widgets that are empty or hidden by their own condition.

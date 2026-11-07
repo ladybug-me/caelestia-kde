@@ -142,5 +142,30 @@ ws_leave_effect_off
     assert_file_missing "$dir/writes.log" "and KWin must not be reconfigured while it works"
 }
 
+test_a_missing_effect_says_why_it_is_missing() {
+    # "not running" alone leaves the user with nothing to do. The script names what
+    # it could see, and the guard puts that in the toast.
+    local stubs out
+    stubs="$(new_tmpdir)/stubs"
+    stub_tools "$stubs" true 1
+
+    out="$(PATH="$stubs" "$BASH" "$GUARD" 2>/dev/null)"
+    assert_contains "$out" "KWin never registered it" "the reason must survive with no plugin and no kwin_wayland to read"
+}
+
+test_the_guard_shows_what_the_script_said() {
+    local guard="$REPO_ROOT/shell/services/WorkspaceTrackerGuard.qml"
+    assert_file_contains "$guard" 'StdioCollector {' "the reason has to be collected, or the message can only be generic"
+    assert_file_contains "$guard" 'check.reason' "the toast must carry the script's explanation"
+    assert_file_contains "$guard" '.arg(detail)' "and it must be interpolated into the sentence"
+}
+
+test_the_toast_names_the_cost_and_the_way_back() {
+    local guard="$REPO_ROOT/shell/services/WorkspaceTrackerGuard.qml"
+    assert_file_contains "$guard" 'Desktop tracking is off' "the title must say what the user loses, in one elided line"
+    assert_file_contains "$guard" 'per-output desktops and swipes' "the body must say what stopped working"
+    assert_file_contains "$guard" 'caelestia update' "and how to fix it"
+}
+
 run_tests
 

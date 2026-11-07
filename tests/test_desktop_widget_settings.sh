@@ -106,11 +106,11 @@ test_the_selection_box_is_drawn_above_what_plugins_paint() {
     # layer, so no z inside the icons could win.
     local overlay="$DESKTOP/DesktopOverlay.qml"
     assert_file_contains "$ICONS" 'readonly property bool bandShown: bandArea.bandShown' "the drag must report whether the box is up"
-    assert_file_contains "$ICONS" 'readonly property rect bandRect: bandArea.bandRect' "and where it is"
-    assert_file_contains "$ICONS" 'readonly property rect bandRect: {' "the geometry must come from the drag, not a second copy"
+    assert_file_contains "$ICONS" 'readonly property rect bandRect: Qt.rect(root.x + bandArea.bandRect.x' "the box must be handed over in window coordinates"
     assert_file_not_contains "$ICONS" 'Qt.alpha(Colours.palette.m3primary, 0.18)' "the box must not be painted inside the icons layer"
     assert_file_contains "$overlay" 'Qt.alpha(Colours.palette.m3primary, 0.18)' "the overlay paints the box instead"
     assert_file_contains "$overlay" 'root.icons.bandRect' "the overlay draws it from the reported rectangle"
+    assert_file_contains "$overlay" 'x: band.x' "the box is already in window coordinates and must not take the grid origin again"
     assert_file_contains "$overlay" 'visible: root.icons ? root.icons.bandShown : false' "and only while the drag is active"
 }
 

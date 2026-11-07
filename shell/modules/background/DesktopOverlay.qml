@@ -55,9 +55,11 @@ Item {
     Rectangle {
         readonly property rect band: root.icons ? root.icons.bandRect : Qt.rect(0, 0, 0, 0)
 
+        // The icons item hands the box over in window coordinates, unlike the cards: it
+        // measures from its own corner rather than from the grid.
         visible: root.icons ? root.icons.bandShown : false
-        x: root.origin.x + band.x
-        y: root.origin.y + band.y
+        x: band.x
+        y: band.y
         width: band.width
         height: band.height
         radius: Tokens.rounding.small

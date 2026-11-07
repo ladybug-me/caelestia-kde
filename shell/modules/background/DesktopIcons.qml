@@ -24,10 +24,12 @@ Item {
     // The same origin in window coordinates: the layer that draws the cards' edges sits
     // above whatever a plugin paints over them, so it cannot measure from the grid itself.
     readonly property point widgetOrigin: Qt.point(root.x + gridOrigin.x, root.y + gridOrigin.y)
-    // The selection box a drag draws, reported the same way. Drawn inside the icons
-    // layer it would vanish under a plugin that repaints the wallpaper over the desktop.
+    // The selection box a drag draws, already in window coordinates: the icons item
+    // measures from its own corner, while the layer that draws the box sits above the
+    // background layers and cannot measure from it. Drawn inside the icons layer the box
+    // would vanish under a plugin that repaints the wallpaper over the desktop.
     readonly property bool bandShown: bandArea.bandShown
-    readonly property rect bandRect: bandArea.bandRect
+    readonly property rect bandRect: Qt.rect(root.x + bandArea.bandRect.x, root.y + bandArea.bandRect.y, bandArea.bandRect.width, bandArea.bandRect.height)
     // The wallpaper blurred once for all frosted cards, null when unused.
     readonly property Item glass: glassLoader.item
 

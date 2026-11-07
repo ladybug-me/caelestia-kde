@@ -30,7 +30,11 @@ Item {
             h: Math.max(1, Math.min(raw.h, controller.rows))
         };
     }
-    readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true || config.background === false)
+    // Turning a card's background off removes the card, so it takes the border with it.
+    // The theme's own frameless widgets (the clock, the lyrics) keep theirs: they have no
+    // fill to read against, and the edge is all that says where they end.
+    readonly property bool backgroundOff: !isGroup && (config.background === false || config.frameless === true)
+    readonly property bool frameless: !isGroup && (info.frameless === true || root.backgroundOff)
     // The card's look, which any widget can override. An unset key falls back to the
     // theme's value, so the desktop keeps one look until someone changes one widget.
     readonly property real defaultBackgroundOpacity: controller.widgetCatalog?.defaultBackgroundOpacity ?? 0.4
@@ -53,9 +57,10 @@ Item {
     // it leaves a card with no way to say where it ends.
     readonly property rect edgeRect: Qt.rect(root.x + card.x, root.y + card.y, card.width, card.height)
     readonly property real edgeRadius: card.radius
-    // A card with no background still gets its edge: the widget has to say where it
-    // ends, or it dissolves into the wallpaper behind it.
-    readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : 1
+    // A card with no background still gets an edge: the widget has to say where it ends,
+    // or it dissolves into the wallpaper behind it. One the user switched the background
+    // off for gets none, unless a selection or the editor is asking for one.
+    readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : (root.backgroundOff ? 0 : 1)
     // Selection brightens the edge instead of darkening it -- the card you are working
     // on must not be the faintest one on the desktop -- and a frameless card's edge is
     // drawn stronger, since it has no fill to read against.

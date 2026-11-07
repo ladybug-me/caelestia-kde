@@ -77,16 +77,6 @@ MouseArea {
     signal itemSelected(item: MenuItem)
     signal rightClickedAt(real x, real y)
 
-    // Plays the opening animation again, e.g. after the menu moved while open.
-    function replayReveal(): void {
-        if (!revealHorizontal || !expanded)
-            return;
-        revealOut.stop();
-        revealIn.stop();
-        menu.hScale = 0;
-        revealIn.start();
-    }
-
     function openSubmenu(row: Item, entries: var): void {
         closeTimer.stop();
         submenuRow = row;

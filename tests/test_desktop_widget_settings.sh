@@ -13,6 +13,7 @@ FORM="$DESKTOP/desktopicons/WidgetSettingsForm.qml"
 PANEL="$DESKTOP/desktopicons/WidgetSettings.qml"
 GALLERY="$DESKTOP/desktopicons/WidgetGallery.qml"
 MENU="$DESKTOP/DesktopIconContextMenu.qml"
+CONTROLS_MENU="$REPO_ROOT/shell/components/controls/Menu.qml"
 LAYOUT="$REPO_ROOT/shell/services/DesktopLayout.qml"
 WINDOW="$REPO_ROOT/shell/modules/drawers/ContentWindow.qml"
 WIDGETS="$DESKTOP/desktopicons/widgets"
@@ -229,11 +230,34 @@ test_the_gallery_hint_points_at_the_settings() {
 test_a_card_edge_is_always_visible() {
     # A frameless card has no fill to read against, so its edge is the only thing
     # that says where the widget ends. It must be drawn, and drawn stronger.
-    assert_file_contains "$BIG" 'readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : 1' "every card must keep an edge, frameless or not"
+    assert_file_contains "$BIG" '? (root.widgetEditMode ? 3 : 2) : (root.backgroundOff ? 0 : 1)' "a card that keeps its background always keeps an edge"
     assert_file_contains "$BIG" 'Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)' "a card with no fill needs a stronger edge"
     # Selection brightens the edge: the card being edited must not be the faintest.
     assert_file_not_contains "$BIG" 'Qt.darker(Colours.palette.m3primary, 1.45)' "selection must not dim the edge"
     assert_file_contains "$BIG" '? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface' "a selected card's edge must stay at full strength"
+}
+
+test_a_card_with_no_background_draws_no_border() {
+    # Turning the background off removes the card, so the edge goes with it. The theme's
+    # own frameless widgets are a different case and keep theirs.
+    assert_file_contains "$BIG" 'readonly property bool backgroundOff: !isGroup && (config.background === false || config.frameless === true)' "the user's toggle must be told apart from the type's own look"
+    assert_file_contains "$BIG" 'readonly property bool frameless: !isGroup && (info.frameless === true || root.backgroundOff)' "a turned-off background is still frameless"
+    assert_file_contains "$BIG" '(root.backgroundOff ? 0 : 1)' "and it must draw no edge of its own"
+    assert_file_contains "$BIG" 'Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)' "a frameless type keeps the stronger edge it needs"
+}
+
+test_a_second_right_click_closes_and_reopens_the_desktop_menu() {
+    # The open menu used to hop to the new spot while staying open, because reopen() only
+    # replayed the reveal. It has to go away and come back.
+    local menu="$DESKTOP/DesktopContextMenu.qml" body
+    body="$(function_body "$menu" reopen)"
+    assert_contains "$body" 'root.expanded = false' "the open menu must close"
+    assert_contains "$body" 'reopenTimer.restart()' "and reopen once it has gone"
+    assert_file_contains "$menu" 'onTriggered: root.expanded = true' "the timer is what brings it back"
+    assert_file_not_contains "$menu" 'replayReveal' "replaying the reveal leaves the old panel on screen"
+    assert_file_contains "$CONTROLS_MENU" 'rightClickReposition ? Qt.LeftButton | Qt.RightButton' "the catcher must take the right button, or the click never reaches the menu"
+    assert_file_contains "$CONTROLS_MENU" 'rightClickedAt(mouse.x, mouse.y)' "and report where it happened"
+    assert_file_contains "$WINDOW" 'desktopContextMenu.reopen()' "the window asks the open menu to reopen at the new spot"
 }
 
 run_tests

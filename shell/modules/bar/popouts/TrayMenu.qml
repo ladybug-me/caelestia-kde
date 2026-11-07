@@ -187,7 +187,7 @@ StackView {
                 id: groupCard
 
                 required property var modelData
-                property alias rows: rowRepeater
+                property var rows: rowRepeater
 
                 implicitWidth: menu.rowWidth + Tokens.padding.medium * 2 * menu.scaleOffset
                 implicitHeight: groupLayout.implicitHeight + Tokens.padding.medium * 2 * menu.scaleOffset

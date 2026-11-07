@@ -20,7 +20,9 @@ Item {
     property var frame
     property var controller
 
-    readonly property string path: frame?.config.path ?? ""
+    // Falling back to the type's own folder is what keeps a reset (which clears the
+    // config) from leaving the widget pointing at nothing.
+    readonly property string path: frame?.config.path ?? frame?.info?.config?.path ?? ""
     readonly property string folderName: path.substring(path.lastIndexOf("/") + 1) || path
     readonly property real slotWidth: Math.max(controller.iconSize * 0.6, 40) + Tokens.padding.medium * 2
     readonly property real slotHeight: controller.iconSize * 0.6 + Tokens.padding.small * 2 + 30

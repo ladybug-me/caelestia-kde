@@ -13,14 +13,17 @@ Item {
     property var frame
     property var controller
 
+    readonly property var cfg: frame?.config ?? ({})
+    readonly property bool showWeather: cfg.showWeather !== false
+    readonly property bool showHourly: cfg.showHourly !== false
     readonly property bool wide: width > height * 1.6
-    readonly property bool showHours: wide && height > 150 && Weather.hourlyForecast && Weather.hourlyForecast.length > 0
+    readonly property bool showHours: root.showHourly && root.showWeather && root.wide && height > 150 && Weather.hourlyForecast && Weather.hourlyForecast.length > 0
 
     Component.onCompleted: Weather.reload()
 
     GridLayout {
         anchors.fill: parent
-        columns: root.wide ? 2 : 1
+        columns: root.wide && root.showWeather ? 2 : 1
         columnSpacing: Tokens.spacing.large
         rowSpacing: Tokens.spacing.small
 
@@ -57,7 +60,7 @@ Item {
             Layout.fillWidth: true
             Layout.alignment: root.wide ? Qt.AlignVCenter : Qt.AlignBottom
             spacing: Tokens.spacing.small
-            visible: Weather.hasWeather
+            visible: root.showWeather && Weather.hasWeather
 
             RowLayout {
                 Layout.fillWidth: true

@@ -1,126 +1,169 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
 
-// Month view. Scroll or use the arrows to change month; click the title to
-// come back to today.
+// A month at a glance with, when the card is wide enough, the agenda of the day
+// picked in it. The month itself belongs to CalendarMonth, so the grid, the dots on
+// days with events and the shape on the selected day are the ones the bar shows.
 Item {
     id: root
 
     property var frame
     property var controller
 
-    readonly property date today: Time.date
-    property int year: today.getFullYear()
-    property int month: today.getMonth()
-    readonly property int firstDay: Qt.locale().firstDayOfWeek
-    // Index of the first cell: days of the previous month shown before the 1st.
-    readonly property int lead: (new Date(year, month, 1).getDay() - firstDay + 7) % 7
+    readonly property var cfg: frame?.config ?? ({})
+    readonly property bool showEvents: cfg.showEvents !== false
+    // Wide cards trade half the month's width for the agenda; narrow ones keep the
+    // whole width for the month and mark the days that have events instead.
+    readonly property bool agenda: root.showEvents && root.width > root.height * 1.25
+    readonly property real fontScale: Math.max(0.8, Math.min(1.25, root.height / 260))
 
-    function shift(delta: int): void {
-        const d = new Date(year, month + delta, 1);
-        year = d.getFullYear();
-        month = d.getMonth();
+    property date viewDate: new Date()
+    property date selectedDate: new Date()
+
+    readonly property var selectedEvents: CalendarEvents.eventsOn(root.selectedDate)
+    readonly property string agendaHint: {
+        if (!CalendarEvents.configured)
+            return qsTr("No calendars yet");
+        if (CalendarEvents.errors.length > 0)
+            return qsTr("Could not read %1").arg(CalendarEvents.errors[0].source);
+        return qsTr("No events");
     }
 
-    function cellDate(index: int): date {
-        return new Date(year, month, index - lead + 1);
+    function shiftMonth(delta: int): void {
+        root.viewDate = new Date(root.viewDate.getFullYear(), root.viewDate.getMonth() + delta, 1);
     }
+
+    function pick(date: date): void {
+        root.selectedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        // A trailing day belongs to the month it is shown in, so follow it there.
+        if (date.getMonth() !== root.viewDate.getMonth() || date.getFullYear() !== root.viewDate.getFullYear())
+            root.viewDate = new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+
+    function eventTime(event: var): string {
+        if (event.allDay)
+            return qsTr("All day");
+        // The bar clock's 12/24-hour choice, so the two never disagree.
+        return Time.clockTime(event.start);
+    }
+
+    Component.onCompleted: CalendarEvents.refresh()
 
     WheelHandler {
         acceptedModifiers: Qt.NoModifier
-        onWheel: event => root.shift(event.angleDelta.y > 0 ? -1 : 1)
+        onWheel: event => root.shiftMonth(event.angleDelta.y > 0 ? -1 : 1)
     }
 
-    ColumnLayout {
+    RowLayout {
         anchors.fill: parent
-        spacing: Tokens.spacing.small
+        spacing: Tokens.spacing.large
 
-        RowLayout {
+        CalendarMonth {
             Layout.fillWidth: true
+            Layout.preferredWidth: root.agenda ? root.width * 0.55 : root.width
+            Layout.alignment: Qt.AlignTop
+
+            viewDate: root.viewDate
+            highlightedDate: root.selectedDate
+            selectable: true
+            fontScale: root.fontScale
+            scaleOffset: root.fontScale
+
+            onMonthShifted: delta => root.shiftMonth(delta)
+            onTodayRequested: root.viewDate = new Date()
+            onDayClicked: date => root.pick(date)
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            visible: root.agenda
+            spacing: Tokens.spacing.small
 
             StyledText {
                 Layout.fillWidth: true
-                text: Qt.locale().standaloneMonthName(root.month) + " " + root.year
-                font: Tokens.font.title.small
+                text: root.selectedDate.toLocaleDateString(Qt.locale(), "ddd d MMM")
                 color: Colours.palette.m3primary
+                font: Tokens.font.title.small
+                elide: Text.ElideRight
+            }
 
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        root.year = root.today.getFullYear();
-                        root.month = root.today.getMonth();
-                    }
+            Flickable {
+                id: agendaScroll
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                contentWidth: width
+                contentHeight: agendaColumn.implicitHeight
+                clip: true
+                boundsBehavior: Flickable.StopAtBounds
+
+                ScrollBar.vertical: StyledScrollBar {
+                    flickable: agendaScroll
                 }
-            }
 
-            IconButton {
-                type: IconButton.Text
-                icon: "chevron_left"
-                onClicked: root.shift(-1)
-            }
+                ColumnLayout {
+                    id: agendaColumn
 
-            IconButton {
-                type: IconButton.Text
-                icon: "chevron_right"
-                onClicked: root.shift(1)
-            }
-        }
-
-        GridLayout {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            columns: 7
-            rowSpacing: 0
-            columnSpacing: 0
-
-            Repeater {
-                model: 7
-
-                StyledText {
-                    required property int index
-
-                    Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
-                    text: Qt.locale().dayName((root.firstDay + index) % 7, Locale.NarrowFormat)
-                    color: Colours.palette.m3outline
-                    font: Tokens.font.label.small
-                }
-            }
-
-            Repeater {
-                model: 42
-
-                Item {
-                    id: day
-
-                    required property int index
-                    readonly property date date: root.cellDate(index)
-                    readonly property bool inMonth: date.getMonth() === root.month
-                    readonly property bool isToday: date.toDateString() === root.today.toDateString()
-
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    StyledRect {
-                        anchors.centerIn: parent
-                        width: Math.min(parent.width, parent.height) - 2
-                        height: width
-                        radius: Tokens.rounding.full
-                        color: day.isToday ? Colours.palette.m3primary : "transparent"
-                    }
+                    width: agendaScroll.width
+                    spacing: Tokens.spacing.small
 
                     StyledText {
-                        anchors.centerIn: parent
-                        text: day.date.getDate()
-                        font: Tokens.font.label.medium
-                        color: day.isToday ? Colours.palette.m3onPrimary : day.inMonth ? Colours.palette.m3onSurface : Colours.palette.m3outlineVariant
+                        Layout.fillWidth: true
+                        visible: root.selectedEvents.length === 0
+                        text: root.agendaHint
+                        color: Colours.palette.m3outline
+                        font: Tokens.font.body.small
+                        wrapMode: Text.Wrap
+                    }
+
+                    Repeater {
+                        model: root.selectedEvents
+
+                        RowLayout {
+                            id: eventRow
+
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            spacing: Tokens.spacing.small
+
+                            StyledRect {
+                                Layout.alignment: Qt.AlignTop
+                                Layout.topMargin: Tokens.padding.extraSmall
+                                implicitWidth: 6
+                                implicitHeight: 6
+                                radius: Tokens.rounding.full
+                                color: Colours.palette.m3primary
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 0
+
+                                StyledText {
+                                    Layout.fillWidth: true
+                                    text: eventRow.modelData.summary
+                                    font: Tokens.font.body.small
+                                    elide: Text.ElideRight
+                                }
+
+                                StyledText {
+                                    Layout.fillWidth: true
+                                    text: root.eventTime(eventRow.modelData)
+                                    color: Colours.palette.m3onSurfaceVariant
+                                    font: Tokens.font.label.small
+                                    elide: Text.ElideRight
+                                }
+                            }
+                        }
                     }
                 }
             }

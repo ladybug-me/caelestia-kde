@@ -191,17 +191,15 @@ StyledRect {
             color: root.colour
         }
 
-        Loader {
+        // Loaded inline rather than through an asynchronous Loader: the extra
+        // width used to appear a moment after the bar slid in, which read as the
+        // am/pm label jumping next to the time.
+        StyledText {
             Layout.alignment: Qt.AlignVCenter
-            asynchronous: true
-            active: Units.twelveHourClock
-            visible: active
-
-            sourceComponent: StyledText {
-                text: Time.amPmStr.toLowerCase()
-                font: Tokens.font.body.builders.small.size(Math.round(root.textSize * 0.9)).build()
-                color: root.colour
-            }
+            visible: Units.twelveHourClock
+            text: Time.amPmStr.toLowerCase()
+            font: Tokens.font.body.builders.small.size(Math.round(root.textSize * 0.9)).build()
+            color: root.colour
         }
     }
 

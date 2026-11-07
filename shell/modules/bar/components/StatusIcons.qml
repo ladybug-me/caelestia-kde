@@ -266,10 +266,36 @@ StyledRect {
                         onClicked: mouse => {
                             if (mouse.button === Qt.RightButton) {
                                 root.openContextMenu();
-                            } else if (name === "notifications") {
-                                const vis = Visibilities.getForActive();
-                                vis.sidebar = !vis.sidebar;
+                                return;
                             }
+
+                            if (name === "notifications") {
+                                // Hovering the bell may have opened the small
+                                // notification popout already; leaving it open on
+                                // top of the sidebar makes both panels jitter.
+                                if (root.popouts)
+                                    root.popouts.hasCurrent = false;
+
+                                const vis = root.bar?.visibilities ?? Visibilities.getForActive();
+                                vis.sidebar = !vis.sidebar;
+                                return;
+                            }
+
+                            // Hover popouts are a convenience, not the only way in:
+                            // a click opens the same popout when they are disabled.
+                            const popouts = root.popouts;
+                            if (!popouts)
+                                return;
+
+                            const popoutName = delegateContainer.popoutName;
+                            if (popouts.hasCurrent && popouts.currentName === popoutName) {
+                                popouts.hasCurrent = false;
+                                return;
+                            }
+
+                            popouts.currentName = popoutName;
+                            popouts.currentCenter = root.isHorizontal ? delegateContainer.mapToItem(null, delegateContainer.width / 2, 0).x : delegateContainer.mapToItem(null, 0, delegateContainer.height / 2).y;
+                            popouts.hasCurrent = true;
                         }
                     }
                 }

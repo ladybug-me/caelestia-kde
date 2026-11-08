@@ -17,8 +17,6 @@ ColumnLayout {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    // Index of the Nexus "Updates" page, resolved by page key so this menu
-    // can't drift out of sync if the page registry is reordered.
     readonly property int updatesPageIdx: {
         const idx = PageRegistry.indexForKey("updates");
         return idx >= 0 ? idx : 0;
@@ -28,38 +26,31 @@ ColumnLayout {
 
     readonly property bool checking: UpdateChecker.checkingUpdates
 
-    readonly property string statusText: {
-        if (root.checking)
-            return qsTr("Checking for updates…");
-        if (root.hasUpdate)
-            return UpdateChecker.versionSummaryMode
-                ? qsTr("New version available on %1").arg(UpdateChecker.currentBranch)
-                : qsTr("%1 new commits on %2 branch").arg(UpdateChecker.pendingCount).arg(UpdateChecker.currentBranch);
-        return qsTr("System is up to date");
-    }
+    readonly property string statusText: UpdateChecker.statusTitle
 
-    readonly property string statusIcon: root.checking ? "sync" : root.hasUpdate ? "update" : "check_circle"
+    readonly property string statusDetail: UpdateChecker.statusDetailFor(root.nowMs)
+
+    readonly property string statusIcon: UpdateChecker.statusIcon
+
+    readonly property string checkActionText: {
+        if (root.checking)
+            return qsTr("Checking…");
+        if (UpdateChecker.checkFailed)
+            return qsTr("Try again");
+        return qsTr("Check for updates");
+    }
 
     property double nowMs: Date.now()
-
-    function formatDuration(ms: double): string {
-        const total = Math.max(0, Math.floor(ms / 1000));
-        const minutes = Math.floor(total / 60);
-        const seconds = total % 60;
-        return minutes > 0 ? qsTr("%1m %2s").arg(minutes).arg(seconds) : qsTr("%1s").arg(seconds);
-    }
 
     function hideIndicator(): void {
         BarWidgets.setEnabled(GlobalConfig.bar, "updateIndicator", false);
         root.popouts.hasCurrent = false;
     }
 
-    // Joins the sidebar like the other panel-sized popouts while it is open.
     width: Math.max(300 * scaleOffset, _isSidebarOpen ? (Visibilities.sidebarWidthFor(Tokens.sizes.sidebar.width) * scaleOffset) - Tokens.padding.extraLargeIncreased : 0)
     implicitWidth: width
     spacing: Tokens.spacing.small * scaleOffset
 
-    // Status card: state icon + summary + last/next check timings.
     StyledRect {
         Layout.fillWidth: true
         implicitHeight: statusLayout.implicitHeight + Tokens.padding.medium * 2 * root.scaleOffset
@@ -82,7 +73,7 @@ ColumnLayout {
 
                 MaterialIcon {
                     text: root.statusIcon
-                    color: root.hasUpdate ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+                    color: root.hasUpdate || UpdateChecker.checkFailed ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                     fontStyle.pointSize: Tokens.font.icon.medium.pointSize * root.fontScale
                 }
 
@@ -96,47 +87,14 @@ ColumnLayout {
                 }
             }
 
-            RowLayout {
+            StyledText {
                 Layout.fillWidth: true
-                spacing: Tokens.spacing.small * root.scaleOffset
-
-                MaterialIcon {
-                    text: "history"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle.pointSize: Tokens.font.icon.medium.pointSize * root.fontScale
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: {
-                        if (root.checking)
-                            return qsTr("Checking…");
-                        if (UpdateChecker.lastCheckMs <= 0)
-                            return qsTr("Last check: not yet");
-                        return qsTr("Last check %1 ago").arg(root.formatDuration(root.nowMs - UpdateChecker.lastCheckMs));
-                    }
-                    color: Colours.palette.m3onSurfaceVariant
-                    font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
-                }
-            }
-
-            RowLayout {
-                Layout.fillWidth: true
-                visible: UpdateChecker.lastCheckMs > 0
-                spacing: Tokens.spacing.small * root.scaleOffset
-
-                MaterialIcon {
-                    text: "schedule"
-                    color: Colours.palette.m3onSurfaceVariant
-                    fontStyle.pointSize: Tokens.font.icon.medium.pointSize * root.fontScale
-                }
-
-                StyledText {
-                    Layout.fillWidth: true
-                    text: qsTr("Next check in %1").arg(root.formatDuration(UpdateChecker.lastCheckMs + UpdateChecker.checkIntervalMs - root.nowMs))
-                    color: Colours.palette.m3onSurfaceVariant
-                    font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
-                }
+                Layout.leftMargin: Tokens.spacing.small * root.scaleOffset + Tokens.font.icon.medium.pointSize * root.fontScale
+                visible: text !== ""
+                text: root.statusDetail
+                color: Colours.palette.m3onSurfaceVariant
+                wrapMode: Text.Wrap
+                font.pointSize: Tokens.font.body.small.pointSize * root.fontScale
             }
         }
     }
@@ -170,7 +128,7 @@ ColumnLayout {
 
                     radius: parent.radius
                     enabled: !root.checking
-                    onClicked: UpdateChecker.checkUpdates()
+                    onClicked: UpdateChecker.checkUpdates("", false, true)
                 }
 
                 RowLayout {
@@ -188,7 +146,7 @@ ColumnLayout {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: root.checking ? qsTr("Checking…") : qsTr("Check for updates")
+                        text: root.checkActionText
                         color: Colours.palette.m3onSurface
                         font.pointSize: Tokens.font.body.medium.pointSize * root.fontScale
                     }
@@ -275,7 +233,7 @@ ColumnLayout {
     }
 
     Timer {
-        interval: 1000
+        interval: 15000
         repeat: true
         running: true
         onTriggered: root.nowMs = Date.now()

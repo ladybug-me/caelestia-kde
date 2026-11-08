@@ -27,6 +27,10 @@ Append an object to the end of `list` in `Entries.qml`:
   match an entry are ignored.
 - `icon` - a Material icon name. Optional.
 - `title`, `description` - wrapped in `qsTr()` so lupdate can extract them.
+  Write the description as one sentence a user can scan: name the surface and
+  the action, keep it under about 90 characters, and leave out "now", "seamless",
+  "comprehensive" and benefit clauses. The list shows a single line and elides it
+  (`WhatsNewWindow.qml`), so a paragraph here reaches the user as a fragment.
 - `mediaUrl` - a filename in this directory, or `root:/assets/...` to point at a
   shared shell asset. `.mp4`, `.webm`, `.mkv`, `.avi` and `.mov` play muted on a
   loop; anything else is shown as a still. Optional.

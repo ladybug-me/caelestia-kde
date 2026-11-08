@@ -14,7 +14,7 @@ QtObject {
             "title": qsTr("Cheaper Inference AI Provider"),
             "settingsPage": "utilities",
             "settingsSubPage": 7,
-            "description": qsTr("Added Cheaper Inference as a supported assistant provider in AI settings, allowing seamless integration with cost-effective cloud AI inference models alongside existing local and cloud providers.")
+            "description": qsTr("A new assistant provider in AI settings, on an OpenAI-compatible gateway.")
         },
         {
             "id": "accessibility_suite",
@@ -23,7 +23,7 @@ QtObject {
             "title": qsTr("Accessibility Controls"),
             "settingsPage": "session",
             "settingsSubPage": 5,
-            "description": qsTr("A dedicated Accessibility page in Nexus provides instant controls for screen magnification, colour inversion, high-contrast filters, reduced motion, and on-screen keyboard options to suit your workflow.")
+            "description": qsTr("Magnifier, color inversion, contrast filters and on-screen keyboard in Nexus.")
         },
         {
             "id": "captive_portal_and_proxy",
@@ -32,21 +32,21 @@ QtObject {
             "title": qsTr("Captive Portal & Proxy Settings"),
             "settingsPage": "network",
             "settingsSubPage": 8,
-            "description": qsTr("The shell now automatically detects public and hotel captive Wi-Fi portals with one-click sign-in prompts, alongside comprehensive system proxy configuration options in Network settings.")
+            "description": qsTr("Wi-Fi sign-in prompts, plus a system proxy field in Nexus → Network.")
         },
         {
             "id": "dock_recent_files",
             "revision": 69,
             "icon": "history",
             "title": qsTr("Dock Recent Files & Jump Lists"),
-            "description": qsTr("Pinned and running applications on the dock now display their recently accessed documents and jump-list actions directly in their right-click context menus for faster resumption.")
+            "description": qsTr("Right-click a dock icon for its recent files and jump-list actions.")
         },
         {
             "id": "nexus_keyboard_navigation",
             "revision": 70,
             "icon": "keyboard",
             "title": qsTr("Nexus Keyboard Navigation"),
-            "description": qsTr("Nexus settings now offers full keyboard accessibility: press Meta+U to open Nexus, '/' to jump immediately into search, arrow keys and Tab to navigate categories and controls, and hold-to-confirm key captures.")
+            "description": qsTr("Meta+U opens Nexus; / jumps to search; arrows and Tab move between controls.")
         },
         {
             "id": "window_tiling_live_reload",
@@ -55,7 +55,7 @@ QtObject {
             "title": qsTr("Instant Window Tiling Reload"),
             "settingsPage": "desktop",
             "settingsSubPage": 3,
-            "description": qsTr("Krohnkite window tiling settings now reload and apply dynamically in real time without requiring a session logout or restart when tweaking tiling layouts, rules, and window gaps.")
+            "description": qsTr("Krohnkite tiling changes apply as you edit them, with no re-login.")
         },
         {
             "id": "toast_positioning_and_radius",
@@ -64,7 +64,7 @@ QtObject {
             "title": qsTr("Toast Positioning & Corner Rounding"),
             "settingsPage": "displays",
             "settingsSubPage": 7,
-            "description": qsTr("Toast notification banners can now be anchored to any corner of the screen (top-left, top-right, bottom-left, bottom-right) with configurable corner radii and independent surface styling rules.")
+            "description": qsTr("Toasts can sit in any corner, with their own radius and surface styling.")
         },
         {
             "id": "startup_applications_manager",
@@ -73,7 +73,7 @@ QtObject {
             "title": qsTr("Startup Applications Manager"),
             "settingsPage": "session",
             "settingsSubPage": 6,
-            "description": qsTr("Easily manage programs that run when you log in through Nexus. View all configured autostart entries, toggle individual background services, and add new apps with the integrated application picker.")
+            "description": qsTr("Turn autostart entries on or off, or add an app, in Nexus → Session.")
         },
         {
             "id": "storage_management",
@@ -82,7 +82,7 @@ QtObject {
             "title": qsTr("Disk & Storage Management"),
             "settingsPage": "session",
             "settingsSubPage": 8,
-            "description": qsTr("Nexus now includes a dedicated Disk & Storage settings page to inspect mounted drives, monitor filesystem capacity and partition health, and safely mount, unmount, or eject external USB media.")
+            "description": qsTr("Mount, unmount and eject drives, and watch capacity, in Nexus → Session.")
         },
         {
             "id": "utilities_countdown_timers",
@@ -91,7 +91,7 @@ QtObject {
             "title": qsTr("Countdown Timers & Quick Toggles"),
             "settingsPage": "utilities",
             "settingsSubPage": 4,
-            "description": qsTr("The Utilities drawer introduces persistent countdown timers that survive shell restarts, pin active timers directly to the taskbar, and convert utilities like Keep Awake into persistent quick toggles.")
+            "description": qsTr("Countdown timers that survive a restart, pinnable to the taskbar.")
         },
         {
             "id": "tray_customization_reorder",
@@ -100,7 +100,7 @@ QtObject {
             "title": qsTr("System Tray Ordering & Renaming"),
             "settingsPage": "panels",
             "settingsSubPage": 9,
-            "description": qsTr("The taskbar system tray now provides granular per-icon control: set icons to Always Visible, Collapsible, or Hidden, drag and drop to reorder pinned tray items, and assign custom display names and tooltips.")
+            "description": qsTr("Drag tray icons to reorder, and set each to always visible, collapsible or hidden.")
         },
         {
             "id": "shell_animation_presets",
@@ -109,7 +109,7 @@ QtObject {
             "title": qsTr("Shell Animation Presets"),
             "settingsPage": "appearance",
             "settingsSubPage": 7,
-            "description": qsTr("Fine-tune interface motion with new shell animation presets, allowing you to choose between expressive motion, standard timing, snappy transitions, or instant response across all panels and drawers. You can also switch animation profiles from launcher by typing > and selecting Animations.")
+            "description": qsTr("Motion presets under Nexus → Appearance; type > and pick Animations in the launcher.")
         },
         {
             "id": "display_hdr_management",
@@ -118,7 +118,7 @@ QtObject {
             "title": qsTr("Display & HDR Management"),
             "settingsPage": "displays",
             "settingsSubPage": 0,
-            "description": qsTr("Manage multiple monitors seamlessly within Nexus: configure display resolutions, refresh rates, monitor rotation, fractional HiDPI scaling, and High Dynamic Range (HDR) toggles all in one place.")
+            "description": qsTr("Resolution, refresh rate, rotation, scaling and HDR per monitor in Nexus.")
         },
         {
             "id": "focus_sessions_schedule",
@@ -127,7 +127,7 @@ QtObject {
             "title": qsTr("Focus Sessions & Meeting DND"),
             "settingsPage": "displays",
             "settingsSubPage": 9,
-            "description": qsTr("Focus Sessions let you schedule distraction-free work periods that automatically silence notifications and dim background distractions, with optional automated start whenever calendar meetings begin.")
+            "description": qsTr("Schedule quiet hours, or let calendar meetings start a focus session.")
         },
         {
             "id": "calendar_agenda_sync",
@@ -136,14 +136,14 @@ QtObject {
             "title": qsTr("Calendar Agenda & Google Calendar Sync"),
             "settingsPage": "session",
             "settingsSubPage": 3,
-            "description": qsTr("The taskbar calendar synchronizes with Google Calendar and remote ICS feeds to display upcoming meeting agendas and event schedules, with hover activation and direct link access right from the bar.")
+            "description": qsTr("The bar calendar reads Google Calendar and ICS feeds; hover for the agenda.")
         },
         {
             "id": "launcher_krunner_search",
             "revision": 81,
             "icon": "manage_search",
             "title": qsTr("KRunner System Search in Launcher"),
-            "description": qsTr("The launcher now integrates with KDE's KRunner search service to execute math equations, locate system files and browser bookmarks, look up system settings, and configure custom web search engines. Type > to open commands and select Search everything.")
+            "description": qsTr("Type > and pick Search everything to run launcher searches through KRunner.")
         },
         {
             "id": "nexus_three_panel_redesign",
@@ -152,7 +152,7 @@ QtObject {
             "title": qsTr("Three-Panel Nexus Settings"),
             "settingsPage": "appearance",
             "settingsSubPage": 1,
-            "description": qsTr("Nexus settings has been overhauled with a three-panel layout displaying sections, subcategories, and active settings side by side. It folds smoothly into two panels on compact screens, and introduces an integrated system font picker previewing every installed typeface.")
+            "description": qsTr("Sections, subcategories and settings sit side by side, folding to two panels.")
         },
         {
             "id": "plasma_audio_visualizer",
@@ -161,7 +161,7 @@ QtObject {
             "title": qsTr("Plasma Audio Visualizer"),
             "settingsPage": "desktop",
             "settingsSubPage": 1,
-            "description": qsTr("Desktop audio visualization is now powered by the native Plasma Audio Visualizer with multi-monitor positioning, idle auto-hiding, responsive geometry calculations, and multiple profiles.")
+            "description": qsTr("The desktop audio visualiser runs on Plasma's native visualiser.")
         },
         {
             "id": "skwd_wall_engine",
@@ -170,7 +170,7 @@ QtObject {
             "title": qsTr("New Wallpaper Engine"),
             "settingsPage": "appearance",
             "settingsSubPage": 5,
-            "description": qsTr("Deep integration with the skwd-wall daemon brings high-performance animated and video wallpapers with thumbnail caching, automatic Material You smart color extraction via caelestia-color, and a new Library and Community wallpapers browser. Press Meta + X to open the new Wallpaper Switcher.")
+            "description": qsTr("Animated and video wallpapers come from skwd-wall; Meta+X opens the switcher.")
         }
     ]
 

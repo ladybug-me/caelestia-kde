@@ -572,7 +572,6 @@ FloatingWindow {
                                 font: Tokens.font.body.large
                                 color: Colours.palette.m3onSurfaceVariant
                                 wrapMode: Text.WordWrap
-                                horizontalAlignment: Text.AlignHCenter
                             }
 
                             IconTextButton {

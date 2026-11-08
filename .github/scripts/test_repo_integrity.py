@@ -707,6 +707,7 @@ class WhatsNewEntryTests(unittest.TestCase):
     ENTRIES = ROOT / "shell" / "modules" / "whatsnew" / "Entries.qml"
     ASSETS = ROOT / "shell" / "assets" / "whatsnew"
     SHELL = ROOT / "shell"
+    DESCRIPTION_LIMIT = 90
 
     def entries(self) -> list[dict]:
         """Parse the entry list. Field order within an entry is fixed by the file."""
@@ -721,12 +722,14 @@ class WhatsNewEntryTests(unittest.TestCase):
             identifier = re.match(r'\s*"([^"]*)"', chunk)
             revision = re.search(r'"revision":\s*(\d+)', chunk)
             media = re.search(r'"mediaUrl":\s*"([^"]*)"', chunk)
+            description = re.search(r'"description":\s*qsTr\(\s*"([^"]*)"', chunk)
             parsed.append(
                 {
                     "id": identifier.group(1) if identifier else "",
                     "revision": int(revision.group(1)) if revision else None,
                     "title": bool(re.search(r'"title":\s*qsTr\(', chunk)),
                     "description": bool(re.search(r'"description":\s*qsTr\(', chunk)),
+                    "description_text": description.group(1) if description else "",
                     "media": media.group(1) if media else "",
                 }
             )
@@ -756,6 +759,33 @@ class WhatsNewEntryTests(unittest.TestCase):
             bare,
             [],
             "titles and descriptions must be wrapped in qsTr() so lupdate can extract them: " + ", ".join(bare),
+        )
+
+    def test_descriptions_fit_the_list_row(self) -> None:
+        """The list shows the description on one elided line.
+
+        Entries drifted into release-note paragraphs: one long sentence, usually
+        with a closing benefit clause, far wider than the row that renders it.
+        The user sees a fragment until they open the entry, so the description
+        is held to a label - one sentence, inside the budget the row has room
+        for, and without the "now" that a list of new things does not need.
+        """
+        offenders = []
+        for entry in self.entries():
+            text = entry["description_text"]
+            if len(text) > self.DESCRIPTION_LIMIT:
+                offenders.append(f"{entry['id']}: {len(text)} characters, budget is {self.DESCRIPTION_LIMIT}")
+            elif re.search(r"[.!?]\s+\S", text):
+                offenders.append(f"{entry['id']}: more than one sentence")
+            elif not text.endswith("."):
+                offenders.append(f"{entry['id']}: does not end in a full stop")
+            elif re.search(r"\bnow\b", text, re.IGNORECASE):
+                offenders.append(f"{entry['id']}: says 'now'")
+
+        self.assertEqual(
+            offenders,
+            [],
+            "a what's-new description is a label, not a release note:\n" + "\n".join(offenders),
         )
 
     def test_media_files_exist(self) -> None:

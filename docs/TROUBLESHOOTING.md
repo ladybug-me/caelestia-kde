@@ -1293,13 +1293,13 @@ If the script is killed with **SIGKILL** (not SIGTERM), lock files may persist:
 
 | Lock File | Script |
 |---|---|
-| `${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock` | `setup.sh` |
-| `${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock` | `update.sh` |
+| `${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID/setup.lock` | `setup.sh` |
+| `${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID/update.lock` | `update.sh` |
 
 **Always use Ctrl+C (SIGINT)** which is handled gracefully. Remove stale locks:
 ```bash
-rm -f "${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock"
-rm -f "${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock"
+rm -f "${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID/setup.lock"
+rm -f "${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID/update.lock"
 ```
 
 ### 8.5 Update.sh Fails
@@ -1545,7 +1545,7 @@ systemctl --user restart plasma-plasmashell
 |---|---|
 | Shell won't start | `quickshell -d -n -p ~/.config/quickshell/caelestia/shell.qml` |
 | Lock screen not active | `kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelestia.desktop"` |
-| Stale lock file | `rm -f "${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock"` |
+| Stale lock file | `rm -f "${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID/setup.lock"` |
 | Missing QML module | `export QML2_IMPORT_PATH="$HOME/.local/lib/qt6/qml"` |
 | No window thumbnails | `kbuildsycoca6 --noincremental && qdbus6 org.kde.KWin /KWin reconfigure` |
 | Git submodule error | `git submodule update --init --recursive src/dots` |

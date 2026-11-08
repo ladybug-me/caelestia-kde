@@ -19,7 +19,14 @@ section() {
 export BUNDLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$BUNDLE_DIR" || die "Could not enter $BUNDLE_DIR"
 
-exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-update.lock"
+# Prevent concurrent update runs from racing on git/CMake/config writes. The lock
+# lives in a directory this user owns: a fixed name under a world-writable /tmp
+# would be followed if someone planted a symlink there first.
+LOCK_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID"
+if ! install -d -m 700 "$LOCK_DIR" 2>/dev/null || [ -L "$LOCK_DIR" ] || [ ! -O "$LOCK_DIR" ]; then
+    die "Could not secure the update lock directory at $LOCK_DIR."
+fi
+exec 9>"$LOCK_DIR/update.lock"
 flock -n 9 || { echo "Another Caelestia update is already running."; exit 1; }
 
 section "Step 1 - Source Code Update"

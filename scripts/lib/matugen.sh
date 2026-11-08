@@ -10,6 +10,8 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/packages.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
 matugen_present() {
     if ! command -v matugen >/dev/null 2>&1; then
@@ -65,8 +67,8 @@ install_matugen_github() {
         tmpdir="$(mktemp -d)"
         if curl -fsSL "$dl_url" | tar -xz -C "$tmpdir" 2>/dev/null; then
             # A tarball can carry a symlink in place of the binary, and `install`
-            # would follow it as root. Only a regular file is installed.
-            if [[ -f "$tmpdir/matugen" && ! -L "$tmpdir/matugen" ]]; then
+            # would follow it as root. Only a file the archive really holds is used.
+            if regular_file "$tmpdir/matugen"; then
                 if caelestia_sudo install -m 755 "$tmpdir/matugen" /usr/local/bin/matugen 2>/dev/null; then
                     rm -rf "$tmpdir"
                     ok "matugen installed successfully to /usr/local/bin from GitHub release."
@@ -111,9 +113,9 @@ install_matugen_cargo() {
     fi
 
     if command -v cargo >/dev/null 2>&1 && cargo install matugen; then
-        # ~/.cargo/bin is the user's, and `cp` follows a symlink: a planted link
-        # would be copied as root. Only a regular file is promoted.
-        if [[ -f "$HOME/.cargo/bin/matugen" && ! -L "$HOME/.cargo/bin/matugen" ]]; then
+        # ~/.cargo/bin is the user's, and `cp` follows a symlink: only a file cargo
+        # wrote there itself is promoted to /usr/local/bin.
+        if regular_file "$HOME/.cargo/bin/matugen"; then
             caelestia_sudo cp "$HOME/.cargo/bin/matugen" /usr/local/bin/matugen 2>/dev/null || true
         fi
         local rc

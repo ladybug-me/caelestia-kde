@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# Whether `$1` is a regular file this user pointed at directly rather than a symlink
+# to somewhere else. Privileged installs copy from user-writable directories, and
+# `install` follows a link: checking this first is what keeps a planted link from
+# being copied as root.
+regular_file() {
+    [[ -f "$1" && ! -L "$1" ]]
+}
+
 atomic_replace_tree() {
     local src="$1" dest="$2" required="${3:-}"
 

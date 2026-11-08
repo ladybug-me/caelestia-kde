@@ -10,6 +10,8 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/packages.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
 skwd_wall_binary_present() {
     command -v skwd-wall-v2 >/dev/null 2>&1 || \
@@ -71,8 +73,9 @@ install_skwd_wall_source() {
         if cargo install --path "$src_dir" --bin skwd-wall 2>/dev/null || \
            cargo build --release --manifest-path "$src_dir/Cargo.toml" 2>/dev/null; then
             # The build directory sits in a checkout the user can write, and
-            # `install` follows a symlink: only a regular file is promoted.
-            if [[ -f "$src_dir/target/release/skwd-wall" && ! -L "$src_dir/target/release/skwd-wall" ]]; then
+            # `install` follows a symlink: only a file cargo really produced is
+            # promoted.
+            if regular_file "$src_dir/target/release/skwd-wall"; then
                 caelestia_sudo install -m 755 "$src_dir/target/release/skwd-wall" /usr/local/bin/skwd-wall-v2 2>/dev/null || {
                     mkdir -p "$HOME/.local/bin"
                     install -m 755 "$src_dir/target/release/skwd-wall" "$HOME/.local/bin/skwd-wall-v2"

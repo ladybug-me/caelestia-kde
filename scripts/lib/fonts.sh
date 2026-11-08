@@ -8,6 +8,8 @@ CAELESTIA_FONTS_SOURCED=1
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/log.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/privileges.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
 # Mirrors the fonts downloaded into the user's font directory into a system-wide
 # one, so the login screen picks them up instead of falling back to fonts that
@@ -22,13 +24,13 @@ mirror_login_fonts() {
         return 1
     fi
 
-    # The source directory is writable by the user, and `install` follows a symlink:
-    # a link planted there would be copied as root into a world-readable directory.
+    # The source directory is writable by the user, so only what they put there
+    # directly is mirrored: `install` would follow a planted link as root.
     local candidate
     shopt -s nullglob
     for candidate in "$src"/MaterialSymbolsRounded.ttf "$src"/Rubik-*.ttf "$src"/CaskaydiaCove*.ttf \
         "$src"/JetBrainsMono*.ttf; do
-        if [[ -f "$candidate" && ! -L "$candidate" ]]; then
+        if regular_file "$candidate"; then
             theme_fonts+=("$candidate")
         elif [[ -L "$candidate" ]]; then
             warn "Skipping symlinked font $candidate."

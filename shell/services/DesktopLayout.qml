@@ -46,6 +46,7 @@ Singleton {
     signal pasteRequested(string screenName, real x, real y)
     signal viewOptionsRequested(string screenName, real x, real y)
     signal addWidgetRequested(string screenName, real x, real y)
+    signal widgetSettingsRequested(string screenName, var rect, string id)
     signal arrangeRequested(string screenName, string sortKey)
     signal openIconContextMenu(string screenName, real x, real y, var keys, string inGroup)
     signal openDropMenu(string screenName, real x, real y, var urls, string target, var cell)
@@ -89,6 +90,17 @@ Singleton {
             return;
         const next = Object.assign({}, widgets);
         next[id] = Object.assign({}, w, { config: Object.assign({}, w.config, patch) });
+        setWidgets(next);
+    }
+
+    /// Back to what the type ships with. A merge would leave every key that was ever
+    /// written behind, which is the opposite of a reset.
+    function resetWidgetConfig(id: string): void {
+        const w = widgets[id];
+        if (!w)
+            return;
+        const next = Object.assign({}, widgets);
+        next[id] = Object.assign({}, w, { config: {} });
         setWidgets(next);
     }
 

@@ -54,6 +54,8 @@ PageBase {
         }
     ]
 
+    readonly property bool visualizerAvailable: PlasmaWidgets.hasVisualizer && !Config.background.wallpaperEnabled
+
     isSubPage: true
     title: qsTr("Desktop Addons")
 
@@ -133,24 +135,25 @@ PageBase {
             Layout.fillWidth: true
             spacing: 0
 
-            InfoRow {
+            NavRow {
                 first: true
                 Layout.fillWidth: true
-                visible: !PlasmaWidgets.hasVisualizer
+                visible: !root.visualizerAvailable
                 icon: "info"
-                wrapSubtext: true
-                label: qsTr("plasma-audio-visualizer not installed")
-                subtext: qsTr("Download and install plasma-audio-visualizer to enable these settings.")
+                label: qsTr("Visualizer not available")
+                status: qsTr("Click to open troubleshooting guide")
+                onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#79-plasma-audio-visualizer")
             }
 
             ToggleRow {
-                first: PlasmaWidgets.hasVisualizer
-                last: !Config.background.visualiser.enabled
+                first: root.visualizerAvailable
                 Layout.fillWidth: true
-                enabled: PlasmaWidgets.hasVisualizer
+                enabled: root.visualizerAvailable
                 opacity: enabled ? 1 : 0.5
                 text: qsTr("Enable Visualizer")
-                subtext: qsTr("Show audio visualizer on desktop")
+                subtext: Config.background.wallpaperEnabled
+                    ? qsTr("Visualizer is not visible when internal wallpaper is enabled")
+                    : qsTr("Show audio visualizer on desktop")
                 reset: ({ node: GlobalConfig.background.visualiser, setting: "enabled" })
                 checked: Config.background.visualiser.enabled
                 onToggled: {
@@ -161,8 +164,7 @@ PageBase {
             SelectRow {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
-                visible: Config.background.visualiser.enabled
-                enabled: PlasmaWidgets.hasVisualizer
+                enabled: root.visualizerAvailable && Config.background.visualiser.enabled
                 opacity: enabled ? 1 : 0.5
                 label: qsTr("Profile")
                 subtext: qsTr("Visualizer layout and style preset")
@@ -182,8 +184,7 @@ PageBase {
             ToggleRow {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
-                visible: Config.background.visualiser.enabled
-                enabled: PlasmaWidgets.hasVisualizer
+                enabled: root.visualizerAvailable && Config.background.visualiser.enabled
                 opacity: enabled ? 1 : 0.5
                 text: qsTr("Auto-hide visualizer")
                 subtext: qsTr("Hide visualizer when a window is maximized on active workspace")
@@ -195,8 +196,7 @@ PageBase {
             ToggleRow {
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
-                visible: Config.background.visualiser.enabled
-                enabled: PlasmaWidgets.hasVisualizer && Config.background.visualiser.autoHide
+                enabled: root.visualizerAvailable && Config.background.visualiser.enabled && Config.background.visualiser.autoHide
                 opacity: enabled ? 1 : 0.5
                 text: qsTr("Hide on all monitors")
                 subtext: qsTr("Also hide on all other monitors if disabled by a window")
@@ -209,11 +209,12 @@ PageBase {
                 last: true
                 Layout.fillWidth: true
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
-                visible: Config.background.visualiser.enabled && PlasmaWidgets.hasVisualizer
+                enabled: root.visualizerAvailable && Config.background.visualiser.enabled
+                opacity: enabled ? 1 : 0.5
                 icon: "info"
                 wrapSubtext: true
                 label: qsTr("Configure Visualizer")
-                subtext: qsTr("Right click on desktop -> Edit Mode -> Right click visualizer -> Configure")
+                subtext: qsTr("Right click on desktop -> Edit Plasma Widgets -> Right click visualizer -> Configure")
             }
         }
 

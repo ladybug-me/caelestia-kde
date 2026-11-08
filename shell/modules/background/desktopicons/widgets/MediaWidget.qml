@@ -1,6 +1,8 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import QtQuick
+import QtQuick.Effects
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
@@ -8,15 +10,20 @@ import qs.components.controls
 import qs.services
 
 // Now playing from the active MPRIS player, with transport controls.
-Item {
+DesktopWidget {
     id: root
-
-    property var frame
-    property var controller
 
     readonly property var player: Players.active
     readonly property real progress: player?.length > 0 ? Math.min(1, (player.position % player.length) / player.length) : 0
     readonly property string artUrl: Players.getArtUrl(player)
+    // Artwork above the text when the card is taller than it is wide, or when that is
+    // what the widget was set to. A wide card always keeps the two side by side.
+    readonly property bool vertical: root.height > root.width * 1.1 || (root.width <= root.height * 1.6 && cfg.layout === "vertical")
+    readonly property bool artworkBackground: cfg.albumArtBackground && !!root.artUrl
+
+    // The card leaves the desktop to itself while nothing is playing, but only when
+    // asked: a widget that vanishes on its own is hard to find again.
+    wantsHidden: cfg.hideWhenNoMedia && !root.player
 
     Timer {
         running: root.player?.isPlaying ?? false
@@ -33,17 +40,53 @@ Item {
         font: Tokens.font.body.medium
     }
 
-    RowLayout {
+    // The artwork behind everything else, blurred and dimmed so the title stays
+    // readable on any cover.
+    StyledClippingRect {
+        anchors.fill: parent
+        visible: root.artworkBackground
+        radius: Tokens.rounding.medium
+
+        Image {
+            id: backdrop
+
+            anchors.fill: parent
+            source: root.artUrl
+            fillMode: Image.PreserveAspectCrop
+            asynchronous: true
+            sourceSize.width: width
+            sourceSize.height: height
+            layer.enabled: true
+            layer.effect: MultiEffect {
+                blurEnabled: true
+                blur: 1
+                blurMax: 48
+                saturation: 0.7
+            }
+        }
+
+        StyledRect {
+            anchors.fill: parent
+            radius: Tokens.rounding.medium
+            color: Qt.alpha(Colours.palette.m3surfaceContainer, 0.45)
+        }
+    }
+
+    GridLayout {
         anchors.fill: parent
         visible: !!root.player
-        spacing: Tokens.spacing.large
+        columns: root.vertical ? 1 : 2
+        columnSpacing: Tokens.spacing.large
+        rowSpacing: Tokens.spacing.small
 
         StyledClippingRect {
-            Layout.fillHeight: true
-            Layout.preferredWidth: height
-            Layout.maximumWidth: root.width * 0.45
+            Layout.fillHeight: !root.vertical
+            Layout.fillWidth: root.vertical
+            Layout.preferredWidth: root.vertical ? root.width : root.height
+            Layout.preferredHeight: root.vertical ? root.height * 0.5 : root.height
+            Layout.maximumWidth: root.vertical ? root.width : root.width * 0.45
             radius: Tokens.rounding.medium
-            color: Colours.palette.m3surfaceContainerHigh
+            color: root.artworkBackground ? "transparent" : Colours.palette.m3surfaceContainerHigh
 
             MaterialIcon {
                 anchors.centerIn: parent

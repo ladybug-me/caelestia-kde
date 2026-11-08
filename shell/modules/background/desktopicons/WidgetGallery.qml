@@ -1,10 +1,11 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
-import qs.components.effects
+import qs.components.controls
 import qs.services
 
 // "Add Widget" panel: pick a widget and it lands where the menu was opened.
@@ -32,117 +33,103 @@ Item {
         onPressed: root.open = false
     }
 
-    Elevation {
+    DesktopPanel {
         id: panel
 
-        x: Math.max(Tokens.padding.large, Math.min(root.width - width - Tokens.padding.large, root.at.x))
-        y: Math.max(Tokens.padding.large, Math.min(root.height - height - Tokens.padding.large, root.at.y))
-        width: content.implicitWidth + Tokens.padding.large * 2
-        height: content.implicitHeight + Tokens.padding.large * 2
-        radius: Tokens.rounding.large
-        level: 2
-        opacity: root.open ? 1 : 0
-        scale: root.open ? 1 : 0.9
-        transformOrigin: Item.TopLeft
+        open: root.open
+        target: root.at
+        width: panel.layout.implicitWidth + Tokens.padding.large * 2
+        height: panel.layout.implicitHeight + Tokens.padding.large * 2
 
-        Behavior on opacity {
-            Anim {
-                type: Anim.FastEffects
+        StyledText {
+            text: qsTr("Add Widget")
+            font: Tokens.font.title.medium
+        }
+
+        // The catalogue has more types than fit on a short screen, so the grid
+        // scrolls instead of running off the panel.
+        Flickable {
+            id: galleryScroll
+
+            Layout.preferredWidth: cards.implicitWidth
+            Layout.preferredHeight: Math.min(cards.implicitHeight, Math.max(160, root.height * 0.55))
+            contentWidth: cards.implicitWidth
+            contentHeight: cards.implicitHeight
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+
+            ScrollBar.vertical: StyledScrollBar {
+                flickable: galleryScroll
             }
-        }
 
-        Behavior on scale {
-            Anim {
-                type: Anim.FastSpatial
-            }
-        }
+            GridLayout {
+                id: cards
 
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
-        }
+                columns: 3
+                rowSpacing: Tokens.spacing.small
+                columnSpacing: Tokens.spacing.small
 
-        StyledRect {
-            anchors.fill: parent
-            radius: parent.radius
-            color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surfaceContainerLow
+                Repeater {
+                    model: root.controller?.widgetCatalog?.types ?? []
 
-            ColumnLayout {
-                id: content
+                    StyledRect {
+                        id: card
 
-                anchors.fill: parent
-                anchors.margins: Tokens.padding.large
-                spacing: Tokens.spacing.medium
+                        required property var modelData
 
-                StyledText {
-                    text: qsTr("Add Widget")
-                    font: Tokens.font.title.medium
-                }
+                        implicitWidth: 150
+                        implicitHeight: cardColumn.implicitHeight + Tokens.padding.large * 2
+                        radius: Tokens.rounding.medium
+                        color: cardArea.containsMouse ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
 
-                GridLayout {
-                    columns: 3
-                    rowSpacing: Tokens.spacing.small
-                    columnSpacing: Tokens.spacing.small
+                        ColumnLayout {
+                            id: cardColumn
 
-                    Repeater {
-                        model: root.controller?.widgetCatalog?.types ?? []
+                            anchors.centerIn: parent
+                            spacing: Tokens.spacing.small
 
-                        StyledRect {
-                            id: card
-
-                            required property var modelData
-
-                            implicitWidth: 150
-                            implicitHeight: cardColumn.implicitHeight + Tokens.padding.large * 2
-                            radius: Tokens.rounding.medium
-                            color: cardArea.containsMouse ? Colours.palette.m3secondaryContainer : Colours.palette.m3surfaceContainer
-
-                            ColumnLayout {
-                                id: cardColumn
-
-                                anchors.centerIn: parent
-                                spacing: Tokens.spacing.small
-
-                                MaterialIcon {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: card.modelData.icon
-                                    color: Colours.palette.m3primary
-                                    fontStyle: Tokens.font.icon.builders.extraLarge.build()
-                                }
-
-                                StyledText {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: card.modelData.name
-                                }
-
-                                StyledText {
-                                    Layout.alignment: Qt.AlignHCenter
-                                    text: `${card.modelData.size.w} × ${card.modelData.size.h}`
-                                    color: Colours.palette.m3outline
-                                    font: Tokens.font.label.small
-                                }
+                            MaterialIcon {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: card.modelData.icon
+                                color: Colours.palette.m3primary
+                                fontStyle: Tokens.font.icon.builders.extraLarge.build()
                             }
 
-                            MouseArea {
-                                id: cardArea
+                            StyledText {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: card.modelData.name
+                            }
 
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                cursorShape: Qt.PointingHandCursor
-                                onClicked: {
-                                    root.open = false;
-                                    root.controller.addWidget(card.modelData.type, root.cell);
-                                }
+                            StyledText {
+                                Layout.alignment: Qt.AlignHCenter
+                                text: `${card.modelData.size.w} × ${card.modelData.size.h}`
+                                color: Colours.palette.m3outline
+                                font: Tokens.font.label.small
+                            }
+                        }
+
+                        MouseArea {
+                            id: cardArea
+
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: {
+                                root.open = false;
+                                root.controller.addWidget(card.modelData.type, root.cell);
                             }
                         }
                     }
                 }
-
-                StyledText {
-                    text: qsTr("Drag a widget's border or corner to resize it; right-click for more")
-                    color: Colours.palette.m3outline
-                }
             }
+        }
+
+        StyledText {
+            Layout.preferredWidth: cards.implicitWidth
+            Layout.maximumWidth: cards.implicitWidth
+            text: qsTr("Drag a widget's border or corner to resize it; its gear in edit mode opens its settings")
+            color: Colours.palette.m3outline
+            wrapMode: Text.Wrap
         }
     }
 }

@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
@@ -7,20 +8,19 @@ import qs.components
 import qs.services
 
 // Time and date, current weather and, when wide enough, the next hours.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
+    readonly property bool showWeather: cfg.showWeather
+    readonly property bool showHourly: cfg.showHourly
     readonly property bool wide: width > height * 1.6
-    readonly property bool showHours: wide && height > 150 && Weather.hourlyForecast && Weather.hourlyForecast.length > 0
+    readonly property bool showHours: root.showHourly && root.showWeather && root.wide && height > 150 && Weather.hourlyForecast && Weather.hourlyForecast.length > 0
 
     Component.onCompleted: Weather.reload()
 
     GridLayout {
         anchors.fill: parent
-        columns: root.wide ? 2 : 1
+        columns: root.wide && root.showWeather ? 2 : 1
         columnSpacing: Tokens.spacing.large
         rowSpacing: Tokens.spacing.small
 
@@ -57,7 +57,7 @@ Item {
             Layout.fillWidth: true
             Layout.alignment: root.wide ? Qt.AlignVCenter : Qt.AlignBottom
             spacing: Tokens.spacing.small
-            visible: Weather.hasWeather
+            visible: root.showWeather && Weather.hasWeather
 
             RowLayout {
                 Layout.fillWidth: true

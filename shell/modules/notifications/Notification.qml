@@ -169,7 +169,7 @@ StyledRect {
 
                         sourceComponent: ColouredIcon {
                             anchors.fill: parent
-                            source: Quickshell.iconPath(root.modelData?.appIcon ?? "")
+                            source: Icons.getNotifAppIcon(root.modelData?.appIcon ?? "")
                             colour: root.isCritical ? Colours.palette.m3onError : root.isLow ? Colours.palette.m3onSurface : Colours.palette.m3onSecondaryContainer
                             layer.enabled: root.modelData?.appIcon?.endsWith("symbolic") ?? false
                         }

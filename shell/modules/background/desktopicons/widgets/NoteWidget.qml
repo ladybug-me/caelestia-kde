@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import QtQuick
 import QtQuick.Controls
 import Caelestia.Config
@@ -9,11 +10,8 @@ import qs.services
 
 // A sticky note typed straight on the desktop. The text is kept in the
 // widget's config, saved shortly after typing stops.
-Item {
+DesktopWidget {
     id: root
-
-    property var frame
-    property var controller
 
     readonly property string savedText: frame?.config.text ?? ""
 

@@ -124,7 +124,7 @@ QtObject {
                 { label: qsTr("HDR"), keywords: ["hdr", "dynamic range", "screen"], pagePath: "display/DisplayPage.qml", subPageIdx: 0 },
                 { label: qsTr("Output & Input"), keywords: ["speakers", "output", "volume", "playback", "sink", "microphone", "recording", "source"], pagePath: "audio/AudioPage.qml", subPageIdx: 2 },
                 { label: qsTr("App Volumes"), keywords: ["app", "volume", "stream", "per-app"], pagePath: "audio/AppVolumes.qml", subPageIdx: 3 },
-                { label: qsTr("Sound Effects"), keywords: ["sfx", "feedback", "camera", "screen lock", "sounds"], pagePath: "audio/SoundEffectsPage.qml", subPageIdx: 4 },
+                { label: qsTr("Sounds"), keywords: ["sfx", "feedback", "camera", "screen lock", "sounds", "notifications", "notification sound", "volume"], pagePath: "audio/SoundEffectsPage.qml", subPageIdx: 4 },
                 { label: qsTr("Notification Silence"), keywords: ["silence", "mute", "muted", "turn off notifications", "hide notifications", "notification sound", "do not disturb"], pagePath: "audio/NotificationSilencingPage.qml", subPageIdx: 5 },
                 { label: qsTr("Preferences"), keywords: ["notifications", "fullscreen", "position", "timeout", "taskbar"], pagePath: "services/NotificationPreferencesPage.qml", subPageIdx: 6 },
                 { label: qsTr("Toasts"), keywords: ["popup", "banner", "sound", "volume"], pagePath: "services/ToastPreferencesPage.qml", subPageIdx: 7 },

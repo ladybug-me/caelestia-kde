@@ -230,15 +230,15 @@ CustomMouseArea {
                 const showThreshold = bar.position === "right" ? Config.session.dragThreshold : -Config.session.dragThreshold;
                 const hideThreshold = bar.position === "right" ? -Config.session.dragThreshold : Config.session.dragThreshold;
 
-                if (bar.position === "right" ? dragX > showThreshold : dragX < showThreshold)
+                if (Config.session.enabled && (bar.position === "right" ? dragX > showThreshold : dragX < showThreshold))
                     visibilities.session = true;
                 else if (bar.position === "right" ? dragX < hideThreshold : dragX > hideThreshold)
                     visibilities.session = false;
 
                 const showSidebarThreshold = bar.position === "right" ? Config.sidebar.dragThreshold : -Config.sidebar.dragThreshold;
-                if (showSidebar && panels.session.offsetScale <= 0 && (bar.position === "right" ? dragX > showSidebarThreshold : dragX < showSidebarThreshold))
+                if (Config.sidebar.enabled && showSidebar && panels.session.offsetScale <= 0 && (bar.position === "right" ? dragX > showSidebarThreshold : dragX < showSidebarThreshold))
                     visibilities.sidebar = true;
-            } else if (showSidebar && (bar.position === "right" ? dragX > Config.sidebar.dragThreshold : dragX < -Config.sidebar.dragThreshold)) {
+            } else if (Config.sidebar.enabled && showSidebar && (bar.position === "right" ? dragX > Config.sidebar.dragThreshold : dragX < -Config.sidebar.dragThreshold)) {
                 visibilities.sidebar = true;
             }
         } else {
@@ -257,7 +257,7 @@ CustomMouseArea {
                 const showThreshold = bar.position === "right" ? Config.session.dragThreshold : -Config.session.dragThreshold;
                 const hideThreshold = bar.position === "right" ? -Config.session.dragThreshold : Config.session.dragThreshold;
 
-                if (bar.position === "right" ? dragX > showThreshold : dragX < showThreshold)
+                if (Config.session.enabled && (bar.position === "right" ? dragX > showThreshold : dragX < showThreshold))
                     visibilities.session = true;
                 else if (bar.position === "right" ? dragX < hideThreshold : dragX > hideThreshold)
                     visibilities.session = false;
@@ -267,19 +267,19 @@ CustomMouseArea {
                 visibilities.sidebar = false;
         }
 
-        if (Config.launcher.showOnHover) {
+        if (Config.launcher.enabled && Config.launcher.showOnHover) {
             if (!visibilities.launcher && inBottomPanel(panels.launcher, x, y, false, Config.launcher.hoverThickness, Config.launcher.hoverWidth))
                 visibilities.launcher = true;
-        } else if (pressed && inBottomPanel(panels.launcher, dragStart.x, dragStart.y, false, Config.launcher.hoverThickness, Config.launcher.hoverWidth) && withinPanelWidth(panels.launcher, x, y)) {
+        } else if (Config.launcher.enabled && pressed && inBottomPanel(panels.launcher, dragStart.x, dragStart.y, false, Config.launcher.hoverThickness, Config.launcher.hoverWidth) && withinPanelWidth(panels.launcher, x, y)) {
             if (dragY < -Config.launcher.dragThreshold)
                 visibilities.launcher = true;
             else if (dragY > Config.launcher.dragThreshold)
                 visibilities.launcher = false;
         }
 
-        const showDashboard = Config.dashboard.showOnHover && inTopPanel(panels.dashboard, x, y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth);
+        const showDashboard = Config.dashboard.enabled && Config.dashboard.showOnHover && inTopPanel(panels.dashboard, x, y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth);
 
-        if (Config.dashboard.showOnHover) {
+        if (Config.dashboard.enabled && Config.dashboard.showOnHover) {
             if (!dashboardShortcutActive) {
                 visibilities.dashboard = showDashboard;
             } else if (showDashboard) {
@@ -287,7 +287,7 @@ CustomMouseArea {
             }
         }
 
-        if (pressed && inTopPanel(panels.dashboard, dragStart.x, dragStart.y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth) && withinPanelWidth(panels.dashboard, x, y)) {
+        if (Config.dashboard.enabled && pressed && inTopPanel(panels.dashboard, dragStart.x, dragStart.y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth) && withinPanelWidth(panels.dashboard, x, y)) {
             if (dragY > Config.dashboard.dragThreshold)
                 visibilities.dashboard = true;
             else if (dragY < -Config.dashboard.dragThreshold)
@@ -313,9 +313,9 @@ CustomMouseArea {
         const inUtilitiesArea = bar.position === "bottom"
             ? inTopPanel(panels.utilities, x, y, Config.utilities.hoverThickness, Config.utilities.hoverWidth) && (root.visibilities.utilities ? inUtilitiesAreaOpen : inUtilitiesAreaClosed)
             : inBottomPanel(panels.utilities, x, y, true, Config.utilities.hoverThickness, Config.utilities.hoverWidth) && (root.visibilities.utilities ? inUtilitiesAreaOpen : inUtilitiesAreaClosed);
-        const showUtilities = Config.utilities.showOnHover && !popouts.hasCurrent && panels.popoutsWrapper.offsetScale > 0.99 && inUtilitiesArea;
+        const showUtilities = Config.utilities.enabled && Config.utilities.showOnHover && !popouts.hasCurrent && panels.popoutsWrapper.offsetScale > 0.99 && inUtilitiesArea;
 
-        if (Config.utilities.showOnHover) {
+        if (Config.utilities.enabled && Config.utilities.showOnHover) {
             if (!utilitiesShortcutActive) {
                 visibilities.utilities = showUtilities;
             } else if (showUtilities) {
@@ -323,7 +323,7 @@ CustomMouseArea {
             }
         }
 
-        if (pressed) {
+        if (Config.utilities.enabled && pressed) {
             const inUtilitiesDragStart = bar.position === "bottom"
                 ? inTopPanel(panels.utilities, dragStart.x, dragStart.y, Config.utilities.hoverThickness, Config.utilities.hoverWidth)
                 : inBottomPanel(panels.utilities, dragStart.x, dragStart.y, true, Config.utilities.hoverThickness, Config.utilities.hoverWidth);

@@ -1,13 +1,101 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
+import Quickshell
 import Caelestia.Config
+import qs.components.controls
 import qs.services
 import qs.modules.nexus.common
 
 PageBase {
     id: root
 
-    title: qsTr("Sound effects")
+    readonly property list<string> bundledSounds: [
+        "aidos.wav",
+        "Aldebaran.wav",
+        "Altair.wav",
+        "Antares.wav",
+        "arcturus.wav",
+        "Ariel.wav",
+        "Beat_Box_Android.wav",
+        "Bees_Knees.wav",
+        "Betelgeuse.wav",
+        "Canopus.wav",
+        "Capella.wav",
+        "Carme.wav",
+        "Castor.wav",
+        "Ceres.wav",
+        "CetiAlpha.wav",
+        "Cheeper.wav",
+        "circios.wav",
+        "Cricket.wav",
+        "Deneb.wav",
+        "Doink.wav",
+        "Drip.wav",
+        "Elara.wav",
+        "Electra.wav",
+        "Europa.wav",
+        "Fomalhaut.wav",
+        "Heaven.wav",
+        "Hojus.wav",
+        "horkos.wav",
+        "hypnos1.wav",
+        "Iapetus.wav",
+        "IM_Me.wav",
+        "Io.wav",
+        "kratos1.wav",
+        "kratos2.wav",
+        "Lalande.wav",
+        "Merope.wav",
+        "Mira.wav",
+        "moonbeam.wav",
+        "nomos1.wav",
+        "nomos2.wav",
+        "ouranos.wav",
+        "phantasos.wav",
+        "pixiedust.wav",
+        "pizzicato.wav",
+        "Plastic_Pipe.wav",
+        "Polaris.wav",
+        "Pollux.wav",
+        "poros.wav",
+        "Procyon.wav",
+        "Proxima.wav",
+        "regulus.wav",
+        "Rhea.wav",
+        "Salacia.wav",
+        "ShortCircuit.wav",
+        "sirius.wav",
+        "Sirrah.wav",
+        "SpaceSeed.wav",
+        "Star_Struck.wav",
+        "TaDa.wav",
+        "Tethys.wav",
+        "thrasos1.wav",
+        "Tinkerbell.wav",
+        "Titan.wav",
+        "tweeters.wav",
+        "Upsilon.wav",
+        "vega.wav"
+    ]
+    property var soundList: {
+        const current = GlobalConfig.audio.sounds.notificationSound;
+        if (current && !bundledSounds.includes(current))
+            return [current, ...bundledSounds];
+        return bundledSounds;
+    }
+
+    function soundDisplayName(fileName: string): string {
+        if (!fileName)
+            return qsTr("Default");
+        const base = fileName.replace(/\.[^/.]+$/, "").replace(/_/g, " ");
+        if (fileName === "Iapetus.wav" || base === "Iapetus")
+            return qsTr("%1 (default)").arg(base);
+        return base;
+    }
+
+    title: qsTr("Sounds")
     isSubPage: true
 
     ColumnLayout {
@@ -16,9 +104,76 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
+        Variants {
+            id: soundVariants
+
+            model: root.soundList
+
+            MenuItem {
+                required property string modelData
+
+                text: root.soundDisplayName(modelData)
+                value: modelData
+            }
+        }
+
+        Timer {
+            id: notifPreviewTimer
+
+            interval: 400
+            onTriggered: Audio.playNotification()
+        }
+
+        Timer {
+            id: sfxPreviewTimer
+
+            interval: 400
+            onTriggered: Audio.playEffectTick()
+        }
+
         SectionHeader {
             first: true
-            text: qsTr("General")
+            text: qsTr("Notifications")
+        }
+
+        StepperRow {
+            first: true
+            label: qsTr("Notification volume")
+            subtext: Math.round(value * 100) + "%"
+            value: GlobalConfig.audio.sounds.notificationVolume
+            from: 0.0
+            to: 1.0
+            stepSize: 0.05
+            reset: ({ node: GlobalConfig.audio.sounds, setting: "notificationVolume" })
+            onMoved: value => {
+                GlobalConfig.audio.sounds.notificationVolume = value;
+                notifPreviewTimer.restart();
+            }
+        }
+
+        SelectRow {
+            label: qsTr("Notification sound")
+            subtext: qsTr("Sound played for incoming toasts and alerts")
+            menuItems: soundVariants.instances
+            active: menuItems.find(i => i.value === GlobalConfig.audio.sounds.notificationSound) ?? null
+            fallbackText: root.soundDisplayName(GlobalConfig.audio.sounds.notificationSound)
+            onSelected: item => {
+                GlobalConfig.audio.sounds.notificationSound = item.value;
+                Audio.playNotification();
+            }
+        }
+
+        RowButton {
+            last: true
+            icon: "play_arrow"
+            text: qsTr("Preview sound")
+            subtext: qsTr("Play current notification sound")
+            disabled: GlobalConfig.audio.sounds.notificationVolume === 0
+            onClicked: Audio.playNotification()
+        }
+
+        SectionHeader {
+            text: qsTr("Interface")
         }
 
         ToggleRow {
@@ -29,23 +184,23 @@ PageBase {
             onToggled: GlobalConfig.audio.sounds.enabled = checked
         }
 
-        SliderRow {
-            last: true
-            icon: "volume_up"
+        StepperRow {
             label: qsTr("Sound effect volume")
-            valueLabel: Math.round(value * 100) + "%"
+            subtext: Math.round(value * 100) + "%"
             value: GlobalConfig.audio.sounds.sfxVolume
+            from: 0.0
+            to: 1.0
+            stepSize: 0.05
+            reset: ({ node: GlobalConfig.audio.sounds, setting: "sfxVolume" })
             enabled: GlobalConfig.audio.sounds.enabled
-            onMoved: value => GlobalConfig.audio.sounds.sfxVolume = value
-            onReleased: value => Audio.playEffectTick()
-        }
-
-        SectionHeader {
-            text: qsTr("Feedback")
+            opacity: enabled ? 1 : 0.5
+            onMoved: value => {
+                GlobalConfig.audio.sounds.sfxVolume = value;
+                sfxPreviewTimer.restart();
+            }
         }
 
         ToggleRow {
-            first: true
             text: qsTr("Camera click")
             reset: ({ node: GlobalConfig.audio.sounds, setting: "cameraClick" })
             checked: GlobalConfig.audio.sounds.cameraClick
@@ -54,7 +209,6 @@ PageBase {
         }
 
         ToggleRow {
-            last: true
             text: qsTr("Volume tick")
             reset: ({ node: GlobalConfig.audio.sounds, setting: "effectTick" })
             checked: GlobalConfig.audio.sounds.effectTick
@@ -62,12 +216,7 @@ PageBase {
             onToggled: GlobalConfig.audio.sounds.effectTick = checked
         }
 
-        SectionHeader {
-            text: qsTr("System")
-        }
-
         ToggleRow {
-            first: true
             text: qsTr("Charging started")
             reset: ({ node: GlobalConfig.audio.sounds, setting: "chargingStarted" })
             checked: GlobalConfig.audio.sounds.chargingStarted

@@ -43,39 +43,73 @@ private:
     Display* m_dpy;
 };
 
-unsigned char* fetchProperty(Display* dpy, Window win, Atom prop, Atom type, unsigned long* count) {
+/// One X11 window property. `format` is how many bits the property's items use,
+/// which is what says whether the data may be read as 32-bit items at all: any
+/// X client can publish `_NET_WM_ICON` or `_NET_WM_PID` with format 8, and
+/// reading those bytes as longs walks off the end of the buffer.
+struct XProperty {
+    unsigned char* data = nullptr;
+    int format = 0;
+    unsigned long count = 0;
+
+    XProperty() = default;
+
+    ~XProperty() {
+        if (data) {
+            XFree(data);
+        }
+    }
+
+    XProperty(const XProperty&) = delete;
+    XProperty& operator=(const XProperty&) = delete;
+
+    /// The items as Xlib returns format-32 data on this platform: an array of long.
+    const unsigned long* items32() const { return reinterpret_cast<const unsigned long*>(data); }
+
+    QByteArray bytes() const { return QByteArray(reinterpret_cast<const char*>(data), static_cast<qsizetype>(count)); }
+};
+
+/// Reads the whole property into `property`. An empty property is not an error,
+/// but leaves `property.data` null so callers can skip it.
+bool fetchProperty(Display* dpy, Window win, Atom prop, Atom type, XProperty& property) {
     Atom actualType;
     int actualFormat;
     unsigned long bytesAfter;
     unsigned char* data = nullptr;
 
-    if (XGetWindowProperty(dpy, win, prop, 0, 0, False, type, &actualType, &actualFormat, count, &bytesAfter, &data) !=
-        Success) {
-        return nullptr;
+    if (XGetWindowProperty(dpy, win, prop, 0, 0, False, type, &actualType, &actualFormat, &property.count, &bytesAfter,
+            &data) != Success) {
+        return false;
     }
     if (data) {
         XFree(data);
         data = nullptr;
     }
     if (bytesAfter == 0) {
-        return nullptr;
+        return false;
     }
 
     const long words = static_cast<long>((bytesAfter + 3) / 4);
-    if (XGetWindowProperty(
-            dpy, win, prop, 0, words, False, type, &actualType, &actualFormat, count, &bytesAfter, &data) != Success) {
-        return nullptr;
+    if (XGetWindowProperty(dpy, win, prop, 0, words, False, type, &actualType, &actualFormat, &property.count,
+            &bytesAfter, &data) != Success) {
+        return false;
     }
-    return data;
+
+    property.data = data;
+    property.format = actualFormat;
+    return data != nullptr;
 }
 
 QString windowTitle(Display* dpy, Window win) {
     const Atom netName = XInternAtom(dpy, "_NET_WM_NAME", True);
     if (netName != None) {
-        unsigned long count = 0;
-        if (auto* data = fetchProperty(dpy, win, netName, AnyPropertyType, &count)) {
-            const auto title = QString::fromUtf8(reinterpret_cast<const char*>(data));
-            XFree(data);
+        XProperty property;
+        if (fetchProperty(dpy, win, netName, AnyPropertyType, property) && property.format == 8) {
+            QString title = QString::fromUtf8(property.bytes());
+            const auto nul = title.indexOf(QChar());
+            if (nul >= 0) {
+                title.truncate(nul);
+            }
             if (!title.isEmpty()) {
                 return title;
             }
@@ -97,13 +131,11 @@ qint64 windowPid(Display* dpy, Window win) {
         return -1;
     }
 
-    unsigned long count = 0;
-    auto* data = fetchProperty(dpy, win, netWmPid, XA_CARDINAL, &count);
-    if (!data) {
+    XProperty property;
+    if (!fetchProperty(dpy, win, netWmPid, XA_CARDINAL, property) || property.format != 32 || property.count < 1) {
         return -1;
     }
-    const auto pid = static_cast<qint64>(*reinterpret_cast<const unsigned long*>(data) & 0xffffffff);
-    XFree(data);
+    const auto pid = static_cast<qint64>(property.items32()[0] & 0xffffffff);
     return pid > 0 ? pid : -1;
 }
 
@@ -146,13 +178,16 @@ QImage decodeLargest(const unsigned long* data, unsigned long count) {
         if (w <= 0 || h <= 0) {
             break;
         }
-        const unsigned long pixels = static_cast<unsigned long>(w) * static_cast<unsigned long>(h);
-        if (pixels > count - i) {
+        const auto pixels = static_cast<unsigned long>(w) * static_cast<unsigned long>(h);
+        if (pixels == 0 || pixels > count - i) {
             break;
         }
 
         if (static_cast<qint64>(w) * h > static_cast<qint64>(best.width()) * best.height()) {
             QImage image(w, h, QImage::Format_ARGB32);
+            if (image.isNull()) {
+                break;
+            }
             for (int y = 0; y < h; ++y) {
                 auto* line = reinterpret_cast<QRgb*>(image.scanLine(y));
                 for (int x = 0; x < w; ++x) {
@@ -193,39 +228,38 @@ QString WindowIcon::extract(const QString& wmClass, const QString& title, qint64
         return QString();
     }
 
-    unsigned long windowCount = 0;
-    auto* rawWindows = fetchProperty(dpy, DefaultRootWindow(dpy), clientList, XA_WINDOW, &windowCount);
-    if (!rawWindows) {
+    XProperty clientListProperty;
+    if (!fetchProperty(dpy, DefaultRootWindow(dpy), clientList, XA_WINDOW, clientListProperty) ||
+        clientListProperty.format != 32) {
         return QString();
     }
-    const auto* windows = reinterpret_cast<const Window*>(rawWindows);
+    const auto windowCount = clientListProperty.count;
+    const auto* windows = clientListProperty.items32();
 
     QList<Window> candidates;
     bool havePidMatch = false;
     for (unsigned long i = 0; i < windowCount; ++i) {
-        if (pid > 0 && windowPid(dpy, windows[i]) == pid) {
+        const auto window = static_cast<Window>(windows[i]);
+        if (pid > 0 && windowPid(dpy, window) == pid) {
             if (!havePidMatch) {
                 havePidMatch = true;
                 candidates.clear();
             }
-            candidates.append(windows[i]);
+            candidates.append(window);
         } else if (!havePidMatch && !wmClass.isEmpty() &&
-                   (matchesClass(dpy, windows[i], wmClass) || matchesTitle(dpy, windows[i], wmClass, title))) {
-            candidates.append(windows[i]);
+                   (matchesClass(dpy, window, wmClass) || matchesTitle(dpy, window, wmClass, title))) {
+            candidates.append(window);
         }
     }
-    XFree(rawWindows);
 
     QImage icon;
     for (const auto win : candidates) {
-        unsigned long iconCount = 0;
-        auto* rawIcon = fetchProperty(dpy, win, netWmIcon, XA_CARDINAL, &iconCount);
-        if (!rawIcon) {
+        XProperty iconProperty;
+        if (!fetchProperty(dpy, win, netWmIcon, XA_CARDINAL, iconProperty) || iconProperty.format != 32) {
             continue;
         }
 
-        icon = decodeLargest(reinterpret_cast<const unsigned long*>(rawIcon), iconCount);
-        XFree(rawIcon);
+        icon = decodeLargest(iconProperty.items32(), iconProperty.count);
         if (!icon.isNull()) {
             break;
         }

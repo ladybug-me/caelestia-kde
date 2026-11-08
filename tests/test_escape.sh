@@ -5,10 +5,14 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source "$REPO_ROOT/scripts/lib/js.sh"
+source "$REPO_ROOT/scripts/lib/escape.sh"
 
+# The escaper counts characters, so a locale name is not enough: this shell can
+# report UTF-8 while still counting bytes. Ask it with a two-byte character.
 locale_is_utf8() {
-    [[ "$(locale charmap 2>/dev/null || echo ANSI_X3.4-1968)" == "UTF-8" ]]
+    local probe
+    probe=$(printf '\303\251') # é in UTF-8
+    [[ ${#probe} -eq 1 ]]
 }
 
 test_a_plain_path_is_left_alone() {
@@ -59,6 +63,25 @@ test_astral_characters_become_a_surrogate_pair() {
     fi
 
     assert_eq 'wall\ud83c\udf0d.png' "$(js_string 'wall🌍.png')" "an astral character should become a surrogate pair"
+}
+
+test_a_sed_replacement_keeps_a_plain_path() {
+    assert_eq "/home/u/walls/a-b.png" "$(sed_replacement '/home/u/walls/a-b.png')" "an ordinary path should pass through unchanged"
+}
+
+test_a_sed_replacement_escapes_what_sed_reads() {
+    assert_eq 'a\&b' "$(sed_replacement 'a&b')" "an ampersand means the whole match and must be escaped"
+    assert_eq 'a\|b' "$(sed_replacement 'a|b')" "the delimiter must be escaped"
+    assert_eq 'a\\b' "$(sed_replacement 'a\b')" "a backslash must be doubled"
+}
+
+test_a_sed_replacement_refuses_a_line_break() {
+    if sed_replacement $'a\nb' >/dev/null; then
+        fail "a newline in a replacement should be refused, not escaped"
+    fi
+    if sed_replacement $'a\rb' >/dev/null; then
+        fail "a carriage return in a replacement should be refused, not escaped"
+    fi
 }
 
 run_tests

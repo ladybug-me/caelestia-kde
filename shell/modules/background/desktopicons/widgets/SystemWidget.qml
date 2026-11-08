@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import QtQuick
 import QtQuick.Layouts
 import Caelestia.Components
@@ -12,11 +13,8 @@ import qs.services
 // CPU, GPU, memory and disk use. Shows more the bigger it is: rings when
 // small, meters with temperatures in between, and usage details with a
 // network graph when wide.
-Item {
+DesktopWidget {
     id: root
-
-    property var frame
-    property var controller
 
     // Size in cells. Width picks the layout: rings at 2, meters at 3,
     // meters with usage and a network column from 4. A third row adds the

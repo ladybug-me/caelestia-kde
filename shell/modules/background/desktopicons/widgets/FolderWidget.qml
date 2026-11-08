@@ -14,13 +14,11 @@ import qs.utils
 
 // A live view of a real folder, like Plasma's Folder View: scroll through it,
 // open files, drag them out, and drop files on it to move them in.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property string path: frame?.config.path ?? ""
+    // The config carries the type's default folder, so a reset lands back on it.
+    readonly property string path: frame?.config?.path ?? ""
     readonly property string folderName: path.substring(path.lastIndexOf("/") + 1) || path
     readonly property real slotWidth: Math.max(controller.iconSize * 0.6, 40) + Tokens.padding.medium * 2
     readonly property real slotHeight: controller.iconSize * 0.6 + Tokens.padding.small * 2 + 30
@@ -44,7 +42,7 @@ Item {
 
         selectFolder: true
         title: qsTr("Choose a folder to show")
-        cwd: root.path.startsWith(Paths.home) ? ["Home", ...root.path.substring(Paths.home.length).split("/").filter(s => s.length > 0)] : ["Home"]
+        cwd: Paths.cwdSegments(root.path)
         onAccepted: path => root.frame.setConfig({ path: path.replace(/^file:\/\//, "").replace(/\/+$/, "") })
     }
 

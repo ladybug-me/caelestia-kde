@@ -21,6 +21,15 @@ Item {
     // Wallpaper layer, sampled for the frosted cards of large items.
     property Item wallpaper: null
     readonly property point gridOrigin: Qt.point(gridItem.x, gridItem.y)
+    // The same origin in window coordinates: the layer that draws the cards' edges sits
+    // above whatever a plugin paints over them, so it cannot measure from the grid itself.
+    readonly property point widgetOrigin: Qt.point(root.x + gridOrigin.x, root.y + gridOrigin.y)
+    // The selection box a drag draws, already in window coordinates: the icons item
+    // measures from its own corner, while the layer that draws the box sits above the
+    // background layers and cannot measure from it. Drawn inside the icons layer the box
+    // would vanish under a plugin that repaints the wallpaper over the desktop.
+    readonly property bool bandShown: bandArea.bandShown
+    readonly property rect bandRect: Qt.rect(root.x + bandArea.bandRect.x, root.y + bandArea.bandRect.y, bandArea.bandRect.width, bandArea.bandRect.height)
     // The wallpaper blurred once for all frosted cards, null when unused.
     readonly property Item glass: glassLoader.item
 
@@ -97,6 +106,9 @@ Item {
 
     property string openGroupId: ""
     property var tiles: ({})
+    // The large items, whose card edges and frames DesktopOverlay draws: `tiles`
+    // holds the small icons too, and those have no card.
+    readonly property var cardTiles: Object.keys(tiles).filter(k => root.isBigKey(k)).map(k => tiles[k])
 
     // Renames that are in flight: old file name -> new file name, so the new
     // file keeps the old one's cell or group slot.
@@ -1017,8 +1029,7 @@ Item {
             {
                 type: type,
                 w: info.size.w,
-                h: info.size.h,
-                config: info.config ?? {}
+                h: info.size.h
             }
         ], cell);
     }
@@ -1027,6 +1038,16 @@ Item {
     // the cells, so the gallery opens in view whatever the pointer did last.
     function requestWidgetGallery(): void {
         DesktopLayout.addWidgetRequested(screenData.name, gridItem.x + gridItem.width / 2, gridItem.y + gridItem.height / 2);
+    }
+
+    /// Opens the settings of one widget, handing over the card's rectangle so the panel
+    /// can open beside it rather than on top of it.
+    function openWidgetSettings(key: string): void {
+        if (!isWidgetKey(key))
+            return;
+        const tile = tiles[key];
+        const rect = tile ? { x: gridItem.x + tile.x, y: gridItem.y + tile.y, width: tile.width, height: tile.height } : { x: gridItem.x, y: gridItem.y, width: 0, height: 0 };
+        DesktopLayout.widgetSettingsRequested(screenData.name, rect, nameOf(key));
     }
 
     function removeWidgets(keys: var): void {
@@ -1061,6 +1082,14 @@ Item {
                 closeGroup();
             else
                 WidgetEditor.close();
+        } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            // The way in without the mouse: pick a widget in the editor and open its
+            // settings, the same panel the gear opens.
+            const picked = selectedKeys().filter(isWidgetKey);
+            if (picked.length === 1)
+                openWidgetSettings(picked[0]);
+            else
+                return false;
         } else if (ctrl && event.key === Qt.Key_A) {
             setSelection(Engine.orderedKeys(contextPositions(), rows).filter(isWidgetKey));
         } else if (ctrl && event.key === Qt.Key_C) {
@@ -1392,7 +1421,7 @@ Item {
                     plan.mode = "join";
             } else if (widgetOf(target)?.type === "folder" && (!internal || dragKeys.every(k => !isWidgetKey(k)))) {
                 plan.mode = "folder";
-                plan.dest = widgetOf(target).config.path ?? "";
+                plan.dest = widgetCatalog.configFor("folder", widgetOf(target).config).path ?? "";
             }
             return plan;
         }
@@ -1832,6 +1861,16 @@ wl-paste --no-newline --type text/uri-list`]
         property point origin
         property var base: ({})
 
+        // The box the drag draws. Its geometry lives here, next to the handler that
+        // produces it, and DesktopOverlay draws it above the background layers.
+        readonly property bool bandShown: bandDrag.active
+        readonly property rect bandRect: {
+            if (!bandDrag.active)
+                return Qt.rect(0, 0, 0, 0);
+            const p = bandDrag.centroid.position;
+            return Qt.rect(Math.min(p.x, origin.x), Math.min(p.y, origin.y), Math.abs(p.x - origin.x), Math.abs(p.y - origin.y));
+        }
+
         anchors.fill: parent
 
         TapHandler {
@@ -1863,7 +1902,7 @@ wl-paste --no-newline --type text/uri-list`]
             onCentroidChanged: {
                 if (!active)
                     return;
-                const r = band.rect();
+                const r = bandArea.bandRect;
                 const hit = Engine.keysInRect(root.contextPositionsTopLevel(), Qt.rect(r.x - gridItem.x, r.y - gridItem.y, r.width, r.height), root.cellWidth, root.cellHeight, Tokens.padding.small, root.spans);
                 const next = Object.assign({}, bandArea.base);
                 for (const k of hit)
@@ -1884,28 +1923,6 @@ wl-paste --no-newline --type text/uri-list`]
                     accumulated = 0;
                 }
             }
-        }
-
-        StyledRect {
-            id: band
-
-            readonly property rect current: bandDrag.active ? rect() : Qt.rect(0, 0, 0, 0)
-
-            function rect(): rect {
-                const p = bandDrag.centroid.position;
-                return Qt.rect(Math.min(p.x, bandArea.origin.x), Math.min(p.y, bandArea.origin.y), Math.abs(p.x - bandArea.origin.x), Math.abs(p.y - bandArea.origin.y));
-            }
-
-            visible: bandDrag.active
-            x: current.x
-            y: current.y
-            width: current.width
-            height: current.height
-            radius: Tokens.rounding.small
-            color: Qt.alpha(Colours.palette.m3primary, 0.18)
-            border.width: 1
-            border.color: Qt.alpha(Colours.palette.m3primary, 0.7)
-            z: 50
         }
     }
 
@@ -2066,6 +2083,7 @@ wl-paste --no-newline --type text/uri-list`]
                 onDoubleClicked: mouse => root.tileDoubleClicked(key, mouse)
                 onContextMenuRequested: (x, y) => root.tileContextMenu(key, x, y)
                 onDragRequested: root.beginDrag(key)
+                onSettingsRequested: root.openWidgetSettings(key)
 
                 Behavior on x {
                     Anim {}

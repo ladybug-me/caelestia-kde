@@ -175,6 +175,14 @@ Variants {
                 }
             }
         }
+        // Above the background widgets a plugin registers: the wallpaper depth
+        // foreground repaints the wallpaper over the cards, so the card edges and the
+        // selection box are drawn over it rather than inside the icons layer.
+        DesktopOverlay {
+            anchors.fill: parent
+            icons: desktopIcons
+            z: 4096
+        }
         WlrLayershell.exclusionMode: ExclusionMode.Ignore
         WlrLayershell.layer: WlrLayer.Bottom
         WlrLayershell.keyboardFocus: (!Config.background.disableQuickshellDesktop && desktopIcons.renameActive) ? WlrKeyboardFocus.Exclusive : (!Config.background.disableQuickshellDesktop && desktopIcons.visible) ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None

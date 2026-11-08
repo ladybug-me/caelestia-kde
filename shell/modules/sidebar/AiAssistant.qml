@@ -1131,21 +1131,20 @@ Item {
                 var weather = Weather.city + ": " + Weather.temp + " (" + Weather.description + "). Humidity: " + Weather.humidity + "%, Wind: " + Weather.windSpeed + " km/h";
                 AiToolCalls.recordResult("Tool: get_weather\nResult: Local weather from system dashboard: " + weather + "\n\n");
             },
-            // The model's output is untrusted input, so only the subcommands the tool
-            // documents may run: a prompt injection cannot reach the rest of the CLI.
+            // The model's output is untrusted input, so the only thing it may name is
+            // an action from the table: there is no argument string for a prompt
+            // injection to carry flags in, and a name that is not there never reaches
+            // argv. Array.isArray also keeps the lookup off the prototype chain.
             "caelestia_command": function(args) {
-                var subcmd = String(args.subcommand || "").trim();
-                var subargs = String(args.args || "").trim();
-                if (AiToolCalls.caelestiaSubcommands.indexOf(subcmd) === -1) {
-                    Logger.log("[AI] Refusing caelestia subcommand: " + subcmd);
-                    AiToolCalls.recordResult("Tool: caelestia_command\nResult: " + (subcmd ? "'" + subcmd + "' is not an allowed subcommand" : "no subcommand was given") + "; nothing was executed.\n\n");
+                var action = String(args.action || "").trim();
+                var argv = AiToolCalls.caelestiaActions[action];
+                if (!Array.isArray(argv)) {
+                    Logger.log("[AI] Refusing caelestia action: " + action);
+                    AiToolCalls.recordResult("Tool: caelestia_command\nResult: " + (action ? "'" + action + "' is not an allowed action" : "no action was given") + "; nothing was executed.\n\n");
                     return;
                 }
                 root.currentActionText = "Running caelestia...";
-                var command = ["caelestia", subcmd];
-                if (subargs)
-                    command = command.concat(subargs.split(/\s+/));
-                root.startTool(command, "exec_caelestia_command");
+                root.startTool(["caelestia"].concat(argv), "exec_caelestia_command");
             }
         })
 

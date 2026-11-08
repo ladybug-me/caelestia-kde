@@ -22,11 +22,21 @@ Singleton {
     property string accumulatedToolResults: ""
     property string accumulatedToolImage: ""
 
-    // The only caelestia subcommands the assistant may run. The model's output is
-    // untrusted, so this list is enforced when a call arrives, not just described
-    // in the prompt.
-    readonly property var caelestiaSubcommands: ["shell", "toggle", "scheme", "search", "screenshot",
-        "record", "clipboard", "emoji", "wallpaper", "resizer", "install", "update"]
+    // What caelestia_command may run: a closed set of actions, each a complete
+    // argv. The model's output is untrusted — a page it reads can carry a prompt
+    // injection — so this table, not the prompt, is the authority, and a call names
+    // an action instead of a subcommand plus free-form flags. `shell`, `install`,
+    // `update`, `login-screen` and `record` are absent on purpose: they stop or
+    // restart the session, record the screen, or hand control to a privileged
+    // installer, which are the user's calls to make and not the assistant's.
+    readonly property var caelestiaActions: ({
+            "random-wallpaper": ["wallpaper", "-r"],
+            "list-schemes": ["scheme", "list"],
+            "get-scheme": ["scheme", "get"],
+            "set-light-mode": ["scheme", "set", "-m", "light"],
+            "set-dark-mode": ["scheme", "set", "-m", "dark"],
+            "version": ["version"]
+        })
 
     // Assigned by the assistant: function(results, imageB64OrNull).
     // Fired once every dispatched tool has reported back.
@@ -98,6 +108,6 @@ Singleton {
     }
 
     function toolsPrompt() {
-        return `\n\nYou have access to the following tools. To call a tool, output a ${root.toolCallStart} block containing ONLY valid JSON. Do not output any text inside the block other than the JSON object.\n\nFORMAT:\n${root.toolCallStart}\n{"name": "TOOL_NAME", "args": {ARGUMENTS}}\n${root.toolCallEnd}\n\nAVAILABLE TOOLS:\n- take_screenshot: Captures the user's screen for visual analysis. Args: none.\n  Example: ${root.toolCallStart}\n{"name": "take_screenshot", "args": {}}\n${root.toolCallEnd}\n\n- web_search: Searches the web. Args: query (string, required), page (number, optional).\n  Example: ${root.toolCallStart}\n{"name": "web_search", "args": {"query": "latest news"}}\n${root.toolCallEnd}\n\n- read_webpage: Fetches and reads the text of a URL. Args: url (string, required).\n  Example: ${root.toolCallStart}\n{"name": "read_webpage", "args": {"url": "https://example.com"}}\n${root.toolCallEnd}\n\n- open_app: Launches an installed desktop application. Args: app_name (string, required).\n  Example: ${root.toolCallStart}\n{"name": "open_app", "args": {"app_name": "dolphin"}}\n${root.toolCallEnd}\n\n- set_timer: Sets a countdown timer that fires a desktop notification. Args: seconds (number, required), message (string, required).\n  Example: ${root.toolCallStart}\n{"name": "set_timer", "args": {"seconds": 300, "message": "Break time!"}}\n${root.toolCallEnd}\n\n- get_weather: Gets the current local weather from the system dashboard. Args: none.\n  Example: ${root.toolCallStart}\n{"name": "get_weather", "args": {}}\n${root.toolCallEnd}\n\n- caelestia_command: Runs a caelestia CLI command. Valid subcommands: ${root.caelestiaSubcommands.join(", ")}. Args: subcommand (string, required), args (string, optional extra flags).\n  Example: ${root.toolCallStart}\n{"name": "caelestia_command", "args": {"subcommand": "wallpaper", "args": "--random"}}\n${root.toolCallEnd}\n\nCRITICAL RULES:\n1. ALWAYS use a ${root.toolCallStart} block to call a tool. NEVER pretend to perform actions in plain text.\n2. You may output a brief acknowledgment before the ${root.toolCallStart} block (e.g. 'Opening Dolphin for you!') but you MUST include the block.\n3. You can include multiple ${root.toolCallStart} blocks in one response.\n4. After receiving tool results, respond naturally to the user based on what the tool returned.`;
+        return `\n\nYou have access to the following tools. To call a tool, output a ${root.toolCallStart} block containing ONLY valid JSON. Do not output any text inside the block other than the JSON object.\n\nFORMAT:\n${root.toolCallStart}\n{"name": "TOOL_NAME", "args": {ARGUMENTS}}\n${root.toolCallEnd}\n\nAVAILABLE TOOLS:\n- take_screenshot: Captures the user's screen for visual analysis. Args: none.\n  Example: ${root.toolCallStart}\n{"name": "take_screenshot", "args": {}}\n${root.toolCallEnd}\n\n- web_search: Searches the web. Args: query (string, required), page (number, optional).\n  Example: ${root.toolCallStart}\n{"name": "web_search", "args": {"query": "latest news"}}\n${root.toolCallEnd}\n\n- read_webpage: Fetches and reads the text of a URL. Args: url (string, required).\n  Example: ${root.toolCallStart}\n{"name": "read_webpage", "args": {"url": "https://example.com"}}\n${root.toolCallEnd}\n\n- open_app: Launches an installed desktop application. Args: app_name (string, required).\n  Example: ${root.toolCallStart}\n{"name": "open_app", "args": {"app_name": "dolphin"}}\n${root.toolCallEnd}\n\n- set_timer: Sets a countdown timer that fires a desktop notification. Args: seconds (number, required), message (string, required).\n  Example: ${root.toolCallStart}\n{"name": "set_timer", "args": {"seconds": 300, "message": "Break time!"}}\n${root.toolCallEnd}\n\n- get_weather: Gets the current local weather from the system dashboard. Args: none.\n  Example: ${root.toolCallStart}\n{"name": "get_weather", "args": {}}\n${root.toolCallEnd}\n\n- caelestia_command: Runs one of the caelestia actions the shell allows. Actions: ${Object.keys(root.caelestiaActions).join(", ")}. Args: action (string, required).\n  Example: ${root.toolCallStart}\n{"name": "caelestia_command", "args": {"action": "random-wallpaper"}}\n${root.toolCallEnd}\n\nCRITICAL RULES:\n1. ALWAYS use a ${root.toolCallStart} block to call a tool. NEVER pretend to perform actions in plain text.\n2. You may output a brief acknowledgment before the ${root.toolCallStart} block (e.g. 'Opening Dolphin for you!') but you MUST include the block.\n3. You can include multiple ${root.toolCallStart} blocks in one response.\n4. After receiving tool results, respond naturally to the user based on what the tool returned.`;
     }
 }

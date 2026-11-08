@@ -24,7 +24,7 @@ Item {
     AmbientGlow {
         anchors.fill: parent
         source: Players.active ? Players.getArtUrl(Players.active) : ""
-        active: Config.dashboard.ambientColor && !Colours.light
+        active: root.visible && Config.dashboard.ambientColor && !Colours.light
         glowOpacity: Config.dashboard.ambientOpacity
         useFallback: false
         radius: Tokens.rounding.large

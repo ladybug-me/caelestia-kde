@@ -162,7 +162,7 @@ StyledRect {
 
             Layout.fillWidth: true
             textFormat: Text.StyledText
-            text: root.modelData?.bodyStyled || qsTr("No body here! :/")
+            text: root.modelData?.bodyStyled || qsTr("No message text")
             color: root.modelData?.urgency === "critical" ? Colours.palette.m3secondary : Colours.palette.m3outline
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 

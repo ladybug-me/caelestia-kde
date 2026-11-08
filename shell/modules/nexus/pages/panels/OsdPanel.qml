@@ -36,7 +36,7 @@ PageBase {
         MenuItem {
             property string value: "card"
 
-            text: qsTr("Modern Elevated Card")
+            text: qsTr("Elevated Card")
         },
         MenuItem {
             property string value: "bar"

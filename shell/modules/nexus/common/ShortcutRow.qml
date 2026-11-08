@@ -231,7 +231,7 @@ ConnectedRect {
                                 hoverEnabled: true
                                 cursorShape: Qt.PointingHandCursor
                                 ToolTip.visible: containsMouse
-                                ToolTip.text: qsTr("Collides with: ") + parent.partCollisionName
+                                ToolTip.text: qsTr("Collides with %1").arg(parent.partCollisionName)
                             }
                         }
 

@@ -427,7 +427,7 @@ exit $status`]
             }
             onExited: code => {
                 root.installing = false;
-                root.installStatus = code === 0 ? qsTr("Installed.") : (qsTr("Failed") + " (" + code + ")");
+                root.installStatus = code === 0 ? qsTr("Installed.") : qsTr("Install failed (%1)").arg(code);
                 root.refreshStatus();
                 UpdateChecker.checkClaudeCodeUpdate();
             }
@@ -470,7 +470,7 @@ exit $status`]
                 else if (code === 126)
                     root.ollamaInstallStatus = qsTr("Cancelled.");
                 else
-                    root.ollamaInstallStatus = qsTr("Failed") + " (" + code + ")";
+                    root.ollamaInstallStatus = qsTr("Ollama install failed (%1)").arg(code);
                 root.refreshOllamaStatus();
             }
         }
@@ -621,7 +621,7 @@ exit $status`]
 
         ToggleRow {
             text: qsTr("opencode Zen")
-            subtext: qsTr("Curated coding models, pay as you go")
+            subtext: qsTr("Pay per token; no subscription")
             reset: ({ node: GlobalConfig.ai, setting: "enableOpencode" })
             checked: GlobalConfig.ai.enableOpencode
             onToggled: GlobalConfig.ai.enableOpencode = checked

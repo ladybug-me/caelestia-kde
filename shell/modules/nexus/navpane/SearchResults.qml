@@ -182,7 +182,7 @@ VerticalFadeListView {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: item.sectionLabel.length > 0 ? qsTr("in %1 › %2").arg(item.pageLabel).arg(item.sectionLabel) : qsTr("in ") + item.pageLabel
+                    text: item.sectionLabel.length > 0 ? qsTr("in %1 › %2").arg(item.pageLabel).arg(item.sectionLabel) : qsTr("in %1").arg(item.pageLabel)
                     color: item.isSelected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                     font: NexusStyle.secondaryFont
                     elide: Text.ElideRight

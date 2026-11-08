@@ -53,7 +53,7 @@ Item {
             Loader {
                 anchors.centerIn: parent
 
-                opacity: img.status === Image.Ready ? 0 : 1
+                opacity: img.status === Image.Loading ? 1 : 0
                 active: opacity > 0
 
                 sourceComponent: StyledRect {

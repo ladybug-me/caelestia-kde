@@ -156,7 +156,7 @@ QtObject {
         },
         {
             label: qsTr("opencode Zen"),
-            description: qsTr("Curated coding models, pay as you go"),
+            description: qsTr("Pay per token; no subscription"),
             section: qsTr("AI Assistant"),
             pageIdx: 5,
             subPageIdx: 7

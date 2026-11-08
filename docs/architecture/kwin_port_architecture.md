@@ -1,102 +1,86 @@
 # KWin port architecture
 
-This document covers the C++ plugin backend and the API available to QML components.
+The C++ plugin behind the shell's KWin integration, and the API it exposes to QML.
 
 ![The Caelestia shell](../../assets/shell-screenshot.png)
 
----
+## Why the plugin exists
 
-## 1. Architectural Evolution: The Native Backend
+The port began with a "fake Hyprland" layer: a KWin script that pushed window data over D-Bus, a Python daemon that listened, and a mock `hyprctl` that returned Hyprland-shaped JSON. Every window operation crossed two process boundaries, and the shell saw little of KDE's own API.
 
-### The Legacy Approach
-Previously, the KDE port relied on a "fake Hyprland" wrapper architecture:
-1. **KWin JS Script** (`main.js`): Ran continuously in KWin, pushing window data over D-Bus.
-2. **Python Daemon** (`qs-kwin-bridge.py`): A background service that listened to these D-Bus signals.
-3. **Mock `hyprctl`**: A fake Python mock returning JSON formatted exactly like Hyprland's native output.
+An interim version dropped the daemon and ran `qdbus6` through `QProcess` to inject temporary KWin scripts. That removed one hop, but window state still arrived over D-Bus and depended on external processes.
 
-**The Problem**: This involved too many IPC hops, was prone to lagging, required a background daemon, and heavily restricted the shell from using KDE's native capabilities.
+The current plugin talks to KWin and Wayland in-process:
 
-### The Interim Port
-Initially, the port ripped out the Python daemon and used decoupled `QProcess` tasks executing `qdbus6` to inject temporary KWin scripts and manage windows. While more reliable, it still relied heavily on D-Bus and external processes.
+- `KWinActiveWindowBridge` binds the `plasma-window-management` Wayland protocol through `PlasmaWindows`. It tracks the active window, the global window list and window states without D-Bus round trips or script injection.
+- `KWinWorkspaceState` reads the virtual desktop manager over D-Bus and follows trackpad swipes through a `QLocalSocket` server (`caelestia-workspace-tracker`).
+- `GlobalShortcut` registers system-wide keys with `kglobalaccel` from C++.
 
-### The Current Native Wayland Approach
-The current architecture communicates directly with KWin and Wayland via native **C++ Quickshell Plugins**, utilizing pure Wayland protocols and optimized IPC for maximum performance and reliability:
+## QML API
 
-1. **`KWinActiveWindowBridge` (C++ / Wayland Protocol)**
-   - Binds directly to the `plasma-window-management` Wayland protocol via `PlasmaWindows`.
-   - Tracks active windows, global window lists, and manages window states natively without D-Bus overhead or KWin script injection.
-2. **`KWinWorkspaceState` (C++ / D-Bus & Local Sockets)**
-   - Interfaces with KDE Plasma's Virtual Desktop Manager over optimized D-Bus calls.
-   - Handles **Workspace Swipe Tracking** for trackpads via a native `QLocalSocket` tracking server (`caelestia-workspace-tracker`).
-3. **`GlobalShortcut` (C++)**
-   - Standardizes system-wide keyboard shortcuts in C++, routing through KDE's `kglobalaccel` seamlessly.
+The C++ singletons below are exposed to QML as `Caelestia.*`.
 
----
+### KWinActiveWindowBridge
 
-## 2. Developer API Reference (QML)
+Real-time window, monitor and window-list state from Plasma Window Management.
 
-The following native C++ singletons and components are exposed to QML to interact with KDE natively.
+Properties:
 
-### `KWinActiveWindowBridge` (Singleton)
-Provides real-time information about active windows, monitors, and the global window list natively via Plasma Window Management.
+- `activeWindow` (`QVariantMap`): the focused window. Fields: `address` (string UUID), `title`, `class` (app id), `fullscreen`, `maximized`.
+- `activeOutputName` (`QString`): the output the active window is on.
+- `windowList` (`QVariantList`): every window. Each map carries `address`, `title`, `class`, `floating`, `fullscreen`, `x`, `y`, `width`, `height`.
 
-**Properties:**
-* `activeWindow` (`QVariantMap`): The currently focused window.
-  * Fields: `address` (String uuid), `title` (String), `class` (String appId), `fullscreen` (Boolean), `maximized` (Boolean).
-* `activeOutputName` (`QString`): The name of the monitor/output where the active window resides.
-* `windowList` (`QVariantList` of `QVariantMap`): An array containing all active windows across the system.
-  * Each map contains: `address`, `title`, `class`, `floating`, `fullscreen`, `x`, `y`, `width`, `height`.
+Methods:
 
-**Methods (Invokables):**
-* `void focusWindow(const QString &address)`: Brings the specified window to the front and focuses it.
-* `void closeWindow(const QString &address)`: Gracefully requests the specified window to close.
-* `void minimizeWindow(const QString &address)`: Minimizes the specified window.
-* `void maximizeWindow(const QString &address, bool horz = true, bool vert = true)`: Maximizes the window.
-* `void setMaximized(const QString &address, bool maximized)`: Sets or unsets the maximized state.
-* `void setFullscreen(const QString &address, bool fullscreen)`: Sets or unsets the fullscreen state.
-* `void raiseWindow(const QString &address)`: Raises the window to the top of the stack.
-* `void setWindowProperty(const QString &address, const QString &property, bool enable)`: Toggles legacy states.
-* `void setWindowDesktop(const QString &address, int desktopId)`: Moves window to desktop (-1 for current, -2 for all).
-* `void setActiveOutputName(const QString &outputName)`: Manually sets the active output tracker.
-* `void refreshWindows()`: Kept for backward compatibility.
+- `focusWindow(address)`
+- `closeWindow(address)`
+- `minimizeWindow(address)`
+- `maximizeWindow(address, horz = true, vert = true)`
+- `setMaximized(address, maximized)`
+- `setFullscreen(address, fullscreen)`
+- `raiseWindow(address)`
+- `setWindowProperty(address, property, enable)`: toggles legacy states.
+- `setWindowDesktop(address, desktopId)`: `-1` for the current desktop, `-2` for all.
+- `setActiveOutputName(outputName)`
+- `refreshWindows()`: kept for backward compatibility.
 
-### `KWinWorkspaceState` (Singleton)
-Provides real-time tracking of KDE Plasma virtual desktops (workspaces) and trackpad swipe gestures.
+### KWinWorkspaceState
 
-**Properties:**
-* `activeId` (`int`): The ID of the currently active virtual desktop (1-indexed).
-* `workspaces` (`QVariantList` of `QVariantMap`): A list of all virtual desktops.
-  * Each map contains: `id` (String UUID), `name` (String), `index` (Integer 1-based), `active` (Boolean).
-* `swipeOffset` (`double`): Real-time fractional offset representing a trackpad swipe in progress (for animations).
+Virtual desktops and trackpad swipe state.
 
-**Methods (Invokables):**
-* `void switchTo(const QString& id)`: Switches the active workspace to the provided desktop UUID, ID, or name.
-* `void createWorkspace(const QString& name = "")`: Creates a new virtual desktop.
-* `void removeWorkspace(const QString& id)`: Removes the specified virtual desktop.
-* `void setDesktop(int desktopId)`: Switches the current desktop workspace by 1-based index.
-* `void nextDesktop()`: Switches to the next adjacent desktop, wrapping around at the end.
-* `void previousDesktop()`: Switches to the previous adjacent desktop, wrapping around at the beginning.
+Properties:
 
-### `GlobalShortcut` (Component)
-A QML component used to register global keyboard shortcuts through KDE's native `kglobalaccel` system.
+- `activeId` (`int`): the active desktop, 1-based.
+- `workspaces` (`QVariantList`): each map carries `id` (string UUID), `name`, `index` (1-based) and `active`.
+- `swipeOffset` (`double`): the fractional offset of a swipe in progress, for animations.
 
-**Properties:** `name`, `key` (semicolon-separated multi-key), `description`
-**Signal:** `activated()`
+Methods:
 
-### `KeybindsModel` & `GlobalShortcutDispatcher` (Singletons)
-- **`GlobalShortcutDispatcher`**: Singleton relay for cross-instance signals and the central **collision index** (`key → friendly label`), backed by `stolen-shortcuts.json`.
-- **`KeybindsModel`**: `QAbstractListModel` singleton that loads defaults, merges user overrides from `${XDG_CONFIG_HOME:-~/.config}/caelestia/keybinds.json`, and drives the Nexus shortcut manager UI.
+- `switchTo(id)`: accepts a UUID, an id or a name.
+- `createWorkspace(name = "")`
+- `removeWorkspace(id)`
+- `setDesktop(desktopId)`: 1-based index.
+- `nextDesktop()` / `previousDesktop()`: wrap at the ends.
 
-> **Full documentation** — shortcut theft, conflict resolution, crash-safe recovery, the diff-based update logic, and the Nexus UI integration are all covered in detail in **[`docs/shortcut_architecture.md`](shortcut_architecture.md)**.
+### GlobalShortcut
 
----
+Registers a shortcut through `kglobalaccel`.
 
-## 3. How Shortcuts are Loaded (`Shortcuts.qml`)
+Properties: `name`, `key` (semicolon-separated multi-key), `description`.
+Signal: `activated()`.
 
-All keyboard shortcuts in Caelestia are declared inside `Shortcuts.qml` under `shell/modules/` using the `CustomShortcut` QML wrapper under `shell/components/misc/`.
+### KeybindsModel and GlobalShortcutDispatcher
 
-The `CustomShortcut` wrapper dynamically inspects the environment at startup:
-- **Hyprland**: loads `Quickshell.Hyprland.GlobalShortcut`; bindings come from `hyprland.conf`.
-- **KDE (KWin)**: loads `Caelestia.GlobalShortcut`, registering directly with KDE's global shortcut daemon.
+- `GlobalShortcutDispatcher` relays signals between instances and keeps the collision index (`key → friendly label`), backed by `stolen-shortcuts.json`.
+- `KeybindsModel` is a `QAbstractListModel` that loads defaults, merges overrides from `${XDG_CONFIG_HOME:-~/.config}/caelestia/keybinds.json`, and drives the Nexus shortcut manager.
 
-See [`docs/shortcut_architecture.md`](shortcut_architecture.md) for full details on the shortcut loading pipeline, Nexus manager, and user override persistence.
+Full detail on stealing, conflicts, crash recovery, the diff-based update and the Nexus UI is in [`shortcut_architecture.md`](shortcut_architecture.md).
+
+## How shortcuts load
+
+`Shortcuts.qml` under `shell/modules/` declares every built-in shortcut through the `CustomShortcut` wrapper in `shell/components/misc/`. The wrapper checks the environment at startup:
+
+- Hyprland loads `Quickshell.Hyprland.GlobalShortcut`, with bindings from `hyprland.conf`.
+- KWin loads `Caelestia.GlobalShortcut`, which registers with KDE's global shortcut daemon.
+
+See [`shortcut_architecture.md`](shortcut_architecture.md) for the loading pipeline and the override file.

@@ -59,13 +59,13 @@ Searcher {
             variant: "fruitsalad"
             icon: "nutrition"
             name: qsTr("Fruit Salad")
-            description: qsTr("A playful theme - the seed color's hue does not appear in the theme.")
+            description: qsTr("A playful theme - the seed color shifts through unrelated hues.")
         },
         Variant {
             variant: "rainbow"
             icon: "looks"
             name: qsTr("Rainbow")
-            description: qsTr("A playful theme - the seed color's hue does not appear in the theme.")
+            description: qsTr("A playful theme - a full spectrum, with the seed only as an accent.")
         },
         Variant {
             variant: "neutral"

@@ -1,10 +1,6 @@
-# TROUBLESHOOTING
+# Troubleshooting
 
-## Troubleshooting guide
-
-This document catalogs known failure modes, error conditions, and edge cases discovered through analysis of the installer, shell build system, scripts, documentation, and runtime architecture of this port.
-
----
+Known failure modes, how to confirm the cause, and the command that repairs it.
 
 ## Table of Contents
 
@@ -24,13 +20,11 @@ This document catalogs known failure modes, error conditions, and edge cases dis
 10. [Update Issues](#10-update-issues)
 11. [Diagnostic Commands Reference](#11-diagnostic-commands-reference)
 
----
-
 ## 1. Build & Compilation Issues
 
 ### 1.1 C++ Installer Compilation Fails
 
-The installer compiles the `caelestia-install` TUI binary during `setup.sh`. The CMake project requires **C++20** (`CMAKE_CXX_STANDARD 20`).
+`setup.sh` downloads the prebuilt `caelestia-install` binary for the release and verifies it. When no artifact matches the architecture or `tui.version`, it falls back to compiling `installer/tui`, which needs **C++20** (`CMAKE_CXX_STANDARD 20`) and the build toolchain.
 
 | Symptom | Likely Cause | Fix |
 |---|---|---|
@@ -93,8 +87,6 @@ The project enables ccache in both `installer/CMakeLists.txt` and `shell/CMakeLi
 - The cache directory (`~/.cache/ccache`) may be too small — increase it: `ccache -M 5G`
 - Debug builds (`-DCMAKE_BUILD_TYPE=Debug`) are much slower; the installer uses `Release`
 
----
-
 ## 2. Dependency & Package Issues
 
 ### 2.1 Arch Linux / yay Failures
@@ -146,8 +138,6 @@ $XDG_CACHE_HOME/caelestia-kde/failed_packages.txt
 ```
 
 The installer does **not** abort on package failure — it logs and continues. Check this file after installation if something doesn't work.
-
----
 
 ## 3. Runtime Issues — Shell
 
@@ -336,8 +326,6 @@ System Settings.
 Applying once when the wallpaper or theme changes is expected and does not
 trigger any of this.
 
----
-
 ### 3.8 Workspace Tracker Effect Stops Loading After a KDE Update
 
 The workspace pills show the focused screen's desktop on every screen, swiping
@@ -362,8 +350,6 @@ qdbus6 org.kde.KWin /Caelestia/Workspaces org.freedesktop.DBus.Introspectable.In
 The last command prints the effect's interface once it is loaded again, and
 fails while it is not. `bash shell/scripts/check-workspace-tracker.sh` answers the
 same question with an exit status (3 means enabled but not loaded).
-
----
 
 ### 3.9 Copy/Paste Crashes Krita or Inkscape (cliphist.service)
 
@@ -705,8 +691,6 @@ The list is that application's own history in that application's own order: when
 was opened by two applications, each records its own visit, and the jump list keeps the visit
 that application made rather than dropping the file because something else opened it later.
 
----
-
 ### 3.21 A Timer Did Not Fire, or Disappeared
 
 Timers are countdowns, and they live in the utilities drawer (*the card titled Timers*),
@@ -753,7 +737,6 @@ shell itself does. Currency rates come from the sources `qalc` knows about and g
 when it cannot reach them; `qalc -e "20 usd in eur"` prints the rate it used when asked to
 show its work.
 
-
 ## 4. Runtime Issues — Lock Screen
 
 ### 4.1 Lock Screen Greeter Diagnostic
@@ -779,8 +762,6 @@ ls -la ~/.local/share/plasma/shells/caelestia.desktop/contents/lockscreen/LockSc
 | Lock screen fails or crashes | Greeter files missing or corrupted in `~/.local/share/plasma/shells/`. | Re-deploy via `BUNDLE_DIR=. ./scripts/08-build-shell.sh` or `cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/`. |
 | Lock screen shows wallpaper error | Legacy `PlasmaApplicationWallpaper` left in `kscreenlockerrc`. | Reset WallpaperPlugin: `kwriteconfig6 --file kscreenlockerrc --group Greeter --key WallpaperPlugin "org.kde.image"`. |
 | Profile picture missing | `~/.face` does not exist and no system user avatar set. | Place your avatar image at `~/.face` or configure an avatar in KDE System Settings → Users. |
-
----
 
 ## 5. Configuration Issues
 
@@ -971,8 +952,6 @@ sudo apt install iw    # Debian / Ubuntu
 
 A connection whose link quality is genuinely poor still shows fewer bars, and so does a
 roaming client sitting on a weak radio of a strong network.
-
----
 
 ## 7. KDE & Plasma Specific Issues
 
@@ -1280,31 +1259,29 @@ unanswered is dropped after two minutes.
 
 ### 7.9 Plasma Audio Visualizer
 
-The desktop audio visualizer relies on the `plasma-audio-visualizer` package and widget for KDE Plasma.
+The desktop visualizer is a Plasma widget from `plasma-audio-visualizer`, not a shell module. Install it first; on Arch it is in the AUR (`yay -S plasma-audio-visualizer`).
 
-**Common issues and requirements:**
-- **Package installation:** Ensure `plasma-audio-visualizer` is installed on your system (e.g. from the AUR on Arch Linux: `yay -S plasma-audio-visualizer`).
-- **User Defined:** The shell supports presets for the visualizer like Double Reverse, Single, etc. If the visualizer widget is edited manually, the shell saves that configuration as User Defined and reapplies whenever required. Sometimes during first installation, visualizer may be removed after being applied by the installer. So, shell changes visualizer preset to User Defined which is no visualizer at all. To fix this, change visualizer preset to others like Double Reverse.
-- **Internal wallpaper conflict:** The visualizer is a plasma widget which renders on plasma desktop rather then quickshell desktop. If quickshell wallpaper layer is enabled due to some reason (`wallpapeEnabled: true`), the visualizer will not be displayed at all. Shell disables wallpaper layer automatically by detecting `skwd-wall` presence. Hence, user must ensure that skwd-wall is installed and is in path.
-- **Widget configuration:** If you wish to use the visualizer standalone, disable it in shell settings and add it as a widget from plasma widgets. If you wish to edit shell's preset for visualizer, choose a preset like Single or Double Reverse, then in Plasma Edit Mode (right-click desktop -> *Edit Plasma Widgets*), edit the visualizer to your liking.
+The shell drives the widget through presets such as Double Reverse and Single. Editing the widget in Plasma saves the result as *User Defined*, which the shell reapplies. A fresh install can leave the preset on *User Defined* with nothing shown; pick another preset to bring it back.
 
+The widget draws on the Plasma desktop. When the Quickshell wallpaper layer is on (`background.wallpaperEnabled`), the widget is hidden behind it, so the layer only works when `skwd-wall` is installed and on `PATH`. The shell turns the layer off when it detects `skwd-wall`.
+
+To use the visualizer without the shell's presets, turn it off in the shell and add the widget from Plasma's widget picker. To keep the shell's preset but change the look, pick Single or Double Reverse here, then edit the widget in Plasma's edit mode (right-click the desktop, *Edit Plasma Widgets*).
 
 ### 7.10 skwd-wall
 
-`skwd-wall-v2` provides dynamic wallpaper rendering and management in Caelestia KDE.
+`skwd-wall-v2` renders animated and video wallpapers. Without it, the shell falls back to its own wallpaper engine and the skwd-specific settings (tags, filters, effect pipelines) are unavailable. Installation is automatic; if that fails, see [liixini/skwd-wall](https://github.com/liixini/skwd-wall).
 
-**Common issues and requirements:**
-- **Installation:** When `skwd-wall` is not installed, Caelestia falls back to its internal wallpaper engine, and skwd-specific settings (such as tags, filters, and effect pipelines) are disabled. You may need to restart your pc more than once for the shell to recognize the skwd-wall after first installation. See [liixini/skwd-wall](https://github.com/liixini/skwd-wall) if there was a problem with automatic installation.
-- **Daemon status:** The shell relies on skwd-walld.service isActive status to recognize it. Check if the skwd-walld daemon is active:
-  ```bash
-  systemctl --user status skwd-walld
-  ```
-- **Manual launch:**
-  ```bash
-  skwd-wall-v2
-  ```
+The shell treats the engine as present when the `skwd-walld` user service is active:
 
----
+```bash
+systemctl --user status skwd-walld
+```
+
+The service can take more than one restart to register after the first install. To run the renderer by hand:
+
+```bash
+skwd-wall-v2
+```
 
 ## 8. Post-Install Issues
 
@@ -1414,8 +1391,6 @@ stale `main`, or a checkout carrying commits of its own builds locally, because 
 replace that tree with the release's. `main` that has moved on since its last release cannot be
 told apart from that release, so it is installed as the release its `version.env` names.
 
----
-
 ## 9. Uninstall Issues
 
 ### 9.1 Uninstalling from the Shell
@@ -1490,8 +1465,6 @@ user's own:
 - `~/.config/caelestia-update/` and `~/.cache/caelestia-update-repo` - the updater's
   checkout and cache. Remove them yourself with the command in [10.1](#101-fixing-caelestia-updater-recommended).
 
----
-
 ## 10. Update Issues
 
 ### 10.1 Fixing caelestia updater (Recommended)
@@ -1516,8 +1489,6 @@ curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/insta
 ```
 
 - If it gives an error due to already present `~/caelestia-kde` directory in your pc, then remove that directory first and then run the above command. **Make sure to copy the `backups/` folder somewhere and then put it back here after installation completes.**
-
----
 
 ## 11. Diagnostic Commands Reference
 
@@ -1581,8 +1552,6 @@ update-desktop-database ~/.local/share/applications/
 # Restart Plasma shell (affects current session)
 systemctl --user restart plasma-plasmashell
 ```
-
----
 
 ## Quick Reference: Common Fixes
 

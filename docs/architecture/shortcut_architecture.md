@@ -1,10 +1,8 @@
 # Shortcut system architecture
 
-This document provides a simplified overview of how the Caelestia shortcut system works, from the backend C++ components to the QML frontend.
+How a key sequence reaches a Caelestia action, and what happens when KDE already owns the key.
 
----
-
-## 1. High-Level Overview
+## Overview
 
 ```text
 [ QML UI (Shortcuts.qml, Nexus) ]
@@ -14,71 +12,42 @@ This document provides a simplified overview of how the Caelestia shortcut syste
               │ registers keys & handles conflicts
               ▼
 [ GlobalShortcutDispatcher ]  <──  [ KeybindsModel ]
-  (Tracks stolen keys)             (Loads user settings)
+  (tracks stolen keys)             (loads user settings)
 ```
 
-- **`GlobalShortcut`**: Registers a single shortcut.
-- **`GlobalShortcutDispatcher`**: A central hub that tracks shortcut collisions.
-- **`KeybindsModel`**: Manages user-configured overrides and default bindings.
+- `GlobalShortcut` registers one shortcut.
+- `GlobalShortcutDispatcher` owns the collision index.
+- `KeybindsModel` loads defaults, applies user overrides, and feeds the Nexus list.
 
----
+## GlobalShortcut
 
-## 2. Core Components
+Binds a key sequence such as `Meta+P` to an action through KDE's `kglobalaccel`.
 
-### `GlobalShortcut`
+When another KDE app owns the sequence (Spectacle and `Print`, for example), Caelestia takes it over temporarily. Changing or removing the Caelestia shortcut gives the sequence back to the app that owned it.
 
-This handles binding a hotkey (like `Meta+P`) to an action. It uses KDE's `kglobalaccel` under the hood.
+## GlobalShortcutDispatcher
 
-**Key Features:**
-- **Key Conflict Resolution:** If you try to use a shortcut that another KDE app is already using (like Spectacle using `Print`), Caelestia will temporarily "steal" it.
-- **Smart Restoration:** If you change or remove a Caelestia shortcut, any stolen shortcuts are automatically given back to their original KDE apps.
+A singleton coordinator. It tracks which keys are currently taken from other apps, exposes that state to the UI, and writes the recovery record before it takes a key.
 
-### `GlobalShortcutDispatcher`
+## KeybindsModel
 
-A singleton that acts as the central coordinator.
-- **Collision Index:** It keeps track of which keys are currently "stolen" from other apps.
-- This allows the UI to easily show a warning (like a red dot) if a shortcut conflicts with another app.
+Loads defaults from `keybindsdefaults.hpp`, applies overrides from `${XDG_CONFIG_HOME:-~/.config}/caelestia/keybinds.json`, and updates the UI when the set changes.
 
-### `KeybindsModel`
+## Crash recovery
 
-Manages saving and loading your shortcut preferences.
-1. Loads defaults from `keybindsdefaults.hpp`.
-2. Applies user customizations from `${XDG_CONFIG_HOME:-~/.config}/caelestia/keybinds.json`.
-3. Communicates with the UI to update the list of active shortcuts.
+A stolen key would otherwise stay stolen if the shell crashed. Every takeover is recorded in `${XDG_CONFIG_HOME:-~/.config}/caelestia/stolen-shortcuts.json` before it happens. A normal exit restores the keys and deletes the file; on the next start, a file left behind is replayed and removed.
 
----
+## Nexus manager
 
-## 3. Crash Recovery (Safety First)
+The Shortcuts page groups shortcuts by category: Shell, Applications, Workspaces, Screenshot & Recording, and Window Tiling. A conflict shows a red dot and names the app whose key was taken. A shortcut can be recaptured or reset to its default.
 
-If the shell crashes or is force-killed, we don't want your KDE shortcuts to be permanently broken because we stole them and never gave them back.
-
-**How it works:**
-1. Whenever Caelestia steals a shortcut, it immediately writes this to a recovery file: `${XDG_CONFIG_HOME:-~/.config}/caelestia/stolen-shortcuts.json`.
-2. When the shell closes normally, it restores the shortcuts and deletes the file.
-3. If the shell crashes, the file remains on disk. On the **next startup**, Caelestia reads this file, restores all the stolen shortcuts, and cleans up.
-
----
-
-## 4. User Interface (QML)
-
-### Defining Shortcuts (`Shortcuts.qml`)
-Shortcuts are defined using a `CustomShortcut` component. It automatically detects if you are running KDE (KWin) or Hyprland and uses the correct backend.
-
-### Nexus Shortcut Manager
-The Nexus settings panel is where users manage their shortcuts:
-- **Groups:** Organizes shortcuts into categories (Shell, Apps, etc.).
-- **Collision Blinker:** Shows a red warning dot if a key sequence conflicts with an existing KDE app. Hovering shows which app was overridden.
-- **Editing:** Users can capture new keystrokes or reset back to default settings.
-
----
-
-## 5. Important Files
+## Files
 
 | File | Purpose |
-|---|---|
-| `globalshortcut.hpp / .cpp` | Core logic for binding, stealing, and restoring shortcuts. |
-| `keybindsmodel.hpp / .cpp` | Manages user settings and feeds data to the UI. |
-| `keybindsdefaults.hpp` | The default key combinations. |
-| `Shortcuts.qml` | Where all shell shortcuts are declared. |
-| `keybinds.json` | Where user overrides are saved. |
-| `stolen-shortcuts.json` | Crash recovery file. |
+| --- | --- |
+| `globalshortcut.hpp` / `.cpp` | Binds, steals and restores shortcuts |
+| `keybindsmodel.hpp` / `.cpp` | User settings and the model behind the UI |
+| `keybindsdefaults.hpp` | Default key combinations |
+| `Shortcuts.qml` | Where the shell declares its shortcuts |
+| `keybinds.json` | User overrides |
+| `stolen-shortcuts.json` | Crash-recovery record |

@@ -89,9 +89,17 @@ install_cava_sdk() {
         rm -f "$archive"
         return 1
     elif [[ "$status" -eq 2 ]]; then
-        if ! is_own_release "$url"; then
-            warn "No published checksum for $url - unpacking without verification (SHA-256 $(file_sha256 "$archive"))."
+        if is_own_release "$url"; then
+            warn "Our cava release publishes no checksum for $url (SHA-256 $(file_sha256 "$archive"))."
+        else
+            warn "No published checksum for $url (SHA-256 $(file_sha256 "$archive"))."
         fi
+        if ! unverified_download_allowed; then
+            err "Refusing to unpack $url unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
+            rm -f "$archive"
+            return 1
+        fi
+        warn "Unpacking $url unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
     fi
 
     # The archive is unpacked as root and tar takes the mode and the owner from it, so
@@ -111,8 +119,8 @@ install_cava_sdk() {
         fi
     fi
 
-    local status=0
-    "${tar_cmd[@]}" 2>/dev/null || status=$?
+    local unpack_status=0
+    "${tar_cmd[@]}" 2>/dev/null || unpack_status=$?
     rm -f "$archive"
-    return "$status"
+    return "$unpack_status"
 }

@@ -4,7 +4,9 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QDBusError>
+#include <QFileInfo>
 #include <effect/effectwindow.h>
 #include <QDebug>
 #include <core/output.h>
@@ -13,6 +15,16 @@
 #include <QDir>
 
 namespace caelestia {
+
+namespace {
+
+/// The executable the shell runs as. This is what the check below matches on: the
+/// session bus itself offers every local process the same way in, so the name of the
+/// caller is the only thing separating the shell from anything else on the bus.
+constexpr char shellExecutable[] = "quickshell";
+constexpr char shellExecutableAlt[] = "qs";
+
+} // namespace
 
 WorkspaceTrackerEffect::WorkspaceTrackerEffect()
     : m_socket(new QLocalSocket(this))
@@ -61,8 +73,35 @@ KWin::LogicalOutput* WorkspaceTrackerEffect::findOutput(const QString& name)
     return nullptr;
 }
 
+bool WorkspaceTrackerEffect::callerIsShell()
+{
+    // A call made inside the compositor is KWin itself, which has no sender to check.
+    if (!calledFromDBus()) {
+        return true;
+    }
+
+    const QString service = message().service();
+    if (service.isEmpty()) {
+        return false;
+    }
+
+    const uint pid = connection().interface()->servicePid(service).value();
+    if (pid == 0) {
+        return false;
+    }
+
+    const QString executable = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
+    const QString name = executable.section(u'/', -1);
+    return name == QLatin1String(shellExecutable) || name == QLatin1String(shellExecutableAlt);
+}
+
 void WorkspaceTrackerEffect::SendToOutput(const QString& uuid, const QString& output)
 {
+    if (!callerIsShell()) {
+        qWarning() << "WorkspaceTracker: refusing SendToOutput from a caller that is not the shell";
+        return;
+    }
+
     KWin::LogicalOutput* target = findOutput(output);
     if (!target) {
         return;
@@ -84,6 +123,11 @@ void WorkspaceTrackerEffect::SendToOutput(const QString& uuid, const QString& ou
 
 void WorkspaceTrackerEffect::SetDesktop(const QString& output, int desktop)
 {
+    if (!callerIsShell()) {
+        qWarning() << "WorkspaceTracker: refusing SetDesktop from a caller that is not the shell";
+        return;
+    }
+
     if (desktop < 1) {
         return;
     }

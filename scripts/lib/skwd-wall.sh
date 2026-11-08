@@ -55,7 +55,7 @@ install_skwd_paper_plasma_source() {
         fi
         if cmake -B "$tmp_dir/build-sys" -S "$tmp_dir" -DCMAKE_INSTALL_PREFIX=/usr >/dev/null 2>&1 && \
            cmake --build "$tmp_dir/build-sys" >/dev/null 2>&1 && \
-           caelestia_sudo cmake --install "$tmp_dir/build-sys" >/dev/null 2>&1; then
+           install_staged_tree / cmake --install "$tmp_dir/build-sys"; then
             rm -rf "$tmp_dir"
             return 0
         fi
@@ -72,11 +72,11 @@ install_skwd_wall_source() {
     if [[ -d "$src_dir" ]] && command -v cargo >/dev/null 2>&1; then
         if cargo install --path "$src_dir" --bin skwd-wall 2>/dev/null || \
            cargo build --release --manifest-path "$src_dir/Cargo.toml" 2>/dev/null; then
-            # The build directory sits in a checkout the user can write, and
-            # `install` follows a symlink: only a file cargo really produced is
-            # promoted.
+            # The build directory sits in a checkout the user can write, and `install`
+            # follows a symlink: only a file cargo really produced is promoted, and it is
+            # read without following a link on the way.
             if regular_file "$src_dir/target/release/skwd-wall"; then
-                caelestia_sudo install -m 755 "$src_dir/target/release/skwd-wall" /usr/local/bin/skwd-wall-v2 2>/dev/null || {
+                privileged_copy_file "$src_dir/target/release/skwd-wall" /usr/local/bin/skwd-wall-v2 0755 2>/dev/null || {
                     mkdir -p "$HOME/.local/bin"
                     install -m 755 "$src_dir/target/release/skwd-wall" "$HOME/.local/bin/skwd-wall-v2"
                 }

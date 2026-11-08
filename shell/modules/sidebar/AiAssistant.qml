@@ -1094,6 +1094,20 @@ Item {
 
     property string currentActionText: "Thinking..."
 
+    // The tools that reach past the chat. Each one is model output acting on the user's
+    // machine, so it is asked about rather than run.
+    readonly property var consentTools: ({
+            "take_screenshot": true,
+            "read_webpage": true,
+            "open_app": true
+        })
+
+    /// The call waiting for an answer, and the notification asking for it. Both are
+    /// cleared together, so neither can outlive the other.
+    property var pendingToolConsent: null
+
+    property var consentPrompt: null
+
     // One entry per tool the model may call, keyed by the name it writes in the call.
     // This table is the dispatch: a name that is not here is answered rather than
     // guessed at, so there is no second list of "known tools" to keep in step.
@@ -1156,7 +1170,77 @@ Item {
             AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
             return;
         }
-        handler(args);
+
+        // Everything the model can do inside the chat needs no permission. These three
+        // reach outside it - the screen, the network, the user's applications - and the
+        // reason one of them is being asked for can itself be text a page chose.
+        if (root.consentTools[toolName] === undefined) {
+            handler(args);
+            return;
+        }
+
+        if (root.pendingToolConsent !== null) {
+            // One question at a time. A second call is a second thing to agree to before
+            // the first has an answer, which is how a chain slips past a single prompt.
+            AiToolCalls.recordResult("Tool: " + toolName
+                + "\nResult: the user is still deciding about another tool call; nothing was executed.\n\n");
+            return;
+        }
+
+        root.pendingToolConsent = {
+            "name": toolName,
+            "args": args,
+            "handler": handler
+        };
+
+        root.consentPrompt = Notifs.addShellNotification({
+            summary: qsTr("Assistant permission"),
+            body: root.consentBody(toolName, args),
+            appName: qsTr("Assistant"),
+            materialIcon: "shield_person",
+            actions: [
+                { identifier: "deny", text: qsTr("Don't allow"), invoke: () => root.denyPendingTool() },
+                { identifier: "allow", text: qsTr("Allow"), invoke: () => root.allowPendingTool() }
+            ]
+        });
+    }
+
+    /// What the user is being asked to allow, with the thing being named: a URL or an
+    /// application name is what tells them whether the request is the one they made.
+    function consentBody(toolName, args) {
+        switch (toolName) {
+        case "take_screenshot":
+            return qsTr("The assistant wants to capture your screen and send it to the model.");
+        case "read_webpage":
+            return qsTr("The assistant wants to fetch %1.").arg(String((args || {}).url || "(no address)"));
+        case "open_app":
+            return qsTr("The assistant wants to launch %1.").arg(String((args || {}).app_name || "(no application)"));
+        default:
+            return qsTr("The assistant wants to use %1.").arg(toolName);
+        }
+    }
+
+    function allowPendingTool(): void {
+        const pending = root.pendingToolConsent;
+        root.clearToolConsent();
+        if (pending)
+            pending.handler(pending.args);
+    }
+
+    function denyPendingTool(): void {
+        const pending = root.pendingToolConsent;
+        root.clearToolConsent();
+        if (pending)
+            AiToolCalls.recordResult("Tool: " + pending.name + "\nResult: the user declined; nothing was executed.\n\n");
+    }
+
+    function clearToolConsent(): void {
+        if (root.consentPrompt !== null) {
+            if (Notifs.list.includes(root.consentPrompt) && !root.consentPrompt.closed)
+                root.consentPrompt.close();
+            root.consentPrompt = null;
+        }
+        root.pendingToolConsent = null;
     }
 
     /// Starts a tool's command and counts it as outstanding. Counting where the

@@ -5,6 +5,23 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/toolchain.sh"
 
+# The cava release publishes no checksum for its archives, so unpacking one is a decision
+# the user makes through the documented opt-out. These tests make that decision the same
+# way a user would, and the tests that check the refusal do not.
+with_unverified_allowed() {
+    ( export CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1; "$@" )
+}
+
+# verify_download reads the published checksum with coreutils, and PATH holds only the stubs
+# in these tests, so the tools it needs are linked in beside them.
+add_coreutils() {
+    local stub="$1" tool resolved
+    for tool in mktemp sha256sum cut rm cat; do
+        resolved="$(command -v "$tool" 2>/dev/null)" || continue
+        ln -sf "$resolved" "$stub/$tool"
+    done
+}
+
 test_linguist_tools_available_when_lrelease_is_on_path() {
     local tmp stub
     tmp="$(new_tmpdir)"
@@ -127,7 +144,7 @@ test_install_cava_sdk_fetches_and_extracts_for_arch() {
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
-    with_path "$stub" "" install_cava_sdk arch
+    with_unverified_allowed with_path "$stub" "" install_cava_sdk arch
     status=$?
 
     assert_status 0 "$status" "installing the cava sdk for arch should succeed"
@@ -146,7 +163,7 @@ test_install_cava_sdk_fetches_for_aarch64() {
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
-    with_path "$stub" "" install_cava_sdk arch
+    with_unverified_allowed with_path "$stub" "" install_cava_sdk arch
     status=$?
 
     assert_status 0 "$status" "installing the cava sdk for aarch64 arch should succeed"
@@ -164,7 +181,7 @@ test_install_cava_sdk_maps_debian_to_ubuntu() {
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
-    with_path "$stub" "" install_cava_sdk debian
+    with_unverified_allowed with_path "$stub" "" install_cava_sdk debian
     status=$?
 
     assert_status 0 "$status" "installing the cava sdk for debian should succeed"
@@ -194,7 +211,7 @@ test_install_cava_sdk_extraction_ignores_the_archive_ownership() {
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\n' \"\$*\" >> '$log'
 \"\$@\""
 
-    with_path "$stub" "" install_cava_sdk arch
+    with_unverified_allowed with_path "$stub" "" install_cava_sdk arch
     status=$?
 
     assert_status 0 "$status" "installing the cava sdk should still succeed"
@@ -240,7 +257,7 @@ test_own_release_is_recognized() {
     fi
 }
 
-test_the_cava_sdk_download_does_not_warn_about_the_missing_checksum() {
+test_the_cava_sdk_download_is_refused_without_a_published_checksum() {
     local tmp stub log out status
     tmp="$(new_tmpdir)"
     stub="$tmp/bin"
@@ -248,16 +265,37 @@ test_the_cava_sdk_download_does_not_warn_about_the_missing_checksum() {
     stub_bin "$stub" uname "echo x86_64"
     recording_stub "$stub" curl "$log"
     recording_stub "$stub" tar "$log"
+    add_coreutils "$stub"
     stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\\n' \"\$*\" >> '$log'
 \"\$@\""
 
     out="$(with_path "$stub" "" install_cava_sdk arch 2>&1)"
     status=$?
 
-    assert_status 0 "$status" "installing the cava sdk should still succeed"
-    assert_not_contains "$out" "No published checksum" \
-        "our own release's missing checksum is expected and should not be reported"
-    assert_not_contains "$out" "WARN" "nothing should be warned about for our own cava release"
+    assert_status 1 "$status" "an archive nobody published a hash for must not be unpacked"
+    assert_contains "$out" "publishes no checksum" "the missing hash has to be reported"
+    assert_contains "$out" "CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1" "and the way to accept it named"
+    assert_eq "" "$(calls_to "$log" tar)" "nothing may be unpacked as root"
+}
+
+test_the_cava_sdk_download_unpacks_once_the_user_opts_in() {
+    local tmp stub log out status
+    tmp="$(new_tmpdir)"
+    stub="$tmp/bin"
+    log="$tmp/calls.log"
+    stub_bin "$stub" uname "echo x86_64"
+    recording_stub "$stub" curl "$log"
+    recording_stub "$stub" tar "$log"
+    add_coreutils "$stub"
+    stub_bin "$stub" caelestia_sudo "printf 'caelestia_sudo %s\\n' \"\$*\" >> '$log'
+\"\$@\""
+
+    out="$(with_unverified_allowed with_path "$stub" "" install_cava_sdk arch 2>&1)"
+    status=$?
+
+    assert_status 0 "$status" "the documented opt-out should let the install run"
+    assert_contains "$out" "CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1" "and say that it did"
+    assert_contains "$(calls_to "$log" tar)" "--exclude=bin" "tar must still be the thing unpacking it"
 }
 
 test_a_missing_checksum_is_still_warned_about_in_general() {

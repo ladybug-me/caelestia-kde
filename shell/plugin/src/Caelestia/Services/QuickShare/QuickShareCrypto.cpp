@@ -510,6 +510,25 @@ QByteArray QuickShareCrypto::openDeviceToDevice(const QByteArray& secureMessage)
     const QByteArray iv(parsed.header().iv().data(), static_cast<qsizetype>(parsed.header().iv().size()));
     const QByteArray ciphertext(parsed.body().data(), static_cast<qsizetype>(parsed.body().size()));
 
+    // The header is the peer's. AES-256-CBC reads exactly one block of IV, so a shorter
+    // one - which protobuf happily carries - would have OpenSSL read past the end of this
+    // allocation. Nothing here needs a second block either, so anything else is refused.
+    const int ivLength = EVP_CIPHER_iv_length(EVP_aes_256_cbc());
+    if (ivLength <= 0 || iv.size() != ivLength) {
+        qWarning() << u"QuickShareCrypto: refusing a frame whose IV is not "_s << ivLength << u" bytes"_s;
+        return {};
+    }
+    if (m_decodeKey.size() != EVP_CIPHER_key_length(EVP_aes_256_cbc())) {
+        qWarning() << u"QuickShareCrypto: no session key to open the frame with"_s;
+        return {};
+    }
+    // A ciphertext has to be a whole number of blocks, or the padding check below is being
+    // asked about a body that cannot have been produced by this cipher.
+    if (ciphertext.isEmpty() || ciphertext.size() % EVP_CIPHER_block_size(EVP_aes_256_cbc()) != 0) {
+        qWarning() << u"QuickShareCrypto: refusing a frame that is not a whole number of blocks"_s;
+        return {};
+    }
+
     EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
     if (!ctx)
         return {};

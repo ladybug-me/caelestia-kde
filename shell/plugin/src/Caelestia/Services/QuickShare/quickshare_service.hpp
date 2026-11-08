@@ -46,6 +46,10 @@ public:
     QVariantList transferHistory() const;
 
     Q_INVOKABLE void sendFile(const QString& deviceId, const QString& filePath);
+    /// Lets the send go ahead once the user has compared the code shown here with the one
+    /// the receiving device shows. Nothing leaves the machine before that.
+    Q_INVOKABLE void confirmOutgoingTransfer();
+    Q_INVOKABLE void cancelOutgoingTransfer();
     Q_INVOKABLE void acceptIncomingTransfer();
     Q_INVOKABLE void rejectIncomingTransfer();
     Q_INVOKABLE void clearHistory();
@@ -67,6 +71,10 @@ signals:
     // UI notifications
     void incomingTransferRequested(const QString& deviceName, const QString& fileName, qint64 fileSize);
     void incomingTransferPinReady(const QString& pinCode);
+    /// The code this side shows for a file it is about to send. The user compares it with
+    /// the receiving device before confirmOutgoingTransfer() lets the file go.
+    void outgoingTransferPinReady(
+        const QString& deviceId, const QString& deviceName, const QString& fileName, const QString& pinCode);
     void outgoingTransferProgress(const QString& deviceId, qint64 bytesSent, qint64 bytesTotal);
     /// The transfer this shell started with `deviceId` ended.
     void outgoingTransferFinished(const QString& deviceId, bool success);
@@ -99,6 +107,9 @@ private:
     /// The incoming request the shell can still answer. Every connection is owned by
     /// this object and tracked by the handlers that created it.
     QPointer<QuickShareConnection> m_pendingIncomingRequest;
+    /// The send waiting for the user to compare codes. A send is one at a time, so one
+    /// handle is all it takes.
+    QPointer<QuickShareConnection> m_pendingOutgoingRequest;
 
     /// Live connections, so the listener can refuse more than maxConnections peers.
     int m_connectionCount = 0;

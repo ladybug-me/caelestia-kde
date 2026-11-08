@@ -2,6 +2,7 @@
 
 #include <effect/effect.h>
 #include <effect/effecthandler.h>
+#include <QDBusContext>
 #include <QLocalSocket>
 #include <QUuid>
 #include <QPointer>
@@ -21,7 +22,7 @@ struct DesktopReport {
     char output[64] = {};
 };
 
-class WorkspaceTrackerEffect : public KWin::Effect
+class WorkspaceTrackerEffect : public KWin::Effect, protected QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.caelestia.Workspaces")
@@ -50,6 +51,11 @@ private Q_SLOTS:
 private:
     void sendPayload(int desktop, float x, float y, KWin::LogicalOutput* output);
     void sendFullState();
+    /// Whether the D-Bus caller is the Caelestia shell. Moving a window to another
+    /// output, or switching desktops under the user, is the kind of misdirection a
+    /// hostile application wants; the session bus offers every local process the same
+    /// way in.
+    bool callerIsShell();
     static KWin::LogicalOutput* findOutput(const QString& name);
 
     QLocalSocket* m_socket;

@@ -156,6 +156,40 @@ except Exception:
 '
 }
 
+# 0 when the asset matches the checksum published beside it, 1 when it does not, 2 when the
+# release publishes none. Codeberg keeps no digest for its assets, so the third answer is
+# the expected one here: the caller decides what to say about it.
+verify_kwinscript() {
+    local url="$1" file="$2" sidecar expected
+    sidecar="$(mktemp)"
+    if ! curl -fsL --proto '=https' --tlsv1.2 -- "$url.sha256" -o "$sidecar" 2>/dev/null; then
+        rm -f "$sidecar"
+        return 2
+    fi
+    expected="$(cut -d' ' -f1 < "$sidecar")"
+    rm -f "$sidecar"
+    [[ -n "$expected" ]] || return 2
+    [[ "$expected" == "$(sha256sum "$file" | cut -d' ' -f1)" ]]
+}
+
+# Downloads the asset into "$2", refusing it when the published checksum disagrees. A
+# release with no checksum cannot be tied to the page it came from, so installing it is
+# said out loud rather than done quietly.
+download_kwinscript() {
+    local url="$1" dest="$2" status=0
+
+    curl -sL --proto '=https' --tlsv1.2 -- "$url" -o "$dest" || return 1
+    verify_kwinscript "$url" "$dest" || status=$?
+    if [[ "$status" -eq 1 ]]; then
+        echo "Error: checksum mismatch for $url - refusing to install it." >&2
+        return 1
+    fi
+    if [[ "$status" -eq 2 ]]; then
+        echo "Warning: no published checksum for $url - installing it unverified (SHA-256 $(sha256sum "$dest" | cut -d' ' -f1))." >&2
+    fi
+    return 0
+}
+
 do_install() {
     if ! command -v kpackagetool6 >/dev/null 2>&1; then
         echo "Error: kpackagetool6 is not available." >&2
@@ -178,7 +212,7 @@ do_install() {
     trap 'rm -rf "$tmpdir"' EXIT INT TERM
     local kwinscript="$tmpdir/krohnkite.kwinscript"
 
-    if curl -sL --proto '=https' --tlsv1.2 -- "$dl_url" -o "$kwinscript"; then
+    if download_kwinscript "$dl_url" "$kwinscript"; then
         if is_installed; then
             kpackagetool6 -t KWin/Script -u "$kwinscript" 2>/dev/null || {
                 kpackagetool6 -t KWin/Script -r krohnkite 2>/dev/null || true
@@ -195,7 +229,7 @@ do_install() {
         trap - EXIT INT TERM
         return 0
     else
-        notify "Installation Failed" "Krohnkite download failed. Please try again."
+        notify "Installation Failed" "Krohnkite could not be downloaded or verified. Please try again."
         rm -rf "$tmpdir"
         trap - EXIT INT TERM
         return 1
@@ -227,7 +261,7 @@ do_update() {
     trap 'rm -rf "$tmpdir"' EXIT INT TERM
     local kwinscript="$tmpdir/krohnkite.kwinscript"
 
-    if curl -sL --proto '=https' --tlsv1.2 -- "$dl_url" -o "$kwinscript"; then
+    if download_kwinscript "$dl_url" "$kwinscript"; then
         qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript "krohnkite" 2>/dev/null || true
 
         if is_installed; then
@@ -246,7 +280,7 @@ do_update() {
         trap - EXIT INT TERM
         return 0
     else
-        notify "Update Failed" "Krohnkite download failed. Please try again."
+        notify "Update Failed" "Krohnkite could not be downloaded or verified. Please try again."
         rm -rf "$tmpdir"
         trap - EXIT INT TERM
         return 1

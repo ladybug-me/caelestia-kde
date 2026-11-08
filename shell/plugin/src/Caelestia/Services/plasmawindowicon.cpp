@@ -11,6 +11,7 @@
 #include <QFile>
 #include <QIcon>
 #include <QLoggingCategory>
+#include <QSaveFile>
 #include <QSocketNotifier>
 #include <QStandardPaths>
 
@@ -159,8 +160,12 @@ void PlasmaWindowIcon::deliver(const QString& uuid, const QByteArray& payload) {
     const auto path = cacheRoot + QStringLiteral("/") + digest + QStringLiteral(".png");
 
     if (!QFile::exists(path)) {
-        QFile file(path);
-        if (!QDir().mkpath(cacheRoot) || !file.open(QIODevice::WriteOnly) || file.write(png) != png.size()) {
+        // The name is a digest anyone can compute, so a file already sitting there may be
+        // a link to somewhere else. QSaveFile writes beside it and renames over the name,
+        // which replaces the link instead of following it.
+        QDir().mkpath(cacheRoot);
+        QSaveFile file(path);
+        if (!file.open(QIODevice::WriteOnly) || file.write(png) != png.size() || !file.commit()) {
             qCWarning(logPlasmaWindowIcon) << "could not write icon cache for" << uuid << "to" << path;
             emit failed(uuid);
             return;

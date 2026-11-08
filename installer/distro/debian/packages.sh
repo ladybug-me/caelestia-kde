@@ -20,6 +20,8 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/plasma-audio-visualizer.sh"
 # shellcheck source=scripts/lib/fonts.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/fonts.sh"
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/install-fs.sh"
 
 darkly_deb_asset_url() {
     local release_json id ver needle url
@@ -51,6 +53,17 @@ darkly_deb_asset_url() {
     return 1
 }
 
+# gpu-screen-recorder records a monitor without a password prompt by giving its KMS server
+# a capability from a post-install script; that script runs unprivileged now, so the
+# capability is applied here, to the binary root just put in place.
+gsr_set_kms_capability() {
+    local binary="$1"
+    if ! caelestia_sudo setcap cap_sys_admin+ep "$binary" 2>/dev/null; then
+        warn "Could not grant $binary the capability that skips the password prompt."
+    fi
+    return 0
+}
+
 info "Installing Debian packages..."
 
 INSTALL_FISH="${INSTALL_FISH:-true}"
@@ -59,9 +72,10 @@ INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
-# gpu-screen-recorder has no apt package, so the fallback below clones upstream and
-# runs its ./install.sh as root. That is only acceptable against a pinned revision:
-# never point this at master. To update, list the upstream tags with
+# gpu-screen-recorder has no apt package, so the fallback below builds upstream at a
+# pinned revision. Never point this at master: the value is a release tag, and the build
+# is what the installer runs, so it has to be a tree this project looked at. To update,
+# list the upstream tags with
 #   git ls-remote --tags https://repo.dec05eba.com/gpu-screen-recorder
 # bump the ref, and test the build before shipping it.
 GPU_SCREEN_RECORDER_REF="6.1.3" # commit 396526a908f8f1b9cb826a9187a2c9150f44d94d
@@ -220,7 +234,7 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             if git clone --depth 1 https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
-                    caelestia_sudo make install 2>/dev/null || caelestia_sudo make install-bin
+                    install_staged_tree / make install || install_staged_tree / make install-bin
                 ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
             else
                 err "Failed to clone $pkg."
@@ -231,11 +245,14 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
         gpu-screen-recorder)
             tmpdir="$(mktemp -d)"
             caelestia_sudo apt-get install -y build-essential git ffmpeg meson libxi-dev libdrm-dev libavcodec-dev libavformat-dev libx11-dev libxcomposite-dev libxdamage-dev libxrender-dev libxrandr-dev libpulse-dev libva-dev libcap-dev libdbus-1-dev libpipewire-0.3-dev libavfilter-dev libvulkan-dev || true
-            info "Building gpu-screen-recorder $GPU_SCREEN_RECORDER_REF from repo.dec05eba.com (pinned ref; its ./install.sh runs as root)."
+            info "Building gpu-screen-recorder $GPU_SCREEN_RECORDER_REF from repo.dec05eba.com (pinned ref)."
             if git clone --depth 1 --branch "$GPU_SCREEN_RECORDER_REF" https://repo.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
-                    caelestia_sudo ./install.sh
+                    meson setup build --prefix=/usr --buildtype=release -Dsystemd=true -Dstrip=true -Dcapabilities=false &&
+                        ninja -C build &&
+                        install_staged_tree / meson install -C build &&
+                        gsr_set_kms_capability /usr/bin/gsr-kms-server
                 ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
             else
                 err "Failed to clone $pkg."
@@ -290,7 +307,10 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
                     (
                         cd "$tmpdir" || exit 1
                         cargo build --release
-                        caelestia_sudo cp target/release/wl-clip-persist /usr/local/bin/
+                        # The target directory is the clone's own, and `cp` carries a
+                        # symlink to wherever it points; only a file cargo wrote is
+                        # promoted.
+                        privileged_copy_file target/release/wl-clip-persist /usr/local/bin/wl-clip-persist 0755
                     ) || { err "cargo build $pkg failed."; FAILED_PKGS+=("$pkg"); }
                 else
                     err "Failed to clone $pkg."
@@ -315,9 +335,12 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
                 fi
             fi
             if command -v cargo-binstall >/dev/null 2>&1; then
+                # cargo-binstall lives in this user's ~/.cargo/bin, and it downloads and
+                # unpacks the archive: elevating it would run a file this user can rewrite
+                # as root, so a failed install is reported instead of escalated.
                 cargo-binstall -y satty || {
-                    info "Normal cargo-binstall failed. Trying with sudo..."
-                    caelestia_sudo "$(command -v cargo-binstall)" -y satty || { err "sudo cargo-binstall $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                    err "cargo-binstall could not install $pkg; install it yourself with 'cargo-binstall -y $pkg' and re-run the installer."
+                    FAILED_PKGS+=("$pkg")
                 }
             else
                 err "cargo-binstall not available to install $pkg."
@@ -373,23 +396,38 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
 info "Downloading and installing required custom fonts (parallel)..."
 mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+# The two archives go into a directory only this user can name: a predictable name in /tmp
+# is a file someone else can leave behind, and the unzip would take whatever is there.
+font_tmp="$(mktemp -d)"
 
 curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
-curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "/tmp/CascadiaCode.zip" &
+curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "$font_tmp/CascadiaCode.zip" &
 _pid_cc=$!
 
-curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "/tmp/JetBrainsMono.zip" &
+curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "$font_tmp/JetBrainsMono.zip" &
 _pid_jb=$!
 
 curl -sL "https://github.com/google/fonts/raw/main/ofl/rubik/Rubik-VariableFont_wght.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Rubik-VariableFont_wght.ttf" &
 _pid_ru=$!
 
-wait $_pid_ms $_pid_cc $_pid_jb $_pid_ru
+_cc_status=0
+_jb_status=0
+wait "$_pid_ms" || true
+wait "$_pid_cc" || _cc_status=$?
+wait "$_pid_jb" || _jb_status=$?
+wait "$_pid_ru" || true
 
-unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; FAILED_PKGS+=("CascadiaCode font"); }
-unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; FAILED_PKGS+=("JetBrains Mono Nerd Font"); }
+if [[ "$_cc_status" -ne 0 ]] || ! unzip -qo "$font_tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
+    err "Failed to download or extract CascadiaCode font."
+    FAILED_PKGS+=("CascadiaCode font")
+fi
+if [[ "$_jb_status" -ne 0 ]] || ! unzip -qo "$font_tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
+    err "Failed to download or extract JetBrains Mono Nerd Font."
+    FAILED_PKGS+=("JetBrains Mono Nerd Font")
+fi
+rm -rf "$font_tmp"
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Rubik-VariableFont_wght.ttf" ]] || { err "Failed to download Rubik font."; FAILED_PKGS+=("Rubik font"); }
 
@@ -440,11 +478,19 @@ if command -v sassc >/dev/null 2>&1 && ! command -v sass >/dev/null 2>&1; then
 fi
 
 if ! command -v qdbus6 >/dev/null 2>&1; then
-    if command -v qdbus-qt6 >/dev/null 2>&1; then
-        caelestia_sudo ln -sf "$(command -v qdbus-qt6)" /usr/local/bin/qdbus6 || true
-    elif [[ -x "/usr/lib/qt6/bin/qdbus" ]]; then
-        caelestia_sudo ln -sf /usr/lib/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
-    fi
+    # PATH also holds this user's own directories, and /usr/local/bin/qdbus6 outlives the
+    # file it points at: only a path root owns is linked.
+    _qdbus_qt6="$(command -v qdbus-qt6 2>/dev/null || true)"
+    case "$_qdbus_qt6" in
+        /usr/bin/*|/usr/lib/*|/usr/lib64/*)
+            caelestia_sudo ln -sf "$_qdbus_qt6" /usr/local/bin/qdbus6 || true
+            ;;
+        *)
+            if [[ -x "/usr/lib/qt6/bin/qdbus" ]]; then
+                caelestia_sudo ln -sf /usr/lib/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
+            fi
+            ;;
+    esac
 fi
 
 fi

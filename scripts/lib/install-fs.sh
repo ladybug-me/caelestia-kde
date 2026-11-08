@@ -8,6 +8,138 @@ regular_file() {
     [[ -f "$1" && ! -L "$1" ]]
 }
 
+# Whether a tree can be copied as root unchanged: a symlink anywhere inside it is either
+# followed - which puts whatever it points at into a world-readable place - or left as a
+# link root later opens. Neither is content the tree actually carried.
+tree_has_no_symlinks() {
+    local dir="$1" found
+
+    [[ -d "$dir" && ! -L "$dir" ]] || return 1
+    found="$(find "$dir" -type l -print -quit 2>/dev/null)"
+    [[ -z "$found" ]]
+}
+
+# Copies "$1" to "$2" as root with mode "$3". The source is opened with O_NOFOLLOW, so a
+# link planted between a check and the copy is refused by the kernel rather than followed;
+# that is what a check-then-copy cannot promise.
+privileged_copy_file() {
+    local src="$1" dest="$2" mode="${3:-0644}"
+
+    regular_file "$src" || return 1
+    caelestia_sudo dd if="$src" of="$dest" iflag=nofollow status=none 2>/dev/null || return 1
+    caelestia_sudo chmod "$mode" "$dest" || return 1
+}
+
+# Installs the tree at "$1" under "$2", which must already exist, as root. The tree comes
+# from a build this user ran, so root copies what it holds rather than executing anything
+# from it, and the only link allowed across is one staying in its own directory - a
+# versioned library or a command alias - which root recreates from the same relative
+# target. One privileged step, because a prompt per file is not something a build can ask
+# for.
+privileged_copy_tree() {
+    local src="${1%/}" dest="$2" escaping status=0
+
+    [[ -d "$src" && ! -L "$src" && -d "$dest" ]] || return 1
+
+    # Two things a build has no business staging: a link that leaves its own directory,
+    # which would let the build pick a path root later opens, and a setuid or setgid file,
+    # which would arrive as root's. Both fail here, before the prompt; the privileged side
+    # checks the first again and drops the bits of the second.
+    escaping="$(find "$src" -type l \( -lname '*/*' -o -lname . -o -lname .. \) -print -quit 2>/dev/null || true)"
+    [[ -z "$escaping" ]] || return 1
+    escaping="$(find "$src" -type f \( -perm -4000 -o -perm -2000 \) -print -quit 2>/dev/null || true)"
+    [[ -z "$escaping" ]] || return 1
+
+    caelestia_sudo bash -s -- "$src" "$dest" << 'EOF' || status=$?
+src="$1"
+dest="${2%/}"
+status=0
+copied=0
+
+while IFS= read -r -d "" path; do
+    rel="${path#"$src"/}"
+    if ! mkdir -p -- "$dest/$(dirname -- "$rel")"; then
+        status=1
+        continue
+    fi
+
+    if [[ -L "$path" ]]; then
+        target="$(readlink -- "$path" 2>/dev/null)" || { status=1; continue; }
+        case "$target" in
+            ""|*/*|.|..) status=1; continue ;;
+        esac
+        ln -sfn -- "$target" "$dest/$rel" || status=1
+        continue
+    fi
+
+    if [[ ! -f "$path" ]]; then
+        status=1
+        continue
+    fi
+    if ! raw="$(stat -c %a -- "$path" 2>/dev/null)"; then
+        status=1
+        continue
+    fi
+    # The tree is this user's, so a file they made setuid would arrive as root's setuid
+    # binary; only the read, write and execute bits are carried across.
+    printf -v mode '%o' "$(( 8#$raw & 0777 ))"
+    if ! dd if="$path" of="$dest/$rel" iflag=nofollow status=none 2>/dev/null; then
+        status=1
+        continue
+    fi
+    chmod "$mode" "$dest/$rel" || status=1
+    copied=$((copied + 1))
+done < <(find "$src" \( -type f -o -type l \) -print0 2>/dev/null)
+
+[[ "$copied" -gt 0 ]] || status=1
+exit "$status"
+EOF
+
+    return "$status"
+}
+
+# Installs what "$@" writes into "$1" as root. Build systems install by running scripts out
+# of a directory this user can write, so they only ever run unprivileged here: DESTDIR
+# points them at a prefix of ours, and the tree that lands there is what root copies.
+install_staged_tree() {
+    local dest="$1" stage status=0
+    shift
+
+    stage="$(mktemp -d)" || return 1
+    if ! DESTDIR="$stage" "$@" >/dev/null; then
+        rm -rf -- "$stage"
+        return 1
+    fi
+    privileged_copy_tree "$stage" "$dest" || status=$?
+    rm -rf -- "$stage"
+    return "$status"
+}
+
+# Where the helpers the shell is allowed to elevate live: a directory root owns, so that
+# a polkit prompt can only ever run a file nobody else can rewrite.
+privileged_helper_dir() {
+    printf '%s\n' /usr/lib/caelestia/scripts
+}
+
+# Installs "$1" there as root and prints the path. Copying next to the shell is not
+# enough: a source install keeps the shell in the user's home, and pkexec given a path
+# from there would run whatever this user had put behind it.
+install_privileged_helper() {
+    local src="$1" dest_dir name dest
+
+    regular_file "$src" || return 1
+    name="$(basename -- "$src")"
+    dest_dir="$(privileged_helper_dir)"
+    dest="$dest_dir/$name"
+
+    caelestia_sudo install -d -m 0755 -o root -g root "$dest_dir" || return 1
+    caelestia_sudo dd if="$src" of="$dest" iflag=nofollow status=none 2>/dev/null || return 1
+    caelestia_sudo chmod 0755 "$dest" || return 1
+    caelestia_sudo chown root:root "$dest" || return 1
+
+    printf '%s\n' "$dest"
+}
+
 atomic_replace_tree() {
     local src="$1" dest="$2" required="${3:-}"
 

@@ -21,6 +21,15 @@ sys.stdout.write(match.group(1))
 PYEOF
 }
 
+# A checkout as the probe expects to find one: the uninstaller plus the step scripts that
+# make it this project rather than any directory someone pointed the record at.
+make_checkout() {
+    local dir="$1"
+    mkdir -p "$dir/scripts"
+    printf '#!/usr/bin/env bash\n' > "$dir/uninstall.sh"
+    printf '#!/usr/bin/env bash\n' > "$dir/scripts/setup.sh"
+}
+
 test_the_service_searches_the_same_checkout_caelestia_uses() {
     local service
     service="$(cat "$SERVICE")"
@@ -96,15 +105,13 @@ test_the_probe_finds_a_script_and_nothing_else() {
     tmp="$(new_tmpdir)"
     mkdir -p "$tmp/home" "$tmp/config"
 
-    mkdir -p "$tmp/checkout"
-    printf '#!/usr/bin/env bash\n' > "$tmp/checkout/uninstall.sh"
+    make_checkout "$tmp/checkout"
     body="$(sh -c "$command" -- "$tmp/home" "$tmp/checkout" "$tmp/config" pacman dnf apt-get 2>&1)"
     assert_contains "$body" "SCRIPT $tmp/checkout/uninstall.sh" \
         "an explicit checkout should be reported"
     assert_not_contains "$body" "PACKAGE" "no manager should be reported when a script was found"
 
-    mkdir -p "$tmp/home/caelestia-kde"
-    printf '#!/usr/bin/env bash\n' > "$tmp/home/caelestia-kde/uninstall.sh"
+    make_checkout "$tmp/home/caelestia-kde"
     body="$(sh -c "$command" -- "$tmp/home" "" "$tmp/config" pacman dnf apt-get 2>&1)"
     assert_contains "$body" "SCRIPT $tmp/home/caelestia-kde/uninstall.sh" \
         "the default checkout should be reported"
@@ -126,7 +133,7 @@ test_the_probe_finds_a_checkout_the_install_recorded() {
 
     tmp="$(new_tmpdir)"
     mkdir -p "$tmp/home" "$tmp/config" "$tmp/cloned/caelestia-kwin"
-    printf '#!/usr/bin/env bash\n' > "$tmp/cloned/caelestia-kwin/uninstall.sh"
+    make_checkout "$tmp/cloned/caelestia-kwin"
     printf '%s\n' "$tmp/cloned/caelestia-kwin" > "$tmp/config/.checkout"
 
     body="$(sh -c "$command" -- "$tmp/home" "" "$tmp/config" pacman dnf apt-get 2>&1)"
@@ -146,14 +153,49 @@ test_the_probe_prefers_the_checkout_that_holds_the_backups() {
     }
 
     tmp="$(new_tmpdir)"
-    mkdir -p "$tmp/home/caelestia-kde" "$tmp/config" "$tmp/cloned"
-    printf '#!/usr/bin/env bash\n' > "$tmp/home/caelestia-kde/uninstall.sh"
-    printf '#!/usr/bin/env bash\n' > "$tmp/cloned/uninstall.sh"
+    mkdir -p "$tmp/home/caelestia-kde" "$tmp/config"
+    make_checkout "$tmp/home/caelestia-kde"
+    make_checkout "$tmp/cloned"
     printf '%s\n' "$tmp/cloned" > "$tmp/config/.checkout"
 
     body="$(sh -c "$command" -- "$tmp/home" "" "$tmp/config" pacman dnf apt-get 2>&1)"
     assert_contains "$body" "SCRIPT $tmp/home/caelestia-kde/uninstall.sh" \
         "~/caelestia-kde should win, because the uninstaller restores from its own backups/"
+}
+
+test_the_probe_ignores_a_directory_that_is_not_this_project() {
+    local command tmp body
+    command="$(extract_probe_command)" || {
+        fail "the probe command could not be read out of the service"
+        return 0
+    }
+
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/home" "$tmp/config" "$tmp/stray"
+    printf '#!/usr/bin/env bash\n' > "$tmp/stray/uninstall.sh"
+    printf '%s\n' "$tmp/stray" > "$tmp/config/.checkout"
+
+    body="$(sh -c "$command" -- "$tmp/home" "" "$tmp/config" pacman dnf apt-get 2>&1)"
+    assert_contains "$body" "UNKNOWN" \
+        "an uninstall.sh in a directory that is not this project is not something to run as root"
+}
+
+test_the_probe_ignores_a_linked_uninstaller() {
+    local command tmp body
+    command="$(extract_probe_command)" || {
+        fail "the probe command could not be read out of the service"
+        return 0
+    }
+
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/home" "$tmp/config" "$tmp/linked/scripts"
+    printf '#!/usr/bin/env bash\n' > "$tmp/linked/scripts/setup.sh"
+    ln -s /bin/true "$tmp/linked/uninstall.sh"
+    printf '%s\n' "$tmp/linked" > "$tmp/config/.checkout"
+
+    body="$(sh -c "$command" -- "$tmp/home" "" "$tmp/config" pacman dnf apt-get 2>&1)"
+    assert_contains "$body" "UNKNOWN" \
+        "a link there would run whatever it points at, which is the whole problem"
 }
 
 run_tests

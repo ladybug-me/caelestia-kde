@@ -1211,18 +1211,27 @@ which needs administrator rights on every start.
 them to the shell, because a package must not enable a system daemon or open a port
 behind the user's back. There, the first time Quick Share is switched on the shell
 checks the system through
-`<qmlconfdir>/scripts/quickshare_setup.sh --status`, and if something is missing asks
-through `pkexec` to put it right. The same helper is behind **Quick Share setup** on
-the Quick Share settings page (Nexus → Services → Quick Share), which is the way back
-if the check was declined, if the firewall changed later, or if the report reads
+`/usr/lib/caelestia/scripts/quickshare_setup.sh --status`, and if something is missing
+asks through `pkexec` to put it right. The same helper is behind **Quick Share setup**
+on the Quick Share settings page (Nexus → Services → Quick Share), which is the way
+back if the check was declined, if the firewall changed later, or if the report reads
 `SETUP=unknown` because the rule set cannot be read without root. The row says what it
 knows: where the report cannot see the port, it reports that the port could not be
 checked again rather than claiming a success it cannot confirm.
 
+That path is not the copy that ships with the shell. A source install keeps the shell
+in the user's home, and `pkexec` given a file the user can rewrite would run the
+rewrite as root, so `scripts/08-build-shell.sh` installs the two helpers it elevates
+(`quickshare_setup.sh` and `ollama_setup.sh`) into `/usr/lib/caelestia/scripts/` as
+root's own. The shell only ever elevates a copy root owns and nobody else can write,
+and says the helper is missing — with a reinstall as the remedy — when there is none.
+An existing checkout that has not been reinstalled since this changed reads the same
+way: run `update.sh`, or the installer, once.
+
 To see what the machine reports:
 
 ```bash
-bash ~/.config/quickshell/caelestia/scripts/quickshare_setup.sh --status --port 65000
+bash /usr/lib/caelestia/scripts/quickshare_setup.sh --status --port 65000
 ```
 
 The report is four lines. `AVAHI` is `active`, `inactive`, `absent` or `unknown`,
@@ -1234,7 +1243,7 @@ rule set needs root, and guessing there would raise a password prompt for nothin
 To do it by hand, run the helper as root:
 
 ```bash
-sudo bash ~/.config/quickshell/caelestia/scripts/quickshare_setup.sh --port 65000
+sudo /usr/lib/caelestia/scripts/quickshare_setup.sh --port 65000
 ```
 
 It is idempotent: it enables and starts `avahi-daemon.service` (falling back to
@@ -1258,6 +1267,14 @@ Port 65000 rather than anything lower because it sits above Linux's default ephe
 range (32768–60999), so the listener never collides with the local port of an outgoing
 connection. If it is taken by something else, Quick Share reports that it could not
 listen and stays off.
+
+Sending: both devices now show a four-digit code, and the sending side will not send
+until you confirm that the two match. The code is derived from the handshake itself, so
+a device that relayed the connection between two others ends up with a different code
+on each end, which is the point of comparing them. Decline the prompt if the code on
+the receiving device is not the one shown here — that is a device in the middle, not the
+one you picked. Nothing leaves the machine before you confirm, and a request left
+unanswered is dropped after two minutes.
 
 ---
 

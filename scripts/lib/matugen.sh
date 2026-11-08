@@ -12,6 +12,12 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/install-fs.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/download.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/download.sh" 2>/dev/null || true
+
+# The release the binary comes from, fixed here rather than read from `latest`: what root
+# installs is then this project's decision, and the asset names belong to the tag.
+MATUGEN_VERSION="4.2.0"
 
 matugen_present() {
     if ! command -v matugen >/dev/null 2>&1; then
@@ -47,7 +53,7 @@ cleanup_legacy_cargo_matugen() {
 }
 
 install_matugen_github() {
-    info "Fetching matugen binary from GitHub releases..."
+    info "Fetching matugen $MATUGEN_VERSION binary from GitHub releases..."
     local arch carch="x86_64"
     arch="$(uname -m 2>/dev/null || echo "x86_64")"
     case "$arch" in
@@ -57,15 +63,22 @@ install_matugen_github() {
         *)               carch="x86_64" ;;
     esac
 
-    local release_json="" dl_url="" tmpdir=""
-    release_json="$(curl -fsSL "https://api.github.com/repos/InioX/matugen/releases/latest" 2>/dev/null || true)"
-    if [[ -n "$release_json" ]]; then
-        dl_url="$(printf '%s' "$release_json" | grep -oE "https://[^\"]*${carch}[^\"]*\.tar\.gz" | head -n1)"
-    fi
+    local dl_url tmpdir="" archive checksum_status=0
+    dl_url="https://github.com/InioX/matugen/releases/download/v${MATUGEN_VERSION}/matugen-${MATUGEN_VERSION}-${carch}.tar.gz"
 
-    if [[ -n "$dl_url" ]]; then
-        tmpdir="$(mktemp -d)"
-        if curl -fsSL "$dl_url" | tar -xz -C "$tmpdir" 2>/dev/null; then
+    tmpdir="$(mktemp -d)"
+    archive="$tmpdir/matugen.tar.gz"
+    if fetch_asset "$dl_url" "$archive" 2>/dev/null; then
+        verify_download "$dl_url" "$archive" || checksum_status=$?
+        if [[ "$checksum_status" -eq 1 ]]; then
+            warn "Checksum mismatch for $dl_url - not installing it."
+            rm -rf "$tmpdir"
+            return 1
+        elif [[ "$checksum_status" -eq 2 ]]; then
+            warn "No published checksum for $dl_url (SHA-256 $(file_sha256 "$archive")) - installing it unverified."
+        fi
+
+        if tar -xzf "$archive" -C "$tmpdir" 2>/dev/null; then
             # A tarball can carry a symlink in place of the binary, and `install`
             # would follow it as root. Only a file the archive really holds is used.
             if regular_file "$tmpdir/matugen"; then
@@ -73,18 +86,17 @@ install_matugen_github() {
                     rm -rf "$tmpdir"
                     ok "matugen installed successfully to /usr/local/bin from GitHub release."
                     return 0
-                else
-                    mkdir -p "$HOME/.local/bin"
-                    install -m 755 "$tmpdir/matugen" "$HOME/.local/bin/matugen"
-                    rm -rf "$tmpdir"
-                    ok "matugen installed successfully to $HOME/.local/bin from GitHub release."
-                    return 0
                 fi
+                mkdir -p "$HOME/.local/bin"
+                install -m 755 "$tmpdir/matugen" "$HOME/.local/bin/matugen"
+                rm -rf "$tmpdir"
+                ok "matugen installed successfully to $HOME/.local/bin from GitHub release."
+                return 0
             fi
         fi
-        rm -rf "$tmpdir"
     fi
 
+    rm -rf "$tmpdir"
     return 1
 }
 

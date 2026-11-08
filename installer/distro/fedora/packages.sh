@@ -20,6 +20,8 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/plasma-audio-visualizer.sh"
 # shellcheck source=scripts/lib/fonts.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/fonts.sh"
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/install-fs.sh"
 
 darkly_rpm_asset_url() {
     local release_json ver url
@@ -33,6 +35,17 @@ darkly_rpm_asset_url() {
     url="$(printf '%s' "$release_json" | grep -oE 'https://[^"]*\.fc[0-9]+\.x86_64\.rpm' | head -n1)"
     [[ -n "$url" ]] && { echo "$url"; return 0; }
     return 1
+}
+
+# gpu-screen-recorder records a monitor without a password prompt by giving its KMS server
+# a capability from a post-install script; that script runs unprivileged now, so the
+# capability is applied here, to the binary root just put in place.
+gsr_set_kms_capability() {
+    local binary="$1"
+    if ! caelestia_sudo setcap cap_sys_admin+ep "$binary" 2>/dev/null; then
+        warn "Could not grant $binary the capability that skips the password prompt."
+    fi
+    return 0
 }
 
 info "Installing Fedora packages..."
@@ -263,7 +276,7 @@ for pkg in "${COPR_PKGS[@]}"; do
             if git clone --depth 1 https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
-                    caelestia_sudo make install
+                    install_staged_tree / make install
                 ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
             else
                 err "Failed to clone $pkg."
@@ -277,7 +290,9 @@ for pkg in "${COPR_PKGS[@]}"; do
             if git clone --depth 1 https://git.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
-                    meson setup build && ninja -C build && caelestia_sudo meson install -C build
+                    meson setup build -Dcapabilities=false && ninja -C build &&
+                        install_staged_tree / meson install -C build &&
+                        gsr_set_kms_capability /usr/local/bin/gsr-kms-server
                 ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
             else
                 err "Failed to clone $pkg."
@@ -304,20 +319,34 @@ if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
 info "Downloading and installing required custom fonts (parallel)..."
 mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+# The two archives go into a directory only this user can name: a predictable name in /tmp
+# is a file someone else can leave behind, and the unzip would take whatever is there.
+font_tmp="$(mktemp -d)"
 
 curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
-curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "/tmp/CascadiaCode.zip" &
+curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "$font_tmp/CascadiaCode.zip" &
 _pid_cc=$!
 
-curl -sL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "/tmp/JetBrainsMono.zip" &
+curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "$font_tmp/JetBrainsMono.zip" &
 _pid_jb=$!
 
-wait $_pid_ms $_pid_cc $_pid_jb
+_cc_status=0
+_jb_status=0
+wait "$_pid_ms" || true
+wait "$_pid_cc" || _cc_status=$?
+wait "$_pid_jb" || _jb_status=$?
 
-unzip -qo "/tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/CascadiaCode.zip" || { err "Failed to extract CascadiaCode font."; FAILED_PKGS+=("CascadiaCode font"); }
-unzip -qo "/tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null && rm -f "/tmp/JetBrainsMono.zip" || { err "Failed to extract JetBrains Mono Nerd Font."; FAILED_PKGS+=("JetBrains Mono Nerd Font"); }
+if [[ "$_cc_status" -ne 0 ]] || ! unzip -qo "$font_tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
+    err "Failed to download or extract CascadiaCode font."
+    FAILED_PKGS+=("CascadiaCode font")
+fi
+if [[ "$_jb_status" -ne 0 ]] || ! unzip -qo "$font_tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
+    err "Failed to download or extract JetBrains Mono Nerd Font."
+    FAILED_PKGS+=("JetBrains Mono Nerd Font")
+fi
+rm -rf "$font_tmp"
 [[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
 
 fc-cache -f
@@ -369,13 +398,21 @@ if command -v sassc >/dev/null 2>&1 && ! command -v sass >/dev/null 2>&1; then
 fi
 
 if ! command -v qdbus6 >/dev/null 2>&1; then
-    if command -v qdbus-qt6 >/dev/null 2>&1; then
-        caelestia_sudo ln -sf "$(command -v qdbus-qt6)" /usr/local/bin/qdbus6 || true
-    elif [[ -x "/usr/lib64/qt6/bin/qdbus" ]]; then
-        caelestia_sudo ln -sf /usr/lib64/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
-    elif [[ -x "/usr/lib/qt6/bin/qdbus" ]]; then
-        caelestia_sudo ln -sf /usr/lib/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
-    fi
+    # PATH also holds this user's own directories, and /usr/local/bin/qdbus6 outlives the
+    # file it points at: only a path root owns is linked.
+    _qdbus_qt6="$(command -v qdbus-qt6 2>/dev/null || true)"
+    case "$_qdbus_qt6" in
+        /usr/bin/*|/usr/lib/*|/usr/lib64/*)
+            caelestia_sudo ln -sf "$_qdbus_qt6" /usr/local/bin/qdbus6 || true
+            ;;
+        *)
+            if [[ -x "/usr/lib64/qt6/bin/qdbus" ]]; then
+                caelestia_sudo ln -sf /usr/lib64/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
+            elif [[ -x "/usr/lib/qt6/bin/qdbus" ]]; then
+                caelestia_sudo ln -sf /usr/lib/qt6/bin/qdbus /usr/local/bin/qdbus6 || true
+            fi
+            ;;
+    esac
 fi
 
 fi

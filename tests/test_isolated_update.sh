@@ -12,7 +12,8 @@ make_update_bundle() {
     mkdir -p "$root/scripts/lib" "$root/shell/scripts"
     cp "$REPO_ROOT/update.sh" "$root/update.sh"
     cp "$REPO_ROOT/scripts/lib/log.sh" "$REPO_ROOT/scripts/lib/privileges.sh" \
-        "$REPO_ROOT/scripts/lib/install-fs.sh" "$REPO_ROOT/scripts/lib/submodules.sh" \
+        "$REPO_ROOT/scripts/lib/install-fs.sh" "$REPO_ROOT/scripts/lib/runtime-dir.sh" \
+        "$REPO_ROOT/scripts/lib/submodules.sh" \
         "$root/scripts/lib/"
 
     for step in 03-deploy-configs.sh 08-build-shell.sh 09-system-tweaks.sh; do

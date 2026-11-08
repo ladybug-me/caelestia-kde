@@ -27,6 +27,12 @@ Singleton {
     property string promptFileName: ""
     property real promptFileSize: 0
     property string promptPin: ""
+    /// The send waiting for the user to compare codes, while one is pending.
+    property NotifData sendPrompt: null
+    readonly property bool sendPromptLive: root.sendPrompt !== null && Notifs.list.includes(root.sendPrompt) && !root.sendPrompt.closed
+    property string sendDeviceName: ""
+    property string sendFileName: ""
+    property string sendPin: ""
     /// Whether an incoming request is still waiting for an answer. It outlives the
     /// prompt: once the prompt is dismissed the notification loses the only Accept /
     /// Decline the user had, so this is what keeps the request answerable from the
@@ -77,6 +83,30 @@ Singleton {
         QuickShareService.acceptIncomingTransfer();
     }
 
+    function confirmOutgoingTransfer(): void {
+        QuickShareService.confirmOutgoingTransfer();
+        root.clearSendPrompt();
+    }
+
+    function cancelOutgoingTransfer(): void {
+        QuickShareService.cancelOutgoingTransfer();
+        root.clearSendPrompt();
+    }
+
+    function clearSendPrompt(): void {
+        if (root.sendPromptLive)
+            root.sendPrompt.close();
+        root.sendPrompt = null;
+        root.sendDeviceName = "";
+        root.sendFileName = "";
+        root.sendPin = "";
+    }
+
+    function sendPromptBody(): string {
+        return qsTr("Sending %1 to %2.\nCheck that %3 shows the same code before sending: %4")
+            .arg(root.sendFileName, root.sendDeviceName, root.sendDeviceName, root.sendPin);
+    }
+
     function rejectIncomingTransfer(): void {
         root.pendingIncoming = false;
         QuickShareService.rejectIncomingTransfer();
@@ -94,8 +124,10 @@ Singleton {
 
     function promptBody(): string {
         let body = qsTr("%1 wants to send you %2 (%3)").arg(root.promptDeviceName).arg(root.promptFileName).arg(Units.formatBytes(root.promptFileSize));
+        // The code is the only thing that says the sender is the device that was picked.
+        // It is worth nothing unless the person on this end is told to compare it.
         if (root.promptPin)
-            body += qsTr("\nPIN: %1").arg(root.promptPin);
+            body += qsTr("\nCheck that %1 shows this code before accepting: %2").arg(root.promptDeviceName, root.promptPin);
         return body;
     }
 
@@ -140,7 +172,12 @@ Singleton {
 
     Connections {
         function onIncomingTransferRequested(deviceName: string, fileName: string, fileSize: real): void {
+            // The code is derived during the handshake, so it may already be here by the
+            // time the request is; clearing the prompt must not take it with it.
+            const code = root.promptPin;
+
             root.clearPrompt();
+            root.promptPin = code;
             root.pendingIncoming = true;
             root.promptDeviceName = deviceName;
             root.promptFileName = fileName;
@@ -163,6 +200,31 @@ Singleton {
             root.promptPin = pinCode;
             if (root.promptLive)
                 root.prompt.body = root.promptBody();
+        }
+
+        // The peer agreed to take the file, but the code is the only thing that says the
+        // peer is the device the user picked. A relayed handshake gives each end a
+        // different code, so a user who compares them catches it here.
+        function onOutgoingTransferPinReady(deviceId: string, deviceName: string, fileName: string, pinCode: string): void {
+            root.clearSendPrompt();
+            root.sendDeviceName = deviceName;
+            root.sendFileName = fileName;
+            root.sendPin = pinCode;
+            root.sendPrompt = Notifs.addShellNotification({
+                summary: qsTr("Confirm the code"),
+                body: root.sendPromptBody(),
+                appName: qsTr("Quick Share"),
+                materialIcon: "near_me",
+                actions: [
+                    { identifier: "cancel", text: qsTr("Cancel"), invoke: () => root.cancelOutgoingTransfer() },
+                    { identifier: "send", text: qsTr("Send"), invoke: () => root.confirmOutgoingTransfer() }
+                ]
+            });
+        }
+
+        function onOutgoingTransferFinished(deviceId: string, success: bool): void {
+            // The prompt has nothing left to answer once the transfer it was for ended.
+            root.clearSendPrompt();
         }
 
         function onIncomingTransferFinished(success: bool): void {

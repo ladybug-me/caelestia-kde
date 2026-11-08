@@ -169,11 +169,22 @@ void QuickShareService::sendFile(const QString& deviceId, const QString& filePat
     const QString deviceName = device->name;
     auto* connection = new QuickShareConnection(device->address, device->port, this);
 
-    // The file itself goes out once the handshake finishes.
+    // The request goes out once the handshake finishes, so the receiving device can show
+    // its own code; the file itself waits for the user to compare the two.
     connect(connection, &QuickShareConnection::stateChanged, this,
         [connection, filePath](QuickShareConnection::State state) {
             if (state == QuickShareConnection::ConnectionAccepted)
                 connection->sendFile(filePath);
+        });
+
+    // The code is the handshake's, so both ends derive it from the same transcript. A
+    // relayed handshake gives the two ends different codes, which is what the comparison
+    // is for; without it the sender has no way to tell a device from whatever answers in
+    // its place.
+    connect(connection, &QuickShareConnection::pinCodeReady, this,
+        [this, connection, deviceId, deviceName, filePath](const QString& pinCode) {
+            m_pendingOutgoingRequest = connection;
+            emit outgoingTransferPinReady(deviceId, deviceName, QFileInfo(filePath).fileName(), pinCode);
         });
 
     connect(connection, &QuickShareConnection::transferProgress, this, [this, deviceId](qint64 sent, qint64 total) {
@@ -182,12 +193,31 @@ void QuickShareService::sendFile(const QString& deviceId, const QString& filePat
 
     connect(connection, &QuickShareConnection::transferFinished, this,
         [this, connection, deviceId, deviceName, filePath](bool success) {
+            if (m_pendingOutgoingRequest == connection)
+                m_pendingOutgoingRequest = nullptr;
+
             if (success)
                 appendHistoryEntry(u"sent"_s, QFileInfo(filePath).fileName(), filePath, deviceName);
 
             emit outgoingTransferFinished(deviceId, success);
             retire(connection);
         });
+}
+
+void QuickShareService::confirmOutgoingTransfer() {
+    if (m_pendingOutgoingRequest)
+        m_pendingOutgoingRequest->confirmSend();
+}
+
+void QuickShareService::cancelOutgoingTransfer() {
+    if (!m_pendingOutgoingRequest)
+        return;
+
+    // The connection reports the end itself, which is what clears the pending send and
+    // tells the UI; dropping the handle here only stops a second confirm from reaching it.
+    QuickShareConnection* connection = m_pendingOutgoingRequest.data();
+    m_pendingOutgoingRequest = nullptr;
+    connection->cancel();
 }
 
 void QuickShareService::acceptIncomingTransfer() {

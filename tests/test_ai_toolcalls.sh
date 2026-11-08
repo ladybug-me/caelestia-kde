@@ -183,4 +183,31 @@ EOF
     fi
 }
 
+test_every_tool_that_reaches_outside_the_chat_is_asked_about() {
+    # The model's output is untrusted, and the thing that talked it into a call is often
+    # a page it read. The screen, the network and the user's applications are outside the
+    # chat, so each one is a question rather than an action.
+    assert_contains "$AI_SRC" '"take_screenshot": true' "the screen is the user's to share"
+    assert_contains "$AI_SRC" '"read_webpage": true' "so is a request to an address the model chose"
+    assert_contains "$AI_SRC" '"open_app": true' "and so is launching something"
+
+    assert_contains "$AI_SRC" 'if (root.consentTools[toolName] === undefined)' \
+        "the gate keys on that table, so a new tool is a decision rather than a default"
+    assert_contains "$AI_SRC" 'if (root.pendingToolConsent !== null)' \
+        "one question at a time, so a chain cannot slip past a single prompt"
+    assert_contains "$AI_SRC" 'still deciding about another tool call; nothing was executed' \
+        "a second call while one is pending is answered, not run"
+    assert_contains "$AI_SRC" 'the user declined; nothing was executed' \
+        "a refusal is reported to the model rather than retried"
+}
+
+test_the_permission_names_what_is_being_asked_for() {
+    assert_contains "$AI_SRC" 'The assistant wants to fetch %1' \
+        "a URL is shown, because an attacker's address is visible in it"
+    assert_contains "$AI_SRC" 'The assistant wants to launch %1' \
+        "so is the application"
+    assert_contains "$AI_SRC" 'The assistant wants to capture your screen' \
+        "and the screen capture says what leaves the machine"
+}
+
 run_tests

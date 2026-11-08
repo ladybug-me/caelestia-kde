@@ -41,15 +41,34 @@ constexpr qint64 chunkSize = 1024 * 1024;
 /// the shell copy and re-copy its whole buffer.
 constexpr uint32_t maxFrameSize = 8 * 1024 * 1024;
 
-/// The most payload bytes one peer may make us hold across its buffers.
-constexpr qint64 maxBufferedPayload = 64 * 1024 * 1024;
+/// The most payload bytes one peer may make us hold across its buffers. What arrives
+/// this way is control frames - a request, a response - so a megabyte is already far
+/// more than any of them needs; the cap is what keeps an unauthenticated peer from
+/// parking a buffer per connection for the whole session.
+constexpr qint64 maxBufferedPayload = 1024 * 1024;
 
 /// How many payloads a peer may have in flight at once.
-constexpr int maxPayloadBuffers = 32;
+constexpr int maxPayloadBuffers = 8;
 
 /// How much of an outgoing file may sit in Qt's socket write buffer before the
 /// send waits for the socket to drain.
 constexpr qint64 sendBufferLimit = 4 * chunkSize;
+
+/// How long a peer has to get through the handshake. A host that connects and says
+/// nothing is otherwise indistinguishable from one that is about to, and the service
+/// only holds a fixed number of connections.
+constexpr int handshakeTimeoutMs = 15000;
+
+/// How long a request may wait for the user to answer it. Nothing arrives on the wire
+/// while the prompt is up, so this is a person's window, not a peer's.
+constexpr int consentTimeoutMs = 120000;
+
+/// How long an accepted transfer may go without a byte arriving.
+constexpr int transferIdleTimeoutMs = 60000;
+
+/// The largest file a peer may ask to send. The request is what the user consents to, so
+/// a size no one would agree to is refused before it is ever shown.
+constexpr qint64 maxIncomingFileSize = 4LL * 1024 * 1024 * 1024;
 
 /// The name to save a received file under. The peer chose it, so it can name a
 /// path: keep only the last component and refuse anything that would still
@@ -167,6 +186,42 @@ void QuickShareConnection::connectSocket() {
     connect(m_socket, QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), this,
         &QuickShareConnection::onError);
 #endif
+
+    m_idleTimer = new QTimer(this);
+    m_idleTimer->setSingleShot(true);
+    connect(m_idleTimer, &QTimer::timeout, this, [this]() {
+        onIdleTimeout();
+    });
+    restartIdleTimer();
+}
+
+void QuickShareConnection::restartIdleTimer() {
+    if (!m_idleTimer || m_finished)
+        return;
+
+    m_idleTimer->start(idleTimeoutMs());
+}
+
+int QuickShareConnection::idleTimeoutMs() const {
+    // A person is in front of this connection when a code is waiting to be compared or a
+    // request is waiting to be answered. Nothing arrives on the wire meanwhile, so the
+    // window is theirs rather than the peer's.
+    if (!m_outgoingFilePath.isEmpty() && !m_sendConfirmed)
+        return consentTimeoutMs;
+    if (m_incomingAnnounced && !m_incomingAccepted)
+        return consentTimeoutMs;
+
+    // Everything else is the peer's to lose: a handshake it never finishes, or a transfer
+    // it stops feeding.
+    if (m_incomingAccepted || m_state == Transferring)
+        return transferIdleTimeoutMs;
+    return handshakeTimeoutMs;
+}
+
+void QuickShareConnection::onIdleTimeout() {
+    if (!m_finished)
+        failTransfer(u"the peer stopped before the transfer finished"_s);
+    m_socket->disconnectFromHost();
 }
 
 void QuickShareConnection::setState(State state) {
@@ -174,6 +229,7 @@ void QuickShareConnection::setState(State state) {
         return;
 
     m_state = state;
+    restartIdleTimer();
     emit stateChanged(m_state);
 }
 
@@ -356,9 +412,44 @@ void QuickShareConnection::acceptTransfer() {
     if (m_state != ConnectionAccepted)
         return;
 
+    // Accepting a request nobody made would leave the socket open for whatever arrives
+    // next, so there is nothing to accept.
+    if (!m_incomingAnnounced) {
+        qWarning() << u"QuickShareConnection: refusing to accept a transfer that was never requested"_s;
+        return;
+    }
+
+    // Freeze what the user was shown. Everything after this is checked against these,
+    // not against whatever the peer says next.
+    m_acceptedFileName = m_incomingFileName;
+    m_acceptedFileSize = m_incomingFileSize;
     m_incomingAccepted = true;
+
     sendEncryptedSharingFrame(sharing::nearby::V1Frame::RESPONSE);
     setState(Transferring);
+}
+
+void QuickShareConnection::confirmSend() {
+    if (m_finished || m_sendConfirmed)
+        return;
+
+    m_sendConfirmed = true;
+
+    // The peer's ACCEPT may already be here; the file goes now that the peer and the user
+    // have both agreed. Otherwise the RESPONSE handler sends it.
+    if (m_peerAccepted && !m_outgoingFilePath.isEmpty())
+        sendFilePayload();
+    restartIdleTimer();
+}
+
+void QuickShareConnection::cancel() {
+    if (m_finished)
+        return;
+
+    if (m_idleTimer)
+        m_idleTimer->stop();
+    finishTransfer(false);
+    m_socket->disconnectFromHost();
 }
 
 void QuickShareConnection::rejectTransfer() {
@@ -377,6 +468,7 @@ void QuickShareConnection::rejectTransfer() {
 
 void QuickShareConnection::onReadyRead() {
     m_buffer.append(m_socket->readAll());
+    restartIdleTimer();
 
     // Parse in one pass over the newly arrived bytes, then drop the consumed
     // prefix once: removing per frame is quadratic in the number of frames.
@@ -474,6 +566,7 @@ void QuickShareConnection::handleUkey2(const QByteArray& data) {
         writeLengthPrefixed(m_socket, finished);
         sendConnectionResponse();
         setState(PostHandshake);
+        emit pinCodeReady(m_crypto.pinCode());
         break;
     }
     case securegcm::Ukey2Message::CLIENT_FINISH:
@@ -556,7 +649,7 @@ void QuickShareConnection::handleFileChunk(const PayloadTransferFrame& packet, c
 
     // The sender only starts after our ACCEPT, so a file that arrives before the
     // user answered is either a racing peer or one that skipped the request.
-    if (!m_incomingAccepted) {
+    if (m_finished || !m_incomingAccepted) {
         qWarning() << u"QuickShareConnection: refusing a file chunk for an unaccepted transfer"_s;
         return;
     }
@@ -575,10 +668,10 @@ void QuickShareConnection::handleFileChunk(const PayloadTransferFrame& packet, c
         return;
     }
 
-    // The request named a size, and the user accepted that size. A peer that keeps
-    // sending past it is not the transfer they agreed to.
-    if (m_incomingFileSize > 0 && m_incomingOffset + body.size() > m_incomingFileSize) {
-        failTransfer(u"a file chunk arrived past the announced size"_s);
+    // The size the user accepted is the whole budget. A peer that keeps sending past it
+    // is not the transfer they agreed to, and there is no second request to ask about.
+    if (m_incomingOffset + body.size() > m_acceptedFileSize) {
+        failTransfer(u"a file chunk arrived past the accepted size"_s);
         return;
     }
 
@@ -601,8 +694,8 @@ bool QuickShareConnection::openIncomingFile() {
         return false;
     }
 
-    if (!openUniqueFile(m_incomingHandle, directory, m_incomingFileName, m_incomingSavedPath)) {
-        failTransfer(u"could not create a file for %1"_s.arg(m_incomingFileName));
+    if (!openUniqueFile(m_incomingHandle, directory, m_acceptedFileName, m_incomingSavedPath)) {
+        failTransfer(u"could not create a file for %1"_s.arg(m_acceptedFileName));
         return false;
     }
 
@@ -646,13 +739,28 @@ void QuickShareConnection::handleSharingFrame(const sharing::nearby::Frame& fram
         setState(ConnectionAccepted);
         break;
     case sharing::nearby::V1Frame::INTRODUCTION: {
+        // The request is the thing the user agrees to, and they agree to it once. A
+        // second INTRODUCTION after that is not a new question but an attempt to change
+        // what was agreed to, so it is refused rather than asked about again.
+        if (m_finished || m_incomingAccepted || m_incomingAnnounced) {
+            qWarning() << u"QuickShareConnection: refusing a second file request"_s;
+            break;
+        }
+
         const auto& introduction = frame.v1().introduction();
         if (introduction.file_metadata_size() == 0)
             break;
 
         const auto& metadata = introduction.file_metadata(0);
+        const qint64 size = metadata.size();
+        if (size <= 0 || size > maxIncomingFileSize) {
+            failTransfer(u"a file request named a size this shell will not take"_s);
+            break;
+        }
+
         m_incomingFileName = safeIncomingFileName(QString::fromStdString(metadata.name()));
-        m_incomingFileSize = metadata.size();
+        m_incomingFileSize = size;
+        m_incomingAnnounced = true;
         emit transferRequested(m_incomingFileName, m_incomingFileSize);
         break;
     }
@@ -661,7 +769,10 @@ void QuickShareConnection::handleSharingFrame(const sharing::nearby::Frame& fram
             finishTransfer(false);
             break;
         }
-        if (!m_outgoingFilePath.isEmpty())
+        // The peer agreeing is not the user agreeing: the file only goes once the user
+        // has compared this connection's code with the one the peer shows.
+        m_peerAccepted = true;
+        if (m_sendConfirmed && !m_outgoingFilePath.isEmpty())
             sendFilePayload();
         break;
     }
@@ -673,6 +784,13 @@ void QuickShareConnection::handleSharingFrame(const sharing::nearby::Frame& fram
 void QuickShareConnection::sendFilePayload() {
     if (m_outgoingFile.isOpen() || m_outgoingFileQueued || m_finished)
         return;
+
+    // The file was picked by the user, the peer agreed, and the user compared the code:
+    // all three are needed before a byte leaves.
+    if (!m_sendConfirmed || !m_peerAccepted) {
+        qWarning() << u"QuickShareConnection: refusing to send before the code is confirmed"_s;
+        return;
+    }
 
     m_outgoingFile.setFileName(m_outgoingFilePath);
     if (!m_outgoingFile.open(QIODevice::ReadOnly)) {
@@ -723,6 +841,9 @@ void QuickShareConnection::sendDisconnection() {
 }
 
 void QuickShareConnection::onDisconnected() {
+    if (m_idleTimer)
+        m_idleTimer->stop();
+
     setState(Disconnected);
     // Whatever was still running ended with the socket. finishTransfer reports at
     // most once and takes a partial download with it, so a transfer that already

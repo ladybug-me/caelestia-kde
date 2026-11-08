@@ -58,10 +58,16 @@ config_dir="$3"
 shift 3
 
 report_uninstaller() {
-    if [ -n "$1" ] && [ -f "$1/uninstall.sh" ]; then
-        printf 'SCRIPT %s\n' "$1/uninstall.sh"
-        exit 0
-    fi
+    [ -n "$1" ] || return 0
+
+    # The recorded checkout is a path from a file this user can edit, and what happens
+    # next is the user running that script as root. A link is refused rather than
+    # followed, and a directory that is not this project is not what the record meant.
+    [ -f "$1/uninstall.sh" ] && [ ! -L "$1/uninstall.sh" ] || return 0
+    [ -f "$1/scripts/setup.sh" ] && [ ! -L "$1/scripts/setup.sh" ] || return 0
+
+    printf 'SCRIPT %s\n' "$1/uninstall.sh"
+    exit 0
 }
 
 recorded="$(cat "$config_dir/.checkout" 2>/dev/null || true)"

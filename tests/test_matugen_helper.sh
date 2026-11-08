@@ -8,6 +8,25 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/privileges.
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/packages.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/matugen.sh"
 
+# install_matugen_github downloads the release asset and then asks for its checksum. curl
+# writes to the path it is given, and the pinned release publishes no .sha256 at all: the
+# stub answers that request the way the release does, by failing.
+stub_asset_curl() {
+    MATUGEN_TEST_ASSET="$1"
+    curl() {
+        local arg prev="" url="" dest=""
+        for arg in "$@"; do
+            [[ "$prev" == "-o" ]] && dest="$arg"
+            [[ "$arg" == https://* ]] && url="$arg"
+            prev="$arg"
+        done
+        case "$url" in
+            *.sha256) return 22 ;;
+            *) cp "$MATUGEN_TEST_ASSET" "$dest" ;;
+        esac
+    }
+}
+
 test_matugen_present_checks_path() {
     local tmp
     tmp="$(new_tmpdir)"
@@ -84,16 +103,16 @@ test_ensure_matugen_reports_success_when_present() {
     ) || fail "ensure_matugen should succeed when matugen is present on PATH"
 }
 
-test_install_matugen_github_downloads_and_installs() {
-    local tmp
+test_install_matugen_github_installs_the_pinned_release() {
+    local tmp out status
     tmp="$(new_tmpdir)"
     mkdir -p "$tmp/usr/local/bin" "$tmp/assets"
 
     touch "$tmp/assets/matugen"
     chmod +x "$tmp/assets/matugen"
-    tar -czf "$tmp/assets/matugen-v4.2.0-x86_64.tar.gz" -C "$tmp/assets" matugen
+    tar -czf "$tmp/assets/matugen-4.2.0-x86_64.tar.gz" -C "$tmp/assets" matugen
 
-    (
+    out="$(
         HOME="$tmp"
         caelestia_sudo() {
             if [[ "$1" == "install" ]]; then
@@ -104,22 +123,17 @@ test_install_matugen_github_downloads_and_installs() {
         }
         export -f caelestia_sudo
 
-        curl() {
-            if [[ "$*" == *"releases/latest"* ]]; then
-                printf '{"assets":[{"browser_download_url":"https://github.com/InioX/matugen/releases/download/v4.2.0/matugen-v4.2.0-x86_64.tar.gz"}]}'
-                return 0
-            else
-                cat "$tmp/assets/matugen-v4.2.0-x86_64.tar.gz"
-                return 0
-            fi
-        }
+        stub_asset_curl "$tmp/assets/matugen-4.2.0-x86_64.tar.gz"
         export -f curl
 
-        if ! install_matugen_github; then
-            exit 1
-        fi
-    ) || fail "install_matugen_github should succeed when release asset exists"
+        install_matugen_github 2>&1
+    )"
+    status=$?
 
+    assert_status 0 "$status" "install_matugen_github should succeed when the pinned asset exists"
+    assert_contains "$out" "releases/download/v4.2.0/matugen-4.2.0-x86_64.tar.gz" \
+        "the download must come from the pinned release rather than from latest"
+    assert_contains "$out" "No published checksum" "and the missing checksum must be said out loud"
     assert_file_exists "$tmp/usr/local/bin/matugen" "github release binary should be installed"
 }
 
@@ -159,13 +173,13 @@ test_install_matugen_debian_falls_back_to_cargo() {
 }
 
 test_install_matugen_fedora_uses_github_when_copr_fails() {
-    local tmp
+    local tmp status
     tmp="$(new_tmpdir)"
     mkdir -p "$tmp/usr/local/bin" "$tmp/assets"
 
     touch "$tmp/assets/matugen"
     chmod +x "$tmp/assets/matugen"
-    tar -czf "$tmp/assets/matugen-v4.2.0-x86_64.tar.gz" -C "$tmp/assets" matugen
+    tar -czf "$tmp/assets/matugen-4.2.0-x86_64.tar.gz" -C "$tmp/assets" matugen
 
     (
         HOME="$tmp"
@@ -182,15 +196,7 @@ test_install_matugen_fedora_uses_github_when_copr_fails() {
         }
         export -f caelestia_sudo
 
-        curl() {
-            if [[ "$*" == *"releases/latest"* ]]; then
-                printf '{"assets":[{"browser_download_url":"https://github.com/InioX/matugen/releases/download/v4.2.0/matugen-v4.2.0-x86_64.tar.gz"}]}'
-                return 0
-            else
-                cat "$tmp/assets/matugen-v4.2.0-x86_64.tar.gz"
-                return 0
-            fi
-        }
+        stub_asset_curl "$tmp/assets/matugen-4.2.0-x86_64.tar.gz"
         export -f curl
 
         if ! install_matugen_fedora; then

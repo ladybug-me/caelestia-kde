@@ -10,6 +10,8 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/packages.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
 refresh_plasma_widget_cache() {
     if command -v kbuildsycoca6 >/dev/null 2>&1; then
@@ -87,7 +89,7 @@ install_plasma_audio_visualizer_source() {
     # 2. Build and install C++ plugin system-wide (preferred)
     if cmake -B "$build_dir/plugin" -S "$src_dir" -DBUILD_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr >/dev/null 2>&1 && \
        cmake --build "$build_dir/plugin" >/dev/null 2>&1; then
-        if caelestia_sudo cmake --install "$build_dir/plugin" >/dev/null 2>&1; then
+        if install_staged_tree / cmake --install "$build_dir/plugin"; then
             plugin_ok=true
         fi
     fi

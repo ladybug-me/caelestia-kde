@@ -303,7 +303,9 @@ EOS
 run_configure_quick_share() {
     local bundle="$1" packaged_status="$2" log="${3:-/dev/null}" sudo_status="${4:-0}"
     env BUNDLE_DIR="$bundle" CONFIGURE_LOG="$log" PACKAGED="$packaged_status" SUDO_STATUS="$sudo_status" \
-        bash -c 'install_is_packaged() { return "$PACKAGED"; }
+        INSTALL_FS="$REPO_ROOT/scripts/lib/install-fs.sh" \
+        bash -c 'source "$INSTALL_FS"
+install_is_packaged() { return "$PACKAGED"; }
 skip() { printf "SKIP %s\n" "$*"; }
 warn() { printf "WARN %s\n" "$*"; }
 ok() { printf "OK %s\n" "$*"; }
@@ -388,6 +390,25 @@ test_a_failed_setup_warns_without_stopping_the_install() {
 
     assert_contains "$out" "did not finish" \
         "a firewall that refused is worth saying, not worth failing the install over"
+}
+
+test_the_elevated_run_is_never_the_copy_in_the_checkout() {
+    local tmp log bundle out
+    tmp="$(new_tmpdir)"
+    log="$tmp/calls.log"
+    bundle="$(stub_bundle_reporting "$tmp/bundle" needed)"
+
+    out="$(run_configure_quick_share "$bundle" 1 "$log" 2>&1)"
+
+    # The checkout is this user's to rewrite, so sudo must not be handed a path in it:
+    # what is elevated is the copy the installer puts where only root can change it.
+    assert_not_contains "$(cat "$log")" "ESCALATE bash $bundle/shell/scripts/quickshare_setup.sh" \
+        "the user-writable helper must never be what root runs"
+    assert_contains "$(cat "$log")" "ESCALATE bash /usr/lib/caelestia/scripts/quickshare_setup.sh --port $PORT" \
+        "the elevated run carries the port against the root-owned helper"
+    assert_contains "$out" "Quick Share can receive" "and the step still reports what it achieved"
+    assert_contains "$(cat "$log")" "ESCALATE install -d -m 0755 -o root -g root /usr/lib/caelestia/scripts" \
+        "the helper is installed into a directory root owns"
 }
 
 run_tests

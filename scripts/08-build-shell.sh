@@ -623,7 +623,7 @@ if cmake -G "$CMAKE_GENERATOR" -B kwin-effects/workspace-tracker/build -S kwin-e
         info "Workspace tracker already up to date; skipping system install."
         WS_INSTALLED=1
         WS_RECONFIGURE=0
-    elif ! caelestia_sudo cmake --install "$PWD/kwin-effects/workspace-tracker/build" >/dev/null; then
+    elif ! install_staged_tree / cmake --install "$PWD/kwin-effects/workspace-tracker/build"; then
         warn "Workspace tracker system installation failed."
     else
         WS_INSTALLED=1
@@ -678,6 +678,19 @@ for module in "${QML_MODULES[@]}"; do
 done
 
 export QML2_IMPORT_PATH="$QML_BASE${QML2_IMPORT_PATH:+:$QML2_IMPORT_PATH}"
+
+# The two helpers the shell elevates through polkit. They are installed here as root
+# rather than read from next to the shell, because a source install keeps the shell in
+# the user's home: pkexec handed a path from there would run this user's code as root
+# behind a prompt for a feature they did ask for.
+info "Installing the privileged helpers..."
+for helper in quickshare_setup.sh ollama_setup.sh; do
+    if installed_helper="$(install_privileged_helper "$BUNDLE_DIR/shell/scripts/$helper")"; then
+        ok "Privileged helper installed to $installed_helper"
+    else
+        warn "Could not install $helper as a root-owned helper; the matching feature will ask for a manual run."
+    fi
+done
 
 write_shell_environment
 

@@ -7,6 +7,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SERVICE="$REPO_ROOT/shell/services/Uninstaller.qml"
 DIALOG="$REPO_ROOT/shell/modules/nexus/common/UninstallDialog.qml"
+FRAME="$REPO_ROOT/shell/modules/nexus/common/NexusDialog.qml"
 ABOUT="$REPO_ROOT/shell/modules/nexus/pages/AboutPage.qml"
 CAELESTIA_CLI="$REPO_ROOT/src/bin/caelestia"
 
@@ -80,20 +81,20 @@ test_the_uninstaller_runs_in_a_terminal() {
 }
 
 test_the_dialog_only_offers_to_run_a_script_that_exists() {
-    local dialog
+    local dialog frame
     dialog="$(cat "$DIALOG")"
+    frame="$(cat "$FRAME")"
 
-    # Commented cause uninstalldialog.qml uses Colors. which requires qs.services
-    # assert_not_contains "$dialog" "qs.services" \
-    #     "the dialog should not reach into services; the page hands the state in"
-    assert_contains "$dialog" "import qs.components" \
-        "StyledText must be imported from the parent components module"
+    assert_contains "$dialog" "NexusDialog {" \
+        "the dialog is the shared frame plus what the uninstaller found"
     assert_contains "$dialog" "property string state" \
         "it should take the uninstaller state as a property"
-    assert_contains "$dialog" "signal confirmed" \
-        "and report confirmation rather than launching itself"
-    assert_contains "$dialog" "visible: root.canRun" \
+    assert_contains "$frame" "signal confirmed" \
+        "the frame reports confirmation rather than launching itself"
+    assert_contains "$dialog" "confirmText: root.canRun" \
         "the run button should follow what was found"
+    assert_contains "$frame" 'visible: root.confirmText !== ""' \
+        "and the frame hides it when nothing can run"
 }
 
 test_the_page_offers_the_action() {

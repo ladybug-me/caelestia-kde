@@ -359,6 +359,13 @@ QtObject {
             subPageIdx: 7
         },
         {
+            label: qsTr("Subcategory side pane"),
+            description: qsTr("List a section's subcategories in their own pane. Turned off, they line up inside the section"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPageIdx: 7
+        },
+        {
             label: qsTr("Force System Defaults (xdg-open)"),
             description: qsTr("Override applications to use KDE system defaults"),
             section: qsTr("Apps"),
@@ -939,14 +946,12 @@ QtObject {
         },
         {
             label: qsTr("Show update indicator"),
-            description: qsTr("Always-visible icon in the taskbar that changes when a Caelestia update is available"),
             section: qsTr("Updates"),
             pageIdx: 2,
             subPageIdx: 17
         },
         {
-            label: qsTr("Enable update checking"),
-            description: qsTr("Enables the update indicator and periodic checks (every 30 minutes)"),
+            label: qsTr("Turn on update checking"),
             section: qsTr("Updates"),
             pageIdx: 2,
             subPageIdx: 17
@@ -3018,14 +3023,14 @@ QtObject {
             subPageIdx: 10
         },
         {
-            label: qsTr("Show Update Indicator"),
-            description: qsTr("Show a notification icon in the taskbar when updates are available"),
+            label: qsTr("Check for updates automatically"),
+            description: qsTr("Every 30 minutes, and once when the shell starts"),
             section: qsTr("Updates"),
             pageIdx: 7,
             subPageIdx: 10
         },
         {
-            label: qsTr("Open Backup Folder"),
+            label: qsTr("Open backup folder"),
             section: qsTr("Updates"),
             pageIdx: 7,
             subPageIdx: 10

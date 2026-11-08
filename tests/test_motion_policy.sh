@@ -367,12 +367,22 @@ test_the_dialogs_share_one_transition_with_a_shorter_exit() {
     local dialog
     for dialog in \
         "$SHELL_DIR/modules/nexus/common/KeyCaptureDialog.qml" \
-        "$SHELL_DIR/modules/nexus/common/UninstallDialog.qml" \
+        "$SHELL_DIR/modules/nexus/common/NexusDialog.qml" \
         "$SHELL_DIR/modules/nexus/pages/desktop/AddShortcutDialog.qml"; do
         assert_file_contains "$dialog" 'enter: DialogTransition { }' \
             "$(basename "$dialog") should use the shared entrance"
         assert_file_contains "$dialog" 'exit: DialogTransition {' \
             "$(basename "$dialog") should use the shared exit"
+    done
+    # Every confirmation built on the frame inherits that transition, so it must not
+    # carry one of its own.
+    for dialog in \
+        "$SHELL_DIR/modules/nexus/common/UninstallDialog.qml" \
+        "$SHELL_DIR/modules/nexus/common/UpdateConfirmDialog.qml"; do
+        assert_file_contains "$dialog" 'NexusDialog {' \
+            "$(basename "$dialog") should be the shared frame"
+        assert_file_not_contains "$dialog" 'enter: DialogTransition' \
+            "$(basename "$dialog") should not carry a second transition"
     done
     assert_file_contains "$SHELL_DIR/modules/nexus/common/DialogTransition.qml" \
         'type: exiting ? Anim.FastEffects : Anim.DefaultEffects' \

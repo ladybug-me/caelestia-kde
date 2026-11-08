@@ -441,24 +441,27 @@ class ShellSurfaceTests(unittest.TestCase):
         list was "Merge pull request #697 from somebody/branch" and the type was
         printed twice, once as a chip and once as the "fix(scope):" prefix.
         """
+        model = (
+            ROOT / "shell" / "modules" / "nexus" / "common" / "updateModel.js"
+        ).read_text(encoding="utf-8")
         timeline = (
             ROOT / "shell" / "modules" / "nexus" / "common" / "UpdateTimeline.qml"
         ).read_text(encoding="utf-8")
 
-        self.assertNotIn(
-            'text: entry.modelData.subject || ""',
-            timeline,
-            "the raw subject must be rewritten before it is rendered",
-        )
         self.assertIn(
-            "function mergedSubject",
-            timeline,
+            "function mergeSubject",
+            model,
             "a pull-request merge must be shown as what landed, not as the merge itself",
         )
         self.assertIn(
-            "function typeStrippedSubject",
-            timeline,
+            "function strippedSubject",
+            model,
             "the type chip already names the commit type, so the subject must not repeat it",
+        )
+        self.assertNotIn(
+            "Merge pull request",
+            timeline,
+            "the rewrite belongs to the model, not to the row that renders it",
         )
 
     def test_the_dev_timeline_hides_merge_commits(self) -> None:
@@ -467,14 +470,27 @@ class ShellSurfaceTests(unittest.TestCase):
         The commit the running shell is installed at has to stay, though: it is how
         the timeline marks where the user is.
         """
+        model = (
+            ROOT / "shell" / "modules" / "nexus" / "common" / "updateModel.js"
+        ).read_text(encoding="utf-8")
         page = (
             ROOT / "shell" / "modules" / "nexus" / "pages" / "UpdatesPage.qml"
         ).read_text(encoding="utf-8")
 
         self.assertIn(
-            'filter(e => !e.isMerge || e.state === "current")',
+            'item.state === "current"',
+            model,
+            "the installed commit must survive the filtering that drops merges",
+        )
+        self.assertIn(
+            "if (item.isMerge)",
+            model,
+            "and merges are what that filtering drops",
+        )
+        self.assertNotIn(
+            "isMerge",
             page,
-            "merge commits must be dropped from the dev timeline, except the installed one",
+            "the page shows what the model decided rather than filtering again",
         )
 
     def test_the_shortcut_list_does_not_animate_endlessly(self) -> None:

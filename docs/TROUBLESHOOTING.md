@@ -1490,6 +1490,31 @@ curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/insta
 
 - If it gives an error due to already present `~/caelestia-kde` directory in your pc, then remove that directory first and then run the above command. **Make sure to copy the `backups/` folder somewhere and then put it back here after installation completes.**
 
+### 10.4 The Updates page says it could not check
+
+The check reports a failure instead of "You're up to date" when it cannot get
+an answer, and leaves the last successful result untouched. The status line
+under the notice names the reason and says when the check last succeeded:
+
+```bash
+# Is GitHub reachable at all?
+git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git main
+
+# The bare clone the check reads from, and its freshness
+git -C ~/.cache/caelestia-update-repo log --oneline -1 main
+```
+
+A stale or broken clone is repaired by deleting it, as in
+[10.1](#101-fixing-caelestia-updater-recommended). The check runs again the next
+time the page is opened, or immediately with **Try again**.
+
+### 10.5 Update checking is off
+
+With periodic checking off, the taskbar indicator stays hidden and the page
+answers a manual **Check** only. **Turn on** in the Updates page restores both,
+and the same switch lives under Panels → Taskbar → Update indicator, which opens
+the page for you when checking is off.
+
 ## 11. Diagnostic Commands Reference
 
 ### System State Checks

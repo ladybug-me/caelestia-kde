@@ -16658,12 +16658,12 @@ PIN: %1</source>
       <location filename="../modules/whatsnew/WhatsNewWindow.qml" line="+110"/>
       <location line="+148"/>
       <source>What&apos;s New in Caelestia</source>
-      <translation>O Que&apos;é Novo em Caelestia</translation>
+      <translation>Novidades do Caelestia</translation>
     </message>
     <message>
       <location line="-97"/>
       <source>What&apos;s New</source>
-      <translation>O que&apos;é novo</translation>
+      <translation>Novidades</translation>
     </message>
     <message>
       <location line="+421"/>

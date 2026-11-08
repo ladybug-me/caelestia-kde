@@ -53,9 +53,9 @@ Item {
         running: true
 
         onTriggered: {
-            const next = content.children.find(c => c.keepLoaded && !c.active);
+            const next = content.children.find(c => c.keepLoaded && !c.kept);
             if (next)
-                next.active = true;
+                next.kept = true;
             else
                 stop();
         }
@@ -517,6 +517,8 @@ Item {
         // Stays loaded after its first show, so hovering it again does not rebuild it.
         // Only for popouts that hold nothing running while hidden.
         property bool keepLoaded: false
+        // Set on the first show (or by the warm up below); a kept popout is never torn down.
+        property bool kept: false
         property string previewKey: name
         property real minScale: 0.1
         readonly property bool shouldBeActive: root.popouts.currentName === name
@@ -535,14 +537,19 @@ Item {
         // A kept popout is hidden, not removed: it must not take mouse events or keep
         // its bindings running while faded out.
         visible: opacity > 0
-        active: false
+        // Loaded while shown, while fading out, and for good once kept.
+        active: shouldBeActive || kept || opacity > 0
+
+        onShouldBeActiveChanged: {
+            if (shouldBeActive && keepLoaded)
+                kept = true;
+        }
 
         states: State {
             name: "active"
             when: popout.shouldBeActive
 
             PropertyChanges {
-                popout.active: true
                 popout.opacity: 1
             }
         }
@@ -557,10 +564,6 @@ Item {
                         property: "opacity"
                         type: Anim.DefaultEffects
                     }
-                    PropertyAction {
-                        property: "active"
-                        value: popout.keepLoaded
-                    }
                 }
             },
             Transition {
@@ -568,9 +571,6 @@ Item {
                 to: "active"
 
                 SequentialAnimation {
-                    PropertyAction {
-                        property: "active"
-                    }
                     Anim {
                         property: "opacity"
                         type: Anim.SlowEffects

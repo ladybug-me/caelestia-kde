@@ -39,7 +39,7 @@ Singleton {
             if (code !== 3)
                 return;
 
-            const detail = check.reason.length > 0 ? check.reason : qsTr("not registered by KWin");
+            const detail = check.reason.length > 0 ? check.reason : qsTr("no reason given");
             console.warn(`[WorkspaceTrackerGuard] workspace tracker not loaded: ${detail}`);
             // The toast is one elided title line above a box ~410px wide, so the message
             // stays to a sentence: what KWin refused, and the one command that fixes it.

@@ -75,31 +75,14 @@ install_cava_sdk() {
     fi
 
     local url="https://github.com/ladybug-me/cava/releases/download/continuous/cava-${arch}-${asset_suffix}.tar.gz"
-    local archive status=0
+    local archive
     archive="$(mktemp)"
 
-    if ! fetch_asset "$url" "$archive" 2>/dev/null; then
+    # Our continuous builds publish no hash, so this is the one artifact whose refusal the
+    # helper reports as this project's own omission rather than a third party's.
+    if ! fetch_verified_asset "$url" "$archive" "" unpack; then
         rm -f "$archive"
         return 1
-    fi
-
-    verify_download "$url" "$archive" || status=$?
-    if [[ "$status" -eq 1 ]]; then
-        warn "Checksum mismatch for $url - not unpacking it."
-        rm -f "$archive"
-        return 1
-    elif [[ "$status" -eq 2 ]]; then
-        if is_own_release "$url"; then
-            warn "Our cava release publishes no checksum for $url (SHA-256 $(file_sha256 "$archive"))."
-        else
-            warn "No published checksum for $url (SHA-256 $(file_sha256 "$archive"))."
-        fi
-        if ! unverified_download_allowed; then
-            err "Refusing to unpack $url unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
-            rm -f "$archive"
-            return 1
-        fi
-        warn "Unpacking $url unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
     fi
 
     # The archive is unpacked as root and tar takes the mode and the owner from it, so

@@ -81,46 +81,6 @@ gsr_set_kms_capability() {
     return 0
 }
 
-# Copies a font this user downloaded into "$font_dir", once the transfer is known to have
-# produced a font. The two branch URLs the fonts come from publish no hash, so the file's
-# type is what says the bytes are the font that was asked for rather than an error page
-# saved under a font's name, and the hash is printed so a run records what it installed.
-install_checked_font() {
-    local source="$1" name="$2" kind hash
-    if [[ ! -s "$source" ]]; then
-        err "Refusing to install $name: the download is empty."
-        return 1
-    fi
-    if command -v file >/dev/null 2>&1; then
-        kind="$(file -b "$source" 2>/dev/null || true)"
-        case "$kind" in
-            *TrueType*|*OpenType*) ;;
-            *)
-                err "Refusing to install $name: it is not a TrueType or OpenType font ($kind)."
-                return 1
-                ;;
-        esac
-    fi
-    hash="$(file_sha256 "$source")"
-    if ! mv -f "$source" "$font_dir/$name" 2>/dev/null; then
-        err "Failed to install $name into $font_dir."
-        return 1
-    fi
-    info "$name installed (SHA-256 $hash)."
-}
-
-# A version-pinned archive is only unpacked once its bytes are the ones the version above
-# names. The project publishes no checksum beside the archive, so the hash is a constant.
-nerd_font_archive_matches() {
-    local archive="$1" expected="$2" name="$3" actual
-    actual="$(file_sha256 "$archive")"
-    if [[ "$actual" != "$expected" ]]; then
-        err "Checksum mismatch for $name - not extracting it (got $actual, expected $expected)."
-        return 1
-    fi
-    return 0
-}
-
 info "Installing Debian packages..."
 
 INSTALL_FISH="${INSTALL_FISH:-true}"
@@ -397,44 +357,17 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
                 *)         CARCH="linux-amd64" ;;
             esac
             _cliphist_asset="$(cliphist_asset_url "$CARCH" || true)"
-            CLIPHIST_URL="${_cliphist_asset%%$'\t'*}"
-            _cliphist_digest="${_cliphist_asset#*$'\t'}"
-            # No tab means the release reported no digest for the asset at all.
-            [[ "$_cliphist_digest" == "$_cliphist_asset" ]] && _cliphist_digest=""
+            CLIPHIST_URL=""
+            _cliphist_digest=""
+            IFS=$'\t' read -r CLIPHIST_URL _cliphist_digest <<< "$_cliphist_asset"
             if [ -n "$CLIPHIST_URL" ]; then
                 tmpbin="$(mktemp)"
-                # What root installs has to be tied to the release it came from: the digest
-                # the release reports for this asset, or a sidecar if it published one.
-                if fetch_asset "$CLIPHIST_URL" "$tmpbin" 2>/dev/null; then
-                    _cliphist_status=0
-                    asset_matches_digest "$tmpbin" "$_cliphist_digest" || _cliphist_status=$?
-                    if [[ "$_cliphist_status" -eq 2 ]]; then
-                        verify_download "$CLIPHIST_URL" "$tmpbin" || _cliphist_status=$?
-                    fi
-
-                    _cliphist_install=0
-                    case "$_cliphist_status" in
-                        0) _cliphist_install=1 ;;
-                        1) err "Checksum mismatch for $CLIPHIST_URL - not installing it." ;;
-                        *)
-                            if unverified_download_allowed; then
-                                warn "Installing $CLIPHIST_URL unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
-                                _cliphist_install=1
-                            else
-                                warn "No published checksum for $CLIPHIST_URL (SHA-256 $(file_sha256 "$tmpbin"))."
-                                err "Refusing to install $CLIPHIST_URL unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
-                            fi
-                            ;;
-                    esac
-
-                    if [[ "$_cliphist_install" -eq 1 ]]; then
-                        caelestia_sudo install -m 755 "$tmpbin" /usr/local/bin/cliphist
-                        info "cliphist installed successfully to /usr/local/bin."
-                    else
-                        FAILED_PKGS+=("$pkg")
-                    fi
+                # The binary is installed as root, so it is only taken once it is the one the
+                # pinned release published.
+                if fetch_verified_asset "$CLIPHIST_URL" "$tmpbin" "$_cliphist_digest" install; then
+                    caelestia_sudo install -m 755 "$tmpbin" /usr/local/bin/cliphist
+                    info "cliphist installed successfully to /usr/local/bin."
                 else
-                    err "Failed to download cliphist."
                     FAILED_PKGS+=("$pkg")
                 fi
                 rm -f "$tmpbin"
@@ -571,7 +504,7 @@ done
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
 info "Downloading and installing required custom fonts (parallel)..."
-font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+font_dir="$(user_font_dir)"
 mkdir -p "$font_dir"
 # Every archive goes into a directory only this user can name: a predictable name in /tmp
 # is a file someone else can leave behind, and the unzip would take whatever is there.
@@ -645,55 +578,20 @@ mirror_login_fonts || FAILED_PKGS+=("Login screen fonts")
 info "Installing Darkly KDE Theme from prebuilt package..."
 if [[ "$INSTALL_DARKLY" == "true" ]]; then
     if ! command -v darkly >/dev/null 2>&1 && ! package_present darkly; then
-        _darkly_asset="$(darkly_deb_asset_url || true)"
-        _darkly_deb="${_darkly_asset%%$'\t'*}"
-        _darkly_digest="${_darkly_asset#*$'\t'}"
-        # No tab means the release reported no digest for the asset at all.
-        [[ "$_darkly_digest" == "$_darkly_asset" ]] && _darkly_digest=""
-        if [[ -n "$_darkly_deb" ]]; then
-            tmpdir="$(mktemp -d)"
-            info "Downloading Darkly ${DARKLY_VERSION} .deb from GitHub releases..."
-            # apt runs the package's maintainer scripts as root, so the bytes are only
-            # handed over once a checksum agrees with them: the digest the release reports
-            # for this asset, or a sidecar if the release published one beside it.
-            if ! fetch_asset "$_darkly_deb" "$tmpdir/darkly.deb" 2>/dev/null; then
-                err "Failed to download Darkly .deb from GitHub releases."
+        # apt runs a package's maintainer scripts as root, so the bytes are only handed over
+        # once they are the ones the pinned release published.
+        _darkly_dir="$(mktemp -d)" || _darkly_dir=""
+        if [[ -n "$_darkly_dir" ]] && fetch_darkly_package darkly_deb_asset_url deb "$_darkly_dir"; then
+            if ! caelestia_sudo apt-get install -y "$_darkly_dir/darkly.deb" && ! caelestia_sudo dpkg -i "$_darkly_dir/darkly.deb"; then
+                err "Failed to install Darkly .deb."
                 FAILED_PKGS+=("darkly")
-            else
-                _darkly_status=0
-                asset_matches_digest "$tmpdir/darkly.deb" "$_darkly_digest" || _darkly_status=$?
-                if [[ "$_darkly_status" -eq 2 ]]; then
-                    verify_download "$_darkly_deb" "$tmpdir/darkly.deb" || _darkly_status=$?
-                fi
-
-                _darkly_install=0
-                case "$_darkly_status" in
-                    0) _darkly_install=1 ;;
-                    1) err "Checksum mismatch for $_darkly_deb - not installing it." ;;
-                    *)
-                        if unverified_download_allowed; then
-                            warn "Installing $_darkly_deb unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
-                            _darkly_install=1
-                        else
-                            warn "No published checksum for $_darkly_deb (SHA-256 $(file_sha256 "$tmpdir/darkly.deb"))."
-                            err "Refusing to install $_darkly_deb unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
-                        fi
-                        ;;
-                esac
-
-                if [[ "$_darkly_install" -eq 1 ]]; then
-                    if ! caelestia_sudo apt-get install -y "$tmpdir/darkly.deb" && ! caelestia_sudo dpkg -i "$tmpdir/darkly.deb"; then
-                        err "Failed to install Darkly .deb."
-                        FAILED_PKGS+=("darkly")
-                    fi
-                else
-                    FAILED_PKGS+=("darkly")
-                fi
             fi
-            rm -rf "$tmpdir"
         else
-            err "No prebuilt Darkly .deb found for this distro."
+            err "No usable prebuilt Darkly .deb for this distro."
             FAILED_PKGS+=("darkly")
+        fi
+        if [[ -n "$_darkly_dir" ]]; then
+            rm -rf "$_darkly_dir"
         fi
     fi
 

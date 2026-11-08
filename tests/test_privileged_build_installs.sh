@@ -92,7 +92,7 @@ test_matugen_installs_a_pinned_release() {
         "the matugen release should be named by a version constant"
     assert_file_not_contains "$helper" 'releases/latest' \
         "a release page that moves is not something root should follow"
-    assert_file_contains "$helper" 'verify_download' \
+    assert_file_contains "$helper" 'fetch_verified_asset' \
         "and whatever checksum the release publishes should be checked"
 }
 
@@ -155,18 +155,41 @@ test_the_darkly_package_is_resolved_from_a_pinned_release() {
             "a release page that moves is not something root should follow"
         assert_file_contains "$REPO_ROOT/$file" 'releases/tags/v${DARKLY_VERSION}' \
             "the asset has to come from that tag"
-        assert_file_contains "$REPO_ROOT/$file" 'verify_download' \
+        assert_file_contains "$REPO_ROOT/$file" 'fetch_darkly_package' \
             "and its checksum has to be checked before a package manager runs it"
-        assert_file_contains "$REPO_ROOT/$file" 'asset_matches_digest' \
-            "the digest the release reports is what the download is measured against"
-        assert_file_contains "$REPO_ROOT/$file" 'unverified_download_allowed' \
-            "an artifact with no published checksum is the user's call, not a default"
     done
 
     assert_file_not_contains "$REPO_ROOT/installer/distro/debian/packages.sh" 'releases/latest' \
         "the cliphist binary is pinned the same way"
     assert_file_contains "$REPO_ROOT/installer/distro/debian/packages.sh" 'CLIPHIST_VERSION="' \
         "by a version constant of its own"
+}
+
+# One policy, one home: an artifact fetched from elsewhere is measured against what its
+# release published, and a release that published nothing is the user's decision. Every
+# caller used to spell that out, which is how the same rule ends up with five spellings.
+test_the_verification_policy_has_one_home() {
+    local helper="$REPO_ROOT/scripts/lib/download.sh"
+    local file
+
+    assert_file_contains "$helper" 'fetch_verified_asset()' \
+        "download.sh owns the question of whether a download may be used"
+    assert_file_contains "$helper" 'asset_matches_digest "$dest" "$digest"' \
+        "the digest the release reports is what the bytes are measured against"
+    assert_file_contains "$helper" 'unverified_download_allowed' \
+        "with a release that published nothing left to the user"
+
+    for file in \
+        installer/distro/debian/packages.sh \
+        installer/distro/fedora/packages.sh \
+        scripts/lib/matugen.sh \
+        scripts/lib/toolchain.sh \
+        scripts/lib/darkly.sh; do
+        assert_file_not_contains "$REPO_ROOT/$file" 'asset_matches_digest' \
+            "$file must ask the one helper rather than measuring the download itself"
+        assert_file_not_contains "$REPO_ROOT/$file" 'unverified_download_allowed' \
+            "and must not restate the opt-in either"
+    done
 }
 
 test_matugen_checks_the_archive_before_unpacking_it() {
@@ -185,10 +208,8 @@ test_matugen_is_checked_against_the_digest_the_release_reports() {
 
     assert_file_contains "$helper" 'releases/tags/v${MATUGEN_VERSION}' \
         "the asset and its digest have to come from the pinned tag"
-    assert_file_contains "$helper" 'asset_matches_digest "$archive"' \
-        "the digest is what the archive is measured against"
-    assert_file_contains "$helper" 'unverified_download_allowed' \
-        "and a release with no digest at all is the user's call, not a default"
+    assert_file_contains "$helper" 'fetch_verified_asset "$dl_url" "$archive" "$digest"' \
+        "and the digest is what the archive is measured against"
 }
 
 # `~/.cargo/bin` is the user's, so the binary root promotes is read without following a link.
@@ -236,10 +257,8 @@ test_the_cliphist_binary_is_checked_against_the_release_digest() {
 
     assert_file_contains "$file" 'releases/tags/v${CLIPHIST_VERSION}' \
         "the asset has to come from the pinned tag"
-    assert_file_contains "$file" 'asset_matches_digest "$tmpbin"' \
+    assert_file_contains "$file" 'fetch_verified_asset "$CLIPHIST_URL" "$tmpbin" "$_cliphist_digest"' \
         "and be measured against the digest the release reports"
-    assert_file_contains "$file" 'unverified_download_allowed' \
-        "with a download nobody checksummed left to the user"
     assert_file_not_contains "$file" 'curl -fsSL "$CLIPHIST_URL" -o "$tmpbin"' \
         "not downloaded and installed without looking at it"
 }
@@ -272,7 +291,8 @@ JSON
 }
 
 # Both Nerd Font archives are version-pinned and the project publishes no checksum beside
-# them, so the hashes are constants in the scripts that install the fonts as root.
+# them, so the hashes are constants in the scripts that install the fonts as root. The
+# helpers that check and place them are shared, so a distro only says which fonts it needs.
 test_the_nerd_font_archives_are_checked_against_a_pinned_hash() {
     local file
     for file in installer/distro/debian/packages.sh installer/distro/fedora/packages.sh; do
@@ -292,6 +312,29 @@ test_the_nerd_font_archives_are_checked_against_a_pinned_hash() {
     assert_file_contains "$REPO_ROOT/installer/distro/fedora/packages.sh" \
         'install_checked_font "$font_tmp/MaterialSymbolsRounded.ttf"' \
         "which is the only thing a mutable URL allows"
+}
+
+# The font helpers were written out in both distro scripts, byte for byte, in files that
+# already source the module that owns fonts.
+test_the_font_helpers_have_one_home() {
+    local helper="$REPO_ROOT/scripts/lib/fonts.sh"
+    local file
+
+    assert_file_contains "$helper" 'install_checked_font()' \
+        "fonts.sh is where a downloaded font is placed"
+    assert_file_contains "$helper" 'nerd_font_archive_matches()' \
+        "and where a pinned archive is checked"
+    assert_file_contains "$helper" 'user_font_dir()' \
+        "with one answer to where that directory is"
+
+    for file in installer/distro/debian/packages.sh installer/distro/fedora/packages.sh; do
+        assert_file_not_contains "$REPO_ROOT/$file" 'install_checked_font() {' \
+            "$file must not carry its own copy of the helper"
+        assert_file_not_contains "$REPO_ROOT/$file" 'nerd_font_archive_matches() {' \
+            "of either one"
+        assert_file_contains "$REPO_ROOT/$file" 'font_dir="$(user_font_dir)"' \
+            "and must ask where the font directory is instead of spelling it out"
+    done
 }
 
 # Upstream's installers are downloaded to a file this user named, logged and then run, so a

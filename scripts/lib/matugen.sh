@@ -82,65 +82,46 @@ install_matugen_github() {
         *)               carch="x86_64" ;;
     esac
 
-    local dl_url tmpdir="" archive checksum_status=0 asset digest=""
+    local dl_url tmpdir="" archive asset digest=""
     dl_url="https://github.com/InioX/matugen/releases/download/v${MATUGEN_VERSION}/matugen-${MATUGEN_VERSION}-${carch}.tar.gz"
 
     # The asset URL and the digest beside it come from the pinned tag, so a release that
     # moved the asset cannot change what is downloaded or how it is checked. When the API
     # cannot answer, the URL above still stands and the checksum falls back to a sidecar.
     if asset="$(matugen_asset_url "$carch")"; then
-        dl_url="${asset%%$'\t'*}"
-        digest="${asset#*$'\t'}"
-        [[ "$digest" == "$asset" ]] && digest=""
+        IFS=$'\t' read -r dl_url digest <<< "$asset"
     fi
 
     tmpdir="$(mktemp -d)"
     archive="$tmpdir/matugen.tar.gz"
-    if fetch_asset "$dl_url" "$archive" 2>/dev/null; then
-        asset_matches_digest "$archive" "$digest" || checksum_status=$?
-        if [[ "$checksum_status" -eq 2 ]]; then
-            verify_download "$dl_url" "$archive" || checksum_status=$?
-        fi
-        if [[ "$checksum_status" -eq 1 ]]; then
-            warn "Checksum mismatch for $dl_url - not installing it."
-            rm -rf "$tmpdir"
-            return 1
-        elif [[ "$checksum_status" -eq 2 ]]; then
-            warn "No published checksum for $dl_url (SHA-256 $(file_sha256 "$archive"))."
-            if ! unverified_download_allowed; then
-                err "Refusing to install $dl_url unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
-                rm -rf "$tmpdir"
-                return 1
-            fi
-            warn "Installing $dl_url unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
-        else
-            info "Checksum for $dl_url matches the release."
-        fi
+    if ! fetch_verified_asset "$dl_url" "$archive" "$digest" install; then
+        rm -rf "$tmpdir"
+        return 1
+    fi
 
-        # tar takes the member names as they are, so an archive with a `..` or an absolute
-        # path writes outside the directory it is handed. Nothing in it is needed with the
-        # owner or the mode the archive carries either.
-        if ! archive_entries_are_safe "$archive"; then
-            warn "Refusing to unpack $dl_url: the archive has setuid, setgid or escaping entries."
-            rm -rf "$tmpdir"
-            return 1
-        fi
+    # tar takes the member names as they are, so an archive with a `..` or an absolute
+    # path writes outside the directory it is handed. Nothing in it is needed with the
+    # owner or the mode the archive carries either.
+    if ! archive_entries_are_safe "$archive"; then
+        warn "Refusing to unpack $dl_url: the archive has setuid, setgid or escaping entries."
+        rm -rf "$tmpdir"
+        return 1
+    fi
 
-        if tar --no-same-owner --no-same-permissions -xzf "$archive" -C "$tmpdir" 2>/dev/null; then
-            # A tarball can carry a symlink in place of the binary, and `install`
-            # would follow it as root. Only a file the archive really holds is used.
-            if regular_file "$tmpdir/matugen"; then
-                if caelestia_sudo install -m 755 "$tmpdir/matugen" /usr/local/bin/matugen 2>/dev/null; then
-                    rm -rf "$tmpdir"
-                    ok "matugen installed successfully to /usr/local/bin from GitHub release."
-                    return 0
-                fi
-                mkdir -p "$HOME/.local/bin"
-                install -m 755 "$tmpdir/matugen" "$HOME/.local/bin/matugen"
+    if tar --no-same-owner --no-same-permissions -xzf "$archive" -C "$tmpdir" 2>/dev/null; then
+        # A tarball can carry a symlink in place of the binary, and `install`
+        # would follow it as root. Only a file the archive really holds is used.
+        if regular_file "$tmpdir/matugen"; then
+            if caelestia_sudo install -m 755 "$tmpdir/matugen" /usr/local/bin/matugen 2>/dev/null; then
                 rm -rf "$tmpdir"
-                ok "matugen installed successfully to $HOME/.local/bin from GitHub release."
+                ok "matugen installed successfully to /usr/local/bin from GitHub release."
                 return 0
             fi
+            mkdir -p "$HOME/.local/bin"
+            install -m 755 "$tmpdir/matugen" "$HOME/.local/bin/matugen"
+            rm -rf "$tmpdir"
+            ok "matugen installed successfully to $HOME/.local/bin from GitHub release."
+            return 0
         fi
     fi
 

@@ -43,13 +43,14 @@ private:
     Display* m_dpy;
 };
 
-/// One X11 window property. `format` is how many bits the property's items use,
-/// which is what says whether the data may be read as 32-bit items at all: any
-/// X client can publish `_NET_WM_ICON` or `_NET_WM_PID` with format 8, and
-/// reading those bytes as longs walks off the end of the buffer.
+/// One X11 window property, read at a width the caller states.
+///
+/// The width matters because any X client can publish `_NET_WM_ICON` or
+/// `_NET_WM_PID` with format 8, and reading those bytes as longs walks off the end
+/// of the buffer. `fetchProperty` refuses a property of any other width, so the
+/// accessors below are only ever reached for the width they expect.
 struct XProperty {
     unsigned char* data = nullptr;
-    int format = 0;
     unsigned long count = 0;
 
     XProperty() = default;
@@ -63,15 +64,17 @@ struct XProperty {
     XProperty(const XProperty&) = delete;
     XProperty& operator=(const XProperty&) = delete;
 
-    /// The items as Xlib returns format-32 data on this platform: an array of long.
+    /// The items of a property read as format 32. Xlib returns those as longs.
     const unsigned long* items32() const { return reinterpret_cast<const unsigned long*>(data); }
 
-    QByteArray bytes() const { return QByteArray(reinterpret_cast<const char*>(data), static_cast<qsizetype>(count)); }
+    /// The bytes of a property read as format 8.
+    QByteArray bytes8() const { return QByteArray(reinterpret_cast<const char*>(data), static_cast<qsizetype>(count)); }
 };
 
-/// Reads the whole property into `property`. An empty property is not an error,
-/// but leaves `property.data` null so callers can skip it.
-bool fetchProperty(Display* dpy, Window win, Atom prop, Atom type, XProperty& property) {
+/// Reads the whole property into `property` when it holds `expectedFormat`-bit
+/// items. An empty property, or one of another width, is not an error: it leaves
+/// `property.data` null so callers can skip it.
+bool fetchProperty(Display* dpy, Window win, Atom prop, Atom type, int expectedFormat, XProperty& property) {
     Atom actualType;
     int actualFormat;
     unsigned long bytesAfter;
@@ -95,8 +98,14 @@ bool fetchProperty(Display* dpy, Window win, Atom prop, Atom type, XProperty& pr
         return false;
     }
 
+    if (actualFormat != expectedFormat) {
+        if (data) {
+            XFree(data);
+        }
+        return false;
+    }
+
     property.data = data;
-    property.format = actualFormat;
     return data != nullptr;
 }
 
@@ -104,8 +113,8 @@ QString windowTitle(Display* dpy, Window win) {
     const Atom netName = XInternAtom(dpy, "_NET_WM_NAME", True);
     if (netName != None) {
         XProperty property;
-        if (fetchProperty(dpy, win, netName, AnyPropertyType, property) && property.format == 8) {
-            QString title = QString::fromUtf8(property.bytes());
+        if (fetchProperty(dpy, win, netName, AnyPropertyType, 8, property)) {
+            QString title = QString::fromUtf8(property.bytes8());
             const auto nul = title.indexOf(QChar());
             if (nul >= 0) {
                 title.truncate(nul);
@@ -132,7 +141,7 @@ qint64 windowPid(Display* dpy, Window win) {
     }
 
     XProperty property;
-    if (!fetchProperty(dpy, win, netWmPid, XA_CARDINAL, property) || property.format != 32 || property.count < 1) {
+    if (!fetchProperty(dpy, win, netWmPid, XA_CARDINAL, 32, property) || property.count < 1) {
         return -1;
     }
     const auto pid = static_cast<qint64>(property.items32()[0] & 0xffffffff);
@@ -229,8 +238,8 @@ QString WindowIcon::extract(const QString& wmClass, const QString& title, qint64
     }
 
     XProperty clientListProperty;
-    if (!fetchProperty(dpy, DefaultRootWindow(dpy), clientList, XA_WINDOW, clientListProperty) ||
-        clientListProperty.format != 32) {
+    if (!fetchProperty(dpy, DefaultRootWindow(dpy), clientList, XA_WINDOW, 32, clientListProperty) ||
+        clientListProperty.count < 1) {
         return QString();
     }
     const auto windowCount = clientListProperty.count;
@@ -255,7 +264,7 @@ QString WindowIcon::extract(const QString& wmClass, const QString& title, qint64
     QImage icon;
     for (const auto win : candidates) {
         XProperty iconProperty;
-        if (!fetchProperty(dpy, win, netWmIcon, XA_CARDINAL, iconProperty) || iconProperty.format != 32) {
+        if (!fetchProperty(dpy, win, netWmIcon, XA_CARDINAL, 32, iconProperty)) {
             continue;
         }
 

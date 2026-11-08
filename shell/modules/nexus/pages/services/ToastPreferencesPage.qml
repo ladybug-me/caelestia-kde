@@ -112,16 +112,13 @@ PageBase {
             text: qsTr("Sound")
         }
 
-        SliderRow {
+        NavRow {
             first: true
             last: true
-            icon: "notifications"
-            label: qsTr("Notification volume")
-            valueLabel: Math.round(value * 100) + "%"
-            value: GlobalConfig.audio.sounds.notificationVolume
-            enabled: GlobalConfig.audio.sounds.enabled
-            onMoved: value => GlobalConfig.audio.sounds.notificationVolume = value
-            onReleased: value => Audio.playNotification()
+            icon: "volume_up"
+            label: qsTr("Notification sounds")
+            status: qsTr("Volume and sound selector")
+            onClicked: root.nState.openSubPage("soundEffects")
         }
     }
 }

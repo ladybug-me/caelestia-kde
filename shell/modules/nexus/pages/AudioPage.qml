@@ -142,8 +142,8 @@ PageBase {
         NavRow {
             first: true
             icon: "volume_up"
-            label: qsTr("Sound effects")
-            status: qsTr("Feedback sounds and volume")
+            label: qsTr("Sounds")
+            status: qsTr("Notification and feedback sounds")
             onClicked: root.nState.openSubPage("soundEffects")
         }
 

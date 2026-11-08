@@ -29,6 +29,7 @@ MouseArea {
 
     onPressed: event => {
         root.startY = event.y;
+        root.swiped = false;
         if (event.button === Qt.RightButton)
             root.expandRequested(true);
         else if (event.button === Qt.MiddleButton)

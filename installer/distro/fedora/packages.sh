@@ -35,13 +35,15 @@ DARKLY_VERSION="0.5.43"
 # against the release it came from without the project publishing a sidecar beside it.
 # Printed as one line: callers split on the tab.
 darkly_rpm_asset_url() {
-    local release_json ver asset
-    release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/tags/v${DARKLY_VERSION}" 2>/dev/null || true)"
+    local release_json ver asset curl jq
+    curl="$(system_tool curl)"
+    jq="$(system_tool jq)"
+    [[ -n "$curl" && -n "$jq" ]] || return 1
+    release_json="$("$curl" -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/tags/v${DARKLY_VERSION}" 2>/dev/null || true)"
     [[ -n "$release_json" ]] || return 1
-    command -v jq >/dev/null 2>&1 || return 1
     ver="$(rpm -E %fedora 2>/dev/null | tr -d '[:space:]')"
     if [[ -n "$ver" ]]; then
-        asset="$(printf '%s' "$release_json" | jq -r --arg needle ".fc${ver}.x86_64.rpm" '
+        asset="$(printf '%s' "$release_json" | "$jq" -r --arg needle ".fc${ver}.x86_64.rpm" '
             first(.assets[]
                 | select((.browser_download_url // "") | test("\\.rpm$") and contains($needle)))
             | "\(.browser_download_url // "")\t\(.digest // "")"
@@ -50,7 +52,7 @@ darkly_rpm_asset_url() {
     fi
     # No RPM built for this Fedora: the newest one there is still installs, and dnf says so
     # if it does not.
-    asset="$(printf '%s' "$release_json" | jq -r '
+    asset="$(printf '%s' "$release_json" | "$jq" -r '
         first(.assets[] | select((.browser_download_url // "") | test("\\.fc[0-9]+\\.x86_64\\.rpm$")))
         | "\(.browser_download_url // "")\t\(.digest // "")"
     ' 2>/dev/null)"

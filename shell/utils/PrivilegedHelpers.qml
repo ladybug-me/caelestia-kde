@@ -46,13 +46,20 @@ Singleton {
     // `stat` reports the link itself, so a symlink is refused rather than read through,
     // and a mode that is not a mode is not trusted. Written without a template literal:
     // the shell's own `${...}` would be read as JavaScript.
+    //
+    // The interpreter and `stat` are named by absolute path, and PATH is replaced before
+    // either is reached. A source install puts this user's own bin directory first on
+    // PATH, so a `stat` they could drop there would otherwise be the thing deciding
+    // whether a helper is root's - which is the whole question. Nothing below needs PATH;
+    // it is replaced so that anything added here later cannot quietly reach a user's copy.
     readonly property string ownershipCheck: [
+        'PATH=/usr/sbin:/usr/bin:/sbin:/bin; export PATH',
         'for pair in "$@"; do',
         '    name="${pair%%|*}"',
         '    path="${pair#*|}"',
         '    [ -f "$path" ] && [ ! -L "$path" ] || continue',
-        '    owner="$(stat -c %u "$path" 2>/dev/null)" || continue',
-        '    mode="$(stat -c %a "$path" 2>/dev/null)" || continue',
+        '    owner="$(/usr/bin/stat -c %u "$path" 2>/dev/null)" || continue',
+        '    mode="$(/usr/bin/stat -c %a "$path" 2>/dev/null)" || continue',
         '    [[ "$owner" == 0 && "$mode" =~ ^[0-7]+$ ]] || continue',
         '    (( 8#$mode & 8#022 )) -eq 0 || continue',
         '    printf "%s=%s\\n" "$name" "$path"',
@@ -72,7 +79,9 @@ Singleton {
     Process {
         id: resolveProc
 
-        command: ["bash", "-c", root.ownershipCheck, "_"].concat(root.candidates.map(candidate => candidate.name + "|" + candidate.path))
+        // /bin/bash by absolute path: the snippet is bash, and a `bash` this user could
+        // shadow would be a `bash` deciding what is root's.
+        command: ["/bin/bash", "-c", root.ownershipCheck, "_"].concat(root.candidates.map(candidate => candidate.name + "|" + candidate.path))
 
         stdout: SplitParser {
             onRead: line => {

@@ -106,7 +106,7 @@ Singleton {
     Process {
         id: reportProc
 
-        command: ["bash", root.script, "--status", "--port", String(QuickShareService.listenPort)]
+        command: ["/bin/bash", root.script, "--status", "--port", String(QuickShareService.listenPort)]
         stdout: SplitParser {
             onRead: line => {
                 if (!line.startsWith("SETUP="))
@@ -154,7 +154,10 @@ Singleton {
     Process {
         id: setupProc
 
-        command: ["pkexec", "bash", root.script, "--port", String(QuickShareService.listenPort)]
+        // Both programs by absolute path. `pkexec` is what asks polkit for the privilege, and
+        // `bash` is what runs the helper; a copy of either dropped in a directory this user
+        // can write would be the thing standing between the prompt and the work.
+        command: ["/usr/bin/pkexec", "/bin/bash", root.script, "--port", String(QuickShareService.listenPort)]
         stderr: SplitParser {
             onRead: line => {
                 const said = line.trim();

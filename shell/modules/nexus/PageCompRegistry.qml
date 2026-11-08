@@ -175,7 +175,7 @@ QtObject {
                 Layout.alignment: Qt.AlignHCenter
             }
             StyledText {
-                text: qsTr("This page will be available in a future update.")
+                text: qsTr("This page is not available in this build. Update the shell to get it.")
                 color: Colours.palette.m3outlineVariant
                 font: Tokens.font.body.large
                 Layout.alignment: Qt.AlignHCenter

@@ -23,5 +23,6 @@ RowLayout {
         id: toggle
 
         cLayer: 2
+        Accessible.name: root.label
     }
 }

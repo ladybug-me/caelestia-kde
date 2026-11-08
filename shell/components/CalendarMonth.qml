@@ -30,6 +30,10 @@ ColumnLayout {
     readonly property int currMonth: root.viewDate.getMonth()
     readonly property int currYear: root.viewDate.getFullYear()
     readonly property date markedDate: isNaN(root.highlightedDate?.getTime() ?? NaN) ? new Date() : root.highlightedDate
+    // Built once: building the fonts inside the day and weekday delegates runs the builder
+    // chain 49 times per month.
+    readonly property font dayFont: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+    readonly property font weekdayFont: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
 
     signal monthShifted(int delta)
     signal todayRequested()
@@ -51,11 +55,6 @@ ColumnLayout {
         const now = new Date();
         return root.currMonth === now.getMonth() && root.currYear === now.getFullYear();
     }
-
-    // Built once: building the font inside the day and weekday delegates costs
-    // noticeable time on every open (42 + 7 builder chains).
-    readonly property font dayFont: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
-    readonly property font weekdayFont: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
 
     spacing: Tokens.spacing.extraSmall * root.scaleOffset
 

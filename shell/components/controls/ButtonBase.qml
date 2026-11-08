@@ -17,6 +17,10 @@ StyledRect {
     property bool isToggle
     property bool isRound
 
+    // Screen readers announce this; a caller overrides it with a clearer name when
+    // the visible content is an icon or a glyph.
+    property string accessibleName
+
     property bool radiusMorph: true
     property alias shapeMorph: stateLayer.shapeMorph
     property bool fillWidth
@@ -48,6 +52,21 @@ StyledRect {
 
     signal clicked
 
+    activeFocusOnTab: true
+    Accessible.role: Accessible.Button
+    Accessible.name: accessibleName
+    Accessible.checkable: isToggle
+    Accessible.checked: isToggle ? internalChecked : false
+
+    Keys.onPressed: event => {
+        if (event.key === Qt.Key_Space || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            if (root.isToggle)
+                root.internalChecked = !root.internalChecked;
+            root.clicked();
+            event.accepted = true;
+        }
+    }
+
     onCheckedChanged: internalChecked = checked
 
     radius: {
@@ -74,6 +93,16 @@ StyledRect {
                 root.internalChecked = !root.internalChecked;
             root.clicked();
         }
+    }
+
+    Rectangle {
+        anchors.fill: parent
+        radius: root.radius
+        color: "transparent"
+        border.width: 2
+        border.color: Colours.palette.m3primary
+        visible: root.activeFocus
+        z: 1
     }
 
     Behavior on radius {

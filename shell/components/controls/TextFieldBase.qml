@@ -15,6 +15,9 @@ TextField {
     selectionColor: Qt.alpha(Colours.palette.m3primary, 0.4)
     selectedTextColor: color
 
+    Accessible.role: Accessible.EditableText
+    Accessible.name: root.placeholderText
+
     font: Tokens.font.body.small
     renderType: TextField.NativeRendering
     cursorVisible: !readOnly

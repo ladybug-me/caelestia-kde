@@ -13,6 +13,18 @@ Switch {
     implicitWidth: implicitIndicatorWidth
     implicitHeight: implicitIndicatorHeight
 
+    activeFocusOnTab: true
+    Accessible.role: Accessible.CheckBox
+    Accessible.name: root.text
+    Accessible.checked: root.checked
+
+    Keys.onPressed: event => {
+        if (event.key === Qt.Key_Space || event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+            root.toggle();
+            event.accepted = true;
+        }
+    }
+
     onToggled: {
         Audio.playEffectTick();
     }
@@ -20,6 +32,8 @@ Switch {
     indicator: StyledRect {
         radius: Tokens.rounding.full
         color: !root.enabled ? Colours.disabledContainer : root.checked ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHighest, root.cLayer)
+        border.width: root.activeFocus ? 2 : 0
+        border.color: Colours.palette.m3primary
 
         implicitWidth: implicitHeight * 1.7
         implicitHeight: Tokens.font.body.medium.pointSize + Tokens.padding.small * 2

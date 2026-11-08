@@ -19,6 +19,10 @@ Item {
     readonly property bool graceLocked: localGraceLocked || Boolean(activeAuthenticator && activeAuthenticator.graceLocked)
     property string authMessage: ""
     property string pendingPassword: ""
+    // kscreenlocker holds a prompt open until it is answered. Starting another
+    // authentication in that window is refused as a failed login, so the greeter
+    // has to know a prompt is already waiting for it.
+    property bool promptPending: false
 
     property int lockoutSecondsRemaining: 0
     readonly property int lockoutMinutesRemaining: Math.ceil(lockoutSecondsRemaining / 60)
@@ -119,34 +123,48 @@ Item {
     }
 
     function ensureAuthenticating() {
-        if (root.graceLocked || root.isAuthenticating || (activeAuthenticator && activeAuthenticator.busy)) return;
+        if (root.graceLocked || root.isAuthenticating || root.promptPending || (activeAuthenticator && activeAuthenticator.busy)) return;
+        root.startConversation();
+    }
+
+    // The only place a conversation is started. kscreenlocker answers a second
+    // startAuthenticating() during a live prompt with a failure, so clearing the
+    // prompt state belongs here, on the one path that begins one.
+    function startConversation() {
+        root.promptPending = false;
         if (activeAuthenticator && typeof activeAuthenticator.startAuthenticating === "function") {
             activeAuthenticator.startAuthenticating();
         }
     }
 
+    // The only place a prompt is answered. A prompt is consumed exactly once, so the
+    // state it leaves behind lives here rather than at every call site.
+    function answerPrompt(pass) {
+        root.pendingPassword = "";
+        root.promptPending = false;
+        root.isAuthenticating = true;
+        authTimeoutTimer.restart();
+        Qt.callLater(() => {
+            if (activeAuthenticator && typeof activeAuthenticator.respond === "function") {
+                activeAuthenticator.respond(pass);
+            }
+        });
+    }
+
     function startLogin(pass) {
         if (!pass || pass.length === 0 || root.isAuthenticating || root.graceLocked) return;
         root.clearAuthMessage();
-        root.isAuthenticating = true;
         root.localGraceLocked = false;
-        authTimeoutTimer.restart();
 
-        if (activeAuthenticator) {
-            var hasPrompt = Boolean(activeAuthenticator.promptForSecret || activeAuthenticator.prompt);
-            if (typeof activeAuthenticator.respond === "function" && hasPrompt) {
-                Qt.callLater(() => {
-                    if (activeAuthenticator && typeof activeAuthenticator.respond === "function") {
-                        activeAuthenticator.respond(pass);
-                    }
-                });
-            } else {
-                root.pendingPassword = pass;
-                if (typeof activeAuthenticator.startAuthenticating === "function") {
-                    activeAuthenticator.startAuthenticating();
-                }
-            }
+        if (root.promptPending && typeof activeAuthenticator.respond === "function") {
+            root.answerPrompt(pass);
+            return;
         }
+
+        root.pendingPassword = pass;
+        root.isAuthenticating = true;
+        authTimeoutTimer.restart();
+        root.startConversation();
     }
 
     function clearAuthMessage() {
@@ -171,15 +189,14 @@ Item {
                 root.isAuthenticating = false;
                 root.localGraceLocked = false;
                 root.pendingPassword = "";
+                root.promptPending = false;
                 root.clearPasswordRequested();
                 if (activeAuthenticator && typeof activeAuthenticator.stopAuthenticating === "function") {
                     activeAuthenticator.stopAuthenticating();
                 } else if (activeAuthenticator && typeof activeAuthenticator.cancel === "function") {
                     activeAuthenticator.cancel();
                 }
-                if (activeAuthenticator && typeof activeAuthenticator.startAuthenticating === "function") {
-                    activeAuthenticator.startAuthenticating();
-                }
+                root.startConversation();
                 if (!root.authMessage) {
                     root.handleMessage(i18ndc("plasma_shell_org.kde.plasma.desktop", "@info:status", "Authentication timed out"));
                 }
@@ -214,9 +231,7 @@ Item {
         repeat: false
         onTriggered: {
             root.clearPasswordRequested();
-            if (activeAuthenticator && typeof activeAuthenticator.startAuthenticating === "function") {
-                activeAuthenticator.startAuthenticating();
-            }
+            root.startConversation();
             fallbackUnlockTimer.restart();
         }
     }
@@ -250,9 +265,8 @@ Item {
 
     Connections {
         function onFailed(kind, auth) {
-            authTimeoutTimer.stop();
-            root.pendingPassword = "";
-
+            // Only an interactive (password) failure ends the prompt; a scan that did not
+            // match leaves the password conversation it runs beside untouched.
             if (kind !== 0) {
                 if (kind & ScreenLocker.Authenticator.Fingerprint) {
                     root.fprintTries++;
@@ -263,6 +277,10 @@ Item {
                 }
                 return;
             }
+
+            authTimeoutTimer.stop();
+            root.pendingPassword = "";
+            root.promptPending = false;
 
             var authErr = (auth && auth.errorMessage) ? auth.errorMessage :
                           (activeAuthenticator && activeAuthenticator.errorMessage ? activeAuthenticator.errorMessage :
@@ -298,6 +316,7 @@ Item {
             root.isAuthenticating = false;
             root.localGraceLocked = false;
             root.pendingPassword = "";
+            root.promptPending = false;
             root.lockoutSecondsRemaining = 0;
             backendHeartbeatTimer.stop();
             authTimeoutTimer.stop();
@@ -327,36 +346,25 @@ Item {
         }
 
         function onPromptChanged(msg) {
+            // An echo-on prompt is answered with the same field, so it has to hold the
+            // guard too. Both prompt values are empty when the backend resets.
+            root.promptPending = Boolean(activeAuthenticator && activeAuthenticator.prompt);
             if (activeAuthenticator && activeAuthenticator.prompt) {
                 root.handleMessage(activeAuthenticator.prompt);
             }
             if (root.pendingPassword) {
-                var pass = root.pendingPassword;
-                root.pendingPassword = "";
-                root.isAuthenticating = true;
-                authTimeoutTimer.restart();
-                Qt.callLater(() => {
-                    if (activeAuthenticator && typeof activeAuthenticator.respond === "function") {
-                        activeAuthenticator.respond(pass);
-                    }
-                });
+                root.answerPrompt(root.pendingPassword);
             }
         }
 
         function onPromptForSecretChanged(msg) {
             fallbackUnlockTimer.stop();
             root.localGraceLocked = false;
+            // kscreenlocker also emits this with no prompt after an authenticator reset.
+            root.promptPending = Boolean(activeAuthenticator && activeAuthenticator.promptForSecret);
             authTimeoutTimer.stop();
             if (root.pendingPassword) {
-                var pass = root.pendingPassword;
-                root.pendingPassword = "";
-                root.isAuthenticating = true;
-                authTimeoutTimer.restart();
-                Qt.callLater(() => {
-                    if (activeAuthenticator && typeof activeAuthenticator.respond === "function") {
-                        activeAuthenticator.respond(pass);
-                    }
-                });
+                root.answerPrompt(root.pendingPassword);
                 return;
             }
             root.isAuthenticating = false;

@@ -145,7 +145,7 @@ PageBase {
             text: qsTr("Help")
             icon: "help"
             type: TextButton.Tonal
-            onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#10-update-issues")
+            onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#updating")
         }
     ]
 

@@ -1,28 +1,32 @@
-# Caelestia Lock Screen Architecture
+# Lock screen architecture
 
-This document outlines the architecture, component structure, design system, and developer guidelines for the native Caelestia lock screen implementation in KDE Plasma 6 / KWin.
+How Caelestia's lock screen replaces the stock Plasma greeter, and what the pieces
+inside `src/kde/shells/caelestia.desktop/` do.
 
 ![The Caelestia lock screen](../../assets/lockscreen-screenshot.png)
 
----
+## A Plasma shell package
 
-## 1. Overview & Architecture
+`kscreenlocker_greet` runs the lock screen session and owns authentication. It
+loads a shell package — the same mechanism the desktop uses — so Caelestia
+supplies a `Plasma/Shell` KPackage, and `plasmashellrc` points the greeter at it:
 
-In KDE Plasma 6, `kscreenlocker_greet` manages the lock screen session and authentication. Rather than relying on third-party Wayland proxies or nested compositors, Caelestia provides a **native Plasma Shell package** (`caelestia.desktop`).
-
-### How It Works
-- **Native Shell Package:** The greeter is packaged as a `Plasma/Shell` KPackage located at `~/.local/share/plasma/shells/caelestia.desktop/`.
-- **KDE Greeter Registration:** In `~/.config/plasmashellrc`, setting `[Shell]` -> `ShellPackage=caelestia.desktop` instructs `kscreenlocker_greet` to load Caelestia's lockscreen interface directly instead of the stock Plasma desktop shell.
-- **Hardware-Accelerated Rendering:** Rendering is performed directly within QtQuick and KWin's compositor using hardware GPU acceleration, eliminating the CPU software-compositing bottlenecks of nested Wayland proxies.
-- **Direct Authentication:** The greeter interfaces directly with KDE's ScreenLocker authentication backend (`authenticator`), providing seamless PAM authentication, error handling, grace locks, and fingerprint reader integration.
-
----
-
-## 2. Component Structure
-
-The lock screen greeter source is located in `src/kde/shells/caelestia.desktop/`:
-
+```ini
+[Shell]
+ShellPackage=caelestia.desktop
 ```
+
+The package is deployed to
+`~/.local/share/plasma/shells/caelestia.desktop/`.
+
+Because the greeter renders in-process under KWin, the UI is QtQuick on the
+compositor's GPU; a nested Wayland proxy would compose it in software instead.
+Authentication is the greeter's own backend (`authenticator`): PAM, its error
+reporting, grace locks, and fingerprint readers.
+
+## Components
+
+```text
 src/kde/shells/caelestia.desktop/
 ├── metadata.json                          # KPackage manifest required by kpackagetool6 / plasmashell.
 │                                          # Declares KPackageStructure=Plasma/Shell so the package is
@@ -47,69 +51,91 @@ src/kde/shells/caelestia.desktop/
             └── sysinfo.py                 # system info fetch script
 ```
 
----
+## Blur
 
-## 3. Design constants
+A Wayland greeter gets no compositor background blur, so the lock screen blurs
+its own copy of the wallpaper. The greeter already has the desktop wallpaper as
+an in-process item, so `LockScreenUi.qml` runs it through `FastBlur` with a
+radius of 64 and maps the result onto the background container (`lockBg`) and the
+layout regions with a `ShaderEffectSource` clipped by an `OpacityMask` that
+matches the container's corner radius. Card widgets sit on translucent surfaces
+(`Qt.rgba(..., 0.55)`) over that backdrop.
 
-The Caelestia lock screen brings the Quickshell lock screen design into native KDE Plasma 6:
+## Sizes
 
-1. **Frosted-Glass Blur Textures:**
-   - Because KWin Wayland does not apply compositor background blur to out-of-process greeter windows, Caelestia uses KDE's greeter wallpaper blurring technique by sourcing the in-process `wallpaper` item directly through `FastBlur` (radius 64).
-   - The blurred wallpaper is mapped onto the lockscreen container (`lockBg`) and layout regions using a live `ShaderEffectSource` clipped with `OpacityMask` matching the container's corner radius (`bgRadius`).
-   - Card widgets use translucent surface backgrounds (`Qt.rgba(..., 0.55)`).
+All three constants scale with `lockHeight / 1080`:
 
-2. **Concentric Corner Radii:**
-   - Outer background container radius: `bgRadius = 42px` (scaled with screen height).
-   - Inner container padding: `bgMargin = 16px`.
-   - Card widget corner radius: `cardRadius = bgRadius - bgMargin = 26px`.
+| Constant | Value at 1080p | Use |
+|---|---|---|
+| `bgRadius` | 42 | Outer background container |
+| `bgMargin` | 16 | Padding between the container and the cards |
+| `cardRadius` | 26 (`bgRadius - bgMargin`) | Card widgets |
 
-3. **Avatar Priority:**
-   - [`ProfileAvatar.qml`](../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/ProfileAvatar.qml) prioritizes `~/.face` directly from the user's home directory.
-   - Automatically falls back to the system account picture (`kscreenlocker_userImage`) and the Material Symbols user icon if `~/.face` is absent.
+## Avatars
 
-4. **Responsive Layouts:**
-   - **Landscape (Default):** 3-column layout (Left: Weather, Caelestiafetch, Media | Center: Clock, Avatar, Password Pill | Right: Resources, Notification Dock).
-   - **Portrait:** Centered vertical column adapting automatically on vertical displays.
+`ProfileAvatar.qml` prefers `~/.face` from the home directory, falls back to the
+system account picture (`kscreenlocker_userImage`), and falls back again to the
+Material Symbols person icon.
 
-5. **Notification Sync:**
-   - The dock never reads the shell's persisted `notifs.json`: that file is a debounced copy of the live model and trails it by 3–10 s, which made the lock screen disagree with the desktop notification page.
-   - `components/NotifSync.qml` owns the dock's data: it polls `notifs list` every 2 s (only while notifications are shown) and holds the snapshot the page hands to `NotifDock`. The shell answers with `{ quiet, items }` — its live list through the same `toPlainList()` it persists, plus whether popups are quiet — so notifications arriving, expiring or being cleared on the desktop show up or vanish here within a couple of seconds.
-   - Clear-all runs `notifs clear`, so the desktop page empties with it.
-   - Do-not-disturb stays the shell's, held by name: the dino game claims `notifs setDndHold lockGame true` while it runs and releases that hold afterwards. The shell keeps holds apart from the user's own switch, so a game ending can neither switch off a do-not-disturb the user set nor one a focus session is holding.
-   - Every call goes through `components/ShellCall.qml`, which hands back stdout alone; the greeter cannot see the shell's models, and a non-UTF-8 locale used to put Qt's warning on stdout in front of the JSON.
+## Layout
 
----
+Landscape is a three-column layout: weather, caelestiafetch and media on the
+left; clock, avatar and password pill in the centre; resources and the
+notification dock on the right. Portrait collapses to a single centred column.
 
-## 4. Deployment, Testing, and Uninstallation
+## Notifications
 
-### Deployment
-The lock screen greeter is deployed during the shell build ([`scripts/08-build-shell.sh`](../../scripts/08-build-shell.sh)); `scripts/02-packages.sh` only sets up the Python tooling and matugen the build needs:
+The dock does not read the shell's persisted `notifs.json`. That file is a
+debounced copy of the live model and trails it by three to ten seconds, which
+made the lock screen disagree with the desktop notification page.
+
+`components/NotifSync.qml` owns the dock's data instead. While notifications are
+on screen it runs `notifs list` every two seconds, and the page passes the
+snapshot to `NotifDock`. The shell answers with `{ quiet, items }` — its live list
+through the same `toPlainList()` it persists, plus whether popups are quiet — so
+a notification arriving, expiring or being cleared on the desktop appears or
+disappears here within a couple of seconds. Clear-all runs `notifs clear`, which
+empties the desktop page with it.
+
+Do-not-disturb stays the shell's, held by name. The dino game claims
+`notifs setDndHold lockGame true` while it runs and releases that hold when it
+ends, and the shell keeps holds apart from the user's own switch: a game ending
+can neither clear a do-not-disturb the user set nor one a focus session holds.
+
+Every call goes through `components/ShellCall.qml`, which returns stdout alone. The
+greeter cannot read the shell's models, and under a non-UTF-8 locale Qt put its own
+warning on stdout ahead of the JSON.
+
+## Deploying and testing
+
+[`scripts/08-build-shell.sh`](../../scripts/08-build-shell.sh) deploys the
+greeter; [`scripts/02-packages.sh`](../../scripts/02-packages.sh) only installs
+the Python tooling and matugen the build needs.
 
 ```bash
-# Manual installation / deployment:
+# By hand
 mkdir -p ~/.local/share/plasma/shells/
 cp -r src/kde/shells/caelestia.desktop ~/.local/share/plasma/shells/
 kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" "caelestia.desktop"
 ```
 
-### Interactive Testing
-You can test the lock screen UI safely in a non-blocking test window without locking your desktop session:
+The greeter can be run in a window without locking the session:
 
 ```bash
 /usr/lib/kscreenlocker_greet --testing
 ```
 
-### Uninstallation & Reverting
-To revert back to the stock KDE Breeze lock screen:
+## Reverting
+
+[`uninstall.sh`](../../uninstall.sh) does all three of these; by hand:
 
 ```bash
-# Reset shell package back to KDE default
+# Back to the stock shell package
 kwriteconfig6 --file plasmashellrc --group "Shell" --key "ShellPackage" --delete
 
-# Restore default Breeze greeter theme
+# Back to the Breeze greeter theme
 kwriteconfig6 --file kscreenlockerrc --group "Greeter" --key "Theme" "org.kde.breeze.desktop"
 
-# (Optional) Remove local shell files
+# Remove the local package copy
 rm -rf ~/.local/share/plasma/shells/caelestia.desktop
 ```
-This is also handled automatically when running [`./uninstall.sh`](../../uninstall.sh).

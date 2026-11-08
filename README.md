@@ -90,7 +90,7 @@ Settings are written to `~/.config/caelestia/shell.json`.
 | Problem | Fix |
 | --- | --- |
 | Widgets not appearing | Log out and back in, or run `caelestia shell -d` |
-| Colors not applying | Run `caelestia scheme set -n dynamic`, or `caelestia wallpaper -f <image>`. See [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md#34-colors-not-applying) |
+| Colors not applying | Run `caelestia scheme set -n dynamic`, or `caelestia wallpaper -f <image>`. See [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md#colours-do-not-apply) |
 | Install failed mid-way | Re-run `bash ./scripts/setup.sh` |
 | Full reset needed | See [TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) |
 

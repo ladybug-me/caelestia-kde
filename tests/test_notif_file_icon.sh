@@ -75,11 +75,11 @@ test_notification_popup_binds_get_notif_app_icon() {
     local popup
     popup="$(cat "$NOTIF_POPUP")"
 
-    assert_contains "$popup" 'source: Icons.getNotifAppIcon(root.modelData.appIcon)' \
-        "Notification popup ColouredIcon must bind Icons.getNotifAppIcon(root.modelData.appIcon)"
-    assert_not_contains "$popup" 'source: Quickshell.iconPath(root.modelData.appIcon)' \
+    assert_file_matches "$NOTIF_POPUP" 'source: Icons\.getNotifAppIcon\(root\.modelData(\?\.appIcon \?\? "")?(\.appIcon)?\)' \
+        "Notification popup ColouredIcon must bind Icons.getNotifAppIcon"
+    assert_not_contains "$popup" 'source: Quickshell.iconPath(root.modelData' \
         "Notification popup ColouredIcon must not directly call Quickshell.iconPath"
-    assert_contains "$popup" 'layer.enabled: root.modelData.appIcon.endsWith("symbolic")' \
+    assert_file_matches "$NOTIF_POPUP" 'layer\.enabled: root\.modelData(\?\.appIcon\?\.endsWith\("symbolic"\) \?\? false|\.appIcon\.endsWith\("symbolic"\))' \
         "Notification popup must preserve symbolic icon colorization guard"
 }
 

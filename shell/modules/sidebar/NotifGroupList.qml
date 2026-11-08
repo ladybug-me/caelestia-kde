@@ -78,6 +78,10 @@ LazyListView {
 
             onExpandRequested: expanded => root.requestToggleExpand(expanded)
             onCloseRequested: modelData?.close()
+            onActivateRequested: {
+                if (GlobalConfig.notifs.actionOnClick && !notifInner.body?.hoveredLink && modelData?.activate() && !Visibilities.sidebarPinned)
+                    root.visibilities.sidebar = false;
+            }
 
             ParallelAnimation {
                 running: notif.modelData?.closed ?? false

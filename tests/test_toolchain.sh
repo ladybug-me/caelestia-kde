@@ -5,6 +5,11 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/toolchain.sh"
 
+# The library names the programs it trusts by absolute path so a PATH this user can write
+# cannot stand in for them. Every stub here lives on PATH, so the lookup is pointed back at
+# it; that the real lookup uses /usr/bin is covered by tests/test_tools.sh.
+system_tool() { printf '%s\n' "$1"; }
+
 # The cava release publishes no checksum for its archives, so unpacking one is a decision
 # the user makes through the documented opt-out. These tests make that decision the same
 # way a user would, and the tests that check the refusal do not.

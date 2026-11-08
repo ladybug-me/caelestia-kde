@@ -67,4 +67,34 @@ test_the_elevated_helper_is_only_ever_one_root_owns() {
         "nothing elevates the copy that sits next to the shell"
 }
 
+# polkit runs whatever path it is handed as root, and the shell inherits PATH from a session
+# where a source install puts this user's own bin directory first. A `pkexec`, `bash` or
+# `stat` they could write there would be the thing deciding what runs as root, so none of
+# them may be looked up.
+test_nothing_deciding_what_runs_as_root_comes_from_path() {
+    local helpers="$SHELL_DIR/utils/PrivilegedHelpers.qml" body
+    body="$(cat "$helpers")"
+
+    assert_contains "$body" "'PATH=/usr/sbin:/usr/bin:/sbin:/bin; export PATH'" \
+        "the ownership check replaces the inherited PATH before it runs anything"
+    assert_contains "$body" '/usr/bin/stat -c %u' \
+        "and asks stat by absolute path"
+    assert_contains "$body" 'command: ["/bin/bash", "-c"' \
+        "and runs the check with a bash named by absolute path"
+}
+
+test_every_elevation_names_the_program_it_runs() {
+    local sites rellooked
+    sites="$(grep -rn 'command:.*pkexec' "$SHELL_DIR" --include='*.qml' || true)"
+
+    rellooked="$(printf '%s\n' "$sites" | grep -v '"/usr/bin/pkexec"' || true)"
+    assert_eq "" "$rellooked" "every elevation names pkexec by absolute path"
+
+    rellooked="$(printf '%s\n' "$sites" | grep -v '"/bin/bash"' || true)"
+    assert_eq "" "$rellooked" "and hands the helper to a bash named by absolute path"
+
+    assert_contains "$sites" 'QuickShareSetup.qml' "the Quick Share helper is one of them"
+    assert_contains "$sites" 'AiSettingsPage.qml' "so is the Ollama helper"
+}
+
 run_tests

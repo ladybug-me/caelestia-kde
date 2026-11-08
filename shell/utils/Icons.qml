@@ -8,6 +8,9 @@ import Caelestia.Config
 Singleton {
     id: root
 
+    /// What a notification may point `app_icon` at.
+    readonly property list<string> notificationIconExtensions: ["png", "jpg", "jpeg", "webp", "gif", "bmp", "ico", "svg", "xpm", "avif", "tiff"]
+
     readonly property var weatherIcons: ({
             "0": "clear_day",
             "1": "clear_day",
@@ -174,11 +177,20 @@ Singleton {
     }
 
     // The spec lets app_icon be a file:// URI or an absolute path as well as a theme
-    // icon name (Electron apps send the path to their bundled PNG).
+    // icon name (Electron apps send the path to their bundled PNG). The sender chooses
+    // that path, so it is only read when it names a picture: otherwise any file on the
+    // machine is something a notification could ask the shell to open.
     function getNotifAppIcon(icon: string): string {
-        if (icon.startsWith("file://") || icon.startsWith("/"))
-            return icon.startsWith("/") ? `file://${icon}` : icon;
-        return Quickshell.iconPath(icon);
+        if (!icon.startsWith("file://") && !icon.startsWith("/"))
+            return Quickshell.iconPath(icon);
+
+        const path = icon.startsWith("/") ? icon : icon.slice("file://".length);
+        const dot = path.lastIndexOf(".");
+        const extension = dot < 0 ? "" : path.slice(dot + 1).toLowerCase();
+        if (!notificationIconExtensions.includes(extension))
+            return Quickshell.iconPath("application-x-executable");
+
+        return icon.startsWith("/") ? `file://${path}` : icon;
     }
 
     function getNotifIcon(summary: string, urgency: int): string {

@@ -24,13 +24,15 @@ MATUGEN_VERSION="4.2.0"
 # that names it, so the archive can be checked against the release it came from. Printed as
 # one line: callers split on the tab.
 matugen_asset_url() {
-    local carch="$1" release_json asset name
-    command -v jq >/dev/null 2>&1 || return 1
-    release_json="$(curl -fsSL "https://api.github.com/repos/InioX/matugen/releases/tags/v${MATUGEN_VERSION}" 2>/dev/null || true)"
+    local carch="$1" release_json asset name curl jq
+    curl="$(system_tool curl)"
+    jq="$(system_tool jq)"
+    [[ -n "$curl" && -n "$jq" ]] || return 1
+    release_json="$("$curl" -fsSL "https://api.github.com/repos/InioX/matugen/releases/tags/v${MATUGEN_VERSION}" 2>/dev/null || true)"
     [[ -n "$release_json" ]] || return 1
     name="matugen-${MATUGEN_VERSION}-${carch}.tar.gz"
 
-    asset="$(printf '%s' "$release_json" | jq -r --arg name "$name" '
+    asset="$(printf '%s' "$release_json" | "$jq" -r --arg name "$name" '
         first(.assets[] | select(.name == $name))
         | "\(.browser_download_url // "")\t\(.digest // "")"
     ' 2>/dev/null)"

@@ -223,8 +223,18 @@ download_kwinscript() {
         fi
         return 0
     fi
-    echo "Warning: no published checksum for $url - installing it unverified (SHA-256 $actual)." >&2
-    return 0
+
+    # Every other release is a tag nobody here has checked, and Codeberg keeps no digest for
+    # its assets, so the bytes cannot be tied to the page they came from. That is the user's
+    # decision to make, the same way it is for every other unverified download here.
+    if [[ "${CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD:-}" == "1" ]]; then
+        echo "Warning: no published checksum for $url - installing it unverified (SHA-256 $actual)." >&2
+        return 0
+    fi
+
+    echo "Error: $url is not the pinned release ($KROHNKITE_PINNED_VERSION) and publishes no checksum." >&2
+    echo "       Set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to install it anyway (SHA-256 $actual)." >&2
+    return 1
 }
 
 do_install() {

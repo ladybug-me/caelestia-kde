@@ -2,14 +2,23 @@
 if [[ -z "${CAELESTIA_DOWNLOAD_SOURCED:-}" ]]; then
 CAELESTIA_DOWNLOAD_SOURCED=1
 
+# shellcheck source=scripts/lib/tools.sh
+# Not optional: every function below resolves the program it runs through `system_tool`, so
+# a shell that cannot find this file has no way to tell a real digest from a forged one.
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/tools.sh"
+
 file_sha256() {
-    sha256sum "$1" | cut -d' ' -f1
+    local sha256sum cut
+    sha256sum="$(system_tool sha256sum)"
+    cut="$(system_tool cut)"
+    "$sha256sum" "$1" | "$cut" -d' ' -f1
 }
 
 fetch_asset() {
-    local url="$1" dest="$2"
+    local url="$1" dest="$2" curl
     shift 2
-    curl -fsSL --connect-timeout 10 "$@" "$url" -o "$dest"
+    curl="$(system_tool curl)"
+    "$curl" -fsSL --connect-timeout 10 "$@" "$url" -o "$dest"
 }
 
 # 0 when the artifact matches the checksum published beside it, 1 when it does not
@@ -17,13 +26,14 @@ fetch_asset() {
 # caller's decision: an executable has to match, an archive may be allowed through
 # with a warning.
 verify_download() {
-    local url="$1" file="$2" sidecar expected
+    local url="$1" file="$2" sidecar expected cut
+    cut="$(system_tool cut)"
     sidecar="$(mktemp)"
     if ! fetch_asset "$url.sha256" "$sidecar" 2>/dev/null; then
         rm -f "$sidecar"
         return 2
     fi
-    expected="$(cut -d' ' -f1 < "$sidecar")"
+    expected="$("$cut" -d' ' -f1 < "$sidecar")"
     rm -f "$sidecar"
     [[ -n "$expected" ]] || return 2
     [[ "$expected" == "$(file_sha256 "$file")" ]]
@@ -118,8 +128,9 @@ fetch_verified_asset() { # url dest [digest] [verb]
 # behind. Extraction runs as root for the SDK, and tar restores the mode and the owner
 # from the archive, so the entries are the thing to check when no hash is published.
 archive_entries_are_safe() {
-    local archive="$1" listing line mode name
-    listing="$(tar -tvzf "$archive" 2>/dev/null)" || return 1
+    local archive="$1" listing line mode name tar
+    tar="$(system_tool tar)"
+    listing="$("$tar" -tvzf "$archive" 2>/dev/null)" || return 1
 
     while IFS= read -r line; do
         [[ -n "$line" ]] || continue

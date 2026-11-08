@@ -439,7 +439,7 @@ exit $status`]
             // A missing helper is a helper this row may not run: there is no root-owned
             // copy to ask, and the user-writable one next to the shell is not asked either.
             running: root.ollamaScriptPath() !== ""
-            command: ["bash", root.ollamaScriptPath(), "--status"]
+            command: ["/bin/bash", root.ollamaScriptPath(), "--status"]
             stdout: SplitParser {
                 onRead: line => {
                     const t = (line || "").trim();
@@ -454,7 +454,9 @@ exit $status`]
         Process {
             id: ollamaInstallProc
 
-            command: ["pkexec", "bash", root.ollamaScriptPath(), "--models", GlobalConfig.ai.defaultOllamaModel || "llama3"]
+            // Both by absolute path, for the same reason as the Quick Share helper: neither
+            // `pkexec` nor `bash` may be something this user could have put on PATH.
+            command: ["/usr/bin/pkexec", "/bin/bash", root.ollamaScriptPath(), "--models", GlobalConfig.ai.defaultOllamaModel || "llama3"]
             stdout: SplitParser {
                 onRead: line => root.ollamaInstallStatus = line
             }

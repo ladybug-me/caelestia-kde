@@ -8,6 +8,12 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/privileges.
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/packages.sh"
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/matugen.sh"
 
+# The library names the programs it trusts by absolute path so a PATH this user can write
+# cannot stand in for them. A stub here lives on PATH, so the lookup is pointed back at it;
+# that the real lookup uses /usr/bin is covered by tests/test_tools.sh. A subshell inherits
+# this definition, which is why one line covers every case in this file.
+system_tool() { printf '%s\n' "$1"; }
+
 # install_matugen_github resolves the asset and the digest the release reports for it from
 # the GitHub API and then downloads the asset. curl writes to the path it is given: the stub
 # answers the API with a one-asset release the way the pinned tag reports one, and copies the

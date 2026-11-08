@@ -35,10 +35,12 @@ DARKLY_VERSION="0.5.43"
 # against the release it came from without the project publishing a sidecar beside it.
 # Printed as one line: callers split on the tab.
 darkly_deb_asset_url() {
-    local release_json id ver needle asset
-    release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/tags/v${DARKLY_VERSION}" 2>/dev/null || true)"
+    local release_json id ver needle asset curl jq
+    curl="$(system_tool curl)"
+    jq="$(system_tool jq)"
+    [[ -n "$curl" && -n "$jq" ]] || return 1
+    release_json="$("$curl" -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/tags/v${DARKLY_VERSION}" 2>/dev/null || true)"
     [[ -n "$release_json" ]] || return 1
-    command -v jq >/dev/null 2>&1 || return 1
     id="$(grep -E '^ID=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
     ver="$(grep -E '^VERSION_ID=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"')"
 
@@ -57,7 +59,7 @@ darkly_deb_asset_url() {
 
     # The needles are tried in order, so the most specific asset this distro has wins.
     for needle in "${needles[@]}"; do
-        asset="$(printf '%s' "$release_json" | jq -r --arg needle "$needle" '
+        asset="$(printf '%s' "$release_json" | "$jq" -r --arg needle "$needle" '
             first(.assets[]
                 | select((.browser_download_url // "") | test("_amd64\\.deb$") and contains($needle)))
             | "\(.browser_download_url // "")\t\(.digest // "")"
@@ -118,12 +120,14 @@ CLIPHIST_VERSION="0.7.0"
 # reports a sha256 for each asset in the same response that names it, so the download can be
 # checked against the release it came from. Printed as one line: callers split on the tab.
 cliphist_asset_url() {
-    local carch="$1" release_json asset
-    release_json="$(curl -fsSL "https://api.github.com/repos/sentriz/cliphist/releases/tags/v${CLIPHIST_VERSION}" 2>/dev/null || true)"
+    local carch="$1" release_json asset curl jq
+    curl="$(system_tool curl)"
+    jq="$(system_tool jq)"
+    [[ -n "$curl" && -n "$jq" ]] || return 1
+    release_json="$("$curl" -fsSL "https://api.github.com/repos/sentriz/cliphist/releases/tags/v${CLIPHIST_VERSION}" 2>/dev/null || true)"
     [[ -n "$release_json" ]] || return 1
-    command -v jq >/dev/null 2>&1 || return 1
 
-    asset="$(printf '%s' "$release_json" | jq -r --arg suffix "-${carch}" '
+    asset="$(printf '%s' "$release_json" | "$jq" -r --arg suffix "-${carch}" '
         first(.assets[] | select((.name // "") | endswith($suffix)))
         | "\(.browser_download_url // "")\t\(.digest // "")"
     ' 2>/dev/null)"

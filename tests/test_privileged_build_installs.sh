@@ -12,6 +12,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# The installers name the programs they trust by absolute path, so that a directory this
+# user can write cannot stand in for `sha256sum` or `jq`. The stubs in these tests live on
+# PATH, so a subshell that drives an extracted function points the lookup back at it; that
+# the real lookup uses /usr/bin is covered by tests/test_tools.sh.
+path_tools() {
+    system_tool() { printf '%s\n' "$1"; }
+}
+
 # Every file that either runs a build system or escalates on its behalf.
 BUILDERS=(
     scripts/08-build-shell.sh
@@ -277,6 +285,7 @@ JSON
 
     out="$(
         eval "$(extract_function "$REPO_ROOT/installer/distro/debian/packages.sh" cliphist_asset_url)"
+        path_tools
         CLIPHIST_VERSION="$version"
         curl() { cat "$tmp/release.json"; }
         cliphist_asset_url linux-amd64
@@ -373,6 +382,7 @@ JSON
 
     out="$(
         eval "$(extract_function "$REPO_ROOT/installer/distro/debian/packages.sh" darkly_deb_asset_url)"
+        path_tools
         DARKLY_VERSION="$version"
         curl() {
             printf '%s\n' "$*" >> "$log"
@@ -399,6 +409,7 @@ test_the_release_digest_decides_whether_a_download_is_used() {
     printf 'darkly\n' > "$file"
     eval "$(extract_function "$REPO_ROOT/scripts/lib/download.sh" asset_matches_digest)"
     eval "$(extract_function "$REPO_ROOT/scripts/lib/download.sh" file_sha256)"
+    path_tools
     expected="$(file_sha256 "$file")"
 
     asset_matches_digest "$file" "sha256:$expected"
@@ -422,6 +433,7 @@ test_an_unknown_darkly_asset_is_reported_rather_than_substituted() {
 
     out="$(
         eval "$(extract_function "$REPO_ROOT/installer/distro/debian/packages.sh" darkly_deb_asset_url)"
+        path_tools
         DARKLY_VERSION="$version"
         curl() { cat "$tmp/release.json"; }
         darkly_deb_asset_url

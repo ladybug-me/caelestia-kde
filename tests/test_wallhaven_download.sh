@@ -184,4 +184,32 @@ test_the_destination_is_built_from_checked_parts() {
         "and so does the wallpaper name"
 }
 
+# A server decides how much it sends. Without a bound, one download - or one that never ends -
+# fills the disk the session is running on.
+test_a_download_is_capped() {
+    require_node || return 0
+    local script order
+    script="$(extract_download_script)" || {
+        fail "the download script could not be read out of the service"
+        return 0
+    }
+
+    assert_contains "$script" "MAX_BYTES = 64 * 1024 * 1024" \
+        "a wallpaper download has an upper bound"
+
+    # The length the server claims is checked before anything is written, and the bytes it
+    # actually sends are counted as they arrive, since a claim can be a lie.
+    order="$(printf '%s\n' "$script" | awk '
+        /^MAX_BYTES = / { cap = NR }
+        /if total > MAX_BYTES/ { claimed = NR }
+        /if downloaded > MAX_BYTES/ { streamed = NR }
+        /handle\.write\(chunk\)/ { write = NR }
+        END {
+            if (cap && claimed && streamed && write && claimed < write && streamed < write)
+                print "ok"
+        }')"
+    assert_eq "ok" "$order" \
+        "the cap is checked before the bytes are written, both ways it can be exceeded"
+}
+
 run_tests

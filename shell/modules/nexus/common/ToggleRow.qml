@@ -17,6 +17,9 @@ StyledSwitch {
 
     Layout.fillWidth: true
 
+    // The switch has no independent text; the row's own copy names and explains it.
+    Accessible.description: root.subtext
+
     horizontalPadding: Tokens.padding.largeIncreased
     verticalPadding: Tokens.padding.medium
     font: Tokens.font.body.small

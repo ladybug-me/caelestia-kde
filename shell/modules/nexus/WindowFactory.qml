@@ -85,6 +85,7 @@ Singleton {
             root.openWindow = nexusComp.createObject(dummy, {
                 visible: false
             });
+            Logger.mark("nexus=created");
         }
     }
 

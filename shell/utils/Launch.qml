@@ -36,6 +36,21 @@ Singleton {
             Quickshell.execDetached(root.wrap(command));
     }
 
+    /// Opens a link clicked in a notification. The URL is sender-controlled text, so
+    /// only web and mail links go through: another scheme (`file://`, `smb://`, an
+    /// application's own handler) would turn one click into whatever the sender named.
+    function openUrl(url: string): void {
+        const scheme = /^([A-Za-z][A-Za-z0-9+.-]*):/.exec(url || "");
+        if (!scheme)
+            return;
+
+        const name = scheme[1].toLowerCase();
+        if (name !== "http" && name !== "https" && name !== "mailto")
+            return;
+
+        Qt.openUrlExternally(url);
+    }
+
     /// Whether KDE ships a settings module by this name. Printing, the on-screen
     /// keyboard and the accessibility options stay KDE's to own: the shell gives them a
     /// front door, and says so when the module is missing rather than opening a dead page.

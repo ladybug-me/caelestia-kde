@@ -89,9 +89,12 @@ Singleton {
             }
 
             // A portal intercepts the check and redirects to itself, so a URL that is
-            // still the check URL means the network answered normally.
+            // still the check URL means the network answered normally. Whatever did
+            // answer chose the URL, so only a web page is opened: a `file://` or
+            // custom-scheme redirect would hand a hostile network a local launch.
             const url = probeOutput.text.trim();
-            root.portalUrl = url.startsWith(root.checkUrl) ? "" : url;
+            const isWebPage = /^https?:\/\//i.test(url);
+            root.portalUrl = !isWebPage || url.startsWith(root.checkUrl) ? "" : url;
             if (root.portalUrl !== "")
                 Quickshell.execDetached(["xdg-open", root.portalUrl]);
             else

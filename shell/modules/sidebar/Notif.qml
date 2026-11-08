@@ -6,6 +6,7 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.utils
 
 StyledRect {
     id: root
@@ -166,7 +167,7 @@ StyledRect {
             wrapMode: Text.WrapAtWordBoundaryOrAnywhere
 
             onLinkActivated: link => {
-                Qt.openUrlExternally(link);
+                Launch.openUrl(link);
                 if (!Visibilities.sidebarPinned)
                     root.visibilities.sidebar = false;
             }

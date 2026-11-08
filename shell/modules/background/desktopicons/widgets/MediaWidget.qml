@@ -9,23 +9,20 @@ import qs.components.controls
 import qs.services
 
 // Now playing from the active MPRIS player, with transport controls.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
     readonly property var player: Players.active
     readonly property real progress: player?.length > 0 ? Math.min(1, (player.position % player.length) / player.length) : 0
     readonly property string artUrl: Players.getArtUrl(player)
     // Artwork above the text when the card is taller than it is wide, or when that is
     // what the widget was set to. A wide card always keeps the two side by side.
-    readonly property bool vertical: root.height > root.width * 1.1 ? true : root.width > root.height * 1.6 ? false : cfg.layout === "vertical"
-    readonly property bool artworkBackground: cfg.albumArtBackground === true && !!root.artUrl
+    readonly property bool vertical: root.height > root.width * 1.1 || (root.width <= root.height * 1.6 && cfg.layout === "vertical")
+    readonly property bool artworkBackground: cfg.albumArtBackground && !!root.artUrl
+
     // The card leaves the desktop to itself while nothing is playing, but only when
     // asked: a widget that vanishes on its own is hard to find again.
-    readonly property bool wantsHidden: cfg.hideWhenNoMedia === true && !root.player
+    wantsHidden: cfg.hideWhenNoMedia && !root.player
 
     Timer {
         running: root.player?.isPlaying ?? false

@@ -21,19 +21,12 @@ ColumnLayout {
 
     readonly property var widget: DesktopLayout.widgets[root.widgetId] ?? null
     readonly property var settings: root.catalog ? root.catalog.settingsFor(root.type) : []
-    readonly property var defaults: root.catalog ? root.catalog.defaultsFor(root.type) : ({})
+    // The widget's settings with its type's defaults filled in -- the same resolution
+    // the card uses, so the form never shows a value the desktop is not drawing with.
+    readonly property var values: root.catalog ? root.catalog.configFor(root.type, root.widget?.config) : ({})
 
-    // Bumped by a reset. A control that was dragged has replaced its own binding
-    // with what the drag wrote, so the fields reload from the config instead.
-    property int reloadTick: 0
-
-    /// An unset key falls back to the type's default, which is what the widget
-    /// itself draws with, so the form never shows a value the desktop is not using.
     function read(key: string): var {
-        if (!key)
-            return undefined;
-        const value = root.widget?.config?.[key];
-        return value === undefined ? root.defaults[key] : value;
+        return key ? root.values[key] : undefined;
     }
 
     function write(key: string, value: var): void {
@@ -42,11 +35,6 @@ ColumnLayout {
         const patch = {};
         patch[key] = value;
         DesktopLayout.setWidgetConfig(root.widgetId, patch);
-    }
-
-    function reset(): void {
-        DesktopLayout.resetWidgetConfig(root.widgetId);
-        root.reloadTick++;
     }
 
     function percentValue(v: real): string {
@@ -119,14 +107,6 @@ ColumnLayout {
 
                 checked: toggleRow.field ? root.read(toggleRow.field.key) !== false : false
                 onToggled: root.write(toggleRow.field.key, checked)
-
-                Connections {
-                    function onReloadTickChanged(): void {
-                        toggle.checked = root.read(toggleRow.field.key) !== false;
-                    }
-
-                    target: root
-                }
             }
         }
     }
@@ -170,14 +150,6 @@ ColumnLayout {
                 stepSize: sliderRow.field?.step ?? 0
                 value: sliderRow.current
                 onInteraction: v => root.write(sliderRow.field.key, sliderRow.whole ? Math.round(v) : v)
-
-                Connections {
-                    function onReloadTickChanged(): void {
-                        slider.value = sliderRow.current;
-                    }
-
-                    target: root
-                }
             }
         }
     }
@@ -246,14 +218,6 @@ ColumnLayout {
                 // Every keystroke is written, not just the end of the edit: the panel can
                 // be closed with a click outside, which would otherwise drop the value.
                 onTextEdited: root.write(textRow.field.key, text)
-
-                Connections {
-                    function onReloadTickChanged(): void {
-                        input.text = textRow.current;
-                    }
-
-                    target: root
-                }
             }
         }
     }
@@ -286,13 +250,7 @@ ColumnLayout {
                     Layout.fillWidth: true
                     text: pathRow.current !== "" ? pathRow.current.substring(pathRow.current.lastIndexOf("/") + 1) : (pathRow.field?.placeholder ?? qsTr("Choose…"))
                     type: TextButton.Filled
-                    onClicked: {
-                        picker.target = pathRow.field.key;
-                        picker.selectFolder = pathRow.folder;
-                        picker.filters = pathRow.folder ? ["*"] : ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.svg", "*.gif"];
-                        picker.filterLabel = pathRow.folder ? qsTr("All folders") : qsTr("Images");
-                        picker.open();
-                    }
+                    onClicked: picker.open()
                 }
 
                 IconButton {
@@ -306,10 +264,15 @@ ColumnLayout {
             FileDialog {
                 id: picker
 
-                property string target: ""
+                // Each row edits exactly one key, so the dialog's answers are constants
+                // for the row rather than set just before it opens.
+                readonly property string target: pathRow.field?.key ?? ""
 
-                title: selectFolder ? qsTr("Choose a folder") : qsTr("Choose an image")
-                cwd: pathRow.current.startsWith(Paths.home) ? ["Home", ...pathRow.current.substring(Paths.home.length).split("/").filter(s => s.length > 0)] : ["Home"]
+                title: pathRow.folder ? qsTr("Choose a folder") : qsTr("Choose an image")
+                selectFolder: pathRow.folder
+                filters: pathRow.folder ? ["*"] : ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.svg", "*.gif"]
+                filterLabel: pathRow.folder ? qsTr("All folders") : qsTr("Images")
+                cwd: Paths.cwdSegments(pathRow.current)
                 onAccepted: path => root.write(picker.target, path.replace(/^file:\/\//, "").replace(/\/+$/, ""))
             }
         }

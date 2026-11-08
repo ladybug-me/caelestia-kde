@@ -171,13 +171,21 @@ QtObject {
         return rows;
     }
 
-    // The config a widget of this type holds when nothing has been changed, so that
-    // "Reset" has something to write and every control has a value to show.
+    // The config a widget of this type holds when nothing has been changed. The store
+    // keeps only what was changed, so this is where a default lives; nothing else
+    // repeats them.
     function defaultsFor(type: string): var {
         const out = Object.assign({}, info(type).config ?? {});
         for (const row of settingsFor(type))
             if (row.default !== undefined)
                 out[row.key] = row.default;
         return out;
+    }
+
+    // What a widget really holds: what the type ships with, with the widget's own
+    // settings on top. One resolver for the card, the form and everything else that
+    // reads a widget's config, so none of them can disagree about a default.
+    function configFor(type: string, stored: var): var {
+        return Object.assign({}, defaultsFor(type), stored ?? {});
     }
 }

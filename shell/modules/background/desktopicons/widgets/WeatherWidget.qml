@@ -9,16 +9,12 @@ import qs.services
 // Current weather on its own, with the next few days underneath when there is
 // room for them. The data belongs to the shared weather service, so this only
 // decides how much of it fits.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
-    readonly property bool showForecast: cfg.showForecast !== false
+    readonly property bool showForecast: cfg.showForecast
     // A cell is not a page: more days than the card can hold would overflow it.
-    readonly property int wantedDays: Math.max(1, Math.min(6, Math.round(cfg.forecastDays ?? 3)))
+    readonly property int wantedDays: Math.max(1, Math.min(6, Math.round(cfg.forecastDays)))
     readonly property int rowCount: {
         if (!root.showForecast || !Weather.forecast || Weather.forecast.length === 0)
             return 0;

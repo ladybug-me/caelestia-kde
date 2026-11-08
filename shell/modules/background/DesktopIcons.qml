@@ -106,6 +106,9 @@ Item {
 
     property string openGroupId: ""
     property var tiles: ({})
+    // The large items, whose card edges and frames DesktopOverlay draws: `tiles`
+    // holds the small icons too, and those have no card.
+    readonly property var cardTiles: Object.keys(tiles).filter(k => root.isBigKey(k)).map(k => tiles[k])
 
     // Renames that are in flight: old file name -> new file name, so the new
     // file keeps the old one's cell or group slot.
@@ -1026,8 +1029,7 @@ Item {
             {
                 type: type,
                 w: info.size.w,
-                h: info.size.h,
-                config: info.config ?? {}
+                h: info.size.h
             }
         ], cell);
     }
@@ -1419,7 +1421,7 @@ Item {
                     plan.mode = "join";
             } else if (widgetOf(target)?.type === "folder" && (!internal || dragKeys.every(k => !isWidgetKey(k)))) {
                 plan.mode = "folder";
-                plan.dest = widgetOf(target).config.path ?? "";
+                plan.dest = widgetCatalog.configFor("folder", widgetOf(target).config).path ?? "";
             }
             return plan;
         }

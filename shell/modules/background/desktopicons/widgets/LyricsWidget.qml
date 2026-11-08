@@ -3,11 +3,8 @@ pragma ComponentBehavior: Bound
 import "../.."
 import QtQuick
 
-Item {
+DesktopWidget {
     id: root
-
-    property var frame: null
-    property var controller: null
 
     DesktopLyrics {
         anchors.fill: parent

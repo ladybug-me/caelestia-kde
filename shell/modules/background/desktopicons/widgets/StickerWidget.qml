@@ -10,15 +10,11 @@ import qs.utils
 
 // An image on the desktop: a sticker, a logo, an animated GIF. Double click to pick
 // another file; the card is moved and resized from the widget editor like the rest.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
     readonly property string path: cfg.path ?? ""
-    readonly property real imageOpacity: typeof cfg.opacity === "number" ? Math.max(0, Math.min(1, cfg.opacity)) : 1
+    readonly property real imageOpacity: Math.max(0, Math.min(1, cfg.opacity))
     readonly property bool animated: /\.gif$/i.test(root.path)
 
     function chooseImage(): void {
@@ -65,7 +61,7 @@ Item {
         title: qsTr("Choose an image")
         filters: ["*.png", "*.jpg", "*.jpeg", "*.webp", "*.svg", "*.gif"]
         filterLabel: qsTr("Images")
-        cwd: root.path.startsWith(Paths.home) ? ["Home", ...root.path.substring(Paths.home.length).split("/").filter(s => s.length > 0)] : ["Home"]
+        cwd: Paths.cwdSegments(root.path)
         onAccepted: path => root.frame?.setConfig({ path: path.replace(/^file:\/\//, "") })
     }
 }

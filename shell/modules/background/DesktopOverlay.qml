@@ -11,10 +11,16 @@ import qs.services
 Item {
     id: root
 
-    property var icons: null
+    // Typed, so the three things this draws stay the icons layer's business: the cards
+    // (not every tile) and the two rectangles it measures.
+    property DesktopIcons icons: null
 
-    readonly property var cards: root.icons ? Object.values(root.icons.tiles) : []
+    readonly property var cards: root.icons ? root.icons.cardTiles : []
     readonly property point origin: root.icons ? root.icons.widgetOrigin : Qt.point(0, 0)
+
+    // The icons layer hides itself (the Plasma widget editor, a screen with the desktop
+    // turned off); the chrome goes with it rather than staying over the bare wallpaper.
+    visible: root.icons !== null && root.icons.visible
 
     Repeater {
         model: root.cards

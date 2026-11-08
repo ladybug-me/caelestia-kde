@@ -7,15 +7,11 @@ import qs.components
 import qs.services
 
 // Time and date, current weather and, when wide enough, the next hours.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
-    readonly property bool showWeather: cfg.showWeather !== false
-    readonly property bool showHourly: cfg.showHourly !== false
+    readonly property bool showWeather: cfg.showWeather
+    readonly property bool showHourly: cfg.showHourly
     readonly property bool wide: width > height * 1.6
     readonly property bool showHours: root.showHourly && root.showWeather && root.wide && height > 150 && Weather.hourlyForecast && Weather.hourlyForecast.length > 0
 

@@ -9,13 +9,9 @@ import qs.utils
 
 // A glyph and a label that run a shell command. The whole card is the button, so a
 // small one is still easy to hit.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
     readonly property string glyph: cfg.glyph ?? ""
     readonly property string text: cfg.label ?? ""
     readonly property string command: cfg.command ?? ""

@@ -59,7 +59,8 @@ test_the_form_renders_every_row_kind() {
 
 test_the_inspector_writes_through_the_layout_store() {
     assert_file_contains "$FORM" 'DesktopLayout.setWidgetConfig(root.widgetId, patch)' "a field must write through the store that owns the layout"
-    assert_file_contains "$FORM" 'DesktopLayout.resetWidgetConfig(root.widgetId)' "a reset must go the same way"
+    assert_file_contains "$PANEL" 'DesktopLayout.resetWidgetConfig(root.widgetId)' "a reset must go the same way"
+    assert_file_not_contains "$FORM" 'reloadTick' "the form must not re-seed itself after a reset"
     assert_file_not_contains "$FORM" 'DesktopLayout.widgets[root.widgetId].config' "the form must not edit the config it is reading"
 }
 
@@ -69,10 +70,23 @@ test_a_reset_replaces_the_config_instead_of_merging_it() {
     assert_contains "$body" 'config: {}' "a reset must drop every key that was ever written"
     assert_not_contains "$body" 'w.config' "a merge would keep exactly the keys a reset is meant to remove"
     assert_contains "$body" 'setWidgets(next)' "the reset must still be saved like any other change"
-    # A widget whose config a reset empties must fall back to what its type ships with,
-    # or resetting Folder View would leave it pointing at no folder at all.
-    assert_file_contains "$WIDGETS/FolderWidget.qml" 'frame?.info?.config?.path' "the folder must fall back to its type's default, not to nothing"
-    assert_file_contains "$CATALOG" 'config: { path: Paths.home + "/Downloads" }' "that default must be the one the catalogue names"
+    # An emptied config only works because the defaults are resolved where the config
+    # is read. One resolver, or a reset leaves every widget that ships a value with
+    # nothing at all.
+    assert_file_contains "$CATALOG" 'function configFor' "the catalogue must resolve a widget's settings"
+    assert_contains "$(function_body "$CATALOG" configFor)" 'defaultsFor(type)' "with the type's defaults underneath"
+    assert_file_contains "$BIG" 'widgetCatalog.configFor' "the card must read through it"
+    assert_file_contains "$WIDGETS/FolderWidget.qml" 'frame?.config?.path' "and the widgets must be able to trust what they read"
+    assert_file_contains "$CATALOG" 'config: { path: Paths.home + "/Downloads" }' "a reset folder must land back on the type's own folder"
+}
+
+test_a_widget_reads_its_shipped_values_after_a_reset() {
+    # The Button widget is the case that shows why resolution cannot live in the
+    # widgets: its icon, label and command come from the catalogue, so reading the
+    # stored config alone would leave an empty card that does nothing.
+    assert_file_contains "$CATALOG" 'config: { glyph: "terminal", label: qsTr("Terminal"), command: "terminal" }' "the button must ship its own values"
+    assert_file_not_contains "$WIDGETS/ButtonWidget.qml" 'frame?.info?.config' "a widget must not re-derive its own defaults"
+    assert_file_not_contains "$BIG" 'defaultBackgroundOpacity' "nor may the card keep a second copy of the theme's"
 }
 
 test_the_form_starts_afresh_for_each_opening() {
@@ -101,6 +115,20 @@ test_the_card_edge_is_drawn_above_what_plugins_paint() {
     assert_file_contains "$DESKTOP/Background.qml" 'z: 4096' "the overlay must sit above the plugin background widgets"
 }
 
+test_the_chrome_draws_only_for_cards_that_are_shown() {
+    # The tiles map holds the small icons as well as the cards, and none of them has
+    # an edge. Drawing an edge per tile threw on every icon on the desktop.
+    local overlay="$DESKTOP/DesktopOverlay.qml"
+    assert_file_contains "$ICONS" 'readonly property var cardTiles' "the icons layer must say which tiles are cards"
+    assert_file_contains "$overlay" 'root.icons.cardTiles' "the overlay must ask for those, not for every tile"
+    assert_file_not_contains "$overlay" 'Object.values(root.icons.tiles)' "iterating the tile map draws an edge for icons that have none"
+    assert_file_contains "$overlay" 'property DesktopIcons icons' "the overlay must know the type it draws, or nothing checks this"
+    # The chrome is above the desktop rather than inside it, so it does not inherit
+    # the card's -- or the desktop's -- visibility. Both have to be told to it.
+    assert_file_contains "$BIG" 'edgeShown: root.visible && ' "a hidden card must draw no chrome"
+    assert_file_contains "$overlay" 'visible: root.icons !== null && root.icons.visible' "and the overlay must go when the desktop does"
+}
+
 test_the_selection_box_is_drawn_above_what_plugins_paint() {
     # Dragging on the desktop draws a selection box. It sat at z: 50 inside the icons
     # layer, which is still below the wallpaper depth foreground's z: 8 -- a different
@@ -120,7 +148,7 @@ test_the_panel_never_swallows_a_click_meant_for_something_else() {
     assert_file_not_contains "$PANEL" 'enabled: root.open' "the panel must not cover the desktop with a backdrop"
     assert_file_not_contains "$PANEL" 'onPressed: root.close()' "clicks outside the panel belong to the desktop"
     assert_file_contains "$PANEL" 'onClicked: root.close()' "the panel needs its own way out"
-    assert_file_contains "$PANEL" 'x: root.place.x' "the panel must place itself away from the widget"
+    assert_file_contains "$PANEL" 'target: root.place' "the panel must place itself away from the widget"
     assert_contains "$(function_body "$PANEL" refresh)" 'form.active = false' "the panel is still rebuilt per opening"
 }
 
@@ -130,7 +158,9 @@ test_the_panel_opens_away_from_the_widget_it_edits() {
     assert_contains "$place" 'a.x + a.width + gap' "it must be able to open to the right of the card"
     assert_contains "$place" 'a.x - w - gap' "it must be able to open to the left of the card"
     assert_contains "$place" 'a.y + a.height + gap' "it must be able to open under the card"
-    assert_contains "$place" 'Math.min(root.width - w - edge, x)' "it must stay on screen"
+    # The clamp lives in the panel's own card, so both panels keep themselves on screen
+    # instead of each repeating the arithmetic.
+    assert_file_contains "$DESKTOP/desktopicons/DesktopPanel.qml" 'Math.min(root.parent.width - root.width - root.edge, root.target.x)' "the panel must stay on screen"
     assert_contains "$(function_body "$ICONS" openWidgetSettings)" 'width: tile.width' "the screen must hand over the card's rectangle, not a point"
     assert_file_contains "$LAYOUT" 'signal widgetSettingsRequested(string screenName, var rect, string id)' "the request carries that rectangle across"
 }
@@ -138,16 +168,28 @@ test_the_panel_opens_away_from_the_widget_it_edits() {
 test_the_panel_is_in_the_window_s_input_mask() {
     # A layer window only accepts clicks inside its input region. Every popup the
     # window draws has to say it is open, or its clicks fall through to the desktop.
-    local overlay
-    overlay="$(grep -o 'readonly property bool transientOverlayOpen:.*' "$WINDOW" | head -1)"
-    assert_contains "$overlay" 'widgetGallery.open' "the gallery is the model every popup follows"
-    assert_contains "$overlay" 'widgetSettings.open' "the settings panel must make the window take input where it is drawn"
+    assert_file_contains "$WINDOW" 'readonly property var desktopPopups: [viewOptions, widgetGallery, widgetSettings]' "the panels report being open through one list"
+    assert_file_contains "$WINDOW" 'root.desktopPopups.some(popup => popup.open)' "and the window asks all of them at once"
+    assert_file_contains "$WINDOW" 'root.desktopMenus.some(menu => menu.expanded)' "the desktop's menus the same way"
 }
 
 test_the_panel_is_only_as_tall_as_its_fields() {
-    assert_file_contains "$PANEL" 'header.implicitHeight + Tokens.spacing.medium + Math.min(root.formHeight, root.maxFormHeight)' "the height must come from what the panel holds, not from a layout that lags"
+    assert_file_contains "$PANEL" 'panel.layout.implicitHeight + Tokens.padding.large * 2' "the height must come from what the panel holds, not a sum of its parts"
     assert_file_contains "$PANEL" 'Layout.preferredHeight: Math.min(root.formHeight, root.maxFormHeight)' "a long form must be capped and scroll instead"
     assert_file_contains "$PANEL" 'root.height - Tokens.padding.large * 2' "it must never be taller than the screen"
+}
+
+test_both_panels_hang_off_one_card() {
+    # The gallery and the inspector differ only in what they hold: the elevation, the
+    # fold, the click catcher and the clamped placement are the same in both.
+    local shared="$DESKTOP/desktopicons/DesktopPanel.qml"
+    assert_file_exists "$shared"
+    assert_file_contains "$shared" 'Behavior on scale' "the fold belongs to the shared card"
+    assert_file_contains "$shared" 'MouseArea {' "and so does the click catcher"
+    assert_file_contains "$GALLERY" 'DesktopPanel {' "the gallery must use it"
+    assert_file_contains "$PANEL" 'DesktopPanel {' "and so must the inspector"
+    assert_file_not_contains "$GALLERY" 'Behavior on opacity' "neither panel may repeat the card"
+    assert_file_not_contains "$PANEL" 'Behavior on opacity' "neither panel may repeat the card"
 }
 
 test_the_card_takes_its_look_from_the_config() {
@@ -155,20 +197,20 @@ test_the_card_takes_its_look_from_the_config() {
     assert_file_contains "$BIG" 'config.backgroundOpacity' "the fill must follow the widget's opacity"
     assert_file_contains "$BIG" 'config.backgroundRadius' "the corners must follow the widget's radius"
     assert_file_contains "$BIG" 'Qt.alpha(GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surfaceContainer, root.backgroundOpacity)' "the card's one colour must carry the opacity"
-    assert_file_contains "$BIG" 'controller.widgetCatalog?.defaultBackgroundOpacity' "an unset widget must use the theme's value, not a second copy of it"
+    assert_file_contains "$BIG" 'widgetCatalog.configFor' "an unset widget must read the catalogue's defaults, not a second copy of them"
 }
 
 test_a_widget_may_hide_itself_and_the_editor_brings_it_back() {
     assert_file_contains "$BIG" 'content?.wantsHidden === true' "the card must follow a content's wish to step aside"
     assert_file_contains "$BIG" '!widgetEditMode && content?.wantsHidden === true' "hiding must not hide a widget from the editor"
-    assert_file_contains "$WIDGETS/MediaWidget.qml" 'wantsHidden: cfg.hideWhenNoMedia === true && !root.player' "the player is what asks for it"
+    assert_file_contains "$WIDGETS/MediaWidget.qml" 'wantsHidden: cfg.hideWhenNoMedia && !root.player' "the player is what asks for it"
 }
 
 test_the_media_widget_can_be_laid_out_either_way() {
     assert_file_contains "$WIDGETS/MediaWidget.qml" 'columns: root.vertical ? 1 : 2' "the artwork must be able to sit above the text"
     assert_file_contains "$WIDGETS/MediaWidget.qml" 'cfg.layout === "vertical"' "the choice must come from the widget's settings"
     assert_file_contains "$WIDGETS/MediaWidget.qml" 'layer.effect: MultiEffect' "the artwork behind the player must be blurred"
-    assert_file_contains "$WIDGETS/MediaWidget.qml" 'cfg.albumArtBackground === true' "the backdrop must be optional"
+    assert_file_contains "$WIDGETS/MediaWidget.qml" 'cfg.albumArtBackground' "the backdrop must be optional"
 }
 
 test_the_calendar_shares_the_month_and_lists_the_day() {
@@ -176,12 +218,12 @@ test_the_calendar_shares_the_month_and_lists_the_day() {
     assert_file_contains "$WIDGETS/CalendarWidget.qml" 'selectable: true' "a day must be pickable for the agenda"
     assert_file_contains "$WIDGETS/CalendarWidget.qml" 'CalendarEvents.eventsOn(root.selectedDate)' "the agenda must be the shared calendar service"
     assert_file_contains "$WIDGETS/CalendarWidget.qml" 'Time.clockTime(event.start)' "an event's time must follow the clock's 12/24-hour choice"
-    assert_file_contains "$WIDGETS/CalendarWidget.qml" 'cfg.showEvents !== false' "the agenda must be switchable"
+    assert_file_contains "$WIDGETS/CalendarWidget.qml" 'cfg.showEvents' "the agenda must be switchable"
 }
 
 test_the_weather_widget_only_shows_the_days_that_fit() {
     assert_file_contains "$WIDGETS/WeatherWidget.qml" 'Math.floor((root.height - 96) / 24)' "the forecast must fit the card it is in"
-    assert_file_contains "$WIDGETS/WeatherWidget.qml" 'cfg.showForecast !== false' "the forecast must be switchable"
+    assert_file_contains "$WIDGETS/WeatherWidget.qml" 'cfg.showForecast' "the forecast must be switchable"
     assert_file_contains "$WIDGETS/WeatherWidget.qml" 'Weather.formatTemp' "temperatures must follow the configured unit"
 }
 
@@ -201,6 +243,22 @@ test_the_sticker_plays_an_animated_image() {
     assert_file_contains "$WIDGETS/StickerWidget.qml" 'CachingAnimatedImage {' "a GIF must play"
     assert_file_contains "$WIDGETS/StickerWidget.qml" 'CachingImage {' "a still image must be drawn as one"
     assert_file_contains "$WIDGETS/StickerWidget.qml" 'FileDialog {' "the image must be pickable on the desktop"
+}
+
+test_every_widget_shares_one_frame() {
+    # The card hands every widget the same four things. Declaring them in each file
+    # made them a convention that only the widgets knew about.
+    local shared="$WIDGETS/DesktopWidget.qml" widget
+    assert_file_exists "$shared"
+    assert_file_contains "$shared" 'property var frame' "the card that holds the widget"
+    assert_file_contains "$shared" 'property var controller' "the screen it lives on"
+    assert_file_contains "$shared" 'readonly property var cfg' "its settings, defaults included"
+    assert_file_contains "$shared" 'property bool wantsHidden' "and the one thing it may ask for"
+    for widget in "$WIDGETS"/*Widget.qml; do
+        [[ "$(basename "$widget")" == "DesktopWidget.qml" ]] && continue
+        assert_file_contains "$widget" 'DesktopWidget {' "$(basename "$widget") must take its frame from the shared one"
+        assert_file_not_contains "$widget" 'property var frame' "$(basename "$widget") must not declare the frame again"
+    done
 }
 
 test_settings_are_reachable_from_the_card_and_the_menu() {

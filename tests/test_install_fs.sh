@@ -419,6 +419,35 @@ make_stage_fixture() {
     printf 'data\n' > "$tmp/stage/usr/share/app/data.txt"
 }
 
+test_privileged_copy_file_copies_the_source_with_the_requested_mode() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/dest"
+    printf 'font\n' > "$tmp/source.ttf"
+    chmod 0777 "$tmp/source.ttf"
+
+    privileged_copy_file "$tmp/source.ttf" "$tmp/dest/source.ttf" 0644
+    status=$?
+
+    assert_status 0 "$status" "a regular file should be copied"
+    assert_eq "font" "$(cat "$tmp/dest/source.ttf")" "with the source's contents"
+    assert_eq "644" "$(stat -c %a "$tmp/dest/source.ttf")" "and the mode the caller asked for"
+}
+
+test_privileged_copy_file_refuses_a_symlinked_source() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/dest"
+    printf 'elsewhere\n' > "$tmp/real.ttf"
+    ln -s "$tmp/real.ttf" "$tmp/link.ttf"
+
+    privileged_copy_file "$tmp/link.ttf" "$tmp/dest/link.ttf" 0644 2>/dev/null
+    status=$?
+
+    assert_status 1 "$status" "a source that is a link must not be opened"
+    assert_file_missing "$tmp/dest/link.ttf" "and so nothing is put in its place"
+}
+
 test_privileged_copy_tree_keeps_the_layout_and_the_modes() {
     local tmp status
     tmp="$(new_tmpdir)"

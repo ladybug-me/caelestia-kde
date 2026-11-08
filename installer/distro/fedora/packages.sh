@@ -22,18 +22,39 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/fonts.sh"
 # shellcheck source=scripts/lib/install-fs.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/install-fs.sh"
+# shellcheck source=scripts/lib/download.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/download.sh"
 
+# Where the Darkly package comes from. A release page named `latest` moves, and what it
+# points at is handed to dnf as root, so the version this installer ships is fixed here and
+# the asset is resolved from that tag alone.
+DARKLY_VERSION="0.5.43"
+
+# The pinned release, as "<url>\t<digest>" for the asset this Fedora uses. GitHub reports a
+# sha256 for each asset in the same response that names it, so the download can be checked
+# against the release it came from without the project publishing a sidecar beside it.
+# Printed as one line: callers split on the tab.
 darkly_rpm_asset_url() {
-    local release_json ver url
-    release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/latest" 2>/dev/null || true)"
+    local release_json ver asset
+    release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/tags/v${DARKLY_VERSION}" 2>/dev/null || true)"
     [[ -n "$release_json" ]] || return 1
+    command -v jq >/dev/null 2>&1 || return 1
     ver="$(rpm -E %fedora 2>/dev/null | tr -d '[:space:]')"
     if [[ -n "$ver" ]]; then
-        url="$(printf '%s' "$release_json" | grep -oE "https://[^\"]*\.fc${ver}\.x86_64\.rpm" | head -n1)"
-        [[ -n "$url" ]] && { echo "$url"; return 0; }
+        asset="$(printf '%s' "$release_json" | jq -r --arg needle ".fc${ver}.x86_64.rpm" '
+            first(.assets[]
+                | select((.browser_download_url // "") | test("\\.rpm$") and contains($needle)))
+            | "\(.browser_download_url // "")\t\(.digest // "")"
+        ' 2>/dev/null)"
+        [[ -n "$asset" && "$asset" != $'\t' ]] && { printf '%s\n' "$asset"; return 0; }
     fi
-    url="$(printf '%s' "$release_json" | grep -oE 'https://[^"]*\.fc[0-9]+\.x86_64\.rpm' | head -n1)"
-    [[ -n "$url" ]] && { echo "$url"; return 0; }
+    # No RPM built for this Fedora: the newest one there is still installs, and dnf says so
+    # if it does not.
+    asset="$(printf '%s' "$release_json" | jq -r '
+        first(.assets[] | select((.browser_download_url // "") | test("\\.fc[0-9]+\\.x86_64\\.rpm$")))
+        | "\(.browser_download_url // "")\t\(.digest // "")"
+    ' 2>/dev/null)"
+    [[ -n "$asset" && "$asset" != $'\t' ]] && { printf '%s\n' "$asset"; return 0; }
     return 1
 }
 
@@ -55,6 +76,21 @@ INSTALL_PAPIRUS="${INSTALL_PAPIRUS:-true}"
 INSTALL_DARKLY="${INSTALL_DARKLY:-true}"
 
 PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
+
+# gpu-screen-recorder has no dnf package, so the fallback below builds upstream at a pinned
+# revision. Never point this at master: the value is a release tag, and the build is what
+# the installer runs, so it has to be a tree this project looked at. To update, list the
+# upstream tags with
+#   git ls-remote --tags https://repo.dec05eba.com/gpu-screen-recorder
+# bump the ref, and test the build before shipping it. The Debian script carries the same
+# value for the same build.
+GPU_SCREEN_RECORDER_REF="6.1.3" # commit 396526a908f8f1b9cb826a9187a2c9150f44d94d
+
+# The other fallback builds come from clones too, and the installer runs each clone's own
+# build and install as root, so which tree that is has to be this project's decision rather
+# than whatever a branch holds on the day it runs. The value is an upstream tag, which
+# `git clone --depth 1 --branch` accepts.
+APP2UNIT_REF="v1.4.4"
 
 CORE_PACKAGES=(
     cmake ninja-build ccache qt6-qttools-devel extra-cmake-modules libgcc glibc
@@ -273,7 +309,7 @@ for pkg in "${COPR_PKGS[@]}"; do
         app2unit)
             tmpdir="$(mktemp -d)"
             caelestia_sudo dnf install -y make
-            if git clone --depth 1 https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
+            if git clone --depth 1 --branch "$APP2UNIT_REF" https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
                     install_staged_tree / make install
@@ -287,7 +323,8 @@ for pkg in "${COPR_PKGS[@]}"; do
         gpu-screen-recorder)
             tmpdir="$(mktemp -d)"
             caelestia_sudo dnf install -y meson ninja-build pkgconf libXcomposite-devel libXrandr-devel libXfixes-devel libdrm-devel wayland-devel pipewire-devel libcap-devel ffmpeg-devel
-            if git clone --depth 1 https://git.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
+            info "Building gpu-screen-recorder $GPU_SCREEN_RECORDER_REF from repo.dec05eba.com (pinned ref)."
+            if git clone --depth 1 --branch "$GPU_SCREEN_RECORDER_REF" https://repo.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
                     meson setup build -Dcapabilities=false && ninja -C build &&
@@ -362,12 +399,52 @@ if [[ "$INSTALL_DARKLY" == "true" ]]; then
             info "Enabling Darkly COPR (deltacopy/darkly)..."
             if ! (caelestia_sudo dnf copr enable -y deltacopy/darkly && caelestia_sudo dnf install -y darkly); then
                 info "COPR install failed; falling back to prebuilt RPM from GitHub releases..."
-                _darkly_rpm="$(darkly_rpm_asset_url || true)"
+                _darkly_asset="$(darkly_rpm_asset_url || true)"
+                _darkly_rpm="${_darkly_asset%%$'\t'*}"
+                _darkly_digest="${_darkly_asset#*$'\t'}"
+                # No tab means the release reported no digest for the asset at all.
+                [[ "$_darkly_digest" == "$_darkly_asset" ]] && _darkly_digest=""
                 if [[ -n "$_darkly_rpm" ]]; then
-                    if ! caelestia_sudo dnf install -y "$_darkly_rpm"; then
-                        err "Failed to install Darkly RPM."
+                    # dnf runs the package's maintainer scripts as root, so the bytes are
+                    # only handed over once a checksum agrees with them: the digest the
+                    # release reports for this asset, or a sidecar if it published one.
+                    tmpdir="$(mktemp -d)"
+                    info "Downloading Darkly ${DARKLY_VERSION} RPM from GitHub releases..."
+                    if ! fetch_asset "$_darkly_rpm" "$tmpdir/darkly.rpm" 2>/dev/null; then
+                        err "Failed to download Darkly RPM."
                         FAILED_PKGS+=("darkly")
+                    else
+                        _darkly_status=0
+                        asset_matches_digest "$tmpdir/darkly.rpm" "$_darkly_digest" || _darkly_status=$?
+                        if [[ "$_darkly_status" -eq 2 ]]; then
+                            verify_download "$_darkly_rpm" "$tmpdir/darkly.rpm" || _darkly_status=$?
+                        fi
+
+                        _darkly_install=0
+                        case "$_darkly_status" in
+                            0) _darkly_install=1 ;;
+                            1) err "Checksum mismatch for $_darkly_rpm - not installing it." ;;
+                            *)
+                                if unverified_download_allowed; then
+                                    warn "Installing $_darkly_rpm unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
+                                    _darkly_install=1
+                                else
+                                    warn "No published checksum for $_darkly_rpm (SHA-256 $(file_sha256 "$tmpdir/darkly.rpm"))."
+                                    err "Refusing to install $_darkly_rpm unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
+                                fi
+                                ;;
+                        esac
+
+                        if [[ "$_darkly_install" -eq 1 ]]; then
+                            if ! caelestia_sudo dnf install -y "$tmpdir/darkly.rpm"; then
+                                err "Failed to install Darkly RPM."
+                                FAILED_PKGS+=("darkly")
+                            fi
+                        else
+                            FAILED_PKGS+=("darkly")
+                        fi
                     fi
+                    rm -rf "$tmpdir"
                 else
                     err "No prebuilt Darkly RPM found for this Fedora version."
                     FAILED_PKGS+=("darkly")

@@ -78,7 +78,16 @@ install_matugen_github() {
             warn "No published checksum for $dl_url (SHA-256 $(file_sha256 "$archive")) - installing it unverified."
         fi
 
-        if tar -xzf "$archive" -C "$tmpdir" 2>/dev/null; then
+        # tar takes the member names as they are, so an archive with a `..` or an absolute
+        # path writes outside the directory it is handed. Nothing in it is needed with the
+        # owner or the mode the archive carries either.
+        if ! archive_entries_are_safe "$archive"; then
+            warn "Refusing to unpack $dl_url: the archive has setuid, setgid or escaping entries."
+            rm -rf "$tmpdir"
+            return 1
+        fi
+
+        if tar --no-same-owner --no-same-permissions -xzf "$archive" -C "$tmpdir" 2>/dev/null; then
             # A tarball can carry a symlink in place of the binary, and `install`
             # would follow it as root. Only a file the archive really holds is used.
             if regular_file "$tmpdir/matugen"; then

@@ -29,10 +29,25 @@ verify_download() {
     [[ "$expected" == "$(file_sha256 "$file")" ]]
 }
 
+# 0 when the file matches the digest the release API reported for it, 1 when it does not,
+# 2 when there is no digest to compare against or it names an algorithm this cannot check.
+# GitHub reports a sha256 for each asset in the same response that names it, which is what
+# makes a pinned download checkable on its own.
+asset_matches_digest() {
+    local file="$1" digest="$2"
+
+    case "$digest" in
+        sha256:*) ;;
+        *) return 2 ;;
+    esac
+    [[ "${digest#sha256:}" == "$(file_sha256 "$file")" ]]
+}
+
 # A release asset this project publishes itself. The archive is ours, so the caller can name
 # it in its message; it is not a reason to install anything unverified. The path is anchored
 # to `releases/download` so that a repository or tag page under the same account does not
 # qualify.
+
 is_own_release() {
     local url="$1"
     case "$url" in

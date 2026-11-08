@@ -103,6 +103,43 @@ test_ensure_matugen_reports_success_when_present() {
     ) || fail "ensure_matugen should succeed when matugen is present on PATH"
 }
 
+# tar writes member names as the archive states them, so an entry above the extraction
+# directory lands in the user's own files. The pinned release is unpacked without a
+# privilege prompt, which makes the entries the only thing standing between an archive and
+# the tree it is emptied into.
+test_install_matugen_github_refuses_an_archive_that_escapes_the_extraction_directory() {
+    local tmp out status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/usr/local/bin" "$tmp/assets"
+
+    : > "$tmp/assets/matugen"
+    chmod +x "$tmp/assets/matugen"
+    tar -czf "$tmp/assets/matugen-4.2.0-x86_64.tar.gz" -C "$tmp/assets" \
+        --transform='s,^,../,' matugen 2>/dev/null
+
+    out="$(
+        HOME="$tmp"
+        caelestia_sudo() {
+            if [[ "$1" == "install" ]]; then
+                cp "$4" "$tmp/usr/local/bin/matugen"
+                return 0
+            fi
+            "$@"
+        }
+        export -f caelestia_sudo
+
+        stub_asset_curl "$tmp/assets/matugen-4.2.0-x86_64.tar.gz"
+        export -f curl
+
+        install_matugen_github 2>&1
+    )"
+    status=$?
+
+    assert_status 1 "$status" "an archive with an escaping entry must not be unpacked"
+    assert_contains "$out" "Refusing to unpack" "and the refusal has to be said out loud"
+    assert_file_missing "$tmp/usr/local/bin/matugen" "nothing from it may be installed"
+}
+
 test_install_matugen_github_installs_the_pinned_release() {
     local tmp out status
     tmp="$(new_tmpdir)"

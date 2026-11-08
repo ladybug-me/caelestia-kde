@@ -25,7 +25,7 @@ mirror_login_fonts() {
     fi
 
     # The source directory is writable by the user, so only what they put there
-    # directly is mirrored: `install` would follow a planted link as root.
+    # directly is mirrored: a link is not the font they downloaded.
     local candidate
     shopt -s nullglob
     for candidate in "$src"/MaterialSymbolsRounded.ttf "$src"/Rubik-*.ttf "$src"/CaskaydiaCove*.ttf \
@@ -43,10 +43,16 @@ mirror_login_fonts() {
         return 1
     fi
 
-    if ! caelestia_sudo install -m 644 "${theme_fonts[@]}" "$dest/"; then
-        err "Failed to install the login screen fonts system-wide."
-        return 1
-    fi
+    # The check above and the copy are two moments, and a file this user can write can be
+    # replaced by a link between them. Each source is opened as root with O_NOFOLLOW
+    # instead, so what lands in the system font directory is the file that was checked.
+    local font
+    for font in "${theme_fonts[@]}"; do
+        if ! privileged_copy_file "$font" "$dest/$(basename -- "$font")" 0644; then
+            err "Failed to install the login screen fonts system-wide."
+            return 1
+        fi
+    done
 
     caelestia_sudo fc-cache -f "$dest" >/dev/null 2>&1 || true
 }

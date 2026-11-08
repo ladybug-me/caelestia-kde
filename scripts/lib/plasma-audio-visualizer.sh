@@ -13,6 +13,14 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 # shellcheck source=scripts/lib/install-fs.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
+# The revision the fallback build comes from. The clone's own cmake runs here and the C++
+# plugin is installed as root, so the tree has to be one this project chose rather than
+# whatever the default branch holds on the day the installer runs. It is an upstream tag,
+# which `git clone --depth 1 --branch` accepts; to update, list the tags with
+#   git ls-remote --tags https://github.com/luisbocanegra/plasma-audio-visualizer
+# and build the new one before bumping this.
+PLASMA_AUDIO_VISUALIZER_REF="v3.6.1"
+
 refresh_plasma_widget_cache() {
     if command -v kbuildsycoca6 >/dev/null 2>&1; then
         kbuildsycoca6 --noincremental >/dev/null 2>&1 || true
@@ -55,7 +63,7 @@ install_plasma_audio_visualizer_source() {
     if [[ ! -d "$src_dir" || ! -f "$src_dir/CMakeLists.txt" ]]; then
         tmp_dir="$(mktemp -d)"
         cleanup_tmp=true
-        if ! git clone --depth 1 "https://github.com/luisbocanegra/plasma-audio-visualizer.git" "$tmp_dir"; then
+        if ! git clone --depth 1 --branch "$PLASMA_AUDIO_VISUALIZER_REF" "https://github.com/luisbocanegra/plasma-audio-visualizer.git" "$tmp_dir"; then
             err "Failed to clone plasma-audio-visualizer repository."
             rm -rf "$tmp_dir"
             return 1

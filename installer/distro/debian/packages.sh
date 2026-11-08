@@ -22,11 +22,23 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/sc
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/fonts.sh"
 # shellcheck source=scripts/lib/install-fs.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/install-fs.sh"
+# shellcheck source=scripts/lib/download.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)}/scripts/lib/download.sh"
 
+# Where the Darkly package comes from. A release page named `latest` moves, and what it
+# points at is handed to apt as root, so the version this installer ships is fixed here and
+# the asset is resolved from that tag alone.
+DARKLY_VERSION="0.5.43"
+
+# The pinned release, as "<url>\t<digest>" for the asset this distro uses. GitHub reports a
+# sha256 for each asset in the same response that names it, so the download can be checked
+# against the release it came from without the project publishing a sidecar beside it.
+# Printed as one line: callers split on the tab.
 darkly_deb_asset_url() {
-    local release_json id ver needle url
-    release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/latest" 2>/dev/null || true)"
+    local release_json id ver needle asset
+    release_json="$(curl -fsSL "https://api.github.com/repos/Bali10050/Darkly/releases/tags/v${DARKLY_VERSION}" 2>/dev/null || true)"
     [[ -n "$release_json" ]] || return 1
+    command -v jq >/dev/null 2>&1 || return 1
     id="$(grep -E '^ID=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"' | tr '[:upper:]' '[:lower:]')"
     ver="$(grep -E '^VERSION_ID=' /etc/os-release 2>/dev/null | cut -d= -f2 | tr -d '"')"
 
@@ -43,10 +55,15 @@ darkly_deb_asset_url() {
         *) needles=("debian13" "debian14" "kubuntu" "kdeneon" "debian") ;;
     esac
 
+    # The needles are tried in order, so the most specific asset this distro has wins.
     for needle in "${needles[@]}"; do
-        url="$(printf '%s' "$release_json" | grep -oE 'https://[^"]*_amd64\.deb' | grep -F "$needle" | head -n1)"
-        if [[ -n "$url" ]]; then
-            echo "$url"
+        asset="$(printf '%s' "$release_json" | jq -r --arg needle "$needle" '
+            first(.assets[]
+                | select((.browser_download_url // "") | test("_amd64\\.deb$") and contains($needle)))
+            | "\(.browser_download_url // "")\t\(.digest // "")"
+        ' 2>/dev/null)"
+        if [[ -n "$asset" && "$asset" != $'\t' ]]; then
+            printf '%s\n' "$asset"
             return 0
         fi
     done
@@ -79,6 +96,18 @@ PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 #   git ls-remote --tags https://repo.dec05eba.com/gpu-screen-recorder
 # bump the ref, and test the build before shipping it.
 GPU_SCREEN_RECORDER_REF="6.1.3" # commit 396526a908f8f1b9cb826a9187a2c9150f44d94d
+
+# The rest of the fallback builds come from clones as well, and the installer runs each
+# clone's own build and install as root, so which tree that is has to be this project's
+# decision rather than whatever a branch holds on the day it runs. These are upstream tags,
+# which `git clone --depth 1 --branch` accepts; updating one means looking at the diff and
+# building it before shipping the bump.
+APP2UNIT_REF="v1.4.4"
+WL_CLIP_PERSIST_REF="v0.5.0"
+
+# cliphist ships one binary per architecture rather than a package, so it is taken from this
+# release instead of whichever one happens to be newest when the installer runs.
+CLIPHIST_VERSION="0.7.0"
 
 CORE_PACKAGES=(
     cmake ninja-build ccache g++ build-essential qt6-l10n-tools qt6-tools-dev extra-cmake-modules
@@ -231,7 +260,7 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
         app2unit)
             tmpdir="$(mktemp -d)"
             caelestia_sudo apt-get install -y make scdoc || true
-            if git clone --depth 1 https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
+            if git clone --depth 1 --branch "$APP2UNIT_REF" https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
                 (
                     cd "$tmpdir" || exit 1
                     install_staged_tree / make install || install_staged_tree / make install-bin
@@ -278,10 +307,10 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
                 i386|i686) CARCH="linux-386" ;;
                 *)         CARCH="linux-amd64" ;;
             esac
-            LATEST_URL="$(curl -fsSL https://api.github.com/repos/sentriz/cliphist/releases/latest | grep -o "\"https://[^\"]*${CARCH}\"" | tr -d "\"" | head -n1)"
-            if [ -n "$LATEST_URL" ]; then
+            CLIPHIST_URL="$(curl -fsSL "https://api.github.com/repos/sentriz/cliphist/releases/tags/v${CLIPHIST_VERSION}" | grep -o "\"https://[^\"]*${CARCH}\"" | tr -d "\"" | head -n1)"
+            if [ -n "$CLIPHIST_URL" ]; then
                 tmpbin="$(mktemp)"
-                if curl -fsSL "$LATEST_URL" -o "$tmpbin"; then
+                if curl -fsSL "$CLIPHIST_URL" -o "$tmpbin"; then
                     caelestia_sudo install -m 755 "$tmpbin" /usr/local/bin/cliphist
                     info "cliphist installed successfully to /usr/local/bin."
                 else
@@ -303,7 +332,7 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             fi
             if command -v cargo >/dev/null 2>&1; then
                 tmpdir="$(mktemp -d)"
-                if git clone --depth 1 https://github.com/Linus789/wl-clip-persist "$tmpdir"; then
+                if git clone --depth 1 --branch "$WL_CLIP_PERSIST_REF" https://github.com/Linus789/wl-clip-persist "$tmpdir"; then
                     (
                         cd "$tmpdir" || exit 1
                         cargo build --release
@@ -440,18 +469,50 @@ mirror_login_fonts || FAILED_PKGS+=("Login screen fonts")
 info "Installing Darkly KDE Theme from prebuilt package..."
 if [[ "$INSTALL_DARKLY" == "true" ]]; then
     if ! command -v darkly >/dev/null 2>&1 && ! package_present darkly; then
-        _darkly_deb="$(darkly_deb_asset_url || true)"
+        _darkly_asset="$(darkly_deb_asset_url || true)"
+        _darkly_deb="${_darkly_asset%%$'\t'*}"
+        _darkly_digest="${_darkly_asset#*$'\t'}"
+        # No tab means the release reported no digest for the asset at all.
+        [[ "$_darkly_digest" == "$_darkly_asset" ]] && _darkly_digest=""
         if [[ -n "$_darkly_deb" ]]; then
             tmpdir="$(mktemp -d)"
-            info "Downloading Darkly .deb from GitHub releases..."
-            if curl -fsSL "$_darkly_deb" -o "$tmpdir/darkly.deb"; then
-                if ! caelestia_sudo apt-get install -y "$tmpdir/darkly.deb" && ! caelestia_sudo dpkg -i "$tmpdir/darkly.deb"; then
-                    err "Failed to install Darkly .deb."
-                    FAILED_PKGS+=("darkly")
-                fi
-            else
+            info "Downloading Darkly ${DARKLY_VERSION} .deb from GitHub releases..."
+            # apt runs the package's maintainer scripts as root, so the bytes are only
+            # handed over once a checksum agrees with them: the digest the release reports
+            # for this asset, or a sidecar if the release published one beside it.
+            if ! fetch_asset "$_darkly_deb" "$tmpdir/darkly.deb" 2>/dev/null; then
                 err "Failed to download Darkly .deb from GitHub releases."
                 FAILED_PKGS+=("darkly")
+            else
+                _darkly_status=0
+                asset_matches_digest "$tmpdir/darkly.deb" "$_darkly_digest" || _darkly_status=$?
+                if [[ "$_darkly_status" -eq 2 ]]; then
+                    verify_download "$_darkly_deb" "$tmpdir/darkly.deb" || _darkly_status=$?
+                fi
+
+                _darkly_install=0
+                case "$_darkly_status" in
+                    0) _darkly_install=1 ;;
+                    1) err "Checksum mismatch for $_darkly_deb - not installing it." ;;
+                    *)
+                        if unverified_download_allowed; then
+                            warn "Installing $_darkly_deb unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
+                            _darkly_install=1
+                        else
+                            warn "No published checksum for $_darkly_deb (SHA-256 $(file_sha256 "$tmpdir/darkly.deb"))."
+                            err "Refusing to install $_darkly_deb unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
+                        fi
+                        ;;
+                esac
+
+                if [[ "$_darkly_install" -eq 1 ]]; then
+                    if ! caelestia_sudo apt-get install -y "$tmpdir/darkly.deb" && ! caelestia_sudo dpkg -i "$tmpdir/darkly.deb"; then
+                        err "Failed to install Darkly .deb."
+                        FAILED_PKGS+=("darkly")
+                    fi
+                else
+                    FAILED_PKGS+=("darkly")
+                fi
             fi
             rm -rf "$tmpdir"
         else

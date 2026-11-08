@@ -13,6 +13,11 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 # shellcheck source=scripts/lib/install-fs.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
+# The revision the wallpaper plugin's fallback build comes from, for the same reason as the
+# audio visualizer: the plugin is installed as root, so the tree is pinned. It is an
+# upstream tag, which `git clone --depth 1 --branch` accepts.
+SKWD_PAPER_PLASMA_REF="v1.0.0-beta.27"
+
 skwd_wall_binary_present() {
     command -v skwd-wall-v2 >/dev/null 2>&1 || \
     command -v skwd-wall >/dev/null 2>&1 || \
@@ -46,7 +51,7 @@ install_skwd_paper_plasma_source() {
     info "Installing skwd-paper-plasma plugin from source..."
     local tmp_dir
     tmp_dir="$(mktemp -d)"
-    if git clone --depth 1 "https://github.com/liixini/skwd-paper-plasma.git" "$tmp_dir" 2>/dev/null; then
+    if git clone --depth 1 --branch "$SKWD_PAPER_PLASMA_REF" "https://github.com/liixini/skwd-paper-plasma.git" "$tmp_dir" 2>/dev/null; then
         if cmake -B "$tmp_dir/build" -S "$tmp_dir" -DCMAKE_INSTALL_PREFIX="${XDG_DATA_HOME:-$HOME/.local}" >/dev/null 2>&1 && \
            cmake --build "$tmp_dir/build" >/dev/null 2>&1 && \
            cmake --install "$tmp_dir/build" >/dev/null 2>&1; then

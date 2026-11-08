@@ -17,6 +17,8 @@ This document catalogs known failure modes, error conditions, and edge cases dis
 7. [KDE & Plasma Specific Issues](#7-kde--plasma-specific-issues)
    1. [Installer Window Rules](#77-installer-window-rules)
    2. [Quick Share Cannot Receive Files](#78-quick-share-cannot-receive-files)
+   3. [Plasma Audio Visualizer](#79-plasma-audio-visualizer)
+   4. [skwd-wall](#710-skwd-wall)
 8. [Post-Install Issues](#8-post-install-issues)
 9. [Uninstall Issues](#9-uninstall-issues)
 10. [Update Issues](#10-update-issues)
@@ -1258,6 +1260,32 @@ Port 65000 rather than anything lower because it sits above Linux's default ephe
 range (32768–60999), so the listener never collides with the local port of an outgoing
 connection. If it is taken by something else, Quick Share reports that it could not
 listen and stays off.
+
+### 7.9 Plasma Audio Visualizer
+
+The desktop audio visualizer relies on the `plasma-audio-visualizer` package and widget for KDE Plasma.
+
+**Common issues and requirements:**
+- **Package installation:** Ensure `plasma-audio-visualizer` is installed on your system (e.g. from the AUR on Arch Linux: `yay -S plasma-audio-visualizer`).
+- **User Defined:** The shell supports presets for the visualizer like Double Reverse, Single, etc. If the visualizer widget is edited manually, the shell saves that configuration as User Defined and reapplies whenever required. Sometimes during first installation, visualizer may be removed after being applied by the installer. So, shell changes visualizer preset to User Defined which is no visualizer at all. To fix this, change visualizer preset to others like Double Reverse. 
+- **Internal wallpaper conflict:** The visualizer is a plasma widget which renders on plasma desktop rather then quickshell desktop. If quickshell wallpaper layer is enabled due to some reason (`wallpapeEnabled: true`), the visualizer will not be displayed at all. Shell disables wallpaper layer automatically by detecting `skwd-wall` presence. Hence, user must ensure that skwd-wall is installed and is in path.
+- **Widget configuration:** If you wish to use the visualizer standalone, disable it in shell settings and add it as a widget from plasma widgets. If you wish to edit shell's preset for visualizer, choose a preset like Single or Double Reverse, then in Plasma Edit Mode (right-click desktop -> *Edit Plasma Widgets*), edit the visualizer to your liking.
+
+
+### 7.10 skwd-wall
+
+`skwd-wall-v2` provides dynamic wallpaper rendering and management in Caelestia KDE.
+
+**Common issues and requirements:**
+- **Installation:** When `skwd-wall` is not installed, Caelestia falls back to its internal wallpaper engine, and skwd-specific settings (such as tags, filters, and effect pipelines) are disabled. You may need to restart your pc more than once for the shell to recognize the skwd-wall after first installation. See [liixini/skwd-wall](https://github.com/liixini/skwd-wall) if there was a problem with automatic installation.
+- **Daemon status:** The shell relies on skwd-walld.service isActive status to recognize it. Check if the skwd-walld daemon is active:
+  ```bash
+  systemctl --user status skwd-walld
+  ```
+- **Manual launch:**
+  ```bash
+  skwd-wall-v2
+  ```
 
 ---
 

@@ -64,6 +64,7 @@ VerticalFadeListView {
         readonly property string settingLabel: modelData.settingLabel
         readonly property string pageLabel: modelData.pageLabel
         readonly property string pageIcon: modelData.pageIcon
+        readonly property string sectionLabel: modelData.sectionLabel ?? ""
         readonly property int pageIdx: modelData.pageIdx
         readonly property int subPageIdx: modelData.subPageIdx
 
@@ -181,7 +182,7 @@ VerticalFadeListView {
 
                 StyledText {
                     Layout.fillWidth: true
-                    text: qsTr("in ") + item.pageLabel
+                    text: item.sectionLabel.length > 0 ? qsTr("in %1 › %2").arg(item.pageLabel).arg(item.sectionLabel) : qsTr("in ") + item.pageLabel
                     color: item.isSelected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                     font: NexusStyle.secondaryFont
                     elide: Text.ElideRight

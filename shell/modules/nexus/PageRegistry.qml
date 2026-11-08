@@ -43,10 +43,37 @@ QtObject {
                     subPageIdx: setting.subPageIdx !== undefined ? setting.subPageIdx : -1,
                     pageLabel: page.label,
                     pageIcon: page.icon,
+                    sectionLabel: "",
                     searchText: [setting.label, setting.description, page.label, page.category, keywords].filter(Boolean).join(" ")
                 });
             });
         });
+
+        // Every row the pages render, so a setting the dictionary does not name
+        // is still findable. A row the dictionary already names keeps the
+        // curated entry: it carries hand-written keywords a generated one cannot.
+        const named = {};
+        index.forEach((entry) => {
+            named[`${entry.pageIdx}|${entry.subPageIdx}|${entry.settingLabel.toLowerCase()}`] = true;
+        });
+        PageRowIndex.rows.forEach((row) => {
+            if (named[`${row.pageIdx}|${row.subPageIdx}|${row.label.toLowerCase()}`])
+                return;
+            const page = pages[row.pageIdx];
+            if (!page)
+                return;
+            index.push({
+                settingLabel: row.label,
+                settingDescription: row.description || "",
+                pageIdx: row.pageIdx,
+                subPageIdx: row.subPageIdx,
+                pageLabel: page.label,
+                pageIcon: page.icon,
+                sectionLabel: row.section || "",
+                searchText: [row.label, row.description, row.section, page.label, page.category].filter(Boolean).join(" ")
+            });
+        });
+
         allPages = indexedPages;
         searchIndex = index;
         _entriesFinder = new Fzf.Finder(searchIndex, {

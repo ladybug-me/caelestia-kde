@@ -24,7 +24,7 @@ BASH   ?= bash
 
 .PHONY: help install update uninstall build-shell fetch-dependencies installer \
         test test-bash test-fast test-isolated test-artifacts test-repo validate hygiene \
-        check check-shell check-python check-qml search-coverage \
+        check check-shell check-python check-qml search-index search-coverage \
         sync-fetch sync-report translations clean
 
 help: ## List the available targets
@@ -101,6 +101,10 @@ check-qml: ## QML conventions, syntax, imports, embedded bash, config references
 	$(PYTHON) $(CI_DIR)/check_embedded_bash.py
 	$(PYTHON) $(CI_DIR)/check_config_references.py
 	$(PYTHON) $(CI_DIR)/check_qml_deployment.py --source-root $(SHELL_DIR)
+	$(PYTHON) $(TOOLS_DIR)/generate_settings_index.py --check
+
+search-index: ## Regenerate the search index of the setting rows the pages render
+	$(PYTHON) $(TOOLS_DIR)/generate_settings_index.py
 
 search-coverage: ## Report settings pages that no search entry can open
 	$(PYTHON) $(CI_DIR)/audit_search_coverage.py

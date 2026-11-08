@@ -166,9 +166,9 @@ Item {
 
                         // Neighbours are loaded while dragging. Index based on purpose: reading x or
                         // implicitWidth here depends on this Loader's own content (binding loop).
-                        readonly property bool inView: view.moving && Math.abs(index - view.currentIndex) <= 1
+                        readonly property bool preloadNeighbour: view.moving && Math.abs(index - view.currentIndex) === 1
 
-                        active: root.visibilities.dashboard && (keepLoaded || index === view.currentIndex || inView)
+                        active: root.visibilities.dashboard && (keepLoaded || index === view.currentIndex || preloadNeighbour)
 
                         onActiveChanged: {
                             if (active)

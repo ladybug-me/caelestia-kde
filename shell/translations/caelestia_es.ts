@@ -4266,6 +4266,29 @@
     </message>
   </context>
   <context>
+    <name>CalendarWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/CalendarWidget.qml" line="+30"/>
+      <source>No calendars yet</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Could not read %1</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>No events</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+16"/>
+      <source>All day</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>CaptureCard</name>
     <message>
       <location filename="../modules/utilities/cards/CaptureCard.qml" line="+94"/>
@@ -5530,6 +5553,11 @@
     </message>
     <message>
       <location line="+12"/>
+      <source>Widget Settings...</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
       <source>Change Folder...</source>
       <translation>Cambiar la carpeta...</translation>
     </message>
@@ -5607,13 +5635,13 @@
   <context>
     <name>DesktopIcons</name>
     <message>
-      <location filename="../modules/background/DesktopIcons.qml" line="+699"/>
+      <location filename="../modules/background/DesktopIcons.qml" line="+711"/>
       <location line="+3"/>
       <source>Group</source>
       <translation>Agrupar</translation>
     </message>
     <message>
-      <location line="+442"/>
+      <location line="+459"/>
       <location line="+10"/>
       <source>Rename failed</source>
       <translation>No se pudo renombrar</translation>
@@ -6673,7 +6701,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>FolderWidget</name>
     <message>
-      <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+46"/>
+      <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+44"/>
       <source>Choose a folder to show</source>
       <translation>Elegí una carpeta para mostrar</translation>
     </message>
@@ -8799,12 +8827,12 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>MediaWidget</name>
     <message>
-      <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+31"/>
+      <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+38"/>
       <source>Nothing playing</source>
       <translation>No hay nada en reproducción</translation>
     </message>
     <message>
-      <location line="+49"/>
+      <location line="+85"/>
       <source>Unknown title</source>
       <translation>Título desconocido</translation>
     </message>
@@ -9292,7 +9320,7 @@ Ahora salir a tocar el pasto</translation>
   <context>
     <name>NoteWidget</name>
     <message>
-      <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+49"/>
+      <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+47"/>
       <source>Write something…</source>
       <translation>Escribir algo…</translation>
     </message>
@@ -9580,7 +9608,7 @@ Ahora salir a tocar el pasto</translation>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+110"/>
+      <location line="+113"/>
       <source>Caelestia Mode</source>
       <translation>Modo Caelestia</translation>
     </message>
@@ -13412,6 +13440,24 @@ PIN: %1</source>
     </message>
   </context>
   <context>
+    <name>StickerWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/StickerWidget.qml" line="+29"/>
+      <source>Double click to choose an image</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+33"/>
+      <source>Choose an image</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Images</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>StorageCard</name>
     <message>
       <location filename="../modules/dashboard/performance/StorageCard.qml" line="+76"/>
@@ -14110,7 +14156,7 @@ PIN: %1</source>
   <context>
     <name>SystemWidget</name>
     <message>
-      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+69"/>
+      <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+67"/>
       <location line="+39"/>
       <source>CPU</source>
       <translation type="unfinished"/>
@@ -14997,7 +15043,7 @@ PIN: %1</source>
   <context>
     <name>TrayMenu</name>
     <message>
-      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+340"/>
+      <location filename="../modules/bar/popouts/TrayMenu.qml" line="+374"/>
       <source>Back</source>
       <translation>Atrás</translation>
     </message>
@@ -15944,6 +15990,24 @@ PIN: %1</source>
     </message>
   </context>
   <context>
+    <name>VolumeWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/VolumeWidget.qml" line="+25"/>
+      <source>Muted</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>WallhavenPage</name>
     <message>
       <location filename="../modules/nexus/pages/wallandstyle/WallhavenPage.qml" line="+7"/>
@@ -16556,6 +16620,19 @@ PIN: %1</source>
     </message>
   </context>
   <context>
+    <name>WeatherWidget</name>
+    <message>
+      <location filename="../modules/background/desktopicons/widgets/WeatherWidget.qml" line="+30"/>
+      <source>Loading weather…</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>No weather configured</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
     <name>WelcomeText</name>
     <message>
       <location filename="../../src/sddm/themes/full/widgets/WelcomeText.qml" line="+13"/>
@@ -16595,22 +16672,92 @@ PIN: %1</source>
   <context>
     <name>WidgetCatalog</name>
     <message>
-      <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+7"/>
+      <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+14"/>
       <source>Clock &amp; Weather</source>
       <translation>Reloj y clima</translation>
     </message>
     <message>
-      <location line="+1"/>
-      <source>Desktop Clock</source>
+      <location line="+7"/>
+      <source>Show weather</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
+      <source>Show hourly forecast</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Only when the widget is wide enough</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Weather</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Show forecast</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Daily highs and lows below the current weather</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Forecast days</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>Desktop Clock</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
       <source>Media</source>
       <translation>Multimedia</translation>
     </message>
     <message>
+      <location line="+7"/>
+      <source>Layout</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+1"/>
+      <source>Artwork beside</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Artwork above</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Artwork background</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Blur the current artwork behind the player</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hide when idle</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Hide the widget while nothing is playing</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
       <source>Media Shapes</source>
       <translation type="unfinished"/>
     </message>
@@ -16625,17 +16772,108 @@ PIN: %1</source>
       <translation>Monitor del sistema</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+3"/>
       <source>Calendar</source>
       <translation>Calendario</translation>
     </message>
     <message>
-      <location line="+1"/>
+      <location line="+7"/>
+      <source>Show agenda</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>List the picked day&apos;s events next to the month</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
       <source>Note</source>
       <translation>Nota</translation>
     </message>
     <message>
+      <location line="+3"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Device</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
       <location line="+1"/>
+      <source>Output</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Show device name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Button</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+6"/>
+      <location line="+3"/>
+      <source>Terminal</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="-1"/>
+      <source>Icon</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Material icon name</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Label</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Command</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Run on click</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Sticker</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+9"/>
+      <source>Image</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>PNG, JPEG, WebP, SVG or GIF</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Image opacity</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
       <source>Folder View</source>
       <translation>Vista de carpeta</translation>
     </message>
@@ -16644,17 +16882,83 @@ PIN: %1</source>
       <source>Large Folder</source>
       <translation>Carpeta grande</translation>
     </message>
+    <message>
+      <location line="+5"/>
+      <source>Background</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Draw the card behind the widget&apos;s content</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Background opacity</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Corner radius</source>
+      <translation type="unfinished"/>
+    </message>
   </context>
   <context>
     <name>WidgetGallery</name>
     <message>
-      <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+78"/>
+      <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+45"/>
       <source>Add Widget</source>
       <translation>Agregar widget</translation>
     </message>
     <message>
-      <location line="+64"/>
-      <source>Drag a widget&apos;s border or corner to resize it; right-click for more</source>
+      <location line="+85"/>
+      <source>Drag a widget&apos;s border or corner to resize it; its gear in edit mode opens its settings</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetSettings</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetSettings.qml" line="+27"/>
+      <source>Widget</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+107"/>
+      <source>Edit the widget&apos;s settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Reset</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>WidgetSettingsForm</name>
+    <message>
+      <location filename="../modules/background/desktopicons/WidgetSettingsForm.qml" line="+251"/>
+      <source>Choose…</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+20"/>
+      <source>Choose a folder</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Choose an image</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+3"/>
+      <source>All folders</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+0"/>
+      <source>Images</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -16711,14 +17015,19 @@ PIN: %1</source>
   <context>
     <name>WorkspaceTrackerGuard</name>
     <message>
-      <location filename="../services/WorkspaceTrackerGuard.qml" line="+36"/>
-      <source>Workspace tracker effect is not running</source>
-      <translation>El efecto rastreador del espacio de trabajo no se está ejecutando</translation>
+      <location filename="../services/WorkspaceTrackerGuard.qml" line="+42"/>
+      <source>no reason given</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Desktop tracking is off</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+0"/>
-      <source>KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in.</source>
-      <translation>KWin dejó de cargarlo después de una actualización de KDE. Ejecute la actualización de caelestia, luego cierre la sesión y vuelva a entrar.</translation>
+      <source>KWin refused the workspace tracker (%1). Run caelestia update.</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>

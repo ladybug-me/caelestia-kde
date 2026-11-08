@@ -52,6 +52,11 @@ ColumnLayout {
         return root.currMonth === now.getMonth() && root.currYear === now.getFullYear();
     }
 
+    // Built once: building the font inside the day and weekday delegates costs
+    // noticeable time on every open (42 + 7 builder chains).
+    readonly property font dayFont: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+    readonly property font weekdayFont: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
+
     spacing: Tokens.spacing.extraSmall * root.scaleOffset
 
     CalendarMonthSlide {
@@ -132,7 +137,7 @@ ColumnLayout {
 
             horizontalAlignment: Text.AlignHCenter
             text: model.shortName
-            font: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
+            font: root.weekdayFont
             color: (model.day === 0 || model.day === 6) ? Colours.palette.m3tertiary : Colours.palette.m3onSurface
         }
     }
@@ -183,7 +188,7 @@ ColumnLayout {
                         return Colours.palette.m3onSurfaceVariant;
                     }
                     opacity: root.isToday(dayItem.model.date) || dayItem.model.month === grid.month ? 1 : 0.4
-                    font: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+                    font: root.dayFont
                 }
 
                 Rectangle {

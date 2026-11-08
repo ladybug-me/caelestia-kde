@@ -70,13 +70,17 @@ install_skwd_wall_source() {
     if [[ -d "$src_dir" ]] && command -v cargo >/dev/null 2>&1; then
         if cargo install --path "$src_dir" --bin skwd-wall 2>/dev/null || \
            cargo build --release --manifest-path "$src_dir/Cargo.toml" 2>/dev/null; then
-            if [[ -f "$src_dir/target/release/skwd-wall" ]]; then
+            # The build directory sits in a checkout the user can write, and
+            # `install` follows a symlink: only a regular file is promoted.
+            if [[ -f "$src_dir/target/release/skwd-wall" && ! -L "$src_dir/target/release/skwd-wall" ]]; then
                 caelestia_sudo install -m 755 "$src_dir/target/release/skwd-wall" /usr/local/bin/skwd-wall-v2 2>/dev/null || {
                     mkdir -p "$HOME/.local/bin"
                     install -m 755 "$src_dir/target/release/skwd-wall" "$HOME/.local/bin/skwd-wall-v2"
                 }
+                built=true
+            else
+                warn "Refusing to install a symlinked skwd-wall build artifact."
             fi
-            built=true
         fi
     fi
 

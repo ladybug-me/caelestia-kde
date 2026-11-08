@@ -64,7 +64,9 @@ install_matugen_github() {
     if [[ -n "$dl_url" ]]; then
         tmpdir="$(mktemp -d)"
         if curl -fsSL "$dl_url" | tar -xz -C "$tmpdir" 2>/dev/null; then
-            if [[ -f "$tmpdir/matugen" ]]; then
+            # A tarball can carry a symlink in place of the binary, and `install`
+            # would follow it as root. Only a regular file is installed.
+            if [[ -f "$tmpdir/matugen" && ! -L "$tmpdir/matugen" ]]; then
                 if caelestia_sudo install -m 755 "$tmpdir/matugen" /usr/local/bin/matugen 2>/dev/null; then
                     rm -rf "$tmpdir"
                     ok "matugen installed successfully to /usr/local/bin from GitHub release."
@@ -109,7 +111,9 @@ install_matugen_cargo() {
     fi
 
     if command -v cargo >/dev/null 2>&1 && cargo install matugen; then
-        if [[ -f "$HOME/.cargo/bin/matugen" ]]; then
+        # ~/.cargo/bin is the user's, and `cp` follows a symlink: a planted link
+        # would be copied as root. Only a regular file is promoted.
+        if [[ -f "$HOME/.cargo/bin/matugen" && ! -L "$HOME/.cargo/bin/matugen" ]]; then
             caelestia_sudo cp "$HOME/.cargo/bin/matugen" /usr/local/bin/matugen 2>/dev/null || true
         fi
         local rc

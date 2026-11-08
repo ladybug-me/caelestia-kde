@@ -22,8 +22,18 @@ mirror_login_fonts() {
         return 1
     fi
 
+    # The source directory is writable by the user, and `install` follows a symlink:
+    # a link planted there would be copied as root into a world-readable directory.
+    local candidate
     shopt -s nullglob
-    theme_fonts=("$src"/MaterialSymbolsRounded.ttf "$src"/Rubik-*.ttf "$src"/CaskaydiaCove*.ttf "$src"/JetBrainsMono*.ttf)
+    for candidate in "$src"/MaterialSymbolsRounded.ttf "$src"/Rubik-*.ttf "$src"/CaskaydiaCove*.ttf \
+        "$src"/JetBrainsMono*.ttf; do
+        if [[ -f "$candidate" && ! -L "$candidate" ]]; then
+            theme_fonts+=("$candidate")
+        elif [[ -L "$candidate" ]]; then
+            warn "Skipping symlinked font $candidate."
+        fi
+    done
     shopt -u nullglob
 
     if [[ ${#theme_fonts[@]} -eq 0 ]]; then

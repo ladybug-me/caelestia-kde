@@ -17,13 +17,26 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        pacman -Syu --noconfirm --needed \
-          git cmake ninja python extra-cmake-modules \
-          qt6-base qt6-declarative qt6-shadertools qt6-wayland qt6-tools \
-          qt6-multimedia qt6-5compat \
-          kwindowsystem kguiaddons kglobalaccel kconfig kcoreaddons \
-          kpipewire networkmanager-qt pulseaudio-qt libqalculate \
-          protobuf openssl avahi \
-          pipewire libpipewire aubio lm_sensors fftw ncurses alsa-lib \
-          iniparser libglvnd sdl2 portaudio sndio libpulse \
+        packages=(
+          git cmake ninja python extra-cmake-modules
+          qt6-base qt6-declarative qt6-shadertools qt6-wayland qt6-tools
+          qt6-multimedia qt6-5compat
+          kwindowsystem kguiaddons kglobalaccel kconfig kcoreaddons
+          kpipewire networkmanager-qt pulseaudio-qt libqalculate
+          protobuf openssl avahi
+          pipewire libpipewire aubio lm_sensors fftw ncurses alsa-lib
+          iniparser libglvnd sdl2 portaudio sndio libpulse
           ${{ inputs.extra-packages }}
+        )
+        # A mirror that drops one package aborts the whole transaction, which fails
+        # the job before it ever runs its check. Retry with a fresh database rather
+        # than blocking a pull request on one bad download.
+        for attempt in 1 2 3; do
+          if pacman -Syu --noconfirm --needed --disable-download-timeout "${packages[@]}"; then
+            exit 0
+          fi
+          echo "::warning::pacman could not retrieve every package (attempt ${attempt} of 3); retrying"
+          sleep $((attempt * 15))
+        done
+        echo "::error::the build dependencies could not be installed after 3 attempts"
+        exit 1

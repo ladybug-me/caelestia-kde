@@ -410,7 +410,12 @@ PageBase {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: PluginStore.installError !== "" ? PluginStore.installError : PluginStore.installing ? PluginStore.installProgress : qsTr("The repository root must contain metadata.json")
+                        // A plugin runs inside the shell process, with everything this
+                        // session can reach. Saying so where the URL is typed is the only
+                        // place the person choosing it sees it.
+                        text: PluginStore.installError !== "" ? PluginStore.installError
+                            : PluginStore.installing ? PluginStore.installProgress
+                            : qsTr("The repository root must contain metadata.json. A plugin runs inside the shell, so it can do anything this session can.")
                         color: PluginStore.installError !== "" ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                         font: NexusStyle.secondaryFont
                         elide: Text.ElideRight

@@ -5,6 +5,7 @@
 #include <QByteArray>
 #include <QList>
 #include <QString>
+#include <optional>
 
 namespace caelestia::services {
 
@@ -60,8 +61,7 @@ private:
 
     /// The last sequence number seen from the peer. Device-to-device frames must
     /// increase, so a replayed or reordered frame is refused.
-    int m_lastRecvSequence = 0;
-    bool m_hasRecvSequence = false;
+    std::optional<int> m_lastRecvSequence;
 
     QByteArray m_encodeKey;
     QByteArray m_decodeKey;

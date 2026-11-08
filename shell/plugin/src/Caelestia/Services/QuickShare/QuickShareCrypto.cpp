@@ -535,12 +535,11 @@ QByteArray QuickShareCrypto::openDeviceToDevice(const QByteArray& secureMessage)
     // A frame may only be used once and only in order: the sender counts up, so
     // anything that does not advance the count is a replay. The first frame is
     // taken as the origin, since peers need not start the count at the same value.
-    if (m_hasRecvSequence && deviceToDevice.sequence_number() <= m_lastRecvSequence) {
+    if (m_lastRecvSequence && deviceToDevice.sequence_number() <= *m_lastRecvSequence) {
         qWarning() << u"QuickShareCrypto: refusing a replayed or reordered frame"_s;
         return {};
     }
     m_lastRecvSequence = deviceToDevice.sequence_number();
-    m_hasRecvSequence = true;
 
     return QByteArray(deviceToDevice.message().data(), static_cast<qsizetype>(deviceToDevice.message().size()));
 }

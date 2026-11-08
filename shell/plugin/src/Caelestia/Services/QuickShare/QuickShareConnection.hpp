@@ -59,42 +59,39 @@ private slots:
     void onError(QAbstractSocket::SocketError socketError);
 
 private:
-    /// The bytes of one payload, assembled from the chunks a peer sends. A chunk
-    /// carries the offset it continues from, so a missing or reordered one is
-    /// refused rather than appended, and the last one says the payload is whole.
-    class PayloadBuffer {
+    /// The payloads a peer is sending, assembled from their chunks. It owns both the
+    /// parts and the running total, so the budget can never drift from what is held.
+    class PayloadAssembler {
     public:
-        /// Takes a chunk. False when it does not continue the payload.
-        bool append(qint64 offset, const QByteArray& body, bool last) {
-            if (offset != m_data.size())
-                return false;
+        enum class Result {
+            /// The chunk does not continue a payload; nothing was kept.
+            Ignored,
+            /// The chunk was kept and the payload is not whole yet.
+            Pending,
+            /// The last chunk landed. `payload` holds the whole thing and the
+            /// assembler has already let it go.
+            Complete,
+            /// The chunk would take the assembler past its budget.
+            Refused,
+        };
 
-            m_data.append(body);
-            m_complete = last;
-            return true;
-        }
+        /// Takes one chunk. A chunk carries the offset it continues from, so a
+        /// missing or reordered one is refused rather than appended.
+        Result append(qint64 payloadId, qint64 offset, const QByteArray& body, bool last, QByteArray& payload);
 
-        bool complete() const { return m_complete; }
-
-        qint64 size() const { return m_data.size(); }
-
-        const QByteArray& data() const { return m_data; }
-
-        void clear() {
-            m_data.clear();
-            m_complete = false;
-        }
+        void clear();
 
     private:
-        QByteArray m_data;
-        bool m_complete = false;
+        QMap<qint64, QByteArray> m_parts;
+        qint64 m_bufferedBytes = 0;
     };
 
     void connectSocket();
     void setState(State state);
-    /// Refuses the connection: pending bytes are dropped and the transfer reports
-    /// itself as failed. A malformed frame, or one too large to hold, ends here.
-    void dropConnection(const QString& reason);
+    /// Ends the transfer with a failure: pending bytes are dropped, a partial
+    /// download is taken away, and the socket is closed. Every refusal goes through
+    /// here so a failure cannot leave a peer writing into a connection nobody answers.
+    void failTransfer(const QString& reason);
     /// Reports the end of the transfer once: a file save and the peer's later
     /// disconnection both end the same transfer.
     void finishTransfer(bool success);
@@ -108,10 +105,9 @@ private:
     void handleFileChunk(const location::nearby::connections::PayloadTransferFrame& packet, const QByteArray& body);
     void handleByteChunk(const location::nearby::connections::PayloadTransferFrame& packet, const QByteArray& body);
     /// Opens the destination for an accepted transfer. False (with the transfer
-    /// already reported) when no file could be created.
+    /// already failed and reported) when no file could be created.
     bool openIncomingFile();
     void finishIncomingFile();
-    void failIncomingFile();
 
     void sendConnectionRequest();
     void sendConnectionResponse();
@@ -159,9 +155,7 @@ private:
     /// The file and its trailer are on the wire; only the socket draining is left.
     bool m_outgoingFileQueued = false;
 
-    QMap<qint64, PayloadBuffer> m_payloadBuffers;
-    /// Bytes held across m_payloadBuffers, so one peer cannot grow them without bound.
-    qint64 m_bufferedPayloadBytes = 0;
+    PayloadAssembler m_payloads;
 };
 
 } // namespace caelestia::services

@@ -92,6 +92,9 @@ private:
 
     void connectSocket();
     void setState(State state);
+    /// Refuses the connection: pending bytes are dropped and the transfer reports
+    /// itself as failed. A malformed frame, or one too large to hold, ends here.
+    void dropConnection(const QString& reason);
     /// Reports the end of the transfer once: a file save and the peer's later
     /// disconnection both end the same transfer.
     void finishTransfer(bool success);
@@ -104,7 +107,11 @@ private:
     void handlePayloadTransfer(const location::nearby::connections::PayloadTransferFrame& packet);
     void handleFileChunk(const location::nearby::connections::PayloadTransferFrame& packet, const QByteArray& body);
     void handleByteChunk(const location::nearby::connections::PayloadTransferFrame& packet, const QByteArray& body);
-    void saveIncomingFile();
+    /// Opens the destination for an accepted transfer. False (with the transfer
+    /// already reported) when no file could be created.
+    bool openIncomingFile();
+    void finishIncomingFile();
+    void failIncomingFile();
 
     void sendConnectionRequest();
     void sendConnectionResponse();
@@ -133,6 +140,14 @@ private:
     QString m_incomingFileName;
     QString m_incomingFilePath;
     qint64 m_incomingFileSize = 0;
+    /// A peer may only hand us a file after the user accepted the request; until
+    /// then its chunks are refused rather than written out.
+    bool m_incomingAccepted = false;
+    /// The destination file, written as chunks arrive so a large transfer never
+    /// sits in memory. Only open while a file is arriving.
+    QFile m_incomingHandle;
+    QString m_incomingSavedPath;
+    qint64 m_incomingOffset = 0;
     QString m_deviceName;
 
     qint64 m_outgoingFilePayloadId = 0;
@@ -145,8 +160,8 @@ private:
     bool m_outgoingFileQueued = false;
 
     QMap<qint64, PayloadBuffer> m_payloadBuffers;
-
-    PayloadBuffer m_incomingFile;
+    /// Bytes held across m_payloadBuffers, so one peer cannot grow them without bound.
+    qint64 m_bufferedPayloadBytes = 0;
 };
 
 } // namespace caelestia::services

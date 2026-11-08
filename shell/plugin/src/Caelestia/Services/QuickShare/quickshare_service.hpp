@@ -99,6 +99,9 @@ private:
     /// The incoming request the shell can still answer. Every connection is owned by
     /// this object and tracked by the handlers that created it.
     QPointer<QuickShareConnection> m_pendingIncomingRequest;
+
+    /// Live connections, so the listener can refuse more than maxConnections peers.
+    int m_connectionCount = 0;
 };
 
 } // namespace caelestia::services

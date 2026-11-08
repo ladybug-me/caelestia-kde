@@ -33,6 +33,10 @@ QString deviceLabel(const QuickShareConnection* connection) {
 /// socket can reach the peer before it goes.
 constexpr int connectionLingerMs = 2000;
 
+/// The most peers this shell holds at once. Every connection owns a socket and
+/// buffers, so an unauthenticated listener with no cap is a way to exhaust them.
+constexpr int maxConnections = 8;
+
 /// The port the transfer listener binds. shell/scripts/quickshare-port is its one
 /// definition: CMake bakes it in here, the shell passes it to the setup helper when it
 /// opens the firewall, and the install step reads it to write that same rule. A
@@ -262,7 +266,18 @@ void QuickShareService::onNewConnection() {
     if (!socket)
         return;
 
+    if (m_connectionCount >= maxConnections) {
+        qWarning() << u"QuickShareService: refusing a peer; %1 connections are already open"_s.arg(m_connectionCount);
+        socket->abort();
+        socket->deleteLater();
+        return;
+    }
+
     auto* connection = new QuickShareConnection(socket, this);
+    ++m_connectionCount;
+    connect(connection, &QObject::destroyed, this, [this] {
+        --m_connectionCount;
+    });
 
     connect(connection, &QuickShareConnection::transferRequested, this,
         [this, connection](const QString& fileName, qint64 fileSize) {

@@ -35,6 +35,18 @@ using location::nearby::connections::V1Frame;
 /// The payload chunk size this implementation writes.
 constexpr qint64 chunkSize = 1024 * 1024;
 
+/// The largest frame accepted from a peer. A length prefix is a uint32 the peer
+/// chooses, so it is range-checked before it sizes anything: 4 + 0xFFFFFFFD wraps
+/// to a tiny number when done in 32 bits, which let an unauthenticated peer make
+/// the shell copy and re-copy its whole buffer.
+constexpr uint32_t maxFrameSize = 8 * 1024 * 1024;
+
+/// The most payload bytes one peer may make us hold across its buffers.
+constexpr qint64 maxBufferedPayload = 64 * 1024 * 1024;
+
+/// How many payloads a peer may have in flight at once.
+constexpr int maxPayloadBuffers = 32;
+
 /// How much of an outgoing file may sit in Qt's socket write buffer before the
 /// send waits for the socket to drain.
 constexpr qint64 sendBufferLimit = 4 * chunkSize;
@@ -133,7 +145,26 @@ void QuickShareConnection::finishTransfer(bool success) {
 
     m_finished = true;
     m_outgoingFile.close();
+    m_payloadBuffers.clear();
+    m_bufferedPayloadBytes = 0;
+
+    // A file that never finished is not the user's file: close it and take the
+    // partial copy away rather than leave it in their Downloads.
+    if (m_incomingHandle.isOpen()) {
+        m_incomingHandle.close();
+        if (!m_incomingSavedPath.isEmpty())
+            QFile::remove(m_incomingSavedPath);
+        m_incomingSavedPath.clear();
+    }
+
     emit transferFinished(success);
+}
+
+void QuickShareConnection::dropConnection(const QString& reason) {
+    qWarning() << u"QuickShareConnection:"_s << reason;
+    m_buffer.clear();
+    finishTransfer(false);
+    m_socket->disconnectFromHost();
 }
 
 void QuickShareConnection::sendConnectionRequest() {
@@ -288,6 +319,7 @@ void QuickShareConnection::acceptTransfer() {
     if (m_state != ConnectionAccepted)
         return;
 
+    m_incomingAccepted = true;
     sendEncryptedSharingFrame(sharing::nearby::V1Frame::RESPONSE);
     setState(Transferring);
 }
@@ -309,17 +341,25 @@ void QuickShareConnection::rejectTransfer() {
 void QuickShareConnection::onReadyRead() {
     m_buffer.append(m_socket->readAll());
 
-    while (m_buffer.size() >= 4) {
+    // Parse in one pass over the newly arrived bytes, then drop the consumed
+    // prefix once: removing per frame is quadratic in the number of frames.
+    qsizetype offset = 0;
+    while (m_buffer.size() - offset >= 4) {
         uint32_t length;
-        memcpy(&length, m_buffer.constData(), 4);
+        memcpy(&length, m_buffer.constData() + offset, 4);
         length = qFromBigEndian(length);
 
-        if (static_cast<uint32_t>(m_buffer.size()) < 4 + length) {
-            break;
+        if (length > maxFrameSize) {
+            dropConnection(u"refusing a frame of %1 bytes"_s.arg(length));
+            return;
         }
 
-        QByteArray frameData = m_buffer.mid(4, length);
-        m_buffer.remove(0, 4 + length);
+        const qsizetype frameSize = 4 + static_cast<qsizetype>(length);
+        if (m_buffer.size() - offset < frameSize)
+            break;
+
+        const QByteArray frameData = m_buffer.mid(offset + 4, length);
+        offset += frameSize;
 
         switch (m_state) {
         case OfflineFrameExchange:
@@ -340,6 +380,9 @@ void QuickShareConnection::onReadyRead() {
             break;
         }
     }
+
+    if (offset > 0)
+        m_buffer.remove(0, offset);
 }
 
 void QuickShareConnection::handleOfflineFrame(const QByteArray& data) {
@@ -378,21 +421,27 @@ void QuickShareConnection::handleUkey2(const QByteArray& data) {
     switch (message.message_type()) {
     case securegcm::Ukey2Message::CLIENT_INIT: {
         const QByteArray serverInit = m_crypto.processClientInit(data);
-        if (serverInit.isEmpty())
-            qWarning() << u"QuickShareConnection: m_crypto.processClientInit failed"_s;
-        else
-            writeLengthPrefixed(m_socket, serverInit);
+        if (serverInit.isEmpty()) {
+            dropConnection(u"the peer's Ukey2 CLIENT_INIT was refused"_s);
+            break;
+        }
+        writeLengthPrefixed(m_socket, serverInit);
         break;
     }
-    case securegcm::Ukey2Message::SERVER_INIT:
-        (void)m_crypto.processServerInit(data);
-        writeLengthPrefixed(m_socket, m_crypto.generateClientFinished());
+    case securegcm::Ukey2Message::SERVER_INIT: {
+        const QByteArray finished = m_crypto.processServerInit(data);
+        if (finished.isEmpty() || !m_crypto.isHandshakeComplete()) {
+            dropConnection(u"the peer's Ukey2 SERVER_INIT was refused"_s);
+            break;
+        }
+        writeLengthPrefixed(m_socket, finished);
         sendConnectionResponse();
         setState(PostHandshake);
         break;
+    }
     case securegcm::Ukey2Message::CLIENT_FINISH:
         if (!m_crypto.processClientFinished(data)) {
-            qWarning() << u"QuickShareConnection: m_crypto.processClientFinished failed!"_s;
+            dropConnection(u"the peer's Ukey2 CLIENT_FINISH was refused"_s);
             break;
         }
         setState(PostHandshake);
@@ -468,30 +517,84 @@ void QuickShareConnection::handleFileChunk(const PayloadTransferFrame& packet, c
     const auto& chunk = packet.payload_chunk();
     const bool last = (chunk.flags() & PayloadTransferFrame::PayloadChunk::LAST_CHUNK) != 0;
 
-    if (!m_incomingFile.append(chunk.offset(), body, last))
+    // The sender only starts after our ACCEPT, so a file that arrives before the
+    // user answered is either a racing peer or one that skipped the request.
+    if (!m_incomingAccepted) {
+        qWarning() << u"QuickShareConnection: refusing a file chunk for an unaccepted transfer"_s;
         return;
+    }
 
-    emit transferProgress(m_incomingFile.size(), m_incomingFileSize);
+    if (!m_incomingHandle.isOpen()) {
+        if (chunk.offset() != 0)
+            return; // a continuation of a file this connection never started
+        if (!openIncomingFile())
+            return;
+    }
+
+    // A chunk carries the offset it continues from, so a gap or a repeat is refused
+    // instead of being written over what is already there.
+    if (chunk.offset() != m_incomingOffset) {
+        dropConnection(u"a file chunk did not continue the file"_s);
+        return;
+    }
+
+    // The request named a size, and the user accepted that size. A peer that keeps
+    // sending past it is not the transfer they agreed to.
+    if (m_incomingFileSize > 0 && m_incomingOffset + body.size() > m_incomingFileSize) {
+        dropConnection(u"a file chunk arrived past the announced size"_s);
+        return;
+    }
+
+    if (m_incomingHandle.write(body) != body.size()) {
+        qWarning() << u"QuickShareConnection: failed to write"_s << m_incomingSavedPath;
+        failIncomingFile();
+        return;
+    }
+
+    m_incomingOffset += body.size();
+    emit transferProgress(m_incomingOffset, m_incomingFileSize);
 
     if (last)
-        saveIncomingFile();
+        finishIncomingFile();
 }
 
-void QuickShareConnection::saveIncomingFile() {
+bool QuickShareConnection::openIncomingFile() {
     const QString directory = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation);
-    QDir().mkpath(directory);
+    if (directory.isEmpty() || !QDir().mkpath(directory)) {
+        qWarning() << u"QuickShareConnection: no writable download directory"_s;
+        finishTransfer(false);
+        return false;
+    }
 
-    const QString savePath = directory.isEmpty() ? QString() : uniqueFilePath(directory, m_incomingFileName);
-    QFile file(savePath);
-    const bool saved = file.open(QIODevice::WriteOnly) && file.write(m_incomingFile.data()) == m_incomingFile.size();
-    if (saved)
-        file.close();
-    else
-        qWarning() << u"QuickShareConnection: Failed to save"_s << m_incomingFileName << u"to"_s << savePath;
+    // NewOnly rather than a check followed by an open: two peers naming the same
+    // file must not end up writing to one path, and nothing already there may be
+    // truncated.
+    for (int attempt = 0; attempt < 100; ++attempt) {
+        m_incomingSavedPath = uniqueFilePath(directory, m_incomingFileName);
+        m_incomingHandle.setFileName(m_incomingSavedPath);
+        if (m_incomingHandle.open(QIODevice::WriteOnly | QIODevice::NewOnly)) {
+            m_incomingOffset = 0;
+            return true;
+        }
+    }
 
-    m_incomingFilePath = saved ? savePath : QString();
-    m_incomingFile.clear();
-    finishTransfer(saved);
+    qWarning() << u"QuickShareConnection: could not create a file for"_s << m_incomingFileName;
+    finishTransfer(false);
+    return false;
+}
+
+void QuickShareConnection::finishIncomingFile() {
+    m_incomingHandle.close();
+    m_incomingFilePath = m_incomingSavedPath;
+    finishTransfer(true);
+}
+
+void QuickShareConnection::failIncomingFile() {
+    m_incomingHandle.close();
+    if (!m_incomingSavedPath.isEmpty())
+        QFile::remove(m_incomingSavedPath);
+    m_incomingSavedPath.clear();
+    finishTransfer(false);
 }
 
 void QuickShareConnection::handleByteChunk(const PayloadTransferFrame& packet, const QByteArray& body) {
@@ -502,16 +605,32 @@ void QuickShareConnection::handleByteChunk(const PayloadTransferFrame& packet, c
     if (buffer == m_payloadBuffers.end()) {
         if (chunk.offset() != 0)
             return; // a continuation of a payload this connection never saw start
+        if (m_payloadBuffers.size() >= maxPayloadBuffers) {
+            dropConnection(u"refusing more than %1 buffered payloads"_s.arg(maxPayloadBuffers));
+            return;
+        }
         buffer = m_payloadBuffers.insert(payloadId, PayloadBuffer());
     }
 
+    if (m_bufferedPayloadBytes + body.size() > maxBufferedPayload) {
+        dropConnection(u"refusing more than %1 bytes of buffered payloads"_s.arg(maxBufferedPayload));
+        return;
+    }
+
     const bool last = (chunk.flags() & PayloadTransferFrame::PayloadChunk::LAST_CHUNK) != 0;
-    if (!buffer->append(chunk.offset(), body, last) || !buffer->complete())
+    const qint64 before = buffer->size();
+    if (!buffer->append(chunk.offset(), body, last))
+        return;
+
+    m_bufferedPayloadBytes += buffer->size() - before;
+    if (!buffer->complete())
         return;
 
     sharing::nearby::Frame frame;
     if (frame.ParseFromArray(buffer->data().constData(), static_cast<int>(buffer->data().size())))
         handleSharingFrame(frame);
+
+    m_bufferedPayloadBytes -= buffer->size();
     m_payloadBuffers.erase(buffer);
 }
 
@@ -602,6 +721,10 @@ void QuickShareConnection::sendDisconnection() {
 
 void QuickShareConnection::onDisconnected() {
     setState(Disconnected);
+    // A file that never finished is taken away rather than left in Downloads.
+    // A finished one has already reported itself.
+    if (m_incomingHandle.isOpen())
+        failIncomingFile();
     emit closed();
 }
 

@@ -9,6 +9,7 @@
 #include <openssl/sha.h>
 
 #include <QDebug>
+#include <QList>
 #include <cstring>
 #include <string>
 
@@ -58,7 +59,8 @@ static QByteArray serializePublicKey(EVP_PKEY* key) {
 }
 
 /// The uncompressed point the serialized GenericPublicKey `bytes` names, or an
-/// empty array if they do not name a P-256 key.
+/// empty array if they do not name a P-256 key. Sizes are checked here so a
+/// malformed coordinate cannot turn into a truncated point.
 static QByteArray peerPublicKey(const std::string& bytes) {
     securemessage::GenericPublicKey genericPublicKey;
     if (!genericPublicKey.ParseFromString(bytes) || genericPublicKey.type() != securemessage::EC_P256)
@@ -67,13 +69,20 @@ static QByteArray peerPublicKey(const std::string& bytes) {
     const auto coordinate = [](std::string raw) {
         if (raw.size() == 33 && raw[0] == '\0')
             raw.erase(raw.begin());
+        if (raw.size() != 32)
+            return QByteArray();
         return QByteArray(raw.data(), static_cast<qsizetype>(raw.size()));
     };
 
+    const QByteArray x = coordinate(genericPublicKey.ec_p256_public_key().x());
+    const QByteArray y = coordinate(genericPublicKey.ec_p256_public_key().y());
+    if (x.isEmpty() || y.isEmpty())
+        return {};
+
     QByteArray point;
     point.append(static_cast<char>(0x04)); // an uncompressed point: x then y
-    point.append(coordinate(genericPublicKey.ec_p256_public_key().x()));
-    point.append(coordinate(genericPublicKey.ec_p256_public_key().y()));
+    point.append(x);
+    point.append(y);
     return point;
 }
 
@@ -143,29 +152,42 @@ void QuickShareCrypto::generateDhKeypair() {
     EVP_PKEY_CTX_free(pctx);
 }
 
-void QuickShareCrypto::deriveKeys(const QByteArray& peerPublicKeyBytes) {
+bool QuickShareCrypto::deriveKeys(const QByteArray& peerPublicKeyBytes) {
     EVP_PKEY* peerKey = nullptr;
     EC_GROUP* group = EC_GROUP_new_by_curve_name(NID_X9_62_prime256v1);
+    bool valid = false;
     if (group) {
         EC_POINT* point = EC_POINT_new(group);
-        if (point) {
-            if (EC_POINT_oct2point(group, point, reinterpret_cast<const unsigned char*>(peerPublicKeyBytes.constData()),
-                    peerPublicKeyBytes.size(), nullptr)) {
-                EC_KEY* ecKey = EC_KEY_new();
-                EC_KEY_set_group(ecKey, group);
-                EC_KEY_set_public_key(ecKey, point);
+        BN_CTX* bnContext = BN_CTX_new();
+        if (point && bnContext &&
+            EC_POINT_oct2point(group, point, reinterpret_cast<const unsigned char*>(peerPublicKeyBytes.constData()),
+                peerPublicKeyBytes.size(), bnContext) == 1 &&
+            EC_POINT_is_at_infinity(group, point) == 0 && EC_POINT_is_on_curve(group, point, bnContext) == 1) {
+            EC_KEY* ecKey = EC_KEY_new();
+            if (ecKey && EC_KEY_set_group(ecKey, group) == 1 && EC_KEY_set_public_key(ecKey, point) == 1 &&
+                EC_KEY_check_key(ecKey) == 1) {
                 peerKey = EVP_PKEY_new();
                 EVP_PKEY_assign_EC_KEY(peerKey, ecKey);
+                valid = true;
+            } else if (ecKey) {
+                EC_KEY_free(ecKey);
             }
-            EC_POINT_free(point);
         }
+        BN_CTX_free(bnContext);
+        EC_POINT_free(point);
         EC_GROUP_free(group);
     }
 
-    QByteArray sharedSecret = extractSharedSecret(peerKey);
+    if (!valid) {
+        qWarning() << u"QuickShareCrypto: the peer key is not a valid P-256 point"_s;
+        return false;
+    }
 
-    if (peerKey) {
-        EVP_PKEY_free(peerKey);
+    const QByteArray sharedSecret = extractSharedSecret(peerKey);
+    EVP_PKEY_free(peerKey);
+    if (sharedSecret.isEmpty()) {
+        qWarning() << u"QuickShareCrypto: could not derive the shared secret"_s;
+        return false;
     }
 
     QByteArray derivedSecret;
@@ -205,6 +227,8 @@ void QuickShareCrypto::deriveKeys(const QByteArray& peerPublicKeyBytes) {
         m_decodeKey = serverKey;
         m_hmacDecodeKey = serverHmacKey;
     }
+
+    return true;
 }
 
 QString QuickShareCrypto::pinCode() const {
@@ -226,13 +250,20 @@ QByteArray QuickShareCrypto::extractSharedSecret(EVP_PKEY* peerKey) {
     if (!m_dhKey || !peerKey)
         return QByteArray();
     EVP_PKEY_CTX* ctx = EVP_PKEY_CTX_new(m_dhKey, nullptr);
-    EVP_PKEY_derive_init(ctx);
-    EVP_PKEY_derive_set_peer(ctx, peerKey);
-    size_t secretLen = 0;
-    EVP_PKEY_derive(ctx, nullptr, &secretLen);
+    if (!ctx)
+        return QByteArray();
     QByteArray secret;
+    size_t secretLen = 0;
+    if (EVP_PKEY_derive_init(ctx) <= 0 || EVP_PKEY_derive_set_peer(ctx, peerKey) <= 0 ||
+        EVP_PKEY_derive(ctx, nullptr, &secretLen) <= 0 || secretLen == 0) {
+        EVP_PKEY_CTX_free(ctx);
+        return QByteArray();
+    }
     secret.resize(secretLen);
-    EVP_PKEY_derive(ctx, (unsigned char*)secret.data(), &secretLen);
+    if (EVP_PKEY_derive(ctx, (unsigned char*)secret.data(), &secretLen) <= 0) {
+        EVP_PKEY_CTX_free(ctx);
+        return QByteArray();
+    }
     EVP_PKEY_CTX_free(ctx);
     return secret;
 }
@@ -261,6 +292,15 @@ QByteArray QuickShareCrypto::processClientInit(const QByteArray& data) {
     if (!clientInit.ParseFromString(msg.message_data()))
         return QByteArray();
 
+    // The commitment is the client's promise about the CLIENT_FINISH it will send
+    // later; keeping it lets processClientFinished refuse a swapped public key.
+    m_clientCommitments.clear();
+    for (const auto& commitment : clientInit.cipher_commitments()) {
+        if (commitment.handshake_cipher() == securegcm::P256_SHA512)
+            m_clientCommitments.append(
+                QByteArray(commitment.commitment().data(), static_cast<qsizetype>(commitment.commitment().size())));
+    }
+
     return generateServerInit();
 }
 
@@ -277,10 +317,9 @@ QByteArray QuickShareCrypto::processServerInit(const QByteArray& data) {
         return QByteArray();
 
     const QByteArray peerKey = peerPublicKey(serverInit.public_key());
-    if (peerKey.isEmpty())
+    if (peerKey.isEmpty() || !deriveKeys(peerKey))
         return QByteArray();
 
-    deriveKeys(peerKey);
     m_handshakeComplete = true;
     return generateClientFinished();
 }
@@ -296,11 +335,26 @@ bool QuickShareCrypto::processClientFinished(const QByteArray& data) {
     if (!clientFinished.ParseFromString(msg.message_data()))
         return false;
 
-    const QByteArray peerKey = peerPublicKey(clientFinished.public_key());
-    if (peerKey.isEmpty())
+    // Verify the commitment made in CLIENT_INIT over these exact bytes before the
+    // key they carry can become the session key.
+    unsigned char digest[SHA512_DIGEST_LENGTH];
+    SHA512(reinterpret_cast<const unsigned char*>(data.constData()), static_cast<size_t>(data.size()), digest);
+    bool committed = false;
+    for (const auto& commitment : m_clientCommitments) {
+        if (commitment.size() == SHA512_DIGEST_LENGTH &&
+            CRYPTO_memcmp(commitment.constData(), digest, SHA512_DIGEST_LENGTH) == 0) {
+            committed = true;
+            break;
+        }
+    }
+    if (!committed) {
+        qWarning() << u"QuickShareCrypto: CLIENT_FINISH does not match the CLIENT_INIT commitment"_s;
         return false;
+    }
 
-    deriveKeys(peerKey);
+    const QByteArray peerKey = peerPublicKey(clientFinished.public_key());
+    if (peerKey.isEmpty() || !deriveKeys(peerKey))
+        return false;
 
     m_handshakeComplete = true;
     return true;
@@ -477,6 +531,16 @@ QByteArray QuickShareCrypto::openDeviceToDevice(const QByteArray& secureMessage)
     securegcm::DeviceToDeviceMessage deviceToDevice;
     if (!deviceToDevice.ParseFromArray(plaintext.constData(), static_cast<int>(plaintext.size())))
         return {};
+
+    // A frame may only be used once and only in order: the sender counts up, so
+    // anything that does not advance the count is a replay. The first frame is
+    // taken as the origin, since peers need not start the count at the same value.
+    if (m_hasRecvSequence && deviceToDevice.sequence_number() <= m_lastRecvSequence) {
+        qWarning() << u"QuickShareCrypto: refusing a replayed or reordered frame"_s;
+        return {};
+    }
+    m_lastRecvSequence = deviceToDevice.sequence_number();
+    m_hasRecvSequence = true;
 
     return QByteArray(deviceToDevice.message().data(), static_cast<qsizetype>(deviceToDevice.message().size()));
 }

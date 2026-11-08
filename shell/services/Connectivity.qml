@@ -4,6 +4,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import qs.services
+import qs.utils
 
 /// Whether the network actually lets traffic through, and where to send someone who has
 /// to sign in first.
@@ -89,9 +90,11 @@ Singleton {
             }
 
             // A portal intercepts the check and redirects to itself, so a URL that is
-            // still the check URL means the network answered normally.
+            // still the check URL means the network answered normally. Whatever did
+            // answer chose the URL, so only a web page is opened: a `file://` or
+            // custom-scheme redirect would hand a hostile network a local launch.
             const url = probeOutput.text.trim();
-            root.portalUrl = url.startsWith(root.checkUrl) ? "" : url;
+            root.portalUrl = Launch.isWebUrl(url) && !url.startsWith(root.checkUrl) ? url : "";
             if (root.portalUrl !== "")
                 Quickshell.execDetached(["xdg-open", root.portalUrl]);
             else

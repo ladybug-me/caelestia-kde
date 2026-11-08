@@ -10,6 +10,33 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/packages.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/download.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/download.sh" 2>/dev/null || true
+
+# The release the binary comes from, fixed here rather than read from `latest`: what root
+# installs is then this project's decision, and the asset names belong to the tag.
+MATUGEN_VERSION="4.2.0"
+
+# The pinned release, as "<url>\t<digest>" for the asset this machine needs. InioX publishes
+# no .sha256 beside the asset, but GitHub reports a sha256 for each one in the same response
+# that names it, so the archive can be checked against the release it came from. Printed as
+# one line: callers split on the tab.
+matugen_asset_url() {
+    local carch="$1" release_json asset name
+    command -v jq >/dev/null 2>&1 || return 1
+    release_json="$(curl -fsSL "https://api.github.com/repos/InioX/matugen/releases/tags/v${MATUGEN_VERSION}" 2>/dev/null || true)"
+    [[ -n "$release_json" ]] || return 1
+    name="matugen-${MATUGEN_VERSION}-${carch}.tar.gz"
+
+    asset="$(printf '%s' "$release_json" | jq -r --arg name "$name" '
+        first(.assets[] | select(.name == $name))
+        | "\(.browser_download_url // "")\t\(.digest // "")"
+    ' 2>/dev/null)"
+    [[ -n "$asset" && "$asset" != $'\t' ]] || return 1
+    printf '%s\n' "$asset"
+}
 
 matugen_present() {
     if ! command -v matugen >/dev/null 2>&1; then
@@ -45,7 +72,7 @@ cleanup_legacy_cargo_matugen() {
 }
 
 install_matugen_github() {
-    info "Fetching matugen binary from GitHub releases..."
+    info "Fetching matugen $MATUGEN_VERSION binary from GitHub releases..."
     local arch carch="x86_64"
     arch="$(uname -m 2>/dev/null || echo "x86_64")"
     case "$arch" in
@@ -55,32 +82,50 @@ install_matugen_github() {
         *)               carch="x86_64" ;;
     esac
 
-    local release_json="" dl_url="" tmpdir=""
-    release_json="$(curl -fsSL "https://api.github.com/repos/InioX/matugen/releases/latest" 2>/dev/null || true)"
-    if [[ -n "$release_json" ]]; then
-        dl_url="$(printf '%s' "$release_json" | grep -oE "https://[^\"]*${carch}[^\"]*\.tar\.gz" | head -n1)"
+    local dl_url tmpdir="" archive asset digest=""
+    dl_url="https://github.com/InioX/matugen/releases/download/v${MATUGEN_VERSION}/matugen-${MATUGEN_VERSION}-${carch}.tar.gz"
+
+    # The asset URL and the digest beside it come from the pinned tag, so a release that
+    # moved the asset cannot change what is downloaded or how it is checked. When the API
+    # cannot answer, the URL above still stands and the checksum falls back to a sidecar.
+    if asset="$(matugen_asset_url "$carch")"; then
+        IFS=$'\t' read -r dl_url digest <<< "$asset"
     fi
 
-    if [[ -n "$dl_url" ]]; then
-        tmpdir="$(mktemp -d)"
-        if curl -fsSL "$dl_url" | tar -xz -C "$tmpdir" 2>/dev/null; then
-            if [[ -f "$tmpdir/matugen" ]]; then
-                if caelestia_sudo install -m 755 "$tmpdir/matugen" /usr/local/bin/matugen 2>/dev/null; then
-                    rm -rf "$tmpdir"
-                    ok "matugen installed successfully to /usr/local/bin from GitHub release."
-                    return 0
-                else
-                    mkdir -p "$HOME/.local/bin"
-                    install -m 755 "$tmpdir/matugen" "$HOME/.local/bin/matugen"
-                    rm -rf "$tmpdir"
-                    ok "matugen installed successfully to $HOME/.local/bin from GitHub release."
-                    return 0
-                fi
-            fi
-        fi
+    tmpdir="$(mktemp -d)"
+    archive="$tmpdir/matugen.tar.gz"
+    if ! fetch_verified_asset "$dl_url" "$archive" "$digest" install; then
         rm -rf "$tmpdir"
+        return 1
     fi
 
+    # tar takes the member names as they are, so an archive with a `..` or an absolute
+    # path writes outside the directory it is handed. Nothing in it is needed with the
+    # owner or the mode the archive carries either.
+    if ! archive_entries_are_safe "$archive"; then
+        warn "Refusing to unpack $dl_url: the archive has setuid, setgid or escaping entries."
+        rm -rf "$tmpdir"
+        return 1
+    fi
+
+    if tar --no-same-owner --no-same-permissions -xzf "$archive" -C "$tmpdir" 2>/dev/null; then
+        # A tarball can carry a symlink in place of the binary, and `install`
+        # would follow it as root. Only a file the archive really holds is used.
+        if regular_file "$tmpdir/matugen"; then
+            if caelestia_sudo install -m 755 "$tmpdir/matugen" /usr/local/bin/matugen 2>/dev/null; then
+                rm -rf "$tmpdir"
+                ok "matugen installed successfully to /usr/local/bin from GitHub release."
+                return 0
+            fi
+            mkdir -p "$HOME/.local/bin"
+            install -m 755 "$tmpdir/matugen" "$HOME/.local/bin/matugen"
+            rm -rf "$tmpdir"
+            ok "matugen installed successfully to $HOME/.local/bin from GitHub release."
+            return 0
+        fi
+    fi
+
+    rm -rf "$tmpdir"
     return 1
 }
 
@@ -103,14 +148,31 @@ install_matugen_cargo() {
 
         if ! command -v cargo >/dev/null 2>&1; then
             info "Installing Rust toolchain via rustup..."
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal || true # ci:allow-curl-pipe
+            # The installer is written to a file this user named rather than piped into a
+            # shell, so a transfer that stops halfway cannot leave half a script executing
+            # and the hash of the one that does run ends up in the log.
+            local rustup_script
+            rustup_script="$(mktemp)"
+            if fetch_asset https://sh.rustup.rs "$rustup_script" --proto '=https' --tlsv1.2 2>/dev/null; then
+                info "rustup installer SHA-256: $(file_sha256 "$rustup_script")"
+                sh -s -- -y --default-toolchain stable --profile minimal < "$rustup_script" || true
+            else
+                warn "Could not download the rustup installer; install Rust yourself from https://rustup.rs and re-run the installer."
+            fi
+            rm -f "$rustup_script"
             export PATH="$HOME/.cargo/bin:$PATH"
         fi
     fi
 
     if command -v cargo >/dev/null 2>&1 && cargo install matugen; then
-        if [[ -f "$HOME/.cargo/bin/matugen" ]]; then
-            caelestia_sudo cp "$HOME/.cargo/bin/matugen" /usr/local/bin/matugen 2>/dev/null || true
+        # ~/.cargo/bin is the user's, and both `cp` and `install` follow a symlink: only a
+        # file cargo wrote there itself is promoted, and root opens it with O_NOFOLLOW
+        # rather than following a link planted between the check and the copy.
+        if regular_file "$HOME/.cargo/bin/matugen"; then
+            privileged_copy_file "$HOME/.cargo/bin/matugen" /usr/local/bin/matugen 0755 2>/dev/null || {
+                mkdir -p "$HOME/.local/bin"
+                install -m 755 "$HOME/.cargo/bin/matugen" "$HOME/.local/bin/matugen"
+            }
         fi
         local rc
         for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do

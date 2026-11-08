@@ -10,6 +10,18 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/packages.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
+
+# The revision the fallback build comes from. The clone's own cmake runs here and the C++
+# plugin is installed as root, so the tree has to be one this project chose rather than
+# whatever the default branch holds on the day the installer runs. It is an upstream tag,
+# which `git clone --depth 1 --branch` accepts, and a tag can be moved: the commit beside it
+# is what the checkout has to be, so a moved tag fails closed. To update, list the tags with
+#   git ls-remote --tags https://github.com/luisbocanegra/plasma-audio-visualizer
+# bump both values from that listing, and build the new one before shipping the bump.
+PLASMA_AUDIO_VISUALIZER_REF="v3.6.1"
+PLASMA_AUDIO_VISUALIZER_COMMIT="6896fe95500002cfaf716593750f2f9bdd9d9880"
 
 refresh_plasma_widget_cache() {
     if command -v kbuildsycoca6 >/dev/null 2>&1; then
@@ -53,8 +65,13 @@ install_plasma_audio_visualizer_source() {
     if [[ ! -d "$src_dir" || ! -f "$src_dir/CMakeLists.txt" ]]; then
         tmp_dir="$(mktemp -d)"
         cleanup_tmp=true
-        if ! git clone --depth 1 "https://github.com/luisbocanegra/plasma-audio-visualizer.git" "$tmp_dir"; then
+        if ! git clone --depth 1 --branch "$PLASMA_AUDIO_VISUALIZER_REF" "https://github.com/luisbocanegra/plasma-audio-visualizer.git" "$tmp_dir"; then
             err "Failed to clone plasma-audio-visualizer repository."
+            rm -rf "$tmp_dir"
+            return 1
+        fi
+        if [[ "$(git -C "$tmp_dir" rev-parse HEAD)" != "$PLASMA_AUDIO_VISUALIZER_COMMIT" ]]; then
+            err "plasma-audio-visualizer: $PLASMA_AUDIO_VISUALIZER_REF no longer points at $PLASMA_AUDIO_VISUALIZER_COMMIT; refusing to build it."
             rm -rf "$tmp_dir"
             return 1
         fi
@@ -87,7 +104,7 @@ install_plasma_audio_visualizer_source() {
     # 2. Build and install C++ plugin system-wide (preferred)
     if cmake -B "$build_dir/plugin" -S "$src_dir" -DBUILD_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr >/dev/null 2>&1 && \
        cmake --build "$build_dir/plugin" >/dev/null 2>&1; then
-        if caelestia_sudo cmake --install "$build_dir/plugin" >/dev/null 2>&1; then
+        if install_staged_tree / cmake --install "$build_dir/plugin"; then
             plugin_ok=true
         fi
     fi

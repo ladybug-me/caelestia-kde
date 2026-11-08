@@ -36,6 +36,23 @@ Singleton {
             Quickshell.execDetached(root.wrap(command));
     }
 
+    /// Whether `url` names a web page. The two callers that need this — a link in a
+    /// notification body and a portal's redirect — both act on text someone else
+    /// chose, and only a page may be opened from either.
+    function isWebUrl(url: string): bool {
+        return /^https?:\/\//i.test(url || "");
+    }
+
+    /// Opens a link clicked in a notification. The URL is sender-controlled text, so
+    /// only web and mail links go through: another scheme (`file://`, `smb://`, an
+    /// application's own handler) would turn one click into whatever the sender named.
+    function openUrl(url: string): void {
+        if (!root.isWebUrl(url) && !/^mailto:/i.test(url || ""))
+            return;
+
+        Qt.openUrlExternally(url);
+    }
+
     /// Whether KDE ships a settings module by this name. Printing, the on-screen
     /// keyboard and the accessibility options stay KDE's to own: the shell gives them a
     /// front door, and says so when the module is missing rather than opening a dead page.

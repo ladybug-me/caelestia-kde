@@ -5,6 +5,7 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib/install-kind.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/install-fs.sh"
 # shellcheck source=scripts/lib/packages.sh
 source "$(dirname "${BASH_SOURCE[0]}")/lib/packages.sh"
 
@@ -187,7 +188,12 @@ if [[ "$DISPLAY_MANAGER" == "plasmalogin" ]]; then
         SYNC_SCRIPT="/usr/local/bin/caelestia-greeter-sync"
 
         caelestia_sudo install -d -m 0755 /usr/local/bin
-        caelestia_sudo install -m 0755 "$SRC_DIR/sync.sh" "$SYNC_SCRIPT"
+        # The helper is granted NOPASSWD sudo and run as root, so it is copied with the
+        # link refused rather than followed: `install` here would have taken whatever a
+        # planted symlink pointed at.
+        if ! privileged_copy_file "$SRC_DIR/sync.sh" "$SYNC_SCRIPT" 0755; then
+            die "Could not install the login screen helper from $SRC_DIR/sync.sh"
+        fi
         ok "Login screen sync helper installed to $SYNC_SCRIPT"
     fi
 
@@ -252,17 +258,35 @@ else
 fi
 
 install_theme_files() {
+    # Everything below is copied as root out of a tree this user can write. A link in
+    # that tree is either followed - disclosing what it points at into a world-readable
+    # theme directory - or left for root to open later, so the tree has to be plain.
+    if ! tree_has_no_symlinks "$THEME_SOURCE"; then
+        die "The login screen theme source at $THEME_SOURCE contains a symlink; refusing to install it as root."
+    fi
+
     if [[ -d "$INSTALL_DIR" ]]; then
         caelestia_sudo rm -rf "$INSTALL_DIR"
     fi
 
+    caelestia_sudo mkdir -p "$INSTALL_DIR"
+    # Copied file by file as root with O_NOFOLLOW rather than with `cp -r`: the tree was
+    # checked a moment ago, and a link planted since then is refused by the kernel instead
+    # of being followed or left for root to open later.
+    if ! privileged_copy_tree "$THEME_SOURCE" "$INSTALL_DIR"; then
+        die "Could not install the login screen theme from $THEME_SOURCE."
+    fi
     caelestia_sudo mkdir -p "$INSTALL_DIR/scripts"
-    caelestia_sudo cp -r "$THEME_SOURCE"/* "$INSTALL_DIR/"
-    caelestia_sudo cp "$SRC_DIR/sync.sh" "$INSTALL_DIR/scripts/"
+    if ! privileged_copy_file "$SRC_DIR/sync.sh" "$INSTALL_DIR/scripts/sync.sh" 0644; then
+        die "Could not install the login screen helper from $SRC_DIR/sync.sh"
+    fi
 
     caelestia_sudo mkdir -p "$INSTALL_DIR/assets/google-sans-flex"
     if [[ -f "$FONT_SOURCE" ]]; then
-        caelestia_sudo cp "$FONT_SOURCE" "$INSTALL_DIR/assets/google-sans-flex/GoogleSansFlex.ttf"
+        if ! privileged_copy_file "$FONT_SOURCE" "$INSTALL_DIR/assets/google-sans-flex/GoogleSansFlex.ttf" 0644; then
+            warn "Could not install GoogleSansFlex.ttf from $FONT_SOURCE; theme text may not render correctly."
+            ALL_OK=false
+        fi
     else
         warn "GoogleSansFlex.ttf not found at $FONT_SOURCE, theme text may not render correctly."
         ALL_OK=false
@@ -270,8 +294,13 @@ install_theme_files() {
 
     if [[ "$VARIANT" == "mini" ]]; then
         if [[ -d "$SRC_DIR/themes/full/components/shapes" ]]; then
+            if ! tree_has_no_symlinks "$SRC_DIR/themes/full/components/shapes"; then
+                die "The shape components at $SRC_DIR/themes/full/components/shapes contain a symlink; refusing to install them as root."
+            fi
             caelestia_sudo mkdir -p "$INSTALL_DIR/components/shapes"
-            caelestia_sudo cp -r "$SRC_DIR/themes/full/components/shapes"/* "$INSTALL_DIR/components/shapes/"
+            if ! privileged_copy_tree "$SRC_DIR/themes/full/components/shapes" "$INSTALL_DIR/components/shapes"; then
+                die "Could not install the shape components from $SRC_DIR/themes/full/components/shapes."
+            fi
         else
             warn "Shape components not found at $SRC_DIR/themes/full/components/shapes, mini theme will not render correctly."
             ALL_OK=false

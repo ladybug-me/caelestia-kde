@@ -5,6 +5,7 @@ set -euo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/lib/install-kind.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/install-fs.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/virtual-desktops.sh"
 
 echo
@@ -174,7 +175,15 @@ configure_quick_share() {
         return 0
     fi
 
-    if caelestia_sudo bash "$setup" --port "$port"; then
+    # The run is elevated, so it happens against the root-owned copy rather than the one
+    # in this checkout: sudo given a script this user can rewrite would run the rewrite.
+    local privileged=""
+    if ! privileged="$(install_privileged_helper "$setup")"; then
+        warn "Quick Share setup did not finish; retry from Settings -> Services -> Quick Share."
+        return 0
+    fi
+
+    if caelestia_sudo bash "$privileged" --port "$port"; then
         ok "Quick Share can receive: Avahi is running and port $port is open."
     else
         warn "Quick Share setup did not finish; retry from Settings -> Services -> Quick Share."

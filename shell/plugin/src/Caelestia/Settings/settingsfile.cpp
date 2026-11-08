@@ -139,8 +139,11 @@ SettingsFile::LoadResult SettingsFile::load(bool reportErrors) {
     m_lastData = json;
     emit changed();
 
+    // The document carries the API keys the settings page stores, so only its shape is
+    // logged: the file's name and the keys it holds, never the values behind them.
     qCDebug(lcSettingsFile) << "Read JSON from" << m_path;
-    qCDebug(lcSettingsFile) << " " << json;
+    if (json.isObject())
+        qCDebug(lcSettingsFile) << " keys:" << json.toObject().keys();
 
     return LoadResult::Changed;
 }

@@ -407,4 +407,136 @@ test_prune_install_root_tolerates_a_missing_root() {
     rm -rf "$tmp"
 }
 
+# The copy helpers escalate through caelestia_sudo. These tests write into a directory the
+# running user owns, so the shim only has to run the command it was given.
+caelestia_sudo() { "$@"; }
+
+make_stage_fixture() {
+    local tmp="$1"
+    mkdir -p "$tmp/stage/usr/bin" "$tmp/stage/usr/share/app" "$tmp/dest"
+    printf '#!/bin/sh\n' > "$tmp/stage/usr/bin/app"
+    chmod 0755 "$tmp/stage/usr/bin/app"
+    printf 'data\n' > "$tmp/stage/usr/share/app/data.txt"
+}
+
+test_privileged_copy_file_copies_the_source_with_the_requested_mode() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/dest"
+    printf 'font\n' > "$tmp/source.ttf"
+    chmod 0777 "$tmp/source.ttf"
+
+    privileged_copy_file "$tmp/source.ttf" "$tmp/dest/source.ttf" 0644
+    status=$?
+
+    assert_status 0 "$status" "a regular file should be copied"
+    assert_eq "font" "$(cat "$tmp/dest/source.ttf")" "with the source's contents"
+    assert_eq "644" "$(stat -c %a "$tmp/dest/source.ttf")" "and the mode the caller asked for"
+}
+
+test_privileged_copy_file_refuses_a_symlinked_source() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/dest"
+    printf 'elsewhere\n' > "$tmp/real.ttf"
+    ln -s "$tmp/real.ttf" "$tmp/link.ttf"
+
+    privileged_copy_file "$tmp/link.ttf" "$tmp/dest/link.ttf" 0644 2>/dev/null
+    status=$?
+
+    assert_status 1 "$status" "a source that is a link must not be opened"
+    assert_file_missing "$tmp/dest/link.ttf" "and so nothing is put in its place"
+}
+
+test_privileged_copy_tree_keeps_the_layout_and_the_modes() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_stage_fixture "$tmp"
+
+    privileged_copy_tree "$tmp/stage" "$tmp/dest"
+    status=$?
+
+    assert_status 0 "$status" "a tree of plain files should be promoted"
+    assert_file_exists "$tmp/dest/usr/share/app/data.txt"
+    assert_eq "$(stat -c %a "$tmp/stage/usr/bin/app")" "$(stat -c %a "$tmp/dest/usr/bin/app")" \
+        "the executable should keep its mode"
+    assert_eq "$(stat -c %a "$tmp/stage/usr/share/app/data.txt")" "$(stat -c %a "$tmp/dest/usr/share/app/data.txt")" \
+        "and a data file should keep its own"
+}
+
+test_privileged_copy_tree_refuses_a_link_out_of_the_tree() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_stage_fixture "$tmp"
+    ln -s /etc/passwd "$tmp/stage/usr/share/app/escape"
+
+    privileged_copy_tree "$tmp/stage" "$tmp/dest" 2>/dev/null
+    status=$?
+
+    assert_status 1 "$status" "a link that leaves the tree must be refused"
+    assert_file_missing "$tmp/dest/usr/bin/app" "and nothing at all may be copied across"
+}
+
+test_privileged_copy_tree_recreates_a_link_inside_its_own_directory() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_stage_fixture "$tmp"
+    ln -s app "$tmp/stage/usr/bin/app-alias"
+
+    privileged_copy_tree "$tmp/stage" "$tmp/dest"
+    status=$?
+
+    assert_status 0 "$status" "a command alias is part of what the build installed"
+    [[ -L "$tmp/dest/usr/bin/app-alias" ]] || fail "the alias should be promoted as a link"
+    assert_eq "app" "$(readlink "$tmp/dest/usr/bin/app-alias")" "pointing at the file beside it"
+}
+
+test_privileged_copy_tree_refuses_a_stage_that_holds_nothing() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/stage/usr/bin" "$tmp/dest"
+
+    privileged_copy_tree "$tmp/stage" "$tmp/dest"
+    status=$?
+
+    assert_status 1 "$status" "an install that staged no file must not report success"
+}
+
+test_privileged_copy_tree_refuses_a_setuid_file() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_stage_fixture "$tmp"
+    chmod 4755 "$tmp/stage/usr/bin/app"
+
+    privileged_copy_tree "$tmp/stage" "$tmp/dest" 2>/dev/null
+    status=$?
+
+    assert_status 1 "$status" "a setuid file a user built must not arrive as root's"
+    assert_file_missing "$tmp/dest/usr/bin/app"
+}
+
+test_install_staged_tree_installs_what_the_build_wrote_under_destdir() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/dest" "$tmp/src"
+    printf 'built\n' > "$tmp/src/payload"
+
+    install_staged_tree "$tmp/dest" sh -c 'mkdir -p "$DESTDIR/usr/bin" && cp "$1" "$DESTDIR/usr/bin/payload"' _ "$tmp/src/payload"
+    status=$?
+
+    assert_status 0 "$status" "the staged install should succeed"
+    assert_file_exists "$tmp/dest/usr/bin/payload" "and put the build's file under the destination"
+}
+
+test_install_staged_tree_reports_a_failed_install() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/dest"
+
+    install_staged_tree "$tmp/dest" sh -c 'exit 3'
+    status=$?
+
+    assert_status 1 "$status" "a failed install must be reported to the caller"
+}
+
 run_tests

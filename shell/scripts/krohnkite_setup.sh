@@ -5,6 +5,16 @@ set -euo pipefail
 
 REPO_API="https://codeberg.org/api/v1/repos/anametologin/Krohnkite/releases?limit=10"
 
+# Codeberg publishes no checksum beside its release assets, so the asset URL's tag is the
+# only thing tying the download to a release - and an asset can be replaced under it. The
+# bytes of the asset at the release named here are therefore pinned as well. This is the
+# SHA-256 of
+#   curl -fsSL https://codeberg.org/anametologin/Krohnkite/releases/download/0.9.11.0/krohnkite-0.9.11.0_e345c9a.kwinscript | sha256sum
+# To bump it, take the hash of the asset on the new release the same way and update both
+# values together; an asset for a different release is installed with a warning instead.
+KROHNKITE_PINNED_VERSION="0.9.11.0"
+KROHNKITE_SHA256="1a8d99bf55dbf30d3af704ba7951a895aeee1d16e7da5a7bfe1d2db8215f6fa7"
+
 notify() {
     local title="$1"
     local message="$2"
@@ -156,6 +166,67 @@ except Exception:
 '
 }
 
+# 0 when the asset matches the checksum published beside it, 1 when it does not, 2 when the
+# release publishes none. Codeberg keeps no digest for its assets, so the third answer is
+# the expected one here: the caller decides what to say about it.
+verify_kwinscript() {
+    local url="$1" file="$2" sidecar expected
+    sidecar="$(mktemp)"
+    if ! curl -fsL --proto '=https' --tlsv1.2 -- "$url.sha256" -o "$sidecar" 2>/dev/null; then
+        rm -f "$sidecar"
+        return 2
+    fi
+    expected="$(cut -d' ' -f1 < "$sidecar")"
+    rm -f "$sidecar"
+    [[ -n "$expected" ]] || return 2
+    [[ "$expected" == "$(sha256sum "$file" | cut -d' ' -f1)" ]]
+}
+
+# The release a download URL came from, taken out of the .../releases/download/<tag>/<asset>
+# path. Fails for anything that is not a release asset, because a URL this cannot place has
+# no tag to compare the pinned hash against.
+release_tag_of_url() {
+    local url="$1" rest
+    case "$url" in
+        */releases/download/*) rest="${url#*/releases/download/}" ;;
+        *) return 1 ;;
+    esac
+    case "$rest" in
+        */*) printf '%s\n' "${rest%%/*}" ;;
+        *) return 1 ;;
+    esac
+}
+
+# Downloads the asset into "$2", refusing it when a published checksum disagrees and when the
+# bytes of the pinned release are not the ones that were pinned. A release with no checksum
+# and no pin cannot be tied to the page it came from, so installing it is said out loud
+# rather than done quietly.
+download_kwinscript() {
+    local url="$1" dest="$2" status=0 tag actual
+
+    curl -sL --proto '=https' --tlsv1.2 -- "$url" -o "$dest" || return 1
+    verify_kwinscript "$url" "$dest" || status=$?
+    if [[ "$status" -eq 1 ]]; then
+        echo "Error: checksum mismatch for $url - refusing to install it." >&2
+        return 1
+    fi
+    if [[ "$status" -eq 0 ]]; then
+        return 0
+    fi
+
+    actual="$(sha256sum "$dest" | cut -d' ' -f1)"
+    tag="$(release_tag_of_url "$url" 2>/dev/null || true)"
+    if [[ -n "$tag" && "$tag" == "$KROHNKITE_PINNED_VERSION" ]]; then
+        if [[ "$actual" != "$KROHNKITE_SHA256" ]]; then
+            echo "Error: checksum mismatch for $url - got $actual, expected $KROHNKITE_SHA256." >&2
+            return 1
+        fi
+        return 0
+    fi
+    echo "Warning: no published checksum for $url - installing it unverified (SHA-256 $actual)." >&2
+    return 0
+}
+
 do_install() {
     if ! command -v kpackagetool6 >/dev/null 2>&1; then
         echo "Error: kpackagetool6 is not available." >&2
@@ -178,7 +249,7 @@ do_install() {
     trap 'rm -rf "$tmpdir"' EXIT INT TERM
     local kwinscript="$tmpdir/krohnkite.kwinscript"
 
-    if curl -sL --proto '=https' --tlsv1.2 -- "$dl_url" -o "$kwinscript"; then
+    if download_kwinscript "$dl_url" "$kwinscript"; then
         if is_installed; then
             kpackagetool6 -t KWin/Script -u "$kwinscript" 2>/dev/null || {
                 kpackagetool6 -t KWin/Script -r krohnkite 2>/dev/null || true
@@ -195,7 +266,7 @@ do_install() {
         trap - EXIT INT TERM
         return 0
     else
-        notify "Installation Failed" "Krohnkite download failed. Please try again."
+        notify "Installation Failed" "Krohnkite could not be downloaded or verified. Please try again."
         rm -rf "$tmpdir"
         trap - EXIT INT TERM
         return 1
@@ -227,7 +298,7 @@ do_update() {
     trap 'rm -rf "$tmpdir"' EXIT INT TERM
     local kwinscript="$tmpdir/krohnkite.kwinscript"
 
-    if curl -sL --proto '=https' --tlsv1.2 -- "$dl_url" -o "$kwinscript"; then
+    if download_kwinscript "$dl_url" "$kwinscript"; then
         qdbus6 org.kde.KWin /Scripting org.kde.kwin.Scripting.unloadScript "krohnkite" 2>/dev/null || true
 
         if is_installed; then
@@ -246,7 +317,7 @@ do_update() {
         trap - EXIT INT TERM
         return 0
     else
-        notify "Update Failed" "Krohnkite download failed. Please try again."
+        notify "Update Failed" "Krohnkite could not be downloaded or verified. Please try again."
         rm -rf "$tmpdir"
         trap - EXIT INT TERM
         return 1

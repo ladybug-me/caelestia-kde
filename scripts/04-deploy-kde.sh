@@ -3,7 +3,7 @@
 set -euo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/lib/install-kind.sh"
-source "$(dirname "${BASH_SOURCE[0]}")/lib/js.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/lib/escape.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/lib/privileges.sh"
 
@@ -20,11 +20,20 @@ darkly_decoration_installed() {
 
 patch_breeze_login_wallpaper() {
     local image="$1"
+
+    # The path comes from a file the user can write, so it is escaped for sed rather
+    # than pasted in: a line break would start another sed command.
+    local escaped
+    if ! escaped="$(sed_replacement "$image")"; then
+        warn "Skipping the login wallpaper: the path contains a line break."
+        return 0
+    fi
+
     # No sudo check here: caelestia_sudo has its own escalation paths (askpass, pkexec),
     # and the edit is best-effort either way.
     if ! install_is_packaged &&
         [[ -f /usr/share/sddm/themes/breeze/theme.conf ]]; then
-        caelestia_sudo sed -i "s|^background=.*|background=$image|" /usr/share/sddm/themes/breeze/theme.conf 2>/dev/null || true
+        caelestia_sudo sed -i "s|^background=.*|background=$escaped|" /usr/share/sddm/themes/breeze/theme.conf 2>/dev/null || true
     fi
 }
 

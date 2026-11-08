@@ -10,6 +10,17 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/privileges.sh" 2>/dev/null || true
 # shellcheck source=scripts/lib/packages.sh
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/packages.sh" 2>/dev/null || true
+# shellcheck source=scripts/lib/install-fs.sh
+source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
+
+# The revision the wallpaper plugin's fallback build comes from, for the same reason as the
+# audio visualizer: the plugin is installed as root, so the tree is pinned. It is an upstream
+# tag, which `git clone --depth 1 --branch` accepts, and a tag can be moved, so the commit
+# beside it is what the checkout has to be. To update, list the tags with
+#   git ls-remote --tags https://github.com/liixini/skwd-paper-plasma
+# bump both values from that listing, and build the new one before shipping the bump.
+SKWD_PAPER_PLASMA_REF="v1.0.0-beta.27"
+SKWD_PAPER_PLASMA_COMMIT="45dc81ed6b690ab9552e46188238ff18cc02945b"
 
 skwd_wall_binary_present() {
     command -v skwd-wall-v2 >/dev/null 2>&1 || \
@@ -44,7 +55,12 @@ install_skwd_paper_plasma_source() {
     info "Installing skwd-paper-plasma plugin from source..."
     local tmp_dir
     tmp_dir="$(mktemp -d)"
-    if git clone --depth 1 "https://github.com/liixini/skwd-paper-plasma.git" "$tmp_dir" 2>/dev/null; then
+    if git clone --depth 1 --branch "$SKWD_PAPER_PLASMA_REF" "https://github.com/liixini/skwd-paper-plasma.git" "$tmp_dir" 2>/dev/null; then
+        if [[ "$(git -C "$tmp_dir" rev-parse HEAD)" != "$SKWD_PAPER_PLASMA_COMMIT" ]]; then
+            warn "skwd-paper-plasma: $SKWD_PAPER_PLASMA_REF no longer points at $SKWD_PAPER_PLASMA_COMMIT; refusing to build it."
+            rm -rf "$tmp_dir"
+            return 1
+        fi
         if cmake -B "$tmp_dir/build" -S "$tmp_dir" -DCMAKE_INSTALL_PREFIX="${XDG_DATA_HOME:-$HOME/.local}" >/dev/null 2>&1 && \
            cmake --build "$tmp_dir/build" >/dev/null 2>&1 && \
            cmake --install "$tmp_dir/build" >/dev/null 2>&1; then
@@ -53,7 +69,7 @@ install_skwd_paper_plasma_source() {
         fi
         if cmake -B "$tmp_dir/build-sys" -S "$tmp_dir" -DCMAKE_INSTALL_PREFIX=/usr >/dev/null 2>&1 && \
            cmake --build "$tmp_dir/build-sys" >/dev/null 2>&1 && \
-           caelestia_sudo cmake --install "$tmp_dir/build-sys" >/dev/null 2>&1; then
+           install_staged_tree / cmake --install "$tmp_dir/build-sys"; then
             rm -rf "$tmp_dir"
             return 0
         fi
@@ -70,13 +86,18 @@ install_skwd_wall_source() {
     if [[ -d "$src_dir" ]] && command -v cargo >/dev/null 2>&1; then
         if cargo install --path "$src_dir" --bin skwd-wall 2>/dev/null || \
            cargo build --release --manifest-path "$src_dir/Cargo.toml" 2>/dev/null; then
-            if [[ -f "$src_dir/target/release/skwd-wall" ]]; then
-                caelestia_sudo install -m 755 "$src_dir/target/release/skwd-wall" /usr/local/bin/skwd-wall-v2 2>/dev/null || {
+            # The build directory sits in a checkout the user can write, and `install`
+            # follows a symlink: only a file cargo really produced is promoted, and it is
+            # read without following a link on the way.
+            if regular_file "$src_dir/target/release/skwd-wall"; then
+                privileged_copy_file "$src_dir/target/release/skwd-wall" /usr/local/bin/skwd-wall-v2 0755 2>/dev/null || {
                     mkdir -p "$HOME/.local/bin"
                     install -m 755 "$src_dir/target/release/skwd-wall" "$HOME/.local/bin/skwd-wall-v2"
                 }
+                built=true
+            else
+                warn "Refusing to install a symlinked skwd-wall build artifact."
             fi
-            built=true
         fi
     fi
 

@@ -53,6 +53,8 @@ test_unknown_tools_do_not_corrupt_the_tool_counter() {
         "an unknown tool must not decrement a counter that was never incremented"
     assert_contains "$AI_SRC" 'unknown tool; nothing was executed' \
         "and must still feed the model an explicit result"
+    assert_contains "$AI_SRC" 'typeof handler !== "function"' \
+        "a name from the prototype chain must not be mistaken for a handler"
 }
 
 test_the_bookkeeping_has_one_owner() {
@@ -121,6 +123,91 @@ EOF
         rm -f "$harness"
         fail "the tool-call scanner harness failed (or timed out, which is the freeze regression)"
     fi
+}
+
+test_caelestia_commands_come_from_a_closed_action_table() {
+    assert_not_contains "$SVC_SRC" 'caelestiaSubcommands' \
+        "the free-form subcommand list must stay gone"
+    assert_not_contains "$AI_SRC" 'subargs.split' \
+        "no free-form flag string may reach argv"
+    assert_contains "$AI_SRC" 'Array.isArray(argv)' \
+        "the action must be read as a table entry, not through the prototype chain"
+
+    if ! command -v node >/dev/null 2>&1; then
+        skip_test "node is not available"
+        return 0
+    fi
+
+    local harness
+    harness="$(mktemp "${TMPDIR:-/tmp}/caelestia-actions.XXXXXX.mjs")"
+    cat > "$harness" <<'EOF'
+import { readFileSync } from "node:fs";
+
+const src = readFileSync(process.argv[2], "utf8");
+
+const marker = "property var caelestiaActions: ({";
+const start = src.indexOf(marker);
+if (start === -1) throw new Error("caelestiaActions not found");
+const open = src.indexOf("{", start);
+let depth = 0, end = -1;
+for (let i = open; i < src.length; i++) {
+    if (src[i] === "{") depth++;
+    else if (src[i] === "}" && --depth === 0) { end = i; break; }
+}
+if (end === -1) throw new Error("caelestiaActions braces unbalanced");
+
+const actions = new Function("return " + src.slice(open, end + 1))();
+const fail = (msg) => { console.error("FAIL: " + msg); process.exit(1); };
+
+// Stopping the shell, recording the screen and installing are the user's calls,
+// so nothing in the table may name them however it spells the flags.
+const forbidden = ["shell", "install", "update", "login-screen", "record"];
+
+if (Object.keys(actions).length === 0) fail("the action table is empty");
+
+for (const [name, argv] of Object.entries(actions)) {
+    if (!Array.isArray(argv) || argv.length === 0) fail(name + " must be a non-empty argv");
+    for (const word of argv) {
+        if (typeof word !== "string" || word === "") fail(name + " must carry literal words only");
+        if (forbidden.includes(word)) fail(name + " reaches a privileged subcommand: " + word);
+    }
+}
+
+console.log("caelestia actions: " + Object.keys(actions).length + " allowed, none privileged");
+EOF
+    if timeout 15 node "$harness" "$SVC"; then
+        rm -f "$harness"
+    else
+        rm -f "$harness"
+        fail "the caelestia action table check failed"
+    fi
+}
+
+test_every_tool_that_reaches_outside_the_chat_is_asked_about() {
+    # The model's output is untrusted, and the thing that talked it into a call is often
+    # a page it read. The screen, the network and the user's applications are outside the
+    # chat, so each one is a question rather than an action.
+    assert_contains "$AI_SRC" '"take_screenshot": true' "the screen is the user's to share"
+    assert_contains "$AI_SRC" '"read_webpage": true' "so is a request to an address the model chose"
+    assert_contains "$AI_SRC" '"open_app": true' "and so is launching something"
+
+    assert_contains "$AI_SRC" 'if (root.consentTools[toolName] === undefined)' \
+        "the gate keys on that table, so a new tool is a decision rather than a default"
+    assert_contains "$AI_SRC" 'if (root.pendingToolConsent !== null)' \
+        "one question at a time, so a chain cannot slip past a single prompt"
+    assert_contains "$AI_SRC" 'still deciding about another tool call; nothing was executed' \
+        "a second call while one is pending is answered, not run"
+    assert_contains "$AI_SRC" 'the user declined; nothing was executed' \
+        "a refusal is reported to the model rather than retried"
+}
+
+test_the_permission_names_what_is_being_asked_for() {
+    assert_contains "$AI_SRC" 'The assistant wants to fetch %1' \
+        "a URL is shown, because an attacker's address is visible in it"
+    assert_contains "$AI_SRC" 'The assistant wants to launch %1' \
+        "so is the application"
+    assert_contains "$AI_SRC" 'The assistant wants to capture your screen' \
+        "and the screen capture says what leaves the machine"
 }
 
 run_tests

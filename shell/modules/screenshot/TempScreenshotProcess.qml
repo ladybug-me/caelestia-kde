@@ -1,13 +1,14 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import qs.utils
 
 Process {
     id: screenshotProc
 
     running: true
 
-    property string screenshotDir: `${Quickshell.env("XDG_RUNTIME_DIR") || "/tmp"}/caelestia-screenshot`
+    property string screenshotDir: Paths.runtimeTemp("screenshot")
 
     required property ShellScreen screen
 

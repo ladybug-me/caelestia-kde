@@ -8,7 +8,17 @@ PID_FILE="${STATE_DIR}/recorder.pid"
 LOCK_FILE="${STATE_DIR}/recorder.lock"
 CURRENT_FILE="${STATE_DIR}/current_recording_path"
 MODE_FILE="${STATE_DIR}/current_recording_mode"
-IPC_SOCK="${XDG_RUNTIME_DIR:-/tmp}/caelestia-gsr.sock"
+
+# Everything two invocations share while a recording runs lives in one directory this
+# user owns. This helper is installed on its own and cannot source scripts/lib, so it
+# claims the directory itself the way caelestia_runtime_dir() does.
+RUNTIME_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID"
+if ! install -d -m 700 "$RUNTIME_DIR" 2>/dev/null || [[ -L "$RUNTIME_DIR" ]] || [[ ! -O "$RUNTIME_DIR" ]]; then
+    echo "caelestia-record: cannot secure the runtime directory at $RUNTIME_DIR" >&2
+    exit 1
+fi
+IPC_SOCK="${RUNTIME_DIR}/caelestia-gsr.sock"
+RECORDER_LOG="${RUNTIME_DIR}/gpu-screen-recorder.log"
 
 # Where finished recordings live; must match the shell's recordingsDir so the shell finds them.
 # Resolved via user-dirs (not $XDG_VIDEOS_DIR, which is empty in the shell session).
@@ -280,7 +290,7 @@ case "$ACTION" in
 
         # Subshell so the recorder's PID can be captured.
         (
-            exec "${args[@]}" >/tmp/gpu-screen-recorder.log 2>&1 &
+            exec "${args[@]}" >"$RECORDER_LOG" 2>&1 &
             echo $! > "$PID_FILE"
             wait
             rm -f "$PID_FILE" "$LOCK_FILE" "$CURRENT_FILE" "$MODE_FILE"

@@ -60,6 +60,10 @@ else
 fi
 CAELESTIA_PENDING=0
 
+# The bare clone the commit count is taken from. It is a cache of the upstream history,
+# so it lives with the other cached state rather than anywhere the user owns directly.
+REPO="$HOME/.cache/caelestia-kde/upstream.git"
+
 if [ -n "$_localCommit" ]; then
     if [ ! -d "$REPO" ]; then
         timeout ${GIT_TIMEOUT} git clone --bare --filter=blob:none https://github.com/ladybug-me/caelestia-kde.git "$REPO" >/dev/null 2>&1 || true

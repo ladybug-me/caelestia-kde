@@ -347,6 +347,15 @@ Singleton {
         }
     }
 
+    // The history is whatever notifications said, and a one-time code is a notification.
+    // It belongs to this user alone, not to whoever else can read the state directory.
+    Process {
+        id: secureStorage
+
+        running: root.loaded
+        command: ["sh", "-c", "f=$1; [ -e \"$f\" ] || install -m 600 /dev/null \"$f\"; chmod 600 \"$f\" 2>/dev/null; true", "_", `${Paths.state}/notifs.json`]
+    }
+
     // qmllint disable unresolved-type
     CustomShortcut {
         // qmllint enable unresolved-type

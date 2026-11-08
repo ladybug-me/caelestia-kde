@@ -1094,6 +1094,162 @@ Item {
 
     property string currentActionText: "Thinking..."
 
+    // The tools that reach past the chat. Each one is model output acting on the user's
+    // machine, so it is asked about rather than run.
+    readonly property var consentTools: ({
+            "take_screenshot": true,
+            "read_webpage": true,
+            "open_app": true
+        })
+
+    /// The call waiting for an answer, and the notification asking for it. Both are
+    /// cleared together, so neither can outlive the other.
+    property var pendingToolConsent: null
+
+    property var consentPrompt: null
+
+    // One entry per tool the model may call, keyed by the name it writes in the call.
+    // This table is the dispatch: a name that is not here is answered rather than
+    // guessed at, so there is no second list of "known tools" to keep in step.
+    readonly property var toolHandlers: ({
+            "take_screenshot": function(args) {
+                root.currentActionText = "Analyzing screen...";
+                root.startTool(`spectacle -b -m -n -o ${Paths.runtimeTemp("orion_screenshot.png")}`, "screenshot_take");
+            },
+            "web_search": function(args) {
+                root.currentActionText = "Searching the web...";
+                root.startTool(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py",
+                    "--mode", "search", "--query", String(args.query || ""), "--page", String(args.page || 1)],
+                    "exec_web_search");
+            },
+            "read_webpage": function(args) {
+                root.currentActionText = "Reading webpage...";
+                root.startTool(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py",
+                    "--mode", "read", "--url", String(args.url || "")], "exec_read_webpage");
+            },
+            "open_app": function(args) {
+                root.currentActionText = "Opening app...";
+                var app = root.shellQuote("Name=.*" + String(args.app_name || ""));
+                root.startTool(["sh", "-c", 'grep -i -m 1 "^Exec=" $(find /usr/share/applications ~/.local/share/applications -name "*.desktop" -exec grep -il "$1" {} + 2>/dev/null) | cut -d "=" -f 2- | sed "s/ %[a-zA-Z]//g" | xargs -I {} sh -c "setsid {} >/dev/null 2>&1 &"', "--", app],
+                    "exec_open_app");
+            },
+            "set_timer": function(args) {
+                root.currentActionText = "Setting timer...";
+                var secs = Number(args.seconds) || 5;
+                var msg = String(args.message || "Timer finished");
+                Timers.start(secs, msg);
+                AiToolCalls.recordResult("Tool: set_timer\nResult: Timer set for " + secs + " seconds with message: " + msg + "\n\n");
+            },
+            "get_weather": function(args) {
+                root.currentActionText = "Checking weather...";
+                var weather = Weather.city + ": " + Weather.temp + " (" + Weather.description + "). Humidity: " + Weather.humidity + "%, Wind: " + Weather.windSpeed + " km/h";
+                AiToolCalls.recordResult("Tool: get_weather\nResult: Local weather from system dashboard: " + weather + "\n\n");
+            },
+            // The model's output is untrusted input, so the only thing it may name is
+            // an action from the table: there is no argument string for a prompt
+            // injection to carry flags in, and a name that is not there never reaches
+            // argv. Array.isArray also keeps the lookup off the prototype chain.
+            "caelestia_command": function(args) {
+                var action = String(args.action || "").trim();
+                var argv = AiToolCalls.caelestiaActions[action];
+                if (!Array.isArray(argv)) {
+                    Logger.log("[AI] Refusing caelestia action: " + action);
+                    AiToolCalls.recordResult("Tool: caelestia_command\nResult: " + (action ? "'" + action + "' is not an allowed action" : "no action was given") + "; nothing was executed.\n\n");
+                    return;
+                }
+                root.currentActionText = "Running caelestia...";
+                root.startTool(["caelestia"].concat(argv), "exec_caelestia_command");
+            }
+        })
+
+    /// Runs one tool call the model asked for.
+    function dispatchTool(toolName, args) {
+        const handler = root.toolHandlers[toolName];
+        if (typeof handler !== "function") {
+            Logger.log("[AI] Unknown tool: " + toolName);
+            AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
+            return;
+        }
+
+        // Everything the model can do inside the chat needs no permission. These three
+        // reach outside it - the screen, the network, the user's applications - and the
+        // reason one of them is being asked for can itself be text a page chose.
+        if (root.consentTools[toolName] === undefined) {
+            handler(args);
+            return;
+        }
+
+        if (root.pendingToolConsent !== null) {
+            // One question at a time. A second call is a second thing to agree to before
+            // the first has an answer, which is how a chain slips past a single prompt.
+            AiToolCalls.recordResult("Tool: " + toolName
+                + "\nResult: the user is still deciding about another tool call; nothing was executed.\n\n");
+            return;
+        }
+
+        root.pendingToolConsent = {
+            "name": toolName,
+            "args": args,
+            "handler": handler
+        };
+
+        root.consentPrompt = Notifs.addShellNotification({
+            summary: qsTr("Assistant permission"),
+            body: root.consentBody(toolName, args),
+            appName: qsTr("Assistant"),
+            materialIcon: "shield_person",
+            actions: [
+                { identifier: "deny", text: qsTr("Don't allow"), invoke: () => root.denyPendingTool() },
+                { identifier: "allow", text: qsTr("Allow"), invoke: () => root.allowPendingTool() }
+            ]
+        });
+    }
+
+    /// What the user is being asked to allow, with the thing being named: a URL or an
+    /// application name is what tells them whether the request is the one they made.
+    function consentBody(toolName, args) {
+        switch (toolName) {
+        case "take_screenshot":
+            return qsTr("The assistant wants to capture your screen and send it to the model.");
+        case "read_webpage":
+            return qsTr("The assistant wants to fetch %1.").arg(String((args || {}).url || "(no address)"));
+        case "open_app":
+            return qsTr("The assistant wants to launch %1.").arg(String((args || {}).app_name || "(no application)"));
+        default:
+            return qsTr("The assistant wants to use %1.").arg(toolName);
+        }
+    }
+
+    function allowPendingTool(): void {
+        const pending = root.pendingToolConsent;
+        root.clearToolConsent();
+        if (pending)
+            pending.handler(pending.args);
+    }
+
+    function denyPendingTool(): void {
+        const pending = root.pendingToolConsent;
+        root.clearToolConsent();
+        if (pending)
+            AiToolCalls.recordResult("Tool: " + pending.name + "\nResult: the user declined; nothing was executed.\n\n");
+    }
+
+    function clearToolConsent(): void {
+        if (root.consentPrompt !== null) {
+            if (Notifs.list.includes(root.consentPrompt) && !root.consentPrompt.closed)
+                root.consentPrompt.close();
+            root.consentPrompt = null;
+        }
+        root.pendingToolConsent = null;
+    }
+
+    /// Starts a tool's command and counts it as outstanding. Counting where the
+    /// process starts is what keeps the count and the table from drifting apart.
+    function startTool(command, type) {
+        AiToolCalls.runningToolsCount++;
+        root.runAgentCommand(command, type);
+    }
+
     function fetchOllamaModels() {
         var ollamaUrl = GlobalConfig.ai.ollamaUrl || "http://localhost:11434";
         var xhr = new XMLHttpRequest();
@@ -1624,62 +1780,8 @@ Item {
                                 AiToolCalls.reset();
 
                                 for (var t = 0; t < textToolCalls.length; t++) {
-                                    var toolCall = textToolCalls[t];
-                                    var toolName = toolCall.name;
-                                    var args = toolCall.args || {};
-
-                                    if (toolName === "take_screenshot" || toolName === "web_search" || toolName === "read_webpage" || toolName === "open_app" || toolName === "caelestia_command") {
-                                        AiToolCalls.runningToolsCount++;
-
-                                    }
-
-                                    if (toolName === "take_screenshot") {
-                                        currentActionText = "Analyzing screen...";
-                                        var screenCmd = `spectacle -b -m -n -o ${Paths.runtimeTemp("orion_screenshot.png")}`;
-                                        runAgentCommand(screenCmd, "screenshot_take");
-
-                                    } else if (toolName === "web_search") {
-                                        currentActionText = "Searching the web...";
-                                        var query = String(args.query || "");
-                                        var page = args.page || 1;
-                                        runAgentCommand(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py", "--mode", "search", "--query", query, "--page", String(page)], "exec_" + toolName);
-
-                                    } else if (toolName === "read_webpage") {
-                                        currentActionText = "Reading webpage...";
-                                        var url = String(args.url || "");
-                                        runAgentCommand(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py", "--mode", "read", "--url", url], "exec_" + toolName);
-
-                                    } else if (toolName === "open_app") {
-                                        currentActionText = "Opening app...";
-                                        var app = String(args.app_name || "");
-                                        var safeApp = shellQuote("Name=.*" + app);
-                                        runAgentCommand(["sh", "-c", 'grep -i -m 1 "^Exec=" $(find /usr/share/applications ~/.local/share/applications -name "*.desktop" -exec grep -il "$1" {} + 2>/dev/null) | cut -d "=" -f 2- | sed "s/ %[a-zA-Z]//g" | xargs -I {} sh -c "setsid {} >/dev/null 2>&1 &"', "--", safeApp], "exec_" + toolName);
-
-                                    } else if (toolName === "set_timer") {
-                                        currentActionText = "Setting timer...";
-                                        var secs = Number(args.seconds) || 5;
-                                        var msg = String(args.message || "Timer finished");
-                                        Timers.start(secs, msg);
-                                        AiToolCalls.recordResult("Tool: set_timer\nResult: Timer set for " + secs + " seconds with message: " + msg + "\n\n");
-
-                                    } else if (toolName === "get_weather") {
-                                        currentActionText = "Checking weather...";
-                                        var weatherStr = Weather.city + ": " + Weather.temp + " (" + Weather.description + "). Humidity: " + Weather.humidity + "%, Wind: " + Weather.windSpeed + " km/h";
-                                        AiToolCalls.recordResult("Tool: get_weather\nResult: Local weather from system dashboard: " + weatherStr + "\n\n");
-
-                                    } else if (toolName === "caelestia_command") {
-                                        currentActionText = "Running caelestia...";
-                                        var subcmd = String(args.subcommand || "");
-                                        var subargs = String(args.args || "").trim();
-                                        var cmdArr = ["caelestia", subcmd];
-                                        if (subargs) cmdArr = cmdArr.concat(subargs.split(/\s+/));
-                                        runAgentCommand(cmdArr, "exec_" + toolName);
-
-                                    } else {
-                                        Logger.log("[AI] Unknown tool: " + toolName);
-                                        AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
-
-                                    }
+                                    const call = textToolCalls[t];
+                                    root.dispatchTool(String(call.name || ""), call.args || {});
                                 }
 
                                 if (AiToolCalls.runningToolsCount === 0) {

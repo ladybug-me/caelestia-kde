@@ -7,6 +7,7 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.utils
 
 Item {
     id: root
@@ -204,7 +205,10 @@ Item {
 
                 StateLayer {
                     radius: parent.radius
-                    onClicked: Qt.openUrlExternally(delegateItem.link)
+                    // The link comes from a feed, not from the shell: another scheme
+                    // (`file://`, `smb://`, an application's own handler) would turn one
+                    // click into whatever the feed named.
+                    onClicked: Launch.openUrl(delegateItem.link)
                 }
 
                 ColumnLayout {

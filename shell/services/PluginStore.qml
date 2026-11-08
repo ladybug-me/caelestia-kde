@@ -71,7 +71,7 @@ Item {
     }
 
     function fetchIndex(branch) {
-        let fetchBranch = branch || "main";
+        let fetchBranch = isValidRef(branch) ? branch : "main";
         loading = true;
         error = false;
         errorMessage = "";
@@ -98,13 +98,33 @@ Item {
         return typeof id === "string" && /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(id) && !id.includes("..");
     }
 
+    // The ref comes from the same remote index and is handed to git as a refspec. A name
+    // git would read as an option, or one carrying a range, is not a branch anyone
+    // publishes, so it is refused before it reaches the command line.
+    function isValidRef(ref) {
+        return typeof ref === "string" && ref.length <= 128 && /^[A-Za-z0-9][A-Za-z0-9._\/-]*$/.test(ref) && !ref.includes("..");
+    }
+
+    // A plugin is cloned from a URL the user typed. Only the two transports that name a
+    // host are offered, and nothing git or the shell would treat as an option.
+    function isValidGitUrl(url) {
+        if (typeof url !== "string" || url === "" || url.length > 2048)
+            return false;
+        if (/[\s]/.test(url) || url.startsWith("-") || url.includes(".."))
+            return false;
+        return /^https:\/\/[A-Za-z0-9._~:\/?#\[\]@!$&'()*+,;=%-]+$/.test(url)
+            || /^git@[A-Za-z0-9._-]+:[A-Za-z0-9._\/-]+$/.test(url);
+    }
+
     function installPlugin(id, repoPath, branch, restart) {
         if (!isValidPluginId(id)) {
             console.warn("PluginStore: refusing to install plugin with unsafe id:", id);
             return;
         }
 
-        let installBranch = branch || "main";
+        let installBranch = isValidRef(branch) ? branch : "main";
+        if (installBranch !== (branch || "main"))
+            console.warn("PluginStore: refusing unsafe branch name, using main instead:", branch);
 
         // repoPath must be a relative path inside the store repo. Installed plugins
         // report an absolute *install* dir as their path, which must never be used
@@ -127,6 +147,14 @@ echo "$2/*" >> .git/info/sparse-checkout
 git fetch -q --depth 1 --filter=blob:none origin "$3"
 git reset --hard -q "origin/$3"
 test -d "$2"
+# The row the user approved named this id; a plugin whose own metadata claims another
+# one would be loaded under an identity nobody was shown.
+INSTALLED_ID=$(jq -r '.id // empty' "$2/metadata.json" 2>/dev/null || true)
+if [ "$INSTALLED_ID" != "$1" ]; then
+    echo "metadata.json names '$INSTALLED_ID', not '$1'" >&2
+    rm -rf "$TMP_DIR"
+    exit 1
+fi
 mkdir -p "$(dirname "$4")"
 rm -rf "$4"
 mv "$2" "$4"
@@ -218,7 +246,7 @@ echo "DONE"`;
 
 
     function installFromUrl(url) {
-        if (typeof url !== "string" || (url.indexOf("https://") !== 0 && url.indexOf("git@") !== 0)) {
+        if (!isValidGitUrl(url)) {
             installError = qsTr("Enter a valid git URL");
             return;
         }

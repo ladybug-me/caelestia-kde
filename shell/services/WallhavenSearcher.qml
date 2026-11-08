@@ -13,6 +13,11 @@ Singleton {
 
     readonly property string apiBase: "https://wallhaven.cc/api/v1"
 
+    // The API's answers name a file on disk and are turned into a path, so they are
+    // checked before use: an id is a plain name, and an extension has to be one of the
+    // formats a wallpaper can be, never something the shell would load back as code.
+    readonly property var wallpaperExts: ["jpg", "png", "webp", "gif", "bmp", "avif"]
+
     property string apiKey: GlobalConfig.services.wallhavenApiKey ?? ""
 
     property string lastQuery: ""
@@ -240,53 +245,153 @@ Singleton {
         };
     }
 
+    function wallpaperExtension(path) {
+        const match = /\.([A-Za-z0-9]{2,5})(?:\?|$)/.exec(path || "");
+        if (!match)
+            return "jpg";
+
+        const ext = match[1].toLowerCase() === "jpeg" ? "jpg" : match[1].toLowerCase();
+        return root.wallpaperExts.indexOf(ext) === -1 ? "jpg" : ext;
+    }
+
+    function isValidWallpaperId(id) {
+        return typeof id === "string" && /^[A-Za-z0-9_-]+$/.test(id);
+    }
+
     function downloadWallpaper(wallpaper: var): void {
         if (!wallpaper || !wallpaper.path) {
             console.error("Wallhaven: Invalid wallpaper data");
             return;
         }
 
-        const fullPath = wallpaper.path || wallpaper.url || "";
-        const urlMatch = fullPath.match(/\.([a-zA-Z]{3,4})(?:\?|$)/);
-        let ext = urlMatch ? urlMatch[1] : "";
-        if (ext) {
-            ext = ext.toLowerCase();
-            if (ext === "jpeg")
-                ext = "jpg";
-        } else {
-            ext = "jpg";
+        const id = String(wallpaper.id ?? "");
+        if (!root.isValidWallpaperId(id)) {
+            console.error("Wallhaven: refusing a wallpaper whose id is not a plain name:", id);
+            return;
         }
 
-        const tmpPath = `${Paths.cache}/wallhaven-${wallpaper.id}.tmp`;
-        const dstPath = `${Paths.wallsdir}/wallhaven-${wallpaper.id}.${ext}`;
+        const fullPath = wallpaper.path || wallpaper.url || "";
+        if (!/^https:\/\//i.test(fullPath)) {
+            console.error("Wallhaven: refusing a wallpaper whose URL is not https:", fullPath);
+            return;
+        }
+
+        const ext = root.wallpaperExtension(fullPath);
+        const tmpPath = `${Paths.cache}/wallhaven-${id}.tmp`;
+        const dstPath = `${Paths.wallsdir}/wallhaven-${id}.${ext}`;
 
         currentWallpaper = {
-            id: wallpaper.id,
+            id: id,
             ext: ext
         };
         if (activeDownloadRunning || downloadProc.running) {
             console.warn("Wallhaven: Download already in progress");
             return;
         }
-        resetDownloadState(wallpaper.id);
-        downloadProc.wallpaperId = wallpaper.id;
+        resetDownloadState(id);
+        downloadProc.wallpaperId = id;
         downloadProc.tmpPath = tmpPath;
         downloadProc.dstPath = dstPath;
 
         Logger.log("Wallhaven: Downloading", wallpaper.path, "to", tmpPath);
         Logger.log("Wallhaven: Will move to", dstPath, "(ext:", ext, ")");
 
+        // urllib follows redirects without asking, so a link that starts on wallhaven can
+        // end anywhere this machine can reach. The script below holds every hop to the
+        // rule the first url is already held to: https only, and only to an address that
+        // is not this machine or its network. It is written one line per entry because a
+        // program of this size stops being reviewable on a single line.
         downloadProc.command = [
             "python3",
             "-c",
-            'import math, os, sys, urllib.request\nurl, tmp_path, dst_path = sys.argv[1:4]\nos.makedirs(os.path.dirname(dst_path), exist_ok=True)\ntry:\n    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"})\n    with urllib.request.urlopen(req) as response, open(tmp_path, "wb") as handle:\n        total = response.headers.get("Content-Length")\n        total = int(total) if total else 0\n        downloaded = 0\n        while True:\n            chunk = response.read(262144)\n            if not chunk:\n                break\n            handle.write(chunk)\n            downloaded += len(chunk)\n            if total > 0:\n                print(f"PROGRESS {downloaded / total:.6f}", flush=True)\n            else:\n                pseudo = min(0.92, 1.0 - math.exp(-downloaded / 1200000.0))\n                print(f"PROGRESS {pseudo:.6f}", flush=True)\n    print("PROGRESS 1", flush=True)\n    os.replace(tmp_path, dst_path)\nexcept Exception as exc:\n    try:\n        if os.path.exists(tmp_path):\n            os.remove(tmp_path)\n    except OSError:\n        pass\n    print(str(exc), file=sys.stderr, flush=True)\n    sys.exit(1)',
+            [
+                'import ipaddress, math, os, socket, sys, urllib.parse, urllib.request',
+                'url, tmp_path, dst_path = sys.argv[1:4]',
+                'if urllib.parse.urlsplit(url).scheme != "https":',
+                '    print("refusing a download that is not https: " + url, file=sys.stderr, flush=True)',
+                '    sys.exit(1)',
+                '',
+                'def address_of(host):',
+                '    try:',
+                '        address = ipaddress.ip_address(host.split("%", 1)[0])',
+                '    except ValueError:',
+                '        return None',
+                '    if address.version == 6 and address.ipv4_mapped is not None:',
+                '        return address.ipv4_mapped',
+                '    return address',
+                '',
+                'def is_public(address):',
+                '    # is_global alone is not enough, since it is true for multicast too.',
+                '    return address.is_global and not address.is_multicast',
+                '',
+                'def check_hop(hop):',
+                '    parsed = urllib.parse.urlsplit(hop)',
+                '    if parsed.scheme.lower() != "https":',
+                '        raise ValueError("refusing a redirect that is not https: " + hop)',
+                '    if not parsed.hostname:',
+                '        raise ValueError("refusing a redirect that names no host: " + hop)',
+                '    address = address_of(parsed.hostname)',
+                '    if address is not None and not is_public(address):',
+                '        raise ValueError("refusing a redirect to a loopback, private or metadata address: " + hop)',
+                '',
+                'class GuardedRedirects(urllib.request.HTTPRedirectHandler):',
+                '    def redirect_request(self, req, fp, code, msg, headers, newurl):',
+                '        check_hop(newurl)',
+                '        return super().redirect_request(req, fp, code, msg, headers, newurl)',
+                '',
+                '# urllib resolves the name again when it connects, so filtering that answer is',
+                '# what covers a name that is public but resolves to a private address.',
+                'original_getaddrinfo = socket.getaddrinfo',
+                'def guarded_getaddrinfo(host, port, *args, **kwargs):',
+                '    allowed = []',
+                '    for entry in original_getaddrinfo(host, port, *args, **kwargs):',
+                '        address = address_of(entry[4][0])',
+                '        if address is not None and is_public(address):',
+                '            allowed.append(entry)',
+                '    if not allowed:',
+                '        raise socket.gaierror(str(host) + " does not resolve to a public address")',
+                '    return allowed',
+                '',
+                'os.makedirs(os.path.dirname(dst_path), exist_ok=True)',
+                'try:',
+                '    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"})',
+                '    opener = urllib.request.build_opener(GuardedRedirects)',
+                '    socket.getaddrinfo = guarded_getaddrinfo',
+                '    try:',
+                '        with opener.open(req) as response, open(tmp_path, "wb") as handle:',
+                '            total = response.headers.get("Content-Length")',
+                '            total = int(total) if total else 0',
+                '            downloaded = 0',
+                '            while True:',
+                '                chunk = response.read(262144)',
+                '                if not chunk:',
+                '                    break',
+                '                handle.write(chunk)',
+                '                downloaded += len(chunk)',
+                '                if total > 0:',
+                '                    print(f"PROGRESS {downloaded / total:.6f}", flush=True)',
+                '                else:',
+                '                    pseudo = min(0.92, 1.0 - math.exp(-downloaded / 1200000.0))',
+                '                    print(f"PROGRESS {pseudo:.6f}", flush=True)',
+                '    finally:',
+                '        socket.getaddrinfo = original_getaddrinfo',
+                '    print("PROGRESS 1", flush=True)',
+                '    os.replace(tmp_path, dst_path)',
+                'except Exception as exc:',
+                '    try:',
+                '        if os.path.exists(tmp_path):',
+                '            os.remove(tmp_path)',
+                '    except OSError:',
+                '        pass',
+                '    print(str(exc), file=sys.stderr, flush=True)',
+                '    sys.exit(1)'
+            ].join("\n"),
             wallpaper.path,
             tmpPath,
             dstPath
         ];
         downloadProc.running = true;
     }
-
     IpcHandler {
         function doSearch(query: string): void {
             search(query);

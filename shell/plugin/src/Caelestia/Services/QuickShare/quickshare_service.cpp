@@ -33,6 +33,10 @@ QString deviceLabel(const QuickShareConnection* connection) {
 /// socket can reach the peer before it goes.
 constexpr int connectionLingerMs = 2000;
 
+/// The most peers this shell holds at once. Every connection owns a socket and
+/// buffers, so an unauthenticated listener with no cap is a way to exhaust them.
+constexpr int maxConnections = 8;
+
 /// The port the transfer listener binds. shell/scripts/quickshare-port is its one
 /// definition: CMake bakes it in here, the shell passes it to the setup helper when it
 /// opens the firewall, and the install step reads it to write that same rule. A
@@ -165,11 +169,22 @@ void QuickShareService::sendFile(const QString& deviceId, const QString& filePat
     const QString deviceName = device->name;
     auto* connection = new QuickShareConnection(device->address, device->port, this);
 
-    // The file itself goes out once the handshake finishes.
+    // The request goes out once the handshake finishes, so the receiving device can show
+    // its own code; the file itself waits for the user to compare the two.
     connect(connection, &QuickShareConnection::stateChanged, this,
         [connection, filePath](QuickShareConnection::State state) {
             if (state == QuickShareConnection::ConnectionAccepted)
                 connection->sendFile(filePath);
+        });
+
+    // The code is the handshake's, so both ends derive it from the same transcript. A
+    // relayed handshake gives the two ends different codes, which is what the comparison
+    // is for; without it the sender has no way to tell a device from whatever answers in
+    // its place.
+    connect(connection, &QuickShareConnection::pinCodeReady, this,
+        [this, connection, deviceId, deviceName, filePath](const QString& pinCode) {
+            m_pendingOutgoingRequest = connection;
+            emit outgoingTransferPinReady(deviceId, deviceName, QFileInfo(filePath).fileName(), pinCode);
         });
 
     connect(connection, &QuickShareConnection::transferProgress, this, [this, deviceId](qint64 sent, qint64 total) {
@@ -178,12 +193,31 @@ void QuickShareService::sendFile(const QString& deviceId, const QString& filePat
 
     connect(connection, &QuickShareConnection::transferFinished, this,
         [this, connection, deviceId, deviceName, filePath](bool success) {
+            if (m_pendingOutgoingRequest == connection)
+                m_pendingOutgoingRequest = nullptr;
+
             if (success)
                 appendHistoryEntry(u"sent"_s, QFileInfo(filePath).fileName(), filePath, deviceName);
 
             emit outgoingTransferFinished(deviceId, success);
             retire(connection);
         });
+}
+
+void QuickShareService::confirmOutgoingTransfer() {
+    if (m_pendingOutgoingRequest)
+        m_pendingOutgoingRequest->confirmSend();
+}
+
+void QuickShareService::cancelOutgoingTransfer() {
+    if (!m_pendingOutgoingRequest)
+        return;
+
+    // The connection reports the end itself, which is what clears the pending send and
+    // tells the UI; dropping the handle here only stops a second confirm from reaching it.
+    QuickShareConnection* connection = m_pendingOutgoingRequest.data();
+    m_pendingOutgoingRequest = nullptr;
+    connection->cancel();
 }
 
 void QuickShareService::acceptIncomingTransfer() {
@@ -262,7 +296,18 @@ void QuickShareService::onNewConnection() {
     if (!socket)
         return;
 
+    if (m_connectionCount >= maxConnections) {
+        qWarning() << u"QuickShareService: refusing a peer; %1 connections are already open"_s.arg(m_connectionCount);
+        socket->abort();
+        socket->deleteLater();
+        return;
+    }
+
     auto* connection = new QuickShareConnection(socket, this);
+    ++m_connectionCount;
+    connect(connection, &QObject::destroyed, this, [this] {
+        --m_connectionCount;
+    });
 
     connect(connection, &QuickShareConnection::transferRequested, this,
         [this, connection](const QString& fileName, qint64 fileSize) {

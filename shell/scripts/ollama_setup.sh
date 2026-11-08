@@ -30,6 +30,11 @@ export PATH="/usr/local/bin:$PATH"
 # something to talk to as soon as the install finishes.
 MODELS=("llama3")
 
+# Whether the caller has said that a different installer from the one this machine
+# accepted last time is expected. Only meaningful for the first run after an upstream
+# release, which is why it is an argument rather than a setting.
+ACCEPT_NEW_INSTALLER=0
+
 # Report what is installed so the AI settings page can show it, then exit. Needs
 # no privileges, so it runs before any elevation.
 report_status() {
@@ -48,7 +53,7 @@ report_status() {
 }
 
 usage() {
-    echo "Usage: ollama_setup.sh [--status] [--models model[,model...]] [--no-models]"
+    echo "Usage: ollama_setup.sh [--status] [--models model[,model...]] [--no-models] [--accept-new-installer]"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -68,6 +73,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-models)
             MODELS=()
+            shift
+            ;;
+        --accept-new-installer)
+            ACCEPT_NEW_INSTALLER=1
             shift
             ;;
         -h|--help)
@@ -94,9 +103,18 @@ as_root() {
 # root even when the pipeline itself runs as the caller.
 #
 # The script is downloaded first rather than piped into a shell, so a transfer that
-# stops halfway cannot leave half a script executing as root. The hash is printed, and
-# it is enforced when the caller pins one: set OLLAMA_INSTALL_SHA256 to what this
-# reports to make an unexpected upstream change fail instead of run.
+# stops halfway cannot leave half a script executing as root, and what was downloaded
+# is checked before root sees it. Ollama publishes no checksum for this URL and the URL
+# itself never changes - pinning a hash in this repository would simply break the next
+# time they edit their installer - so the hash this machine accepted first is what later
+# runs are measured against. A change is then a decision someone has to make, rather
+# than something that happens to root while nobody is looking.
+#
+# Where the accepted installer is recorded: root's own directory, unless a test points
+# CAELESTIA_OLLAMA_PIN_FILE at a temporary file.
+OLLAMA_PIN_FILE="${CAELESTIA_OLLAMA_PIN_FILE:-/var/lib/caelestia/ollama-install.sha256}"
+OLLAMA_PIN_DIR="$(dirname -- "$OLLAMA_PIN_FILE")"
+
 echo "Installing Ollama..."
 installer_script="$(mktemp)"
 trap 'rm -f "$installer_script"' EXIT
@@ -108,15 +126,51 @@ if ! curl -fsSL --connect-timeout 10 --max-time 60 \
 fi
 
 installer_hash="$(sha256sum "$installer_script" | cut -d' ' -f1)"
+decision="run"
+
 if [[ -n "${OLLAMA_INSTALL_SHA256:-}" ]]; then
+    # An explicit pin outranks everything else: it is the caller saying which bytes
+    # are expected on this machine, whatever it accepted before.
     if [[ "$installer_hash" != "$OLLAMA_INSTALL_SHA256" ]]; then
         echo "Ollama installer checksum mismatch: got $installer_hash, expected $OLLAMA_INSTALL_SHA256." >&2
         exit 1
     fi
     echo "Ollama installer matches the pinned SHA-256."
-else
-    echo "Ollama publishes no checksum for this script; its SHA-256 is $installer_hash."
-    echo "Set OLLAMA_INSTALL_SHA256 to that value to make a change here fatal."
+elif [[ -r "$OLLAMA_PIN_FILE" ]] && [[ "$(cat "$OLLAMA_PIN_FILE" 2>/dev/null)" != "$installer_hash" ]]; then
+    if [[ "$ACCEPT_NEW_INSTALLER" -eq 1 ]]; then
+        echo "Ollama's installer changed upstream since this machine accepted it; using the new one because --accept-new-installer was given."
+        echo "Its SHA-256 is $installer_hash."
+    elif [[ "${CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD:-0}" == "1" ]]; then
+        echo "Ollama's installer changed upstream since this machine accepted it; running the new one because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
+        echo "Its SHA-256 is $installer_hash."
+    else
+        echo "Refusing to run Ollama's installer as root: it is not the one this machine accepted." >&2
+        echo "  accepted previously: $(cat "$OLLAMA_PIN_FILE" 2>/dev/null)" >&2
+        echo "  downloaded now:      $installer_hash" >&2
+        echo "That is what an upstream release looks like, and also what a tampered one looks like." >&2
+        echo "Run 'sudo $0 --accept-new-installer' to accept this one, or set OLLAMA_INSTALL_SHA256 to it." >&2
+        decision="refuse"
+    fi
+fi
+
+if [[ "$decision" == "refuse" ]]; then
+    exit 1
+fi
+
+# The first run records what it ran. Everything after is measured against that, which is
+# what turns "the installer changed" into a question rather than a silent upgrade of
+# root's own privileges.
+if [[ "$ACCEPT_NEW_INSTALLER" -eq 1 ]] || [[ ! -r "$OLLAMA_PIN_FILE" ]]; then
+    if as_root install -d -m 0755 "$OLLAMA_PIN_DIR" 2>/dev/null &&
+        printf '%s\n' "$installer_hash" | as_root tee "$OLLAMA_PIN_FILE" >/dev/null 2>&1; then
+        as_root chmod 0644 "$OLLAMA_PIN_FILE" 2>/dev/null || true
+        if [[ "$ACCEPT_NEW_INSTALLER" -eq 0 ]]; then
+            echo "Recorded the Ollama installer's SHA-256 ($installer_hash) in $OLLAMA_PIN_FILE."
+            echo "A different installer is refused from now on until it is accepted explicitly."
+        fi
+    else
+        echo "Warning: could not record the Ollama installer's SHA-256 in $OLLAMA_PIN_FILE, so a later change cannot be noticed." >&2
+    fi
 fi
 
 as_root sh "$installer_script"

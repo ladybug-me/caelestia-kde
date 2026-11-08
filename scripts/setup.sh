@@ -12,7 +12,14 @@ export INSTALL_START_EPOCH="$(date +%s)"
 
 export PATH="$HOME/.local/bin:$PATH"
 
-exec 9>"${XDG_RUNTIME_DIR:-/tmp}/caelestia-setup.lock"
+# shellcheck source=scripts/lib/runtime-dir.sh
+source "$SCRIPTS_DIR/lib/runtime-dir.sh"
+
+caelestia_runtime_dir || {
+    echo "Could not secure the runtime directory for the setup lock." >&2
+    exit 1
+}
+exec 9>"$CAELESTIA_RUNTIME_DIR/setup.lock"
 flock -n 9 || { echo "Another Caelestia setup is already running."; exit 1; }
 
 # shellcheck source=scripts/lib/privileges.sh

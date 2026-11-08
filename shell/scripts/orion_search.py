@@ -1,9 +1,78 @@
 #!/usr/bin/env python3
 import sys
 import argparse
+import contextlib
+import ipaddress
+import socket
 import urllib.request
 import urllib.parse
 import re
+
+# Only http(s) URLs that resolve to a public address may be read. The assistant
+# hands this script whatever URL the model asked for, and the model's output is
+# untrusted input: `file://` would read local files, and loopback, link-local or
+# private addresses would reach services (including cloud metadata endpoints)
+# that only this machine can talk to.
+ALLOWED_SCHEMES = ("http", "https")
+
+# A page larger than this is not worth the wait, and reading it all is what makes
+# a hostile endpoint able to exhaust memory.
+MAX_RESPONSE_BYTES = 2 * 1024 * 1024
+
+
+def _address_of(host):
+    """The address `host` names, or None when it is a name the resolver must answer."""
+    try:
+        address = ipaddress.ip_address(host.split("%", 1)[0])
+    except ValueError:
+        return None
+    if address.version == 6 and address.ipv4_mapped is not None:
+        return address.ipv4_mapped
+    return address
+
+
+def _validate_url(url):
+    parsed = urllib.parse.urlparse(url)
+    scheme = parsed.scheme.lower()
+    if scheme not in ALLOWED_SCHEMES:
+        raise ValueError(f"refusing {scheme or 'a relative'} URL; only http and https are allowed")
+    if not parsed.hostname:
+        raise ValueError("the URL names no host")
+    # A name is held to the same rule at connect time, by the guard below. Checking a
+    # literal here as well is what makes the refusal readable instead of a bare
+    # resolver error.
+    address = _address_of(parsed.hostname)
+    if address is not None and not address.is_global:
+        raise ValueError("refusing a URL that names a loopback, private or metadata address")
+    return parsed
+
+
+@contextlib.contextmanager
+def _resolve_to_public_addresses():
+    """Refuses any name that resolves to a non-public address.
+
+    urllib resolves the name again when it connects, so filtering at that point
+    covers redirect hops too: a public host that redirects to localhost fails
+    here instead of being followed.
+    """
+    original = socket.getaddrinfo
+
+    def guarded(host, port, *args, **kwargs):
+        resolved = original(host, port, *args, **kwargs)
+        allowed = []
+        for entry in resolved:
+            address = _address_of(entry[4][0])
+            if address is not None and address.is_global:
+                allowed.append(entry)
+        if not allowed:
+            raise socket.gaierror(f"{host} does not resolve to a public address")
+        return allowed
+
+    socket.getaddrinfo = guarded
+    try:
+        yield
+    finally:
+        socket.getaddrinfo = original
 
 
 def search_web(query, page_num):
@@ -69,11 +138,14 @@ def search_web(query, page_num):
 
 def read_webpage(url):
     try:
+        _validate_url(url)
+
         req = urllib.request.Request(
             url,
             headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
         )
-        html = urllib.request.urlopen(req, timeout=15).read().decode('utf-8', errors='ignore')
+        with _resolve_to_public_addresses():
+            html = urllib.request.urlopen(req, timeout=15).read(MAX_RESPONSE_BYTES).decode('utf-8', errors='ignore')
 
         # Remove script and style tags completely
         html = re.sub(r'<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>', '', html, flags=re.IGNORECASE | re.DOTALL)

@@ -77,6 +77,10 @@ Scope {
     // Launcher icon name or absolute path, empty for plain files.
     readonly property string appIcon: isDesktopFile ? (desktopEntry?.icon || desktopIcon) : ""
 
+    // Extra paths to hand to gio launch alongside the launcher, kept between the
+    // trust check and the launch that follows it.
+    property var pendingLaunchPaths: []
+
     function iconSource(materialYou: bool): string {
         const setBase = Qt.resolvedUrl(Quickshell.shellDir + "/assets/icons/yet-another-monochrome-icon-set");
         if (appIcon !== "") {
@@ -104,22 +108,45 @@ Scope {
     }
 
     function launch(): void {
-        // Run the launcher file itself: its name need not match an installed app id,
-        // and xdg-open would open it in an editor instead.
-        if (isDesktopFile)
-            Launch.exec(["gio", "launch", path]);
-        else
+        if (!isDesktopFile) {
             Launch.exec(["xdg-open", path]);
+            return;
+        }
+        root.pendingLaunchPaths = [];
+        trustCheck.running = true;
     }
 
     // Opens files with this launcher, as when they are dropped onto it.
     function launchWith(paths: var): void {
-        if (isDesktopFile)
-            Launch.exec(["gio", "launch", path, ...paths]);
+        if (!isDesktopFile)
+            return;
+        root.pendingLaunchPaths = paths;
+        trustCheck.running = true;
     }
 
     function reloadDesktopFile(): void {
         desktopFile.reload();
+    }
+
+    // KDE treats a launcher as trusted when it is owned by root or carries the
+    // executable bit, and asks the user to trust a download first. `gio launch`
+    // would run Exec on a double-click without that prompt, so the same check is
+    // made here. The file is run itself: its name need not match an installed app
+    // id, and xdg-open would open it in an editor instead.
+    Process {
+        id: trustCheck
+
+        running: false
+        command: ["sh", "-c", 'f=$(readlink -f -- "$1" 2>/dev/null) || exit 1; [ -f "$f" ] || exit 1; if [ -x "$f" ] || [ "$(stat -c %u -- "$f" 2>/dev/null)" = 0 ]; then exit 0; fi; exit 1', "trust-check", root.path]
+        onExited: code => {
+            if (code === 0) {
+                Launch.exec(["gio", "launch", root.path, ...root.pendingLaunchPaths]);
+            } else {
+                Logger.log("[Desktop] Refusing to run untrusted launcher: " + root.path);
+                Toaster.toast(qsTr("This launcher is not trusted"), qsTr("Mark %1 as executable before running it.").arg(root.fileName), "warning");
+            }
+            root.pendingLaunchPaths = [];
+        }
     }
 
     FileView {

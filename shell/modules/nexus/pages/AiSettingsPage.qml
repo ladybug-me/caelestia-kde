@@ -221,7 +221,7 @@ PageBase {
     }
 
     function ollamaScriptPath() {
-        return Quickshell.shellPath("scripts/ollama_setup.sh");
+        return PrivilegedHelpers.path("ollama_setup.sh");
     }
 
     function refreshStatus() {
@@ -436,7 +436,9 @@ exit $status`]
         Process {
             id: ollamaStatusProc
 
-            running: true
+            // A missing helper is a helper this row may not run: there is no root-owned
+            // copy to ask, and the user-writable one next to the shell is not asked either.
+            running: root.ollamaScriptPath() !== ""
             command: ["bash", root.ollamaScriptPath(), "--status"]
             stdout: SplitParser {
                 onRead: line => {
@@ -542,6 +544,13 @@ exit $status`]
             onClicked: {
                 if (root.ollamaInstalling)
                     return;
+
+                // Nothing is elevated unless the installer left a copy only root can write.
+                if (root.ollamaScriptPath() === "") {
+                    root.ollamaInstallStatus = qsTr("Reinstall Caelestia to restore the Ollama helper");
+                    return;
+                }
+
                 root.ollamaInstalling = true;
                 root.ollamaInstallStatus = qsTr("Installing…");
                 ollamaInstallProc.running = true;

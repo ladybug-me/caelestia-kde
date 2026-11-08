@@ -3,7 +3,9 @@
 #include <openssl/evp.h>
 
 #include <QByteArray>
+#include <QList>
 #include <QString>
+#include <optional>
 
 namespace caelestia::services {
 
@@ -38,7 +40,10 @@ public:
 
 private:
     void generateDhKeypair();
-    void deriveKeys(const QByteArray& peerPublicKeyBytes);
+    /// Derives the session keys from the peer's point. False when the point is not
+    /// a valid P-256 point or the shared secret cannot be computed, in which case
+    /// no key is installed and the handshake must fail.
+    bool deriveKeys(const QByteArray& peerPublicKeyBytes);
     QByteArray extractSharedSecret(EVP_PKEY* peerKey);
 
     bool m_handshakeComplete = false;
@@ -49,6 +54,14 @@ private:
     QByteArray m_clientInitMsgData;
     QByteArray m_serverInitMsgData;
     QByteArray m_clientFinishedMsgData;
+
+    /// The commitments a client offered in CLIENT_INIT, checked against the
+    /// CLIENT_FINISH it later sends.
+    QList<QByteArray> m_clientCommitments;
+
+    /// The last sequence number seen from the peer. Device-to-device frames must
+    /// increase, so a replayed or reordered frame is refused.
+    std::optional<int> m_lastRecvSequence;
 
     QByteArray m_encodeKey;
     QByteArray m_decodeKey;

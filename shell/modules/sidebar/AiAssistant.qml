@@ -1094,6 +1094,79 @@ Item {
 
     property string currentActionText: "Thinking..."
 
+    // One entry per tool the model may call, keyed by the name it writes in the call.
+    // This table is the dispatch: a name that is not here is answered rather than
+    // guessed at, so there is no second list of "known tools" to keep in step.
+    readonly property var toolHandlers: ({
+            "take_screenshot": function(args) {
+                root.currentActionText = "Analyzing screen...";
+                root.startTool(`spectacle -b -m -n -o ${Paths.runtimeTemp("orion_screenshot.png")}`, "screenshot_take");
+            },
+            "web_search": function(args) {
+                root.currentActionText = "Searching the web...";
+                root.startTool(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py",
+                    "--mode", "search", "--query", String(args.query || ""), "--page", String(args.page || 1)],
+                    "exec_web_search");
+            },
+            "read_webpage": function(args) {
+                root.currentActionText = "Reading webpage...";
+                root.startTool(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py",
+                    "--mode", "read", "--url", String(args.url || "")], "exec_read_webpage");
+            },
+            "open_app": function(args) {
+                root.currentActionText = "Opening app...";
+                var app = root.shellQuote("Name=.*" + String(args.app_name || ""));
+                root.startTool(["sh", "-c", 'grep -i -m 1 "^Exec=" $(find /usr/share/applications ~/.local/share/applications -name "*.desktop" -exec grep -il "$1" {} + 2>/dev/null) | cut -d "=" -f 2- | sed "s/ %[a-zA-Z]//g" | xargs -I {} sh -c "setsid {} >/dev/null 2>&1 &"', "--", app],
+                    "exec_open_app");
+            },
+            "set_timer": function(args) {
+                root.currentActionText = "Setting timer...";
+                var secs = Number(args.seconds) || 5;
+                var msg = String(args.message || "Timer finished");
+                Timers.start(secs, msg);
+                AiToolCalls.recordResult("Tool: set_timer\nResult: Timer set for " + secs + " seconds with message: " + msg + "\n\n");
+            },
+            "get_weather": function(args) {
+                root.currentActionText = "Checking weather...";
+                var weather = Weather.city + ": " + Weather.temp + " (" + Weather.description + "). Humidity: " + Weather.humidity + "%, Wind: " + Weather.windSpeed + " km/h";
+                AiToolCalls.recordResult("Tool: get_weather\nResult: Local weather from system dashboard: " + weather + "\n\n");
+            },
+            // The model's output is untrusted input, so only the subcommands the tool
+            // documents may run: a prompt injection cannot reach the rest of the CLI.
+            "caelestia_command": function(args) {
+                var subcmd = String(args.subcommand || "").trim();
+                var subargs = String(args.args || "").trim();
+                if (AiToolCalls.caelestiaSubcommands.indexOf(subcmd) === -1) {
+                    Logger.log("[AI] Refusing caelestia subcommand: " + subcmd);
+                    AiToolCalls.recordResult("Tool: caelestia_command\nResult: " + (subcmd ? "'" + subcmd + "' is not an allowed subcommand" : "no subcommand was given") + "; nothing was executed.\n\n");
+                    return;
+                }
+                root.currentActionText = "Running caelestia...";
+                var command = ["caelestia", subcmd];
+                if (subargs)
+                    command = command.concat(subargs.split(/\s+/));
+                root.startTool(command, "exec_caelestia_command");
+            }
+        })
+
+    /// Runs one tool call the model asked for.
+    function dispatchTool(toolName, args) {
+        const handler = root.toolHandlers[toolName];
+        if (!handler) {
+            Logger.log("[AI] Unknown tool: " + toolName);
+            AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
+            return;
+        }
+        handler(args);
+    }
+
+    /// Starts a tool's command and counts it as outstanding. Counting where the
+    /// process starts is what keeps the count and the table from drifting apart.
+    function startTool(command, type) {
+        AiToolCalls.runningToolsCount++;
+        root.runAgentCommand(command, type);
+    }
+
     function fetchOllamaModels() {
         var ollamaUrl = GlobalConfig.ai.ollamaUrl || "http://localhost:11434";
         var xhr = new XMLHttpRequest();
@@ -1624,71 +1697,8 @@ Item {
                                 AiToolCalls.reset();
 
                                 for (var t = 0; t < textToolCalls.length; t++) {
-                                    var toolCall = textToolCalls[t];
-                                    var toolName = toolCall.name;
-                                    var args = toolCall.args || {};
-
-                                    if (toolName === "take_screenshot" || toolName === "web_search" || toolName === "read_webpage" || toolName === "open_app" || toolName === "caelestia_command") {
-                                        AiToolCalls.runningToolsCount++;
-
-                                    }
-
-                                    if (toolName === "take_screenshot") {
-                                        currentActionText = "Analyzing screen...";
-                                        var screenCmd = `spectacle -b -m -n -o ${Paths.runtimeTemp("orion_screenshot.png")}`;
-                                        runAgentCommand(screenCmd, "screenshot_take");
-
-                                    } else if (toolName === "web_search") {
-                                        currentActionText = "Searching the web...";
-                                        var query = String(args.query || "");
-                                        var page = args.page || 1;
-                                        runAgentCommand(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py", "--mode", "search", "--query", query, "--page", String(page)], "exec_" + toolName);
-
-                                    } else if (toolName === "read_webpage") {
-                                        currentActionText = "Reading webpage...";
-                                        var url = String(args.url || "");
-                                        runAgentCommand(["env", "PYTHONIOENCODING=utf8", "python3", Quickshell.shellDir + "/scripts/orion_search.py", "--mode", "read", "--url", url], "exec_" + toolName);
-
-                                    } else if (toolName === "open_app") {
-                                        currentActionText = "Opening app...";
-                                        var app = String(args.app_name || "");
-                                        var safeApp = shellQuote("Name=.*" + app);
-                                        runAgentCommand(["sh", "-c", 'grep -i -m 1 "^Exec=" $(find /usr/share/applications ~/.local/share/applications -name "*.desktop" -exec grep -il "$1" {} + 2>/dev/null) | cut -d "=" -f 2- | sed "s/ %[a-zA-Z]//g" | xargs -I {} sh -c "setsid {} >/dev/null 2>&1 &"', "--", safeApp], "exec_" + toolName);
-
-                                    } else if (toolName === "set_timer") {
-                                        currentActionText = "Setting timer...";
-                                        var secs = Number(args.seconds) || 5;
-                                        var msg = String(args.message || "Timer finished");
-                                        Timers.start(secs, msg);
-                                        AiToolCalls.recordResult("Tool: set_timer\nResult: Timer set for " + secs + " seconds with message: " + msg + "\n\n");
-
-                                    } else if (toolName === "get_weather") {
-                                        currentActionText = "Checking weather...";
-                                        var weatherStr = Weather.city + ": " + Weather.temp + " (" + Weather.description + "). Humidity: " + Weather.humidity + "%, Wind: " + Weather.windSpeed + " km/h";
-                                        AiToolCalls.recordResult("Tool: get_weather\nResult: Local weather from system dashboard: " + weatherStr + "\n\n");
-
-                                    } else if (toolName === "caelestia_command") {
-                                        currentActionText = "Running caelestia...";
-                                        var subcmd = String(args.subcommand || "").trim();
-                                        var subargs = String(args.args || "").trim();
-                                        // The model's output is untrusted input: only the
-                                        // subcommands the tool documents may run, so a prompt
-                                        // injection cannot reach the rest of the CLI.
-                                        if (AiToolCalls.caelestiaSubcommands.indexOf(subcmd) === -1) {
-                                            Logger.log("[AI] Refusing caelestia subcommand: " + subcmd);
-                                            AiToolCalls.recordResult("Tool: caelestia_command\nResult: " + (subcmd ? "'" + subcmd + "' is not an allowed subcommand" : "no subcommand was given") + "; nothing was executed.\n\n");
-                                            AiToolCalls.finishOneTool();
-                                        } else {
-                                            var cmdArr = ["caelestia", subcmd];
-                                            if (subargs) cmdArr = cmdArr.concat(subargs.split(/\s+/));
-                                            runAgentCommand(cmdArr, "exec_" + toolName);
-                                        }
-
-                                    } else {
-                                        Logger.log("[AI] Unknown tool: " + toolName);
-                                        AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
-
-                                    }
+                                    const call = textToolCalls[t];
+                                    root.dispatchTool(String(call.name || ""), call.args || {});
                                 }
 
                                 if (AiToolCalls.runningToolsCount === 0) {

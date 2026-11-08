@@ -20,11 +20,24 @@ darkly_decoration_installed() {
 
 patch_breeze_login_wallpaper() {
     local image="$1"
+
+    # sed reads a newline in the replacement as the start of another command, and
+    # GNU's `e` flag would then run it as root. The path comes from a file the user
+    # can write, so refuse the shapes sed cannot be given safely rather than try to
+    # escape them.
+    if [[ "$image" == *$'\n'* || "$image" == *$'\r'* ]]; then
+        warn "Skipping the login wallpaper: the path contains a line break."
+        return 0
+    fi
+    local escaped="${image//\\/\\\\}"
+    escaped="${escaped//&/\\&}"
+    escaped="${escaped//|/\\|}"
+
     # No sudo check here: caelestia_sudo has its own escalation paths (askpass, pkexec),
     # and the edit is best-effort either way.
     if ! install_is_packaged &&
         [[ -f /usr/share/sddm/themes/breeze/theme.conf ]]; then
-        caelestia_sudo sed -i "s|^background=.*|background=$image|" /usr/share/sddm/themes/breeze/theme.conf 2>/dev/null || true
+        caelestia_sudo sed -i "s|^background=.*|background=$escaped|" /usr/share/sddm/themes/breeze/theme.conf 2>/dev/null || true
     fi
 }
 

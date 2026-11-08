@@ -53,6 +53,8 @@ test_unknown_tools_do_not_corrupt_the_tool_counter() {
         "an unknown tool must not decrement a counter that was never incremented"
     assert_contains "$AI_SRC" 'unknown tool; nothing was executed' \
         "and must still feed the model an explicit result"
+    assert_contains "$AI_SRC" 'typeof handler !== "function"' \
+        "a name from the prototype chain must not be mistaken for a handler"
 }
 
 test_the_bookkeeping_has_one_owner() {

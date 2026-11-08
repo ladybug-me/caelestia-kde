@@ -1151,7 +1151,7 @@ Item {
     /// Runs one tool call the model asked for.
     function dispatchTool(toolName, args) {
         const handler = root.toolHandlers[toolName];
-        if (!handler) {
+        if (typeof handler !== "function") {
             Logger.log("[AI] Unknown tool: " + toolName);
             AiToolCalls.recordResult("Tool: " + toolName + "\nResult: unknown tool; nothing was executed.\n\n");
             return;

@@ -9,9 +9,9 @@ LOCK_FILE="${STATE_DIR}/recorder.lock"
 CURRENT_FILE="${STATE_DIR}/current_recording_path"
 MODE_FILE="${STATE_DIR}/current_recording_mode"
 
-# Everything two invocations share while a recording runs lives in one directory
-# this user owns. A fixed path under a world-writable /tmp could be a socket or a
-# log another user planted.
+# Everything two invocations share while a recording runs lives in one directory this
+# user owns. This helper is installed on its own and cannot source scripts/lib, so it
+# claims the directory itself the way caelestia_runtime_dir() does.
 RUNTIME_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID"
 if ! install -d -m 700 "$RUNTIME_DIR" 2>/dev/null || [[ -L "$RUNTIME_DIR" ]] || [[ ! -O "$RUNTIME_DIR" ]]; then
     echo "caelestia-record: cannot secure the runtime directory at $RUNTIME_DIR" >&2

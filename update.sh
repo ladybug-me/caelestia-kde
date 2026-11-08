@@ -6,6 +6,7 @@ set -uo pipefail
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/log.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/privileges.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/install-fs.sh"
+source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/runtime-dir.sh"
 source "$(dirname "${BASH_SOURCE[0]}")/scripts/lib/submodules.sh"
 
 section() {
@@ -19,14 +20,9 @@ section() {
 export BUNDLE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$BUNDLE_DIR" || die "Could not enter $BUNDLE_DIR"
 
-# Prevent concurrent update runs from racing on git/CMake/config writes. The lock
-# lives in a directory this user owns: a fixed name under a world-writable /tmp
-# would be followed if someone planted a symlink there first.
-LOCK_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID"
-if ! install -d -m 700 "$LOCK_DIR" 2>/dev/null || [ -L "$LOCK_DIR" ] || [ ! -O "$LOCK_DIR" ]; then
-    die "Could not secure the update lock directory at $LOCK_DIR."
-fi
-exec 9>"$LOCK_DIR/update.lock"
+# Prevent concurrent update runs from racing on git/CMake/config writes.
+caelestia_runtime_dir || die "Could not secure the runtime directory for the update lock."
+exec 9>"$CAELESTIA_RUNTIME_DIR/update.lock"
 flock -n 9 || { echo "Another Caelestia update is already running."; exit 1; }
 
 section "Step 1 - Source Code Update"

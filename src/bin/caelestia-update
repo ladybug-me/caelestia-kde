@@ -43,9 +43,10 @@ if [ -n "$TARGET_REF" ]; then
 fi
 UPD_DIR="$HOME/.config/caelestia-update"
 
-# Prevent concurrent update runs from racing on git/CMake/config writes. The lock
-# lives in a directory this user owns: a fixed name under a world-writable /tmp
-# would be followed if someone planted a symlink there first.
+# Prevent concurrent update runs from racing on git/CMake/config writes. This helper is
+# installed on its own and cannot source scripts/lib, so it claims the directory itself
+# the way caelestia_runtime_dir() does: a fixed name under a world-writable /tmp would
+# be followed if someone planted a symlink there first.
 LOCK_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID"
 if ! install -d -m 700 "$LOCK_DIR" 2>/dev/null || [ -L "$LOCK_DIR" ] || [ ! -O "$LOCK_DIR" ]; then
     die "Could not secure the update lock directory at $LOCK_DIR."

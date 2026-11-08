@@ -12,14 +12,14 @@ export INSTALL_START_EPOCH="$(date +%s)"
 
 export PATH="$HOME/.local/bin:$PATH"
 
-# The lock lives in a directory this user owns: a fixed name under a world-writable
-# /tmp would be followed if someone planted a symlink there first.
-LOCK_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}/caelestia-$UID"
-if ! install -d -m 700 "$LOCK_DIR" 2>/dev/null || [ -L "$LOCK_DIR" ] || [ ! -O "$LOCK_DIR" ]; then
-    echo "Could not secure the setup lock directory at $LOCK_DIR." >&2
+# shellcheck source=scripts/lib/runtime-dir.sh
+source "$SCRIPTS_DIR/lib/runtime-dir.sh"
+
+caelestia_runtime_dir || {
+    echo "Could not secure the runtime directory for the setup lock." >&2
     exit 1
-fi
-exec 9>"$LOCK_DIR/setup.lock"
+}
+exec 9>"$CAELESTIA_RUNTIME_DIR/setup.lock"
 flock -n 9 || { echo "Another Caelestia setup is already running."; exit 1; }
 
 # shellcheck source=scripts/lib/privileges.sh

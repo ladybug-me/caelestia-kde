@@ -179,7 +179,8 @@ test_the_breeze_login_wallpaper_is_patched_in_one_place() {
     script="$(cat "$KDE_SCRIPT")"
 
     assert_eq "1" "$(printf '%s\n' "$script" | grep -c '^patch_breeze_login_wallpaper() {')" "the patch should be defined once"
-    assert_eq "1" "$(printf '%s\n' "$script" | grep -c 'background=$image')" "and should be the only thing that writes that background"
+    assert_eq "1" "$(printf '%s\n' "$script" | grep -c 'background=\$escaped')" "and should be the only thing that writes that background"
+    assert_contains "$script" 'escaped="$(sed_replacement "$image")"' "the wallpaper must be escaped before it reaches sed"
     assert_contains "$script" 'patch_breeze_login_wallpaper "$WALLPAPER_IN_USE"' "the branch that keeps the user's wallpaper should still match the logout screen to it"
     assert_contains "$script" 'patch_breeze_login_wallpaper "$WALLPAPER_PATH"' "and the default branch should match it to the wallpaper it sets"
 

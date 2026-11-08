@@ -180,8 +180,8 @@ Singleton {
         SoundEffect {}
     }
 
-    function playSoundSource(sourcePath: string, enabled: bool, volume: real): void {
-        if (!GlobalConfig.audio.sounds.enabled || !enabled)
+    function _playAudioFile(sourcePath: string, volume: real): void {
+        if (volume <= 0)
             return;
 
         let sfx = root._sfxCache[sourcePath];
@@ -194,8 +194,15 @@ Singleton {
         sfx.play();
     }
 
+    function playSoundSource(sourcePath: string, enabled: bool, volume: real): void {
+        if (!GlobalConfig.audio.sounds.enabled || !enabled)
+            return;
+
+        root._playAudioFile(sourcePath, volume);
+    }
+
     function playNotification(): void {
-        playSoundSource(Qt.resolvedUrl("../assets/sounds/notifications/" + GlobalConfig.audio.sounds.notificationSound), true, GlobalConfig.audio.sounds.notificationVolume);
+        root._playAudioFile(Qt.resolvedUrl("../assets/sounds/notifications/" + GlobalConfig.audio.sounds.notificationSound), GlobalConfig.audio.sounds.notificationVolume);
     }
 
     function playCameraClick(): void {

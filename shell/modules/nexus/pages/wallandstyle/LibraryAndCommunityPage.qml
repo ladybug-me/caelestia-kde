@@ -73,14 +73,14 @@ PageBase {
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
-            InfoRow {
+            NavRow {
                 first: true
                 Layout.fillWidth: true
                 visible: !Wallpapers.hasSkwd
                 icon: "info"
-                wrapSubtext: true
-                label: qsTr("skwd-wall not installed")
-                subtext: qsTr("Download and install skwd-wall to enable these settings.")
+                label: qsTr("skwd-wall not available")
+                status: qsTr("Click to open troubleshooting guide")
+                onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#710-skwd-wall")
             }
 
             NavRow {

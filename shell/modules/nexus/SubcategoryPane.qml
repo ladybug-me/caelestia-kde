@@ -426,8 +426,8 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "music_note"
-                    label: qsTr("Sound Effects")
-                    status: qsTr("Feedback sounds and volume")
+                    label: qsTr("Sounds")
+                    status: qsTr("Notification and feedback sounds")
                     slot: 4
                 }
                 SubcategoryCard {

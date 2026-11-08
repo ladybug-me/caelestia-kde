@@ -68,7 +68,7 @@ test_a_muted_notification_is_answered_and_never_filed() {
 
 test_the_popup_offers_the_mute() {
     assert_file_contains "$POPUP" 'icon: "notifications_off"' "the button is on the notification itself"
-    assert_file_contains "$POPUP" 'onClicked: Notifs.muteApp(root.modelData.appName)' \
+    assert_file_contains "$POPUP" 'Notifs.muteApp(root.modelData.appName)' \
         "and mutes the application that sent it, not the shell"
 }
 

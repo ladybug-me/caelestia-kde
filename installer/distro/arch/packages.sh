@@ -51,7 +51,7 @@ CORE_PACKAGES=(
 
     kglobalaccel kglobalacceld kguiaddons kwindowsystem
     kcoreaddons kconfig networkmanager-qt kpipewire kwin
-    
+
     krunner baloo
 
     ffmpeg libqalculate libsecret ksshaskpass libx11 vulkan-headers

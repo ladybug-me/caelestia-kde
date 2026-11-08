@@ -179,7 +179,7 @@ PageBase {
         ToggleRow {
             first: true
             text: qsTr("Click to activate")
-            subtext: qsTr("Activate the notification action on click")
+            subtext: qsTr("Run the notification action or open its app on click")
             reset: ({ node: GlobalConfig.notifs, setting: "actionOnClick" })
             checked: GlobalConfig.notifs.actionOnClick
             onToggled: GlobalConfig.notifs.actionOnClick = checked

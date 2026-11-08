@@ -21,7 +21,7 @@ test_help_flag_displays_usage() {
 test_status_outputs_valid_json() {
     local output
     output="$(bash "$SETUP_SCRIPT" --status 2>&1)" || fail "setup script --status should exit with 0"
-    
+
     python3 -c '
 import json, sys
 data = json.loads(sys.argv[1])

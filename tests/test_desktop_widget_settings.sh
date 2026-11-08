@@ -247,16 +247,19 @@ test_the_sticker_plays_an_animated_image() {
 
 test_every_widget_shares_one_frame() {
     # The card hands every widget the same four things. Declaring them in each file
-    # made them a convention that only the widgets knew about.
-    local shared="$WIDGETS/DesktopWidget.qml" widget
+    # made them a convention that only the widgets knew about. It lives one directory
+    # above them because a widget directory is not importable: each widget reaches it
+    # with an explicit import, and the wallpapers' own directory imports prove nothing.
+    local shared="$DESKTOP/desktopicons/DesktopWidget.qml" widget
     assert_file_exists "$shared"
     assert_file_contains "$shared" 'property var frame' "the card that holds the widget"
     assert_file_contains "$shared" 'property var controller' "the screen it lives on"
     assert_file_contains "$shared" 'readonly property var cfg' "its settings, defaults included"
     assert_file_contains "$shared" 'property bool wantsHidden' "and the one thing it may ask for"
+    assert_file_missing "$WIDGETS/DesktopWidget.qml" "it must not sit inside the widget directory, which cannot be imported"
     for widget in "$WIDGETS"/*Widget.qml; do
-        [[ "$(basename "$widget")" == "DesktopWidget.qml" ]] && continue
         assert_file_contains "$widget" 'DesktopWidget {' "$(basename "$widget") must take its frame from the shared one"
+        assert_file_contains "$widget" 'import ".."' "$(basename "$widget") must import the directory holding it"
         assert_file_not_contains "$widget" 'property var frame' "$(basename "$widget") must not declare the frame again"
     done
 }

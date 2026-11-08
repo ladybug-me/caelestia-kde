@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import "../.."
 import QtQuick
 

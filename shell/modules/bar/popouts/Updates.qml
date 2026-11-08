@@ -17,20 +17,17 @@ ColumnLayout {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    readonly property int updatesPageIdx: {
-        const idx = PageRegistry.indexForKey("updates");
-        return idx >= 0 ? idx : 0;
-    }
+    readonly property int updatesPageIdx: PageRegistry.updatesPageIdx
 
-    readonly property bool hasUpdate: UpdateChecker.hasUpdate
+    readonly property var status: UpdateStatus.describe(null, false)
 
     readonly property bool checking: UpdateChecker.checkingUpdates
 
-    readonly property string statusText: UpdateChecker.statusTitle
+    readonly property string statusText: root.status.title
 
-    readonly property string statusDetail: UpdateChecker.statusDetailFor(root.nowMs)
+    readonly property string statusDetail: root.status.detail
 
-    readonly property string statusIcon: UpdateChecker.statusIcon
+    readonly property string statusIcon: root.status.icon
 
     readonly property string checkActionText: {
         if (root.checking)
@@ -39,8 +36,6 @@ ColumnLayout {
             return qsTr("Try again");
         return qsTr("Check for updates");
     }
-
-    property double nowMs: Date.now()
 
     function hideIndicator(): void {
         BarWidgets.setEnabled(GlobalConfig.bar, "updateIndicator", false);
@@ -73,7 +68,7 @@ ColumnLayout {
 
                 MaterialIcon {
                     text: root.statusIcon
-                    color: root.hasUpdate || UpdateChecker.checkFailed ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+                    color: root.status.highlight ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
                     fontStyle.pointSize: Tokens.font.icon.medium.pointSize * root.fontScale
                 }
 
@@ -128,7 +123,7 @@ ColumnLayout {
 
                     radius: parent.radius
                     enabled: !root.checking
-                    onClicked: UpdateChecker.checkUpdates("", false, true)
+                    onClicked: UpdateChecker.checkNow()
                 }
 
                 RowLayout {
@@ -230,12 +225,5 @@ ColumnLayout {
                 }
             }
         }
-    }
-
-    Timer {
-        interval: 15000
-        repeat: true
-        running: true
-        onTriggered: root.nowMs = Date.now()
     }
 }

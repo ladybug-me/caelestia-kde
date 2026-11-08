@@ -14,14 +14,9 @@ Item {
 
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * Math.max(0.6, !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0))
 
-    readonly property bool hasUpdate: UpdateChecker.hasUpdate
+    readonly property var status: UpdateStatus.describe(null, false)
 
-    readonly property bool checking: UpdateChecker.checkingUpdates
-
-    readonly property int updatesPageIdx: {
-        const idx = PageRegistry.indexForKey("updates");
-        return idx >= 0 ? idx : 0;
-    }
+    readonly property int updatesPageIdx: PageRegistry.updatesPageIdx
 
     implicitWidth: isHorizontal ? (icon.implicitWidth + Tokens.padding.small * 2) : barThickness
     implicitHeight: isHorizontal ? barThickness : (icon.implicitHeight + Tokens.padding.small * 2)
@@ -31,8 +26,8 @@ Item {
 
         anchors.centerIn: parent
         anchors.horizontalCenterOffset: Centering.pixelAlign(parent.width, width)
-        text: UpdateChecker.statusIcon
-        color: root.hasUpdate || UpdateChecker.checkFailed ? Colours.palette.m3primary : Colours.palette.m3secondary
+        text: root.status.icon
+        color: root.status.highlight ? Colours.palette.m3primary : Colours.palette.m3secondary
     }
 
     StateLayer {
@@ -42,13 +37,13 @@ Item {
         implicitHeight: root.implicitHeight
         radius: Tokens.rounding.full
         acceptedButtons: Qt.LeftButton | Qt.RightButton
-        Accessible.name: qsTr("Caelestia updates: %1").arg(UpdateChecker.statusTitle)
+        Accessible.name: qsTr("Caelestia updates: %1").arg(root.status.title)
         Accessible.role: Accessible.Button
         Accessible.description: qsTr("Left-click to open the Updates page. Right-click to check for updates")
 
         onClicked: mouse => {
             if (mouse.button === Qt.RightButton) {
-                UpdateChecker.checkUpdates("", false, true);
+                UpdateChecker.checkNow();
             } else {
                 WindowFactory.create(null, { initialPageIdx: root.updatesPageIdx });
             }

@@ -12,6 +12,12 @@ import qs.services
 Singleton {
     id: root
 
+    enum Handoff {
+        None,
+        Pending,
+        Running
+    }
+
     property bool hasUpdate: false
     property string currentBranch: "main"
     property var commits: []
@@ -38,132 +44,69 @@ Singleton {
     property bool hasMoreCommits: false
     property bool loadingMoreCommits: false
 
-    property bool updaterPending: false
-    property bool updaterRunning: false
-    property bool updaterSeenRunning: false
-    property double updaterLaunchMs: 0
-    property string updaterVersion: ""
+    property int handoff: UpdateChecker.Handoff.None
+    property string handoffVersion: ""
+    property double _handoffStartedMs: 0
     property bool _reloadQueued: false
 
+    readonly property int handoffProbeIntervalMs: 2000
+    readonly property int handoffGraceMs: 10000
     readonly property bool checkingEnabled: GlobalConfig.general.checkUpdates
     readonly property bool checkFailed: root.checkError !== ""
     readonly property bool everChecked: root.lastCheckSuccessMs > 0
-
-    readonly property string statusIcon: {
-        if (root.updaterPending || root.updaterRunning)
-            return "terminal";
-        if (root.checkingUpdates)
-            return "sync";
-        if (root.checkFailed)
-            return "cloud_off";
-        if (root.hasUpdate)
-            return "update";
-        if (!root.checkingEnabled)
-            return "sync_disabled";
-        if (root.currentVersion === "unknown")
-            return "help";
-        return "check_circle";
-    }
-
-    readonly property string statusTitle: {
-        if (root.updaterRunning)
-            return qsTr("Updating in the terminal");
-        if (root.updaterPending)
-            return qsTr("Opening the terminal…");
-        if (root.checkingUpdates)
-            return qsTr("Checking for updates…");
-        if (root.checkFailed)
-            return qsTr("Couldn't check for updates");
-        if (root.hasUpdate) {
-            const latest = root.availableVersions.length > 0 ? root.availableVersions[0].replace(/^v/i, "") : "";
-            if (root.versionSummaryMode)
-                return latest !== "" ? qsTr("Version %1 is available").arg(latest) : qsTr("An update is available");
-            return qsTr("%1 new commits on %2").arg(root.pendingCount).arg(root.currentBranch);
-        }
-        if (!root.checkingEnabled)
-            return qsTr("Update checking is off");
-        if (root.currentVersion === "unknown")
-            return qsTr("Installed version unknown");
-        return qsTr("You're up to date");
-    }
 
     function clampBranch(branch: string): string {
         return (branch === "dev" || branch === "main") ? branch : "main";
     }
 
-    function formatDuration(ms: real): string {
-        const seconds = Math.max(0, Math.floor(ms / 1000));
-        if (seconds < 60)
-            return qsTr("less than a minute");
-        const minutes = Math.floor(seconds / 60);
-        if (minutes < 60)
-            return qsTr("%1 min").arg(minutes);
-        const hours = Math.floor(minutes / 60);
-        if (hours < 24)
-            return qsTr("%1 h").arg(hours);
-        return qsTr("%1 d").arg(Math.floor(hours / 24));
-    }
-
-    function statusDetailFor(nowMs: real): string {
-        const parts = [];
-        if (root.currentVersion !== "unknown" && root.currentVersion !== "")
-            parts.push(root.currentVersion);
-
-        if (root.checkFailed) {
-            parts.push(root.everChecked ? qsTr("last success %1 ago").arg(root.formatDuration(nowMs - root.lastCheckSuccessMs)) : qsTr("never checked successfully"));
-            parts.push(root.checkError);
-        } else if (root.checkingUpdates) {
-            parts.push(qsTr("checking now"));
-        } else if (!root.everChecked) {
-            parts.push(qsTr("not checked yet"));
-        } else {
-            parts.push(qsTr("checked %1 ago").arg(root.formatDuration(nowMs - root.lastCheckSuccessMs)));
-            if (root.checkingEnabled && !root.updaterPending)
-                parts.push(qsTr("next in %1").arg(root.formatDuration(root.lastCheckSuccessMs + root.checkIntervalMs - nowMs)));
-        }
-
-        return parts.join(" · ");
-    }
-
-    function updaterCommand(version): string {
+    function updaterArgs(version): list<string> {
         const branch = root.clampBranch(root.currentBranch);
-        const ref = version === undefined ? root.updaterVersion : version;
-        return ref !== "" ? `caelestia-update ${branch} ${ref}` : `caelestia-update ${branch}`;
+        const ref = version === undefined ? root.handoffVersion : version;
+        return ref !== "" ? ["caelestia-update", branch, ref] : ["caelestia-update", branch];
     }
 
-    function copyUpdaterCommand(version): void {
-        Quickshell.execDetached(["sh", "-c", "printf %s \"$1\" | wl-copy", "--", root.updaterCommand(version)]);
+    // The updater runs in a terminal this shell only spawns, so the lock
+    // caelestia-update holds is the only honest answer to "is it running".
+    function markHandoff(version): void {
+        root.handoffVersion = version === undefined ? "" : version;
+        root.handoff = UpdateChecker.Handoff.Pending;
+        root._handoffStartedMs = Date.now();
+        root.probeHandoff();
     }
 
-    function markUpdaterLaunched(version): void {
-        root.updaterVersion = version === undefined ? "" : version;
-        root.updaterPending = true;
-        root.updaterRunning = false;
-        root.updaterSeenRunning = false;
-        root.updaterLaunchMs = Date.now();
-        root.probeUpdater();
+    function dismissHandoff(): void {
+        root.handoff = UpdateChecker.Handoff.None;
+        root.handoffVersion = "";
     }
 
-    function dismissUpdater(): void {
-        root.updaterPending = false;
-        root.updaterRunning = false;
-        root.updaterSeenRunning = false;
-        root.updaterVersion = "";
-    }
-
-    function probeUpdater(): void {
-        if (updaterProbe.running)
+    function probeHandoff(): void {
+        if (handoffProbe.running)
             return;
-        updaterProbe.running = true;
+        handoffProbe.running = true;
     }
 
-    function checkUpdates(branch, persistBranch, manual) {
-        if (branch === undefined) branch = "";
-        if (manual === undefined) manual = false;
-        if (!manual && !GlobalConfig.general.checkUpdates) return;
-        if (persistBranch === undefined) persistBranch = branch !== "";
-        if (branch !== "") currentBranch = clampBranch(branch);
-        else currentBranch = clampBranch(currentBranch);
+    function checkNow(branch): void {
+        root.startCheck(branch === undefined ? "" : branch, true);
+    }
+
+    function checkInBackground(): void {
+        root.startCheck("", false);
+    }
+
+    function startCheck(branch, manual) {
+        // Only an automatic check honours the periodic-check setting: a user who
+        // presses Check must get an answer even with checking switched off,
+        // otherwise the setting turns the whole page into a dead end.
+        if (!manual && !root.checkingEnabled)
+            return;
+        // Only an explicit branch pick re-points the tracked update channel;
+        // background checks must not fight the channel the updater recorded from
+        // the tree it actually installed (issue #565).
+        if (branch !== "")
+            root.currentBranch = root.clampBranch(branch);
+        else
+            root.currentBranch = root.clampBranch(root.currentBranch);
+        const persistBranch = branch !== "";
         checkingUpdates = true;
         checkError = "";
         devCommitOffset = 0;
@@ -459,7 +402,12 @@ git -C "$REPO" log --format="COMMIT%x1f%H%x1f%h%x1f%s%x1f%an%x1f%cI%x1f%P" --ski
         moreCommitsProcess.running = true;
     }
 
-    Component.onCompleted: localCommitProcess.running = true
+    Component.onCompleted: {
+        localCommitProcess.running = true;
+        // An update restarts this shell, so a fresh shell may already be sitting
+        // behind a running updater. Ask the lock rather than assume none.
+        root.probeHandoff();
+    }
 
     Process {
         id: localCommitProcess
@@ -493,7 +441,7 @@ fi
                     root.currentBranch = parts[1];
                 }
                 root.loaded = true;
-                root.checkUpdates();
+                root.checkInBackground();
             }
         }
         onExited: {
@@ -797,7 +745,7 @@ echo "$INSTALLED|$LATEST"
     }
 
     Process {
-        id: updaterProbe
+        id: handoffProbe
 
         command: ["bash", "-c", `
 LOCK="\${XDG_RUNTIME_DIR:-\${TMPDIR:-/tmp}}/caelestia-$UID/update.lock"
@@ -807,21 +755,26 @@ flock -n "$LOCK" true 2>/dev/null && exit 0
 exit 1
 `]
         onExited: code => {
-            root.updaterRunning = code === 1;
-            if (root.updaterRunning)
-                root.updaterSeenRunning = true;
-            if (root.updaterPending && !root.updaterRunning && (root.updaterSeenRunning || Date.now() - root.updaterLaunchMs > 10000)) {
-                root.dismissUpdater();
-                root.checkUpdates("", false, true);
+            if (code === 1) {
+                root.handoff = UpdateChecker.Handoff.Running;
+                return;
             }
+            if (root.handoff === UpdateChecker.Handoff.None)
+                return;
+            // The terminal needs a moment to start the updater, so a lock that is
+            // not held yet only means "finished" once that grace has passed.
+            if (root.handoff === UpdateChecker.Handoff.Pending && Date.now() - root._handoffStartedMs <= root.handoffGraceMs)
+                return;
+            root.dismissHandoff();
+            root.checkInBackground();
         }
     }
 
     Timer {
-        interval: 2000
+        interval: root.handoffProbeIntervalMs
         repeat: true
-        running: root.updaterPending
-        onTriggered: root.probeUpdater()
+        running: root.handoff !== UpdateChecker.Handoff.None
+        onTriggered: root.probeHandoff()
     }
 
     FileView {
@@ -839,7 +792,7 @@ exit 1
         running: GlobalConfig.general.checkUpdates && root.loaded
         onTriggered: {
             if (!root.checkingUpdates)
-                root.checkUpdates();
+                root.checkInBackground();
         }
     }
 }

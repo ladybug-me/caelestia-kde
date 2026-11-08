@@ -9,6 +9,10 @@ QtObject {
 
     readonly property list<var> pages: PageDictionary.pages
 
+    // The Updates page, resolved by key so the three surfaces that open it cannot
+    // drift out of sync if the registry is reordered.
+    readonly property int updatesPageIdx: Math.max(0, PageDictionary.pageIdxFor("updates"))
+
     property var searchIndex: []
     property var allPages: []
     property var _entriesFinder: null

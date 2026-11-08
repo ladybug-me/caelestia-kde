@@ -1463,11 +1463,34 @@ user's own:
   running shell can act on, and with the shell gone they would strand the KDE
   shortcuts it took.
 - `~/.config/caelestia-update/` and `~/.cache/caelestia-update-repo` - the updater's
-  checkout and cache. Remove them yourself with the command in [10.3](#103-fixing-caelestia-updater-recommended).
+  checkout and cache. Remove them yourself with the command in [10.1](#101-fixing-caelestia-updater-recommended).
 
 ## 10. Update Issues
 
-### 10.1 The Updates page says it could not check
+### 10.1 Fixing caelestia updater (Recommended)
+
+By deleting the build cache and the update checker cache:
+
+```bash
+rm -rf ~/.config/caelestia-update/repo ~/.cache/caelestia-update-repo
+```
+
+**Note:** This will have the updater clone the repo again which takes time according to your internet speed. Hence, the logs might seem stuck or tell you to restart the process, but just wait for it to finish.
+
+### 10.2 Using update.sh
+
+You can simply run `bash update.sh` in the cloned repo folder (~/caelestia-kde) to update to latest version.
+
+### 10.3 Install latest version from repo
+
+Run the following command to simply install the latest shell using installer.
+```bash
+curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/install.sh | sh
+```
+
+- If it gives an error due to already present `~/caelestia-kde` directory in your pc, then remove that directory first and then run the above command. **Make sure to copy the `backups/` folder somewhere and then put it back here after installation completes.**
+
+### 10.4 The Updates page says it could not check
 
 The check reports a failure instead of "You're up to date" when it cannot get
 an answer, and leaves the last successful result untouched. The status line
@@ -1482,38 +1505,15 @@ git -C ~/.cache/caelestia-update-repo log --oneline -1 main
 ```
 
 A stale or broken clone is repaired by deleting it, as in
-[10.3](#103-fixing-caelestia-updater-recommended). The check runs again the next
+[10.1](#101-fixing-caelestia-updater-recommended). The check runs again the next
 time the page is opened, or immediately with **Try again**.
 
-### 10.2 Update checking is off
+### 10.5 Update checking is off
 
 With periodic checking off, the taskbar indicator stays hidden and the page
 answers a manual **Check** only. **Turn on** in the Updates page restores both,
 and the same switch lives under Panels → Taskbar → Update indicator, which opens
 the page for you when checking is off.
-
-### 10.3 Fixing caelestia updater (Recommended)
-
-By deleting the build cache and the update checker cache:
-
-```bash
-rm -rf ~/.config/caelestia-update/repo ~/.cache/caelestia-update-repo
-```
-
-**Note:** This will have the updater clone the repo again which takes time according to your internet speed. Hence, the logs might seem stuck or tell you to restart the process, but just wait for it to finish.
-
-### 10.4 Using update.sh
-
-You can simply run `bash update.sh` in the cloned repo folder (~/caelestia-kde) to update to latest version.
-
-### 10.5 Install latest version from repo
-
-Run the following command to simply install the latest shell using installer.
-```bash
-curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/install.sh | sh
-```
-
-- If it gives an error due to already present `~/caelestia-kde` directory in your pc, then remove that directory first and then run the above command. **Make sure to copy the `backups/` folder somewhere and then put it back here after installation completes.**
 
 ## 11. Diagnostic Commands Reference
 

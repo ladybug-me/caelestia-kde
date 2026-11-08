@@ -15,6 +15,7 @@ In KDE Plasma 6, `kscreenlocker_greet` manages the lock screen session and authe
 - **KDE Greeter Registration:** In `~/.config/plasmashellrc`, setting `[Shell]` -> `ShellPackage=caelestia.desktop` instructs `kscreenlocker_greet` to load Caelestia's lockscreen interface directly instead of the stock Plasma desktop shell.
 - **Hardware-Accelerated Rendering:** Rendering is performed directly within QtQuick and KWin's compositor using hardware GPU acceleration, eliminating the CPU software-compositing bottlenecks of nested Wayland proxies.
 - **Direct Authentication:** The greeter interfaces directly with KDE's ScreenLocker authentication backend (`authenticator`), providing seamless PAM authentication, error handling, grace locks, and fingerprint reader integration.
+- **Prompt Lifecycle:** the backend keeps one prompt open until the password answers it, and since the kscreenlocker 6.8 PAM rework a second `startAuthenticating()` in that window is refused as a failed login. [`AuthHandler.qml`](../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/AuthHandler.qml) tracks `promptPending` and never restarts authentication while a prompt (echo-off or echo-on) is waiting; the heartbeat and the key-press paths only start a conversation when none is live, and a scan that did not match runs beside the password prompt instead of ending it. Neither `busy` nor the prompt strings can stand in for that state: `busy` is false while a prompt waits, `prompt`/`promptForSecret` keep their last value after the conversation ends, and they also change once with no prompt behind them when the backend resets its authenticator.
 
 ---
 
@@ -97,6 +98,19 @@ You can test the lock screen UI safely in a non-blocking test window without loc
 
 ```bash
 /usr/lib/kscreenlocker_greet --testing
+```
+
+### Automated Testing
+[`tests/test_lockscreen_auth_loop.sh`](../../tests/test_lockscreen_auth_loop.sh) drives the real
+[`AuthHandler.qml`](../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/AuthHandler.qml)
+through the PySide6 harness in [`tests/qml/lockscreen_auth/`](../../tests/qml/lockscreen_auth/), which
+stands in for `authenticator` with kscreenlocker's PAM semantics (a prompt stays open until it is
+answered, a concurrent `Authenticate()` is refused, `respond()` without a pending prompt is dropped).
+It runs in the isolated suite and skips when PySide6 is not installed:
+
+```bash
+tests/run-tests.sh --suite isolated test_lockscreen_auth_loop
+python3 tests/qml/lockscreen_auth/run.py A B C F G H I D   # A idle, B first attempt, C retry, F typing, G failed scan, H authenticator reset, I echo-on prompt, D after 15 s idle
 ```
 
 ### Uninstallation & Reverting

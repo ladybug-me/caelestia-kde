@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
 import qs.components.controls
-import qs.components.effects
 import qs.services
 
 // "Widget Settings": what the card looks like and, from the catalogue's schema, the
@@ -30,21 +29,22 @@ Item {
     // screen-tall panel and a long one still fits.
     readonly property real formHeight: form.item ? form.item.implicitHeight : 0
     readonly property real maxFormHeight: Math.max(120, root.height * 0.55)
-    /// Beside the card when the desktop has room, otherwise under or over it, and always
-    /// clamped to the screen. The card keeps its own space, so its gear stays clickable.
+    /// The side to open on: beside the card when the desktop has room, otherwise under
+    /// or over it, and overlapping it only when there is no room anywhere. The panel
+    /// clamps the answer to the screen, so the card keeps its own space and its gear
+    /// stays clickable.
     readonly property point place: {
         const gap = Tokens.padding.medium;
         const w = panel.width;
         const h = panel.height;
         const a = root.anchorRect;
-        const edge = Tokens.padding.large;
-        const besideRight = a.x + a.width + gap;
-        const besideLeft = a.x - w - gap;
+        const right = a.x + a.width + gap;
+        const left = a.x - w - gap;
         const under = a.y + a.height + gap;
         const over = a.y - h - gap;
-        const x = besideRight + w <= root.width - edge ? besideRight : besideLeft >= edge ? besideLeft : a.x + a.width - w;
-        const y = under + h <= root.height - edge ? under : over >= edge ? over : a.y;
-        return Qt.point(Math.max(edge, Math.min(root.width - w - edge, x)), Math.max(edge, Math.min(root.height - h - edge, y)));
+        const x = right + w <= root.width ? right : left >= 0 ? left : right;
+        const y = under + h <= root.height ? under : over >= 0 ? over : under;
+        return Qt.point(x, y);
     }
 
     function openAt(rect: var, id: string): void {
@@ -102,115 +102,83 @@ Item {
     // full-surface click-catcher sat above the desktop's own menus and swallowed every
     // click meant for them, so the panel only takes what lands on itself.
 
-    Elevation {
+    DesktopPanel {
         id: panel
 
-        x: root.place.x
-        y: root.place.y
+        open: root.open
+        target: root.place
         width: Math.min(340, root.width - Tokens.padding.large * 2)
-        // Measured from what the panel actually holds, not from a layout's implicit
-        // size: the form arrives a tick after the panel, and a stale height clipped the
-        // last row before the layout caught up.
-        height: Math.min(Tokens.padding.large * 2 + header.implicitHeight + Tokens.spacing.medium + Math.min(root.formHeight, root.maxFormHeight), root.height - Tokens.padding.large * 2)
-        radius: Tokens.rounding.large
-        level: 2
-        opacity: root.open ? 1 : 0
-        scale: root.open ? 1 : 0.9
-        transformOrigin: Item.TopLeft
+        // From what the panel actually holds: the form arrives a tick after the panel,
+        // and the layout follows it, so the height is right as soon as it is there.
+        height: Math.min(panel.layout.implicitHeight + Tokens.padding.large * 2, root.height - Tokens.padding.large * 2)
 
-        Behavior on opacity {
-            Anim {
-                type: Anim.FastEffects
-            }
-        }
+        RowLayout {
+            id: header
 
-        Behavior on scale {
-            Anim {
-                type: Anim.FastSpatial
-            }
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
-        }
-
-        StyledRect {
-            anchors.fill: parent
-            radius: parent.radius
-            color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surfaceContainerLow
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.small
 
             ColumnLayout {
-                id: body
+                Layout.fillWidth: true
+                spacing: 0
 
-                anchors.fill: parent
-                anchors.margins: Tokens.padding.large
-                spacing: Tokens.spacing.medium
-
-                RowLayout {
-                    id: header
-
+                StyledText {
                     Layout.fillWidth: true
-                    spacing: Tokens.spacing.small
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 0
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: root.title
-                            font: Tokens.font.title.small
-                            elide: Text.ElideRight
-                        }
-
-                        StyledText {
-                            Layout.fillWidth: true
-                            text: qsTr("Edit the widget's settings")
-                            color: Colours.palette.m3onSurfaceVariant
-                            font: Tokens.font.label.small
-                            elide: Text.ElideRight
-                        }
-                    }
-
-                    TextButton {
-                        text: qsTr("Reset")
-                        type: TextButton.Text
-                        onClicked: form.item?.reset()
-                    }
-
-                    IconButton {
-                        type: IconButton.Text
-                        icon: "close"
-                        onClicked: root.close()
-                    }
+                    text: root.title
+                    font: Tokens.font.title.small
+                    elide: Text.ElideRight
                 }
 
-                Flickable {
-                    id: scroll
-
+                StyledText {
                     Layout.fillWidth: true
-                    Layout.preferredHeight: Math.min(root.formHeight, root.maxFormHeight)
-                    contentWidth: width
-                    contentHeight: form.height
-                    clip: true
-                    boundsBehavior: Flickable.StopAtBounds
+                    text: qsTr("Edit the widget's settings")
+                    color: Colours.palette.m3onSurfaceVariant
+                    font: Tokens.font.label.small
+                    elide: Text.ElideRight
+                }
+            }
 
-                    ScrollBar.vertical: StyledScrollBar {
-                        flickable: scroll
-                    }
+            TextButton {
+                text: qsTr("Reset")
+                type: TextButton.Text
+                // The form is rebuilt from the store rather than told to re-read: a
+                // control that was dragged has already replaced its own binding.
+                onClicked: {
+                    DesktopLayout.resetWidgetConfig(root.widgetId);
+                    root.refresh();
+                }
+            }
 
-                    Loader {
-                        id: form
+            IconButton {
+                type: IconButton.Text
+                icon: "close"
+                onClicked: root.close()
+            }
+        }
 
-                        width: scroll.width
-                        active: false
-                        sourceComponent: WidgetSettingsForm {
-                            widgetId: root.widgetId
-                            type: root.type
-                            catalog: root.controller?.widgetCatalog ?? null
-                        }
-                    }
+        Flickable {
+            id: scroll
+
+            Layout.fillWidth: true
+            Layout.preferredHeight: Math.min(root.formHeight, root.maxFormHeight)
+            contentWidth: width
+            contentHeight: form.height
+            clip: true
+            boundsBehavior: Flickable.StopAtBounds
+
+            ScrollBar.vertical: StyledScrollBar {
+                flickable: scroll
+            }
+
+            Loader {
+                id: form
+
+                width: scroll.width
+                active: false
+                sourceComponent: WidgetSettingsForm {
+                    widgetId: root.widgetId
+                    type: root.type
+                    catalog: root.controller?.widgetCatalog ?? null
                 }
             }
         }

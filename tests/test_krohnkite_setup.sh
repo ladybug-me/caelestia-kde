@@ -107,7 +107,7 @@ test_download_accepts_an_asset_that_matches_its_checksum() {
     assert_file_exists "$tmp/download"
 }
 
-test_download_says_so_when_the_release_publishes_no_checksum() {
+test_download_refuses_a_release_that_is_not_the_pinned_one() {
     local tmp out status
     tmp="$(new_tmpdir)"
     printf 'asset\n' > "$tmp/asset"
@@ -120,9 +120,30 @@ test_download_says_so_when_the_release_publishes_no_checksum() {
     )"
     status=$?
 
-    assert_status 0 "$status" "a release with no checksum is still installed"
-    assert_contains "$out" "no published checksum" "but only after saying it is unverified"
-    assert_contains "$out" "SHA-256" "with the hash of what was installed"
+    assert_status 1 "$status" "a release nobody has checked must not be installed quietly"
+    assert_contains "$out" "publishes no checksum" "and the reason has to be stated"
+    assert_contains "$out" "CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1" \
+        "with the way to install it anyway named"
+    assert_contains "$out" "SHA-256" "and the hash of what arrived, so it can be compared"
+}
+
+test_download_installs_a_release_that_is_not_pinned_when_the_user_says_so() {
+    local tmp out status
+    tmp="$(new_tmpdir)"
+    printf 'asset\n' > "$tmp/asset"
+
+    out="$(
+        download_helpers
+        KROHN_ASSET="$tmp/asset"
+        CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1
+        stub_release_curl
+        download_kwinscript "https://codeberg.org/a/b/raw/krohnkite.kwinscript" "$tmp/download" 2>&1
+    )"
+    status=$?
+
+    assert_status 0 "$status" "the user's own decision to install an unverified release stands"
+    assert_contains "$out" "unverified" "but it is said out loud"
+    assert_file_exists "$tmp/download"
 }
 
 # Codeberg publishes no sidecar, so the bytes of the pinned release are tied to it by a hash

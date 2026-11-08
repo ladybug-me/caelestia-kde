@@ -30,6 +30,11 @@ ColumnLayout {
     readonly property int currMonth: root.viewDate.getMonth()
     readonly property int currYear: root.viewDate.getFullYear()
     readonly property date markedDate: isNaN(root.highlightedDate?.getTime() ?? NaN) ? new Date() : root.highlightedDate
+    // Built on the root once: inside the delegates the builder chain ran 49 times per month.
+    readonly property font dayNumberFont: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+    readonly property font weekdayHeaderFont: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.small.pointSize * root.fontScale).build()
+    readonly property font navIconFont: Tokens.font.icon.builders.small.weight(Font.Bold).size(Tokens.font.icon.small.pointSize * root.fontScale).build()
+    readonly property font monthLabelFont: Tokens.font.title.builders.small.capitalisation(Font.Capitalize).size(Tokens.font.title.small.pointSize * root.fontScale).build()
 
     signal monthShifted(int delta)
     signal todayRequested()
@@ -71,7 +76,7 @@ ColumnLayout {
             isRound: true
             icon: "chevron_left"
             type: IconButton.Text
-            font: Tokens.font.icon.builders.small.weight(Font.Bold).size(Tokens.font.icon.builders.small.build().pointSize * root.fontScale).build()
+            font: root.navIconFont
             padding: Tokens.padding.small * root.scaleOffset
             onClicked: root.monthShifted(-1)
         }
@@ -107,7 +112,7 @@ ColumnLayout {
                 anchors.centerIn: parent
                 text: grid.title
                 color: Colours.palette.m3primary
-                font: Tokens.font.title.builders.small.capitalisation(Font.Capitalize).size(Tokens.font.title.builders.small.build().pointSize * root.fontScale).build()
+                font: root.monthLabelFont
             }
         }
 
@@ -115,7 +120,7 @@ ColumnLayout {
             isRound: true
             icon: "chevron_right"
             type: IconButton.Text
-            font: Tokens.font.icon.builders.small.weight(Font.Bold).size(Tokens.font.icon.builders.small.build().pointSize * root.fontScale).build()
+            font: root.navIconFont
             padding: Tokens.padding.small * root.scaleOffset
             onClicked: root.monthShifted(1)
         }
@@ -132,7 +137,7 @@ ColumnLayout {
 
             horizontalAlignment: Text.AlignHCenter
             text: model.shortName
-            font: Tokens.font.body.builders.small.weight(Font.Medium).size(Tokens.font.body.builders.small.build().pointSize * root.fontScale).build()
+            font: root.weekdayHeaderFont
             color: (model.day === 0 || model.day === 6) ? Colours.palette.m3tertiary : Colours.palette.m3onSurface
         }
     }
@@ -183,7 +188,7 @@ ColumnLayout {
                         return Colours.palette.m3onSurfaceVariant;
                     }
                     opacity: root.isToday(dayItem.model.date) || dayItem.model.month === grid.month ? 1 : 0.4
-                    font: Tokens.font.body.builders.small.size(Tokens.font.body.small.pointSize * root.fontScale).build()
+                    font: root.dayNumberFont
                 }
 
                 Rectangle {

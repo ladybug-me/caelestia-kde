@@ -157,6 +157,7 @@ QtObject {
 
     component PlaceholderComp: Item {
         property NexusState nState
+        property int pageIdx: -1
 
         ColumnLayout {
             anchors.centerIn: parent

@@ -13,6 +13,8 @@ StackView {
     default property list<QtObject> pages
     readonly property int animMovement: Tokens.padding.extraExtraLarge * 2
     readonly property var slotMap: ({})
+    // set by Pages so the outgoing page ignores the nav signals of the page that replaces it
+    property int pageIdx: -1
 
     function buildSlotMap(): void {
         for (let i = 0; i < pages.length; i++) {
@@ -142,6 +144,9 @@ StackView {
 
     Connections {
         function onSubCategorySelected(target: var): void {
+            // read the live value: a cached binding is stale while currentPageIdx is still notifying
+            if (root.pageIdx >= 0 && root.pageIdx !== root.nState.currentPageIdx)
+                return;
             root.switchToSlot(target);
         }
 

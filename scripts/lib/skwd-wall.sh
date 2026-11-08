@@ -14,9 +14,13 @@ source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scrip
 source "${BUNDLE_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}/scripts/lib/install-fs.sh" 2>/dev/null || true
 
 # The revision the wallpaper plugin's fallback build comes from, for the same reason as the
-# audio visualizer: the plugin is installed as root, so the tree is pinned. It is an
-# upstream tag, which `git clone --depth 1 --branch` accepts.
+# audio visualizer: the plugin is installed as root, so the tree is pinned. It is an upstream
+# tag, which `git clone --depth 1 --branch` accepts, and a tag can be moved, so the commit
+# beside it is what the checkout has to be. To update, list the tags with
+#   git ls-remote --tags https://github.com/liixini/skwd-paper-plasma
+# bump both values from that listing, and build the new one before shipping the bump.
 SKWD_PAPER_PLASMA_REF="v1.0.0-beta.27"
+SKWD_PAPER_PLASMA_COMMIT="45dc81ed6b690ab9552e46188238ff18cc02945b"
 
 skwd_wall_binary_present() {
     command -v skwd-wall-v2 >/dev/null 2>&1 || \
@@ -52,6 +56,11 @@ install_skwd_paper_plasma_source() {
     local tmp_dir
     tmp_dir="$(mktemp -d)"
     if git clone --depth 1 --branch "$SKWD_PAPER_PLASMA_REF" "https://github.com/liixini/skwd-paper-plasma.git" "$tmp_dir" 2>/dev/null; then
+        if [[ "$(git -C "$tmp_dir" rev-parse HEAD)" != "$SKWD_PAPER_PLASMA_COMMIT" ]]; then
+            warn "skwd-paper-plasma: $SKWD_PAPER_PLASMA_REF no longer points at $SKWD_PAPER_PLASMA_COMMIT; refusing to build it."
+            rm -rf "$tmp_dir"
+            return 1
+        fi
         if cmake -B "$tmp_dir/build" -S "$tmp_dir" -DCMAKE_INSTALL_PREFIX="${XDG_DATA_HOME:-$HOME/.local}" >/dev/null 2>&1 && \
            cmake --build "$tmp_dir/build" >/dev/null 2>&1 && \
            cmake --install "$tmp_dir/build" >/dev/null 2>&1; then

@@ -6,11 +6,13 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 #include <QDBusError>
+#include <QFileDevice>
 #include <QFileInfo>
 #include <effect/effectwindow.h>
 #include <QDebug>
 #include <core/output.h>
 #include <cstring>
+#include <unistd.h>
 #include <QStandardPaths>
 #include <QDir>
 
@@ -23,6 +25,29 @@ namespace {
 /// caller is the only thing separating the shell from anything else on the bus.
 constexpr char shellExecutable[] = "quickshell";
 constexpr char shellExecutableAlt[] = "qs";
+
+/// Whether @p path is a program only root could have put there: a regular file owned by
+/// root that nobody but its owner may write. The name on its own proves nothing, because
+/// any local process can build a binary called `quickshell` and run that.
+bool isRootOwnedProgram(const QString& path)
+{
+    if (path.isEmpty()) {
+        return false;
+    }
+
+    const QFileInfo program(path);
+    if (!program.isFile() || !program.isExecutable() || program.ownerId() != 0) {
+        return false;
+    }
+
+    // Group or other write access is what would let someone other than root replace the
+    // binary after it was installed.
+    if (program.permissions() & (QFileDevice::WriteGroup | QFileDevice::WriteOther)) {
+        return false;
+    }
+
+    return true;
+}
 
 } // namespace
 
@@ -82,17 +107,40 @@ bool WorkspaceTrackerEffect::callerIsShell()
 
     const QString service = message().service();
     if (service.isEmpty()) {
+        qWarning() << "WorkspaceTracker: refusing a call that names no sender";
         return false;
     }
 
     const uint pid = connection().interface()->servicePid(service).value();
     if (pid == 0) {
+        qWarning() << "WorkspaceTracker: refusing a call from a sender with no process id";
         return false;
     }
 
-    const QString executable = QFileInfo(QStringLiteral("/proc/%1/exe").arg(pid)).symLinkTarget();
+    const QFileInfo link(QStringLiteral("/proc/%1/exe").arg(pid));
+    // canonicalFilePath() is readlink -f: it names the binary the caller is really running
+    // rather than the name the caller chose for it, and it is empty when there is nothing
+    // left to resolve.
+    const QString executable = link.canonicalFilePath();
     const QString name = executable.section(u'/', -1);
-    return name == QLatin1String(shellExecutable) || name == QLatin1String(shellExecutableAlt);
+
+    // /proc/<pid> belongs to the uid the process runs as, so this also refuses a setuid
+    // helper that became another user in order to make the call.
+    const QFileInfo owner(QStringLiteral("/proc/%1").arg(pid));
+    const bool sameUser = owner.exists() && owner.ownerId() == static_cast<uint>(::getuid());
+
+    // A normal install runs /usr/bin/quickshell, which root owns and nobody else can
+    // write; that ownership is what the caller cannot fake. A copy the user built
+    // themselves is therefore refused, so running the shell out of a build tree needs an
+    // installed copy for desktop switching to work.
+    const bool named = name == QLatin1String(shellExecutable) || name == QLatin1String(shellExecutableAlt);
+    if (!sameUser || !named || !isRootOwnedProgram(executable)) {
+        qWarning() << "WorkspaceTracker: refusing a call from"
+                   << (executable.isEmpty() ? link.symLinkTarget() : executable) << "(pid" << pid << ")";
+        return false;
+    }
+
+    return true;
 }
 
 void WorkspaceTrackerEffect::SendToOutput(const QString& uuid, const QString& output)

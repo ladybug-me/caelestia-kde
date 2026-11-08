@@ -54,7 +54,8 @@ private:
     /// Whether the D-Bus caller is the Caelestia shell. Moving a window to another
     /// output, or switching desktops under the user, is the kind of misdirection a
     /// hostile application wants; the session bus offers every local process the same
-    /// way in.
+    /// way in. The caller has to be a process of this user running a root-owned program
+    /// named `quickshell` or `qs`, because a name on its own is the caller's to choose.
     bool callerIsShell();
     static KWin::LogicalOutput* findOutput(const QString& name);
 

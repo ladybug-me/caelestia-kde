@@ -81,6 +81,46 @@ gsr_set_kms_capability() {
     return 0
 }
 
+# Copies a font this user downloaded into "$font_dir", once the transfer is known to have
+# produced a font. The two branch URLs the fonts come from publish no hash, so the file's
+# type is what says the bytes are the font that was asked for rather than an error page
+# saved under a font's name, and the hash is printed so a run records what it installed.
+install_checked_font() {
+    local source="$1" name="$2" kind hash
+    if [[ ! -s "$source" ]]; then
+        err "Refusing to install $name: the download is empty."
+        return 1
+    fi
+    if command -v file >/dev/null 2>&1; then
+        kind="$(file -b "$source" 2>/dev/null || true)"
+        case "$kind" in
+            *TrueType*|*OpenType*) ;;
+            *)
+                err "Refusing to install $name: it is not a TrueType or OpenType font ($kind)."
+                return 1
+                ;;
+        esac
+    fi
+    hash="$(file_sha256 "$source")"
+    if ! mv -f "$source" "$font_dir/$name" 2>/dev/null; then
+        err "Failed to install $name into $font_dir."
+        return 1
+    fi
+    info "$name installed (SHA-256 $hash)."
+}
+
+# A version-pinned archive is only unpacked once its bytes are the ones the version above
+# names. The project publishes no checksum beside the archive, so the hash is a constant.
+nerd_font_archive_matches() {
+    local archive="$1" expected="$2" name="$3" actual
+    actual="$(file_sha256 "$archive")"
+    if [[ "$actual" != "$expected" ]]; then
+        err "Checksum mismatch for $name - not extracting it (got $actual, expected $expected)."
+        return 1
+    fi
+    return 0
+}
+
 info "Installing Debian packages..."
 
 INSTALL_FISH="${INSTALL_FISH:-true}"
@@ -91,23 +131,54 @@ PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 # gpu-screen-recorder has no apt package, so the fallback below builds upstream at a
 # pinned revision. Never point this at master: the value is a release tag, and the build
-# is what the installer runs, so it has to be a tree this project looked at. To update,
-# list the upstream tags with
+# is what the installer runs, so it has to be a tree this project looked at. A tag can be
+# moved, so what the clone is checked against afterwards is the commit it pointed at when
+# this was pinned. To update, list the upstream tags with
 #   git ls-remote --tags https://repo.dec05eba.com/gpu-screen-recorder
-# bump the ref, and test the build before shipping it.
-GPU_SCREEN_RECORDER_REF="6.1.3" # commit 396526a908f8f1b9cb826a9187a2c9150f44d94d
+# bump the tag, set the commit from that listing, and test the build before shipping it.
+GPU_SCREEN_RECORDER_REF="6.1.3"
+GPU_SCREEN_RECORDER_COMMIT="396526a908f8f1b9cb826a9187a2c9150f44d94d"
 
 # The rest of the fallback builds come from clones as well, and the installer runs each
 # clone's own build and install as root, so which tree that is has to be this project's
 # decision rather than whatever a branch holds on the day it runs. These are upstream tags,
-# which `git clone --depth 1 --branch` accepts; updating one means looking at the diff and
-# building it before shipping the bump.
+# which `git clone --depth 1 --branch` accepts; the commit beside each one is what the
+# checkout has to be, so a tag that was moved fails closed instead of building something
+# else. Updating one means looking at the diff and building it before shipping the bump.
 APP2UNIT_REF="v1.4.4"
+APP2UNIT_COMMIT="47e23ec6ab9e97bbe335c32fb640744a29bf32f7"
 WL_CLIP_PERSIST_REF="v0.5.0"
+WL_CLIP_PERSIST_COMMIT="e26fde01c13922e3a65049dafb7d5adfbc52626e"
 
 # cliphist ships one binary per architecture rather than a package, so it is taken from this
 # release instead of whichever one happens to be newest when the installer runs.
 CLIPHIST_VERSION="0.7.0"
+
+# The pinned release, as "<url>\t<digest>" for the binary this machine needs. The release
+# reports a sha256 for each asset in the same response that names it, so the download can be
+# checked against the release it came from. Printed as one line: callers split on the tab.
+cliphist_asset_url() {
+    local carch="$1" release_json asset
+    release_json="$(curl -fsSL "https://api.github.com/repos/sentriz/cliphist/releases/tags/v${CLIPHIST_VERSION}" 2>/dev/null || true)"
+    [[ -n "$release_json" ]] || return 1
+    command -v jq >/dev/null 2>&1 || return 1
+
+    asset="$(printf '%s' "$release_json" | jq -r --arg suffix "-${carch}" '
+        first(.assets[] | select((.name // "") | endswith($suffix)))
+        | "\(.browser_download_url // "")\t\(.digest // "")"
+    ' 2>/dev/null)"
+    [[ -n "$asset" && "$asset" != $'\t' ]] || return 1
+    printf '%s\n' "$asset"
+}
+
+# The two Nerd Font archives are version-pinned, so what the login screen ends up with can be
+# tied to the release it came from: the project publishes no checksum beside them, and these
+# are the SHA-256 of the v3.0.2 assets. To bump the version, take the hash of the new archive
+# with
+#   curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v<version>/<asset>.zip | sha256sum
+NERD_FONTS_VERSION="3.0.2"
+CASCADIA_CODE_SHA256="e68cf12cc3c14a18b9ddce0e77f66a78e3ebec4a5224423674fdd9303c5c9272"
+JETBRAINS_MONO_SHA256="1fa397478bfca4917dba796eeeb5a428c0834e760b1d96caffff633d6238fdce"
 
 CORE_PACKAGES=(
     cmake ninja-build ccache g++ build-essential qt6-l10n-tools qt6-tools-dev extra-cmake-modules
@@ -261,10 +332,15 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             tmpdir="$(mktemp -d)"
             caelestia_sudo apt-get install -y make scdoc || true
             if git clone --depth 1 --branch "$APP2UNIT_REF" https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
-                (
-                    cd "$tmpdir" || exit 1
-                    install_staged_tree / make install || install_staged_tree / make install-bin
-                ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                if [[ "$(git -C "$tmpdir" rev-parse HEAD)" != "$APP2UNIT_COMMIT" ]]; then
+                    err "$pkg: $APP2UNIT_REF no longer points at $APP2UNIT_COMMIT; refusing to build it."
+                    FAILED_PKGS+=("$pkg")
+                else
+                    (
+                        cd "$tmpdir" || exit 1
+                        install_staged_tree / make install || install_staged_tree / make install-bin
+                    ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                fi
             else
                 err "Failed to clone $pkg."
                 FAILED_PKGS+=("$pkg")
@@ -276,13 +352,18 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             caelestia_sudo apt-get install -y build-essential git ffmpeg meson libxi-dev libdrm-dev libavcodec-dev libavformat-dev libx11-dev libxcomposite-dev libxdamage-dev libxrender-dev libxrandr-dev libpulse-dev libva-dev libcap-dev libdbus-1-dev libpipewire-0.3-dev libavfilter-dev libvulkan-dev || true
             info "Building gpu-screen-recorder $GPU_SCREEN_RECORDER_REF from repo.dec05eba.com (pinned ref)."
             if git clone --depth 1 --branch "$GPU_SCREEN_RECORDER_REF" https://repo.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
-                (
-                    cd "$tmpdir" || exit 1
-                    meson setup build --prefix=/usr --buildtype=release -Dsystemd=true -Dstrip=true -Dcapabilities=false &&
-                        ninja -C build &&
-                        install_staged_tree / meson install -C build &&
-                        gsr_set_kms_capability /usr/bin/gsr-kms-server
-                ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                if [[ "$(git -C "$tmpdir" rev-parse HEAD)" != "$GPU_SCREEN_RECORDER_COMMIT" ]]; then
+                    err "$pkg: $GPU_SCREEN_RECORDER_REF no longer points at $GPU_SCREEN_RECORDER_COMMIT; refusing to build it."
+                    FAILED_PKGS+=("$pkg")
+                else
+                    (
+                        cd "$tmpdir" || exit 1
+                        meson setup build --prefix=/usr --buildtype=release -Dsystemd=true -Dstrip=true -Dcapabilities=false &&
+                            ninja -C build &&
+                            install_staged_tree / meson install -C build &&
+                            gsr_set_kms_capability /usr/bin/gsr-kms-server
+                    ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                fi
             else
                 err "Failed to clone $pkg."
                 FAILED_PKGS+=("$pkg")
@@ -290,12 +371,20 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             rm -rf "$tmpdir"
             ;;
         starship)
-            if curl -sS https://starship.rs/install.sh | sh -s -- -y; then  # ci:allow-curl-pipe
-                info "starship installed successfully."
+            _installer="$(mktemp)"
+            if fetch_asset https://starship.rs/install.sh "$_installer" 2>/dev/null; then
+                info "starship installer SHA-256: $(file_sha256 "$_installer")"
+                if sh -s -- -y < "$_installer"; then
+                    info "starship installed successfully."
+                else
+                    err "Failed to install starship; install it yourself with the script from https://starship.rs/install.sh and re-run the installer."
+                    FAILED_PKGS+=("$pkg")
+                fi
             else
-                err "Manual build for $pkg failed."
+                err "Could not download the starship installer; install it yourself from https://starship.rs/install.sh and re-run the installer."
                 FAILED_PKGS+=("$pkg")
             fi
+            rm -f "$_installer"
             ;;
         cliphist)
             info "Downloading cliphist binary from GitHub releases..."
@@ -307,12 +396,43 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
                 i386|i686) CARCH="linux-386" ;;
                 *)         CARCH="linux-amd64" ;;
             esac
-            CLIPHIST_URL="$(curl -fsSL "https://api.github.com/repos/sentriz/cliphist/releases/tags/v${CLIPHIST_VERSION}" | grep -o "\"https://[^\"]*${CARCH}\"" | tr -d "\"" | head -n1)"
+            _cliphist_asset="$(cliphist_asset_url "$CARCH" || true)"
+            CLIPHIST_URL="${_cliphist_asset%%$'\t'*}"
+            _cliphist_digest="${_cliphist_asset#*$'\t'}"
+            # No tab means the release reported no digest for the asset at all.
+            [[ "$_cliphist_digest" == "$_cliphist_asset" ]] && _cliphist_digest=""
             if [ -n "$CLIPHIST_URL" ]; then
                 tmpbin="$(mktemp)"
-                if curl -fsSL "$CLIPHIST_URL" -o "$tmpbin"; then
-                    caelestia_sudo install -m 755 "$tmpbin" /usr/local/bin/cliphist
-                    info "cliphist installed successfully to /usr/local/bin."
+                # What root installs has to be tied to the release it came from: the digest
+                # the release reports for this asset, or a sidecar if it published one.
+                if fetch_asset "$CLIPHIST_URL" "$tmpbin" 2>/dev/null; then
+                    _cliphist_status=0
+                    asset_matches_digest "$tmpbin" "$_cliphist_digest" || _cliphist_status=$?
+                    if [[ "$_cliphist_status" -eq 2 ]]; then
+                        verify_download "$CLIPHIST_URL" "$tmpbin" || _cliphist_status=$?
+                    fi
+
+                    _cliphist_install=0
+                    case "$_cliphist_status" in
+                        0) _cliphist_install=1 ;;
+                        1) err "Checksum mismatch for $CLIPHIST_URL - not installing it." ;;
+                        *)
+                            if unverified_download_allowed; then
+                                warn "Installing $CLIPHIST_URL unverified because CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 is set."
+                                _cliphist_install=1
+                            else
+                                warn "No published checksum for $CLIPHIST_URL (SHA-256 $(file_sha256 "$tmpbin"))."
+                                err "Refusing to install $CLIPHIST_URL unverified; set CAELESTIA_ALLOW_UNVERIFIED_DOWNLOAD=1 to accept it."
+                            fi
+                            ;;
+                    esac
+
+                    if [[ "$_cliphist_install" -eq 1 ]]; then
+                        caelestia_sudo install -m 755 "$tmpbin" /usr/local/bin/cliphist
+                        info "cliphist installed successfully to /usr/local/bin."
+                    else
+                        FAILED_PKGS+=("$pkg")
+                    fi
                 else
                     err "Failed to download cliphist."
                     FAILED_PKGS+=("$pkg")
@@ -327,20 +447,32 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             caelestia_sudo apt-get install -y build-essential curl git libwayland-dev || true
             if ! command -v cargo >/dev/null 2>&1 || [ "$(rustc --version 2>/dev/null | awk '{print $2}' | cut -d. -f2 || echo 0)" -lt 85 ]; then
                 info "Modern Rust toolchain (>= 1.85) required. Installing via rustup..."
-                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain stable --profile minimal || true # ci:allow-curl-pipe
+                _installer="$(mktemp)"
+                if fetch_asset https://sh.rustup.rs "$_installer" --proto '=https' --tlsv1.2 2>/dev/null; then
+                    info "rustup installer SHA-256: $(file_sha256 "$_installer")"
+                    sh -s -- -y --default-toolchain stable --profile minimal < "$_installer" || true
+                else
+                    warn "Could not download the rustup installer; install Rust yourself from https://rustup.rs and re-run the installer."
+                fi
+                rm -f "$_installer"
                 export PATH="$HOME/.cargo/bin:$PATH"
             fi
             if command -v cargo >/dev/null 2>&1; then
                 tmpdir="$(mktemp -d)"
                 if git clone --depth 1 --branch "$WL_CLIP_PERSIST_REF" https://github.com/Linus789/wl-clip-persist "$tmpdir"; then
-                    (
-                        cd "$tmpdir" || exit 1
-                        cargo build --release
-                        # The target directory is the clone's own, and `cp` carries a
-                        # symlink to wherever it points; only a file cargo wrote is
-                        # promoted.
-                        privileged_copy_file target/release/wl-clip-persist /usr/local/bin/wl-clip-persist 0755
-                    ) || { err "cargo build $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                    if [[ "$(git -C "$tmpdir" rev-parse HEAD)" != "$WL_CLIP_PERSIST_COMMIT" ]]; then
+                        err "$pkg: $WL_CLIP_PERSIST_REF no longer points at $WL_CLIP_PERSIST_COMMIT; refusing to build it."
+                        FAILED_PKGS+=("$pkg")
+                    else
+                        (
+                            cd "$tmpdir" || exit 1
+                            cargo build --release
+                            # The target directory is the clone's own, and `cp` carries a
+                            # symlink to wherever it points; only a file cargo wrote is
+                            # promoted.
+                            privileged_copy_file target/release/wl-clip-persist /usr/local/bin/wl-clip-persist 0755
+                        ) || { err "cargo build $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                    fi
                 else
                     err "Failed to clone $pkg."
                     FAILED_PKGS+=("$pkg")
@@ -353,7 +485,14 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             ;;
         satty)
             if ! command -v cargo-binstall >/dev/null 2>&1; then
-                curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash || true # ci:allow-curl-pipe
+                _installer="$(mktemp)"
+                if fetch_asset https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh "$_installer" --proto '=https' --tlsv1.2 2>/dev/null; then
+                    info "cargo-binstall installer SHA-256: $(file_sha256 "$_installer")"
+                    bash < "$_installer" || true
+                else
+                    warn "Could not download the cargo-binstall installer; install it yourself from https://github.com/cargo-bins/cargo-binstall and re-run the installer."
+                fi
+                rm -f "$_installer"
                 export PATH="$PATH:$HOME/.cargo/bin"
                 for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
                     touch "$rc" 2>/dev/null || true
@@ -377,13 +516,21 @@ for pkg in "${FALLBACK_TARGETS[@]}"; do
             fi
             ;;
         uv)
-            if curl -LsSf https://astral.sh/uv/install.sh | sh; then # ci:allow-curl-pipe
-                info "uv installed successfully."
-                export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+            _installer="$(mktemp)"
+            if fetch_asset https://astral.sh/uv/install.sh "$_installer" 2>/dev/null; then
+                info "uv installer SHA-256: $(file_sha256 "$_installer")"
+                if sh < "$_installer"; then
+                    info "uv installed successfully."
+                    export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
+                else
+                    err "Failed to install uv; install it yourself with the script from https://astral.sh/uv/install.sh and re-run the installer."
+                    FAILED_PKGS+=("$pkg")
+                fi
             else
-                err "Failed to install uv."
+                err "Could not download the uv installer; install it yourself from https://astral.sh/uv/install.sh and re-run the installer."
                 FAILED_PKGS+=("$pkg")
             fi
+            rm -f "$_installer"
             ;;
         konsave)
             export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
@@ -424,41 +571,70 @@ done
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
 info "Downloading and installing required custom fonts (parallel)..."
-mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
-# The two archives go into a directory only this user can name: a predictable name in /tmp
+font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+mkdir -p "$font_dir"
+# Every archive goes into a directory only this user can name: a predictable name in /tmp
 # is a file someone else can leave behind, and the unzip would take whatever is there.
+# Nothing reaches the font directory until the transfer it came from has been checked.
 font_tmp="$(mktemp -d)"
 
-curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
+fetch_asset "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" "$font_tmp/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
-curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "$font_tmp/CascadiaCode.zip" &
+fetch_asset "https://github.com/ryanoasis/nerd-fonts/releases/download/v${NERD_FONTS_VERSION}/CascadiaCode.zip" "$font_tmp/CascadiaCode.zip" &
 _pid_cc=$!
 
-curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "$font_tmp/JetBrainsMono.zip" &
+fetch_asset "https://github.com/ryanoasis/nerd-fonts/releases/download/v${NERD_FONTS_VERSION}/JetBrainsMono.zip" "$font_tmp/JetBrainsMono.zip" &
 _pid_jb=$!
 
-curl -sL "https://github.com/google/fonts/raw/main/ofl/rubik/Rubik-VariableFont_wght.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Rubik-VariableFont_wght.ttf" &
+# Upstream renamed the file to Rubik[wght].ttf; it is stored under the name the font mirror
+# looks for, which is why the URL and the destination do not match.
+fetch_asset "https://github.com/google/fonts/raw/main/ofl/rubik/Rubik%5Bwght%5D.ttf" "$font_tmp/Rubik-VariableFont_wght.ttf" &
 _pid_ru=$!
 
+_ms_status=0
 _cc_status=0
 _jb_status=0
-wait "$_pid_ms" || true
+_ru_status=0
+wait "$_pid_ms" || _ms_status=$?
 wait "$_pid_cc" || _cc_status=$?
 wait "$_pid_jb" || _jb_status=$?
-wait "$_pid_ru" || true
+wait "$_pid_ru" || _ru_status=$?
 
-if [[ "$_cc_status" -ne 0 ]] || ! unzip -qo "$font_tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
-    err "Failed to download or extract CascadiaCode font."
+if [[ "$_ms_status" -ne 0 ]]; then
+    err "Failed to download Material Symbols font."
+    FAILED_PKGS+=("Material Symbols font")
+elif ! install_checked_font "$font_tmp/MaterialSymbolsRounded.ttf" MaterialSymbolsRounded.ttf; then
+    FAILED_PKGS+=("Material Symbols font")
+fi
+
+if [[ "$_ru_status" -ne 0 ]]; then
+    err "Failed to download Rubik font."
+    FAILED_PKGS+=("Rubik font")
+elif ! install_checked_font "$font_tmp/Rubik-VariableFont_wght.ttf" Rubik-VariableFont_wght.ttf; then
+    FAILED_PKGS+=("Rubik font")
+fi
+
+if [[ "$_cc_status" -ne 0 ]]; then
+    err "Failed to download CascadiaCode font."
+    FAILED_PKGS+=("CascadiaCode font")
+elif ! nerd_font_archive_matches "$font_tmp/CascadiaCode.zip" "$CASCADIA_CODE_SHA256" "CascadiaCode.zip"; then
+    FAILED_PKGS+=("CascadiaCode font")
+elif ! unzip -qo "$font_tmp/CascadiaCode.zip" -d "$font_dir" 2>/dev/null; then
+    err "Failed to extract CascadiaCode font."
     FAILED_PKGS+=("CascadiaCode font")
 fi
-if [[ "$_jb_status" -ne 0 ]] || ! unzip -qo "$font_tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
-    err "Failed to download or extract JetBrains Mono Nerd Font."
+
+if [[ "$_jb_status" -ne 0 ]]; then
+    err "Failed to download JetBrains Mono Nerd Font."
+    FAILED_PKGS+=("JetBrains Mono Nerd Font")
+elif ! nerd_font_archive_matches "$font_tmp/JetBrainsMono.zip" "$JETBRAINS_MONO_SHA256" "JetBrainsMono.zip"; then
+    FAILED_PKGS+=("JetBrains Mono Nerd Font")
+elif ! unzip -qo "$font_tmp/JetBrainsMono.zip" -d "$font_dir" 2>/dev/null; then
+    err "Failed to extract JetBrains Mono Nerd Font."
     FAILED_PKGS+=("JetBrains Mono Nerd Font")
 fi
 rm -rf "$font_tmp"
-[[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
-[[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Rubik-VariableFont_wght.ttf" ]] || { err "Failed to download Rubik font."; FAILED_PKGS+=("Rubik font"); }
 
 fc-cache -f
 

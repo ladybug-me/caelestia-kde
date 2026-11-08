@@ -269,8 +269,14 @@ install_theme_files() {
         caelestia_sudo rm -rf "$INSTALL_DIR"
     fi
 
+    caelestia_sudo mkdir -p "$INSTALL_DIR"
+    # Copied file by file as root with O_NOFOLLOW rather than with `cp -r`: the tree was
+    # checked a moment ago, and a link planted since then is refused by the kernel instead
+    # of being followed or left for root to open later.
+    if ! privileged_copy_tree "$THEME_SOURCE" "$INSTALL_DIR"; then
+        die "Could not install the login screen theme from $THEME_SOURCE."
+    fi
     caelestia_sudo mkdir -p "$INSTALL_DIR/scripts"
-    caelestia_sudo cp -r "$THEME_SOURCE"/* "$INSTALL_DIR/"
     if ! privileged_copy_file "$SRC_DIR/sync.sh" "$INSTALL_DIR/scripts/sync.sh" 0644; then
         die "Could not install the login screen helper from $SRC_DIR/sync.sh"
     fi
@@ -292,7 +298,9 @@ install_theme_files() {
                 die "The shape components at $SRC_DIR/themes/full/components/shapes contain a symlink; refusing to install them as root."
             fi
             caelestia_sudo mkdir -p "$INSTALL_DIR/components/shapes"
-            caelestia_sudo cp -r "$SRC_DIR/themes/full/components/shapes"/* "$INSTALL_DIR/components/shapes/"
+            if ! privileged_copy_tree "$SRC_DIR/themes/full/components/shapes" "$INSTALL_DIR/components/shapes"; then
+                die "Could not install the shape components from $SRC_DIR/themes/full/components/shapes."
+            fi
         else
             warn "Shape components not found at $SRC_DIR/themes/full/components/shapes, mini theme will not render correctly."
             ALL_OK=false

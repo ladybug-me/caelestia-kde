@@ -5,6 +5,16 @@ set -euo pipefail
 
 REPO_API="https://codeberg.org/api/v1/repos/anametologin/Krohnkite/releases?limit=10"
 
+# Codeberg publishes no checksum beside its release assets, so the asset URL's tag is the
+# only thing tying the download to a release - and an asset can be replaced under it. The
+# bytes of the asset at the release named here are therefore pinned as well. This is the
+# SHA-256 of
+#   curl -fsSL https://codeberg.org/anametologin/Krohnkite/releases/download/0.9.11.0/krohnkite-0.9.11.0_e345c9a.kwinscript | sha256sum
+# To bump it, take the hash of the asset on the new release the same way and update both
+# values together; an asset for a different release is installed with a warning instead.
+KROHNKITE_PINNED_VERSION="0.9.11.0"
+KROHNKITE_SHA256="1a8d99bf55dbf30d3af704ba7951a895aeee1d16e7da5a7bfe1d2db8215f6fa7"
+
 notify() {
     local title="$1"
     local message="$2"
@@ -172,11 +182,27 @@ verify_kwinscript() {
     [[ "$expected" == "$(sha256sum "$file" | cut -d' ' -f1)" ]]
 }
 
-# Downloads the asset into "$2", refusing it when the published checksum disagrees. A
-# release with no checksum cannot be tied to the page it came from, so installing it is
-# said out loud rather than done quietly.
+# The release a download URL came from, taken out of the .../releases/download/<tag>/<asset>
+# path. Fails for anything that is not a release asset, because a URL this cannot place has
+# no tag to compare the pinned hash against.
+release_tag_of_url() {
+    local url="$1" rest
+    case "$url" in
+        */releases/download/*) rest="${url#*/releases/download/}" ;;
+        *) return 1 ;;
+    esac
+    case "$rest" in
+        */*) printf '%s\n' "${rest%%/*}" ;;
+        *) return 1 ;;
+    esac
+}
+
+# Downloads the asset into "$2", refusing it when a published checksum disagrees and when the
+# bytes of the pinned release are not the ones that were pinned. A release with no checksum
+# and no pin cannot be tied to the page it came from, so installing it is said out loud
+# rather than done quietly.
 download_kwinscript() {
-    local url="$1" dest="$2" status=0
+    local url="$1" dest="$2" status=0 tag actual
 
     curl -sL --proto '=https' --tlsv1.2 -- "$url" -o "$dest" || return 1
     verify_kwinscript "$url" "$dest" || status=$?
@@ -184,9 +210,20 @@ download_kwinscript() {
         echo "Error: checksum mismatch for $url - refusing to install it." >&2
         return 1
     fi
-    if [[ "$status" -eq 2 ]]; then
-        echo "Warning: no published checksum for $url - installing it unverified (SHA-256 $(sha256sum "$dest" | cut -d' ' -f1))." >&2
+    if [[ "$status" -eq 0 ]]; then
+        return 0
     fi
+
+    actual="$(sha256sum "$dest" | cut -d' ' -f1)"
+    tag="$(release_tag_of_url "$url" 2>/dev/null || true)"
+    if [[ -n "$tag" && "$tag" == "$KROHNKITE_PINNED_VERSION" ]]; then
+        if [[ "$actual" != "$KROHNKITE_SHA256" ]]; then
+            echo "Error: checksum mismatch for $url - got $actual, expected $KROHNKITE_SHA256." >&2
+            return 1
+        fi
+        return 0
+    fi
+    echo "Warning: no published checksum for $url - installing it unverified (SHA-256 $actual)." >&2
     return 0
 }
 

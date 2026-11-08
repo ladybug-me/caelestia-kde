@@ -48,6 +48,19 @@ test_the_runtime_fallback_is_not_a_path_another_user_could_have_made() {
         "a fixed name under /tmp is one another local user can create first"
 }
 
+test_the_screenshot_temps_come_from_the_shared_helper() {
+    local file
+    for file in modules/screenshot/TempScreenshotProcess.qml \
+        modules/screenshot/regionSelector/RegionSelection.qml; do
+        assert_file_contains "$SHELL_DIR/$file" 'Paths.runtimeTemp("screenshot")' \
+            "$file should build its capture directory from Paths, not by hand"
+        assert_file_not_contains "$SHELL_DIR/$file" '"XDG_RUNTIME_DIR"' \
+            "the fallback decision belongs in one place"
+    done
+    assert_file_contains "$SHELL_DIR/modules/screenshot/TempScreenshotProcess.qml" 'import qs.utils' \
+        "so the file needs the module Paths lives in"
+}
+
 test_a_plugin_directory_name_cannot_write_the_list() {
     local script="$SHELL_DIR/scripts/list-plugins.sh"
     assert_file_contains "$script" 'json_string "$name"' \
@@ -79,6 +92,8 @@ test_a_checkout_record_is_only_trusted_when_it_is_this_project() {
         "a link there would run whatever it points at, as root"
     assert_file_contains "$uninstaller" '[ ! -L "$1/scripts/setup.sh" ]' \
         "and a directory that is not this project is not what the record meant"
+    assert_file_contains "$uninstaller" 'remote get-url origin' \
+        "nor is a directory the record points at that no clone of this project produced"
 }
 
 test_the_update_counter_reads_a_checkout_it_actually_has() {
@@ -94,6 +109,22 @@ test_the_workspace_effect_only_takes_calls_from_the_shell() {
         "so the caller is identified by what it is running"
     assert_file_contains "$SHELL_DIR/kwin-effects/workspace-tracker/workspace_tracker.hpp" 'protected QDBusContext' \
         "which needs the sender's message, so the effect has to be a D-Bus context"
+}
+
+test_a_caller_that_only_calls_itself_the_shell_is_not_the_shell() {
+    # A process picks the name it runs under, so the name is checked against the file it is
+    # really running: only a program root installed cannot be produced by the caller.
+    local tracker="$SHELL_DIR/kwin-effects/workspace-tracker/workspace_tracker.cpp"
+    assert_file_contains "$tracker" 'link.canonicalFilePath()' \
+        "the binary behind the name is what has to be trusted"
+    assert_file_contains "$tracker" 'program.ownerId() != 0' \
+        "and a program the caller built in their own home is not one root installed"
+    assert_file_contains "$tracker" 'QFileDevice::WriteGroup | QFileDevice::WriteOther' \
+        "nor is one anybody else can rewrite"
+    assert_file_contains "$tracker" '::getuid()' \
+        "a helper that became another user is not the shell the user started"
+    assert_file_contains "$tracker" 'qWarning() << "WorkspaceTracker: refusing a call from"' \
+        "a refusal says which program and which process it refused"
 }
 
 run_tests

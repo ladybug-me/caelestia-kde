@@ -178,6 +178,139 @@ test_matugen_checks_the_archive_before_unpacking_it() {
         "and nothing in it needs the owner or the mode it carries"
 }
 
+# The release reports a digest for the asset, and the project publishes no sidecar, so the
+# API is the only place the download can be tied to the release it came from.
+test_matugen_is_checked_against_the_digest_the_release_reports() {
+    local helper="$REPO_ROOT/scripts/lib/matugen.sh"
+
+    assert_file_contains "$helper" 'releases/tags/v${MATUGEN_VERSION}' \
+        "the asset and its digest have to come from the pinned tag"
+    assert_file_contains "$helper" 'asset_matches_digest "$archive"' \
+        "the digest is what the archive is measured against"
+    assert_file_contains "$helper" 'unverified_download_allowed' \
+        "and a release with no digest at all is the user's call, not a default"
+}
+
+# `~/.cargo/bin` is the user's, so the binary root promotes is read without following a link.
+test_the_cargo_matugen_binary_is_promoted_without_following_a_link() {
+    local helper="$REPO_ROOT/scripts/lib/matugen.sh"
+
+    assert_file_contains "$helper" 'privileged_copy_file "$HOME/.cargo/bin/matugen" /usr/local/bin/matugen' \
+        "the file cargo wrote is copied by the helper that refuses a link"
+    assert_file_not_contains "$helper" 'caelestia_sudo cp "$HOME/.cargo/bin/matugen"' \
+        "rather than handed to cp, which would follow one"
+}
+
+# A tag can be moved, so the tag a clone names is only how the tree is fetched: the commit
+# beside it is what the checkout has to be, and a moved tag has to fail rather than build
+# whatever it now points at.
+test_every_cloned_build_tree_is_checked_against_a_pinned_commit() {
+    local file
+    for file in installer/distro/debian/packages.sh installer/distro/fedora/packages.sh; do
+        assert_file_matches "$REPO_ROOT/$file" '^GPU_SCREEN_RECORDER_COMMIT="[0-9a-f]{40}"$' \
+            "$file should pin the commit its gpu-screen-recorder tag pointed at"
+        assert_file_matches "$REPO_ROOT/$file" '^APP2UNIT_COMMIT="[0-9a-f]{40}"$' \
+            "and the one app2unit's tag did"
+    done
+    assert_file_matches "$REPO_ROOT/installer/distro/debian/packages.sh" '^WL_CLIP_PERSIST_COMMIT="[0-9a-f]{40}"$' \
+        "the wl-clip-persist tag needs the same pin"
+    assert_file_matches "$REPO_ROOT/scripts/lib/plasma-audio-visualizer.sh" '^PLASMA_AUDIO_VISUALIZER_COMMIT="[0-9a-f]{40}"$' \
+        "as does the audio visualizer's"
+    assert_file_matches "$REPO_ROOT/scripts/lib/skwd-wall.sh" '^SKWD_PAPER_PLASMA_COMMIT="[0-9a-f]{40}"$' \
+        "and the wallpaper plugin's"
+
+    for file in \
+        installer/distro/debian/packages.sh \
+        installer/distro/fedora/packages.sh \
+        scripts/lib/plasma-audio-visualizer.sh \
+        scripts/lib/skwd-wall.sh; do
+        assert_file_contains "$REPO_ROOT/$file" 'rev-parse HEAD' \
+            "$file has to check the checkout is the commit it pinned"
+    done
+}
+
+# cliphist ships a bare binary that is installed as root, so it is checked the same way the
+# packages are: the digest the release reports, or a sidecar, and nothing otherwise.
+test_the_cliphist_binary_is_checked_against_the_release_digest() {
+    local file="$REPO_ROOT/installer/distro/debian/packages.sh"
+
+    assert_file_contains "$file" 'releases/tags/v${CLIPHIST_VERSION}' \
+        "the asset has to come from the pinned tag"
+    assert_file_contains "$file" 'asset_matches_digest "$tmpbin"' \
+        "and be measured against the digest the release reports"
+    assert_file_contains "$file" 'unverified_download_allowed' \
+        "with a download nobody checksummed left to the user"
+    assert_file_not_contains "$file" 'curl -fsSL "$CLIPHIST_URL" -o "$tmpbin"' \
+        "not downloaded and installed without looking at it"
+}
+
+# The asset is picked by the names the release published, so a fixture of that release drives
+# the real function.
+test_the_cliphist_asset_is_resolved_from_the_pinned_tag() {
+    local tmp out version asset digest
+    tmp="$(new_tmpdir)"
+    version="$(sed -n 's/^CLIPHIST_VERSION="\([^"]*\)"$/\1/p' "$REPO_ROOT/installer/distro/debian/packages.sh" | head -n1)"
+    cat > "$tmp/release.json" << 'JSON'
+{"tag_name":"v0.7.0","assets":[
+{"browser_download_url":"https://github.com/sentriz/cliphist/releases/download/v0.7.0/v0.7.0-linux-386","name":"v0.7.0-linux-386","digest":"sha256:4d3e3061674e1498c72842dfd453ca6ee88b98174ffbb0bcf9aff434cad4ff23"},
+{"browser_download_url":"https://github.com/sentriz/cliphist/releases/download/v0.7.0/v0.7.0-linux-amd64","name":"v0.7.0-linux-amd64","digest":"sha256:d21ca6846bd25f7bd2dabb157912e2e07226db76be32885bc53d7f27db98d08a"}]}
+JSON
+
+    out="$(
+        eval "$(extract_function "$REPO_ROOT/installer/distro/debian/packages.sh" cliphist_asset_url)"
+        CLIPHIST_VERSION="$version"
+        curl() { cat "$tmp/release.json"; }
+        cliphist_asset_url linux-amd64
+    )"
+
+    asset="${out%%$'\t'*}"
+    digest="${out#*$'\t'}"
+    assert_contains "$asset" "/releases/download/v${version}/v${version}-linux-amd64" \
+        "the asset should be the one built for this architecture"
+    assert_contains "$digest" "sha256:" \
+        "and the digest the release reports travels with it"
+}
+
+# Both Nerd Font archives are version-pinned and the project publishes no checksum beside
+# them, so the hashes are constants in the scripts that install the fonts as root.
+test_the_nerd_font_archives_are_checked_against_a_pinned_hash() {
+    local file
+    for file in installer/distro/debian/packages.sh installer/distro/fedora/packages.sh; do
+        assert_file_matches "$REPO_ROOT/$file" '^CASCADIA_CODE_SHA256="[0-9a-f]{64}"$' \
+            "$file should pin the CascadiaCode archive it unpacks"
+        assert_file_matches "$REPO_ROOT/$file" '^JETBRAINS_MONO_SHA256="[0-9a-f]{64}"$' \
+            "and the JetBrains Mono one"
+        assert_file_contains "$REPO_ROOT/$file" 'nerd_font_archive_matches "$font_tmp/CascadiaCode.zip"' \
+            "the archive is checked before it is unpacked"
+        assert_file_contains "$REPO_ROOT/$file" 'nerd_font_archive_matches "$font_tmp/JetBrainsMono.zip"' \
+            "both of them are"
+    done
+
+    assert_file_contains "$REPO_ROOT/installer/distro/debian/packages.sh" \
+        'install_checked_font "$font_tmp/Rubik-VariableFont_wght.ttf"' \
+        "the two branch downloads are checked for being a font before they are put in place"
+    assert_file_contains "$REPO_ROOT/installer/distro/fedora/packages.sh" \
+        'install_checked_font "$font_tmp/MaterialSymbolsRounded.ttf"' \
+        "which is the only thing a mutable URL allows"
+}
+
+# Upstream's installers are downloaded to a file this user named, logged and then run, so a
+# transfer that stops halfway cannot leave half a script executing. None is pinned: the URL
+# never changes while its content does, so a hash would break on the next upstream release.
+test_upstream_installer_scripts_are_not_piped_straight_into_a_shell() {
+    local file
+    for file in \
+        installer/distro/debian/packages.sh \
+        installer/distro/fedora/packages.sh \
+        scripts/lib/matugen.sh; do
+        if grep -qE '\|[[:space:]]*(sudo[[:space:]]+)?(ba)?sh([[:space:]]|$)' "$REPO_ROOT/$file"; then
+            fail "$file pipes an installer straight into a shell"
+        fi
+        assert_file_contains "$REPO_ROOT/$file" 'installer SHA-256' \
+            "the hash of what ran has to reach the log"
+    done
+}
+
 # The asset is picked by matching the names the release published, so a fixture of that
 # release drives the real function. The function reads this machine's os-release, but every
 # asset below is one the tag really shipped, so the answer does not depend on the host.

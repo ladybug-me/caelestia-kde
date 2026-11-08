@@ -57,6 +57,34 @@ caelestia_dir="$2"
 config_dir="$3"
 shift 3
 
+# Whether $1 is a clone of this project. Both the configured address and the address git
+# would actually fetch from are read, because url.<base>.insteadOf rewrites the first into
+# the second and that is how a local mirror is set up.
+names_this_project() {
+    command -v git >/dev/null 2>&1 || return 1
+
+    for origin in "$(git -C "$1" remote get-url origin 2>/dev/null)" \
+        "$(git -C "$1" config --get remote.origin.url 2>/dev/null)"; do
+        [ -n "$origin" ] || continue
+        # A trailing slash and a .git suffix name the same repository. Trimmed with sed
+        # rather than a shell parameter expansion, which a QML template literal would read
+        # as JavaScript.
+        origin="$(printf '%s' "$origin" | sed -e 's:/$::' -e 's:\.git$::')"
+        case "$origin" in
+            https://github.com/ladybug-me/caelestia-kde | \
+                https://github.com/caelestia-kde/caelestia | \
+                git@github.com:ladybug-me/caelestia-kde | \
+                git@github.com:caelestia-kde/caelestia | \
+                ssh://git@github.com/ladybug-me/caelestia-kde | \
+                ssh://git@github.com/caelestia-kde/caelestia)
+                return 0
+                ;;
+        esac
+    done
+
+    return 1
+}
+
 report_uninstaller() {
     [ -n "$1" ] || return 0
 
@@ -66,6 +94,14 @@ report_uninstaller() {
     [ -f "$1/uninstall.sh" ] && [ ! -L "$1/uninstall.sh" ] || return 0
     [ -f "$1/scripts/setup.sh" ] && [ ! -L "$1/scripts/setup.sh" ] || return 0
 
+    # Only a recorded path is asked for its remote: two files of the right names in a
+    # directory anyone can create cost nothing to arrange. The paths the user named
+    # themselves are taken at their word, because a checkout unpacked from a tarball or
+    # forked from this project is still theirs to uninstall from.
+    if [ "$2" = recorded ] && ! names_this_project "$1"; then
+        return 0
+    fi
+
     printf 'SCRIPT %s\n' "$1/uninstall.sh"
     exit 0
 }
@@ -74,7 +110,7 @@ recorded="$(cat "$config_dir/.checkout" 2>/dev/null || true)"
 
 report_uninstaller "$caelestia_dir"
 report_uninstaller "$home/caelestia-kde"
-report_uninstaller "$recorded"
+report_uninstaller "$recorded" recorded
 report_uninstaller "$home/.config/caelestia-update/repo"
 report_uninstaller "$home/.cache/caelestia-update-repo"
 

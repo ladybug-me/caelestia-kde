@@ -45,7 +45,9 @@ test_download_url_is_https_kwinscript() {
 # than restated. Sourcing the whole file would run its command dispatcher.
 download_helpers() {
     eval "$(extract_function "$SETUP_SCRIPT" verify_kwinscript)"
+    eval "$(extract_function "$SETUP_SCRIPT" release_tag_of_url)"
     eval "$(extract_function "$SETUP_SCRIPT" download_kwinscript)"
+    eval "$(grep -E '^KROHNKITE_(PINNED_VERSION|SHA256)=' "$SETUP_SCRIPT")"
 }
 
 # curl is the only thing that talks to Codeberg, and it writes to the path it is given: the
@@ -121,6 +123,59 @@ test_download_says_so_when_the_release_publishes_no_checksum() {
     assert_status 0 "$status" "a release with no checksum is still installed"
     assert_contains "$out" "no published checksum" "but only after saying it is unverified"
     assert_contains "$out" "SHA-256" "with the hash of what was installed"
+}
+
+# Codeberg publishes no sidecar, so the bytes of the pinned release are tied to it by a hash
+# in the script instead. A release asset can be replaced under its tag, which is the thing
+# that pin is there to catch.
+test_the_pinned_asset_hash_names_a_release() {
+    local version
+    version="$(sed -n 's/^KROHNKITE_PINNED_VERSION="\([^"]*\)"$/\1/p' "$SETUP_SCRIPT" | head -n1)"
+
+    [[ -n "$version" ]] || fail "the script should name the release its hash was taken from"
+    assert_file_matches "$SETUP_SCRIPT" '^KROHNKITE_SHA256="[0-9a-f]{64}"$' \
+        "and carry a SHA-256 to check that release's asset against"
+}
+
+test_download_refuses_the_pinned_release_when_its_bytes_changed() {
+    local tmp out status url
+    tmp="$(new_tmpdir)"
+    printf 'asset\n' > "$tmp/asset"
+    url="https://codeberg.org/anametologin/Krohnkite/releases/download/0.9.11.0/krohnkite.kwinscript"
+
+    out="$(
+        download_helpers
+        KROHN_ASSET="$tmp/asset"
+        stub_release_curl
+        download_kwinscript "$url" "$tmp/download" 2>&1
+    )"
+    status=$?
+
+    assert_status 1 "$status" "an asset whose bytes changed under the pinned tag must not be installed"
+    assert_contains "$out" "checksum mismatch" "and the reason has to be stated"
+    assert_contains "$out" "got $(sha256sum "$tmp/asset" | cut -d' ' -f1)" "naming what arrived"
+    assert_contains "$out" "expected $(sed -n 's/^KROHNKITE_SHA256="\([^"]*\)"$/\1/p' "$SETUP_SCRIPT" | head -n1)" \
+        "and what the pinned release holds"
+}
+
+test_download_accepts_the_pinned_release_when_the_bytes_match_the_pin() {
+    local tmp out status url
+    tmp="$(new_tmpdir)"
+    printf 'asset\n' > "$tmp/asset"
+    url="https://codeberg.org/anametologin/Krohnkite/releases/download/0.9.11.0/krohnkite.kwinscript"
+
+    out="$(
+        download_helpers
+        KROHN_ASSET="$tmp/asset"
+        KROHNKITE_SHA256="$(sha256sum "$tmp/asset" | cut -d' ' -f1)"
+        stub_release_curl
+        download_kwinscript "$url" "$tmp/download" 2>&1
+    )"
+    status=$?
+
+    assert_status 0 "$status" "the bytes the pin names are accepted"
+    assert_not_contains "$out" "unverified" "without calling them unverified"
+    assert_file_exists "$tmp/download"
 }
 
 run_tests

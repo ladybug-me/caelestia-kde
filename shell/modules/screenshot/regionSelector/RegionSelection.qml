@@ -51,7 +51,7 @@ PanelWindow {
         root.lastHoverFocusedAddress = "";
     }
 
-    property string screenshotDir: `${Quickshell.env("XDG_RUNTIME_DIR") || "/tmp"}/caelestia-screenshot`
+    property string screenshotDir: Paths.runtimeTemp("screenshot")
 
     property color overlayColor: Qt.rgba("#000000".r, "#000000".g, "#000000".b, 1.0 - 0.4)
 

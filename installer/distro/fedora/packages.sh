@@ -69,6 +69,47 @@ gsr_set_kms_capability() {
     return 0
 }
 
+# Copies a font this user downloaded into "$font_dir", once the transfer is known to have
+# produced a font. The branch URL the Material Symbols font comes from publishes no hash, so
+# the file's type is what says the bytes are the font that was asked for rather than an
+# error page saved under a font's name, and the hash is printed so a run records what it
+# installed.
+install_checked_font() {
+    local source="$1" name="$2" kind hash
+    if [[ ! -s "$source" ]]; then
+        err "Refusing to install $name: the download is empty."
+        return 1
+    fi
+    if command -v file >/dev/null 2>&1; then
+        kind="$(file -b "$source" 2>/dev/null || true)"
+        case "$kind" in
+            *TrueType*|*OpenType*) ;;
+            *)
+                err "Refusing to install $name: it is not a TrueType or OpenType font ($kind)."
+                return 1
+                ;;
+        esac
+    fi
+    hash="$(file_sha256 "$source")"
+    if ! mv -f "$source" "$font_dir/$name" 2>/dev/null; then
+        err "Failed to install $name into $font_dir."
+        return 1
+    fi
+    info "$name installed (SHA-256 $hash)."
+}
+
+# A version-pinned archive is only unpacked once its bytes are the ones the version above
+# names. The project publishes no checksum beside the archive, so the hash is a constant.
+nerd_font_archive_matches() {
+    local archive="$1" expected="$2" name="$3" actual
+    actual="$(file_sha256 "$archive")"
+    if [[ "$actual" != "$expected" ]]; then
+        err "Checksum mismatch for $name - not extracting it (got $actual, expected $expected)."
+        return 1
+    fi
+    return 0
+}
+
 info "Installing Fedora packages..."
 
 INSTALL_FISH="${INSTALL_FISH:-true}"
@@ -79,18 +120,31 @@ PACKAGE_GROUP="${PACKAGE_GROUP:-all}"
 
 # gpu-screen-recorder has no dnf package, so the fallback below builds upstream at a pinned
 # revision. Never point this at master: the value is a release tag, and the build is what
-# the installer runs, so it has to be a tree this project looked at. To update, list the
-# upstream tags with
+# the installer runs, so it has to be a tree this project looked at. A tag can be moved, so
+# what the clone is checked against afterwards is the commit it pointed at when this was
+# pinned. To update, list the upstream tags with
 #   git ls-remote --tags https://repo.dec05eba.com/gpu-screen-recorder
-# bump the ref, and test the build before shipping it. The Debian script carries the same
-# value for the same build.
-GPU_SCREEN_RECORDER_REF="6.1.3" # commit 396526a908f8f1b9cb826a9187a2c9150f44d94d
+# bump the tag, set the commit from that listing, and test the build before shipping it. The
+# Debian script carries the same pair for the same build.
+GPU_SCREEN_RECORDER_REF="6.1.3"
+GPU_SCREEN_RECORDER_COMMIT="396526a908f8f1b9cb826a9187a2c9150f44d94d"
 
 # The other fallback builds come from clones too, and the installer runs each clone's own
 # build and install as root, so which tree that is has to be this project's decision rather
 # than whatever a branch holds on the day it runs. The value is an upstream tag, which
-# `git clone --depth 1 --branch` accepts.
+# `git clone --depth 1 --branch` accepts; the commit beside it is what the checkout has to
+# be, so a tag that was moved fails closed instead of building something else.
 APP2UNIT_REF="v1.4.4"
+APP2UNIT_COMMIT="47e23ec6ab9e97bbe335c32fb640744a29bf32f7"
+
+# The two Nerd Font archives are version-pinned, so what the login screen ends up with can be
+# tied to the release it came from: the project publishes no checksum beside them, and these
+# are the SHA-256 of the v3.0.2 assets. To bump the version, take the hash of the new archive
+# with
+#   curl -fsSL https://github.com/ryanoasis/nerd-fonts/releases/download/v<version>/<asset>.zip | sha256sum
+NERD_FONTS_VERSION="3.0.2"
+CASCADIA_CODE_SHA256="e68cf12cc3c14a18b9ddce0e77f66a78e3ebec4a5224423674fdd9303c5c9272"
+JETBRAINS_MONO_SHA256="1fa397478bfca4917dba796eeeb5a428c0834e760b1d96caffff633d6238fdce"
 
 CORE_PACKAGES=(
     cmake ninja-build ccache qt6-qttools-devel extra-cmake-modules libgcc glibc
@@ -310,10 +364,15 @@ for pkg in "${COPR_PKGS[@]}"; do
             tmpdir="$(mktemp -d)"
             caelestia_sudo dnf install -y make
             if git clone --depth 1 --branch "$APP2UNIT_REF" https://github.com/Vladimir-csp/app2unit "$tmpdir"; then
-                (
-                    cd "$tmpdir" || exit 1
-                    install_staged_tree / make install
-                ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                if [[ "$(git -C "$tmpdir" rev-parse HEAD)" != "$APP2UNIT_COMMIT" ]]; then
+                    err "$pkg: $APP2UNIT_REF no longer points at $APP2UNIT_COMMIT; refusing to build it."
+                    FAILED_PKGS+=("$pkg")
+                else
+                    (
+                        cd "$tmpdir" || exit 1
+                        install_staged_tree / make install
+                    ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                fi
             else
                 err "Failed to clone $pkg."
                 FAILED_PKGS+=("$pkg")
@@ -325,12 +384,17 @@ for pkg in "${COPR_PKGS[@]}"; do
             caelestia_sudo dnf install -y meson ninja-build pkgconf libXcomposite-devel libXrandr-devel libXfixes-devel libdrm-devel wayland-devel pipewire-devel libcap-devel ffmpeg-devel
             info "Building gpu-screen-recorder $GPU_SCREEN_RECORDER_REF from repo.dec05eba.com (pinned ref)."
             if git clone --depth 1 --branch "$GPU_SCREEN_RECORDER_REF" https://repo.dec05eba.com/gpu-screen-recorder "$tmpdir"; then
-                (
-                    cd "$tmpdir" || exit 1
-                    meson setup build -Dcapabilities=false && ninja -C build &&
-                        install_staged_tree / meson install -C build &&
-                        gsr_set_kms_capability /usr/local/bin/gsr-kms-server
-                ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                if [[ "$(git -C "$tmpdir" rev-parse HEAD)" != "$GPU_SCREEN_RECORDER_COMMIT" ]]; then
+                    err "$pkg: $GPU_SCREEN_RECORDER_REF no longer points at $GPU_SCREEN_RECORDER_COMMIT; refusing to build it."
+                    FAILED_PKGS+=("$pkg")
+                else
+                    (
+                        cd "$tmpdir" || exit 1
+                        meson setup build -Dcapabilities=false && ninja -C build &&
+                            install_staged_tree / meson install -C build &&
+                            gsr_set_kms_capability /usr/local/bin/gsr-kms-server
+                    ) || { err "Manual build for $pkg failed."; FAILED_PKGS+=("$pkg"); }
+                fi
             else
                 err "Failed to clone $pkg."
                 FAILED_PKGS+=("$pkg")
@@ -338,12 +402,20 @@ for pkg in "${COPR_PKGS[@]}"; do
             rm -rf "$tmpdir"
             ;;
         starship)
-            if curl -sS https://starship.rs/install.sh | sh -s -- -y; then  # ci:allow-curl-pipe
-                info "starship installed successfully."
+            _installer="$(mktemp)"
+            if fetch_asset https://starship.rs/install.sh "$_installer" 2>/dev/null; then
+                info "starship installer SHA-256: $(file_sha256 "$_installer")"
+                if sh -s -- -y < "$_installer"; then
+                    info "starship installed successfully."
+                else
+                    err "Failed to install starship; install it yourself with the script from https://starship.rs/install.sh and re-run the installer."
+                    FAILED_PKGS+=("$pkg")
+                fi
             else
-                err "Manual build for $pkg failed."
+                err "Could not download the starship installer; install it yourself from https://starship.rs/install.sh and re-run the installer."
                 FAILED_PKGS+=("$pkg")
             fi
+            rm -f "$_installer"
             ;;
         *)
             err "No manual fallback defined for $pkg."
@@ -355,36 +427,56 @@ done
 if [[ "$PACKAGE_GROUP" == "all" || "$PACKAGE_GROUP" == "themes" ]]; then
 
 info "Downloading and installing required custom fonts (parallel)..."
-mkdir -p "${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
-# The two archives go into a directory only this user can name: a predictable name in /tmp
+font_dir="${XDG_DATA_HOME:-$HOME/.local/share}/fonts"
+mkdir -p "$font_dir"
+# Every archive goes into a directory only this user can name: a predictable name in /tmp
 # is a file someone else can leave behind, and the unzip would take whatever is there.
+# Nothing reaches the font directory until the transfer it came from has been checked.
 font_tmp="$(mktemp -d)"
 
-curl -sL "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" -o "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" &
+fetch_asset "https://github.com/google/material-design-icons/raw/master/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.ttf" "$font_tmp/MaterialSymbolsRounded.ttf" &
 _pid_ms=$!
 
-curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/CascadiaCode.zip" -o "$font_tmp/CascadiaCode.zip" &
+fetch_asset "https://github.com/ryanoasis/nerd-fonts/releases/download/v${NERD_FONTS_VERSION}/CascadiaCode.zip" "$font_tmp/CascadiaCode.zip" &
 _pid_cc=$!
 
-curl -fsSL "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.2/JetBrainsMono.zip" -o "$font_tmp/JetBrainsMono.zip" &
+fetch_asset "https://github.com/ryanoasis/nerd-fonts/releases/download/v${NERD_FONTS_VERSION}/JetBrainsMono.zip" "$font_tmp/JetBrainsMono.zip" &
 _pid_jb=$!
 
+_ms_status=0
 _cc_status=0
 _jb_status=0
-wait "$_pid_ms" || true
+wait "$_pid_ms" || _ms_status=$?
 wait "$_pid_cc" || _cc_status=$?
 wait "$_pid_jb" || _jb_status=$?
 
-if [[ "$_cc_status" -ne 0 ]] || ! unzip -qo "$font_tmp/CascadiaCode.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
-    err "Failed to download or extract CascadiaCode font."
+if [[ "$_ms_status" -ne 0 ]]; then
+    err "Failed to download Material Symbols font."
+    FAILED_PKGS+=("Material Symbols font")
+elif ! install_checked_font "$font_tmp/MaterialSymbolsRounded.ttf" MaterialSymbolsRounded.ttf; then
+    FAILED_PKGS+=("Material Symbols font")
+fi
+
+if [[ "$_cc_status" -ne 0 ]]; then
+    err "Failed to download CascadiaCode font."
+    FAILED_PKGS+=("CascadiaCode font")
+elif ! nerd_font_archive_matches "$font_tmp/CascadiaCode.zip" "$CASCADIA_CODE_SHA256" "CascadiaCode.zip"; then
+    FAILED_PKGS+=("CascadiaCode font")
+elif ! unzip -qo "$font_tmp/CascadiaCode.zip" -d "$font_dir" 2>/dev/null; then
+    err "Failed to extract CascadiaCode font."
     FAILED_PKGS+=("CascadiaCode font")
 fi
-if [[ "$_jb_status" -ne 0 ]] || ! unzip -qo "$font_tmp/JetBrainsMono.zip" -d "${XDG_DATA_HOME:-$HOME/.local/share}/fonts" 2>/dev/null; then
-    err "Failed to download or extract JetBrains Mono Nerd Font."
+
+if [[ "$_jb_status" -ne 0 ]]; then
+    err "Failed to download JetBrains Mono Nerd Font."
+    FAILED_PKGS+=("JetBrains Mono Nerd Font")
+elif ! nerd_font_archive_matches "$font_tmp/JetBrainsMono.zip" "$JETBRAINS_MONO_SHA256" "JetBrainsMono.zip"; then
+    FAILED_PKGS+=("JetBrains Mono Nerd Font")
+elif ! unzip -qo "$font_tmp/JetBrainsMono.zip" -d "$font_dir" 2>/dev/null; then
+    err "Failed to extract JetBrains Mono Nerd Font."
     FAILED_PKGS+=("JetBrains Mono Nerd Font")
 fi
 rm -rf "$font_tmp"
-[[ -f "${XDG_DATA_HOME:-$HOME/.local/share}/fonts/MaterialSymbolsRounded.ttf" ]] || { err "Failed to download Material Symbols font."; FAILED_PKGS+=("Material Symbols font"); }
 
 fc-cache -f
 

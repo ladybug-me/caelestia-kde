@@ -164,11 +164,9 @@ Item {
                         // Stays loaded once shown, so switching tabs does not rebuild it.
                         property bool keepLoaded: false
 
-                        readonly property bool inView: {
-                            const vx = Math.floor(view.visibleArea.xPosition * view.contentWidth);
-                            const vex = Math.floor(vx + view.visibleArea.widthRatio * view.contentWidth);
-                            return (vx >= x && vx <= x + implicitWidth) || (vex >= x && vex <= x + implicitWidth);
-                        }
+                        // Neighbours are loaded while dragging. Index based on purpose: reading x or
+                        // implicitWidth here depends on this Loader's own content (binding loop).
+                        readonly property bool inView: view.moving && Math.abs(index - view.currentIndex) <= 1
 
                         active: root.visibilities.dashboard && (keepLoaded || index === view.currentIndex || inView)
 

@@ -29,6 +29,7 @@ QtObject {
     property int activeSubPageSlot: -1
     property bool compact: false
     property bool compactSubcategories: false
+    property bool sidePane: true
 
     signal close
     signal subPageOpened(target: var)
@@ -37,6 +38,11 @@ QtObject {
     signal subCategorySelected(target: var)
 
     function defaultSlotForPage(pageIdx: int): int {
+        // Without the side pane a section opens on its own list of
+        // subcategories (slot 0) and pushes them from there.
+        if (!sidePane)
+            return 0;
+
         switch (pageIdx) {
         case 0: return 1; // Appearance: Wallpapers
         case 1: return 4; // Desktop: Desktop Settings
@@ -99,6 +105,12 @@ QtObject {
         return slot;
     }
 
+    // Without the side pane the section's list of subcategories is the root of
+    // the stack, so a requested sub-page is not already showing anywhere.
+    function rootSlotFor(pageIdx: int, target: int): int {
+        return sidePane ? parentSubCategorySlot(pageIdx, target) : 0;
+    }
+
     function selectSubCategory(slot: var): void {
         activeSubPageSlot = slot;
         pendingSubPageIdx = -1;
@@ -107,7 +119,7 @@ QtObject {
     }
 
     function openSubPage(target: var): void {
-        if (compact)
+        if (sidePane && compact)
             compactSubcategories = true;
         subPageIdxStack.push(target);
         subPageOpened(target);
@@ -128,7 +140,8 @@ QtObject {
     }
 
     function enterCompactPage(): void {
-        compactSubcategories = true;
+        if (sidePane)
+            compactSubcategories = true;
     }
 
     function exitCompactPage(): void {
@@ -138,6 +151,19 @@ QtObject {
     // Navigation that changes page, such as a search result. Landing on the
     // page that is already showing still opens immediately: nothing to wait for.
     function goToSubPage(pageIdx: int, subPageIdx: int): void {
+        if (!sidePane) {
+            // The section list is the root of the stack, so a result lands on
+            // that list with the sub-page opened on top of it.
+            if (pageIdx !== currentPageIdx)
+                currentPageIdx = pageIdx;
+            else
+                goToPage(pageIdx);
+
+            if (subPageIdx > 0)
+                openSubPage(subPageIdx);
+            return;
+        }
+
         const subIdx = subPageIdx;
         if (pageIdx === currentPageIdx) {
             pendingSubPageIdx = -1;
@@ -177,7 +203,7 @@ QtObject {
             if (pendingSubPageIdx >= 0) {
                 const target = pendingSubPageIdx;
                 pendingSubPageIdx = -1;
-                activeSubPageSlot = parentSubCategorySlot(currentPageIdx, target);
+                activeSubPageSlot = rootSlotFor(currentPageIdx, target);
                 subPageIdxStack.length = 0;
                 if (target !== activeSubPageSlot) {
                     subPageIdxStack.push(target);
@@ -197,7 +223,7 @@ QtObject {
         if (pendingSubPageIdx >= 0) {
             const target = pendingSubPageIdx;
             pendingSubPageIdx = -1;
-            activeSubPageSlot = parentSubCategorySlot(currentPageIdx, target);
+            activeSubPageSlot = rootSlotFor(currentPageIdx, target);
             if (target !== activeSubPageSlot) {
                 subPageIdxStack.push(target);
             }
@@ -211,5 +237,16 @@ QtObject {
         if (searchOpen && compact && compactSubcategories) {
             exitCompactPage();
         }
+    }
+
+    onSidePaneChanged: {
+        // The pane can be toggled from inside the window it lays out, so the
+        // content has to drop back to whatever the new layout calls its root.
+        if (currentPageIdx < 0)
+            return;
+        compactSubcategories = false;
+        subPageIdxStack.length = 0;
+        activeSubPageSlot = defaultSlotForPage(currentPageIdx);
+        subCategorySelected(activeSubPageSlot);
     }
 }

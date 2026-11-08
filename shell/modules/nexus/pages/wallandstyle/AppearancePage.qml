@@ -523,6 +523,26 @@ PageBase {
                 onMoved: v => GlobalConfig.appearance.deformScale = v
             }
         }
+
+        SectionHeader {
+            text: qsTr("Settings window")
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: 0
+
+            ToggleRow {
+                reset: ({ node: GlobalConfig.nexus, setting: "sidePane" })
+                first: true
+                last: true
+                Layout.fillWidth: true
+                text: qsTr("Subcategory side pane")
+                subtext: qsTr("List a section's subcategories in their own pane. Turned off, they line up inside the section")
+                checked: GlobalConfig.nexus.sidePane
+                onToggled: GlobalConfig.nexus.sidePane = checked
+            }
+        }
     }
 
     component FontPickerRow: DialogRowButton {

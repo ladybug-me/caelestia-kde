@@ -28,7 +28,6 @@ Item {
             },
             {
                 component: mediaComponent,
-                keepAlive: true,
                 iconName: "queue_music",
                 text: qsTr("Media"),
                 enabled: Config.dashboard.showMedia

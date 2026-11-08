@@ -67,8 +67,9 @@ ColumnLayout {
         target: Audio
     }
 
+    // A kept popout is only hidden when closed, so cava must not keep running for it.
     ServiceRef {
-        service: Audio.cava
+        service: root.visible ? Audio.cava : null
     }
 
     RowLayout {

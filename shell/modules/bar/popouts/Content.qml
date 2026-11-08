@@ -45,6 +45,22 @@ Item {
     implicitWidth: Math.min(((currentPopout?.item?.width || currentPopout?.implicitWidth) ?? 0) + Tokens.padding.extraLargeIncreased * (currentPopout?.item?.scaleOffset ?? 1.0), availableWidth)
     implicitHeight: Math.min(((currentPopout?.item?.height || currentPopout?.implicitHeight) ?? 0) + Tokens.padding.extraLargeIncreased * (currentPopout?.item?.scaleOffset ?? 1.0), availableHeight)
 
+    // Builds the kept popouts one by one shortly after start, so the first hover is
+    // as cheap as the next ones.
+    Timer {
+        interval: 1200
+        repeat: true
+        running: true
+
+        onTriggered: {
+            const next = content.children.find(c => c.keepLoaded && !c.active);
+            if (next)
+                next.active = true;
+            else
+                stop();
+        }
+    }
+
     Flickable {
         id: viewport
 
@@ -96,6 +112,7 @@ Item {
             id: networkPopout
 
             name: "network"
+            keepLoaded: true
             sourceComponent: Network {
                 popouts: root.popouts
                 view: "wireless"
@@ -125,6 +142,7 @@ Item {
 
         Popout {
             name: "bluetooth"
+            keepLoaded: true
             sourceComponent: Bluetooth {
                 popouts: root.popouts
             }
@@ -132,6 +150,7 @@ Item {
 
         Popout {
             name: "clock"
+            keepLoaded: true
             sourceComponent: CalendarPopout {
                 popouts: root.popouts
             }
@@ -176,6 +195,7 @@ Item {
 
         Popout {
             name: "battery"
+            keepLoaded: true
             sourceComponent: Battery {
                 popouts: root.popouts
             }
@@ -254,6 +274,7 @@ Item {
 
         Popout {
             name: "audio"
+            keepLoaded: true
             minScale: 0.9
             sourceComponent: Audio {
                 popouts: root.popouts
@@ -262,6 +283,7 @@ Item {
 
         Popout {
             name: "privacy"
+            keepLoaded: true
             sourceComponent: Privacy {
                 popouts: root.popouts
             }
@@ -269,6 +291,7 @@ Item {
 
         Popout {
             name: "nightlight"
+            keepLoaded: true
             sourceComponent: NightLight {
                 popouts: root.popouts
             }
@@ -291,6 +314,7 @@ Item {
 
         Popout {
             name: "notifications"
+            keepLoaded: true
             sourceComponent: Notifications {
                 popouts: root.popouts
             }
@@ -490,6 +514,9 @@ Item {
 
         required property string name
         property bool isContext: false
+        // Stays loaded after its first show, so hovering it again does not rebuild it.
+        // Only for popouts that hold nothing running while hidden.
+        property bool keepLoaded: false
         property string previewKey: name
         property real minScale: 0.1
         readonly property bool shouldBeActive: root.popouts.currentName === name
@@ -505,6 +532,9 @@ Item {
         anchors.centerIn: parent
 
         opacity: 0
+        // A kept popout is hidden, not removed: it must not take mouse events or keep
+        // its bindings running while faded out.
+        visible: opacity > 0
         active: false
 
         states: State {
@@ -529,6 +559,7 @@ Item {
                     }
                     PropertyAction {
                         property: "active"
+                        value: popout.keepLoaded
                     }
                 }
             },

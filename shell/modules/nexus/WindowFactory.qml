@@ -60,7 +60,7 @@ Singleton {
 
     function close(): void {
         if (root.openWindow)
-            root.openWindow.destroy();
+            root.openWindow.visible = false;
     }
 
     function goBack(): void {
@@ -73,6 +73,19 @@ Singleton {
 
     QtObject {
         id: dummy
+    }
+
+    // building the window costs seconds of CPU, so it is built once while idle and then only hidden/shown
+    Timer {
+        running: true
+        interval: 8000
+        onTriggered: {
+            if (root.openWindow)
+                return;
+            root.openWindow = nexusComp.createObject(dummy, {
+                visible: false
+            });
+        }
     }
 
     Component {
@@ -111,11 +124,6 @@ Singleton {
                 Region { item: (GlobalConfig.appearance.transparency.enabled && GlobalConfig.appearance.blur) ? nexus : null }
             }
 
-            onVisibleChanged: {
-                if (!visible)
-                    destroy();
-            }
-
             implicitWidth: nexus.implicitWidth
             implicitHeight: nexus.implicitHeight
 
@@ -135,7 +143,7 @@ Singleton {
                 initialSubPageIdx: win.initialSubPageIdx
                 nState.screen: win.screen ?? Screens.activeScreen ?? Quickshell.screens[0]
                 nState.isWindow: true
-                onClose: win.destroy()
+                onClose: win.visible = false
             }
 
             Behavior on color {

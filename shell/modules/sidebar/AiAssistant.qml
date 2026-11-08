@@ -1669,11 +1669,20 @@ Item {
 
                                     } else if (toolName === "caelestia_command") {
                                         currentActionText = "Running caelestia...";
-                                        var subcmd = String(args.subcommand || "");
+                                        var subcmd = String(args.subcommand || "").trim();
                                         var subargs = String(args.args || "").trim();
-                                        var cmdArr = ["caelestia", subcmd];
-                                        if (subargs) cmdArr = cmdArr.concat(subargs.split(/\s+/));
-                                        runAgentCommand(cmdArr, "exec_" + toolName);
+                                        // The model's output is untrusted input: only the
+                                        // subcommands the tool documents may run, so a prompt
+                                        // injection cannot reach the rest of the CLI.
+                                        if (AiToolCalls.caelestiaSubcommands.indexOf(subcmd) === -1) {
+                                            Logger.log("[AI] Refusing caelestia subcommand: " + subcmd);
+                                            AiToolCalls.recordResult("Tool: caelestia_command\nResult: " + (subcmd ? "'" + subcmd + "' is not an allowed subcommand" : "no subcommand was given") + "; nothing was executed.\n\n");
+                                            AiToolCalls.finishOneTool();
+                                        } else {
+                                            var cmdArr = ["caelestia", subcmd];
+                                            if (subargs) cmdArr = cmdArr.concat(subargs.split(/\s+/));
+                                            runAgentCommand(cmdArr, "exec_" + toolName);
+                                        }
 
                                     } else {
                                         Logger.log("[AI] Unknown tool: " + toolName);

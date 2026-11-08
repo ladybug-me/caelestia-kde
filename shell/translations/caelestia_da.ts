@@ -1562,26 +1562,6 @@
     </message>
     <message>
       <location line="+8"/>
-      <source>Border thickness</source>
-      <translation>Kant tykkelse</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Thickness of the shell border in pixels. Set to 0 for a borderless look</source>
-      <translation>Tykkelse af skalgrænsen i pixels. Sæt til 0 for et grænseløst look</translation>
-    </message>
-    <message>
-      <location line="+10"/>
-      <source>Corner radius scale</source>
-      <translation>Hjørne radius skala</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Multiplies the shell&apos;s corner rounding</source>
-      <translation>Multiplicerer shell&apos;s hjørne afrunding</translation>
-    </message>
-    <message>
-      <location line="+10"/>
       <source>Transparency</source>
       <translation>Gennemsigtighed</translation>
     </message>
@@ -1712,6 +1692,16 @@
     </message>
     <message>
       <location line="+11"/>
+      <source>Border thickness</source>
+      <translation>Kant tykkelse</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Thickness of the shell border in pixels. Set to 0 for a borderless look</source>
+      <translation>Tykkelse af skalgrænsen i pixels. Sæt til 0 for et grænseløst look</translation>
+    </message>
+    <message>
+      <location line="+11"/>
       <source>Border rounding</source>
       <translation>Kant afrunding</translation>
     </message>
@@ -1719,6 +1709,16 @@
       <location line="+11"/>
       <source>Border smoothing</source>
       <translation>Kant udjævning</translation>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Corner radius scale</source>
+      <translation>Hjørne radius skala</translation>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Multiplies the shell&apos;s corner rounding</source>
+      <translation>Multiplicerer shell&apos;s hjørne afrunding</translation>
     </message>
     <message>
       <location line="+12"/>
@@ -4268,17 +4268,12 @@
   <context>
     <name>CaptureCard</name>
     <message>
-      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+92"/>
+      <location filename="../modules/utilities/cards/CaptureCard.qml" line="+94"/>
       <source>Screen Capture</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+7"/>
-      <source>Capture, OCR and image search</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+0"/>
+      <location line="+25"/>
       <source>Paused</source>
       <translation type="unfinished"/>
     </message>
@@ -4288,18 +4283,13 @@
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+0"/>
-      <source>Ready</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+20"/>
-      <location line="+179"/>
+      <location line="+21"/>
+      <location line="+187"/>
       <source>Record</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-178"/>
+      <location line="-186"/>
       <location line="+9"/>
       <location line="+9"/>
       <location line="+9"/>
@@ -4346,12 +4336,12 @@
     </message>
     <message>
       <location line="+1"/>
-      <location line="+117"/>
+      <location line="+109"/>
       <source>Capture</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-107"/>
+      <location line="-99"/>
       <source>Capture fullscreen</source>
       <translation type="unfinished"/>
     </message>
@@ -4393,6 +4383,19 @@
     <message>
       <location line="+198"/>
       <source>Recording %1</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>CardOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/CardOsd.qml" line="+72"/>
+      <source>Muted</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+98"/>
+      <source>0%</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -4526,6 +4529,19 @@
       <location line="+19"/>
       <source>Variants</source>
       <translation>Varianter</translation>
+    </message>
+  </context>
+  <context>
+    <name>CompactOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/CompactOsd.qml" line="+129"/>
+      <source>MUTED</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+16"/>
+      <source>0%</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -6519,6 +6535,14 @@ Now go touch grass</source>
       <location line="+0"/>
       <source>Select a file</source>
       <translation>Vælg en fil</translation>
+    </message>
+  </context>
+  <context>
+    <name>FloatingOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/FloatingOsd.qml" line="+28"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10042,96 +10066,231 @@ Now go touch grass</source>
     </message>
   </context>
   <context>
-    <name>OsdPage</name>
+    <name>OsdFunctions</name>
     <message>
-      <location filename="../modules/nexus/pages/utilities/OsdPage.qml" line="+9"/>
-      <source>On-screen sliders</source>
-      <translation>Skyderne på skærmen</translation>
+      <location filename="../modules/osd/OsdFunctions.qml" line="+36"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+2"/>
+      <source>Brightness</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>OsdPanel</name>
+    <message>
+      <location filename="../modules/nexus/pages/panels/OsdPanel.qml" line="+19"/>
+      <source>Default (Edge Drawer)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Pill / Dynamic Island</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Compact Slider</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Radial Dial HUD</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Modern Elevated Card</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Minimal Bar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+8"/>
+      <source>Bottom Center</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Top Center</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Center</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Right Side</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Left Side</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>On-screen display (OSD)</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+11"/>
-      <source>Sliders</source>
-      <translation>Skyderne</translation>
+      <source>Design &amp; Style</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Design</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Visual style for hardware buttons (volume, brightness)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+25"/>
+      <source>Test OSD on screen</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Trigger a live test of the current OSD design</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+7"/>
+      <source>Position</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Screen placement for the floating indicator</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+14"/>
+      <source>Monitors</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+5"/>
       <source>Enabled</source>
-      <translation>Aktiveret</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the on-screen sliders</source>
-      <translation>Vis skyderne på skærmen</translation>
+      <source>Enable on-screen display popups</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
       <source>Volume</source>
-      <translation>Lydstyrke</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the volume slider</source>
-      <translation>Vis lydstyrkeskyderen</translation>
+      <source>Show indicator on speaker volume changes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
       <source>Microphone</source>
-      <translation>Mikrofon</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Show the microphone slider</source>
-      <translation>Vis skyderen til mikrofonen</translation>
-    </message>
-    <message>
-      <location line="+8"/>
-      <source>Brightness</source>
-      <translation>Lysstyrke</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Show the brightness slider</source>
-      <translation>Vis skyderen for lysstyrke</translation>
+      <source>Show indicator on microphone volume changes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+7"/>
-      <source>Edge trigger</source>
-      <translation>Kant udløser</translation>
-    </message>
-    <message>
-      <location line="+5"/>
-      <source>Depth</source>
-      <translation>Dybde</translation>
+      <source>Brightness</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Distance from the screen edge</source>
-      <translation>Afstand fra skærmens kant</translation>
+      <source>Show indicator on display brightness changes</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
-      <source>Height</source>
-      <translation>Højde</translation>
+      <location line="+8"/>
+      <source>Show in fullscreen</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Portion of the edge that responds</source>
-      <translation>Del af den kant, der reagerer</translation>
+      <source>Display indicator over fullscreen applications</source>
+      <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+10"/>
-      <source>Behavior</source>
-      <translation>Opførsel</translation>
+      <location line="+7"/>
+      <source>Timing</source>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+6"/>
       <source>Hide delay</source>
-      <translation>Skjul forsinkelse</translation>
+      <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
-      <source>Seconds before the slider hides</source>
-      <translation>Sekunder før skyderen skjuler</translation>
+      <source>Seconds before the indicator hides</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+10"/>
+      <source>Edge Drawer (Mouse Trigger)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+5"/>
+      <source>Depth</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Distance from the screen edge to trigger the drawer</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+11"/>
+      <source>Height</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Portion of the edge that responds to hover</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>OsdPreview</name>
+    <message>
+      <location filename="../modules/osd/floating/OsdPreview.qml" line="+58"/>
+      <location line="+13"/>
+      <location line="+13"/>
+      <location line="+12"/>
+      <location line="+13"/>
+      <source>Volume</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+26"/>
+      <source>Edge Drawer</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -10661,18 +10820,23 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+1"/>
-      <location line="+7"/>
+      <location line="+8"/>
       <source>Performance</source>
       <translation>Ydeevne</translation>
     </message>
     <message>
-      <location line="-6"/>
+      <location line="-7"/>
       <source>Screen Capture</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+1"/>
       <source>Keep Awake</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>OSD</source>
       <translation type="unfinished"/>
     </message>
     <message>
@@ -10867,16 +11031,11 @@ Now go touch grass</source>
     </message>
     <message>
       <location line="+3"/>
-      <source>Sliders, game mode, AI</source>
+      <source>Utilities panel, toggles, game mode, AI</source>
       <translation type="unfinished"/>
     </message>
     <message>
       <location line="+3"/>
-      <source>On-screen slider</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
       <source>Utilities panel</source>
       <translation type="unfinished"/>
     </message>
@@ -11051,12 +11210,13 @@ Now go touch grass</source>
       <location line="+6"/>
       <location line="+6"/>
       <location line="+6"/>
-      <location line="+7"/>
+      <location line="+6"/>
+      <location line="+8"/>
       <source>Disabled</source>
       <translation>Deaktiveret</translation>
     </message>
     <message>
-      <location line="-32"/>
+      <location line="-39"/>
       <source>Taskbar</source>
       <translation>Opgavebjælke</translation>
     </message>
@@ -11096,7 +11256,7 @@ Now go touch grass</source>
       <translation>Oversigt</translation>
     </message>
     <message>
-      <location line="+7"/>
+      <location line="+6"/>
       <source>Window Switcher</source>
       <translation>Vindue Skifter</translation>
     </message>
@@ -11109,6 +11269,41 @@ Now go touch grass</source>
       <location line="+0"/>
       <source>All desktops</source>
       <translation>Alle skriveborde</translation>
+    </message>
+    <message>
+      <location line="+6"/>
+      <source>OSD</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Pill</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Compact</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Radial</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Card</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Minimal Bar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Default (Edge)</source>
+      <translation type="unfinished"/>
     </message>
   </context>
   <context>
@@ -11157,6 +11352,19 @@ Now go touch grass</source>
     <message>
       <location line="+20"/>
       <source>GPU</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>PillOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/PillOsd.qml" line="+101"/>
+      <source>Muted</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+18"/>
+      <source>0%</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -11942,6 +12150,14 @@ PIN: %1</source>
     <message>
       <location line="+17"/>
       <source>System</source>
+      <translation type="unfinished"/>
+    </message>
+  </context>
+  <context>
+    <name>RadialOsd</name>
+    <message>
+      <location filename="../modules/osd/floating/RadialOsd.qml" line="+60"/>
+      <source>MUTED</source>
       <translation type="unfinished"/>
     </message>
   </context>
@@ -13381,13 +13597,14 @@ PIN: %1</source>
       <location line="+6"/>
       <location line="+6"/>
       <location line="+6"/>
-      <location line="+12"/>
+      <location line="+7"/>
+      <location line="+21"/>
       <location line="+30"/>
       <source>Disabled</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-79"/>
+      <location line="-95"/>
       <source>Dashboard</source>
       <translation type="unfinished"/>
     </message>
@@ -13397,12 +13614,12 @@ PIN: %1</source>
       <location line="+6"/>
       <location line="+6"/>
       <location line="+6"/>
-      <location line="+48"/>
+      <location line="+64"/>
       <source>Enabled</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="-73"/>
+      <location line="-89"/>
       <source>Taskbar</source>
       <translation type="unfinished"/>
     </message>
@@ -13457,7 +13674,42 @@ PIN: %1</source>
       <translation type="unfinished"/>
     </message>
     <message>
-      <location line="+11"/>
+      <location line="+5"/>
+      <source>OSD</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+4"/>
+      <source>Pill</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Compact</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Radial</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Card</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Minimal Bar</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Default (Edge)</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+13"/>
       <source>Wi-Fi &amp; Connection</source>
       <translation type="unfinished"/>
     </message>
@@ -13638,16 +13890,6 @@ PIN: %1</source>
     </message>
     <message>
       <location line="+11"/>
-      <source>On-screen slider</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Volume, microphone, brightness, and edge triggers</source>
-      <translation type="unfinished"/>
-    </message>
-    <message>
-      <location line="+5"/>
       <source>Utilities panel</source>
       <translation type="unfinished"/>
     </message>
@@ -14621,7 +14863,107 @@ PIN: %1</source>
   <context>
     <name>Toggles</name>
     <message>
-      <location filename="../modules/utilities/cards/Toggles.qml" line="+287"/>
+      <location filename="../modules/utilities/cards/Toggles.qml" line="+132"/>
+      <source>Wi-Fi</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Hotspot</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Bluetooth</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Microphone</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Settings</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Colour picker</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Launcher</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Overview</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Dashboard</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Game mode</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Pause wallpaper</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Audio visualiser</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Night light</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>EasyEffects</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Keep awake</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Restart shell</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Do not disturb</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>VPN</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+1"/>
+      <source>Quick share</source>
+      <translation type="unfinished"/>
+    </message>
+    <message>
+      <location line="+169"/>
       <source>Quick Toggles</source>
       <translation type="unfinished"/>
     </message>
@@ -15266,16 +15608,6 @@ PIN: %1</source>
       <location line="+10"/>
       <source>Quick controls</source>
       <translation>Hurtig kontrol</translation>
-    </message>
-    <message>
-      <location line="+6"/>
-      <source>On-screen sliders</source>
-      <translation>Skyderne på skærmen</translation>
-    </message>
-    <message>
-      <location line="+1"/>
-      <source>Volume, microphone, brightness, and edge triggers</source>
-      <translation>Lydstyrke, mikrofon, lysstyrke og kantudløser</translation>
     </message>
     <message>
       <location line="+6"/>

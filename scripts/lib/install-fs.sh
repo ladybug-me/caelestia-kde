@@ -102,6 +102,61 @@ wait_for_nonempty_file() {
     done
 }
 
+prune_install_root() {
+    local root="${1%/}" listing="$2" prefix="${3%/}"
+    shift 3
+
+    [[ -d "$root" ]] || return 0
+    [[ -f "$listing" && -n "$prefix" ]] || return 1
+
+    local -A shipped=()
+    local -a keep=("$@")
+    local line rel kept found status=0
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        [[ "$line" == "$prefix"/* ]] || continue
+        line="${line#"$prefix"/}"
+        line="${line%/}"
+        [[ -n "$line" ]] || continue
+        shipped["$line"]=1
+    done < "$listing"
+
+    found="$(mktemp)" || return 1
+    if ! find "$root" -mindepth 1 -depth -print0 > "$found"; then
+        rm -f -- "$found"
+        return 1
+    fi
+
+    while IFS= read -r -d '' rel; do
+        rel="${rel#"$root"/}"
+        if [[ -n "${shipped[$rel]:-}" ]]; then
+            continue
+        fi
+
+        kept=0
+        for line in "${keep[@]}"; do
+            if [[ "$rel" == "$line" || "$rel" == "$line"/* ]]; then
+                kept=1
+                break
+            fi
+        done
+        if [[ "$kept" -eq 1 ]]; then
+            continue
+        fi
+
+        if [[ -d "$root/$rel" && ! -L "$root/$rel" ]]; then
+            rmdir -- "$root/$rel" 2>/dev/null || true
+        elif rm -f -- "$root/$rel"; then
+            printf '%s\n' "$rel"
+        else
+            status=1
+        fi
+    done < "$found"
+
+    rm -f -- "$found"
+    return "$status"
+}
+
 validate_install_manifest() {
     local manifest="$1" root="$2" path
 

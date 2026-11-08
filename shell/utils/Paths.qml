@@ -54,4 +54,12 @@ Singleton {
     function shortenHome(path: string): string {
         return path.replace(home, "~");
     }
+
+    /// A path as a file dialog's `cwd` wants it: the home root, then one entry per
+    /// segment below it. Anything outside home starts at the home root.
+    function cwdSegments(path: string): var {
+        if (!path || !home || !path.startsWith(home))
+            return ["Home"];
+        return ["Home", ...path.substring(home.length).split("/").filter(s => s.length > 0)];
+    }
 }

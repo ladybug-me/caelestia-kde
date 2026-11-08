@@ -254,4 +254,157 @@ test_validate_install_manifest_accepts_a_cmake_shaped_manifest() {
     assert_status 0 "$status" "a CMake-shaped manifest of existing files should pass"
 }
 
+make_prune_fixture() {
+    local tmp="$1"
+    mkdir -p "$tmp/root/services" "$tmp/root/modules/x" \
+        "$tmp/root/assets/icons/yet-another-monochrome-icon-set/actions" \
+        "$tmp/root/assets/fonts"
+
+    printf 'new\n' > "$tmp/root/services/Audio.qml"
+    printf 'stale\n' > "$tmp/root/services/Stale.qml"
+    printf 'old\n' > "$tmp/root/modules/x/Old.qml"
+    printf 'icon\n' > "$tmp/root/assets/icons/yet-another-monochrome-icon-set/actions/a.svg"
+    printf 'mine\n' > "$tmp/root/assets/fonts/MyFont.ttf"
+    printf 'state\n' > "$tmp/root/.current_commit"
+
+    printf '%s/services/Audio.qml\n' "$tmp/root" > "$tmp/listing.txt"
+}
+
+test_prune_install_root_removes_what_the_artifact_no_longer_ships() {
+    local tmp status pruned
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+
+    pruned="$(prune_install_root "$tmp/root" "$tmp/listing.txt" "$tmp/root")"
+    status=$?
+
+    assert_status 0 "$status" "a prune of a readable tree should succeed"
+    assert_contains "$pruned" "services/Stale.qml" "the unshipped file is reported"
+    assert_file_missing "$tmp/root/services/Stale.qml"
+    assert_file_exists "$tmp/root/services/Audio.qml"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_keeps_what_the_artifact_does_not_own() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+
+    prune_install_root "$tmp/root" "$tmp/listing.txt" "$tmp/root" \
+        assets/fonts assets/icons/yet-another-monochrome-icon-set .current_commit >/dev/null
+    status=$?
+
+    assert_status 0 "$status" "the prune should succeed"
+    assert_file_exists "$tmp/root/assets/fonts/MyFont.ttf"
+    assert_file_exists "$tmp/root/assets/icons/yet-another-monochrome-icon-set/actions/a.svg"
+    assert_file_exists "$tmp/root/.current_commit"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_drops_a_directory_the_artifact_dropped() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+
+    prune_install_root "$tmp/root" "$tmp/listing.txt" "$tmp/root" >/dev/null
+    status=$?
+
+    assert_status 0 "$status" "the prune should succeed"
+    assert_file_missing "$tmp/root/modules/x/Old.qml"
+    assert_file_missing "$tmp/root/modules/x"
+    assert_is_dir "$tmp/root/services"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_removes_dangling_symlinks() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+    ln -s /nonexistent/target "$tmp/root/services/Gone.qml"
+
+    prune_install_root "$tmp/root" "$tmp/listing.txt" "$tmp/root" >/dev/null
+    status=$?
+
+    assert_status 0 "$status" "the prune should succeed"
+    assert_file_missing "$tmp/root/services/Gone.qml"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_only_counts_paths_under_the_prefix() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+    mkdir -p "$tmp/elsewhere/services"
+    printf 'other tree\n' > "$tmp/elsewhere/services/Stale.qml"
+    printf '%s/services/Audio.qml\n%s/elsewhere/services/Stale.qml\n' \
+        "$tmp/root" "$tmp" > "$tmp/listing.txt"
+
+    prune_install_root "$tmp/root" "$tmp/listing.txt" "$tmp/root" >/dev/null
+    status=$?
+
+    assert_status 0 "$status" "the prune should succeed"
+    assert_file_missing "$tmp/root/services/Stale.qml" \
+        "an entry under another prefix must not protect a file in the config tree"
+    assert_file_exists "$tmp/elsewhere/services/Stale.qml" \
+        "the prune must not reach outside the config tree"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_reads_an_unterminated_last_entry() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+    printf '%s/services/Audio.qml\n%s/services/Last.qml' "$tmp/root" "$tmp/root" > "$tmp/listing.txt"
+    printf 'new\n' > "$tmp/root/services/Last.qml"
+
+    prune_install_root "$tmp/root" "$tmp/listing.txt" "$tmp/root" >/dev/null
+    status=$?
+
+    assert_status 0 "$status" "the prune should succeed"
+    assert_file_exists "$tmp/root/services/Last.qml"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_accepts_a_release_archive_listing() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+    printf 'quickshell/\nquickshell/caelestia/\nquickshell/caelestia/services/\n' > "$tmp/listing.txt"
+    printf 'quickshell/caelestia/services/Audio.qml\nquickshell/caelestia/assets/\nbin/caelestia\n' >> "$tmp/listing.txt"
+
+    prune_install_root "$tmp/root" "$tmp/listing.txt" "quickshell/caelestia" >/dev/null
+    status=$?
+
+    assert_status 0 "$status" "an archive listing names the root and its directories too"
+    assert_file_exists "$tmp/root/services/Audio.qml"
+    assert_file_missing "$tmp/root/services/Stale.qml"
+    assert_is_dir "$tmp/root/assets" "a directory the archive ships stays even once it is empty"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_fails_without_a_listing() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+
+    prune_install_root "$tmp/root" "$tmp/absent.txt" "$tmp/root" >/dev/null 2>&1
+    status=$?
+
+    assert_status 1 "$status" "an unreadable artifact listing should fail"
+    assert_file_exists "$tmp/root/services/Stale.qml"
+    rm -rf "$tmp"
+}
+
+test_prune_install_root_tolerates_a_missing_root() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_prune_fixture "$tmp"
+
+    prune_install_root "$tmp/absent" "$tmp/listing.txt" "$tmp/root" >/dev/null 2>&1
+    status=$?
+
+    assert_status 0 "$status" "a config directory that was never created has nothing to prune"
+    rm -rf "$tmp"
+}
+
 run_tests

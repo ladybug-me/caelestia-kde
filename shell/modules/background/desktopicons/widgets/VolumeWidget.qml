@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
@@ -8,15 +9,11 @@ import qs.services
 
 // The default sink or source: a glyph that fills up with the level, the percentage
 // beside it, and the device it belongs to. Click the glyph to mute, scroll to change.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
     readonly property bool input: cfg.device === "input"
-    readonly property bool showDevice: cfg.showDevice !== false
+    readonly property bool showDevice: cfg.showDevice
 
     readonly property real level: Math.max(0, root.input ? Audio.sourceVolume : Audio.volume)
     readonly property bool muted: root.input ? Audio.sourceMuted : Audio.muted

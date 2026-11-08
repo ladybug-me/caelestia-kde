@@ -26,14 +26,24 @@ Singleton {
     Process {
         id: check
 
+        // The script says why it gave up on stdout, so the message can name the
+        // versions rather than only reporting that something is missing.
+        readonly property string reason: String(out.text ?? "").trim()
+
         command: ["bash", root.checkScript]
+        stdout: StdioCollector {
+            id: out
+        }
 
         onExited: code => {
             if (code !== 3)
                 return;
 
-            console.warn("[WorkspaceTrackerGuard] the effect is enabled but not loaded");
-            Toaster.toast(qsTr("Workspace tracker effect is not running"), qsTr("KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in."), "extension_off", Toast.Warning);
+            const detail = check.reason.length > 0 ? check.reason : qsTr("no reason given");
+            console.warn(`[WorkspaceTrackerGuard] workspace tracker not loaded: ${detail}`);
+            // The toast is one elided title line above a box ~410px wide, so the message
+            // stays to a sentence: what KWin refused, and the one command that fixes it.
+            Toaster.toast(qsTr("Desktop tracking is off"), qsTr("KWin refused the workspace tracker (%1). Run caelestia update.").arg(detail), "extension_off", Toast.Warning);
         }
     }
 }

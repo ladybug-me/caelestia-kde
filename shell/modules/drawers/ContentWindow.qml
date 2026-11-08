@@ -39,8 +39,12 @@ StyledWindow {
     // active workspace changes — hasFullscreenOn() filters by workspace, but
     // a plain function call only re-runs when its direct property deps change.
     readonly property bool actualFullscreen: (Kwin.activeWsId, Kwin.hasFullscreenOn(screen?.name ?? ""))
-    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || desktopContextMenu.expanded || desktopIconContextMenu.expanded || dropMenu.expanded || viewOptions.open || widgetGallery.open || widgetSettings.open || visibilities.overview || Visibilities.launcherOpen || visibilities.dashboard || visibilities.session || visibilities.utilities
-    readonly property bool hasOpenOverlay: focusGrabState.active || transientOverlayOpen || visibilities.sidebar
+    // The popups the desktop opens over itself, grouped by how they report being open.
+    // A new one joins a list instead of extending the expression below.
+    readonly property var desktopMenus: [desktopContextMenu, desktopIconContextMenu, dropMenu]
+    readonly property var desktopPopups: [viewOptions, widgetGallery, widgetSettings]
+    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || root.desktopMenus.some(menu => menu.expanded) || root.desktopPopups.some(popup => popup.open) || visibilities.overview || Visibilities.launcherOpen || (Config.dashboard.enabled && visibilities.dashboard) || (Config.session.enabled && visibilities.session) || (Config.utilities.enabled && visibilities.utilities)
+    readonly property bool hasOpenOverlay: focusGrabState.active || transientOverlayOpen || (Config.sidebar.enabled && visibilities.sidebar)
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
     // The launcher is one panel across outputs: a screen that does not show it
     // still takes input, so that a press there dismisses it.

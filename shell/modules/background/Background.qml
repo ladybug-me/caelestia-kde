@@ -176,9 +176,9 @@ Variants {
             }
         }
         // Above the background widgets a plugin registers: the wallpaper depth
-        // foreground repaints the wallpaper over the cards, so their edges are drawn
-        // over it rather than inside them.
-        WidgetEdges {
+        // foreground repaints the wallpaper over the cards, so the card edges and the
+        // selection box are drawn over it rather than inside the icons layer.
+        DesktopOverlay {
             anchors.fill: parent
             icons: desktopIcons
             z: 4096

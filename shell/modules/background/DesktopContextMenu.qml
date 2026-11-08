@@ -240,11 +240,14 @@ Controls.Menu {
         ContextMenuStore.ensureLoaded(false);
     }
 
-    // Called when the menu is requested again while already open.
+    // Called when the menu is requested again while already open: the panel goes away and
+    // a new one unfolds where the pointer is now, instead of the open panel hopping
+    // sideways under the cursor.
     function reopen() {
         closeSubmenu();
         refresh();
-        replayReveal();
+        root.expanded = false;
+        reopenTimer.restart();
     }
 
     attachSideX: _flipX ? Controls.Menu.Left : Controls.Menu.Right
@@ -271,6 +274,13 @@ Controls.Menu {
     }
 
     Component.onCompleted: reloadMenu(true)
+
+    Timer {
+        id: reopenTimer
+
+        interval: Tokens.anim.durations.small
+        onTriggered: root.expanded = true
+    }
 
     Timer {
         id: execTimer

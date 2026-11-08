@@ -1,5 +1,6 @@
 pragma ComponentBehavior: Bound
 
+import ".."
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
@@ -11,14 +12,10 @@ import qs.services
 // A month at a glance with, when the card is wide enough, the agenda of the day
 // picked in it. The month itself belongs to CalendarMonth, so the grid, the dots on
 // days with events and the shape on the selected day are the ones the bar shows.
-Item {
+DesktopWidget {
     id: root
 
-    property var frame
-    property var controller
-
-    readonly property var cfg: frame?.config ?? ({})
-    readonly property bool showEvents: cfg.showEvents !== false
+    readonly property bool showEvents: cfg.showEvents
     // Wide cards trade half the month's width for the agenda; narrow ones keep the
     // whole width for the month and mark the days that have events instead.
     readonly property bool agenda: root.showEvents && root.width > root.height * 1.25

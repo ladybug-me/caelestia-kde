@@ -30,7 +30,7 @@ test_drag_previews_are_rebuilt_only_when_the_plan_changes() {
 test_the_frosted_cards_share_one_blurred_wallpaper() {
     assert_contains "$ICONS_SRC" 'id: glassLoader' "the controller blurs the wallpaper once"
     assert_contains "$ICONS_SRC" 'readonly property Item glass: glassLoader.item' "the blurred wallpaper is exposed to the cards"
-    assert_contains "$BIG_SRC" 'sourceItem: root.controller.glass' "cards sample the shared blur"
+    assert_contains "$BIG_SRC" 'sourceItem: glassSource.Window.window ? root.controller.glass : null' "cards sample the shared blur"
     assert_not_contains "$BIG_SRC" 'blurEnabled: true' "cards must not blur the wallpaper themselves"
 }
 

@@ -69,7 +69,7 @@ Singleton {
     function load(screen: ShellScreen, visibilities: DrawerVisibilities): void {
         screens.set(Kwin.monitorFor(screen), visibilities);
         screens = new Map(screens);
-        visibilities.launcherChanged.connect(() => setLauncherOwner(visibilities, visibilities.launcher));
+        visibilities.launcherChanged.connect(() => { setLauncherOwner(visibilities, visibilities.launcher); });
         // PersistentProperties can restore the launcher as open, before the change
         // handler above is connected.
         if (visibilities.launcher)

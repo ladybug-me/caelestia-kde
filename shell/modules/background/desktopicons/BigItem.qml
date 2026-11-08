@@ -19,9 +19,10 @@ Item {
     readonly property bool isGroup: controller.isGroupKey(key)
     readonly property string itemId: controller.nameOf(key)
     readonly property var widget: isGroup ? null : (DesktopLayout.widgets[itemId] ?? null)
-    // A widget's own settings. Groups have none, so they read an empty object and
-    // every `config.x` below stays a plain lookup instead of a ReferenceError.
-    readonly property var config: widget?.config ?? ({})
+    // A widget's own settings, with its type's defaults already filled in, so every
+    // `config.x` below and inside the content is a plain lookup. The store keeps only
+    // what was changed, which is how a reset can just empty it.
+    readonly property var config: controller.widgetCatalog.configFor(isGroup ? "group" : (widget?.type ?? ""), widget?.config)
     readonly property var info: controller.widgetCatalog.infoForGrid(isGroup ? "group" : (widget?.type ?? ""), controller.cols, controller.rows)
     readonly property var span: {
         const raw = controller.displaySpans[key] ?? info.size;
@@ -30,12 +31,15 @@ Item {
             h: Math.max(1, Math.min(raw.h, controller.rows))
         };
     }
-    readonly property bool frameless: !isGroup && (info.frameless === true || config.frameless === true || config.background === false)
-    // The card's look, which any widget can override. An unset key falls back to the
-    // theme's value, so the desktop keeps one look until someone changes one widget.
-    readonly property real defaultBackgroundOpacity: controller.widgetCatalog?.defaultBackgroundOpacity ?? 0.4
-    readonly property real backgroundOpacity: typeof config.backgroundOpacity === "number" ? Math.max(0, Math.min(1, config.backgroundOpacity)) : root.defaultBackgroundOpacity
-    readonly property real backgroundRadius: typeof config.backgroundRadius === "number" ? Math.max(0, config.backgroundRadius) : (controller.widgetCatalog?.defaultBackgroundRadius ?? Tokens.rounding.extraLarge)
+    // Turning a card's background off removes the card, so it takes the border with it.
+    // The theme's own frameless widgets (the clock, the lyrics) keep theirs: they have no
+    // fill to read against, and the edge is all that says where they end.
+    readonly property bool backgroundOff: !isGroup && (config.background === false || config.frameless === true)
+    readonly property bool frameless: !isGroup && (info.frameless === true || root.backgroundOff)
+    // The card's look, which any widget can override. An unset key already reads the
+    // theme's value through `config`, so these only keep it in range.
+    readonly property real backgroundOpacity: Math.max(0, Math.min(1, config.backgroundOpacity))
+    readonly property real backgroundRadius: Math.max(0, config.backgroundRadius)
     // A widget may step out of the way when it has nothing to show (no track playing).
     // Editing still shows it, or it could never be brought back.
     readonly property bool hiddenByContent: !widgetEditMode && content?.wantsHidden === true
@@ -47,23 +51,25 @@ Item {
     // Edit mode outlines every card for the same reason.
     readonly property bool outlined: !isGroup && (DesktopLayout.widgetOutlines || widgetEditMode)
 
-    // The card's edge, and the editor's frame around it, are drawn by WidgetEdges on
+    // The card's edge, and the editor's frame around it, are drawn by DesktopOverlay on
     // top of every background layer: a plugin may paint over the widgets (the wallpaper
     // depth one redraws the wallpaper's foreground above them), and an edge buried under
     // it leaves a card with no way to say where it ends.
+    readonly property bool emphasized: root.selected || root.mergeTarget || root.focusVisible
     readonly property rect edgeRect: Qt.rect(root.x + card.x, root.y + card.y, card.width, card.height)
     readonly property real edgeRadius: card.radius
-    // A card with no background still gets its edge: the widget has to say where it
-    // ends, or it dissolves into the wallpaper behind it.
-    readonly property int edgeWidth: root.selected || root.mergeTarget || root.focusVisible ? (root.widgetEditMode ? 3 : 2) : 1
-    // Selection brightens the edge instead of darkening it -- the card you are working
-    // on must not be the faintest one on the desktop -- and a frameless card's edge is
-    // drawn stronger, since it has no fill to read against.
-    readonly property color edgeColor: root.selected || root.mergeTarget || root.focusVisible ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, root.frameless ? 0.42 : 0.22)
-    readonly property bool edgeShown: root.opacity > 0.01 && card.width > 0 && card.height > 0
+    // A card with a background gets an edge, because the edge is what says where that
+    // card ends. One the user turned the background off for has no card to outline, and a
+    // widget whose type is frameless never had one -- those stay clean unless a selection,
+    // the editor or the outlines option asks for something.
+    readonly property int edgeWidth: root.emphasized ? (root.widgetEditMode ? 3 : 2) : (root.frameless ? 0 : 1)
+    readonly property color edgeColor: root.emphasized ? Colours.palette.m3primary : Qt.alpha(Colours.palette.m3onSurface, 0.22)
+    // Only a card that is really on the desktop draws chrome: the overlay is above the
+    // desktop rather than inside it, so it has to be told when the card is not there.
+    readonly property bool edgeShown: root.visible && root.opacity > 0.01 && card.width > 0 && card.height > 0
     // The editor's frame, on every widget while the outlines option is on: it locates
     // widgets that are empty or hidden by their own condition.
-    readonly property bool frameShown: root.outlined && !root.selected && !root.mergeTarget && !root.focusVisible
+    readonly property bool frameShown: root.outlined && !root.emphasized
 
     property bool selected: false
     property bool focusVisible: false
@@ -160,7 +166,12 @@ Item {
 
         sourceComponent: MultiEffect {
             source: ShaderEffectSource {
-                sourceItem: root.controller.glass
+                id: glassSource
+
+                // Set only while this source has a window: Qt takes an extra reference on the source
+                // item's window if this is set before the effect places it in a window, and never
+                // releases it, which crashes the shell when the screen goes away.
+                sourceItem: glassSource.Window.window ? root.controller.glass : null
                 sourceRect: Qt.rect(root.controller.gridOrigin.x + root.x + card.x, root.controller.gridOrigin.y + root.y + card.y, card.width, card.height)
             }
             maskSource: cardMask

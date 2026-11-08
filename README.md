@@ -10,6 +10,8 @@
 [![KDE Plasma](https://img.shields.io/badge/Plasma_6-1D99F3?logo=kde&logoColor=white&style=for-the-badge&labelColor=101418)](https://kde.org/plasma-desktop)
 [![License: GPL-3.0-or-later](https://img.shields.io/badge/License-GPL--3.0--or--later-9bd0cc?style=for-the-badge&labelColor=101418)](LICENSE)
 
+[![Discord](https://img.shields.io/badge/Discord-5865F2?logo=discord&logoColor=white&style=for-the-badge&labelColor=101418)](https://discord.gg/qTkpHrHp5H)
+
 </div>
 
 <!-- markdownlint-disable-next-line MD034 -- a bare URL is what GitHub turns into an inline video player -->
@@ -21,6 +23,10 @@ https://github.com/user-attachments/assets/38b24e7f-fdd9-43db-872b-8c0ac23a44fd
 > Hyprland dotfiles, see [`caelestia-dots/caelestia`](https://github.com/caelestia-dots/caelestia).
 
 > Please do not contact the official Caelestia hyprland developers with questions regarding this KDE port.
+
+
+> [!TIP]
+> Questions, setups, or want to contribute? Join the [Discord](https://discord.gg/qTkpHrHp5H).
 
 ## Installation
 

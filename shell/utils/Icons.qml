@@ -173,6 +173,14 @@ Singleton {
         return "air";
     }
 
+    // The spec lets app_icon be a file:// URI or an absolute path as well as a theme
+    // icon name (Electron apps send the path to their bundled PNG).
+    function getNotifAppIcon(icon: string): string {
+        if (icon.startsWith("file://") || icon.startsWith("/"))
+            return icon.startsWith("/") ? `file://${icon}` : icon;
+        return Quickshell.iconPath(icon);
+    }
+
     function getNotifIcon(summary: string, urgency: int): string {
         summary = summary.toLowerCase();
         if (summary.includes("reboot"))

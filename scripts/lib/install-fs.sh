@@ -30,6 +30,30 @@ privileged_copy_file() {
     caelestia_sudo chmod "$mode" "$dest" || return 1
 }
 
+# Where a staged build may write, as the first directory component of a relative path. A
+# build that installs into /usr stages usr/..., and one that installs into a home prefix
+# stages share/ or lib/. Anything else - etc/sudoers.d, etc/systemd, a PAM stack - is a
+# path no build here produces, and a build tree this user can write must not be able to
+# name one.
+staged_path_is_installable() {
+    local rel="$1"
+
+    case "$rel" in
+        *//*|*/../*|*/..) return 1 ;;
+        # Paths that make something else run, or change how it authenticates. No build here
+        # installs one, and each is a way to turn a file write into a different privilege.
+        usr/lib/systemd/*|usr/lib64/systemd/*) return 1 ;;
+        usr/share/dbus-1/system.d/*|usr/share/dbus-1/system-services/*) return 1 ;;
+        usr/lib/tmpfiles.d/*|usr/lib64/tmpfiles.d/*) return 1 ;;
+        usr/lib/sysctl.d/*|usr/lib64/sysctl.d/*) return 1 ;;
+        usr/lib/binfmt.d/*|usr/lib64/binfmt.d/*) return 1 ;;
+        usr/*|share/*|lib/*|lib64/*|bin/*|sbin/*) return 0 ;;
+        # A generated configuration file belongs under a directory the project owns.
+        etc/xdg/*|etc/fonts/*) return 0 ;;
+    esac
+    return 1
+}
+
 # Installs the tree at "$1" under "$2", which must already exist, as root. The tree comes
 # from a build this user ran, so root copies what it holds rather than executing anything
 # from it, and the only link allowed across is one staying in its own directory - a
@@ -49,6 +73,14 @@ privileged_copy_tree() {
     [[ -z "$escaping" ]] || return 1
     escaping="$(find "$src" -type f \( -perm -4000 -o -perm -2000 \) -print -quit 2>/dev/null || true)"
     [[ -z "$escaping" ]] || return 1
+
+    # And a tree may only put files where an install of this project puts them. Without
+    # this, a build tool that staged etc/sudoers.d/… would have root write it: the copy
+    # below trusts the tree's own layout, and the tree is this user's to shape.
+    local entry
+    while IFS= read -r entry; do
+        staged_path_is_installable "${entry#"$src"/}" || return 1
+    done < <(find "$src" -mindepth 1 \( -type f -o -type l \) -print 2>/dev/null)
 
     caelestia_sudo bash -s -- "$src" "$dest" << 'EOF' || status=$?
 src="$1"

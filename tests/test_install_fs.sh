@@ -515,6 +515,45 @@ test_privileged_copy_tree_refuses_a_setuid_file() {
     assert_file_missing "$tmp/dest/usr/bin/app"
 }
 
+# The staged tree is a directory this user wrote, so root copying all of it wherever it points
+# would let a build write /etc/sudoers.d/anything and have the installer place it.
+test_privileged_copy_tree_refuses_a_stage_that_reaches_outside_the_install_prefixes() {
+    local tmp status
+    tmp="$(new_tmpdir)"
+    mkdir -p "$tmp/stage/etc/sudoers.d" "$tmp/dest"
+    printf 'ALL ALL=(ALL) NOPASSWD:ALL\n' > "$tmp/stage/etc/sudoers.d/evil"
+
+    privileged_copy_tree "$tmp/stage" "$tmp/dest" 2>/dev/null
+    status=$?
+
+    assert_status 1 "$status" "a staged sudoers rule must be refused"
+    assert_file_missing "$tmp/dest/etc/sudoers.d/evil"
+}
+
+test_staged_path_is_installable_accepts_what_a_build_prefix_is_allowed_to_hold() {
+    local path status
+    for path in usr/bin/app usr/local/bin/app usr/lib/libapp.so usr/lib64/libapp.so \
+        usr/share/applications/app.desktop usr/share/icons/hicolor/index.theme \
+        etc/xdg/app.conf etc/fonts/conf.d/50-app.conf share/plasma/shells/x; do
+        staged_path_is_installable "$path"
+        status=$?
+        assert_status 0 "$status" "a build should be allowed to install $path"
+    done
+}
+
+test_staged_path_is_installable_refuses_what_root_would_run() {
+    local path status
+    for path in etc/sudoers.d/evil etc/passwd etc/shadow usr/lib/systemd/system/evil.service \
+        usr/lib64/systemd/system/evil.service usr/share/dbus-1/system.d/evil.conf \
+        usr/share/dbus-1/system-services/evil.service usr/lib/tmpfiles.d/evil.conf \
+        usr/lib64/tmpfiles.d/evil.conf usr/lib/sysctl.d/evil.conf usr/bin/../../etc/passwd \
+        /etc/sudoers.d/evil etc/xdg/../../etc/passwd; do
+        staged_path_is_installable "$path"
+        status=$?
+        assert_status 1 "$status" "root must not install $path out of a tree this user wrote"
+    done
+}
+
 test_install_staged_tree_installs_what_the_build_wrote_under_destdir() {
     local tmp status
     tmp="$(new_tmpdir)"

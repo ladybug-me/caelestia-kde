@@ -23,6 +23,17 @@ StyledRect {
 
     signal clicked
 
+    Accessible.role: Accessible.CheckBox
+    Accessible.name: root.label || root.tooltip
+    Accessible.checkable: true
+    Accessible.checked: root.toggled
+    Accessible.onPressAction: root.clicked()
+
+    activeFocusOnTab: root.enabled
+    Keys.onSpacePressed: root.clicked()
+    Keys.onReturnPressed: root.clicked()
+    Keys.onEnterPressed: root.clicked()
+
     Component.onCompleted: hovered = toggleStateLayer.containsMouse
 
     Layout.preferredWidth: implicitWidth + (toggleStateLayer.pressed ? Tokens.padding.medium * 2 : toggled ? Tokens.padding.small : 0)
@@ -87,6 +98,17 @@ StyledRect {
         Anim {
             type: Anim.DefaultEffects
         }
+    }
+
+    // The chip's own edge carries the focus ring, the same as the other button bases.
+    StyledRect {
+        anchors.fill: parent
+        anchors.margins: -2
+
+        radius: root.radius + 2
+        border.width: 2
+        border.color: Colours.palette.m3primary
+        visible: root.activeFocus && root.activeFocusOnTab
     }
 
     Behavior on Layout.preferredWidth {

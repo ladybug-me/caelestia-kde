@@ -23,5 +23,7 @@ RowLayout {
         id: toggle
 
         cLayer: 2
+        // The row's label is the control's name; the switch itself draws no text.
+        text: root.label
     }
 }

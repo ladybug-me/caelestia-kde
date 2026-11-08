@@ -13,6 +13,10 @@ ButtonBase {
     // instead of snapping, the same cross-fade the bar's status icons use.
     property alias animateIcon: label.animate
 
+    // An icon name reads as words once its separators are gone: "arrow back" rather
+    // than "arrow_back". Consumers with something better to say set accessibleLabel.
+    accessibleLabel: (root.icon || "").replace(/_/g, " ")
+
     font: Tokens.font.icon.medium
     padding: type === IconButton.Text ? Tokens.padding.extraSmall / 2 : Tokens.padding.small
 

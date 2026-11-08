@@ -13,11 +13,21 @@ Switch {
     implicitWidth: implicitIndicatorWidth
     implicitHeight: implicitIndicatorHeight
 
+    Accessible.role: Accessible.CheckBox
+    Accessible.name: root.text
+    Accessible.checkable: true
+    Accessible.checked: root.checked
+    Accessible.onToggleAction: root.toggle()
+
+    activeFocusOnTab: root.enabled
+
     onToggled: {
         Audio.playEffectTick();
     }
 
     indicator: StyledRect {
+        id: track
+
         radius: Tokens.rounding.full
         color: !root.enabled ? Colours.disabledContainer : root.checked ? Colours.palette.m3primary : Colours.layer(Colours.palette.m3surfaceContainerHighest, root.cLayer)
 
@@ -152,6 +162,18 @@ Switch {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         enabled: false
+    }
+
+    // The track is the control, so the focus ring follows it rather than the row a
+    // switch may fill.
+    StyledRect {
+        anchors.fill: track
+        anchors.margins: -4
+
+        radius: Tokens.rounding.full
+        border.width: 2
+        border.color: Colours.palette.m3primary
+        visible: root.activeFocus && root.activeFocusOnTab
     }
 
     component PropAnim: PropertyAnimation {

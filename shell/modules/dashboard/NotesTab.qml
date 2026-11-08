@@ -529,6 +529,7 @@ Item {
                                 CheckBox {
                                     Layout.alignment: Qt.AlignTop
                                     checked: itemRow.modelData.checked ?? false
+                                    accessibleLabel: itemRow.modelData.text ?? ""
                                     onToggled: {
                                         const arr = (root.selectedNote.items || []).slice();
                                         arr[itemRow.index] = Object.assign({}, arr[itemRow.index], { checked: !itemRow.modelData.checked });

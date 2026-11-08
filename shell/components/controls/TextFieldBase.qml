@@ -7,8 +7,14 @@ import qs.services
 TextField {
     id: root
 
+    // A field announces its label, not whatever happens to be typed into it. The
+    // placeholder is the fallback name; consumers with a separate label set this.
+    property string accessibleLabel: root.placeholderText
+
     implicitWidth: contentWidth + leftPadding + rightPadding
     implicitHeight: contentHeight + topPadding + bottomPadding
+
+    Accessible.name: accessibleLabel
 
     color: Colours.palette.m3onSurface
     placeholderTextColor: Colours.palette.m3onSurfaceVariant

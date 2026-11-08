@@ -14,6 +14,8 @@ ButtonBase {
     readonly property alias iconLabel: iconLabel
     readonly property alias label: label
 
+    accessibleLabel: root.text || (root.icon || "").replace(/_/g, " ")
+
     horizontalPadding: Tokens.padding.medium
     verticalPadding: Tokens.padding.small
 

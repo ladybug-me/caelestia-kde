@@ -9,6 +9,8 @@ RadioButton {
 
     font: Tokens.font.body.small
 
+    activeFocusOnTab: root.enabled
+
     implicitWidth: implicitIndicatorWidth + implicitContentWidth + contentItem.anchors.leftMargin
     implicitHeight: Math.max(implicitIndicatorHeight, implicitContentHeight)
 

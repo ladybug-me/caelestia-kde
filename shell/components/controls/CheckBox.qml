@@ -12,11 +12,26 @@ Item {
     id: root
 
     property bool checked: false
+    property string accessibleLabel
 
     signal toggled()
 
+    function toggle(): void {
+        checked = !checked;
+        toggled();
+    }
+
     implicitWidth: 24
     implicitHeight: 24
+
+    Accessible.role: Accessible.CheckBox
+    Accessible.name: accessibleLabel
+    Accessible.checkable: true
+    Accessible.checked: checked
+    Accessible.onToggleAction: toggle()
+
+    activeFocusOnTab: enabled
+    Keys.onSpacePressed: toggle()
 
     StyledRect {
         anchors.fill: parent
@@ -48,9 +63,17 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-        onClicked: {
-            root.checked = !root.checked;
-            root.toggled();
-        }
+        onClicked: root.toggle()
+    }
+
+    // The box is the control; the ring follows its own edge.
+    StyledRect {
+        anchors.fill: parent
+        anchors.margins: -3
+
+        radius: Tokens.rounding.medium
+        border.width: 2
+        border.color: Colours.palette.m3primary
+        visible: root.activeFocus && root.activeFocusOnTab
     }
 }

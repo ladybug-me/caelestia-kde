@@ -202,7 +202,14 @@ Singleton {
     }
 
     function playNotification(): void {
-        root._playAudioFile(Qt.resolvedUrl("../assets/sounds/notifications/" + GlobalConfig.audio.sounds.notificationSound), GlobalConfig.audio.sounds.notificationVolume);
+        // The name is a setting, so a path in it would play a file from outside the bundled
+        // sounds. Everything else about it is what a sound effect already does, which is
+        // where `sounds.enabled` is honoured.
+        const name = GlobalConfig.audio.sounds.notificationSound;
+        if (name.includes("/"))
+            return;
+
+        playSoundSource(Qt.resolvedUrl("../assets/sounds/notifications/" + name), true, GlobalConfig.audio.sounds.notificationVolume);
     }
 
     function playCameraClick(): void {

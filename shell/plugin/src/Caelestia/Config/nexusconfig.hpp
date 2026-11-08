@@ -9,6 +9,11 @@ class NexusConfig : public settings::ObjectNode {
     CONFIG_NODE(NexusConfig, settings::ObjectNode)
 
     CONFIG_PROPERTY(int, wallpapersPerRow, 4)
+
+    // Show a section's subcategories in their own pane, between the section
+    // list and the page. Off lines the same cards up inside the page instead,
+    // which is how the settings window used to work.
+    CONFIG_GLOBAL_PROPERTY(bool, sidePane, true)
     CONFIG_GLOBAL_PROPERTY(int, networkRescanInterval, 15000)
     CONFIG_PROPERTY(int, maxNetworksShown, 5)
 };

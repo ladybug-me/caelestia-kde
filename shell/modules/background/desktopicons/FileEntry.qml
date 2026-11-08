@@ -108,24 +108,18 @@ Scope {
     }
 
     function launch(): void {
-        // Run the launcher file itself: its name need not match an installed app id,
-        // and xdg-open would open it in an editor instead.
-        if (isDesktopFile)
-            root.checkTrustThenLaunch([]);
-        else
+        if (!isDesktopFile) {
             Launch.exec(["xdg-open", path]);
+            return;
+        }
+        root.pendingLaunchPaths = [];
+        trustCheck.running = true;
     }
 
     // Opens files with this launcher, as when they are dropped onto it.
     function launchWith(paths: var): void {
-        if (isDesktopFile)
-            root.checkTrustThenLaunch(paths ?? []);
-    }
-
-    function checkTrustThenLaunch(paths: var): void {
-        // KDE only runs a launcher that is root-owned or marked executable, and asks
-        // the user to trust a download first. `gio launch` would run Exec on a
-        // double-click without that prompt, so the same check is made here.
+        if (!isDesktopFile)
+            return;
         root.pendingLaunchPaths = paths;
         trustCheck.running = true;
     }
@@ -135,7 +129,10 @@ Scope {
     }
 
     // KDE treats a launcher as trusted when it is owned by root or carries the
-    // executable bit. Anything else is a download the user has not vouched for.
+    // executable bit, and asks the user to trust a download first. `gio launch`
+    // would run Exec on a double-click without that prompt, so the same check is
+    // made here. The file is run itself: its name need not match an installed app
+    // id, and xdg-open would open it in an editor instead.
     Process {
         id: trustCheck
 

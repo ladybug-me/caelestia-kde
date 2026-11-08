@@ -46,7 +46,7 @@ Item {
         x: parent ? Math.round((parent.width - width) / 2) : 0
         y: parent ? Math.round((parent.height - height) / 2) : 0
 
-        enter: DialogTransition {}
+        enter: DialogTransition { }
         exit: DialogTransition {
             exiting: true
         }

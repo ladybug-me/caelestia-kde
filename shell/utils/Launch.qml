@@ -36,16 +36,18 @@ Singleton {
             Quickshell.execDetached(root.wrap(command));
     }
 
+    /// Whether `url` names a web page. The two callers that need this — a link in a
+    /// notification body and a portal's redirect — both act on text someone else
+    /// chose, and only a page may be opened from either.
+    function isWebUrl(url: string): bool {
+        return /^https?:\/\//i.test(url || "");
+    }
+
     /// Opens a link clicked in a notification. The URL is sender-controlled text, so
     /// only web and mail links go through: another scheme (`file://`, `smb://`, an
     /// application's own handler) would turn one click into whatever the sender named.
     function openUrl(url: string): void {
-        const scheme = /^([A-Za-z][A-Za-z0-9+.-]*):/.exec(url || "");
-        if (!scheme)
-            return;
-
-        const name = scheme[1].toLowerCase();
-        if (name !== "http" && name !== "https" && name !== "mailto")
+        if (!root.isWebUrl(url) && !/^mailto:/i.test(url || ""))
             return;
 
         Qt.openUrlExternally(url);

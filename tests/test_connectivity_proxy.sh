@@ -27,8 +27,8 @@ test_networkmanager_is_the_one_that_knows_about_portals() {
 test_the_sign_in_url_is_found_by_where_the_redirect_went() {
     assert_file_contains "$CONNECTIVITY" '"%{url_effective}"' \
         "a portal intercepts the check and answers with its own address"
-    assert_file_contains "$CONNECTIVITY" 'url.startsWith(root.checkUrl) ? "" : url' \
-        "an unchanged URL means the network answered normally and there is nothing to open"
+    assert_file_contains "$CONNECTIVITY" 'Launch.isWebUrl(url) && !url.startsWith(root.checkUrl) ? url : ""' \
+        "an unchanged URL means the network answered normally, and only a web page is ever opened"
     assert_file_contains "$CONNECTIVITY" '["xdg-open", root.portalUrl]' "the page is opened, not described"
     assert_file_contains "$NETWORK_PAGE" 'Connectivity.portal' "the network page only shows the row when there is a portal"
     assert_file_contains "$NETWORK_PAGE" 'Connectivity.signIn()' "and the row asks for the sign-in page"

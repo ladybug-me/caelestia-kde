@@ -251,12 +251,17 @@ Item {
         anchors.fill: parent
         visible: root.isPlaying || root.isGameOver
 
+        // Indexed by count: the backend hands out a new list every frame, and a list model
+        // would rebuild every delegate, layer and shader 60 times a second.
         Repeater {
-            model: DinoGameBackend.clouds
+            model: DinoGameBackend.clouds.length
 
             Image {
-                x: modelData.x
-                y: modelData.y
+                required property int index
+                readonly property var cloud: DinoGameBackend.clouds[index] ?? ({})
+
+                x: cloud.x ?? 0
+                y: cloud.y ?? 0
                 width: 92
                 height: 27
                 source: Paths.absolutePath("root:/assets/dino_cloud.png")
@@ -303,17 +308,20 @@ Item {
         }
 
         Repeater {
-            model: DinoGameBackend.obstacles
+            model: DinoGameBackend.obstacles.length
 
             Image {
-                width: modelData.width
-                height: modelData.height
+                required property int index
+                readonly property var obstacle: DinoGameBackend.obstacles[index] ?? ({})
+
+                width: obstacle.width ?? 0
+                height: obstacle.height ?? 0
                 source: {
-                    if (modelData.type === "bird") return Math.floor(DinoGameBackend.frameCount / 7) % 2 === 0 ? Paths.absolutePath("root:/assets/bird_1.png") : Paths.absolutePath("root:/assets/bird_2.png");
-                    return modelData.type === "small" ? Paths.absolutePath("root:/assets/cactus_small.png") : Paths.absolutePath("root:/assets/cactus_large.png");
+                    if (obstacle.type === "bird") return Math.floor(DinoGameBackend.frameCount / 7) % 2 === 0 ? Paths.absolutePath("root:/assets/bird_1.png") : Paths.absolutePath("root:/assets/bird_2.png");
+                    return obstacle.type === "small" ? Paths.absolutePath("root:/assets/cactus_small.png") : Paths.absolutePath("root:/assets/cactus_large.png");
                 }
-                x: modelData.x
-                y: parent.height - 30 - height - (modelData.yOffset || 0)
+                x: obstacle.x ?? 0
+                y: parent.height - 30 - height - (obstacle.yOffset || 0)
 
                 layer.enabled: true
                 layer.effect: Colouriser {

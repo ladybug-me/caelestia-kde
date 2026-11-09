@@ -112,8 +112,10 @@ test_the_page_is_registered_next_to_its_neighbours() {
     registry_bluetooth="$(grep -n 'key: "bluetoothPairing"' "$REGISTRY" | cut -d: -f1)"
     registry_displays="$(grep -n 'key: "displays"' "$REGISTRY" | cut -d: -f1)"
     registry_audio="$(grep -n 'key: "audio"' "$REGISTRY" | cut -d: -f1)"
-    assert_eq "yes" "$([ "$registry_bluetooth" -lt "$registry_displays" ] && [ "$registry_displays" -lt "$registry_audio" ] && echo yes)" \
-        "and the registry has to keep that order"
+    assert_eq "yes" "$([ "$registry_bluetooth" -lt "$registry_audio" ] && [ "$registry_audio" -lt "$registry_displays" ] && echo yes)" \
+        "the display and audio pages follow connectivity in the registry"
+    assert_contains "$registry" 'SubPage { slot: 2; key: "audio"' "audio keeps its assigned slot"
+    assert_contains "$registry" 'SubPage { slot: 11; key: "displays"' "displays keeps its assigned slot"
 }
 
 SCRIPT="$REPO_ROOT/shell/scripts/panel_capabilities.py"

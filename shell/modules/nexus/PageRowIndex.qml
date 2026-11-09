@@ -366,6 +366,24 @@ QtObject {
             subPageIdx: 7
         },
         {
+            label: qsTr("Apps"),
+            section: qsTr("Applications & Shortcuts"),
+            pageIdx: 6,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("All Apps"),
+            section: qsTr("Applications & Shortcuts"),
+            pageIdx: 6,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Keyboard Shortcuts"),
+            section: qsTr("Applications & Shortcuts"),
+            pageIdx: 6,
+            subPageIdx: 0
+        },
+        {
             label: qsTr("Force System Defaults (xdg-open)"),
             description: qsTr("Override applications to use KDE system defaults"),
             section: qsTr("Apps"),
@@ -1362,6 +1380,60 @@ QtObject {
             subPageIdx: 4
         },
         {
+            label: qsTr("Displays"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Audio"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("App Volumes"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Sounds"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Muted Apps"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Notification Behaviour"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Toasts"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Toast Events"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Focus Sessions"),
+            section: qsTr("Display & Sound"),
+            pageIdx: 4,
+            subPageIdx: 0
+        },
+        {
             label: qsTr("Enabled"),
             section: qsTr("Displays"),
             pageIdx: 4,
@@ -1980,6 +2052,48 @@ QtObject {
             section: qsTr("Lock Screen"),
             pageIdx: 0,
             subPageIdx: 8
+        },
+        {
+            label: qsTr("Network"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("All Networks"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Saved Networks"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Hotspot"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Proxy"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Bluetooth"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Pair New Device"),
+            section: qsTr("Network & Connectivity"),
+            pageIdx: 3,
+            subPageIdx: 0
         },
         {
             label: qsTr("Wi-Fi"),
@@ -2676,6 +2790,72 @@ QtObject {
             subPageIdx: 8
         },
         {
+            label: qsTr("Session"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("System Services"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Language & Region"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Accessibility"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Storage"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("About"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Discord Rich Presence"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Calendar"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Startup Applications"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Plugins"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("Updates"),
+            section: qsTr("System & Services"),
+            pageIdx: 7,
+            subPageIdx: 0
+        },
+        {
             label: qsTr("Enable Window Switcher"),
             description: qsTr("Use Caelestia's window switcher for Alt+Tab"),
             section: qsTr("Window Switcher"),
@@ -3055,6 +3235,12 @@ QtObject {
         },
         {
             label: qsTr("Quick Share"),
+            section: qsTr("Utilities & Tools"),
+            pageIdx: 5,
+            subPageIdx: 0
+        },
+        {
+            label: qsTr("AI Assistant"),
             section: qsTr("Utilities & Tools"),
             pageIdx: 5,
             subPageIdx: 0

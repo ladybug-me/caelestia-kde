@@ -82,6 +82,14 @@ StyledRect {
     }
 
     readonly property int perPage: Math.max(2, Math.min(12, Config.utilities.quickTogglesPerPage ?? 6))
+    // Every tile is a peer, so all of them take one cell of the same width. The
+    // rows are balanced against how many toggles this page holds, rather than
+    // split in half: an odd page pads its shorter row instead of stretching the
+    // few tiles on it, and a page of three or fewer sits on one row rather than
+    // becoming two rows of very wide pills.
+    readonly property int pageRows: root.pageSlice().length > 3 ? 2 : 1
+    readonly property int pageColumns: Math.max(1, Math.ceil(root.pageSlice().length / root.pageRows))
+    readonly property bool secondRow: root.pageRows > 1
     readonly property int pageCount: Math.max(1, Math.ceil(quickToggles.length / perPage))
     property int currentPage: 0
     property bool dragging: false
@@ -157,7 +165,7 @@ StyledRect {
         const kids = row.children;
         for (let i = 0; i < kids.length; i++) {
             const c = kids[i];
-            if (!c.visible || c.width <= 0 || c.modelData === undefined)
+            if (!c.visible || c.width <= 0 || c.isSpacer === true || c.modelData === undefined)
                 continue;
             const lp = c.mapFromItem(root, px, py);
             if (lp.x >= 0 && lp.y >= 0 && lp.x <= c.width && lp.y <= c.height)
@@ -166,10 +174,20 @@ StyledRect {
         return null;
     }
 
+    // Each row is padded to the page's column count with empty cells. They take a
+    // cell and the spacing around it but draw nothing, which is what keeps the
+    // tiles above and below the same width when a row is not full. The empty
+    // cells are also why the second row is never shown just because it exists.
     function rowModels(top: bool): var {
+        const columns = root.pageColumns;
         const slice = root.pageSlice();
-        const split = Math.ceil(slice.length / 2);
-        return top ? slice.slice(0, split) : slice.slice(split);
+        const start = top ? 0 : columns;
+        const row = slice.slice(start, start + columns);
+        while (row.length < columns)
+            row.push({
+                id: ""
+            });
+        return row;
     }
 
     function requestPage(page: int): void {
@@ -220,15 +238,19 @@ StyledRect {
         }
         const rows = [rowTop, rowBottom];
         const slice = root.pageSlice();
-        const split = Math.ceil(slice.length / 2);
         const pageStart = root.currentPage * root.perPage;
+        const pageEnd = pageStart + slice.length - 1;
         for (let r = 0; r < rows.length; r++) {
             const row = rows[r];
             if (!row.visible || row.model.length <= 0)
                 continue;
-            if (px >= row.x - 20 && px <= row.x + row.width + 20 && py >= row.y - row.height / 2 && py <= row.y + row.height * 1.5) {
-                const base = pageStart + (row === rowBottom ? split : 0);
-                let slot = Math.floor((px - row.x) / (row.width / row.model.length));
+            const origin = row.mapToItem(root, 0, 0);
+            if (px >= origin.x - 20 && px <= origin.x + row.width + 20 && py >= origin.y - row.height / 2 && py <= origin.y + row.height * 1.5) {
+                const base = pageStart + (row === rowBottom ? root.pageColumns : 0);
+                // Cell pitch includes the gap after each cell, so the last cell
+                // starts where the row's width says it should, not short of it.
+                const pitch = (row.width + row.spacing) / row.model.length;
+                let slot = Math.floor((px - origin.x) / pitch);
                 if (slot < 0)
                     slot = 0;
                 if (slot > row.model.length - 1)
@@ -238,7 +260,10 @@ StyledRect {
                 for (let i = 0; i < ids.length; i++)
                     if (ids[i].id === root.dragId)
                         from = i;
-                const to = base + slot;
+                // A padded cell after the last toggle in a short row is still a
+                // slot on screen, but the toggle dropped on it belongs at the end
+                // of this page, not past it.
+                const to = Math.min(base + slot, pageEnd);
                 if (from >= 0 && to >= 0 && from !== to) {
                     const moved = ids.splice(from, 1)[0];
                     ids.splice(to > ids.length ? ids.length : to, 0, moved);
@@ -336,17 +361,27 @@ StyledRect {
             }
         }
 
-        QuickToggleRow {
-            id: rowTop
+        // The rows are one grid, so they share the tile gap rather than the
+        // section rhythm: 8 between cells in both directions, 12 between the
+        // grid and the header or the page dots.
+        ColumnLayout {
+            id: grid
 
-            model: root.rowModels(true)
-        }
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.small
 
-        QuickToggleRow {
-            id: rowBottom
+            QuickToggleRow {
+                id: rowTop
 
-            visible: model.length > 0
-            model: root.rowModels(false)
+                model: root.rowModels(true)
+            }
+
+            QuickToggleRow {
+                id: rowBottom
+
+                visible: root.secondRow
+                model: root.rowModels(false)
+            }
         }
 
         Row {
@@ -402,7 +437,7 @@ StyledRect {
         x: Math.max(Tokens.padding.extraSmall, Math.min(root.width - width - Tokens.padding.extraSmall, root.hoverX - width / 2))
         y: Math.min(root.height - height - Tokens.padding.extraSmall, root.hoverY + Tokens.spacing.medium)
         implicitWidth: hoverTipLabel.implicitWidth + Tokens.padding.medium * 2
-        implicitHeight: hoverTipLabel.implicitHeight + Tokens.padding.extraSmall * 2
+        implicitHeight: hoverTipLabel.implicitHeight + Tokens.padding.small * 2
         radius: Tokens.rounding.full
         color: Qt.rgba(0, 0, 0, 0.85)
 
@@ -449,10 +484,15 @@ StyledRect {
         property real pressY: 0
         property var pressHit: null
 
-        x: layout.x
-        y: layout.y + rowTop.y
-        width: layout.width
-        height: (rowBottom.visible ? rowBottom.y + rowBottom.height : rowTop.y + rowTop.height) - rowTop.y
+        // The overlay lives on the card, while the grid lives inside the card's
+        // ColumnLayout, so this cannot be an anchor across parents: map the
+        // grid's origin instead.
+        readonly property point gridOrigin: grid.mapToItem(root, 0, 0)
+
+        x: gridOrigin.x
+        y: gridOrigin.y
+        width: grid.width
+        height: grid.height
         onPressed: mouse => {
             const p = rowOverlay.mapToItem(root, mouse.x, mouse.y);
             pressX = p.x;
@@ -737,6 +777,18 @@ StyledRect {
                         onClicked: IdleInhibitor.setEnabled(!IdleInhibitor.enabled)
                     }
                 }
+                // An empty cell, used to pad a short row to the page's column
+                // count. It takes the cell's width and the spacing after it so
+                // the row keeps the grid, but it draws nothing and never takes a
+                // press of its own.
+                DelegateChoice {
+                    roleValue: ""
+                    delegate: Item {
+                        property bool fillWidth: true
+                        property bool isSpacer: true
+                        property real shapeMorphExpansion: 0
+                    }
+                }
             }
         }
     }
@@ -747,9 +799,11 @@ StyledRect {
         required property var modelData
 
         // The toggles are icon only, and several glyphs are not obvious on their
-        // own, so hovering one names it after a short delay.
+        // own, so hovering one names it after a short delay. The same name is
+        // what a screen reader announces, rather than the glyph's ligature.
         readonly property string tooltip: root.labelFor(modelData.id)
 
+        Accessible.name: toggle.tooltip !== "" ? toggle.tooltip : toggle.icon
         inactiveColour: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
         fillWidth: true
         isToggle: true

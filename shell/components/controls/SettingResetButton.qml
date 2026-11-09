@@ -57,7 +57,7 @@ IconButton {
     activeFocusOnTab: root.dirty || root.latched
     disabled: !(root.dirty || root.latched)
     icon: "restore"
-    accessibleName: qsTr("Reset to default")
+    Accessible.name: qsTr("Reset to default")
     type: IconButton.Text
     onClicked: root.reset()
 }

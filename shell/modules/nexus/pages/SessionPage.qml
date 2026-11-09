@@ -179,7 +179,6 @@ PageBase {
                 type: StyledTextField.Boxed
                 Layout.fillWidth: true
                 horizontalAlignment: TextInput.AlignLeft
-                placeholderText: field.iconField ? qsTr("Material icon name") : ""
                 text: field.value
                 onEditingFinished: field.committed(text)
             }

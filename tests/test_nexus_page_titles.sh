@@ -42,7 +42,7 @@ test_a_reset_is_hidden_until_it_has_something_to_do() {
         "a default row should not show a permanent reset icon"
     assert_file_contains "$reset" 'icon: "restore"' \
         "the reset icon should not look like reload"
-    assert_file_contains "$reset" 'accessibleName: qsTr("Reset to default")' \
+    assert_file_contains "$reset" 'Accessible.name: qsTr("Reset to default")' \
         "and it needs a name for a screen reader"
 }
 

@@ -421,7 +421,8 @@ Item {
 
     // opencode is the exception: it is in the list above because it shares all of
     // that, but only for part of its catalogue — the rest needs Anthropic Messages,
-    // and it authenticates with x-api-key. See opencodeWire() and setAuthHeader().
+    // and inference uses a bearer token plus the session header. See opencodeWire(),
+    // setAuthHeader() and the x-opencode-session calls.
     readonly property bool isOpencode: provider === "opencode" || provider === "opencode-go"
 
     readonly property var openaiCompatProviders: ["openai", "gemini", "openrouter", "opencode", "opencode-go", "cheaperinference"]
@@ -472,10 +473,9 @@ Item {
     function setAuthHeader(xhr, p) {
         const which = p || provider;
         const key = root.getApiKeyFor(which);
-        if (which === "opencode" || which === "opencode-go")
-            xhr.setRequestHeader("x-api-key", key);
-        else
-            xhr.setRequestHeader("Authorization", "Bearer " + key);
+        // Console/Go authenticate inference with a bearer token. x-api-key is
+        // only accepted by the public model catalogue.
+        xhr.setRequestHeader("Authorization", "Bearer " + key);
     }
 
     property var keyringKeys: ({})
@@ -1481,6 +1481,8 @@ Item {
             xhr.open("POST", root.openaiCompatBase() + (useAnthropic ? "/messages" : "/chat/completions"), true);
             xhr.setRequestHeader("Content-Type", "application/json");
             root.setAuthHeader(xhr);
+            if (root.isOpencode && chatId)
+                xhr.setRequestHeader("x-opencode-session", chatId);
             if (useAnthropic)
                 xhr.setRequestHeader("anthropic-version", "2023-06-01");
             xhr.onreadystatechange = () => {
@@ -1619,6 +1621,8 @@ Item {
             xhr.open("POST", root.openaiCompatBase() + (useAnthropic ? "/messages" : "/chat/completions"), true);
             xhr.setRequestHeader("Content-Type", "application/json");
             root.setAuthHeader(xhr);
+            if (root.isOpencode && root.currentChatId)
+                xhr.setRequestHeader("x-opencode-session", root.currentChatId);
             if (useAnthropic)
                 xhr.setRequestHeader("anthropic-version", "2023-06-01");
             if (root.provider === "openrouter") {

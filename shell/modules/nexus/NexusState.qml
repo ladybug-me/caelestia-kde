@@ -29,7 +29,7 @@ QtObject {
     property int activeSubPageSlot: -1
     property bool compact: false
     property bool compactSubcategories: false
-    property bool sidePane: true
+    property bool sidePane: false
 
     signal close
     signal subPageOpened(target: var)

@@ -110,7 +110,7 @@ PageBase {
         sortDebouncer.restart();
     }
 
-    title: qsTr("Select wallpaper")
+    title: qsTr("Wallpapers")
     isSubPage: true
     scrollable: false
 

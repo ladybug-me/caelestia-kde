@@ -80,7 +80,7 @@ StyledSwitch {
                 text: root.subtext
                 color: root.enabled ? Colours.palette.m3onSurfaceVariant : Colours.disabledContent
                 font: NexusStyle.secondaryFont
-                elide: Text.ElideRight
+                wrapMode: Text.Wrap
             }
         }
     }

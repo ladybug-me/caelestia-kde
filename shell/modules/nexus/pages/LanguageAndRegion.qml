@@ -95,7 +95,7 @@ PageBase {
         }
     ]
 
-    title: qsTr("Language & region")
+    title: qsTr("Language & Region")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

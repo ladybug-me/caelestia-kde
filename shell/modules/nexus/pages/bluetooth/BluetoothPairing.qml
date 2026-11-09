@@ -21,7 +21,7 @@ PageBase {
             adapter.discovering = on;
     }
 
-    title: qsTr("Pair new device")
+    title: qsTr("Pair New Device")
     isSubPage: true
 
     Component.onCompleted: setScan(true)

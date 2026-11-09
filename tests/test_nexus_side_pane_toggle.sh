@@ -10,9 +10,9 @@ NEXUS="$REPO_ROOT/shell/modules/nexus"
 CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/nexusconfig.hpp"
 APPEARANCE="$NEXUS/pages/wallandstyle/AppearancePage.qml"
 
-test_the_layout_is_a_global_setting_that_defaults_to_the_side_pane() {
-    assert_file_contains "$CONFIG" 'CONFIG_GLOBAL_PROPERTY(bool, sidePane, true)' \
-        "the setting should be global and default to the three-pane layout"
+test_the_layout_is_a_global_setting_that_defaults_to_two_panels() {
+    assert_file_contains "$CONFIG" 'CONFIG_GLOBAL_PROPERTY(bool, sidePane, false)' \
+        "the setting should be global and default to the two-panel layout"
 }
 
 test_the_toggle_lives_in_the_settings_window_itself() {
@@ -35,7 +35,7 @@ test_the_compact_fold_only_applies_to_the_three_pane_layout() {
 }
 
 test_a_section_opens_on_its_own_list_without_the_pane() {
-    assert_file_contains "$NEXUS/NexusState.qml" 'property bool sidePane: true' \
+    assert_file_contains "$NEXUS/NexusState.qml" 'property bool sidePane: false' \
         "the navigation state should know which layout it is driving"
     assert_file_contains "$NEXUS/NexusState.qml" 'if (!sidePane)' \
         "the default slot should depend on the layout"

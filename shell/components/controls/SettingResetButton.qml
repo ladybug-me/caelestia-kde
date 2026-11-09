@@ -51,10 +51,13 @@ IconButton {
     }
 
     // Always occupy its slot at the right edge so rows never shift when it
-    // appears; dimmed and inert until the value differs from the default.
+    // appears; hidden and inert until the value differs from the default.
     visible: root.active
+    opacity: root.dirty || root.latched ? 1 : 0
+    activeFocusOnTab: root.dirty || root.latched
     disabled: !(root.dirty || root.latched)
-    icon: "restart_alt"
+    icon: "restore"
+    Accessible.name: qsTr("Reset to default")
     type: IconButton.Text
     onClicked: root.reset()
 }

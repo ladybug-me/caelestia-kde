@@ -91,7 +91,7 @@ PageBase {
         GlobalConfig.save();
     }
 
-    title: qsTr("Focus sessions")
+    title: qsTr("Focus Sessions")
     isSubPage: true
 
     ColumnLayout {

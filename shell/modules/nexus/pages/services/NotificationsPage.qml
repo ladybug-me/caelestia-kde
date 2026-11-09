@@ -22,7 +22,7 @@ PageBase {
         NavRow {
             first: true
             icon: "notifications"
-            label: qsTr("Notifications")
+            label: qsTr("Notification Behaviour")
             status: qsTr("Position, timeout, and display behavior")
             onClicked: root.nState.openSubPage("notificationPreferences")
         }
@@ -42,7 +42,7 @@ PageBase {
         NavRow {
             first: true
             icon: "tune"
-            label: qsTr("Toast events")
+            label: qsTr("Toast Events")
             status: qsTr("Choose which system changes show a toast")
             onClicked: root.nState.openSubPage("toastEvents")
         }
@@ -50,7 +50,7 @@ PageBase {
         NavRow {
             last: true
             icon: "do_not_disturb_on"
-            label: qsTr("Focus sessions")
+            label: qsTr("Focus Sessions")
             status: Focus.active ? qsTr("Running until %1").arg(Focus.activeEnd()) : qsTr("Do Not Disturb on a schedule")
             onClicked: root.nState.openSubPage("focus")
         }

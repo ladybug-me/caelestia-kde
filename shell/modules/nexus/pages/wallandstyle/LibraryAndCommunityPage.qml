@@ -34,7 +34,7 @@ PageBase {
     }
 
     isSubPage: true
-    title: qsTr("Community & Online")
+    title: qsTr("Library & Components")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

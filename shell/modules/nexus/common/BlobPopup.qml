@@ -113,13 +113,15 @@ Item {
         implicitHeight: icon.implicitHeight + Tokens.padding.extraSmall * 2
         cursorShape: Qt.PointingHandCursor
         hoverEnabled: true
+        Accessible.role: Accessible.Button
+        Accessible.name: qsTr("Open picker")
         onClicked: root.open = !root.open
 
         MaterialIcon {
             id: icon
 
             anchors.centerIn: parent
-            text: "view_apps"
+            text: "expand_less"
             color: Colours.palette.m3onSurfaceVariant
             fontStyle: Tokens.font.icon.medium
         }

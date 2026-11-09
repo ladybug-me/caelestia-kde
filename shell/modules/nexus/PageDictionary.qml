@@ -96,11 +96,11 @@ QtObject {
             description: qsTr("Wi-Fi, Bluetooth, network"),
             category: "connectivity",
             settings: [
-                { label: qsTr("Wi-Fi & Connection"), keywords: ["wireless", "internet", "connections", "network"], pagePath: "network/NetworkPage.qml", subPageIdx: 0 },
+                { label: qsTr("Network"), keywords: ["wireless", "internet", "connections", "network"], pagePath: "network/NetworkPage.qml", subPageIdx: 0 },
                 { label: qsTr("VPN"), keywords: ["vpn", "tunnel", "secure"], subPageIdx: 0 },
                 { label: qsTr("IPv4"), keywords: ["ethernet", "ip address", "dhcp", "gateway"], subPageIdx: 0 },
-                { label: qsTr("All networks"), keywords: ["list", "available", "scan"], pagePath: "network/AllNetworksPage.qml", subPageIdx: 5 },
-                { label: qsTr("Saved networks"), keywords: ["remembered", "forget", "profiles"], pagePath: "network/SavedNetworksPage.qml", subPageIdx: 6 },
+                { label: qsTr("All Networks"), keywords: ["list", "available", "scan"], pagePath: "network/AllNetworksPage.qml", subPageIdx: 5 },
+                { label: qsTr("Saved Networks"), keywords: ["remembered", "forget", "profiles"], pagePath: "network/SavedNetworksPage.qml", subPageIdx: 6 },
                 { label: qsTr("Hotspot"), keywords: ["hotspot", "tethering", "access point", "share connection"], pagePath: "network/HotspotPage.qml", subPageIdx: 7 },
                 { label: qsTr("Captive portal"), keywords: ["captive", "portal", "sign in", "login", "hotel", "airport", "wifi"], subPageIdx: 0 },
                 { label: qsTr("Proxy"), keywords: ["proxy", "http", "socks", "pac", "kioslaverc"], pagePath: "network/ProxyPage.qml", subPageIdx: 8 },
@@ -117,19 +117,19 @@ QtObject {
             description: qsTr("Displays, audio, notifications"),
             category: "connectivity",
             settings: [
-                { label: qsTr("Layout & Scale"), keywords: ["displays", "scale", "fractional", "zoom", "hidpi", "screen"], pagePath: "display/DisplayPage.qml", subPageIdx: 0 },
+                { label: qsTr("Displays"), keywords: ["displays", "scale", "fractional", "zoom", "hidpi", "screen"], pagePath: "display/DisplayPage.qml", subPageIdx: 0 },
                 { label: qsTr("Resolution"), keywords: ["mode", "refresh rate", "hz", "screen", "monitor"], pagePath: "display/DisplayModesPage.qml", subPageIdx: 1 },
                 { label: qsTr("Refresh rate"), keywords: ["hz", "mode", "screen", "monitor"], pagePath: "display/DisplayModesPage.qml", subPageIdx: 1 },
                 { label: qsTr("Rotation"), keywords: ["rotate", "orientation", "portrait", "screen"], pagePath: "display/DisplayPage.qml", subPageIdx: 0 },
                 { label: qsTr("HDR"), keywords: ["hdr", "dynamic range", "screen"], pagePath: "display/DisplayPage.qml", subPageIdx: 0 },
-                { label: qsTr("Output & Input"), keywords: ["speakers", "output", "volume", "playback", "sink", "microphone", "recording", "source"], pagePath: "audio/AudioPage.qml", subPageIdx: 2 },
+                { label: qsTr("Audio"), keywords: ["speakers", "output", "volume", "playback", "sink", "microphone", "recording", "source"], pagePath: "audio/AudioPage.qml", subPageIdx: 2 },
                 { label: qsTr("App Volumes"), keywords: ["app", "volume", "stream", "per-app"], pagePath: "audio/AppVolumes.qml", subPageIdx: 3 },
                 { label: qsTr("Sounds"), keywords: ["sfx", "feedback", "camera", "screen lock", "sounds", "notifications", "notification sound", "volume"], pagePath: "audio/SoundEffectsPage.qml", subPageIdx: 4 },
-                { label: qsTr("Notification Silence"), keywords: ["silence", "mute", "muted", "turn off notifications", "hide notifications", "notification sound", "do not disturb"], pagePath: "audio/NotificationSilencingPage.qml", subPageIdx: 5 },
-                { label: qsTr("Preferences"), keywords: ["notifications", "fullscreen", "position", "timeout", "taskbar"], pagePath: "services/NotificationPreferencesPage.qml", subPageIdx: 6 },
+                { label: qsTr("Muted Apps"), keywords: ["silence", "mute", "muted", "turn off notifications", "hide notifications", "notification sound", "do not disturb"], pagePath: "audio/NotificationSilencingPage.qml", subPageIdx: 5 },
+                { label: qsTr("Notification Behaviour"), keywords: ["notifications", "fullscreen", "position", "timeout", "taskbar"], pagePath: "services/NotificationPreferencesPage.qml", subPageIdx: 6 },
                 { label: qsTr("Toasts"), keywords: ["popup", "banner", "sound", "volume"], pagePath: "services/ToastPreferencesPage.qml", subPageIdx: 7 },
-                { label: qsTr("Toast events"), keywords: ["charging", "clipboard", "vpn", "keyboard", "audio"], pagePath: "services/ToastEventsPage.qml", subPageIdx: 8 },
-                { label: qsTr("Focus sessions"), keywords: ["do not disturb", "dnd", "schedule", "focus", "quiet"], pagePath: "services/FocusPage.qml", subPageIdx: 9 }
+                { label: qsTr("Toast Events"), keywords: ["charging", "clipboard", "vpn", "keyboard", "audio"], pagePath: "services/ToastEventsPage.qml", subPageIdx: 8 },
+                { label: qsTr("Focus Sessions"), keywords: ["do not disturb", "dnd", "schedule", "focus", "quiet"], pagePath: "services/FocusPage.qml", subPageIdx: 9 }
             ]
         },
         {
@@ -143,8 +143,8 @@ QtObject {
                 { label: qsTr("Quick toggles"), keywords: ["toggles", "dashboard", "switches"], pagePath: "utilities/QuickTogglesPage.qml", subPageIdx: 5 },
                 { label: qsTr("Game Mode"), keywords: ["hyprland overrides", "performance", "games", "game mode"], pagePath: "services/GameModePage.qml", subPageIdx: 1 },
                 { label: qsTr("Auto-enable rules"), keywords: ["game mode", "rules", "target windows"], pagePath: "services/GameModeTargetsPage.qml", subPageIdx: 2 },
-                { label: qsTr("Quick share"), keywords: ["bluetooth", "nearby", "file sharing", "send file", "receive file", "android"], pagePath: "services/QuickSharePage.qml", subPageIdx: 6 },
-                { label: qsTr("AI Configuration"), keywords: ["claude", "ai", "llm", "cli", "assistant", "accounts", "providers", "ollama", "openai"], pagePath: "AiSettingsPage.qml", subPageIdx: 7 }
+                { label: qsTr("Quick Share"), keywords: ["bluetooth", "nearby", "file sharing", "send file", "receive file", "android"], pagePath: "services/QuickSharePage.qml", subPageIdx: 6 },
+                { label: qsTr("AI Assistant"), keywords: ["claude", "ai", "llm", "cli", "assistant", "accounts", "providers", "ollama", "openai"], pagePath: "AiSettingsPage.qml", subPageIdx: 7 }
             ]
         },
         {
@@ -154,9 +154,9 @@ QtObject {
             description: qsTr("Default apps, shortcuts"),
             category: "shell",
             settings: [
-                { label: qsTr("Default Applications"), keywords: ["browser", "email", "default", "open with"], pagePath: "AppsPage.qml", subPageIdx: 0 },
+                { label: qsTr("Apps"), keywords: ["browser", "email", "default", "open with"], pagePath: "AppsPage.qml", subPageIdx: 0 },
                 { label: qsTr("File Types"), keywords: ["associations", "extensions", "open with"], pagePath: "AppsPage.qml", subPageIdx: 0 },
-                { label: qsTr("Installed Applications"), keywords: ["installed", "list", "all apps", "uninstall"], pagePath: "apps/AllApps.qml", subPageIdx: 1 },
+                { label: qsTr("All Apps"), keywords: ["installed", "list", "all apps", "uninstall"], pagePath: "apps/AllApps.qml", subPageIdx: 1 },
                 { label: qsTr("Favorites & Hidden"), keywords: ["pinned", "dock", "launcher", "ignore"], pagePath: "apps/AllApps.qml", subPageIdx: 1 },
                 { label: qsTr("Keyboard Shortcuts"), keywords: ["global", "keys", "hotkeys", "keybinds", "shortcuts"], pagePath: "ShortcutManagerPage.qml", subPageIdx: 3 },
                 { label: qsTr("Custom Keybinds"), keywords: ["scripts", "commands", "actions"], pagePath: "ShortcutManagerPage.qml", subPageIdx: 3 }
@@ -169,18 +169,18 @@ QtObject {
             description: qsTr("Session, services, storage, about"),
             category: "system",
             settings: [
-                { label: qsTr("Session settings"), keywords: ["power", "shutdown", "logout", "reboot", "hibernate"], pagePath: "SessionPage.qml", subPageIdx: 0 },
+                { label: qsTr("Session"), keywords: ["power", "shutdown", "logout", "reboot", "hibernate"], pagePath: "SessionPage.qml", subPageIdx: 0 },
                 { label: qsTr("System Services"), keywords: ["daemons", "systemd", "tuning", "visualiser", "microphone", "cava"], pagePath: "ServicesPage.qml", subPageIdx: 1 },
-                { label: qsTr("Remote IPC"), keywords: ["discord", "steamgriddb", "activity", "arpc", "rpc"], pagePath: "services/ArpcPage.qml", subPageIdx: 2 },
-                { label: qsTr("Calendar Integration"), keywords: ["agenda", "events", "ics", "ical", "google", "nextcloud", "reminder"], pagePath: "services/CalendarPage.qml", subPageIdx: 3 },
-                { label: qsTr("Language & Format"), keywords: ["locale", "translation", "ui", "clock", "timezone", "format"], pagePath: "LanguageAndRegion.qml", subPageIdx: 4 },
+                { label: qsTr("Discord Rich Presence"), keywords: ["discord", "steamgriddb", "activity", "arpc", "rpc"], pagePath: "services/ArpcPage.qml", subPageIdx: 2 },
+                { label: qsTr("Calendar"), keywords: ["agenda", "events", "ics", "ical", "google", "nextcloud", "reminder"], pagePath: "services/CalendarPage.qml", subPageIdx: 3 },
+                { label: qsTr("Language & Region"), keywords: ["locale", "translation", "ui", "clock", "timezone", "format"], pagePath: "LanguageAndRegion.qml", subPageIdx: 4 },
                 { label: qsTr("Accessibility"), keywords: ["font scale", "reduce motion", "magnifier", "invert colours", "colour filters", "screen reader", "a11y"], pagePath: "services/AccessibilityPage.qml", subPageIdx: 5 },
                 { label: qsTr("Startup Applications"), keywords: ["login", "startup", "autostart", "boot", "session"], pagePath: "startup/AutostartPage.qml", subPageIdx: 6 },
                 { label: qsTr("Add to startup"), keywords: ["add", "application", "login"], pagePath: "startup/AutostartAppPicker.qml", subPageIdx: 7 },
-                { label: qsTr("Disk & Storage"), keywords: ["mount", "usb", "disk", "partition", "filesystem", "drive", "unmount", "eject"], pagePath: "StoragePage.qml", subPageIdx: 8 },
-                { label: qsTr("Caelestia Plugins"), keywords: ["extensions", "addons", "plugins"], pagePath: "PluginsPage.qml", subPageIdx: 9 },
+                { label: qsTr("Storage"), keywords: ["mount", "usb", "disk", "partition", "filesystem", "drive", "unmount", "eject"], pagePath: "StoragePage.qml", subPageIdx: 8 },
+                { label: qsTr("Plugins"), keywords: ["extensions", "addons", "plugins"], pagePath: "PluginsPage.qml", subPageIdx: 9 },
                 { label: qsTr("Updates"), keywords: ["upgrade", "packages", "pacman", "dnf", "apt", "firmware"], pagePath: "UpdatesPage.qml", subPageIdx: 10 },
-                { label: qsTr("About System"), keywords: ["hardware", "specs", "cpu", "ram", "caelestia", "quickshell", "release", "uninstall"], pagePath: "AboutPage.qml", subPageIdx: 11 }
+                { label: qsTr("About"), keywords: ["hardware", "specs", "cpu", "ram", "caelestia", "quickshell", "release", "uninstall"], pagePath: "AboutPage.qml", subPageIdx: 11 }
             ]
         }
     ]

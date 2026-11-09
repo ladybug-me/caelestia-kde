@@ -13,7 +13,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Saved networks")
+    title: qsTr("Saved Networks")
     isSubPage: true
 
     Component.onCompleted: Nmcli.loadSavedConnections(() => {})

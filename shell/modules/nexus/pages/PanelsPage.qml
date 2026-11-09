@@ -5,7 +5,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Panels")
+    title: qsTr("Panels & Interface")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

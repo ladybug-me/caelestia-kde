@@ -79,7 +79,7 @@ PageBase {
         dialogLoader.item.open()
     }
 
-    title: qsTr("Shortcuts")
+    title: qsTr("Keyboard Shortcuts")
     onShortcutQueryChanged: updateLists()
 
     ColumnLayout {

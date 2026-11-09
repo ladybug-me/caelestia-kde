@@ -65,7 +65,7 @@ ConnectedRect {
                 text: input.isError && root.errorText ? root.errorText : root.subtext
                 color: input.isError && root.errorText ? Colours.palette.m3error : Colours.palette.m3onSurfaceVariant
                 font: NexusStyle.secondaryFont
-                elide: Text.ElideRight
+                wrapMode: Text.Wrap
                 animate: root.errorText
             }
         }

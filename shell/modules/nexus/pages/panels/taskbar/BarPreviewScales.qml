@@ -6,7 +6,6 @@ import QtQuick.Layouts
 import Caelestia.Config
 import qs.components
 import qs.components.controls
-import qs.services
 import qs.utils
 import qs.modules.nexus.common
 
@@ -41,17 +40,6 @@ PageBase {
                 GlobalConfig.bar.perElementPreviewScale = checked;
                 GlobalConfig.bar.perElementFontScale = checked;
             }
-        }
-
-        StyledText {
-            Layout.fillWidth: true
-            Layout.leftMargin: Tokens.padding.largeIncreased
-            Layout.rightMargin: Tokens.padding.largeIncreased
-            visible: !GlobalConfig.bar.perElementPreviewScale && !GlobalConfig.bar.perElementFontScale
-            text: qsTr("Turn this on to set a preview scale and a font scale for each popout type.")
-            color: Colours.palette.m3onSurfaceVariant
-            font: NexusStyle.secondaryFont
-            wrapMode: Text.Wrap
         }
 
         ColumnLayout {

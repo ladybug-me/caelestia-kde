@@ -1,20 +1,14 @@
 pragma ComponentBehavior: Bound
 
-import QtQuick
 import QtQuick.Layouts
 import Caelestia.Config
 import qs.modules.bar
-import qs.modules.nexus
 import qs.modules.nexus.common
 
 PageBase {
     id: root
 
     readonly property bool indicatorEnabled: BarWidgets.isEnabled(GlobalConfig.bar, "updateIndicator")
-
-    readonly property bool checkingOff: !GlobalConfig.general.checkUpdates
-
-    readonly property int updatesPageIdx: PageRegistry.updatesPageIdx
 
     title: qsTr("Updates")
     isSubPage: true
@@ -27,12 +21,10 @@ PageBase {
 
         ToggleRow {
             first: true
-            last: !root.checkingOff
             text: qsTr("Show update indicator")
-            subtext: root.checkingOff
-                ? qsTr("Nothing to report while update checking is off")
-                : qsTr("Always-visible icon in the taskbar that changes when a Caelestia update is available")
+            subtext: qsTr("Always-visible icon in the taskbar that changes when a Caelestia update is available")
             checked: root.indicatorEnabled
+            // Custom reset: enabled state lives in bar.entries, default is true
             reset: ({
                 customGet: () => root.indicatorEnabled,
                 customDef: true,
@@ -41,13 +33,13 @@ PageBase {
             onToggled: BarWidgets.setEnabled(GlobalConfig.bar, "updateIndicator", checked)
         }
 
-        NavRow {
+        ToggleRow {
             last: true
-            visible: root.checkingOff
-            icon: "sync"
-            label: qsTr("Turn on update checking")
-            status: qsTr("Periodic checks and the indicator are off")
-            onClicked: root.nState.goToPage(root.updatesPageIdx)
+            text: qsTr("Enable update checking")
+            subtext: qsTr("Enables the update indicator and periodic checks (every 30 minutes)")
+            reset: ({ node: GlobalConfig.general, setting: "checkUpdates" })
+            checked: GlobalConfig.general.checkUpdates
+            onToggled: GlobalConfig.general.checkUpdates = checked
         }
     }
 }

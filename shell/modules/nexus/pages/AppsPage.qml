@@ -134,8 +134,6 @@ PageBase {
         }
 
         SelectRow {
-            first: true
-            last: true
             Layout.fillWidth: true
             label: qsTr("Web search engine")
             subtext: qsTr("Engine behind the launcher's web search row")

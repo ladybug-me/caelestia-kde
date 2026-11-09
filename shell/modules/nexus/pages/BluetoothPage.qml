@@ -17,18 +17,13 @@ PageBase {
     readonly property BluetoothAdapter adapter: Bluetooth.defaultAdapter // qmllint disable unresolved-type
     readonly property bool btEnabled: adapter?.enabled ?? false
 
-    title: qsTr("Bluetooth")
+    title: qsTr("Connected devices")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
-
-        SectionHeader {
-            first: true
-            text: qsTr("Connected Devices")
-        }
 
         ToggleRow {
             first: true
@@ -155,7 +150,7 @@ PageBase {
 
                                     onClicked: {
                                         root.nState.selectedBtDevice = device.modelData;
-                                        root.nState.openSubPage("btDeviceInfo");
+                                        root.nState.openSubPage(1);
                                     }
                                 }
                             }
@@ -180,7 +175,7 @@ PageBase {
 
             StateLayer {
                 disabled: !root.btEnabled
-                onClicked: root.nState.openSubPage("bluetoothPairing")
+                onClicked: root.nState.openSubPage(2)
             }
 
             RowLayout {

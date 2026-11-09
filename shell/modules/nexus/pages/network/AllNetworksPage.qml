@@ -11,7 +11,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("All Networks")
+    title: qsTr("All networks")
     isSubPage: true
     flickable.bottomMargin: Tokens.padding.extraExtraLarge * 2
 

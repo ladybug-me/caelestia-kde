@@ -14,7 +14,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("App Volumes")
+    title: qsTr("App volumes")
     isSubPage: true
 
     ColumnLayout {

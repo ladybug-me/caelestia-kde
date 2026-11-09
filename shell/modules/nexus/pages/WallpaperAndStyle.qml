@@ -38,7 +38,7 @@ PageBase {
 
             NavRow {
                 icon: "cloud_download"
-                label: qsTr("Library & Components")
+                label: qsTr("Library & Community")
                 status: qsTr("Wallhaven, online wallpapers, tags and filters")
                 onClicked: root.nState.openSubPage(6)
             }
@@ -53,7 +53,7 @@ PageBase {
         }
 
         SectionHeader {
-            text: qsTr("Lock Screen")
+            text: qsTr("Lock screen")
         }
 
         ColumnLayout {
@@ -64,7 +64,7 @@ PageBase {
                 first: true
                 last: true
                 icon: "lock"
-                label: qsTr("Lock Screen")
+                label: qsTr("Lock screen")
                 status: qsTr("Wallpaper sync and lock screen settings")
                 onClicked: root.nState.openSubPage(8)
             }

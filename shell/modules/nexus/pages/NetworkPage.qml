@@ -374,7 +374,7 @@ PageBase {
                                 case "needs-auth":
                                     return VPN.status.reason || qsTr("Authentication required");
                                 case "error":
-                                    return VPN.status.reason || qsTr("Could not connect. Check the VPN settings and try again.");
+                                    return VPN.status.reason || qsTr("An error occurred");
                                 default:
                                     return qsTr("Selected");
                                 }

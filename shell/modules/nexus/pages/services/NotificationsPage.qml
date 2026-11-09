@@ -22,9 +22,9 @@ PageBase {
         NavRow {
             first: true
             icon: "notifications"
-            label: qsTr("Notification Behaviour")
+            label: qsTr("Notifications")
             status: qsTr("Position, timeout, and display behavior")
-            onClicked: root.nState.openSubPage("notificationPreferences")
+            onClicked: root.nState.openSubPage(1)
         }
 
         NavRow {
@@ -32,7 +32,7 @@ PageBase {
             icon: "campaign"
             label: qsTr("Toasts")
             status: qsTr("Fullscreen behavior, appearance, and sound")
-            onClicked: root.nState.openSubPage("toastPreferences")
+            onClicked: root.nState.openSubPage(2)
         }
 
         SectionHeader {
@@ -42,17 +42,17 @@ PageBase {
         NavRow {
             first: true
             icon: "tune"
-            label: qsTr("Toast Events")
+            label: qsTr("Toast events")
             status: qsTr("Choose which system changes show a toast")
-            onClicked: root.nState.openSubPage("toastEvents")
+            onClicked: root.nState.openSubPage(3)
         }
 
         NavRow {
             last: true
             icon: "do_not_disturb_on"
-            label: qsTr("Focus Sessions")
+            label: qsTr("Focus sessions")
             status: Focus.active ? qsTr("Running until %1").arg(Focus.activeEnd()) : qsTr("Do Not Disturb on a schedule")
-            onClicked: root.nState.openSubPage("focus")
+            onClicked: root.nState.openSubPage(4)
         }
     }
 }

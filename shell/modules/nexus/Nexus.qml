@@ -17,186 +17,24 @@ Item {
     property int initialPageIdx: 0
     property var initialSubPageIdx: -1
     readonly property bool windowActive: Window.window ? Window.window.active : false
-    readonly property bool sidePane: GlobalConfig.nexus.sidePane
-
-    // The fold is what the three-pane layout does when it runs out of width,
-    // so it is meaningless without the pane that gets folded away.
-    readonly property bool compact: root.width < 1120 && root.sidePane
 
     readonly property NexusState nState: NexusState {
         id: nState
 
-        compact: root.compact
-        sidePane: root.sidePane
-        pendingSubPageIdx: {
-            if (root.initialSubPageIdx === -1 || root.initialSubPageIdx === undefined || root.initialSubPageIdx === "")
-                return -1;
-            return (typeof root.initialSubPageIdx === "number")
-                ? root.initialSubPageIdx
-                : PageDictionary.defaultSubPageForKey(root.initialSubPageIdx);
-        }
         currentPageIdx: root.initialPageIdx
+        Component.onCompleted: {
+            if (root.initialSubPageIdx !== -1 && root.initialSubPageIdx !== undefined && root.initialSubPageIdx !== "")
+                openSubPage(root.initialSubPageIdx);
+        }
 
         onClose: root.requestClose()
-        onCurrentPageIdxChanged: {
-            if (root.navigatingFromSearch)
-                return;
-            root.activePane = 0;
-            subcategoryPane.clearSelection();
-            pages.clearSelection();
-        }
-        onCompactSubcategoriesChanged: {
-            if (!compactSubcategories && root.compact && root.activePane === 1) {
-                root.activePane = 0;
-                subcategoryPane.clearSelection();
-            }
-        }
     }
     property color blobColour: Colours.tPalette.m3surfaceContainerLow
-    property int activePane: 0
-    property bool navigatingFromSearch: false
-    readonly property bool hasActiveInputField: root.isInputField(Window.window ? Window.window.activeFocusItem : null)
-    readonly property var targetScreen: nState.screen ?? Window.window?.screen ?? Quickshell.screens[0]
 
     signal close
 
     function requestClose(): void {
         root.close();
-    }
-
-    function isInputField(item: var): bool {
-        let cur = item;
-        while (cur) {
-            if (cur.cursorPosition !== undefined || cur.inputMethodHints !== undefined || cur.capturedKey !== undefined)
-                return true;
-            cur = cur.parent ?? null;
-        }
-        return false;
-    }
-
-    function focusSearchBar(): void {
-        if (root.compact && root.nState.compactSubcategories)
-            root.nState.exitCompactPage();
-        root.activePane = 0;
-        subcategoryPane.clearSelection();
-        pages.clearSelection();
-        navPane.focusSearchBar();
-    }
-
-    function clearSearchFocus(): void {
-        navPane.clearSearchFocus();
-        root.forceActiveFocus();
-    }
-
-    function navPaneWidth(): int {
-        if (root.compact)
-            return Math.min(340, Math.round(root.width * 0.45));
-        // Without the side pane the list carries the width it had before the
-        // three-pane layout took a slice of it.
-        if (!root.sidePane)
-            return Math.min(Tokens.sizes.nexus.maxNavWidth, Math.round(root.width / 3));
-        return Math.min(285, Math.round(root.width * 0.21));
-    }
-
-    function moveUp(): void {
-        if (root.activePane === 2)
-            pages.moveUp();
-        else if (root.activePane === 1)
-            subcategoryPane.moveUp();
-        else
-            navPane.moveUp();
-    }
-
-    function moveDown(): void {
-        if (root.activePane === 2)
-            pages.moveDown();
-        else if (root.activePane === 1)
-            subcategoryPane.moveDown();
-        else
-            navPane.moveDown();
-    }
-
-    // Pane 1 is the subcategory pane. Without it the section list and the
-    // content are neighbours, so stepping in skips the middle pane and
-    // stepping out lands on the sections.
-    function enterSubcategories(): void {
-        if (root.sidePane) {
-            root.activePane = 1;
-            subcategoryPane.selectCurrentOrFirst();
-        } else {
-            root.activePane = 2;
-            pages.selectFirst();
-        }
-    }
-
-    function leaveSubcategories(): void {
-        if (root.compact)
-            root.nState.exitCompactPage();
-        subcategoryPane.clearSelection();
-        root.activePane = 0;
-        navPane.selectCurrentOrFirst();
-    }
-
-    function leaveContent(): void {
-        pages.clearSelection();
-        if (root.sidePane) {
-            root.activePane = 1;
-            subcategoryPane.selectCurrentOrFirst();
-        } else {
-            root.activePane = 0;
-            navPane.selectCurrentOrFirst();
-        }
-    }
-
-    function activateSelected(): void {
-        if (root.activePane === 2) {
-            pages.activateSelected();
-        } else if (root.activePane === 1) {
-            subcategoryPane.activateSelected();
-            root.activePane = 2;
-            pages.selectFirst();
-        } else {
-            const wasSearchOpen = root.nState.searchOpen;
-            navPane.activateSelected();
-            if (!wasSearchOpen) {
-                if (root.compact)
-                    root.nState.enterCompactPage();
-                root.enterSubcategories();
-            }
-        }
-    }
-
-    function goLeft(): void {
-        if (root.activePane === 2) {
-            if (pages.stepLeft())
-                return;
-            if (root.nState.subPageIdxStack.length > 0) {
-                WindowFactory.goBack();
-            } else {
-                root.leaveContent();
-            }
-        } else if (root.activePane === 1) {
-            root.leaveSubcategories();
-        }
-    }
-
-    function goRight(): void {
-        if (root.activePane === 2) {
-            if (!pages.stepRight())
-                pages.activateSelected();
-        } else if (root.activePane === 1) {
-            subcategoryPane.activateSelected();
-            root.activePane = 2;
-            pages.selectFirst();
-        } else {
-            const wasSearchOpen = root.nState.searchOpen;
-            navPane.activateSelected();
-            if (!wasSearchOpen) {
-                if (root.compact)
-                    root.nState.enterCompactPage();
-                root.enterSubcategories();
-            }
-        }
     }
 
     function currentFlickable(): var {
@@ -210,7 +48,7 @@ Item {
     }
 
     function scrollCurrentPage(event: var): bool {
-        if (event.x <= (root.sidePane ? subcategoryPane.x + subcategoryPane.width : navPane.x + navPane.width))
+        if (event.x <= navPane.x + navPane.width)
             return false;
 
         const f = root.currentFlickable();
@@ -230,8 +68,8 @@ Item {
         return true;
     }
 
-    implicitHeight: (targetScreen ? targetScreen.height : 1080) * Tokens.sizes.nexus.heightMult
     implicitWidth: implicitHeight * Tokens.sizes.nexus.ratio
+    implicitHeight: nState.screen.height * Tokens.sizes.nexus.heightMult
 
     Behavior on blobColour {
         CAnim {}
@@ -250,7 +88,7 @@ Item {
         opacity: root.blobColour.a
         radius: Tokens.rounding.large
 
-        borderLeft: pages.x - Tokens.padding.small
+        borderLeft: navPane.width + navPane.anchors.margins * 2
         borderRight: Tokens.padding.medium
         borderTop: Tokens.padding.medium
         borderBottom: Tokens.padding.medium
@@ -265,61 +103,18 @@ Item {
         anchors.margins: Tokens.padding.large
 
         nState: nState
-        width: root.navPaneWidth()
-        opacity: root.compact && root.nState.compactSubcategories ? 0 : 1
-        enabled: !root.compact || !root.nState.compactSubcategories
-
-        onSearchResultSelected: (entry) => {
-            root.navigatingFromSearch = true;
-            root.activePane = 2;
-            navPane.clearSelection();
-            subcategoryPane.clearSelection();
-            pages.selectEntry(entry);
-            root.navigatingFromSearch = false;
-        }
-
-        Behavior on opacity {
-            Anim {
-                type: Anim.DefaultEffects
-            }
-        }
-    }
-
-    SubcategoryPane {
-        id: subcategoryPane
-
-        visible: root.sidePane
-        anchors.left: root.compact ? parent.left : navPane.right
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: Tokens.padding.large
-        anchors.topMargin: navPane.anchors.margins
-        anchors.bottomMargin: navPane.anchors.margins
-
-        width: root.compact ? Math.min(340, Math.round(root.width * 0.45)) : Math.min(300, Math.round(root.width * 0.22))
-        opacity: root.compact && !root.nState.compactSubcategories ? 0 : 1
-        enabled: root.sidePane && (!root.compact || root.nState.compactSubcategories)
-        z: 1
-        nState: nState
-
-        Behavior on opacity {
-            Anim {
-                type: Anim.DefaultEffects
-            }
-        }
+        width: Math.min(Tokens.sizes.nexus.maxNavWidth, Math.round(root.width / 3))
     }
 
     Pages {
         id: pages
 
-        anchors.left: root.sidePane ? subcategoryPane.right : navPane.right
+        anchors.left: navPane.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        anchors.leftMargin: Tokens.padding.large
-        anchors.topMargin: navPane.anchors.margins
-        anchors.bottomMargin: navPane.anchors.margins
-        anchors.rightMargin: navPane.anchors.margins
+        anchors.leftMargin: navPane.anchors.margins + anchors.margins
+        anchors.margins: Tokens.padding.extraLarge
 
         nState: nState
     }
@@ -344,148 +139,5 @@ Item {
             WindowFactory.goBack();
             mouse.accepted = true;
         }
-    }
-
-    TapHandler {
-        id: outsideTapHandler
-
-        enabled: navPane.isSearchActive
-
-        onPressedChanged: {
-            if (pressed && !navPane.isInsideSearchRegion(root, point.position.x, point.position.y))
-                root.clearSearchFocus();
-        }
-
-        onTapped: (eventPoint, button) => {
-            if (!navPane.isInsideSearchRegion(root, eventPoint.position.x, eventPoint.position.y))
-                root.clearSearchFocus();
-        }
-    }
-
-    Shortcut {
-        sequence: "/"
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: false
-
-        onActivated: root.focusSearchBar()
-    }
-
-    Shortcut {
-        sequences: ["Up", "k"]
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: true
-
-        onActivated: root.moveUp()
-    }
-
-    Shortcut {
-        sequences: ["Down", "j"]
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: true
-
-        onActivated: root.moveDown()
-    }
-
-    TapHandler {
-        parent: navPane
-
-        onTapped: {
-            root.activePane = 0;
-            subcategoryPane.clearSelection();
-            pages.clearSelection();
-        }
-    }
-
-    TapHandler {
-        parent: subcategoryPane
-
-        onTapped: {
-            root.activePane = 1;
-            navPane.clearSelection();
-            pages.clearSelection();
-        }
-    }
-
-    TapHandler {
-        parent: pages
-
-        onTapped: {
-            root.activePane = 2;
-            navPane.clearSelection();
-            subcategoryPane.clearSelection();
-        }
-    }
-
-    Shortcut {
-        sequence: "Escape"
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: false
-
-        onActivated: {
-            if (pages.handleEscape())
-                return;
-            if (root.nState.subPageIdxStack.length > 0) {
-                WindowFactory.goBack();
-            } else if (root.activePane === 2) {
-                root.leaveContent();
-            } else if (root.activePane === 1) {
-                root.leaveSubcategories();
-            } else {
-                root.requestClose();
-            }
-        }
-    }
-
-    Shortcut {
-        sequence: "Backspace"
-        enabled: root.windowActive && !root.hasActiveInputField && (root.nState.subPageIdxStack.length > 0 || root.activePane > 0)
-        autoRepeat: false
-
-        onActivated: {
-            if (pages.handleEscape())
-                return;
-            if (root.nState.subPageIdxStack.length > 0) {
-                WindowFactory.goBack();
-            } else if (root.activePane === 2) {
-                root.leaveContent();
-            } else if (root.activePane === 1) {
-                root.leaveSubcategories();
-            }
-        }
-    }
-
-    Shortcut {
-        sequence: "Delete"
-        enabled: root.windowActive && !root.hasActiveInputField && root.activePane === 2
-        autoRepeat: false
-
-        onActivated: {
-            if (pages.handleDelete())
-                return;
-        }
-    }
-
-    Shortcut {
-        sequences: ["Left", "h"]
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: true
-
-        onActivated: root.goLeft()
-    }
-
-    Shortcut {
-        sequences: ["Return", "Enter"]
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: false
-
-        onActivated: root.activateSelected()
-    }
-
-    Shortcut {
-        sequences: ["Right", "l"]
-        enabled: root.windowActive && !root.hasActiveInputField
-        autoRepeat: true
-
-        onActivated: root.goRight()
     }
 }

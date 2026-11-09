@@ -67,33 +67,20 @@ PageBase {
             text: qsTr("Icons")
         }
 
-        StyledText {
-            Layout.fillWidth: true
-            Layout.leftMargin: Tokens.padding.largeIncreased
-            Layout.rightMargin: Tokens.padding.largeIncreased
-            text: qsTr("Material icon names used by the session menu")
-            color: Colours.palette.m3onSurfaceVariant
-            font: NexusStyle.secondaryFont
-            wrapMode: Text.Wrap
-        }
-
         LabeledField {
             first: true
-            iconField: true
             label: qsTr("Logout")
             value: Config.session.icons.logout
             onCommitted: v => GlobalConfig.session.icons.logout = v
         }
 
         LabeledField {
-            iconField: true
             label: qsTr("Shutdown")
             value: Config.session.icons.shutdown
             onCommitted: v => GlobalConfig.session.icons.shutdown = v
         }
 
         LabeledField {
-            iconField: true
             label: qsTr("Hibernate")
             value: Config.session.icons.hibernate
             onCommitted: v => GlobalConfig.session.icons.hibernate = v
@@ -101,7 +88,6 @@ PageBase {
 
         LabeledField {
             last: true
-            iconField: true
             label: qsTr("Reboot")
             value: Config.session.icons.reboot
             onCommitted: v => GlobalConfig.session.icons.reboot = v
@@ -143,7 +129,6 @@ PageBase {
 
         property string label
         property string value
-        property bool iconField
 
         signal committed(string v)
 
@@ -165,17 +150,7 @@ PageBase {
                 color: Colours.palette.m3onSurface
                 Layout.preferredWidth: 128
             }
-
-            MaterialIcon {
-                visible: field.iconField
-                text: input.text.length > 0 ? input.text : "help"
-                color: Colours.palette.m3onSurfaceVariant
-                fontStyle: Tokens.font.icon.medium
-            }
-
             StyledTextField {
-                id: input
-
                 type: StyledTextField.Boxed
                 Layout.fillWidth: true
                 horizontalAlignment: TextInput.AlignLeft

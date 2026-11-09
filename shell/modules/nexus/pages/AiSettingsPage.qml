@@ -207,7 +207,7 @@ PageBase {
     }
 
     function loadStoredKeys() {
-        const provs = ["claude", "openai", "gemini", "openrouter", "opencode", "cheaperinference"];
+        const provs = ["claude", "openai", "gemini", "openrouter", "opencode"];
         for (let i = 0; i < provs.length; i++)
             keyLoadComp.createObject(root, { provider: provs[i] });
     }
@@ -221,7 +221,7 @@ PageBase {
     }
 
     function ollamaScriptPath() {
-        return PrivilegedHelpers.path("ollama_setup.sh");
+        return Quickshell.shellPath("scripts/ollama_setup.sh");
     }
 
     function refreshStatus() {
@@ -427,7 +427,7 @@ exit $status`]
             }
             onExited: code => {
                 root.installing = false;
-                root.installStatus = code === 0 ? qsTr("Installed.") : qsTr("Install failed (%1)").arg(code);
+                root.installStatus = code === 0 ? qsTr("Installed.") : (qsTr("Failed") + " (" + code + ")");
                 root.refreshStatus();
                 UpdateChecker.checkClaudeCodeUpdate();
             }
@@ -436,10 +436,8 @@ exit $status`]
         Process {
             id: ollamaStatusProc
 
-            // A missing helper is a helper this row may not run: there is no root-owned
-            // copy to ask, and the user-writable one next to the shell is not asked either.
-            running: root.ollamaScriptPath() !== ""
-            command: ["/bin/bash", root.ollamaScriptPath(), "--status"]
+            running: true
+            command: ["bash", root.ollamaScriptPath(), "--status"]
             stdout: SplitParser {
                 onRead: line => {
                     const t = (line || "").trim();
@@ -454,9 +452,7 @@ exit $status`]
         Process {
             id: ollamaInstallProc
 
-            // Both by absolute path, for the same reason as the Quick Share helper: neither
-            // `pkexec` nor `bash` may be something this user could have put on PATH.
-            command: ["/usr/bin/pkexec", "/bin/bash", root.ollamaScriptPath(), "--models", GlobalConfig.ai.defaultOllamaModel || "llama3"]
+            command: ["pkexec", "bash", root.ollamaScriptPath(), "--models", GlobalConfig.ai.defaultOllamaModel || "llama3"]
             stdout: SplitParser {
                 onRead: line => root.ollamaInstallStatus = line
             }
@@ -470,7 +466,7 @@ exit $status`]
                 else if (code === 126)
                     root.ollamaInstallStatus = qsTr("Cancelled.");
                 else
-                    root.ollamaInstallStatus = qsTr("Ollama install failed (%1)").arg(code);
+                    root.ollamaInstallStatus = qsTr("Failed") + " (" + code + ")";
                 root.refreshOllamaStatus();
             }
         }
@@ -546,13 +542,6 @@ exit $status`]
             onClicked: {
                 if (root.ollamaInstalling)
                     return;
-
-                // Nothing is elevated unless the installer left a copy only root can write.
-                if (root.ollamaScriptPath() === "") {
-                    root.ollamaInstallStatus = qsTr("Reinstall Caelestia to restore the Ollama helper");
-                    return;
-                }
-
                 root.ollamaInstalling = true;
                 root.ollamaInstallStatus = qsTr("Installing…");
                 ollamaInstallProc.running = true;
@@ -621,27 +610,19 @@ exit $status`]
 
         ToggleRow {
             text: qsTr("opencode Zen")
-            subtext: qsTr("Pay per token; no subscription")
+            subtext: qsTr("Curated coding models, pay as you go")
             reset: ({ node: GlobalConfig.ai, setting: "enableOpencode" })
             checked: GlobalConfig.ai.enableOpencode
             onToggled: GlobalConfig.ai.enableOpencode = checked
         }
 
         ToggleRow {
+            last: true
             text: qsTr("opencode Go")
             subtext: qsTr("Monthly subscription; shares Zen's key")
             reset: ({ node: GlobalConfig.ai, setting: "enableOpencodeGo" })
             checked: GlobalConfig.ai.enableOpencodeGo
             onToggled: GlobalConfig.ai.enableOpencodeGo = checked
-        }
-
-        ToggleRow {
-            last: true
-            text: qsTr("Cheaper Inference")
-            subtext: qsTr("OpenAI-compatible gateway; one key for models from multiple vendors")
-            reset: ({ node: GlobalConfig.ai, setting: "enableCheaperInference" })
-            checked: GlobalConfig.ai.enableCheaperInference
-            onToggled: GlobalConfig.ai.enableCheaperInference = checked
         }
 
         SectionHeader {
@@ -651,7 +632,6 @@ exit $status`]
                      || GlobalConfig.ai.enableOpenrouter
                      || GlobalConfig.ai.enableOpencode
                      || GlobalConfig.ai.enableOpencodeGo
-                     || GlobalConfig.ai.enableCheaperInference
             text: qsTr("API keys")
         }
 
@@ -688,13 +668,6 @@ exit $status`]
             value: root.apiKeyFor("opencode")
             envName: "OPENCODE_API_KEY"
             onCommitted: v => root.storeApiKey("opencode", v)
-        }
-
-        ApiKeyField {
-            visible: GlobalConfig.ai.enableCheaperInference
-            value: root.apiKeyFor("cheaperinference")
-            envName: "CHEAPER_INFERENCE_API_KEY"
-            onCommitted: v => root.storeApiKey("cheaperinference", v)
         }
 
         SectionHeader {

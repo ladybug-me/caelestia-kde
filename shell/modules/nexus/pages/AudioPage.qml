@@ -132,7 +132,7 @@ PageBase {
             icon: "tune"
             label: qsTr("App volumes")
             status: Audio.appStreams.length === 0 ? qsTr("No apps playing audio") : Audio.appStreams.length === 1 ? qsTr("1 app playing audio") : qsTr("%1 apps playing audio").arg(Audio.appStreams.length)
-            onClicked: root.nState.openSubPage("appVolumes")
+            onClicked: root.nState.openSubPage(1)
         }
 
         SectionHeader {
@@ -142,9 +142,9 @@ PageBase {
         NavRow {
             first: true
             icon: "volume_up"
-            label: qsTr("Sounds")
-            status: qsTr("Notification and feedback sounds")
-            onClicked: root.nState.openSubPage("soundEffects")
+            label: qsTr("Sound effects")
+            status: qsTr("Feedback sounds and volume")
+            onClicked: root.nState.openSubPage(2)
         }
 
         NavRow {
@@ -152,7 +152,7 @@ PageBase {
             icon: "notifications_off"
             label: qsTr("Muted notification apps")
             status: qsTr("Applications that send nothing, or send without a sound")
-            onClicked: root.nState.openSubPage("notificationSilencing")
+            onClicked: root.nState.openSubPage(3)
         }
     }
 }

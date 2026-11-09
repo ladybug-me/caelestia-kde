@@ -11,7 +11,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Muted Apps")
+    title: qsTr("Muted apps")
     isSubPage: true
 
     ColumnLayout {

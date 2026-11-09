@@ -16,7 +16,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Game Mode")
+    title: qsTr("Game mode")
     isSubPage: true
 
     ColumnLayout {
@@ -49,10 +49,10 @@ PageBase {
             onClicked: root.nState.openSubPage(2)
         }
 
-        ColumnLayout {
+        Column {
             Layout.fillWidth: true
             spacing: root.spacing
-            visible: GameMode.onHyprland
+            visible: Quickshell.env("XDG_CURRENT_DESKTOP").includes("Hyprland")
 
             SectionHeader {
                 text: qsTr("Hyprland overrides")
@@ -94,39 +94,6 @@ PageBase {
                 last: true
                 checked: GlobalConfig.utilities.gameMode.disableWindowTransparency
                 onToggled: GlobalConfig.utilities.gameMode.disableWindowTransparency = checked
-            }
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: root.spacing
-            visible: !GameMode.onHyprland
-
-            SectionHeader {
-                text: qsTr("KDE desktop effects")
-            }
-
-            InfoRow {
-                first: true
-                icon: "animation"
-                label: qsTr("Animations")
-                subtext: qsTr("Disabled while game mode is on")
-                wrapSubtext: true
-            }
-
-            InfoRow {
-                icon: "blur_on"
-                label: qsTr("Blur")
-                subtext: qsTr("Disabled while game mode is on")
-                wrapSubtext: true
-            }
-
-            InfoRow {
-                last: true
-                icon: "video_settings"
-                label: qsTr("Video wallpaper")
-                subtext: qsTr("Paused while game mode is on")
-                wrapSubtext: true
             }
         }
 

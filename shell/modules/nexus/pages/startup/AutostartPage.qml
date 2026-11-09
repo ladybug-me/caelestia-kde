@@ -15,7 +15,7 @@ PageBase {
 
     readonly property var entries: Autostart.entries
 
-    title: qsTr("Startup Applications")
+    title: qsTr("Startup")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -110,7 +110,7 @@ PageBase {
             icon: "add"
             label: qsTr("Add an application")
             status: qsTr("Pick it from the applications installed here")
-            onClicked: root.nState.openSubPage("startupAppPicker")
+            onClicked: root.nState.openSubPage(1)
         }
     }
 }

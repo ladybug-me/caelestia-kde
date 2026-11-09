@@ -8,7 +8,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Utilities & Tools")
+    title: qsTr("Utilities")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -23,6 +23,13 @@ PageBase {
 
         NavRow {
             first: true
+            icon: "volume_up"
+            label: qsTr("On-screen sliders")
+            status: qsTr("Volume, microphone, brightness, and edge triggers")
+            onClicked: root.nState.openSubPage(3)
+        }
+
+        NavRow {
             icon: "widgets"
             label: qsTr("Utilities panel")
             status: qsTr("Choose the cards shown in the panel")
@@ -45,7 +52,7 @@ PageBase {
             first: true
             last: true
             icon: "sports_esports"
-            label: qsTr("Game Mode")
+            label: qsTr("Game mode")
             status: qsTr("Auto-enable rules and performance overrides")
             onClicked: root.nState.openSubPage(1)
         }

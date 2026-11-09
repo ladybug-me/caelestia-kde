@@ -34,13 +34,18 @@ PageBase {
     }
 
     isSubPage: true
-    title: qsTr("Library & Components")
+    title: qsTr("Library & Community")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.top: parent.top
         width: root.cappedWidth
         spacing: Tokens.spacing.large
+
+        SectionHeader {
+            first: true
+            text: qsTr("Community & Online")
+        }
 
         ColumnLayout {
             Layout.fillWidth: true
@@ -73,14 +78,14 @@ PageBase {
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
-            NavRow {
+            InfoRow {
                 first: true
                 Layout.fillWidth: true
                 visible: !Wallpapers.hasSkwd
                 icon: "info"
-                label: qsTr("skwd-wall not available")
-                status: qsTr("Click to open troubleshooting guide")
-                onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#710-skwd-wall")
+                wrapSubtext: true
+                label: qsTr("skwd-wall not installed")
+                subtext: qsTr("Download and install skwd-wall to enable these settings.")
             }
 
             NavRow {

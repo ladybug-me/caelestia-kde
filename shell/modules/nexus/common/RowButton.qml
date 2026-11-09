@@ -27,7 +27,6 @@ ConnectedRect {
     StateLayer {
         id: stateLayer
 
-        manualHoverOverride: root.isSelected
         onClicked: e => root.clicked(e)
     }
 

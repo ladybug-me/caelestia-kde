@@ -5,7 +5,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Panels & Interface")
+    title: qsTr("Panels")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -51,27 +51,11 @@ PageBase {
             onClicked: root.nState.openSubPage(16)
         }
         NavRow {
+            last: true
             icon: "view_array"
             label: qsTr("Window Switcher")
             status: !Config.tabSwitch.enabled ? qsTr("Disabled") : (Config.tabSwitch.currentDesktopOnly ? qsTr("Current desktop only") : qsTr("All desktops"))
             onClicked: root.nState.openSubPage(18)
-        }
-        NavRow {
-            last: true
-            icon: "tune"
-            label: qsTr("OSD")
-            status: {
-                if (!GlobalConfig.osd.enabled) return qsTr("Disabled");
-                switch (GlobalConfig.osd.style) {
-                    case "pill": return qsTr("Pill");
-                    case "compact": return qsTr("Compact");
-                    case "radial": return qsTr("Radial");
-                    case "card": return qsTr("Card");
-                    case "bar": return qsTr("Minimal Bar");
-                    default: return qsTr("Default (Edge)");
-                }
-            }
-            onClicked: root.nState.openSubPage(24)
         }
     }
 }

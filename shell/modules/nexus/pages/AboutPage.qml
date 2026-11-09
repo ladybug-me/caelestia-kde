@@ -84,7 +84,7 @@ PageBase {
                 StyledText {
                     Layout.alignment: Qt.AlignHCenter
                     Layout.topMargin: Tokens.spacing.small
-                    text: "Caelestia KDE"
+                    text: "Caelestia"
                     font: Tokens.font.headline.builders.large.width(110).build()
                 }
 
@@ -165,7 +165,9 @@ PageBase {
             label: qsTr("Enabled plugins")
             status: root.pluginCount || "…"
             onClicked: {
-                root.nState.selectSubCategory(9);
+                const index = PageRegistry.indexForKey("plugins");
+                if (index >= 0)
+                    root.nState.currentPageIdx = index;
             }
         }
 

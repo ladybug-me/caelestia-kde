@@ -6,7 +6,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Toast Events")
+    title: qsTr("Toast events")
     isSubPage: true
 
     ColumnLayout {

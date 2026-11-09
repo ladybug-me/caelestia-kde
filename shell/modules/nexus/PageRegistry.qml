@@ -9,24 +9,15 @@ QtObject {
 
     readonly property list<var> pages: PageDictionary.pages
 
-    // The Updates page, resolved by key so the three surfaces that open it cannot
-    // drift out of sync if the registry is reordered.
-    readonly property int updatesPageIdx: Math.max(0, PageDictionary.pageIdxFor("updates"))
+    // Kept for the newer bar and window helpers, which look the Updates page up
+    // by role instead of by a position that moves when pages are reordered.
+    readonly property int updatesPageIdx: Math.max(0, root.indexForKey("updates"))
 
     property var searchIndex: []
-    property var allPages: []
-    property var _entriesFinder: null
-    property var _pagesFinder: null
 
-    function buildIndex(): void {
+    function buildIndex() {
         let index = [];
-        let indexedPages = [];
         pages.forEach((page, pageIdx) => {
-            indexedPages.push({
-                page: page,
-                pageIdx: pageIdx
-            });
-
             index.push({
                 settingLabel: page.label,
                 settingDescription: page.description || "",
@@ -47,89 +38,73 @@ QtObject {
                     subPageIdx: setting.subPageIdx !== undefined ? setting.subPageIdx : -1,
                     pageLabel: page.label,
                     pageIcon: page.icon,
-                    sectionLabel: "",
                     searchText: [setting.label, setting.description, page.label, page.category, keywords].filter(Boolean).join(" ")
                 });
             });
         });
-
-        // Every row the pages render, so a setting the dictionary does not name
-        // is still findable. A row the dictionary already names keeps the
-        // curated entry: it carries hand-written keywords a generated one cannot.
-        const named = {};
-        index.forEach((entry) => {
-            named[`${entry.pageIdx}|${entry.subPageIdx}|${entry.settingLabel.toLowerCase()}`] = true;
-        });
-        PageRowIndex.rows.forEach((row) => {
-            if (named[`${row.pageIdx}|${row.subPageIdx}|${row.label.toLowerCase()}`])
-                return;
-            const page = pages[row.pageIdx];
-            if (!page)
-                return;
-            index.push({
-                settingLabel: row.label,
-                settingDescription: row.description || "",
-                pageIdx: row.pageIdx,
-                subPageIdx: row.subPageIdx,
-                pageLabel: page.label,
-                pageIcon: page.icon,
-                sectionLabel: row.section || "",
-                searchText: [row.label, row.description, row.section, page.label, page.category].filter(Boolean).join(" ")
-            });
-        });
-
-        allPages = indexedPages;
         searchIndex = index;
-        _entriesFinder = new Fzf.Finder(searchIndex, {
-            selector: e => e.searchText
-        });
-        _pagesFinder = new Fzf.Finder(allPages, {
-            selector: e => [e.page.label, e.page.description, e.page.category].filter(Boolean).join(" ")
-        });
-    }
-
-    function fuzzyPages(query: string): list<var> {
-        const search = query.trim().replace(/\s+/g, " ");
-        if (!search)
-            return allPages;
-        if (!_pagesFinder)
-            return [];
-
-        const results = _pagesFinder.find(search);
-        results.sort((a, b) => {
-            if (a.score === b.score) {
-                const aLen = [a.item.page.label, a.item.page.description, a.item.page.category].filter(Boolean).join(" ").length;
-                const bLen = [b.item.page.label, b.item.page.description, b.item.page.category].filter(Boolean).join(" ").length;
-                return aLen - bLen;
-            }
-            return b.score - a.score;
-        });
-        return results.slice(0, 30).map(r => r.item);
-    }
-
-    function fuzzyEntries(query: string): list<var> {
-        const search = query.trim().replace(/\s+/g, " ");
-        if (!search || !_entriesFinder)
-            return [];
-
-        const results = _entriesFinder.find(search);
-        results.sort((a, b) => {
-            if (a.score === b.score)
-                return a.item.searchText.trim().length - b.item.searchText.trim().length;
-            return b.score - a.score;
-        });
-        return results.slice(0, 30).map(r => r.item);
-    }
-
-    function indexForKey(key: string): int {
-        return PageDictionary.pageIdxFor(key);
-    }
-
-    function defaultSubPageForKey(key: string): int {
-        return PageDictionary.defaultSubPageForKey(key);
     }
 
     Component.onCompleted: {
         buildIndex();
+    }
+
+    function fuzzyPages(query: string): list<var> {
+        const indexed = pages.map((page, pageIdx) => ({
+            page,
+            pageIdx
+        }));
+
+        const search = query.trim().replace(/\s+/g, " ");
+        if (!search)
+            return indexed;
+
+        const selector = e => [e.page.label, e.page.description, e.page.category].filter(Boolean).join(" ");
+        const finder = new Fzf.Finder(indexed, {
+            selector
+        });
+        return finder.find(search).sort((a, b) => {
+            if (a.score === b.score)
+                return selector(a.item).trim().length - selector(b.item).trim().length;
+            return b.score - a.score;
+        }).map(r => r.item);
+    }
+
+    function fuzzyEntries(query: string): list<var> {
+        const search = query.trim().replace(/\s+/g, " ");
+        if (!search)
+            return [];
+
+        const selector = e => e.searchText;
+        const finder = new Fzf.Finder(searchIndex, {
+            selector
+        });
+        return finder.find(search).sort((a, b) => {
+            if (a.score === b.score)
+                return selector(a.item).trim().length - selector(b.item).trim().length;
+            return b.score - a.score;
+        }).map(r => r.item);
+    }
+
+    function indexForKey(key: string): int {
+        for (let i = 0; i < pages.length; i++) {
+            if (pages[i].key === key) return i;
+        }
+        return -1;
+    }
+
+    // A page's first sub-page, for callers that hand us a key rather than an
+    // index. The old design opened the page itself when there was no better
+    // target, which is slot 0.
+    function defaultSubPageForKey(key: string): int {
+        const idx = root.indexForKey(key);
+        if (idx < 0)
+            return -1;
+        const settings = pages[idx].settings || [];
+        for (let i = 0; i < settings.length; i++) {
+            if (settings[i].subPageIdx !== undefined)
+                return settings[i].subPageIdx;
+        }
+        return 0;
     }
 }

@@ -80,12 +80,23 @@ PageBase {
             }
         }
 
-        InfoRow {
-            last: true
-            icon: "info"
+        ConnectedRect {
             Layout.fillWidth: true
-            wrapSubtext: true
-            subtext: root.systemTextStatus()
+            last: true
+            implicitHeight: textStatus.implicitHeight + Tokens.padding.medium * 2
+
+            StyledText {
+                id: textStatus
+
+                anchors.fill: parent
+                anchors.margins: Tokens.padding.medium
+                anchors.leftMargin: Tokens.padding.largeIncreased
+                anchors.rightMargin: Tokens.padding.largeIncreased
+                text: root.systemTextStatus()
+                color: Colours.palette.m3onSurfaceVariant
+                font: NexusStyle.secondaryFont
+                wrapMode: Text.Wrap
+            }
         }
 
         SectionHeader {
@@ -117,7 +128,7 @@ PageBase {
                 required property int index
 
                 first: index === 0
-                //last: index === root.effectRows.length - 1
+                last: index === root.effectRows.length - 1
                 text: modelData.label
                 subtext: modelData.subtext
                 checked: Accessibility.isEffectLoaded(modelData.id)
@@ -125,13 +136,24 @@ PageBase {
             }
         }
 
-        InfoRow {
-            last: true
+        ConnectedRect {
             Layout.fillWidth: true
-            icon: "info"
-            wrapSubtext: true
-            //label: qsTr("These are KWin effects, so the shortcuts and the filter itself (protanopia, deuteranopia, ...) are set in System Settings -> Accessibility. Switching one on here loads it for the session.")
-            subtext: qsTr("These are KWin effects, so the shortcuts and the filter itself (protanopia, deuteranopia, ...) are set in System Settings -> Accessibility. Switching one on here loads it for the session.")
+            first: true
+            last: true
+            implicitHeight: screenHelper.implicitHeight + Tokens.padding.medium * 2
+
+            StyledText {
+                id: screenHelper
+
+                anchors.fill: parent
+                anchors.margins: Tokens.padding.medium
+                anchors.leftMargin: Tokens.padding.largeIncreased
+                anchors.rightMargin: Tokens.padding.largeIncreased
+                text: qsTr("These are KWin effects, so the shortcuts and the filter itself (protanopia, deuteranopia, ...) are set in System Settings -> Accessibility. Switching one on here loads it for the session.")
+                color: Colours.palette.m3onSurfaceVariant
+                font: NexusStyle.secondaryFont
+                wrapMode: Text.Wrap
+            }
         }
 
         SectionHeader {

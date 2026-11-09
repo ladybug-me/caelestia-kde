@@ -79,7 +79,7 @@ PageBase {
         dialogLoader.item.open()
     }
 
-    title: qsTr("Keyboard Shortcuts")
+    title: qsTr("Shortcuts")
     onShortcutQueryChanged: updateLists()
 
     ColumnLayout {
@@ -119,38 +119,14 @@ PageBase {
             id: searchField
 
             Layout.fillWidth: true
-            Layout.preferredHeight: 38
-            topPadding: Tokens.padding.small
-            bottomPadding: Tokens.padding.small
             placeholderText: qsTr("Search shortcuts")
-            font: Tokens.font.body.small
+            font: Tokens.font.body.medium
             bg.color: Colours.tPalette.m3surfaceContainerLowest
             bg.border.color: Colours.palette.m3outlineVariant
-            searchIcon.fontStyle: Tokens.font.icon.small
-            clearIcon.font: Tokens.font.icon.small
+            searchIcon.fontStyle: Tokens.font.icon.medium
+            clearIcon.font: Tokens.font.icon.medium
             clearIcon.padding: Tokens.padding.extraSmall
             onTextChanged: root.shortcutQuery = text
-
-            Keys.onDownPressed: {
-                focus = false;
-                root.moveDown();
-            }
-            Keys.onEscapePressed: event => {
-                if (text !== "") {
-                    text = "";
-                    event.accepted = true;
-                } else {
-                    focus = false;
-                }
-            }
-            Keys.onReturnPressed: {
-                focus = false;
-                root.moveDown();
-            }
-            Keys.onEnterPressed: {
-                focus = false;
-                root.moveDown();
-            }
         }
 
         SectionHeader {

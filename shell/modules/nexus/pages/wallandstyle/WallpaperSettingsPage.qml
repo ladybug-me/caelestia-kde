@@ -153,6 +153,11 @@ PageBase {
             }
         }
 
+        SectionHeader {
+            first: true
+            text: Wallpapers.hasSkwd ? qsTr("Configuration & Tools") : qsTr("General Settings")
+        }
+
         ColumnLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2

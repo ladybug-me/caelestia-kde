@@ -9,53 +9,26 @@ import Caelestia
 import Caelestia.Components
 import Caelestia.Config
 import qs.components
-import qs.components.containers
 import qs.components.controls
 import qs.services
 import qs.utils
 import qs.modules.nexus
-import qs.modules.launcher.services
 import qs.modules.nexus.common
 
 PageBase {
     id: root
 
-    readonly property var fontFamilies: {
-        const families = Qt.fontFamilies();
-        families.sort((a, b) => a.localeCompare(b));
-        return families;
-    }
-
-    readonly property var fontPresets: [
-        { label: qsTr("Follow system"), value: "" },
-        { label: "Google Sans Flex", value: "GoogleSansFlex" },
-        { label: "Rubik", value: "Rubik" }
+    property var fonts: [
+        { label: qsTr("Follow system"), family: "", mono: false },
+        { label: qsTr("Google Sans Flex"), family: "GoogleSansFlex", mono: false },
+        { label: qsTr("Rubik"), family: "Rubik", mono: false },
     ]
 
-    readonly property var monoPresets: [
-        { label: qsTr("Follow system"), value: "" },
-        { label: "CaskaydiaCove NF", value: "CaskaydiaCove NF" },
-        { label: "JetBrainsMono Nerd Font", value: "JetBrainsMono Nerd Font" }
+    property var monoFonts: [
+        { label: qsTr("Follow system"), family: "", mono: true },
+        { label: qsTr("CaskaydiaCove NF"), family: "CaskaydiaCove NF", mono: true },
+        { label: qsTr("JetBrainsMono Nerd Font"), family: "JetBrainsMono Nerd Font", mono: true },
     ]
-
-    readonly property var fontMenuModel: root.menuModel(root.fontPresets, GlobalConfig.appearance.font.body.family)
-    readonly property var monoMenuModel: root.menuModel(root.monoPresets, GlobalConfig.appearance.font.mono.family)
-    readonly property string fontLabel: root.labelFor(root.fontMenuModel, GlobalConfig.appearance.font.body.family)
-    readonly property string monoLabel: root.labelFor(root.monoMenuModel, GlobalConfig.appearance.font.mono.family)
-
-    function menuModel(presets: var, current: string): var {
-        const items = [];
-        if (current && !presets.some(p => p.value === current))
-            items.push({ label: current, value: current });
-        items.push(...presets);
-        items.push({ label: qsTr("Choose system font…"), value: "__pick__" });
-        return items;
-    }
-
-    function labelFor(items: var, current: string): string {
-        const item = items.find(i => i.value === current);
-        return item ? item.label : (current || qsTr("Follow system"));
-    }
 
     function applyFont(family: string): void {
         GlobalConfig.appearance.font.headline.family = family;
@@ -118,89 +91,30 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.large
 
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: Tokens.padding.large
+        }
+
         SectionHeader {
             first: true
             text: qsTr("Font")
         }
 
-        Variants {
-            id: fontVariants
+        Repeater {
+            model: root.fonts
 
-            model: root.fontMenuModel
-
-            MenuItem {
-                required property var modelData
-
-                text: modelData.label
-                value: modelData.value
-                icon: modelData.value === "__pick__" ? "search" : "font_download"
-            }
-        }
-
-        SelectRow {
-            first: true
-            label: qsTr("Font")
-            subtext: qsTr("Used by every text style in the shell")
-            menuItems: fontVariants.instances
-            active: menuItems.find(i => i.value === GlobalConfig.appearance.font.body.family) ?? null
-            fallbackText: root.fontLabel
-            onSelected: item => {
-                if (item.value === "__pick__")
-                    fontPicker.open = true;
-                else
-                    root.applyFont(item.value);
-            }
-        }
-
-        FontPickerRow {
-            id: fontPicker
-
-            visible: false
+            FontCard {}
         }
 
         SectionHeader {
             text: qsTr("Monospace font")
         }
 
-        Variants {
-            id: monoVariants
+        Repeater {
+            model: root.monoFonts
 
-            model: root.monoMenuModel
-
-            MenuItem {
-                required property var modelData
-
-                text: modelData.label
-                value: modelData.value
-                icon: modelData.value === "__pick__" ? "search" : "font_download"
-            }
-        }
-
-        SelectRow {
-            first: true
-            last: true
-            label: qsTr("Monospace font")
-            subtext: qsTr("Used by code, terminal previews and fixed width labels")
-            menuItems: monoVariants.instances
-            active: menuItems.find(i => i.value === GlobalConfig.appearance.font.mono.family) ?? null
-            fallbackText: root.monoLabel
-            onSelected: item => {
-                if (item.value === "__pick__")
-                    monoPicker.open = true;
-                else
-                    root.applyMonoFont(item.value);
-            }
-        }
-
-        FontPickerRow {
-            id: monoPicker
-
-            visible: false
-            mono: true
-        }
-
-        SectionHeader {
-            text: qsTr("Theme")
+            FontCard {}
         }
 
         ColumnLayout {
@@ -227,6 +141,28 @@ PageBase {
                 onToggled: GlobalConfig.appearance.islands = checked
                 Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
                 Layout.fillWidth: true
+            }
+            StepperRow {
+                reset: ({ node: GlobalConfig.border, setting: "thickness" })
+                label: qsTr("Border thickness")
+                subtext: qsTr("Thickness of the shell border in pixels. Set to 0 for a borderless look")
+                value: GlobalConfig.border.thickness
+                from: 0
+                to: 50
+                stepSize: 1
+                onMoved: v => GlobalConfig.border.thickness = v
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
+            }
+            StepperRow {
+                reset: ({ node: GlobalConfig.appearance.rounding, setting: "scale" })
+                label: qsTr("Corner radius scale")
+                subtext: qsTr("Multiplies the shell's corner rounding")
+                value: GlobalConfig.appearance.rounding.scale
+                from: 0.5
+                to: 2.0
+                stepSize: 0.1
+                onMoved: v => GlobalConfig.appearance.rounding.scale = v
+                Layout.topMargin: Tokens.spacing.extraSmall / 2 - parent.spacing
             }
             ToggleRow {
                 reset: ({ node: GlobalConfig.appearance.transparency, setting: "enabled" })
@@ -388,7 +324,6 @@ PageBase {
             }
 
             StepperRow {
-                last: true
                 reset: ({ node: GlobalConfig.appearance.padding, setting: "scale" })
                 Layout.fillWidth: true
                 label: qsTr("Padding scale")
@@ -398,61 +333,26 @@ PageBase {
                 stepSize: 0.05
                 onMoved: v => GlobalConfig.appearance.padding.scale = v
             }
-        }
-
-        SectionHeader {
-            text: qsTr("Animations")
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 0
-
-            ToggleRow {
-                first: true
-                Layout.fillWidth: true
-                reset: ({ node: GlobalConfig.appearance.anim, setting: "enabled" })
-                text: qsTr("Enable animations")
-                subtext: qsTr("Toggle fluid animations across the shell")
-                checked: GlobalConfig.appearance.anim.enabled
-                onToggled: GlobalConfig.appearance.anim.enabled = checked
-            }
-
-            SelectRow {
-                Layout.fillWidth: true
-                enabled: GlobalConfig.appearance.anim.enabled
-                label: qsTr("Animation preset")
-                subtext: qsTr("Motion curves and timing profile")
-                fallbackText: Animations.currentName
-                fallbackIcon: "animation"
-                menuItems: Animations.menuItems
-                active: {
-                    const items = Animations.menuItems || [];
-                    for (let i = 0; i < items.length; i++) {
-                        if (items[i].value === Animations.currentPath || items[i].text === Animations.currentName)
-                            return items[i];
-                    }
-                    return items[0] || null;
-                }
-                onSelected: item => {
-                    if (item && item.value !== undefined) {
-                        Animations.applyPreset(item.value, item.text);
-                    }
-                }
-            }
 
             StepperRow {
-                last: true
                 reset: ({ node: GlobalConfig.appearance.anim.durations, setting: "scale" })
                 Layout.fillWidth: true
-                enabled: GlobalConfig.appearance.anim.enabled
                 label: qsTr("Animation speed scale")
-                subtext: qsTr("Speed multiplier applied to all animation durations")
                 value: GlobalConfig.appearance.anim.durations.scale
                 from: 0.25
                 to: 4
                 stepSize: 0.05
                 onMoved: v => GlobalConfig.appearance.anim.durations.scale = v
+            }
+
+            ToggleRow {
+                reset: ({ node: GlobalConfig.appearance.anim, setting: "enabled" })
+                last: true
+                Layout.fillWidth: true
+                text: qsTr("Animations")
+                subtext: qsTr("Toggle animations on/off")
+                checked: GlobalConfig.appearance.anim.enabled
+                onToggled: GlobalConfig.appearance.anim.enabled = checked
             }
         }
 
@@ -465,20 +365,8 @@ PageBase {
             spacing: 0
 
             StepperRow {
-                reset: ({ node: GlobalConfig.border, setting: "thickness" })
-                first: true
-                Layout.fillWidth: true
-                label: qsTr("Border thickness")
-                subtext: qsTr("Thickness of the shell border in pixels. Set to 0 for a borderless look")
-                value: GlobalConfig.border.thickness
-                from: 0
-                to: 50
-                stepSize: 1
-                onMoved: v => GlobalConfig.border.thickness = v
-            }
-
-            StepperRow {
                 reset: ({ node: GlobalConfig.border, setting: "rounding" })
+                first: true
                 Layout.fillWidth: true
                 label: qsTr("Border rounding")
                 value: GlobalConfig.border.rounding
@@ -500,18 +388,6 @@ PageBase {
             }
 
             StepperRow {
-                reset: ({ node: GlobalConfig.appearance.rounding, setting: "scale" })
-                Layout.fillWidth: true
-                label: qsTr("Corner radius scale")
-                subtext: qsTr("Multiplies the shell's corner rounding")
-                value: GlobalConfig.appearance.rounding.scale
-                from: 0.5
-                to: 2.0
-                stepSize: 0.1
-                onMoved: v => GlobalConfig.appearance.rounding.scale = v
-            }
-
-            StepperRow {
                 reset: ({ node: GlobalConfig.appearance, setting: "deformScale" })
                 last: true
                 Layout.fillWidth: true
@@ -523,99 +399,49 @@ PageBase {
                 onMoved: v => GlobalConfig.appearance.deformScale = v
             }
         }
-
-        SectionHeader {
-            text: qsTr("Settings window")
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 0
-
-            ToggleRow {
-                reset: ({ node: GlobalConfig.nexus, setting: "sidePane" })
-                first: true
-                last: true
-                Layout.fillWidth: true
-                text: qsTr("Subcategory side pane")
-                subtext: qsTr("List a section's subcategories in their own pane. Turned off, they line up inside the section")
-                checked: GlobalConfig.nexus.sidePane
-                onToggled: GlobalConfig.nexus.sidePane = checked
-            }
-        }
     }
 
-    component FontPickerRow: DialogRowButton {
-        id: picker
+    component FontCard: StyledRect {
+        id: fontCard
 
-        property bool mono: false
-        property var selectedItem: null
+        required property var modelData
 
-        rootParent: root.flickable
-        icon: "font_download"
-        label: qsTr("Choose a system font")
-        header: picker.mono ? qsTr("Monospace fonts") : qsTr("System fonts")
-        acceptLabel: qsTr("Apply")
-        acceptAllowed: !!picker.selectedItem
-        separateContent: true
-        horizontalContentMargin: -Tokens.padding.small
+        readonly property bool selected: modelData.mono
+            ? GlobalConfig.appearance.font.mono.family === modelData.family
+            : GlobalConfig.appearance.font.body.family === modelData.family
 
-        onOpenChanged: {
-            if (open)
-                picker.selectedItem = null;
+        Layout.fillWidth: true
+        implicitHeight: fontRow.implicitHeight + Tokens.padding.large * 2
+        radius: Tokens.rounding.large
+        color: selected ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
+        border.width: selected ? 2 : 1
+        border.color: selected ? Colours.palette.m3secondary : Colours.palette.m3surfaceVariant
+
+        StateLayer {
+            radius: parent.radius
+            onClicked: fontCard.modelData.mono ? root.applyMonoFont(fontCard.modelData.family) : root.applyFont(fontCard.modelData.family)
         }
 
-        onAccepted: {
-            if (!picker.selectedItem)
-                return;
-            if (picker.mono)
-                root.applyMonoFont(picker.selectedItem);
-            else
-                root.applyFont(picker.selectedItem);
-            picker.selectedItem = null;
-        }
+        RowLayout {
+            id: fontRow
 
-        content: Component {
-            VerticalFadeListView {
-                spacing: 0
-                topMargin: Tokens.padding.large
-                bottomMargin: Tokens.padding.large
+            anchors.fill: parent
+            anchors.margins: Tokens.padding.large
+            spacing: Tokens.spacing.large
 
-                model: root.fontFamilies
+            StyledText {
+                Layout.fillWidth: true
+                text: fontCard.modelData.label
+                font: Tokens.font.body.medium
+                color: fontCard.selected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+            }
 
-                delegate: StyledRect {
-                    id: fontItem
-
-                    required property string modelData
-
-                    readonly property bool selected: picker.selectedItem === fontItem.modelData
-
-                    anchors.left: ListView.view.contentItem.left
-                    anchors.right: ListView.view.contentItem.right
-                    anchors.margins: 1
-                    implicitHeight: fontLabel.implicitHeight + Tokens.padding.medium * 2
-                    radius: stateLayer.pressed ? Tokens.rounding.extraSmall : selected ? Tokens.rounding.largeIncreased : Tokens.rounding.medium
-                    color: Qt.alpha(Colours.palette.m3tertiaryContainer, selected ? 1 : 0)
-
-                    StateLayer {
-                        id: stateLayer
-
-                        anchors.fill: parent
-                        radius: parent.radius
-
-                        onClicked: picker.selectedItem = fontItem.modelData
-                    }
-
-                    StyledText {
-                        id: fontLabel
-
-                        anchors.fill: parent
-                        anchors.margins: Tokens.padding.medium
-                        text: fontItem.modelData
-                        font.family: fontItem.modelData
-                        elide: Text.ElideRight
-                    }
-                }
+            MaterialIcon {
+                Layout.alignment: Qt.AlignVCenter
+                visible: fontCard.selected
+                text: "check"
+                color: Colours.palette.m3onSecondaryContainer
+                fontStyle: Tokens.font.icon.large
             }
         }
     }

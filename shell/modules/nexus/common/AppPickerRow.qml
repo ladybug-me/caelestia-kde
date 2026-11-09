@@ -53,11 +53,12 @@ PopupRow {
                 StyledTextField {
                     id: query
 
+                    type: StyledTextField.Boxed
+
                     Layout.fillWidth: true
-                    Layout.topMargin: Tokens.spacing.extraSmall
                     horizontalAlignment: TextInput.AlignLeft
                     placeholderText: qsTr("Search applications")
-                    onTextEdited: root.filter = query.text
+                    onTextEdited: text => root.filter = text
                 }
 
                 VerticalFadeListView {

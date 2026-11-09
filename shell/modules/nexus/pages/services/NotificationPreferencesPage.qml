@@ -61,7 +61,7 @@ PageBase {
     ]
     readonly property list<string> positionValues: ["auto", "top-left", "top-center", "top-right", "bottom-left", "bottom-center", "bottom-right"]
 
-    title: qsTr("Notification Behaviour")
+    title: qsTr("Notifications")
     isSubPage: true
 
     ColumnLayout {
@@ -93,7 +93,6 @@ PageBase {
         }
 
         SelectRow {
-            last: true
             label: qsTr("Position")
             subtext: qsTr("Where notification popups appear")
             menuItems: root.positionItems
@@ -101,12 +100,7 @@ PageBase {
             onSelected: item => GlobalConfig.notifs.position = root.positionValues[root.positionItems.indexOf(item)]
         }
 
-        SectionHeader {
-            text: qsTr("Behaviour")
-        }
-
         ToggleRow {
-            first: true
             text: qsTr("Expire automatically")
             subtext: qsTr("Dismiss notifications after their timeout")
             reset: ({ node: GlobalConfig.notifs, setting: "expire" })
@@ -115,7 +109,7 @@ PageBase {
         }
 
         ToggleRow {
-            text: qsTr("Open notifications expanded")
+            text: qsTr("Open expanded")
             subtext: qsTr("Show notifications expanded by default")
             reset: ({ node: GlobalConfig.notifs, setting: "openExpanded" })
             checked: GlobalConfig.notifs.openExpanded
@@ -185,7 +179,7 @@ PageBase {
         ToggleRow {
             first: true
             text: qsTr("Click to activate")
-            subtext: qsTr("Run the notification action or open its app on click")
+            subtext: qsTr("Activate the notification action on click")
             reset: ({ node: GlobalConfig.notifs, setting: "actionOnClick" })
             checked: GlobalConfig.notifs.actionOnClick
             onToggled: GlobalConfig.notifs.actionOnClick = checked
@@ -220,21 +214,6 @@ PageBase {
             valueLabel: Math.round(value * 100) + "%"
             value: GlobalConfig.notifs.clearThreshold
             onMoved: value => GlobalConfig.notifs.clearThreshold = value
-        }
-
-        SectionHeader {
-            text: qsTr("Related settings")
-        }
-
-        RelatedRow {
-            first: true
-            last: true
-            nState: root.nState
-            pageKey: "audio"
-            subPageIdx: 3
-            icon: "notifications_off"
-            label: qsTr("Muted notification apps")
-            status: qsTr("Manage applications with disabled notifications or sounds")
         }
     }
 }

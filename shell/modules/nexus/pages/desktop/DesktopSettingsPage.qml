@@ -39,11 +39,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        SectionHeader {
-            first: true
-            text: qsTr("Desktop Settings")
-        }
-
         ToggleRow {
             Layout.fillWidth: true
             first: true

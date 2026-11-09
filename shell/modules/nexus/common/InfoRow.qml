@@ -12,7 +12,6 @@ ConnectedRect {
 
     property alias label: label.text
     property string subtext
-    property color subtextColour: Colours.palette.m3onSurfaceVariant
     property alias value: value.text
     property string icon
     property color iconColour: Colours.palette.m3onSurfaceVariant
@@ -64,7 +63,7 @@ ConnectedRect {
                 Layout.fillWidth: true
                 visible: root.subtext.length > 0
                 text: root.subtext
-                color: root.subtextColour
+                color: Colours.palette.m3onSurfaceVariant
                 font: NexusStyle.secondaryFont
                 wrapMode: root.wrapSubtext ? Text.Wrap : Text.NoWrap
                 elide: root.wrapSubtext ? Text.ElideNone : Text.ElideRight

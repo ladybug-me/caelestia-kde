@@ -10,219 +10,154 @@ import qs.utils
 import qs.modules.nexus
 import qs.modules.nexus.common
 
-VerticalFadeListView {
+VerticalFadeFlickable {
     id: root
 
     required property NexusState nState
     readonly property string normalizedQuery: root.nState.searchQuery.trim().toLowerCase()
-
-    signal entrySelected(var entry)
-
-    function moveUp(): void {
-        if (count === 0) return;
-        currentIndex = Math.max(0, currentIndex - 1);
-        positionViewAtIndex(currentIndex, ListView.Contain);
-    }
-
-    function moveDown(): void {
-        if (count === 0) return;
-        currentIndex = Math.min(count - 1, currentIndex + 1);
-        positionViewAtIndex(currentIndex, ListView.Contain);
-    }
-
-    function executeSelected(): void {
-        if (count > 0 && currentIndex >= 0 && currentIndex < count) {
-            const entry = model[currentIndex];
-            root.nState.goToSubPage(entry.pageIdx, entry.subPageIdx);
-            root.entrySelected(entry);
-            root.nState.searchQuery = "";
-        }
-    }
-
-    model: PageRegistry.fuzzyEntries(root.normalizedQuery)
-    currentIndex: 0
+    readonly property var filteredEntries: PageRegistry.fuzzyEntries(root.normalizedQuery)
+    property int selectedIndex: 0
 
     topMargin: Tokens.padding.large
     bottomMargin: Tokens.padding.large
-    spacing: Tokens.spacing.extraSmall
-    clip: true
+    contentHeight: content.implicitHeight
 
     focus: true
 
-    onNormalizedQueryChanged: currentIndex = 0
+    onNormalizedQueryChanged: selectedIndex = 0
+
+    function moveUp() {
+        selectedIndex = Math.max(0, selectedIndex - 1);
+        positionViewAtIndex(selectedIndex);
+    }
+
+    function moveDown() {
+        selectedIndex = Math.min(list.count - 1, selectedIndex + 1);
+        positionViewAtIndex(selectedIndex);
+    }
+
+    function executeSelected() {
+        if (list.count > 0 && selectedIndex >= 0 && selectedIndex < list.count) {
+            const entry = root.filteredEntries[selectedIndex];
+            root.nState.goToSubPage(entry.pageIdx, entry.subPageIdx);
+            root.nState.searchQuery = "";
+        }
+    }
 
     Keys.onUpPressed: moveUp()
     Keys.onDownPressed: moveDown()
     Keys.onReturnPressed: executeSelected()
 
-    delegate: StyledRect {
-        id: item
-
-        required property var modelData
-        required property int index
-
-        readonly property string settingLabel: modelData.settingLabel
-        readonly property string pageLabel: modelData.pageLabel
-        readonly property string pageIcon: modelData.pageIcon
-        readonly property string sectionLabel: modelData.sectionLabel ?? ""
-        readonly property int pageIdx: modelData.pageIdx
-        readonly property int subPageIdx: modelData.subPageIdx
-
-        readonly property bool isSelected: index === root.currentIndex
-
-        width: root.width
-        implicitHeight: {
-            const h = layout.implicitHeight + layout.anchors.margins * 2;
-            return h % 2 === 0 ? h : h + 1;
+    function positionViewAtIndex(idx) {
+        if (idx < 0 || idx >= list.count) return;
+        const itemY = idx * (Tokens.spacing.extraSmall + 64);
+        if (itemY < contentY) {
+            contentY = itemY;
+        } else if (itemY + 64 > contentY + height) {
+            contentY = itemY + 64 - height;
         }
+    }
 
-        color: isSelected
-            ? Colours.palette.m3secondaryContainer
-            : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+    ColumnLayout {
+        id: content
 
-        border.width: isSelected ? 2 : 0
-        border.color: Colours.palette.m3primary
+        anchors.left: parent.left
+        anchors.right: parent.right
+        spacing: Tokens.spacing.extraSmall
 
-        radius: isSelected ? Tokens.rounding.extraLargeIncreased : Tokens.rounding.large
-        opacity: 0
+        Repeater {
+            id: list
 
-        transform: Translate {
-            id: slideTrans
-
-            x: -24
-        }
-
-        Component.onCompleted: {
-            if (Tokens.anim.enabled && !root.moving && !root.dragging) {
-                slideAnim.start();
-            } else {
-                slideTrans.x = 0;
-                item.opacity = 1;
-            }
-        }
-
-        Behavior on radius {
-            Anim {
-                type: Anim.DefaultEffects
-            }
-        }
-
-        Behavior on color {
-            CAnim {}
-        }
-
-        Behavior on border.width {
-            Anim {
-                type: Anim.DefaultEffects
-            }
-        }
-
-        StateLayer {
-            id: stateLayer
-
-            anchors.fill: parent
-            radius: parent.radius
-            manualHoverOverride: item.isSelected
-
-            onClicked: {
-                root.currentIndex = item.index;
-                const entry = item.modelData;
-                root.nState.goToSubPage(item.pageIdx, item.subPageIdx);
-                root.entrySelected(entry);
-                root.nState.searchQuery = "";
-            }
-        }
-
-        RowLayout {
-            id: layout
-
-            anchors.fill: parent
-            anchors.margins: Tokens.padding.large
-            spacing: Tokens.spacing.medium
+            model: root.filteredEntries
 
             StyledRect {
-                Layout.fillHeight: true
-                Layout.topMargin: -1
-                Layout.bottomMargin: -1
-                implicitWidth: height
+                id: item
 
-                radius: Tokens.rounding.full
-                color: item.isSelected ? Colours.palette.m3primary : Colours.palette.m3secondaryContainer
+                required property var modelData
+                required property int index
 
-                Behavior on color {
-                    CAnim {}
+                readonly property string settingLabel: modelData.settingLabel
+                readonly property string pageLabel: modelData.pageLabel
+                readonly property string pageIcon: modelData.pageIcon
+                readonly property int pageIdx: modelData.pageIdx
+                readonly property int subPageIdx: modelData.subPageIdx
+
+                readonly property bool isSelected: index === root.selectedIndex
+
+                Layout.fillWidth: true
+                implicitHeight: {
+                    const h = layout.implicitHeight + layout.anchors.margins * 2;
+                    return h % 2 === 0 ? h : h + 1;
                 }
 
-                MaterialIcon {
-                    anchors.centerIn: parent
-                    anchors.verticalCenterOffset: Centering.pixelAlign(parent.height, height)
+                color: isSelected ? Colours.palette.m3secondaryContainer : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+                radius: Tokens.rounding.extraSmall
 
-                    text: item.pageIcon
-                    color: item.isSelected ? Colours.palette.m3onPrimary : Colours.palette.m3onSecondaryContainer
-                    fontStyle: Tokens.font.icon.builders.medium.weight(Font.Medium).build()
-                    grade: 25
+                StateLayer {
+                    id: stateLayer
 
-                    Behavior on color {
-                        CAnim {}
+                    anchors.fill: parent
+                    radius: parent.radius
+
+                    onClicked: {
+                        root.selectedIndex = item.index;
+                        root.nState.goToSubPage(item.pageIdx, item.subPageIdx);
+                        root.nState.searchQuery = "";
                     }
                 }
-            }
 
-            ColumnLayout {
-                Layout.fillWidth: true
-                spacing: 0
+                RowLayout {
+                    id: layout
 
-                StyledText {
-                    Layout.fillWidth: true
-                    text: item.settingLabel
-                    font: Tokens.font.body.medium
-                    color: item.isSelected ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
-                    elide: Text.ElideRight
-                }
+                    anchors.fill: parent
+                    anchors.margins: Tokens.padding.large
+                    spacing: Tokens.spacing.medium
 
-                StyledText {
-                    Layout.fillWidth: true
-                    text: item.sectionLabel.length > 0 ? qsTr("in %1 › %2").arg(item.pageLabel).arg(item.sectionLabel) : qsTr("in %1").arg(item.pageLabel)
-                    color: item.isSelected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
-                    font: NexusStyle.secondaryFont
-                    elide: Text.ElideRight
-                }
-            }
+                    StyledRect {
+                        Layout.fillHeight: true
+                        Layout.topMargin: -1
+                        Layout.bottomMargin: -1
+                        implicitWidth: height
 
-            MaterialIcon {
-                text: "chevron_right"
-                color: item.isSelected ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
-                fontStyle: Tokens.font.icon.medium
-                opacity: item.isSelected ? 1 : 0.6
+                        radius: Tokens.rounding.full
+                        color: Colours.palette.m3surfaceContainerHigh
 
-                Behavior on color {
-                    CAnim {}
-                }
-            }
-        }
+                        MaterialIcon {
+                            anchors.centerIn: parent
+                            anchors.verticalCenterOffset: Centering.pixelAlign(parent.height, height)
 
-        SequentialAnimation {
-            id: slideAnim
+                            text: item.pageIcon
+                            color: Colours.palette.m3onSurfaceVariant
+                            fontStyle: Tokens.font.icon.builders.medium.weight(Font.Medium).build()
+                            grade: 25
+                        }
+                    }
 
-            PauseAnimation {
-                duration: Math.min(item.index * 24, 200)
-            }
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        spacing: 0
 
-            ParallelAnimation {
-                Anim {
-                    target: slideTrans
-                    property: "x"
-                    from: -24
-                    to: 0
-                    type: Anim.FastSpatial
-                }
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: item.settingLabel
+                            font: Tokens.font.body.medium
+                            elide: Text.ElideRight
+                        }
 
-                Anim {
-                    target: item
-                    property: "opacity"
-                    from: 0
-                    to: 1
-                    type: Anim.DefaultEffects
+                        StyledText {
+                            Layout.fillWidth: true
+                            text: qsTr("in ") + item.pageLabel
+                            color: Colours.palette.m3onSurfaceVariant
+                            font: NexusStyle.secondaryFont
+                            elide: Text.ElideRight
+                        }
+                    }
+
+                    MaterialIcon {
+                        text: "chevron_right"
+                        color: Colours.palette.m3onSurfaceVariant
+                        fontStyle: Tokens.font.icon.medium
+                    }
                 }
             }
         }

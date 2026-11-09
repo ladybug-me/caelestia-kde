@@ -14,6 +14,7 @@
 #include "../Config/serviceconfig.hpp"
 #include "../Config/userpaths.hpp"
 #include "lyricsmatching.hpp"
+#include "lyricsromanization.hpp"
 
 Q_LOGGING_CATEGORY(lcLyrics, "caelestia.lyrics", QtInfoMsg)
 
@@ -84,7 +85,12 @@ Lyrics::Lyrics(QObject* parent)
         svcCfg, &config::ServiceConfig::lyricsBackendChanged, this, &Lyrics::onPreferredBackendConfigChanged);
     QObject::connect(paths, &config::UserPaths::lyricsDirChanged, this, &Lyrics::onLyricsDirChanged);
 
+    QObject::connect(svcCfg, &config::ServiceConfig::romanizeIndicLyricsChanged, this, &Lyrics::updateDisplayLyrics);
     loadLyricsMap();
+}
+
+bool Lyrics::romanizationAvailable() const {
+    return lyricsromanization::available();
 }
 
 QStringList Lyrics::lyrics() const {
@@ -296,21 +302,24 @@ void Lyrics::setLines(QVector<LyricLine> lines, LyricsBackend::Backend source) {
     });
 
     m_lines = std::move(lines);
-    QStringList list;
-    list.reserve(m_lines.size());
-    for (const auto& l : std::as_const(m_lines)) {
-        list.append(l.text);
-    }
-    m_lyrics = std::move(list);
-
     setBackend(source);
-    emit lyricsChanged();
+    updateDisplayLyrics();
 
     const auto hasLyrics = !m_lines.isEmpty();
     if (hasLyrics != m_hasLyrics) {
         m_hasLyrics = hasLyrics;
         emit hasLyricsChanged();
     }
+}
+
+void Lyrics::updateDisplayLyrics() {
+    const bool romanize = config::ConfigSingleton::instance()->services()->romanizeIndicLyrics();
+    QStringList list;
+    list.reserve(m_lines.size());
+    for (const auto& line : std::as_const(m_lines))
+        list.append(romanize ? lyricsromanization::romanize(line.text) : line.text);
+    m_lyrics = std::move(list);
+    emit lyricsChanged();
 }
 
 void Lyrics::clearLines() {

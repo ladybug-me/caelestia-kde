@@ -22,6 +22,7 @@ class Lyrics : public QObject {
     QML_SINGLETON
 
     Q_PROPERTY(QStringList lyrics READ lyrics NOTIFY lyricsChanged)
+    Q_PROPERTY(bool romanizationAvailable READ romanizationAvailable CONSTANT)
     Q_PROPERTY(caelestia::services::LyricsBackend::Backend backend READ backend NOTIFY backendChanged)
     Q_PROPERTY(caelestia::services::LyricsBackend::Backend preferredBackend READ preferredBackend WRITE
             setPreferredBackend NOTIFY preferredBackendChanged)
@@ -39,6 +40,7 @@ public:
     explicit Lyrics(QObject* parent = nullptr);
 
     [[nodiscard]] QStringList lyrics() const;
+    [[nodiscard]] bool romanizationAvailable() const;
     [[nodiscard]] LyricsBackend::Backend backend() const;
     [[nodiscard]] LyricsBackend::Backend preferredBackend() const;
     void setPreferredBackend(LyricsBackend::Backend value);
@@ -77,6 +79,7 @@ private:
     void setLoading(bool value);
     void setLines(QVector<LyricLine> lines, LyricsBackend::Backend source);
     void clearLines();
+    void updateDisplayLyrics();
     void appendCandidates(const QList<LyricCandidate>& add);
     void clearCandidates();
 

@@ -142,6 +142,15 @@ PageBase {
             onSelected: item => Lyrics.preferredBackend = root.lyricsItems.indexOf(item)
         }
 
+        ToggleRow {
+            text: qsTr("Romanize lyrics")
+            subtext: Lyrics.romanizationAvailable ? qsTr("Use Latin letters for Devanagari, Gurmukhi and Arabic scripts (approximate)") : qsTr("Requires ICU transliteration support")
+            reset: ({ node: GlobalConfig.services, setting: "romanizeIndicLyrics" })
+            checked: GlobalConfig.services.romanizeIndicLyrics
+            enabled: Lyrics.romanizationAvailable
+            onToggled: GlobalConfig.services.romanizeIndicLyrics = checked
+        }
+
         SelectRow {
             last: true
             label: qsTr("Default player")

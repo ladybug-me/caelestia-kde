@@ -15,7 +15,6 @@ CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/serviceconfig.hpp"
 BAR_CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/barconfig.hpp"
 PAGE="$REPO_ROOT/shell/modules/nexus/pages/services/CalendarPage.qml"
 REGISTRY="$REPO_ROOT/shell/modules/nexus/PageCompRegistry.qml"
-DICTIONARY="$REPO_ROOT/shell/modules/nexus/PageDictionary.qml"
 
 PYTHON="$(command -v python3 || command -v python)"
 
@@ -172,22 +171,21 @@ test_the_empty_agenda_offers_the_way_out() {
         "and the row has to act on it"
     assert_contains "$popout" 'disabled: eventRow.modelData !== null || CalendarEvents.configured' \
         "only the hint row is clickable, not an event"
-    assert_contains "$popout" 'PageDictionary.subPageIdxFor("services/CalendarPage.qml")' \
+    assert_contains "$popout" 'PageCompRegistry.slotForKey("calendar")' \
         "the page is looked up, not hardcoded"
 }
 
 test_calendar_settings_page_is_reachable() {
-    local page registry dictionary
+    local page registry
     page="$(cat "$PAGE")"
     registry="$(cat "$REGISTRY")"
-    dictionary="$(cat "$DICTIONARY")"
 
     assert_contains "$page" 'GlobalConfig.services.calendarSources.insert' "the page must add sources"
     assert_contains "$page" 'GlobalConfig.services.calendarSources.remove(index)' "and remove them"
     assert_contains "$page" 'Secret address in iCal format' \
         "Google Calendar's export has to be named, or nobody finds it"
     assert_contains "$registry" 'Component { CalendarPage {} }' "the page must be registered"
-    assert_contains "$dictionary" 'pagePath: "services/CalendarPage.qml"' "and be searchable"
+    assert_contains "$registry" 'key: "calendar"' "and be searchable"
 }
 
 test_the_clock_reaches_the_calendar_by_click_and_by_hover() {

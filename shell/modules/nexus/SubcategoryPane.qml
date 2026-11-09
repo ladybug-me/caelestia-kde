@@ -3,10 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Bluetooth
 import Caelestia
 import Caelestia.Config
-import Caelestia.Services
 import qs.components
 import qs.components.containers
 import qs.components.controls
@@ -19,18 +17,17 @@ ColumnLayout {
     id: root
 
     required property NexusState nState
-    readonly property var currentPage: PageDictionary.pages[root.nState.currentPageIdx]
+    readonly property var currentPage: PageCompRegistry.categories[root.nState.currentPageIdx]
     property int selectedIndex: 0
     property bool selectionActive: false
     property Item selectedCard: null
 
     function currentCards(): var {
-        const col = stack.children[root.nState.currentPageIdx];
-        if (!col || !col.children)
+        if (!cardsColumn || !cardsColumn.children)
             return [];
         const cards = [];
-        for (let i = 0; i < col.children.length; i++) {
-            const child = col.children[i];
+        for (let i = 0; i < cardsColumn.children.length; i++) {
+            const child = cardsColumn.children[i];
             if (child && child.slot !== undefined)
                 cards.push(child);
         }
@@ -149,16 +146,15 @@ ColumnLayout {
 
         StyledRect {
             visible: root.nState.compact
-
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
-            anchors.leftMargin: Tokens.padding.extraSmall
-            width: 36
-            height: 36
+            width: 38
+            height: 38
             radius: Tokens.rounding.full
-            color: "transparent"
+            color: Colours.palette.m3surfaceContainerHigh
 
             StateLayer {
+                anchors.fill: parent
                 radius: parent.radius
 
                 onClicked: root.nState.exitCompactPage()
@@ -167,6 +163,7 @@ ColumnLayout {
             MaterialIcon {
                 anchors.centerIn: parent
                 text: "arrow_back"
+                color: Colours.palette.m3onSurface
                 fontStyle: Tokens.font.icon.medium
             }
         }
@@ -177,7 +174,7 @@ ColumnLayout {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: root.nState.compact ? 46 : Tokens.padding.medium
             anchors.rightMargin: Tokens.padding.medium
-            text: root.currentPage ? root.currentPage.label : ""
+            text: root.nState.compact ? (root.currentPage ? root.currentPage.label : "") : qsTr("Sections")
             font: Tokens.font.title.builders.large.weight(Font.Medium).build()
             color: Colours.palette.m3onSurface
             elide: Text.ElideRight
@@ -192,13 +189,11 @@ ColumnLayout {
 
         topMargin: 0
         bottomMargin: Tokens.padding.large
-        contentHeight: stack.children[root.nState.currentPageIdx]?.implicitHeight ?? stack.implicitHeight
+        contentHeight: cardsColumn.implicitHeight
 
         StyledRect {
             z: 2
-
             visible: flickable.contentHeight > flickable.height + 1
-
             width: 3
             height: Math.max(24, flickable.height * flickable.visibleArea.heightRatio)
             x: flickable.width - Tokens.padding.small
@@ -208,389 +203,28 @@ ColumnLayout {
             opacity: 0.6
         }
 
-        StackLayout {
-            id: stack
+        ColumnLayout {
+            id: cardsColumn
+
+            readonly property var cat: PageCompRegistry.categories[root.nState.currentPageIdx]
+            readonly property var pagesList: cat ? cat.pages : []
 
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.rightMargin: Tokens.padding.medium
-            currentIndex: root.nState.currentPageIdx
+            spacing: Tokens.spacing.small
 
-            // Page 0: Appearance
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "wallpaper"
-                    label: qsTr("Wallpapers")
-                    status: qsTr("Browse and select wallpapers")
-                    slot: 1
-                }
-                SubcategoryCard {
-                    icon: "cloud_download"
-                    label: qsTr("Library & Components")
-                    status: qsTr("Wallhaven, online wallpapers, tags and filters")
-                    slot: 6
-                }
-                SubcategoryCard {
-                    icon: "settings_suggest"
-                    label: qsTr("Wallpaper Settings")
-                    status: Wallpapers.hasSkwd ? qsTr("Configure wallpaper engine, mixer, and effects") : qsTr("Configure scaling, recoloring, video playback, and slideshows")
-                    slot: 5
-                }
-                SubcategoryCard {
-                    icon: "lock"
-                    label: qsTr("Lock Screen")
-                    status: qsTr("Wallpaper sync and lock screen settings")
-                    slot: 8
-                }
-                SubcategoryCard {
-                    icon: "palette"
-                    label: qsTr("Colors")
-                    status: qsTr("Caelestia owns color management and not skwd-wall.")
-                    slot: 3
-                }
-                SubcategoryCard {
-                    icon: "style"
-                    label: qsTr("Theme & Effects")
-                    status: qsTr("Islands, Pitch Black, Transparency")
-                    slot: 7
-                }
-            }
-
-            // Page 1: Desktop & Tiling
-            ColumnLayout {
-                spacing: Tokens.spacing.small
+            Repeater {
+                model: cardsColumn.pagesList
 
                 SubcategoryCard {
-                    icon: "desktop_windows"
-                    label: qsTr("Desktop")
-                    status: Config.background.disableQuickshellDesktop ? qsTr("Disabled (Plasma)") : (Config.background.desktopIconsEnabled ? qsTr("Icons enabled") : qsTr("Icons disabled"))
-                    slot: 4
-                }
-                SubcategoryCard {
-                    icon: "extension"
-                    label: qsTr("Desktop Addons")
-                    status: qsTr("Visualiser, auto-hide, styling")
-                    cardEnabled: !Config.background.disableQuickshellDesktop
-                    slot: 1
-                }
-                SubcategoryCard {
-                    icon: "menu_open"
-                    label: qsTr("Right Click Menu")
-                    status: qsTr("Configure desktop right click menu")
-                    cardEnabled: !Config.background.disableQuickshellDesktop
-                    slot: 2
-                }
-                SubcategoryCard {
-                    icon: "view_quilt"
-                    label: qsTr("Window Tiling")
-                    status: Config.general.krohnkiteEnabled ? qsTr("Enabled (Krohnkite)") : qsTr("Disabled")
-                    slot: 3
-                }
-            }
+                    required property var modelData
 
-            // Page 2: Panels & Interface
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "dashboard"
-                    label: qsTr("Dashboard")
-                    status: Config.dashboard.enabled ? qsTr("Enabled") : qsTr("Disabled")
-                    slot: 1
-                }
-                SubcategoryCard {
-                    icon: "dock_to_bottom"
-                    label: qsTr("Taskbar")
-                    status: Config.bar.persistent ? qsTr("Always visible") : Config.bar.showOnHover ? qsTr("Reveal on hover") : qsTr("Reveal on drag")
-                    slot: 2
-                }
-                SubcategoryCard {
-                    icon: "apps"
-                    label: qsTr("Launcher")
-                    status: Config.launcher.enabled ? qsTr("Enabled") : qsTr("Disabled")
-                    slot: 3
-                }
-                SubcategoryCard {
-                    icon: "dock_to_right"
-                    label: qsTr("Sidebar")
-                    status: Config.sidebar.enabled ? qsTr("Enabled") : qsTr("Disabled")
-                    slot: 4
-                }
-                SubcategoryCard {
-                    icon: "settings_input_component"
-                    label: qsTr("Quick toggle")
-                    status: Config.utilities.enabled ? qsTr("Enabled") : qsTr("Disabled")
-                    slot: 5
-                }
-                SubcategoryCard {
-                    icon: "view_carousel"
-                    label: qsTr("Overview")
-                    status: Config.overview.enabled ? qsTr("Enabled") : qsTr("Disabled")
-                    slot: 16
-                }
-                SubcategoryCard {
-                    icon: "view_array"
-                    label: qsTr("Window Switcher")
-                    status: !Config.tabSwitch.enabled ? qsTr("Disabled") : (Config.tabSwitch.currentDesktopOnly ? qsTr("Current desktop only") : qsTr("All desktops"))
-                    slot: 18
-                }
-                SubcategoryCard {
-                    icon: "tune"
-                    label: qsTr("OSD")
-                    status: {
-                        if (!GlobalConfig.osd.enabled) return qsTr("Disabled");
-                        switch (GlobalConfig.osd.style) {
-                            case "pill": return qsTr("Pill");
-                            case "compact": return qsTr("Compact");
-                            case "radial": return qsTr("Radial");
-                            case "card": return qsTr("Card");
-                            case "bar": return qsTr("Minimal Bar");
-                            default: return qsTr("Default (Edge)");
-                        }
-                    }
-                    slot: 24
-                }
-            }
-
-            // Page 3: Network & Connectivity
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "wifi"
-                    label: qsTr("Network")
-                    status: Nmcli.activeWifiSsid ? Nmcli.activeWifiSsid : (Nmcli.wifiEnabled ? qsTr("Disconnected") : qsTr("Disabled"))
-                    slot: 13
-                }
-                SubcategoryCard {
-                    icon: "network_check"
-                    label: qsTr("All Networks")
-                    status: qsTr("%1 available").arg(Nmcli.networks.length)
-                    slot: 5
-                }
-                SubcategoryCard {
-                    icon: "history"
-                    label: qsTr("Saved Networks")
-                    status: qsTr("Manage known connections")
-                    slot: 6
-                }
-                SubcategoryCard {
-                    icon: "wifi_tethering"
-                    label: qsTr("Hotspot")
-                    status: Nmcli.hotspot.active ? qsTr("Active") : qsTr("Inactive")
-                    slot: 7
-                }
-                SubcategoryCard {
-                    icon: "vpn_key"
-                    label: qsTr("Proxy")
-                    status: qsTr("Network proxy settings")
-                    slot: 8
-                }
-                SubcategoryCard {
-                    icon: "bluetooth"
-                    label: qsTr("Bluetooth")
-                    status: (Bluetooth.defaultAdapter?.enabled ?? false) ? qsTr("Enabled") : qsTr("Disabled")
-                    slot: 10
-                }
-                SubcategoryCard {
-                    icon: "add_circle"
-                    label: qsTr("Pair New Device")
-                    status: qsTr("Search for nearby Bluetooth devices")
-                    slot: 12
-                }
-            }
-
-            // Page 4: Display & Sound
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "display_settings"
-                    label: qsTr("Displays")
-                    status: qsTr("%1 display(s) connected").arg(Displays.outputs.length)
-                    slot: 11
-                }
-                SubcategoryCard {
-                    icon: "volume_up"
-                    label: qsTr("Audio")
-                    status: Audio.muted ? qsTr("Muted") : qsTr("%1%").arg(Math.round(Audio.volume * 100))
-                    slot: 2
-                }
-                SubcategoryCard {
-                    icon: "tune"
-                    label: qsTr("App Volumes")
-                    status: Audio.appStreams.length === 0 ? qsTr("No apps playing audio") : Audio.appStreams.length === 1 ? qsTr("1 app playing audio") : qsTr("%1 apps playing audio").arg(Audio.appStreams.length)
-                    slot: 3
-                }
-                SubcategoryCard {
-                    icon: "music_note"
-                    label: qsTr("Sounds")
-                    status: qsTr("Notification and feedback sounds")
-                    slot: 4
-                }
-                SubcategoryCard {
-                    icon: "notifications_off"
-                    label: qsTr("Muted Apps")
-                    status: qsTr("Applications that send without sound")
-                    slot: 5
-                }
-                SubcategoryCard {
-                    icon: "notifications"
-                    label: qsTr("Notification Behaviour")
-                    status: qsTr("Position, timeout, and display behavior")
-                    slot: 6
-                }
-                SubcategoryCard {
-                    icon: "campaign"
-                    label: qsTr("Toasts")
-                    status: qsTr("Fullscreen behavior, appearance, and sound")
-                    slot: 7
-                }
-                SubcategoryCard {
-                    icon: "tune"
-                    label: qsTr("Toast Events")
-                    status: qsTr("Choose which system changes show a toast")
-                    slot: 8
-                }
-                SubcategoryCard {
-                    icon: "do_not_disturb_on"
-                    label: qsTr("Focus Sessions")
-                    status: Focus.active ? qsTr("Running until %1").arg(Focus.activeEnd()) : qsTr("Do Not Disturb on a schedule")
-                    slot: 9
-                }
-            }
-
-            // Page 5: Utilities & Tools
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "widgets"
-                    label: qsTr("Utilities panel")
-                    status: qsTr("Choose the cards shown in the panel")
-                    slot: 4
-                }
-                SubcategoryCard {
-                    icon: "toggle_on"
-                    label: qsTr("Quick toggles")
-                    status: qsTr("Choose the controls shown in Quick Toggles")
-                    slot: 5
-                }
-                SubcategoryCard {
-                    icon: "sports_esports"
-                    label: qsTr("Game Mode")
-                    status: qsTr("Auto-enable rules and performance overrides")
-                    slot: 1
-                }
-                SubcategoryCard {
-                    icon: "near_me"
-                    label: qsTr("Quick Share")
-                    status: qsTr("Send files to nearby devices")
-                    slot: 6
-                }
-                SubcategoryCard {
-                    icon: "smart_toy"
-                    label: qsTr("AI Assistant")
-                    status: qsTr("Models, providers, and parameters")
-                    slot: 7
-                }
-            }
-
-            // Page 6: Applications & Shortcuts
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "apps"
-                    label: qsTr("Apps")
-                    status: qsTr("Default openers, installed apps, and search")
-                    slot: 4
-                }
-                SubcategoryCard {
-                    icon: "list_alt"
-                    label: qsTr("All Apps")
-                    status: qsTr("Browse and manage desktop apps")
-                    slot: 1
-                }
-                SubcategoryCard {
-                    icon: "keyboard"
-                    label: qsTr("Keyboard Shortcuts")
-                    status: qsTr("View and configure shell keybindings")
-                    slot: 3
-                }
-            }
-
-            // Page 7: System & Services
-            ColumnLayout {
-                spacing: Tokens.spacing.small
-
-                SubcategoryCard {
-                    icon: "power_settings_new"
-                    label: qsTr("Session")
-                    status: qsTr("Power, lock, and logout options")
-                    slot: 12
-                }
-                SubcategoryCard {
-                    icon: "build"
-                    label: qsTr("System Services")
-                    status: qsTr("Lyrics, GPU, and system integration")
-                    slot: 1
-                }
-                SubcategoryCard {
-                    icon: "sports_esports"
-                    label: qsTr("Discord Rich Presence")
-                    status: qsTr("Broadcast your activity to Discord")
-                    slot: 2
-                }
-                SubcategoryCard {
-                    icon: "calendar_today"
-                    label: qsTr("Calendar")
-                    status: qsTr("Sync calendar events and accounts")
-                    slot: 3
-                }
-                SubcategoryCard {
-                    icon: "language"
-                    label: qsTr("Language & Region")
-                    status: qsTr("System locale, spellcheck, and formats")
-                    slot: 4
-                }
-                SubcategoryCard {
-                    icon: "accessibility_new"
-                    label: qsTr("Accessibility")
-                    status: qsTr("Vision, hearing, and interaction aids")
-                    slot: 5
-                }
-                SubcategoryCard {
-                    icon: "rocket_launch"
-                    label: qsTr("Startup Applications")
-                    status: qsTr("Manage apps launched upon login")
-                    slot: 6
-                }
-                SubcategoryCard {
-                    icon: "storage"
-                    label: qsTr("Storage")
-                    status: qsTr("Mount points, free space, and drives")
-                    slot: 8
-                }
-                SubcategoryCard {
-                    icon: "extension"
-                    label: qsTr("Plugins")
-                    status: qsTr("Manage installed extensions and add-ons")
-                    slot: 9
-                }
-                SubcategoryCard {
-                    icon: "system_update"
-                    label: qsTr("Updates")
-                    status: qsTr("Check for package and system updates")
-                    slot: 10
-                }
-                SubcategoryCard {
-                    icon: "info"
-                    label: qsTr("About")
-                    status: qsTr("Hardware, OS version, and shell info")
-                    slot: 11
+                    icon: modelData.icon
+                    label: modelData.label
+                    status: modelData.status !== "" ? modelData.status : modelData.description
+                    slot: modelData.slot
+                    cardEnabled: modelData.enabled
                 }
             }
         }
@@ -647,7 +281,6 @@ ColumnLayout {
 
         StyledRect {
             visible: card.isSelected
-
             anchors.left: parent.left
             anchors.leftMargin: Tokens.padding.extraSmall
             anchors.verticalCenter: parent.verticalCenter

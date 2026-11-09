@@ -350,11 +350,11 @@ StyledRect {
                 icon: "tune"
                 type: IconButton.Text
                 onClicked: {
-                    const pageIdx = PageDictionary.pageIdxFor("utilities");
+                    const pageIdx = PageCompRegistry.categoryIdxForKey("utilities");
                     root.visibilities.utilities = false;
                     execTimer.pendingAction = () => WindowFactory.create(null, {
                         initialPageIdx: pageIdx,
-                        initialSubPageIdx: 5
+                        initialSubPageIdx: PageCompRegistry.slotForKey("quickToggles")
                     });
                     execTimer.restart();
                 }

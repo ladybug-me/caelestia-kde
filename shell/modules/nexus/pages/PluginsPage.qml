@@ -99,7 +99,7 @@ PageBase {
             text: qsTr("Restart Shell")
             type: TextButton.Filled
             visible: PluginStore.restartRequired
-            onClicked: Launch.exec(["bash", "-c", `bash "${Quickshell.shellPath("scripts/restart_shell.sh")}"; sleep 1; caelestia shell nexus openPage ${PageDictionary.pageIdxFor("plugins")} 0`])
+            onClicked: Launch.exec(["bash", "-c", `bash "${Quickshell.shellPath("scripts/restart_shell.sh")}"; sleep 1; caelestia shell nexus openPage ${PageCompRegistry.categoryIdxForKey("plugins")} 0`])
         }
     ]
 

@@ -38,73 +38,14 @@ QtObject {
     signal subCategorySelected(target: var)
 
     function defaultSlotForPage(pageIdx: int): int {
-        // Without the side pane a section opens on its own list of
-        // subcategories (slot 0) and pushes them from there.
         if (!sidePane)
             return 0;
 
-        switch (pageIdx) {
-        case 0: return 1; // Appearance: Wallpapers
-        case 1: return 4; // Desktop: Desktop Settings
-        case 2: return 1; // Panels & Interface: Dashboard
-        case 3: return 13; // Network & Connectivity: Network
-        case 4: return 11; // Display & Sound: Displays
-        case 5: return 4; // Utilities & Tools: Utilities panel
-        case 6: return 4; // Applications & Shortcuts: Default Applications
-        case 7: return 12; // System & Services: Session settings
-        default: return 0;
-        }
+        return PageCompRegistry.defaultSlotForCategory(pageIdx);
     }
 
     function parentSubCategorySlot(pageIdx: int, slot: int): int {
-        if (pageIdx === 0) {
-            // Appearance
-            if (slot === 2) return 1; // Wallpapers -> WallpaperCategory
-            if (slot === 4) return 6; // Library -> Wallhaven
-            if (slot === 9) return 3; // Colors -> AdvancedColors
-            return slot;
-        }
-        if (pageIdx === 1) {
-            // Desktop & Tiling
-            if (slot === 0) return 4; // DesktopPage -> Desktop
-            return slot;
-        }
-        if (pageIdx === 2) {
-            // Panels & Interface
-            if ([6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 17, 19, 20, 21, 22, 23].indexOf(slot) !== -1)
-                return 2; // Taskbar
-            return slot;
-        }
-        if (pageIdx === 3) {
-            // Network & Connectivity
-            if ([0, 1, 2, 3, 4].indexOf(slot) !== -1) return 13; // Ethernet, AddNetwork, Detail, Vpn -> Network
-            if (slot === 11) return 10; // BtDeviceInfo -> Bluetooth
-            return slot;
-        }
-        if (pageIdx === 4) {
-            // Display & Sound
-            if (slot === 0 || slot === 1) return 11; // DisplayModesPage -> Displays
-            if (slot === 10) return 6; // Notifications main -> Preferences
-            return slot;
-        }
-        if (pageIdx === 5) {
-            // Utilities & Tools
-            if (slot === 2) return 1; // Game mode targets -> Game mode
-            return slot;
-        }
-        if (pageIdx === 6) {
-            // Applications & Shortcuts
-            if (slot === 0) return 4; // AppsPage -> Default Applications
-            if (slot === 2) return 1; // AppInfo -> Installed Applications
-            return slot;
-        }
-        if (pageIdx === 7) {
-            // System & Services
-            if (slot === 0) return 12; // SessionPage -> Session settings
-            if (slot === 7) return 6; // AutostartAppPicker -> Startup Applications
-            return slot;
-        }
-        return slot;
+        return PageCompRegistry.parentSlotFor(pageIdx, slot);
     }
 
     // Without the side pane the section's list of subcategories is the root of

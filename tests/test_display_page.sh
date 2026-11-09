@@ -9,7 +9,6 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SERVICE="$REPO_ROOT/shell/services/Displays.qml"
 PAGE="$REPO_ROOT/shell/modules/nexus/pages/DisplayPage.qml"
 MODES="$REPO_ROOT/shell/modules/nexus/pages/display/DisplayModesPage.qml"
-DICTIONARY="$REPO_ROOT/shell/modules/nexus/PageDictionary.qml"
 REGISTRY="$REPO_ROOT/shell/modules/nexus/PageCompRegistry.qml"
 STATE="$REPO_ROOT/shell/modules/nexus/NexusState.qml"
 
@@ -87,30 +86,22 @@ test_the_mode_list_marks_and_applies() {
 }
 
 test_the_page_is_registered_next_to_its_neighbours() {
-    local dictionary registry state
-    dictionary="$(cat "$DICTIONARY")"
+    local registry state
     registry="$(cat "$REGISTRY")"
     state="$(cat "$STATE")"
 
-    assert_contains "$dictionary" 'key: "displays"' "the page has to exist in the dictionary"
-    assert_contains "$dictionary" 'category: "connectivity"' "and sit with the hardware pages"
-    assert_contains "$dictionary" 'function pageIdxFor(key: string): int' \
+    assert_contains "$registry" 'key: "displays"' "the page has to exist in the registry"
+    assert_contains "$registry" 'label: qsTr("Display & Sound")' "and sit with the hardware pages"
+    assert_contains "$registry" 'function slotForKey(key: string): int' \
         "page positions are looked up, never remembered"
     assert_contains "$registry" 'Component { DisplayPage {} }' "the page has to be registered"
     assert_contains "$registry" 'Component { DisplayModesPage {} }' "with its mode list"
     assert_contains "$state" 'property string selectedOutput' "the mode list needs to know which screen it edits"
 
-    local dictionary_bluetooth dictionary_displays dictionary_audio
-    dictionary_bluetooth="$(grep -n '"bluetooth":' "$DICTIONARY" | head -n1 | cut -d: -f1)"
-    dictionary_displays="$(grep -n '"displays":' "$DICTIONARY" | head -n1 | cut -d: -f1)"
-    dictionary_audio="$(grep -n '"audio":' "$DICTIONARY" | head -n1 | cut -d: -f1)"
-    assert_eq "yes" "$([ "$dictionary_bluetooth" -lt "$dictionary_displays" ] && [ "$dictionary_displays" -lt "$dictionary_audio" ] && echo yes)" \
-        "displays belong between the connected devices and audio"
-
     # The registry is positional: its Nth stack is the Nth page of the dictionary.
     local registry_bluetooth registry_displays registry_audio
     registry_bluetooth="$(grep -n 'key: "bluetoothPairing"' "$REGISTRY" | cut -d: -f1)"
-    registry_displays="$(grep -n 'key: "displays"' "$REGISTRY" | cut -d: -f1)"
+    registry_displays="$(grep -n 'key: "displays"' "$REGISTRY" | head -n1 | cut -d: -f1)"
     registry_audio="$(grep -n 'key: "audio"' "$REGISTRY" | cut -d: -f1)"
     assert_eq "yes" "$([ "$registry_bluetooth" -lt "$registry_displays" ] && [ "$registry_displays" -lt "$registry_audio" ] && echo yes)" \
         "and the registry has to keep that order"

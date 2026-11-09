@@ -27,7 +27,7 @@ Singleton {
                 const rawSub = (props.initialSubPageIdx !== undefined && props.initialSubPageIdx !== -1)
                     ? props.initialSubPageIdx
                     : (isKey ? PageRegistry.defaultSubPageForKey(props.initialPageIdx) : -1);
-                const subIdx = (typeof rawSub === "number") ? rawSub : PageDictionary.defaultSubPageForKey(rawSub);
+                const subIdx = (typeof rawSub === "number") ? rawSub : PageCompRegistry.slotForKey(rawSub);
                 win.nexus.nState.goToSubPage(pageIdx, subIdx);
             }
             win.visible = true;
@@ -44,7 +44,7 @@ Singleton {
                 resolvedProps.initialSubPageIdx = PageRegistry.defaultSubPageForKey(key);
         }
         if (typeof resolvedProps.initialSubPageIdx === "string") {
-            const mapped = PageDictionary.defaultSubPageForKey(resolvedProps.initialSubPageIdx);
+            const mapped = PageCompRegistry.slotForKey(resolvedProps.initialSubPageIdx);
             if (mapped >= 0)
                 resolvedProps.initialSubPageIdx = mapped;
         }

@@ -33,7 +33,7 @@ Item {
                 return -1;
             return (typeof root.initialSubPageIdx === "number")
                 ? root.initialSubPageIdx
-                : PageDictionary.defaultSubPageForKey(root.initialSubPageIdx);
+                : PageCompRegistry.slotForKey(root.initialSubPageIdx);
         }
         currentPageIdx: root.initialPageIdx
 

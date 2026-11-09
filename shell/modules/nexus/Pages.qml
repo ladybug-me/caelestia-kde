@@ -27,6 +27,7 @@ Item {
         const comp = PageCompRegistry.pageComps[idx] ?? PageCompRegistry.placeholderComp;
         const incubator = comp.incubateObject(container, {
             nState,
+            pageIdx: idx,
             visible: false
         });
 

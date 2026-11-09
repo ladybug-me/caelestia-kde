@@ -15,7 +15,7 @@ ColumnLayout {
     readonly property bool isPageBase: true
     required property string title
     required property NexusState nState
-    property bool isSubPage
+    property bool isSubPage: true
     property bool scrollable: true
     property bool showTitle: true
     readonly property int cappedWidth: Math.min(Tokens.sizes.nexus.maxContentWidth, width)
@@ -346,7 +346,7 @@ ColumnLayout {
 
             Loader {
                 visible: active
-                active: root.isSubPage && root.nState.subPageIdxStack.length > 0
+                active: root.isSubPage && (root.nState ? root.nState.subPageIdxStack.length > 0 : false)
                 asynchronous: true
                 sourceComponent: IconButton {
                     icon: "arrow_back"

@@ -8,6 +8,7 @@ PageBase {
     id: root
 
     title: qsTr("System & Services")
+    isSubPage: false
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

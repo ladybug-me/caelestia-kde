@@ -10,6 +10,7 @@ PageBase {
     id: root
 
     title: qsTr("Network & Connectivity")
+    isSubPage: false
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

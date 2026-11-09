@@ -8,6 +8,7 @@ PageBase {
     id: root
 
     title: qsTr("Applications & Shortcuts")
+    isSubPage: false
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

@@ -12,6 +12,7 @@ PageBase {
     id: root
 
     title: qsTr("Appearance")
+    isSubPage: false
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

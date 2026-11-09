@@ -10,6 +10,7 @@ PageBase {
     id: root
 
     title: qsTr("Desktop & Tiling")
+    isSubPage: false
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

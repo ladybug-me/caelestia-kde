@@ -6,6 +6,7 @@ PageBase {
     id: root
 
     title: qsTr("Panels & Interface")
+    isSubPage: false
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

@@ -11,6 +11,7 @@ PageBase {
     id: root
 
     title: qsTr("Display & Sound")
+    isSubPage: false
 
     Component.onCompleted: Displays.refresh()
 

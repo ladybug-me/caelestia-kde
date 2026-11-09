@@ -362,7 +362,7 @@ ColumnLayout {
                     icon: "wifi"
                     label: qsTr("Network")
                     status: Nmcli.activeWifiSsid ? Nmcli.activeWifiSsid : (Nmcli.wifiEnabled ? qsTr("Disconnected") : qsTr("Disabled"))
-                    slot: 0
+                    slot: 13
                 }
                 SubcategoryCard {
                     icon: "network_check"
@@ -410,7 +410,7 @@ ColumnLayout {
                     icon: "display_settings"
                     label: qsTr("Displays")
                     status: qsTr("%1 display(s) connected").arg(Displays.outputs.length)
-                    slot: 0
+                    slot: 11
                 }
                 SubcategoryCard {
                     icon: "volume_up"
@@ -506,7 +506,7 @@ ColumnLayout {
                     icon: "apps"
                     label: qsTr("Apps")
                     status: qsTr("Default openers, installed apps, and search")
-                    slot: 0
+                    slot: 4
                 }
                 SubcategoryCard {
                     icon: "list_alt"
@@ -530,7 +530,7 @@ ColumnLayout {
                     icon: "power_settings_new"
                     label: qsTr("Session")
                     status: qsTr("Power, lock, and logout options")
-                    slot: 0
+                    slot: 12
                 }
                 SubcategoryCard {
                     icon: "build"

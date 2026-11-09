@@ -62,5 +62,18 @@ PageBase {
             status: qsTr("Send files to nearby devices")
             onClicked: root.nState.openSubPage(6)
         }
+
+        SectionHeader {
+            text: qsTr("Artificial intelligence")
+        }
+
+        NavRow {
+            first: true
+            last: true
+            icon: "smart_toy"
+            label: qsTr("AI Assistant")
+            status: qsTr("Models, providers, and parameters")
+            onClicked: root.nState.openSubPage(7)
+        }
     }
 }

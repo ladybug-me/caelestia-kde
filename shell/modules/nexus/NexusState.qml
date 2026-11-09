@@ -47,11 +47,11 @@ QtObject {
         case 0: return 1; // Appearance: Wallpapers
         case 1: return 4; // Desktop: Desktop Settings
         case 2: return 1; // Panels & Interface: Dashboard
-        case 3: return 0; // Network & Connectivity: Wi-Fi & Connection
-        case 4: return 0; // Display & Sound: Layout & Scale
+        case 3: return 13; // Network & Connectivity: Network
+        case 4: return 11; // Display & Sound: Displays
         case 5: return 4; // Utilities & Tools: Utilities panel
-        case 6: return 0; // Applications & Shortcuts: Default Applications
-        case 7: return 0; // System & Services: Session settings
+        case 6: return 4; // Applications & Shortcuts: Default Applications
+        case 7: return 12; // System & Services: Session settings
         default: return 0;
         }
     }
@@ -77,13 +77,13 @@ QtObject {
         }
         if (pageIdx === 3) {
             // Network & Connectivity
-            if ([1, 2, 3, 4].indexOf(slot) !== -1) return 0; // Ethernet, AddNetwork, Detail, Vpn -> Wi-Fi & Connection
+            if ([0, 1, 2, 3, 4].indexOf(slot) !== -1) return 13; // Ethernet, AddNetwork, Detail, Vpn -> Network
             if (slot === 11) return 10; // BtDeviceInfo -> Bluetooth
             return slot;
         }
         if (pageIdx === 4) {
             // Display & Sound
-            if (slot === 1) return 0; // DisplayModesPage -> Layout & Scale
+            if (slot === 0 || slot === 1) return 11; // DisplayModesPage -> Displays
             if (slot === 10) return 6; // Notifications main -> Preferences
             return slot;
         }
@@ -94,11 +94,13 @@ QtObject {
         }
         if (pageIdx === 6) {
             // Applications & Shortcuts
+            if (slot === 0) return 4; // AppsPage -> Default Applications
             if (slot === 2) return 1; // AppInfo -> Installed Applications
             return slot;
         }
         if (pageIdx === 7) {
             // System & Services
+            if (slot === 0) return 12; // SessionPage -> Session settings
             if (slot === 7) return 6; // AutostartAppPicker -> Startup Applications
             return slot;
         }

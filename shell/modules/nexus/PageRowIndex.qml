@@ -370,20 +370,20 @@ QtObject {
             description: qsTr("Override applications to use KDE system defaults"),
             section: qsTr("Apps"),
             pageIdx: 6,
-            subPageIdx: 0
+            subPageIdx: 4
         },
         {
             label: qsTr("All apps"),
             section: qsTr("Apps"),
             pageIdx: 6,
-            subPageIdx: 0
+            subPageIdx: 4
         },
         {
             label: qsTr("Web search engine"),
             description: qsTr("Engine behind the launcher's web search row"),
             section: qsTr("Apps"),
             pageIdx: 6,
-            subPageIdx: 0
+            subPageIdx: 4
         },
         {
             label: qsTr("Enable rich presence"),
@@ -1365,47 +1365,47 @@ QtObject {
             label: qsTr("Enabled"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("Resolution & refresh rate"),
             description: qsTr("How large everything is drawn"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("Scale"),
             description: qsTr("How large everything is drawn"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("Rotation"),
             description: qsTr("Turn the picture to match how the screen stands"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("HDR"),
             description: qsTr("High dynamic range, and the wide colour gamut that goes with it"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("Mouse & touchpad"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("Keyboard"),
             section: qsTr("Displays"),
             pageIdx: 4,
-            subPageIdx: 0
+            subPageIdx: 11
         },
         {
             label: qsTr("Focus sessions"),
@@ -1985,44 +1985,44 @@ QtObject {
             label: qsTr("Wi-Fi"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("Show all networks (%1)"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("Saved networks"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("Add network"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("Hotspot"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("VPN providers"),
             description: qsTr("WireGuard, WARP, NetBird, and Tailscale"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("Proxy"),
             section: qsTr("Network"),
             pageIdx: 3,
-            subPageIdx: 0
+            subPageIdx: 13
         },
         {
             label: qsTr("Show in fullscreen"),
@@ -2544,21 +2544,21 @@ QtObject {
             description: qsTr("Show the session (power) menu"),
             section: qsTr("Session"),
             pageIdx: 7,
-            subPageIdx: 0
+            subPageIdx: 12
         },
         {
             label: qsTr("Vim keybinds"),
             description: qsTr("Navigate the session menu with hjkl"),
             section: qsTr("Session"),
             pageIdx: 7,
-            subPageIdx: 0
+            subPageIdx: 12
         },
         {
             label: qsTr("Drag threshold"),
             description: qsTr("Pixels to drag before the menu moves"),
             section: qsTr("Session"),
             pageIdx: 7,
-            subPageIdx: 0
+            subPageIdx: 12
         },
         {
             label: qsTr("Enabled"),

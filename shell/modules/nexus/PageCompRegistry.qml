@@ -85,7 +85,7 @@ QtObject {
         // Page 3: Network & Connectivity
         Component {
             StackPage {
-                SubPage { slot: 0; key: "network"; Component { NetworkPage {} } }
+                SubPage { slot: 0; key: "networkConnectivity"; Component { NetworkAndConnectivityPage {} } }
                 SubPage { slot: 1; key: "ethernetDetail"; Component { EthernetDetailPage {} } }
                 SubPage { slot: 2; key: "addNetwork"; Component { AddNetworkPage {} } }
                 SubPage { slot: 3; key: "networkDetail"; Component { NetworkDetailPage {} } }
@@ -97,12 +97,13 @@ QtObject {
                 SubPage { slot: 10; key: "bluetooth"; Component { BluetoothPage {} } }
                 SubPage { slot: 11; key: "btDeviceInfo"; Component { BtDeviceInfo {} } }
                 SubPage { slot: 12; key: "bluetoothPairing"; Component { BluetoothPairing {} } }
+                SubPage { slot: 13; key: "network"; Component { NetworkPage {} } }
             }
         },
         // Page 4: Display & Sound
         Component {
             StackPage {
-                SubPage { slot: 0; key: "displays"; Component { DisplayPage {} } }
+                SubPage { slot: 0; key: "displayAndSound"; Component { DisplayAndSoundPage {} } }
                 SubPage { slot: 1; key: "displayModes"; Component { DisplayModesPage {} } }
                 SubPage { slot: 2; key: "audio"; Component { AudioPage {} } }
                 SubPage { slot: 3; key: "appVolumes"; Component { AppVolumes {} } }
@@ -113,6 +114,7 @@ QtObject {
                 SubPage { slot: 8; key: "toastEvents"; Component { ToastEventsPage {} } }
                 SubPage { slot: 9; key: "focus"; Component { FocusPage {} } }
                 SubPage { slot: 10; key: "notifications"; Component { NotificationsPage {} } }
+                SubPage { slot: 11; key: "displays"; Component { DisplayPage {} } }
             }
         },
         // Page 5: Utilities & Tools
@@ -130,16 +132,17 @@ QtObject {
         // Page 6: Applications & Shortcuts
         Component {
             StackPage {
-                SubPage { slot: 0; key: "apps"; Component { AppsPage {} } }
+                SubPage { slot: 0; key: "applicationsAndShortcuts"; Component { ApplicationsAndShortcutsPage {} } }
                 SubPage { slot: 1; key: "allApps"; Component { AllApps {} } }
                 SubPage { slot: 2; key: "appInfo"; Component { AppInfo {} } }
                 SubPage { slot: 3; key: "shortcutManager"; Component { ShortcutManagerPage {} } }
+                SubPage { slot: 4; key: "apps"; Component { AppsPage {} } }
             }
         },
         // Page 7: System & Services
         Component {
             StackPage {
-                SubPage { slot: 0; key: "session"; Component { SessionPage {} } }
+                SubPage { slot: 0; key: "systemAndServices"; Component { SystemAndServicesPage {} } }
                 SubPage { slot: 1; key: "services"; Component { ServicesPage {} } }
                 SubPage { slot: 2; key: "arpc"; Component { ArpcPage {} } }
                 SubPage { slot: 3; key: "calendar"; Component { CalendarPage {} } }
@@ -151,6 +154,7 @@ QtObject {
                 SubPage { slot: 9; key: "plugins"; Component { PluginsPage {} } }
                 SubPage { slot: 10; key: "updates"; Component { UpdatesPage {} } }
                 SubPage { slot: 11; key: "about"; Component { AboutPage {} } }
+                SubPage { slot: 12; key: "session"; Component { SessionPage {} } }
             }
         }
     ]

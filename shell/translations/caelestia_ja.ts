@@ -16178,7 +16178,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>Islands, Pitch Black, Transparency</source>
-      <translation>島、ピッチブラック、透明度format@@0</translation>
+      <translation>島、ピッチブラック、透明度</translation>
     </message>
   </context>
   <context>

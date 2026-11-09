@@ -9582,7 +9582,7 @@ Now go touch grass</source>
       <location filename="../services/NotifData.qml" line="+19"/>
       <location line="+200"/>
       <source>now</source>
-      <translation>format@@0number@@1format@@2s</translation>
+      <translation>agora</translation>
     </message>
     <message>
       <location line="-164"/>

@@ -80,7 +80,7 @@ PageBase {
                 icon: "info"
                 label: qsTr("skwd-wall not available")
                 status: qsTr("Click to open troubleshooting guide")
-                onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#710-skwd-wall")
+                onClicked: Qt.openUrlExternally("https://github.com/caelestia-kde/caelestia/blob/main/docs/TROUBLESHOOTING.md#710-skwd-wall")
             }
 
             NavRow {

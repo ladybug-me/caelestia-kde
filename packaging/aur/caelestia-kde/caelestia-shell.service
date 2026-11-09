@@ -1,6 +1,6 @@
 [Unit]
 Description=Caelestia Shell
-Documentation=https://github.com/ladybug-me/caelestia-kde
+Documentation=https://github.com/caelestia-kde/caelestia
 PartOf=graphical-session.target
 After=graphical-session.target
 # The shell registers org.freedesktop.Notifications, and applications decide once,

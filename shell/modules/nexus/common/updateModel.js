@@ -83,7 +83,7 @@ function releaseEntries(versions, currentVersion, commits) {
             state: state,
             title: label,
             details: bodies[normalizeVersion(versions[v])] || "",
-            url: "https://github.com/ladybug-me/caelestia-kde/releases/tag/" + versions[v],
+            url: "https://github.com/caelestia-kde/caelestia/releases/tag/" + versions[v],
             isRelease: true
         }));
     }

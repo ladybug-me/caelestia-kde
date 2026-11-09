@@ -1622,7 +1622,7 @@ Item {
             if (useAnthropic)
                 xhr.setRequestHeader("anthropic-version", "2023-06-01");
             if (root.provider === "openrouter") {
-                xhr.setRequestHeader("HTTP-Referer", "https://github.com/ladybug-me/caelestia-kde");
+                xhr.setRequestHeader("HTTP-Referer", "https://github.com/caelestia-kde/caelestia");
                 xhr.setRequestHeader("X-Title", "Caelestia Shell");
             }
         } else {

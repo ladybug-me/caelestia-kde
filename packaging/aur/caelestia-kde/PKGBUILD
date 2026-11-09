@@ -5,7 +5,7 @@ pkgver=2.5.1
 pkgrel=1
 pkgdesc='The Caelestia desktop shell, ported to KDE Plasma'
 arch=('x86_64' 'aarch64')
-url='https://github.com/ladybug-me/caelestia-kde'
+url='https://github.com/caelestia-kde/caelestia'
 license=('GPL-3.0-or-later')
 depends=(
     'bash'

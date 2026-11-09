@@ -35,7 +35,7 @@ concurrency:
 jobs:
   synchronize:
     runs-on: ubuntu-latest
-    if: github.repository == 'ladybug-me/caelestia-kde'
+    if: github.repository == 'caelestia-kde/caelestia'
     permissions:
       contents: write
       pull-requests: write
@@ -103,7 +103,7 @@ jobs:
 
   compile:
     runs-on: ubuntu-latest
-    if: github.repository == 'ladybug-me/caelestia-kde' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.download_translations))
+    if: github.repository == 'caelestia-kde/caelestia' && (github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && inputs.download_translations))
     permissions:
       contents: write
     steps:

@@ -145,6 +145,7 @@ run_updater() {
     name = fixture
     email = fixture@example.invalid
 [url "$FIXTURE_REMOTE"]
+    insteadOf = https://github.com/caelestia-kde/caelestia.git
     insteadOf = https://github.com/ladybug-me/caelestia-kde.git
 [protocol "file"]
     allow = always

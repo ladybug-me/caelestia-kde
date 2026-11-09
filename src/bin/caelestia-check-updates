@@ -44,7 +44,7 @@ GIT_TIMEOUT=30
 # itself failing (offline, DNS, timeout). Only "the branch is gone" may rewrite the user's
 # stored choice, or a laptop that is briefly offline silently moves itself to main.
 ls_status=0
-timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git "$BRANCH" >/dev/null 2>&1 || ls_status=$?
+timeout ${GIT_TIMEOUT} git ls-remote --exit-code --heads https://github.com/caelestia-kde/caelestia.git "$BRANCH" >/dev/null 2>&1 || ls_status=$?
 if [ "$ls_status" -eq 2 ]; then
     echo "[WARN] Branch '$BRANCH' does not exist on the remote; falling back to main." >&2
     BRANCH="main"
@@ -66,7 +66,7 @@ REPO="$HOME/.cache/caelestia-kde/upstream.git"
 
 if [ -n "$_localCommit" ]; then
     if [ ! -d "$REPO" ]; then
-        timeout ${GIT_TIMEOUT} git clone --bare --filter=blob:none https://github.com/ladybug-me/caelestia-kde.git "$REPO" >/dev/null 2>&1 || true
+        timeout ${GIT_TIMEOUT} git clone --bare --filter=blob:none https://github.com/caelestia-kde/caelestia.git "$REPO" >/dev/null 2>&1 || true
     else
         timeout ${GIT_TIMEOUT} git -C "$REPO" fetch --force origin "$BRANCH:$BRANCH" >/dev/null 2>&1 || true
     fi

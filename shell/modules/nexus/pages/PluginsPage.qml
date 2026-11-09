@@ -44,7 +44,7 @@ PageBase {
         if (iconString.indexOf("/") === 0) return "file://" + iconString;
 
         if (isStorePlugin) {
-            return "https://raw.githubusercontent.com/ladybug-me/caelestia-kde-plugins/" + root.storeBranch + "/" + basePath + "/" + iconString;
+            return "https://raw.githubusercontent.com/caelestia-kde/plugins/" + root.storeBranch + "/" + basePath + "/" + iconString;
         }
         return "file://" + basePath + "/" + iconString;
     }
@@ -506,8 +506,8 @@ PageBase {
                     mediaUrl: {
                         if (!storeDelegate.mediaurl) return "";
                         if (storeDelegate.mediaurl.indexOf("http://") === 0 || storeDelegate.mediaurl.indexOf("https://") === 0 || storeDelegate.mediaurl.indexOf("file://") === 0) return storeDelegate.mediaurl;
-                        if (storeDelegate.mediaurl.indexOf("/") === 0) return "https://raw.githubusercontent.com/ladybug-me/caelestia-kde-plugins/" + root.storeBranch + storeDelegate.mediaurl;
-                        return "https://raw.githubusercontent.com/ladybug-me/caelestia-kde-plugins/" + root.storeBranch + "/" + storeDelegate.path + "/" + storeDelegate.mediaurl;
+                        if (storeDelegate.mediaurl.indexOf("/") === 0) return "https://raw.githubusercontent.com/caelestia-kde/plugins/" + root.storeBranch + storeDelegate.mediaurl;
+                        return "https://raw.githubusercontent.com/caelestia-kde/plugins/" + root.storeBranch + "/" + storeDelegate.path + "/" + storeDelegate.mediaurl;
                     }
 
                     actionComponent: Component {

@@ -142,7 +142,7 @@ PageBase {
                 icon: "info"
                 label: qsTr("Visualizer not available")
                 status: qsTr("Click to open troubleshooting guide")
-                onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#79-plasma-audio-visualizer")
+                onClicked: Qt.openUrlExternally("https://github.com/caelestia-kde/caelestia/blob/main/docs/TROUBLESHOOTING.md#79-plasma-audio-visualizer")
             }
 
             ToggleRow {

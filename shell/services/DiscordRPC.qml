@@ -268,7 +268,7 @@ Item {
                 startTimestamp: root.shellStartTime,
                 buttons: [
                     { label: qsTr("Website"), url: "https://caelestiashell.com" },
-                    { label: qsTr("GitHub"), url: "https://github.com/ladybug-me/caelestia-kde" }
+                    { label: qsTr("GitHub"), url: "https://github.com/caelestia-kde/caelestia" }
                 ]
             });
             return;

@@ -32,7 +32,7 @@ if [ ! -t 0 ]; then
     fi
 fi
 
-REPO="${CAELESTIA_REPO:-https://github.com/ladybug-me/caelestia-kde.git}"
+REPO="${CAELESTIA_REPO:-https://github.com/caelestia-kde/caelestia.git}"
 BRANCH="${CAELESTIA_BRANCH:-main}"
 DEST="${CAELESTIA_DIR:-$HOME/caelestia-kde}"
 

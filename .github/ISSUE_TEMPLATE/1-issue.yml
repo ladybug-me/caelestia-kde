@@ -7,7 +7,7 @@ body:
       value: |
         Thanks for taking the time to report a bug!
 
-        A quick search of [existing issues](https://github.com/ladybug-me/caelestia-kde/issues?q=is%3Aissue) helps avoid duplicates - if you find one, give it a thumbs up instead.
+        A quick search of [existing issues](https://github.com/caelestia-kde/caelestia/issues?q=is%3Aissue) helps avoid duplicates - if you find one, give it a thumbs up instead.
 
   - type: checkboxes
     attributes:

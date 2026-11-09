@@ -26,7 +26,7 @@ PYEOF
 # make it this project rather than any directory someone pointed the record at. $2 is the
 # origin the clone records, and "none" leaves the directory without a repository at all.
 make_checkout() {
-    local dir="$1" origin="${2-https://github.com/ladybug-me/caelestia-kde.git}"
+    local dir="$1" origin="${2-https://github.com/caelestia-kde/caelestia.git}"
     mkdir -p "$dir/scripts"
     printf '#!/usr/bin/env bash\n' > "$dir/uninstall.sh"
     printf '#!/usr/bin/env bash\n' > "$dir/scripts/setup.sh"
@@ -299,7 +299,7 @@ test_the_probe_accepts_a_clone_its_remote_is_rewritten_from() {
     tmp="$(new_tmpdir)"
     mkdir -p "$tmp/home" "$tmp/config" "$tmp/mirror"
     make_checkout "$tmp/cloned"
-    git -C "$tmp/cloned" config "url.$tmp/mirror.insteadOf" "https://github.com/ladybug-me/caelestia-kde.git"
+    git -C "$tmp/cloned" config "url.$tmp/mirror.insteadOf" "https://github.com/caelestia-kde/caelestia.git"
     assert_eq "$tmp/mirror" "$(git -C "$tmp/cloned" remote get-url origin)" \
         "the rewrite has to be in effect, or this test proves nothing"
     printf '%s\n' "$tmp/cloned" > "$tmp/config/.checkout"

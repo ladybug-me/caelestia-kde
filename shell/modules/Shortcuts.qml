@@ -376,9 +376,15 @@ Scope {
         onPressed: Launch.exec([...GlobalConfig.general.apps.terminal])
     }
     CustomShortcut {
+        // The name stays "firefox" so existing keybinds keep working; the command
+        // follows Nexus -> Apps -> Default Apps -> Browser instead of a hardcoded
+        // binary. Falls back to firefox only if the setting is empty.
         name: "firefox"
         description: qsTr("Launch Browser")
-        onPressed: Launch.exec(["firefox"])
+        onPressed: {
+            const browser = GlobalConfig.general.apps.browser;
+            Launch.exec(browser.length > 0 ? [...browser] : ["firefox"]);
+        }
     }
     CustomShortcut {
         name: "code"

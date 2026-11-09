@@ -1194,6 +1194,19 @@ test_an_apply_path_that_is_not_a_file_keeps_the_thumbnail() {
         "the current link falls back to the thumbnail"
 }
 
+test_an_apply_path_that_is_a_directory_keeps_the_thumbnail() {
+    setup_sandbox
+    local thumb; thumb="$(wallpaper_image "thumb.png")"
+    local scene="$SANDBOX/workshop/431960/3522288336"
+    mkdir -p "$scene"
+
+    # Newer skwd-wall hands the scene's workshop folder instead of its id.
+    SKWD_WALLD=1 run_color wallpaper -f "$thumb" -a "$scene"
+    assert_status 0 "$STATUS" "setting the wallpaper should still succeed"
+    assert_eq "$thumb" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt falls back to the thumbnail"
+}
+
 test_skwd_helm_not_called_when_multi_monitor_already_has_wallpaper() {
     setup_sandbox
     local img; img="$(wallpaper_image "wall.png")"

@@ -47,18 +47,10 @@ StackView {
     function switchToSlot(target: var): void {
         const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
         if (page) {
-            if (root.depth > 1) {
-                root.pop(null, StackView.Immediate);
-            }
-            if (root.depth > 0) {
-                root.replace(page, {
-                    nState
-                }, StackView.Immediate);
-            } else {
-                root.push(page, {
-                    nState
-                }, StackView.Immediate);
-            }
+            root.popToIndex(0, StackView.Immediate);
+            root.replace(page, {
+                nState
+            }, StackView.Immediate);
         }
     }
 
@@ -182,9 +174,7 @@ StackView {
         }
 
         function onSubPagesCleared(): void {
-            if (root.depth > 1) {
-                root.pop(null, StackView.Immediate);
-            }
+            root.popToIndex(0, StackView.Immediate);
         }
 
         target: root.nState

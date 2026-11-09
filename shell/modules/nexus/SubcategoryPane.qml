@@ -177,7 +177,7 @@ ColumnLayout {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: root.nState.compact ? 46 : Tokens.padding.medium
             anchors.rightMargin: Tokens.padding.medium
-            text: root.nState.compact ? (root.currentPage ? root.currentPage.label : "") : qsTr("Sections")
+            text: root.currentPage ? root.currentPage.label : ""
             font: Tokens.font.title.builders.large.weight(Font.Medium).build()
             color: Colours.palette.m3onSurface
             elide: Text.ElideRight

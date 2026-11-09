@@ -231,7 +231,7 @@ PageBase {
             last: true
             nState: root.nState
             pageKey: "audio"
-            subPageIdx: 3
+            subPage: "notificationSilencing"
             icon: "notifications_off"
             label: qsTr("Muted notification apps")
             status: qsTr("Manage applications with disabled notifications or sounds")

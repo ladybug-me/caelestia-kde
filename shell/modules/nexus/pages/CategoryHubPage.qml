@@ -54,7 +54,7 @@ PageBase {
                     status: rowCol.modelData.description !== "" ? rowCol.modelData.description : rowCol.modelData.status
                     enabled: rowCol.modelData.enabled
                     opacity: enabled ? 1.0 : 0.5
-                    onClicked: root.nState.openSubPage(rowCol.modelData.slot)
+                    onClicked: root.nState.openSubPage(rowCol.modelData.key)
                 }
             }
         }

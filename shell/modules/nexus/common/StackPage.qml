@@ -12,40 +12,33 @@ StackView {
     required property NexusState nState
     property var pages: []
     readonly property int animMovement: Tokens.padding.extraExtraLarge * 2
-    readonly property var slotMap: ({})
+    readonly property var pageMap: ({})
     // set by Pages so the outgoing page ignores the nav signals of the page that replaces it
     property int pageIdx: -1
 
-    function buildSlotMap(): void {
+    function buildPageMap(): void {
         for (let i = 0; i < pages.length; i++) {
             const item = pages[i];
-            if (!item)
+            if (!item || !item.key)
                 continue;
-            if (item.component !== undefined) {
-                const s = item.slot >= 0 ? item.slot : i;
-                slotMap[s] = item.component;
-                if (item.key)
-                    slotMap[item.key] = item.component;
-            } else {
-                slotMap[i] = item;
-            }
+            pageMap[item.key] = item.component ?? item;
         }
     }
 
-    function openSubPage(target: var, immediate: bool): void {
-        const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
+    function openSubPage(target: string, immediate: bool): void {
+        const page = pageMap[target];
         if (page) {
             push(page, {
                 nState
             }, immediate ? StackView.Immediate : StackView.PushTransition);
         } else {
-            console.warn(logCat, "Attempted to open invalid sub-page slot/key:", target);
+            console.warn(logCat, "Attempted to open invalid sub-page key:", target);
             nState.closeSubPage();
         }
     }
 
-    function switchToSlot(target: var): void {
-        const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
+    function switchToPage(target: string): void {
+        const page = pageMap[target];
         if (page) {
             root.popToIndex(0, StackView.Immediate);
             root.replace(page, {
@@ -60,22 +53,22 @@ StackView {
         if (!pages || pages.length === 0) {
             pages = root.pageIdx >= 0 ? PageCompRegistry.collectAllPagesForCategory(root.pageIdx) : [];
         }
-        root.buildSlotMap();
-        const baseSlot = nState.activeSubPageSlot >= 0
-            ? nState.activeSubPageSlot
-            : nState.defaultSlotForPage(root.pageIdx);
-        root.openSubPage(baseSlot, true);
-        if (nState.pendingSubPageIdx >= 0) {
-            const pending = nState.pendingSubPageIdx;
-            nState.pendingSubPageIdx = -1;
-            if (pending !== baseSlot && nState.subPageIdxStack.indexOf(pending) < 0) {
-                nState.subPageIdxStack.push(pending);
+        root.buildPageMap();
+        const baseKey = nState.activeSubPageKey !== ""
+            ? nState.activeSubPageKey
+            : nState.defaultPageForCategory(root.pageIdx);
+        root.openSubPage(baseKey, true);
+        if (nState.pendingSubPageKey !== "") {
+            const pending = nState.pendingSubPageKey;
+            nState.pendingSubPageKey = "";
+            if (pending !== baseKey && nState.subPageKeyStack.indexOf(pending) < 0) {
+                nState.subPageKeyStack.push(pending);
             }
         }
-        for (let i = 0; i < nState.subPageIdxStack.length; i++) {
-            const pageSlot = nState.subPageIdxStack[i];
-            if (pageSlot !== baseSlot) {
-                root.openSubPage(pageSlot, true);
+        for (let i = 0; i < nState.subPageKeyStack.length; i++) {
+            const pageKey = nState.subPageKeyStack[i];
+            if (pageKey !== baseKey) {
+                root.openSubPage(pageKey, true);
             }
         }
     }
@@ -154,19 +147,19 @@ StackView {
     }
 
     Connections {
-        function onSubCategorySelected(target: var): void {
+        function onSubCategorySelected(target: string): void {
             // read the live value: a cached binding is stale while currentPageIdx is still notifying
             if (root.pageIdx >= 0 && root.pageIdx !== root.nState.currentPageIdx)
                 return;
-            root.switchToSlot(target);
+            root.switchToPage(target);
         }
 
-        function onSubPageOpened(target: var): void {
+        function onSubPageOpened(target: string): void {
             root.openSubPage(target, false);
         }
 
         function onSubPageClosed(): void {
-            if (root.depth < root.nState.subPageIdxStack.length) {
+            if (root.depth < root.nState.subPageKeyStack.length) {
                 console.log(logCat, "Attempted to close page while depth < stack depth. Ignoring.");
                 return;
             }

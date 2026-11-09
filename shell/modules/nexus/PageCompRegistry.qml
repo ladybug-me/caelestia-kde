@@ -30,7 +30,6 @@ QtObject {
     }
 
     readonly property SubPage hubSubPage: SubPage {
-        slot: 0
         key: "hub"
         component: root.hubPageComp
     }
@@ -46,10 +45,9 @@ QtObject {
             label: qsTr("Appearance")
             icon: "palette"
             description: qsTr("Wallpapers, colors, themes")
-            defaultSlot: 1
+            defaultPage: "wallpaperSelect"
 
             Page {
-                slot: 1
                 key: "wallpaperSelect"
                 label: qsTr("Wallpapers")
                 icon: "wallpaper"
@@ -60,14 +58,12 @@ QtObject {
                 component: Component { WallpaperSelect {} }
 
                 SubPage {
-                    slot: 2
                     key: "wallpaperCategory"
                     label: qsTr("Wallpaper Category")
                     keywords: ["category", "collection", "tags"]
                     component: Component { WallpaperCategory {} }
                 }
                 SubPage {
-                    slot: 4
                     key: "wallhaven"
                     label: qsTr("Wallhaven")
                     keywords: ["wallhaven", "download", "online", "search"]
@@ -76,7 +72,6 @@ QtObject {
             }
 
             Page {
-                slot: 6
                 key: "libraryAndCommunity"
                 label: qsTr("Library & Components")
                 icon: "cloud_download"
@@ -88,7 +83,6 @@ QtObject {
             }
 
             Page {
-                slot: 5
                 key: "wallpaperSettings"
                 label: qsTr("Wallpaper Settings")
                 icon: "settings_suggest"
@@ -100,7 +94,6 @@ QtObject {
             }
 
             Page {
-                slot: 8
                 key: "lockScreen"
                 label: qsTr("Lock Screen")
                 icon: "lock"
@@ -112,7 +105,6 @@ QtObject {
             }
 
             Page {
-                slot: 3
                 key: "colourSelect"
                 label: qsTr("Colors")
                 icon: "palette"
@@ -123,7 +115,6 @@ QtObject {
                 component: Component { ColourSelect {} }
 
                 SubPage {
-                    slot: 9
                     key: "advancedColors"
                     label: qsTr("Advanced Colors")
                     keywords: ["advanced", "contrast", "saturation", "matugen", "intensity"]
@@ -132,7 +123,6 @@ QtObject {
             }
 
             Page {
-                slot: 7
                 key: "appearance"
                 label: qsTr("Theme & Effects")
                 icon: "style"
@@ -144,7 +134,6 @@ QtObject {
             }
 
             Page {
-                slot: 10
                 key: "nexusSettings"
                 label: qsTr("Nexus settings")
                 icon: "tune"
@@ -162,10 +151,9 @@ QtObject {
             label: qsTr("Desktop & Tiling")
             icon: "desktop_windows"
             description: qsTr("Desktop, addons, tiling")
-            defaultSlot: 4
+            defaultPage: "desktop"
 
             Page {
-                slot: 4
                 key: "desktop"
                 label: qsTr("Desktop")
                 icon: "desktop_windows"
@@ -176,7 +164,6 @@ QtObject {
             }
 
             Page {
-                slot: 1
                 key: "desktopAddons"
                 label: qsTr("Desktop Addons")
                 icon: "extension"
@@ -188,7 +175,6 @@ QtObject {
             }
 
             Page {
-                slot: 2
                 key: "contextMenu"
                 label: qsTr("Right Click Menu")
                 icon: "menu_open"
@@ -200,7 +186,6 @@ QtObject {
             }
 
             Page {
-                slot: 3
                 key: "krohnkite"
                 label: qsTr("Window Tiling")
                 icon: "view_quilt"
@@ -217,10 +202,9 @@ QtObject {
             label: qsTr("Panels & Interface")
             icon: "dock_to_bottom"
             description: qsTr("Dashboard, taskbar, launcher")
-            defaultSlot: 1
+            defaultPage: "dashboard"
 
             Page {
-                slot: 1
                 key: "dashboard"
                 label: qsTr("Dashboard")
                 icon: "dashboard"
@@ -231,7 +215,6 @@ QtObject {
             }
 
             Page {
-                slot: 2
                 key: "taskbar"
                 label: qsTr("Taskbar")
                 icon: "dock_to_bottom"
@@ -240,26 +223,25 @@ QtObject {
                 keywords: ["taskbar", "bar", "dock", "tray", "workspaces", "position"]
                 component: Component { TaskbarPanel {} }
 
-                SubPage { slot: 6; key: "barComponents"; label: qsTr("Components"); keywords: ["widgets", "components", "reorder"]; Component { BarComponents {} } }
-                SubPage { slot: 7; key: "barWorkspaces"; label: qsTr("Workspaces"); keywords: ["workspaces", "indicators"]; Component { BarWorkspaces {} } }
-                SubPage { slot: 8; key: "barGreeter"; label: qsTr("Greeter"); keywords: ["greeting", "popout", "slideshow"]; Component { BarGreeter {} } }
-                SubPage { slot: 9; key: "barTray"; label: qsTr("Tray"); keywords: ["system tray", "icons", "pin"]; Component { BarTray {} } }
-                SubPage { slot: 10; key: "barStatusIcons"; label: qsTr("Status Icons"); keywords: ["indicators", "bar"]; Component { BarStatusIcons {} } }
-                SubPage { slot: 11; key: "barClock"; label: qsTr("Clock"); keywords: ["date", "time", "seconds"]; Component { BarClock {} } }
-                SubPage { slot: 12; key: "barDock"; label: qsTr("Dock"); keywords: ["dock", "pinned", "apps", "grouping"]; Component { BarDock {} } }
-                SubPage { slot: 13; key: "barGithub"; label: qsTr("GitHub"); keywords: ["github", "contributions", "token"]; Component { BarGithub {} } }
-                SubPage { slot: 14; key: "barPreviewScales"; label: qsTr("Preview Scales"); keywords: ["scale", "offsets"]; Component { BarPreviewScales {} } }
-                SubPage { slot: 15; key: "taskbarElements"; label: qsTr("Elements & Modules"); keywords: ["modules", "elements"]; Component { TaskbarElements {} } }
-                SubPage { slot: 17; key: "barUpdates"; label: qsTr("Updates Indicator"); keywords: ["updates", "indicator"]; Component { BarUpdates {} } }
-                SubPage { slot: 19; key: "barMedia"; label: qsTr("Media"); keywords: ["media", "player", "music"]; Component { BarMedia {} } }
-                SubPage { slot: 20; key: "barWeather"; label: qsTr("Weather"); keywords: ["weather", "temperature", "forecast"]; Component { BarWeather {} } }
-                SubPage { slot: 21; key: "barPerformance"; label: qsTr("Performance"); keywords: ["cpu", "gpu", "ram", "memory"]; Component { BarPerformance {} } }
-                SubPage { slot: 22; key: "barScreenCapture"; label: qsTr("Screen Capture"); keywords: ["screenshot", "recording"]; Component { BarScreenCapture {} } }
-                SubPage { slot: 23; key: "barKeepAwake"; label: qsTr("Keep Awake"); keywords: ["idle", "sleep", "caffeine"]; Component { BarKeepAwake {} } }
+                SubPage { key: "barComponents"; label: qsTr("Components"); keywords: ["widgets", "components", "reorder"]; Component { BarComponents {} } }
+                SubPage { key: "barWorkspaces"; label: qsTr("Workspaces"); keywords: ["workspaces", "indicators"]; Component { BarWorkspaces {} } }
+                SubPage { key: "barGreeter"; label: qsTr("Greeter"); keywords: ["greeting", "popout", "slideshow"]; Component { BarGreeter {} } }
+                SubPage { key: "barTray"; label: qsTr("Tray"); keywords: ["system tray", "icons", "pin"]; Component { BarTray {} } }
+                SubPage { key: "barStatusIcons"; label: qsTr("Status Icons"); keywords: ["indicators", "bar"]; Component { BarStatusIcons {} } }
+                SubPage { key: "barClock"; label: qsTr("Clock"); keywords: ["date", "time", "seconds"]; Component { BarClock {} } }
+                SubPage { key: "barDock"; label: qsTr("Dock"); keywords: ["dock", "pinned", "apps", "grouping"]; Component { BarDock {} } }
+                SubPage { key: "barGithub"; label: qsTr("GitHub"); keywords: ["github", "contributions", "token"]; Component { BarGithub {} } }
+                SubPage { key: "barPreviewScales"; label: qsTr("Preview Scales"); keywords: ["scale", "offsets"]; Component { BarPreviewScales {} } }
+                SubPage { key: "taskbarElements"; label: qsTr("Elements & Modules"); keywords: ["modules", "elements"]; Component { TaskbarElements {} } }
+                SubPage { key: "barUpdates"; label: qsTr("Updates Indicator"); keywords: ["updates", "indicator"]; Component { BarUpdates {} } }
+                SubPage { key: "barMedia"; label: qsTr("Media"); keywords: ["media", "player", "music"]; Component { BarMedia {} } }
+                SubPage { key: "barWeather"; label: qsTr("Weather"); keywords: ["weather", "temperature", "forecast"]; Component { BarWeather {} } }
+                SubPage { key: "barPerformance"; label: qsTr("Performance"); keywords: ["cpu", "gpu", "ram", "memory"]; Component { BarPerformance {} } }
+                SubPage { key: "barScreenCapture"; label: qsTr("Screen Capture"); keywords: ["screenshot", "recording"]; Component { BarScreenCapture {} } }
+                SubPage { key: "barKeepAwake"; label: qsTr("Keep Awake"); keywords: ["idle", "sleep", "caffeine"]; Component { BarKeepAwake {} } }
             }
 
             Page {
-                slot: 3
                 key: "launcher"
                 label: qsTr("Launcher")
                 icon: "apps"
@@ -270,7 +252,6 @@ QtObject {
             }
 
             Page {
-                slot: 4
                 key: "sidebar"
                 label: qsTr("Sidebar")
                 icon: "dock_to_right"
@@ -281,7 +262,6 @@ QtObject {
             }
 
             Page {
-                slot: 5
                 key: "utilitiesPanel"
                 label: qsTr("Quick toggle")
                 icon: "settings_input_component"
@@ -292,7 +272,6 @@ QtObject {
             }
 
             Page {
-                slot: 16
                 key: "overview"
                 label: qsTr("Overview")
                 icon: "view_carousel"
@@ -303,7 +282,6 @@ QtObject {
             }
 
             Page {
-                slot: 18
                 key: "tabSwitcher"
                 label: qsTr("Window Switcher")
                 icon: "view_array"
@@ -314,7 +292,6 @@ QtObject {
             }
 
             Page {
-                slot: 24
                 key: "osdPanel"
                 label: qsTr("OSD")
                 icon: "tune"
@@ -341,10 +318,9 @@ QtObject {
             label: qsTr("Network & Connectivity")
             icon: "wifi"
             description: qsTr("Wi-Fi, Bluetooth, network")
-            defaultSlot: 13
+            defaultPage: "network"
 
             Page {
-                slot: 13
                 key: "network"
                 label: qsTr("Network")
                 icon: "wifi"
@@ -354,14 +330,13 @@ QtObject {
                 keywords: ["wireless", "internet", "connections", "network", "vpn", "ethernet"]
                 component: Component { NetworkPage {} }
 
-                SubPage { slot: 1; key: "ethernetDetail"; label: qsTr("Ethernet"); keywords: ["ethernet", "lan"]; Component { EthernetDetailPage {} } }
-                SubPage { slot: 2; key: "addNetwork"; label: qsTr("Add Network"); keywords: ["wifi", "manual", "ssid"]; Component { AddNetworkPage {} } }
-                SubPage { slot: 3; key: "networkDetail"; label: qsTr("Network Detail"); keywords: ["signal", "ip", "dns"]; Component { NetworkDetailPage {} } }
-                SubPage { slot: 4; key: "addVpn"; label: qsTr("Add VPN"); keywords: ["vpn", "tunnel", "wireguard", "openvpn"]; Component { AddVpnPage {} } }
+                SubPage { key: "ethernetDetail"; label: qsTr("Ethernet"); keywords: ["ethernet", "lan"]; Component { EthernetDetailPage {} } }
+                SubPage { key: "addNetwork"; label: qsTr("Add Network"); keywords: ["wifi", "manual", "ssid"]; Component { AddNetworkPage {} } }
+                SubPage { key: "networkDetail"; label: qsTr("Network Detail"); keywords: ["signal", "ip", "dns"]; Component { NetworkDetailPage {} } }
+                SubPage { key: "addVpn"; label: qsTr("Add VPN"); keywords: ["vpn", "tunnel", "wireguard", "openvpn"]; Component { AddVpnPage {} } }
             }
 
             Page {
-                slot: 5
                 key: "allNetworks"
                 label: qsTr("All Networks")
                 icon: "network_check"
@@ -373,7 +348,6 @@ QtObject {
             }
 
             Page {
-                slot: 6
                 key: "savedNetworks"
                 label: qsTr("Saved Networks")
                 icon: "history"
@@ -385,7 +359,6 @@ QtObject {
             }
 
             Page {
-                slot: 7
                 key: "hotspot"
                 label: qsTr("Hotspot")
                 icon: "wifi_tethering"
@@ -397,7 +370,6 @@ QtObject {
             }
 
             Page {
-                slot: 8
                 key: "proxy"
                 label: qsTr("Proxy")
                 icon: "vpn_key"
@@ -409,7 +381,6 @@ QtObject {
             }
 
             Page {
-                slot: 10
                 key: "bluetooth"
                 label: qsTr("Bluetooth")
                 icon: "bluetooth"
@@ -419,8 +390,8 @@ QtObject {
                 keywords: ["wireless", "devices", "accessories", "bluetooth", "discoverable", "pairable"]
                 component: Component { BluetoothPage {} }
 
-                SubPage { slot: 11; key: "btDeviceInfo"; label: qsTr("Device Info"); keywords: ["battery", "device"]; Component { BtDeviceInfo {} } }
-                SubPage { slot: 12; key: "bluetoothPairing"; label: qsTr("Pair New Device"); keywords: ["pairing", "pair", "search", "bluetooth"]; Component { BluetoothPairing {} } }
+                SubPage { key: "btDeviceInfo"; label: qsTr("Device Info"); keywords: ["battery", "device"]; Component { BtDeviceInfo {} } }
+                SubPage { key: "bluetoothPairing"; label: qsTr("Pair New Device"); keywords: ["pairing", "pair", "search", "bluetooth"]; Component { BluetoothPairing {} } }
             }
         },
 
@@ -430,10 +401,9 @@ QtObject {
             label: qsTr("Display & Sound")
             icon: "monitor"
             description: qsTr("Displays, audio, notifications")
-            defaultSlot: 11
+            defaultPage: "displays"
 
             Page {
-                slot: 11
                 key: "displays"
                 label: qsTr("Displays")
                 icon: "display_settings"
@@ -443,11 +413,10 @@ QtObject {
                 keywords: ["displays", "scale", "fractional", "zoom", "hidpi", "screen", "rotation", "hdr"]
                 component: Component { DisplayPage {} }
 
-                SubPage { slot: 1; key: "displayModes"; label: qsTr("Display Modes"); keywords: ["resolution", "mode", "refresh rate", "hz"]; Component { DisplayModesPage {} } }
+                SubPage { key: "displayModes"; label: qsTr("Display Modes"); keywords: ["resolution", "mode", "refresh rate", "hz"]; Component { DisplayModesPage {} } }
             }
 
             Page {
-                slot: 2
                 key: "audio"
                 label: qsTr("Audio")
                 icon: "volume_up"
@@ -457,13 +426,12 @@ QtObject {
                 keywords: ["speakers", "output", "volume", "playback", "sink", "microphone", "recording"]
                 component: Component { AudioPage {} }
 
-                SubPage { slot: 3; key: "appVolumes"; label: qsTr("App Volumes"); keywords: ["app", "volume", "stream", "per-app"]; Component { AppVolumes {} } }
-                SubPage { slot: 4; key: "soundEffects"; label: qsTr("Sounds"); keywords: ["sfx", "feedback", "camera", "screen lock", "sounds"]; Component { SoundEffectsPage {} } }
-                SubPage { slot: 5; key: "notificationSilencing"; label: qsTr("Muted Apps"); keywords: ["silence", "mute", "muted", "turn off notifications", "hide notifications"]; Component { NotificationSilencingPage {} } }
+                SubPage { key: "appVolumes"; label: qsTr("App Volumes"); keywords: ["app", "volume", "stream", "per-app"]; Component { AppVolumes {} } }
+                SubPage { key: "soundEffects"; label: qsTr("Sounds"); keywords: ["sfx", "feedback", "camera", "screen lock", "sounds"]; Component { SoundEffectsPage {} } }
+                SubPage { key: "notificationSilencing"; label: qsTr("Muted Apps"); keywords: ["silence", "mute", "muted", "turn off notifications", "hide notifications"]; Component { NotificationSilencingPage {} } }
             }
 
             Page {
-                slot: 6
                 key: "notificationPreferences"
                 label: qsTr("Notification Behaviour")
                 icon: "notifications"
@@ -473,10 +441,10 @@ QtObject {
                 keywords: ["notifications", "fullscreen", "position", "timeout", "taskbar"]
                 component: Component { NotificationPreferencesPage {} }
 
-                SubPage { slot: 7; key: "toastPreferences"; label: qsTr("Toasts"); keywords: ["popup", "banner", "sound", "volume"]; Component { ToastPreferencesPage {} } }
-                SubPage { slot: 8; key: "toastEvents"; label: qsTr("Toast Events"); keywords: ["charging", "clipboard", "vpn", "keyboard", "audio"]; Component { ToastEventsPage {} } }
-                SubPage { slot: 9; key: "focus"; label: qsTr("Focus Sessions"); keywords: ["do not disturb", "dnd", "schedule", "focus", "quiet"]; Component { FocusPage {} } }
-                SubPage { slot: 10; key: "notifications"; label: qsTr("Notifications"); keywords: ["history", "alerts"]; Component { NotificationsPage {} } }
+                SubPage { key: "toastPreferences"; label: qsTr("Toasts"); keywords: ["popup", "banner", "sound", "volume"]; Component { ToastPreferencesPage {} } }
+                SubPage { key: "toastEvents"; label: qsTr("Toast Events"); keywords: ["charging", "clipboard", "vpn", "keyboard", "audio"]; Component { ToastEventsPage {} } }
+                SubPage { key: "focus"; label: qsTr("Focus Sessions"); keywords: ["do not disturb", "dnd", "schedule", "focus", "quiet"]; Component { FocusPage {} } }
+                SubPage { key: "notifications"; label: qsTr("Notifications"); keywords: ["history", "alerts"]; Component { NotificationsPage {} } }
             }
         },
 
@@ -486,10 +454,9 @@ QtObject {
             label: qsTr("Utilities & Tools")
             icon: "build"
             description: qsTr("Utilities panel, toggles, game mode, AI")
-            defaultSlot: 4
+            defaultPage: "utilitiesPanelPage"
 
             Page {
-                slot: 4
                 key: "utilitiesPanelPage"
                 label: qsTr("Utilities panel")
                 icon: "widgets"
@@ -501,7 +468,6 @@ QtObject {
             }
 
             Page {
-                slot: 5
                 key: "quickToggles"
                 label: qsTr("Quick toggles")
                 icon: "toggle_on"
@@ -513,7 +479,6 @@ QtObject {
             }
 
             Page {
-                slot: 1
                 key: "gameMode"
                 label: qsTr("Game Mode")
                 icon: "sports_esports"
@@ -523,11 +488,10 @@ QtObject {
                 keywords: ["hyprland overrides", "performance", "games", "game mode"]
                 component: Component { GameModePage {} }
 
-                SubPage { slot: 2; key: "gameModeTargets"; label: qsTr("Auto-enable rules"); keywords: ["game mode", "rules", "target windows"]; Component { GameModeTargetsPage {} } }
+                SubPage { key: "gameModeTargets"; label: qsTr("Auto-enable rules"); keywords: ["game mode", "rules", "target windows"]; Component { GameModeTargetsPage {} } }
             }
 
             Page {
-                slot: 6
                 key: "quickShare"
                 label: qsTr("Quick Share")
                 icon: "near_me"
@@ -539,7 +503,6 @@ QtObject {
             }
 
             Page {
-                slot: 7
                 key: "ai"
                 label: qsTr("AI Assistant")
                 icon: "smart_toy"
@@ -557,10 +520,9 @@ QtObject {
             label: qsTr("Applications & Shortcuts")
             icon: "apps"
             description: qsTr("Default apps, shortcuts")
-            defaultSlot: 4
+            defaultPage: "apps"
 
             Page {
-                slot: 4
                 key: "apps"
                 label: qsTr("Apps")
                 icon: "apps"
@@ -571,7 +533,6 @@ QtObject {
             }
 
             Page {
-                slot: 1
                 key: "allApps"
                 label: qsTr("All Apps")
                 icon: "list_alt"
@@ -580,11 +541,10 @@ QtObject {
                 keywords: ["installed", "list", "all apps", "uninstall", "favorites", "hidden"]
                 component: Component { AllApps {} }
 
-                SubPage { slot: 2; key: "appInfo"; label: qsTr("App Info"); keywords: ["app", "package", "version"]; Component { AppInfo {} } }
+                SubPage { key: "appInfo"; label: qsTr("App Info"); keywords: ["app", "package", "version"]; Component { AppInfo {} } }
             }
 
             Page {
-                slot: 3
                 key: "shortcutManager"
                 label: qsTr("Keyboard Shortcuts")
                 icon: "keyboard"
@@ -601,10 +561,9 @@ QtObject {
             label: qsTr("System & Services")
             icon: "settings_suggest"
             description: qsTr("Session, services, storage, about")
-            defaultSlot: 12
+            defaultPage: "session"
 
             Page {
-                slot: 12
                 key: "session"
                 label: qsTr("Session")
                 icon: "power_settings_new"
@@ -616,7 +575,6 @@ QtObject {
             }
 
             Page {
-                slot: 1
                 key: "services"
                 label: qsTr("System Services")
                 icon: "build"
@@ -628,7 +586,6 @@ QtObject {
             }
 
             Page {
-                slot: 4
                 key: "language"
                 label: qsTr("Language & Region")
                 icon: "language"
@@ -640,7 +597,6 @@ QtObject {
             }
 
             Page {
-                slot: 5
                 key: "accessibility"
                 label: qsTr("Accessibility")
                 icon: "accessibility_new"
@@ -652,7 +608,6 @@ QtObject {
             }
 
             Page {
-                slot: 8
                 key: "storage"
                 label: qsTr("Storage")
                 icon: "storage"
@@ -664,7 +619,6 @@ QtObject {
             }
 
             Page {
-                slot: 11
                 key: "about"
                 label: qsTr("About")
                 icon: "info"
@@ -676,7 +630,6 @@ QtObject {
             }
 
             Page {
-                slot: 2
                 key: "arpc"
                 label: qsTr("Discord Rich Presence")
                 icon: "sports_esports"
@@ -688,7 +641,6 @@ QtObject {
             }
 
             Page {
-                slot: 3
                 key: "calendar"
                 label: qsTr("Calendar")
                 icon: "calendar_today"
@@ -700,7 +652,6 @@ QtObject {
             }
 
             Page {
-                slot: 6
                 key: "startup"
                 label: qsTr("Startup Applications")
                 icon: "rocket_launch"
@@ -710,11 +661,10 @@ QtObject {
                 keywords: ["login", "startup", "autostart", "boot", "session"]
                 component: Component { AutostartPage {} }
 
-                SubPage { slot: 7; key: "startupAppPicker"; label: qsTr("Add to startup"); keywords: ["add", "application", "login"]; Component { AutostartAppPicker {} } }
+                SubPage { key: "startupAppPicker"; label: qsTr("Add to startup"); keywords: ["add", "application", "login"]; Component { AutostartAppPicker {} } }
             }
 
             Page {
-                slot: 9
                 key: "plugins"
                 label: qsTr("Plugins")
                 icon: "extension"
@@ -726,7 +676,6 @@ QtObject {
             }
 
             Page {
-                slot: 10
                 key: "updates"
                 label: qsTr("Updates")
                 icon: "system_update"
@@ -766,36 +715,22 @@ QtObject {
         return list;
     }
 
-    function defaultSlotForCategory(idx: int): int {
-        return (idx >= 0 && idx < categories.length) ? categories[idx].defaultSlot : 0;
+    function defaultPageForCategory(idx: int): string {
+        return (idx >= 0 && idx < categories.length) ? categories[idx].defaultPage : "hub";
     }
 
-    function parentSlotFor(catIdx: int, slot: int): int {
+    function parentPageFor(catIdx: int, pageKey: string): string {
         const cat = categories[catIdx];
-        if (!cat) return slot;
+        if (!cat || !pageKey) return pageKey;
         for (let i = 0; i < cat.pages.length; i++) {
             const page = cat.pages[i];
-            if (page.slot === slot) return slot;
+            if (page.key === pageKey) return pageKey;
             const subs = page.subPages || [];
             for (let j = 0; j < subs.length; j++) {
-                if (subs[j].slot === slot) return page.slot;
+                if (subs[j].key === pageKey) return page.key;
             }
         }
-        return slot;
-    }
-
-    function slotForKey(key: string): int {
-        for (let i = 0; i < categories.length; i++) {
-            const pages = categories[i].pages;
-            for (let j = 0; j < pages.length; j++) {
-                if (pages[j].key === key) return pages[j].slot;
-                const subs = pages[j].subPages || [];
-                for (let k = 0; k < subs.length; k++) {
-                    if (subs[k].key === key) return subs[k].slot;
-                }
-            }
-        }
-        return -1;
+        return pageKey;
     }
 
     function categoryIdxForKey(key: string): int {
@@ -813,21 +748,9 @@ QtObject {
         return -1;
     }
 
-    function subPageIdxFor(pathOrKey: string): int {
-        const slot = slotForKey(pathOrKey);
-        if (slot >= 0) return slot;
-        const normalized = pathOrKey.split("/").pop().replace(".qml", "");
-        for (let i = 0; i < categories.length; i++) {
-            const pages = categories[i].pages;
-            for (let j = 0; j < pages.length; j++) {
-                if (pages[j].key.toLowerCase() === normalized.toLowerCase()) return pages[j].slot;
-                const subs = pages[j].subPages || [];
-                for (let k = 0; k < subs.length; k++) {
-                    if (subs[k].key.toLowerCase() === normalized.toLowerCase()) return subs[k].slot;
-                }
-            }
-        }
-        return -1;
+    function defaultPageForCategoryKey(key: string): string {
+        const idx = categoryIdxForKey(key);
+        return idx >= 0 ? defaultPageForCategory(idx) : key;
     }
 
     component PlaceholderComp: Item {

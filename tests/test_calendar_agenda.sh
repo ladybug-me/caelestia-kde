@@ -171,8 +171,8 @@ test_the_empty_agenda_offers_the_way_out() {
         "and the row has to act on it"
     assert_contains "$popout" 'disabled: eventRow.modelData !== null || CalendarEvents.configured' \
         "only the hint row is clickable, not an event"
-    assert_contains "$popout" 'PageCompRegistry.slotForKey("calendar")' \
-        "the page is looked up, not hardcoded"
+    assert_contains "$popout" 'initialSubPage: "calendar"' \
+        "the subpage is specified"
 }
 
 test_calendar_settings_page_is_reachable() {

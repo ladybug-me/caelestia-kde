@@ -15,7 +15,7 @@ Item {
     id: root
 
     property int initialPageIdx: 0
-    property var initialSubPageIdx: -1
+    property string initialSubPage: ""
     readonly property bool windowActive: Window.window ? Window.window.active : false
     readonly property bool sidePane: GlobalConfig.nexus.sidePane
 
@@ -28,13 +28,7 @@ Item {
 
         compact: root.compact
         sidePane: root.sidePane
-        pendingSubPageIdx: {
-            if (root.initialSubPageIdx === -1 || root.initialSubPageIdx === undefined || root.initialSubPageIdx === "")
-                return -1;
-            return (typeof root.initialSubPageIdx === "number")
-                ? root.initialSubPageIdx
-                : PageCompRegistry.slotForKey(root.initialSubPageIdx);
-        }
+        pendingSubPageKey: root.initialSubPage || ""
         currentPageIdx: root.initialPageIdx
 
         onClose: root.requestClose()
@@ -170,7 +164,7 @@ Item {
         if (root.activePane === 2) {
             if (pages.stepLeft())
                 return;
-            if (root.nState.subPageIdxStack.length > 0) {
+            if (root.nState.subPageKeyStack.length > 0) {
                 WindowFactory.goBack();
             } else {
                 root.leaveContent();
@@ -424,7 +418,7 @@ Item {
         onActivated: {
             if (pages.handleEscape())
                 return;
-            if (root.nState.subPageIdxStack.length > 0) {
+            if (root.nState.subPageKeyStack.length > 0) {
                 WindowFactory.goBack();
             } else if (root.activePane === 2) {
                 root.leaveContent();
@@ -438,13 +432,13 @@ Item {
 
     Shortcut {
         sequence: "Backspace"
-        enabled: root.windowActive && !root.hasActiveInputField && (root.nState.subPageIdxStack.length > 0 || root.activePane > 0)
+        enabled: root.windowActive && !root.hasActiveInputField && (root.nState.subPageKeyStack.length > 0 || root.activePane > 0)
         autoRepeat: false
 
         onActivated: {
             if (pages.handleEscape())
                 return;
-            if (root.nState.subPageIdxStack.length > 0) {
+            if (root.nState.subPageKeyStack.length > 0) {
                 WindowFactory.goBack();
             } else if (root.activePane === 2) {
                 root.leaveContent();

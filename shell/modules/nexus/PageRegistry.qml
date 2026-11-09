@@ -32,7 +32,7 @@ QtObject {
                 settingLabel: cat.label,
                 settingDescription: cat.description || "",
                 pageIdx: cat.categoryIdx,
-                subPageIdx: -1,
+                subPage: "hub",
                 pageLabel: qsTr("Main Page"),
                 pageIcon: cat.icon,
                 searchText: [cat.label, cat.description, cat.key].filter(Boolean).join(" ")
@@ -47,7 +47,7 @@ QtObject {
                     settingLabel: page.label,
                     settingDescription: page.description || page.status || "",
                     pageIdx: cat.categoryIdx,
-                    subPageIdx: page.slot,
+                    subPage: page.key,
                     pageLabel: cat.label,
                     pageIcon: cat.icon,
                     sectionLabel: page.section || "",
@@ -63,7 +63,7 @@ QtObject {
                         settingLabel: sub.label,
                         settingDescription: "",
                         pageIdx: cat.categoryIdx,
-                        subPageIdx: sub.slot,
+                        subPage: sub.key,
                         pageLabel: cat.label,
                         pageIcon: cat.icon,
                         sectionLabel: page.label,
@@ -76,11 +76,11 @@ QtObject {
         const named = {};
         for (let i = 0; i < index.length; i++) {
             const entry = index[i];
-            named[`${entry.pageIdx}|${entry.subPageIdx}|${entry.settingLabel.toLowerCase()}`] = true;
+            named[`${entry.pageIdx}|${entry.subPage}|${entry.settingLabel.toLowerCase()}`] = true;
         }
 
         PageRowIndex.rows.forEach(row => {
-            if (named[`${row.pageIdx}|${row.subPageIdx}|${row.label.toLowerCase()}`])
+            if (named[`${row.pageIdx}|${row.subPage}|${row.label.toLowerCase()}`])
                 return;
             const cat = categories[row.pageIdx];
             if (!cat)
@@ -89,7 +89,7 @@ QtObject {
                 settingLabel: row.label,
                 settingDescription: row.description || "",
                 pageIdx: row.pageIdx,
-                subPageIdx: row.subPageIdx,
+                subPage: row.subPage,
                 pageLabel: cat.label,
                 pageIcon: cat.icon,
                 sectionLabel: row.section || "",
@@ -144,8 +144,8 @@ QtObject {
         return PageCompRegistry.categoryIdxForKey(key);
     }
 
-    function defaultSubPageForKey(key: string): int {
-        return PageCompRegistry.slotForKey(key);
+    function defaultSubPageForKey(key: string): string {
+        return PageCompRegistry.defaultPageForCategoryKey(key);
     }
 
     Component.onCompleted: {

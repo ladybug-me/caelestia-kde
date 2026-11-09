@@ -92,8 +92,8 @@ test_the_page_is_registered_next_to_its_neighbours() {
 
     assert_contains "$registry" 'key: "displays"' "the page has to exist in the registry"
     assert_contains "$registry" 'label: qsTr("Display & Sound")' "and sit with the hardware pages"
-    assert_contains "$registry" 'function slotForKey(key: string): int' \
-        "page positions are looked up, never remembered"
+    assert_contains "$registry" 'function categoryIdxForKey(key: string): int' \
+        "category indices are looked up, never hardcoded"
     assert_contains "$registry" 'Component { DisplayPage {} }' "the page has to be registered"
     assert_contains "$registry" 'Component { DisplayModesPage {} }' "with its mode list"
     assert_contains "$state" 'property string selectedOutput' "the mode list needs to know which screen it edits"

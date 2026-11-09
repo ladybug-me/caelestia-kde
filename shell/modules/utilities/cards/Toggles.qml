@@ -354,7 +354,7 @@ StyledRect {
                     root.visibilities.utilities = false;
                     execTimer.pendingAction = () => WindowFactory.create(null, {
                         initialPageIdx: pageIdx,
-                        initialSubPageIdx: PageCompRegistry.slotForKey("quickToggles")
+                        initialSubPage: "quickToggles"
                     });
                     execTimer.restart();
                 }

@@ -39,7 +39,7 @@ LABEL = re.compile(r'label: qsTr\("([^"]+)"\)')
 KEYWORDS = re.compile(r'keywords: \[([^\]]*)\]')
 DESCRIPTION = re.compile(r'description: qsTr\("([^"]+)"\)')
 CATEGORY = re.compile(r'category: "([^"]+)"')
-PAIR = re.compile(r"subPageIdx: (\d+)")
+PAIR = re.compile(r'subPage:\s*"([^"]+)"')
 
 SETTING_BLOCKS = (
     "ToggleRow",
@@ -130,9 +130,9 @@ def generated_texts() -> list[str]:
     return texts
 
 
-def navigation_targets() -> set[tuple[int, int]]:
-    """(pageIdx, subPageIdx) pairs the dictionary can open."""
-    targets: set[tuple[int, int]] = set()
+def navigation_targets() -> set[tuple[int, str]]:
+    """(pageIdx, subPage) pairs the dictionary can open."""
+    targets: set[tuple[int, str]] = set()
     page = -1
     in_settings = False
 
@@ -150,16 +150,16 @@ def navigation_targets() -> set[tuple[int, int]]:
             continue
         if in_settings:
             match = PAIR.search(line)
-            targets.add((page, int(match.group(1)) if match else -1))
+            targets.add((page, match.group(1) if match else ""))
 
     # Rows the pages render navigate to their own slot, so they count too.
-    targets.update((int(row["pageIdx"]), int(row["subPageIdx"])) for row in GENERATOR.collect_rows())
+    targets.update((int(row["pageIdx"]), str(row["subPage"])) for row in GENERATOR.collect_rows())
 
     return targets
 
 
-def registry_subpages() -> list[tuple[int, int, str]]:
-    """Every sub-page, as (pageIdx, subPageIdx, component name)."""
+def registry_subpages() -> list[tuple[int, str, str]]:
+    """Every sub-page, as (pageIdx, subPage, component name)."""
     slots = GENERATOR.component_slots()
     return [(page, slot, name) for name, targets in slots.items() for page, slot in targets]
 

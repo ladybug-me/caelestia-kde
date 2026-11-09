@@ -10,6 +10,6 @@ QtObject {
     property string label: ""
     property string icon: ""
     property string description: ""
-    property int defaultSlot: 0
+    property string defaultPage: ""
     default property list<Page> pages
 }

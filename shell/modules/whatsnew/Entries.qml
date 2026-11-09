@@ -13,7 +13,7 @@ QtObject {
             "icon": "picture_in_picture_alt",
             "title": qsTr("Floating OSD Styles"),
             "settingsPage": "panels",
-            "settingsSubPage": 24,
+            "settingsSubPage": "osdPanel",
             "description": qsTr("Pick a volume and brightness OSD: pill, compact, radial, card, or the edge drawer.")
         },
         {
@@ -36,7 +36,7 @@ QtObject {
             "icon": "volume_up",
             "title": qsTr("Notification Sounds"),
             "settingsPage": "audio",
-            "settingsSubPage": 4,
+            "settingsSubPage": "soundEffects",
             "description": qsTr("Choose the notification sound and volume, and preview it in Sound Effects.")
         },
         {

@@ -28,7 +28,7 @@ ColumnLayout {
         const cards = [];
         for (let i = 0; i < cardsColumn.children.length; i++) {
             const child = cardsColumn.children[i];
-            if (child && child.slot !== undefined)
+            if (child && child.pageKey !== undefined)
                 cards.push(child);
         }
         return cards;
@@ -78,7 +78,7 @@ ColumnLayout {
         root.selectionActive = true;
         let idx = -1;
         for (let i = 0; i < cards.length; i++) {
-            if (cards[i].slot === root.nState.activeSubPageSlot) {
+            if (cards[i].pageKey === root.nState.activeSubPageKey) {
                 idx = i;
                 break;
             }
@@ -92,7 +92,7 @@ ColumnLayout {
             return;
         const card = root.selectedCard;
         if (card.cardEnabled) {
-            root.nState.selectSubCategory(card.slot);
+            root.nState.selectSubCategory(card.pageKey);
         }
         root.clearSelection();
     }
@@ -118,7 +118,7 @@ ColumnLayout {
     function ensureActiveCardVisible(): void {
         const cards = currentCards();
         for (let i = 0; i < cards.length; i++) {
-            if (cards[i].slot === root.nState.activeSubPageSlot) {
+            if (cards[i].pageKey === root.nState.activeSubPageKey) {
                 ensureVisible(cards[i]);
                 break;
             }
@@ -133,7 +133,7 @@ ColumnLayout {
             Qt.callLater(root.ensureActiveCardVisible);
         }
 
-        function onActiveSubPageSlotChanged(): void {
+        function onActiveSubPageKeyChanged(): void {
             Qt.callLater(root.ensureActiveCardVisible);
         }
 
@@ -223,7 +223,7 @@ ColumnLayout {
                     icon: modelData.icon
                     label: modelData.label
                     status: modelData.status !== "" ? modelData.status : modelData.description
-                    slot: modelData.slot
+                    pageKey: modelData.key
                     cardEnabled: modelData.enabled
                 }
             }
@@ -236,10 +236,10 @@ ColumnLayout {
         required property string icon
         required property string label
         property string status: ""
-        required property int slot
+        required property string pageKey
         property bool cardEnabled: true
 
-        readonly property bool isSelected: root.nState.activeSubPageSlot === slot
+        readonly property bool isSelected: root.nState.activeSubPageKey === pageKey
         readonly property bool isNavSelected: root.selectedCard === card
 
         Layout.fillWidth: true
@@ -275,7 +275,7 @@ ColumnLayout {
 
             onClicked: {
                 root.clearSelection();
-                root.nState.selectSubCategory(card.slot);
+                root.nState.selectSubCategory(card.pageKey);
             }
         }
 

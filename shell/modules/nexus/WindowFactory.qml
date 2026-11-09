@@ -24,11 +24,8 @@ Singleton {
                 const pageIdx = isKey
                     ? PageRegistry.indexForKey(props.initialPageIdx)
                     : props.initialPageIdx;
-                const rawSub = (props.initialSubPageIdx !== undefined && props.initialSubPageIdx !== -1)
-                    ? props.initialSubPageIdx
-                    : (isKey ? PageRegistry.defaultSubPageForKey(props.initialPageIdx) : -1);
-                const subIdx = (typeof rawSub === "number") ? rawSub : PageCompRegistry.slotForKey(rawSub);
-                win.nexus.nState.goToSubPage(pageIdx, subIdx);
+                const subPage = props.initialSubPage || (isKey ? PageRegistry.defaultSubPageForKey(props.initialPageIdx) : "");
+                win.nexus.nState.goToSubPage(pageIdx, String(subPage));
             }
             win.visible = true;
             win.raise();
@@ -40,14 +37,10 @@ Singleton {
         if (typeof resolvedProps.initialPageIdx === "string") {
             const key = resolvedProps.initialPageIdx;
             resolvedProps.initialPageIdx = PageRegistry.indexForKey(key);
-            if (resolvedProps.initialSubPageIdx === undefined || resolvedProps.initialSubPageIdx === -1)
-                resolvedProps.initialSubPageIdx = PageRegistry.defaultSubPageForKey(key);
+            if (!resolvedProps.initialSubPage)
+                resolvedProps.initialSubPage = PageRegistry.defaultSubPageForKey(key);
         }
-        if (typeof resolvedProps.initialSubPageIdx === "string") {
-            const mapped = PageCompRegistry.slotForKey(resolvedProps.initialSubPageIdx);
-            if (mapped >= 0)
-                resolvedProps.initialSubPageIdx = mapped;
-        }
+
         const win = nexusComp.createObject(parent ?? dummy, resolvedProps);
         root.openWindow = win;
         if (win) {
@@ -67,7 +60,7 @@ Singleton {
         if (!root.openWindow)
             return;
         const state = root.openWindow.nexus.nState;
-        if (state.subPageIdxStack.length > 0)
+        if (state.subPageKeyStack.length > 0)
             state.closeSubPage();
     }
 
@@ -83,7 +76,7 @@ Singleton {
 
             property alias nexus: nexus
             property int initialPageIdx: 0
-            property var initialSubPageIdx: -1
+            property string initialSubPage: ""
 
             function raise(): void {
                 const pageTitles = PageRegistry.pages.map(p => p.label);
@@ -132,7 +125,7 @@ Singleton {
 
                 anchors.fill: parent
                 initialPageIdx: win.initialPageIdx
-                initialSubPageIdx: win.initialSubPageIdx
+                initialSubPage: win.initialSubPage
                 nState.screen: win.screen ?? Screens.activeScreen ?? Quickshell.screens[0]
                 nState.isWindow: true
                 onClose: win.destroy()

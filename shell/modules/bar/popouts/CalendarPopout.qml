@@ -88,7 +88,7 @@ StyledRect {
             root.popouts.hasCurrent = false;
         WindowFactory.create(null, {
             initialPageIdx: pageIdx,
-            initialSubPageIdx: PageCompRegistry.slotForKey("calendar")
+            initialSubPage: "calendar"
         });
     }
 

@@ -373,12 +373,12 @@ class ShellSurfaceTests(unittest.TestCase):
 
         state = (ROOT / "shell" / "modules" / "nexus" / "NexusState.qml").read_text(encoding="utf-8")
         self.assertIn(
-            "property int pendingSubPageIdx",
+            "property string pendingSubPageKey",
             state,
             "the request has to outlive the page swap, so it needs somewhere to wait",
         )
         self.assertIn(
-            "function goToSubPage(pageIdx: int, subPageIdx: int)",
+            "function goToSubPage(pageIdx: int, subPageKey: string)",
             state,
             "page plus sub-page navigation needs one entry point that knows about the swap",
         )
@@ -387,7 +387,7 @@ class ShellSurfaceTests(unittest.TestCase):
             ROOT / "shell" / "modules" / "nexus" / "common" / "StackPage.qml"
         ).read_text(encoding="utf-8")
         self.assertIn(
-            "nState.pendingSubPageIdx",
+            "nState.pendingSubPageKey",
             stack,
             "the incoming page is the only one that can open a queued sub-page",
         )

@@ -506,13 +506,12 @@ Scope {
         function open(): void {
             WindowFactory.create();
         }
-        function openPage(pageIdx: string, subPageIdx: string): void {
-            const hasSubPage = subPageIdx !== "-1" && subPageIdx !== "" && subPageIdx !== undefined;
-            const parsedSub = hasSubPage ? (/^\d+$/.test(subPageIdx) ? parseInt(subPageIdx) : subPageIdx) : -1;
-            const parsedPage = /^\d+$/.test(pageIdx) ? parseInt(pageIdx) : pageIdx;
+        function openPage(pageKey: string, subPageKey: string): void {
+            const hasSubPage = subPageKey !== "-1" && subPageKey !== "" && subPageKey !== undefined;
+            const parsedPage = /^\d+$/.test(pageKey) ? parseInt(pageKey) : pageKey;
             WindowFactory.create(null, {
                 initialPageIdx: parsedPage,
-                initialSubPageIdx: parsedSub
+                initialSubPage: hasSubPage ? subPageKey : ""
             });
         }
         function close(): void {

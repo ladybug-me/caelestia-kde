@@ -10,7 +10,7 @@ StackView {
     id: root
 
     required property NexusState nState
-    default property list<QtObject> pages
+    property var pages: []
     readonly property int animMovement: Tokens.padding.extraExtraLarge * 2
     readonly property var slotMap: ({})
     // set by Pages so the outgoing page ignores the nav signals of the page that replaces it
@@ -47,26 +47,45 @@ StackView {
     function switchToSlot(target: var): void {
         const page = slotMap[target] ?? (typeof target === "number" ? pages[target] : null);
         if (page) {
-            root.popToIndex(0, StackView.Immediate);
-            root.replace(page, {
-                nState
-            }, StackView.Immediate);
+            if (root.depth > 1) {
+                root.pop(null, StackView.Immediate);
+            }
+            if (root.depth > 0) {
+                root.replace(page, {
+                    nState
+                }, StackView.Immediate);
+            } else {
+                root.push(page, {
+                    nState
+                }, StackView.Immediate);
+            }
         }
     }
 
     clip: busy
 
     Component.onCompleted: {
+        if (!pages || pages.length === 0) {
+            pages = root.pageIdx >= 0 ? PageCompRegistry.collectAllPagesForCategory(root.pageIdx) : [];
+        }
         root.buildSlotMap();
-        const baseSlot = nState.activeSubPageSlot;
+        const baseSlot = nState.activeSubPageSlot >= 0
+            ? nState.activeSubPageSlot
+            : nState.defaultSlotForPage(root.pageIdx);
         root.openSubPage(baseSlot, true);
         if (nState.pendingSubPageIdx >= 0) {
             const pending = nState.pendingSubPageIdx;
             nState.pendingSubPageIdx = -1;
-            nState.subPageIdxStack.push(pending);
+            if (pending !== baseSlot && nState.subPageIdxStack.indexOf(pending) < 0) {
+                nState.subPageIdxStack.push(pending);
+            }
         }
-        for (const page of nState.subPageIdxStack)
-            root.openSubPage(page, true);
+        for (let i = 0; i < nState.subPageIdxStack.length; i++) {
+            const pageSlot = nState.subPageIdxStack[i];
+            if (pageSlot !== baseSlot) {
+                root.openSubPage(pageSlot, true);
+            }
+        }
     }
 
     pushEnter: Transition {
@@ -163,7 +182,9 @@ StackView {
         }
 
         function onSubPagesCleared(): void {
-            root.popToIndex(0, StackView.Immediate);
+            if (root.depth > 1) {
+                root.pop(null, StackView.Immediate);
+            }
         }
 
         target: root.nState

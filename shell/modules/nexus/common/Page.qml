@@ -14,6 +14,6 @@ QtObject {
     property string section: ""
     property bool enabled: true
     property var keywords: []
-    default property Component component
-    property list<SubPage> subPages
+    property Component component
+    default property list<SubPage> subPages
 }

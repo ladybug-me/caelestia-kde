@@ -9,6 +9,7 @@ QtObject {
     id: root
 
     readonly property int updatesPageIdx: Math.max(0, PageCompRegistry.categoryIdxForKey("updates"))
+    readonly property var pages: PageCompRegistry.categories
 
     property var searchIndex: []
     property var allPages: []

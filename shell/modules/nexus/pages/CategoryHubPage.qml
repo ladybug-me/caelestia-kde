@@ -12,6 +12,8 @@ PageBase {
     isSubPage: false
 
     ColumnLayout {
+        id: catCol
+
         readonly property var cat: PageCompRegistry.categories[root.nState ? root.nState.currentPageIdx : 0]
         readonly property var pagesList: cat ? cat.pages : []
 
@@ -21,7 +23,7 @@ PageBase {
         spacing: Tokens.spacing.extraSmall / 2
 
         Repeater {
-            model: parent.pagesList
+            model: catCol.pagesList
 
             ColumnLayout {
                 id: rowCol
@@ -29,7 +31,7 @@ PageBase {
                 required property var modelData
                 required property int index
 
-                readonly property var list: parent.parent.pagesList
+                readonly property var list: catCol.pagesList
                 readonly property bool hasSection: modelData.section && modelData.section.length > 0
                 readonly property bool isSectionStart: hasSection && (index === 0 || list[index - 1].section !== modelData.section)
                 readonly property bool isSectionEnd: index === list.length - 1 || (index < list.length - 1 && list[index + 1].section !== modelData.section)

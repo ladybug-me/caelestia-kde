@@ -55,6 +55,52 @@ QtObject {
             subPage: "accessibility"
         },
         {
+            label: qsTr("Smart color scheme"),
+            description: qsTr("Automatically select color variants and theme mode"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
+            label: qsTr("Automatic light and dark"),
+            description: qsTr("Switch the theme mode on a schedule"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
+            label: qsTr("Schedule"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
+            label: qsTr("Light mode hour"),
+            description: qsTr("Switches at %1"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
+            label: qsTr("Dark mode hour"),
+            description: qsTr("Switches at %1, also used when sunrise and sunset are unavailable"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
+            label: qsTr("Mode"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
+            label: qsTr("Color intensity"),
+            section: qsTr("Advanced Colors"),
+            pageIdx: 0,
+            subPage: "advancedColors"
+        },
+        {
             label: qsTr("Ollama"),
             section: qsTr("AI Assistant"),
             pageIdx: 5,
@@ -165,6 +211,152 @@ QtObject {
             section: qsTr("App info"),
             pageIdx: 6,
             subPage: "appInfo"
+        },
+        {
+            label: qsTr("Font"),
+            description: qsTr("Used by every text style in the shell"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Monospace font"),
+            description: qsTr("Used by code, terminal previews and fixed width labels"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Bezel mode (Pitch black)"),
+            description: qsTr("Make the shell pitch black to blend with display bezels"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Islands"),
+            description: qsTr("Everything appears as its own floating widget (Very Experimental)"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Transparency"),
+            description: qsTr("Enable transparency across the shell"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Base opacity"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Layers opacity"),
+            description: qsTr("Requires shell restart"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Background Blur"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("High Quality Blur Masks"),
+            description: qsTr("Disable this to use high performance Wayland/KWin blur"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Blur Corner Quality"),
+            description: qsTr("Increasing this can cause lags! Requires shell restart"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Follow system text size"),
+            description: qsTr("Match the text size set in KDE's settings"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Font scale"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Spacing scale"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Padding scale"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Enable animations"),
+            description: qsTr("Toggle fluid animations across the shell"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Animation preset"),
+            description: qsTr("Motion curves and timing profile"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Animation speed scale"),
+            description: qsTr("Speed multiplier applied to all animation durations"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Border thickness"),
+            description: qsTr("Thickness of the shell border in pixels. Set to 0 for a borderless look"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Border rounding"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Border smoothing"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Corner radius scale"),
+            description: qsTr("Multiplies the shell's corner rounding"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
+        },
+        {
+            label: qsTr("Blur deform"),
+            section: qsTr("Theme & Effects"),
+            pageIdx: 0,
+            subPage: "appearance"
         },
         {
             label: qsTr("Force System Defaults (xdg-open)"),
@@ -1618,6 +1810,147 @@ QtObject {
             subPage: "launcher"
         },
         {
+            label: qsTr("Wallhaven"),
+            section: qsTr("Library & Components"),
+            pageIdx: 0,
+            subPage: "libraryAndCommunity"
+        },
+        {
+            label: qsTr("Online Wallpapers"),
+            section: qsTr("Library & Components"),
+            pageIdx: 0,
+            subPage: "libraryAndCommunity"
+        },
+        {
+            label: qsTr("skwd-wall not available"),
+            section: qsTr("Library & Components"),
+            pageIdx: 0,
+            subPage: "libraryAndCommunity"
+        },
+        {
+            label: qsTr("Tags & Filters"),
+            section: qsTr("Library & Components"),
+            pageIdx: 0,
+            subPage: "libraryAndCommunity"
+        },
+        {
+            label: qsTr("Open skwd-wall"),
+            section: qsTr("Library & Components"),
+            pageIdx: 0,
+            subPage: "libraryAndCommunity"
+        },
+        {
+            label: qsTr("Sync with desktop wallpaper"),
+            description: qsTr("Keep the lock screen wallpaper in sync with the desktop wallpaper"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Lock screen wallpaper"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Blur wallpaper"),
+            description: qsTr("Blur the entire wallpaper, not just behind the widgets"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Fingerprint unlock"),
+            description: qsTr("Allow fingerprint authentication on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Fingerprint attempts"),
+            description: qsTr("Tries before falling back to password"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Profile picture shape"),
+            description: qsTr("Choose the shape of the profile picture on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Rotate profile picture shape"),
+            description: qsTr("Continuously rotate the profile picture shape"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Lock on startup"),
+            description: qsTr("Lock the session shortly after logging in"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Hide notifications"),
+            description: qsTr("Hide notification previews until you unlock"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Recolor logo"),
+            description: qsTr("Tint the lock screen artwork to match the palette"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Sleep"),
+            description: qsTr("Show sleep action on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Hibernate"),
+            description: qsTr("Show hibernate action on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Switch user"),
+            description: qsTr("Show switch user action on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Log out"),
+            description: qsTr("Show log out action on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Restart"),
+            description: qsTr("Show restart action on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
+            label: qsTr("Shut down"),
+            description: qsTr("Show shut down action on the lock screen"),
+            section: qsTr("Lock Screen"),
+            pageIdx: 0,
+            subPage: "lockScreen"
+        },
+        {
             label: qsTr("Wi-Fi"),
             section: qsTr("Network"),
             pageIdx: 3,
@@ -1659,6 +1992,13 @@ QtObject {
             section: qsTr("Network"),
             pageIdx: 3,
             subPage: "network"
+        },
+        {
+            label: qsTr("Subcategory side pane"),
+            description: qsTr("List a section's subcategories in their own pane. Turned off, they line up inside the section"),
+            section: qsTr("Nexus settings"),
+            pageIdx: 0,
+            subPage: "nexusSettings"
         },
         {
             label: qsTr("Show in fullscreen"),
@@ -1781,6 +2121,76 @@ QtObject {
             section: qsTr("Notifications"),
             pageIdx: 4,
             subPage: "notifications"
+        },
+        {
+            label: qsTr("Design"),
+            description: qsTr("Visual style for hardware buttons (volume, brightness)"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Position"),
+            description: qsTr("Screen placement for the floating indicator"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Enabled"),
+            description: qsTr("Enable on-screen display popups"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Volume"),
+            description: qsTr("Show indicator on speaker volume changes"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Microphone"),
+            description: qsTr("Show indicator on microphone volume changes"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Brightness"),
+            description: qsTr("Show indicator on display brightness changes"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Show in fullscreen"),
+            description: qsTr("Display indicator over fullscreen applications"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Hide delay"),
+            description: qsTr("Seconds before the indicator hides"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Depth"),
+            description: qsTr("Distance from the screen edge to trigger the drawer"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
+        },
+        {
+            label: qsTr("Height"),
+            description: qsTr("Portion of the edge that responds to hover"),
+            section: qsTr("OSD"),
+            pageIdx: 2,
+            subPage: "osdPanel"
         },
         {
             label: qsTr("Enable overview"),
@@ -2622,6 +3032,109 @@ QtObject {
             section: qsTr("Utilities panel"),
             pageIdx: 5,
             subPage: "utilitiesPanelPage"
+        },
+        {
+            label: qsTr("General Settings"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Wallpaper Mixer"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Shaders & Effects"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Wallpaper scaling"),
+            description: qsTr("How the wallpaper image fits the screen"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Recolor wallpaper"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Recolor strength"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Pause video wallpapers"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Enable video audio"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Pause video on fullscreen"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Pause video on tiled windows"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Pause video on all displays"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Mute video when media plays"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Playlists & Slideshows"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Schedule & Timers"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Wallpaper slideshow"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Slideshow interval"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
+            label: qsTr("Random order"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
         },
     ]
 }

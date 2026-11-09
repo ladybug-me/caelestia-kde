@@ -58,17 +58,41 @@ HEADER = """\
 """
 
 
+def extract_blocks(text: str, block_name: str) -> list[str]:
+    """Extract top-level blocks of a given type handling nested braces."""
+    blocks: list[str] = []
+    pattern = re.compile(rf"\b{block_name}\s*\{{")
+    for m in pattern.finditer(text):
+        start = m.end() - 1
+        depth = 1
+        i = start + 1
+        while i < len(text) and depth > 0:
+            if text[i] == "{":
+                depth += 1
+            elif text[i] == "}":
+                depth -= 1
+            i += 1
+        blocks.append(text[start + 1 : i - 1])
+    return blocks
+
+
 def component_slots() -> dict[str, list[tuple[int, str]]]:
     """Map a page component name to every (pageIdx, subPageKey) that renders it."""
     slots: dict[str, list[tuple[int, str]]] = {}
     content = REGISTRY.read_text(encoding="utf-8")
-    category_blocks = re.findall(r"Category\s*\{.*?categoryIdx:\s*(\d+)(.*?)(?=Category\s*\{|readonly property list<Component>|$)", content, re.S)
-    if category_blocks:
-        for cat_idx_str, block in category_blocks:
-            cat_idx = int(cat_idx_str)
-            entries = re.findall(r"(?:Page|SubPage)\s*\{[^}]*?key:\s*\"([^\"]+)\"[^}]*?Component\s*\{\s*(\w+)\s*\{\}", block, re.S)
-            for page_key, comp_name in entries:
-                slots.setdefault(comp_name, []).append((cat_idx, page_key))
+    cats = extract_blocks(content, "Category")
+    for cat_idx, cat in enumerate(cats):
+        pages = extract_blocks(cat, "Page")
+        for p in pages:
+            pk_match = re.search(r'key:\s*"([^"]+)"', p)
+            comp_match = re.search(r"Component\s*\{\s*(\w+)\s*\{", p)
+            if pk_match and comp_match:
+                slots.setdefault(comp_match.group(1), []).append((cat_idx, pk_match.group(1)))
+            for s in extract_blocks(p, "SubPage"):
+                sk_match = re.search(r'key:\s*"([^"]+)"', s)
+                scomp_match = re.search(r"Component\s*\{\s*(\w+)\s*\{", s)
+                if sk_match and scomp_match:
+                    slots.setdefault(scomp_match.group(1), []).append((cat_idx, sk_match.group(1)))
     return slots
 
 

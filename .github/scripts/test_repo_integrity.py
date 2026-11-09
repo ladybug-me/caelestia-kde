@@ -19,7 +19,10 @@ import sys
 import unittest
 from pathlib import Path
 
-import yaml
+try:
+    import yaml
+except ImportError:
+    yaml = None
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -393,26 +396,21 @@ class ShellSurfaceTests(unittest.TestCase):
         )
 
     def test_the_font_controls_are_reachable_from_search(self) -> None:
-        """Search is driven by PageDictionary, so a section missing from it is invisible.
+        """Search is driven by PageCompRegistry and PageRowIndex, so setting rows must be indexed.
 
-        The Appearance page holds the font and monospace font pickers, but the only
-        entry that mentioned fonts was the page description, so searching "font"
-        returned the page and nothing that leads to those pickers.
+        The Appearance and Accessibility pages hold the font pickers and font scale rows.
+        They must be present in PageRowIndex.qml so searching "font" reaches them.
         """
         lines = (
-            ROOT / "shell" / "modules" / "nexus" / "PageDictionary.qml"
+            ROOT / "shell" / "modules" / "nexus" / "PageRowIndex.qml"
         ).read_text(encoding="utf-8").splitlines()
 
         for label in ("Font", "Monospace font", "Font scale"):
             entries = [line for line in lines if f'label: qsTr("{label}")' in line]
-            self.assertTrue(entries, f'"{label}" must be a searchable settings entry')
-            self.assertTrue(
-                any("font" in line.lower() for line in entries),
-                f'the "{label}" entry needs a font keyword, or searching "font" misses it',
-            )
+            self.assertTrue(entries, f'"{label}" must be a searchable settings entry in PageRowIndex.qml')
 
     def test_every_settings_subpage_is_reachable_from_search(self) -> None:
-        """PageDictionary is the only thing search indexes, so a page missing from it is a dead end.
+        """PageCompRegistry subpages must be reachable from search, so a page missing from it is a dead end.
 
         Nothing else notices: the page still renders and is still reachable by
         clicking through, so a sub-page can sit unsearchable indefinitely. The
@@ -949,8 +947,8 @@ class SubmoduleTests(unittest.TestCase):
         )
 
 
+@unittest.skipUnless(yaml is not None, "pyyaml required for YAML parse")
 class WorkflowYamlTests(unittest.TestCase):
-    @unittest.skipUnless(shutil.which("python3"), "python3 required for YAML parse")
     def test_workflow_files_parse(self) -> None:
         """All .yml files in .github/workflows/ should be valid YAML."""
         workflows_dir = ROOT / ".github" / "workflows"

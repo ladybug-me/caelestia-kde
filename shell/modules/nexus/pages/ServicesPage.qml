@@ -67,7 +67,7 @@ PageBase {
         return 3;
     }
 
-    title: qsTr("Services")
+    title: qsTr("System Services")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

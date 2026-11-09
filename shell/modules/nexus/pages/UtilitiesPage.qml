@@ -8,7 +8,7 @@ import qs.modules.nexus.common
 PageBase {
     id: root
 
-    title: qsTr("Utilities")
+    title: qsTr("Utilities & Tools")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter
@@ -45,7 +45,7 @@ PageBase {
             first: true
             last: true
             icon: "sports_esports"
-            label: qsTr("Game mode")
+            label: qsTr("Game Mode")
             status: qsTr("Auto-enable rules and performance overrides")
             onClicked: root.nState.openSubPage(1)
         }

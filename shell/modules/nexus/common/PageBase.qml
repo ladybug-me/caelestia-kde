@@ -381,18 +381,41 @@ ColumnLayout {
         }
     }
 
-    VerticalFadeFlickable {
-        id: flickable
-
-        interactive: root.scrollable
+    Item {
         Layout.fillWidth: true
         Layout.fillHeight: true
 
-        topMargin: 0
-        bottomMargin: Tokens.padding.large
+        VerticalFadeFlickable {
+            id: flickable
 
-        contentHeight: root.scrollable ? (root.contentChild?.implicitHeight ?? 0) : height
-        contentItem.children: [root.contentChild]
+            anchors.fill: parent
+            interactive: root.scrollable
+
+            topMargin: 0
+            bottomMargin: Tokens.padding.large
+
+            // The trailing space is what lets the last row scroll clear of the
+            // window edge instead of being cut in half at the bottom.
+            contentHeight: root.scrollable ? (root.contentChild?.implicitHeight ?? 0) + Tokens.padding.large : height
+            contentItem.children: [root.contentChild]
+        }
+
+        StyledRect {
+            id: scrollBar
+
+            anchors.right: parent.right
+            anchors.rightMargin: Tokens.padding.small
+            z: 2
+
+            visible: flickable.contentHeight > flickable.height + 1
+
+            width: 3
+            height: Math.max(24, flickable.height * flickable.visibleArea.heightRatio)
+            y: flickable.visibleArea.yPosition * flickable.height
+            radius: Tokens.rounding.full
+            color: Colours.palette.m3primary
+            opacity: 0.6
+        }
     }
 
     TapHandler {

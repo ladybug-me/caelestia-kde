@@ -177,7 +177,7 @@ ColumnLayout {
             anchors.verticalCenter: parent.verticalCenter
             anchors.leftMargin: root.nState.compact ? 46 : Tokens.padding.medium
             anchors.rightMargin: Tokens.padding.medium
-            text: root.currentPage ? root.currentPage.label : ""
+            text: root.nState.compact ? (root.currentPage ? root.currentPage.label : "") : qsTr("Sections")
             font: Tokens.font.title.builders.large.weight(Font.Medium).build()
             color: Colours.palette.m3onSurface
             elide: Text.ElideRight
@@ -240,7 +240,7 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "lock"
-                    label: qsTr("Lock screen")
+                    label: qsTr("Lock Screen")
                     status: qsTr("Wallpaper sync and lock screen settings")
                     slot: 8
                 }
@@ -277,14 +277,14 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "menu_open"
-                    label: qsTr("Right click menu")
+                    label: qsTr("Right Click Menu")
                     status: qsTr("Configure desktop right click menu")
                     cardEnabled: !Config.background.disableQuickshellDesktop
                     slot: 2
                 }
                 SubcategoryCard {
                     icon: "view_quilt"
-                    label: qsTr("Windows Tiling")
+                    label: qsTr("Window Tiling")
                     status: Config.general.krohnkiteEnabled ? qsTr("Enabled (Krohnkite)") : qsTr("Disabled")
                     slot: 3
                 }
@@ -360,7 +360,7 @@ ColumnLayout {
 
                 SubcategoryCard {
                     icon: "wifi"
-                    label: qsTr("Wi-Fi & Connection")
+                    label: qsTr("Network")
                     status: Nmcli.activeWifiSsid ? Nmcli.activeWifiSsid : (Nmcli.wifiEnabled ? qsTr("Disconnected") : qsTr("Disabled"))
                     slot: 0
                 }
@@ -408,13 +408,13 @@ ColumnLayout {
 
                 SubcategoryCard {
                     icon: "display_settings"
-                    label: qsTr("Layout & Scale")
+                    label: qsTr("Displays")
                     status: qsTr("%1 display(s) connected").arg(Displays.outputs.length)
                     slot: 0
                 }
                 SubcategoryCard {
                     icon: "volume_up"
-                    label: qsTr("Output & Input")
+                    label: qsTr("Audio")
                     status: Audio.muted ? qsTr("Muted") : qsTr("%1%").arg(Math.round(Audio.volume * 100))
                     slot: 2
                 }
@@ -432,13 +432,13 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "notifications_off"
-                    label: qsTr("Notification Silence")
+                    label: qsTr("Muted Apps")
                     status: qsTr("Applications that send without sound")
                     slot: 5
                 }
                 SubcategoryCard {
                     icon: "notifications"
-                    label: qsTr("Preferences")
+                    label: qsTr("Notification Behaviour")
                     status: qsTr("Position, timeout, and display behavior")
                     slot: 6
                 }
@@ -450,7 +450,7 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "tune"
-                    label: qsTr("Toasts Events")
+                    label: qsTr("Toast Events")
                     status: qsTr("Choose which system changes show a toast")
                     slot: 8
                 }
@@ -486,13 +486,13 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "near_me"
-                    label: qsTr("Quick share")
+                    label: qsTr("Quick Share")
                     status: qsTr("Send files to nearby devices")
                     slot: 6
                 }
                 SubcategoryCard {
                     icon: "smart_toy"
-                    label: qsTr("AI Configuration")
+                    label: qsTr("AI Assistant")
                     status: qsTr("Models, providers, and parameters")
                     slot: 7
                 }
@@ -504,13 +504,13 @@ ColumnLayout {
 
                 SubcategoryCard {
                     icon: "apps"
-                    label: qsTr("Default Applications")
-                    status: qsTr("Configure system default openers")
+                    label: qsTr("Apps")
+                    status: qsTr("Default openers, installed apps, and search")
                     slot: 0
                 }
                 SubcategoryCard {
                     icon: "list_alt"
-                    label: qsTr("Installed Applications")
+                    label: qsTr("All Apps")
                     status: qsTr("Browse and manage desktop apps")
                     slot: 1
                 }
@@ -528,7 +528,7 @@ ColumnLayout {
 
                 SubcategoryCard {
                     icon: "power_settings_new"
-                    label: qsTr("Session settings")
+                    label: qsTr("Session")
                     status: qsTr("Power, lock, and logout options")
                     slot: 0
                 }
@@ -539,20 +539,20 @@ ColumnLayout {
                     slot: 1
                 }
                 SubcategoryCard {
-                    icon: "sync_alt"
-                    label: qsTr("Remote IPC")
-                    status: qsTr("Local and network remote procedure calls")
+                    icon: "sports_esports"
+                    label: qsTr("Discord Rich Presence")
+                    status: qsTr("Broadcast your activity to Discord")
                     slot: 2
                 }
                 SubcategoryCard {
                     icon: "calendar_today"
-                    label: qsTr("Calendar Integration")
+                    label: qsTr("Calendar")
                     status: qsTr("Sync calendar events and accounts")
                     slot: 3
                 }
                 SubcategoryCard {
                     icon: "language"
-                    label: qsTr("Language & Format")
+                    label: qsTr("Language & Region")
                     status: qsTr("System locale, spellcheck, and formats")
                     slot: 4
                 }
@@ -570,13 +570,13 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "storage"
-                    label: qsTr("Disk & Storage")
+                    label: qsTr("Storage")
                     status: qsTr("Mount points, free space, and drives")
                     slot: 8
                 }
                 SubcategoryCard {
                     icon: "extension"
-                    label: qsTr("Caelestia Plugins")
+                    label: qsTr("Plugins")
                     status: qsTr("Manage installed extensions and add-ons")
                     slot: 9
                 }
@@ -588,7 +588,7 @@ ColumnLayout {
                 }
                 SubcategoryCard {
                     icon: "info"
-                    label: qsTr("About System")
+                    label: qsTr("About")
                     status: qsTr("Hardware, OS version, and shell info")
                     slot: 11
                 }

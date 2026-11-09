@@ -463,7 +463,7 @@ QtObject {
         },
         {
             label: qsTr("Add an application"),
-            section: qsTr("Startup"),
+            section: qsTr("Startup Applications"),
             pageIdx: 7,
             subPageIdx: 6
         },
@@ -1037,21 +1037,21 @@ QtObject {
         },
         {
             label: qsTr("Bluetooth"),
-            section: qsTr("Connected devices"),
+            section: qsTr("Bluetooth"),
             pageIdx: 3,
             subPageIdx: 10
         },
         {
             label: qsTr("Discoverable"),
             description: qsTr("Allow nearby devices to find this one"),
-            section: qsTr("Connected devices"),
+            section: qsTr("Bluetooth"),
             pageIdx: 3,
             subPageIdx: 10
         },
         {
             label: qsTr("Pairable"),
             description: qsTr("Allow nearby devices to pair with this one"),
-            section: qsTr("Connected devices"),
+            section: qsTr("Bluetooth"),
             pageIdx: 3,
             subPageIdx: 10
         },
@@ -1410,87 +1410,87 @@ QtObject {
         {
             label: qsTr("Focus sessions"),
             description: qsTr("Turn notifications off by themselves on a schedule"),
-            section: qsTr("Focus sessions"),
+            section: qsTr("Focus Sessions"),
             pageIdx: 4,
             subPageIdx: 9
         },
         {
             label: qsTr("Follow the calendar"),
             description: qsTr("Start a session while a calendar event is running"),
-            section: qsTr("Focus sessions"),
+            section: qsTr("Focus Sessions"),
             pageIdx: 4,
             subPageIdx: 9
         },
         {
             label: qsTr("Name"),
-            section: qsTr("Focus sessions"),
+            section: qsTr("Focus Sessions"),
             pageIdx: 4,
             subPageIdx: 9
         },
         {
             label: qsTr("Enable automatically"),
             description: qsTr("Turn on game mode when a target window is focused or running"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Target windows"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable animations"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable blur"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable gaps and rounding"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable shadows"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable window transparency"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable shell transparency"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable toast notifications transparency"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable desktop lyrics"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
         {
             label: qsTr("Disable visualizer"),
-            section: qsTr("Game mode"),
+            section: qsTr("Game Mode"),
             pageIdx: 5,
             subPageIdx: 1
         },
@@ -1642,35 +1642,35 @@ QtObject {
         },
         {
             label: qsTr("Shell language"),
-            section: qsTr("Language & region"),
+            section: qsTr("Language & Region"),
             pageIdx: 7,
             subPageIdx: 4
         },
         {
             label: qsTr("Temperature"),
             description: qsTr("Units for weather temperatures"),
-            section: qsTr("Language & region"),
+            section: qsTr("Language & Region"),
             pageIdx: 7,
             subPageIdx: 4
         },
         {
             label: qsTr("System temperatures"),
             description: qsTr("Units for CPU and GPU temperatures"),
-            section: qsTr("Language & region"),
+            section: qsTr("Language & Region"),
             pageIdx: 7,
             subPageIdx: 4
         },
         {
             label: qsTr("Data sizes"),
             description: qsTr("Units for data sizes and network speeds"),
-            section: qsTr("Language & region"),
+            section: qsTr("Language & Region"),
             pageIdx: 7,
             subPageIdx: 4
         },
         {
             label: qsTr("Clock format"),
             description: qsTr("How times are shown across the shell"),
-            section: qsTr("Language & region"),
+            section: qsTr("Language & Region"),
             pageIdx: 7,
             subPageIdx: 4
         },
@@ -1842,31 +1842,31 @@ QtObject {
         },
         {
             label: qsTr("Wallhaven"),
-            section: qsTr("Community & Online"),
+            section: qsTr("Library & Components"),
             pageIdx: 0,
             subPageIdx: 6
         },
         {
             label: qsTr("Online Wallpapers"),
-            section: qsTr("Community & Online"),
+            section: qsTr("Library & Components"),
             pageIdx: 0,
             subPageIdx: 6
         },
         {
             label: qsTr("skwd-wall not available"),
-            section: qsTr("Community & Online"),
+            section: qsTr("Library & Components"),
             pageIdx: 0,
             subPageIdx: 6
         },
         {
             label: qsTr("Tags & Filters"),
-            section: qsTr("Community & Online"),
+            section: qsTr("Library & Components"),
             pageIdx: 0,
             subPageIdx: 6
         },
         {
             label: qsTr("Open skwd-wall"),
-            section: qsTr("Community & Online"),
+            section: qsTr("Library & Components"),
             pageIdx: 0,
             subPageIdx: 6
         },
@@ -2027,103 +2027,103 @@ QtObject {
         {
             label: qsTr("Show in fullscreen"),
             description: qsTr("Allow notifications over fullscreen apps"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Display on screen"),
             description: qsTr("Which screens show notification popups"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Position"),
             description: qsTr("Where notification popups appear"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Expire automatically"),
             description: qsTr("Dismiss notifications after their timeout"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
-            label: qsTr("Open expanded"),
+            label: qsTr("Open notifications expanded"),
             description: qsTr("Show notifications expanded by default"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Do not disturb while sharing"),
             description: qsTr("Mute notifications while the screen is being shared or recorded"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Default timeout"),
             description: qsTr("Seconds before a notification dismisses"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Group preview count"),
             description: qsTr("Notifications shown before a group collapses"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Max popup notifications"),
             description: qsTr("Only the newest popups are shown; the rest stay in the sidebar"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Max stored notifications"),
             description: qsTr("Older notifications are dropped when the limit is reached"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Click to activate"),
             description: qsTr("Run the notification action or open its app on click"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Expand threshold"),
             description: qsTr("Hover pixels before a docked notification expands"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Fullscreen timeout"),
             description: qsTr("Milliseconds a notification stays over a fullscreen app"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
             label: qsTr("Clear threshold"),
             description: qsTr("Swipe distance before a notification is dismissed"),
-            section: qsTr("Notifications"),
+            section: qsTr("Notification Behaviour"),
             pageIdx: 4,
             subPageIdx: 6
         },
         {
-            label: qsTr("Notifications"),
+            label: qsTr("Notification Behaviour"),
             section: qsTr("Notifications"),
             pageIdx: 4,
             subPageIdx: 10
@@ -2135,13 +2135,13 @@ QtObject {
             subPageIdx: 10
         },
         {
-            label: qsTr("Toast events"),
+            label: qsTr("Toast Events"),
             section: qsTr("Notifications"),
             pageIdx: 4,
             subPageIdx: 10
         },
         {
-            label: qsTr("Focus sessions"),
+            label: qsTr("Focus Sessions"),
             section: qsTr("Notifications"),
             pageIdx: 4,
             subPageIdx: 10
@@ -2149,70 +2149,70 @@ QtObject {
         {
             label: qsTr("Design"),
             description: qsTr("Visual style for hardware buttons (volume, brightness)"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Position"),
             description: qsTr("Screen placement for the floating indicator"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Enabled"),
             description: qsTr("Enable on-screen display popups"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Volume"),
             description: qsTr("Show indicator on speaker volume changes"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Microphone"),
             description: qsTr("Show indicator on microphone volume changes"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Brightness"),
             description: qsTr("Show indicator on display brightness changes"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Show in fullscreen"),
             description: qsTr("Display indicator over fullscreen applications"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Hide delay"),
             description: qsTr("Seconds before the indicator hides"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Depth"),
             description: qsTr("Distance from the screen edge to trigger the drawer"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
         {
             label: qsTr("Height"),
             description: qsTr("Portion of the edge that responds to hover"),
-            section: qsTr("On-screen display (OSD)"),
+            section: qsTr("OSD"),
             pageIdx: 2,
             subPageIdx: 24
         },
@@ -2338,49 +2338,49 @@ QtObject {
         },
         {
             label: qsTr("Dashboard"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("Taskbar"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("Launcher"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("Sidebar"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("Quick toggle"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("Overview"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("Window Switcher"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
         {
             label: qsTr("OSD"),
-            section: qsTr("Panels"),
+            section: qsTr("Panels & Interface"),
             pageIdx: 2,
             subPageIdx: 0
         },
@@ -2435,107 +2435,107 @@ QtObject {
         {
             label: qsTr("Media refresh"),
             description: qsTr("How often the media position updates (ms)"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("System stats refresh"),
             description: qsTr("CPU, memory and GPU update interval (seconds)"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Wi-Fi rescan"),
             description: qsTr("How often available networks are rescanned (seconds)"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Lyrics backend"),
             description: qsTr("Source used to fetch synced lyrics"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Default player"),
             description: qsTr("Preferred media player when several are open"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Volume step"),
             description: qsTr("Amount the volume changes per scroll (%)"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Brightness step"),
             description: qsTr("Amount the brightness changes per scroll (%)"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Max volume"),
             description: qsTr("Upper limit for output volume (%)"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Discord Rich Presence"),
             description: qsTr("Number of bars in the audio visualisers"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Visualiser bars"),
             description: qsTr("Number of bars in the audio visualisers"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Visualiser input"),
             description: qsTr("Audio the visualisers react to"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("GPU"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Calendars & agenda"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("Printers"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("On-screen keyboard"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
         {
             label: qsTr("System accessibility"),
-            section: qsTr("Services"),
+            section: qsTr("System Services"),
             pageIdx: 7,
             subPageIdx: 1
         },
@@ -2894,85 +2894,85 @@ QtObject {
         },
         {
             label: qsTr("Charging changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Game mode changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Night light changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Configuration loaded"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Audio output changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Audio input changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Now playing"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Caps lock changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Num lock changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Keyboard layout changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Keyboard layout limit"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Do not disturb changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("VPN changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
         {
             label: qsTr("Clipboard changes"),
-            section: qsTr("Toast events"),
+            section: qsTr("Toast Events"),
             pageIdx: 4,
             subPageIdx: 8
         },
@@ -3037,25 +3037,25 @@ QtObject {
         },
         {
             label: qsTr("Utilities panel"),
-            section: qsTr("Utilities"),
+            section: qsTr("Utilities & Tools"),
             pageIdx: 5,
             subPageIdx: 0
         },
         {
             label: qsTr("Quick toggles"),
-            section: qsTr("Utilities"),
+            section: qsTr("Utilities & Tools"),
             pageIdx: 5,
             subPageIdx: 0
         },
         {
-            label: qsTr("Game mode"),
-            section: qsTr("Utilities"),
+            label: qsTr("Game Mode"),
+            section: qsTr("Utilities & Tools"),
             pageIdx: 5,
             subPageIdx: 0
         },
         {
             label: qsTr("Quick Share"),
-            section: qsTr("Utilities"),
+            section: qsTr("Utilities & Tools"),
             pageIdx: 5,
             subPageIdx: 0
         },
@@ -3136,7 +3136,7 @@ QtObject {
             subPageIdx: 0
         },
         {
-            label: qsTr("Library & Community"),
+            label: qsTr("Library & Components"),
             section: qsTr("Appearance"),
             pageIdx: 0,
             subPageIdx: 0
@@ -3148,7 +3148,7 @@ QtObject {
             subPageIdx: 0
         },
         {
-            label: qsTr("Lock screen"),
+            label: qsTr("Lock Screen"),
             section: qsTr("Appearance"),
             pageIdx: 0,
             subPageIdx: 0

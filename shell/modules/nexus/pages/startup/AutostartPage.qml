@@ -15,7 +15,7 @@ PageBase {
 
     readonly property var entries: Autostart.entries
 
-    title: qsTr("Startup")
+    title: qsTr("Startup Applications")
 
     ColumnLayout {
         anchors.horizontalCenter: parent.horizontalCenter

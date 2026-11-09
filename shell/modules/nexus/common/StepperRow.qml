@@ -70,7 +70,7 @@ ConnectedRect {
                 text: root.subtext
                 color: Colours.palette.m3onSurfaceVariant
                 font: NexusStyle.secondaryFont
-                elide: Text.ElideRight
+                wrapMode: Text.Wrap
             }
         }
 

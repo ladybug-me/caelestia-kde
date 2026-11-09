@@ -73,7 +73,7 @@ PageBase {
         }
     ]
 
-    title: qsTr("On-screen display (OSD)")
+    title: qsTr("OSD")
     isSubPage: true
 
     ColumnLayout {

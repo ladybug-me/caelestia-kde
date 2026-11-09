@@ -91,65 +91,72 @@ ColumnLayout {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
-                        Item {
-                            id: liquidContainer
+                        // clip is rectangular, so at 100% the rotating wave poked out of the
+                        // outline's rounded top corners; clip to the outline's shape instead
+                        StyledClippingRect {
+                            anchors.fill: parent
+                            radius: Tokens.rounding.medium * root.scaleOffset
 
-                            anchors.bottom: parent.bottom
-                            anchors.left: parent.left
-                            anchors.right: parent.right
+                            Item {
+                                id: liquidContainer
 
-                            height: parent.height * (UPower.displayDevice.isLaptopBattery ? UPower.displayDevice.percentage : 0)
-
-                            Behavior on height {
-                                Anim { type: Anim.FastSpatial }
-                            }
-
-                            Rectangle {
-                                anchors.top: parent.top
-                                anchors.topMargin: waveLayer.opacity * Math.min(24, parent.height)
                                 anchors.bottom: parent.bottom
                                 anchors.left: parent.left
                                 anchors.right: parent.right
 
-                                color: Colours.palette.m3primary
+                                height: parent.height * (UPower.displayDevice.isLaptopBattery ? UPower.displayDevice.percentage : 0)
 
-                                bottomLeftRadius: Tokens.rounding.medium - 3
-                                bottomRightRadius: Tokens.rounding.medium - 3
-                                topLeftRadius: height >= batteryBody.height - 3 ? Tokens.rounding.medium - 3 : 0
-                                topRightRadius: height >= batteryBody.height - 3 ? Tokens.rounding.medium - 3 : 0
-                            }
-
-                            Item {
-                                id: waveLayer
-
-                                anchors.top: parent.top
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                height: Math.min(25, parent.height)
-                                clip: true
-
-                                opacity: {
-                                    if (UPower.onBattery) return 0;
-                                    if (parent.height <= 30) return 0;
-                                    if (parent.height < 40) return (parent.height - 30) / 10.0;
-                                    return 1.0;
+                                Behavior on height {
+                                    Anim { type: Anim.FastSpatial }
                                 }
 
-                                Behavior on opacity { Anim { type: Anim.SlowEffects } }
-
                                 Rectangle {
-                                    width: 140 * root.scaleOffset; height: 140 * root.scaleOffset
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    y: 8 * root.scaleOffset
+                                    anchors.top: parent.top
+                                    anchors.topMargin: waveLayer.opacity * Math.min(24, parent.height)
+                                    anchors.bottom: parent.bottom
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
 
                                     color: Colours.palette.m3primary
-                                    radius: 50 * root.scaleOffset
 
-                                    RotationAnimation on rotation {
-                                        loops: Animation.Infinite
-                                        from: 0; to: 360
-                                        duration: 4000
-                                        running: waveLayer.opacity > 0 && Tokens.anim.enabled
+                                    bottomLeftRadius: Tokens.rounding.medium - 3
+                                    bottomRightRadius: Tokens.rounding.medium - 3
+                                    topLeftRadius: height >= batteryBody.height - 3 ? Tokens.rounding.medium - 3 : 0
+                                    topRightRadius: height >= batteryBody.height - 3 ? Tokens.rounding.medium - 3 : 0
+                                }
+
+                                Item {
+                                    id: waveLayer
+
+                                    anchors.top: parent.top
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    height: Math.min(25, parent.height)
+                                    clip: true
+
+                                    opacity: {
+                                        if (UPower.onBattery) return 0;
+                                        if (parent.height <= 30) return 0;
+                                        if (parent.height < 40) return (parent.height - 30) / 10.0;
+                                        return 1.0;
+                                    }
+
+                                    Behavior on opacity { Anim { type: Anim.SlowEffects } }
+
+                                    Rectangle {
+                                        width: 140 * root.scaleOffset; height: 140 * root.scaleOffset
+                                        anchors.horizontalCenter: parent.horizontalCenter
+                                        y: 8 * root.scaleOffset
+
+                                        color: Colours.palette.m3primary
+                                        radius: 50 * root.scaleOffset
+
+                                        RotationAnimation on rotation {
+                                            loops: Animation.Infinite
+                                            from: 0; to: 360
+                                            duration: 4000
+                                            running: waveLayer.opacity > 0 && Tokens.anim.enabled
+                                        }
                                     }
                                 }
                             }

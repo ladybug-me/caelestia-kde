@@ -2461,6 +2461,13 @@ QtObject {
             subPageIdx: 1
         },
         {
+            label: qsTr("Romanize lyrics"),
+            description: qsTr("Use Latin letters for Devanagari, Gurmukhi and Arabic scripts (approximate; requires ICU)"),
+            section: qsTr("System Services"),
+            pageIdx: 7,
+            subPageIdx: 1
+        },
+        {
             label: qsTr("Default player"),
             description: qsTr("Preferred media player when several are open"),
             section: qsTr("System Services"),

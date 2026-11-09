@@ -5,8 +5,8 @@ import Quickshell
 import Caelestia.Config
 import qs.components
 import qs.services
-import qs.modules.bar.popouts
 import qs.utils
+import qs.modules.bar.popouts
 
 Item {
     id: root
@@ -50,23 +50,6 @@ Item {
     visible: width > 0 && height > 0
     clip: true
 
-    StyledRect {
-        anchors.fill: parent
-        z: -1
-        visible: root.backed
-        radius: Surface.panelRounding
-        // The opaque palette: the transparent one would let the text through.
-        color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surface
-
-        // Clicks and hovers on the popout's padding must not reach the notification below.
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.AllButtons
-            hoverEnabled: true
-            onWheel: wheel => wheel.accepted = true
-        }
-    }
-
     implicitWidth: isHorizontal ? content.implicitWidth : content.implicitWidth * (1 - offsetScale)
     implicitHeight: isHorizontal ? content.implicitHeight * (1 - offsetScale) : content.implicitHeight
 
@@ -106,6 +89,23 @@ Item {
         Anim {
             duration: content.animLength
             easing: content.animCurve
+        }
+    }
+
+    StyledRect {
+        anchors.fill: parent
+        z: -1
+        visible: root.backed
+        radius: Surface.panelRounding
+        // The opaque palette: the transparent one would let the text through.
+        color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surface
+
+        // Clicks and hovers on the popout's padding must not reach the notification below.
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            hoverEnabled: true
+            onWheel: wheel => wheel.accepted = true
         }
     }
 

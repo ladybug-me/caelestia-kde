@@ -285,11 +285,10 @@ Item {
     BarPopouts.ClipWrapper {
         id: popoutsWrapper
 
-        backed: root.popoutCoversNotifications
-
         property string vAnchor: (bar.position === "top" || bar.position === "bottom") ? bar.position : "none"
         property string hAnchor: (bar.position === "left" || bar.position === "right") ? bar.position : "none"
 
+        backed: root.popoutCoversNotifications
         screen: root.screen
         bar: root.bar
         borderThickness: root.borderThickness

@@ -1860,6 +1860,8 @@ wl-paste --no-newline --type text/uri-list`]
 
         property point origin
         property var base: ({})
+        // Read here: a DragHandler has no screen, so Tokens logged a warning on every move
+        readonly property real bandPadding: Tokens.padding.small
 
         // The box the drag draws. Its geometry lives here, next to the handler that
         // produces it, and DesktopOverlay draws it above the background layers.
@@ -1903,7 +1905,7 @@ wl-paste --no-newline --type text/uri-list`]
                 if (!active)
                     return;
                 const r = bandArea.bandRect;
-                const hit = Engine.keysInRect(root.contextPositionsTopLevel(), Qt.rect(r.x - gridItem.x, r.y - gridItem.y, r.width, r.height), root.cellWidth, root.cellHeight, Tokens.padding.small, root.spans);
+                const hit = Engine.keysInRect(root.contextPositionsTopLevel(), Qt.rect(r.x - gridItem.x, r.y - gridItem.y, r.width, r.height), root.cellWidth, root.cellHeight, bandArea.bandPadding, root.spans);
                 const next = Object.assign({}, bandArea.base);
                 for (const k of hit)
                     if (root.iconsEnabled || root.isWidgetKey(k))

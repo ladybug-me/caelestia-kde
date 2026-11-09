@@ -97,6 +97,18 @@ ColumnLayout {
                             anchors.fill: parent
                             radius: Tokens.rounding.medium * root.scaleOffset
 
+                            // Behind the liquid in primary; the copy inside liquidContainer draws
+                            // the part over the charge in onPrimary, so the bolt reads at any level.
+                            MaterialIcon {
+                                id: bolt
+
+                                anchors.centerIn: parent
+                                text: "bolt"
+                                visible: !UPower.onBattery
+                                color: Colours.palette.m3primary
+                                fontStyle.pointSize: Tokens.font.icon.large.pointSize * root.fontScale
+                            }
+
                             Item {
                                 id: liquidContainer
 
@@ -112,7 +124,7 @@ ColumnLayout {
 
                                 Rectangle {
                                     anchors.top: parent.top
-                                    anchors.topMargin: waveLayer.opacity * Math.min(24, parent.height)
+                                    anchors.topMargin: waveLayer.opacity * Math.min(18 * root.scaleOffset, parent.height)
                                     anchors.bottom: parent.bottom
                                     anchors.left: parent.left
                                     anchors.right: parent.right
@@ -128,18 +140,19 @@ ColumnLayout {
                                 Item {
                                     id: waveLayer
 
+                                    // The crest swings about 4px either side of the charge level, so
+                                    // the wave neither lowers the level nor needs fading out near the
+                                    // bottom; the outline clip trims what runs past the body.
                                     anchors.top: parent.top
+                                    anchors.topMargin: -4 * root.scaleOffset
                                     anchors.left: parent.left
                                     anchors.right: parent.right
-                                    height: Math.min(25, parent.height)
+                                    height: 25 * root.scaleOffset
                                     clip: true
 
-                                    opacity: {
-                                        if (UPower.onBattery) return 0;
-                                        if (parent.height <= 30) return 0;
-                                        if (parent.height < 40) return (parent.height - 30) / 10.0;
-                                        return 1.0;
-                                    }
+                                    // Only while charging: on AC but full (or held at a charge limit)
+                                    // the battery reads as full instead of a wave below the top.
+                                    opacity: UPower.displayDevice.state === UPowerDeviceState.Charging ? 1 : 0
 
                                     Behavior on opacity { Anim { type: Anim.SlowEffects } }
 
@@ -159,6 +172,20 @@ ColumnLayout {
                                         }
                                     }
                                 }
+
+                                Item {
+                                    anchors.fill: parent
+                                    clip: true
+                                    visible: bolt.visible
+
+                                    MaterialIcon {
+                                        x: bolt.x
+                                        y: bolt.y - liquidContainer.y
+                                        text: bolt.text
+                                        color: Colours.palette.m3onPrimary
+                                        fontStyle: bolt.fontStyle
+                                    }
+                                }
                             }
                         }
 
@@ -168,15 +195,6 @@ ColumnLayout {
                             border.color: Colours.palette.m3primary
                             border.width: 3 * root.scaleOffset
                             radius: Tokens.rounding.medium * root.scaleOffset
-                        }
-
-                        MaterialIcon {
-                            anchors.centerIn: parent
-                            text: "bolt"
-                            visible: !UPower.onBattery
-                            color: Colours.palette.m3onPrimary
-                            fontStyle.pointSize: Tokens.font.icon.large.pointSize * root.fontScale
-                            z: 1
                         }
                     }
                 }

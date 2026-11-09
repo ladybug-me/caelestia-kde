@@ -6,6 +6,7 @@ import Caelestia.Config
 import qs.components
 import qs.services
 import qs.modules.bar.popouts
+import qs.utils
 
 Item {
     id: root
@@ -17,6 +18,10 @@ Item {
     required property DrawerVisibilities visibilities
 
     readonly property alias content: content
+    // Set while the popout is open over the notification stack. Panel backgrounds
+    // are shared blobs drawn below every panel's content, so the popout gets an
+    // opaque fill of its own to keep the notifications' text from showing through.
+    property bool backed: false
     readonly property bool isHorizontal: bar.isHorizontal
     readonly property bool hovered: popoutsHover.hovered
     property real offsetScale: content.isDetached || content.hasCurrent ? 0 : 1
@@ -44,6 +49,23 @@ Item {
 
     visible: width > 0 && height > 0
     clip: true
+
+    StyledRect {
+        anchors.fill: parent
+        z: -1
+        visible: root.backed
+        radius: Surface.panelRounding
+        // The opaque palette: the transparent one would let the text through.
+        color: GlobalConfig.appearance.pitchBlack ? "#000000" : Colours.palette.m3surface
+
+        // Clicks and hovers on the popout's padding must not reach the notification below.
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.AllButtons
+            hoverEnabled: true
+            onWheel: wheel => wheel.accepted = true
+        }
+    }
 
     implicitWidth: isHorizontal ? content.implicitWidth : content.implicitWidth * (1 - offsetScale)
     implicitHeight: isHorizontal ? content.implicitHeight * (1 - offsetScale) : content.implicitHeight

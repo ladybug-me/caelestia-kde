@@ -444,8 +444,9 @@ StyledWindow {
             // A notification is transient and the drawer is not: keeping them out of one
             // another's blob stops the two backgrounds bridging into a shape that is
             // neither panel when they share the corner. Exclusion is symmetric, so this
-            // side stating it is enough.
-            exclude: [utilsBg]
+            // side stating it is enough. A bar popout can open on top of the stack, so it
+            // is kept apart for the same reason.
+            exclude: [utilsBg, popoutBg]
         }
         PanelBg {
             id: utilsBg

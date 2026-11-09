@@ -23,6 +23,11 @@ Item {
 
     property bool isGameOver: DinoGameBackend.isGameOver
 
+    readonly property bool isRunning: isPlaying && !DinoGameBackend.isPaused
+
+    // The game loop is continuous motion, so the animations switch turns the game off too.
+    readonly property bool playable: Tokens.anim.enabled
+
     implicitWidth: Math.max(250, parent.width * 0.8)
 
     implicitHeight: 200
@@ -35,25 +40,35 @@ Item {
 
     Component.onCompleted: DinoGameBackend.width = width
 
-    Connections {
-        target: DinoGameBackend
+    onIsRunningChanged: Notifs.setDndHold("game", isRunning)
 
-        function onGameStarted() {
-            Notifs.setDndHold("game", true);
-        }
-
-        function onGameDied() {
-            Notifs.setDndHold("game", false);
-        }
+    // The backend outlives this item, so a game left behind (sidebar closed or hidden)
+    // pauses instead of running blind and holding do-not-disturb until it crashes.
+    onVisibleChanged: {
+        if (!visible)
+            DinoGameBackend.pause();
     }
 
-    Component.onDestruction: Notifs.setDndHold("game", false)
+    onPlayableChanged: {
+        if (!playable)
+            DinoGameBackend.pause();
+    }
+
+    Component.onDestruction: {
+        DinoGameBackend.pause();
+        Notifs.setDndHold("game", false);
+    }
+
+    FrameAnimation {
+        running: root.isRunning && root.visible && root.playable
+        onTriggered: DinoGameBackend.advance(frameTime * 1000)
+    }
 
     // A Shortcut covers the whole drawers window, and it takes Up before a focused field's
     // Keys handler sees it (the launcher search loses its list navigation). Only while
     // playing or focused, then.
     Shortcut {
-        enabled: root.isPlaying || root.activeFocus
+        enabled: root.playable && (root.isRunning || root.activeFocus)
         sequence: "Space"
         onActivated: {
             root.forceActiveFocus();
@@ -61,7 +76,7 @@ Item {
         }
     }
     Shortcut {
-        enabled: root.isPlaying || root.activeFocus
+        enabled: root.playable && (root.isRunning || root.activeFocus)
         sequence: "Up"
         onActivated: {
             root.forceActiveFocus();
@@ -81,6 +96,7 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        enabled: root.playable
         hoverEnabled: true
         onClicked: {
             // so Down can duck after a game started with the mouse
@@ -352,6 +368,16 @@ Item {
     StyledText {
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) >= 99999
         text: qsTr("Y O U   W I N !\nNow go touch grass")
+        horizontalAlignment: Text.AlignHCenter
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: -40
+        font: Tokens.font.title.large
+        color: root.activeColor
+    }
+
+    StyledText {
+        visible: root.isPlaying && DinoGameBackend.isPaused
+        text: qsTr("P A U S E D\nClick to continue")
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -40

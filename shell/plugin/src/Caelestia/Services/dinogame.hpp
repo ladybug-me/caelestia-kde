@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QQmlEngine>
-#include <QTimer>
 #include <QVariantList>
 #include <QVariantMap>
 
@@ -18,6 +17,8 @@ class DinoGameBackend : public QObject {
     Q_PROPERTY(bool isGameOver READ isGameOver NOTIFY isGameOverChanged)
     Q_PROPERTY(bool isDucking READ isDucking WRITE setIsDucking NOTIFY isDuckingChanged)
     Q_PROPERTY(bool isInverted READ isInverted NOTIFY isInvertedChanged)
+    Q_PROPERTY(bool isPaused READ isPaused NOTIFY isPausedChanged)
+    Q_PROPERTY(bool isNewHighScore READ isNewHighScore NOTIFY isNewHighScoreChanged)
 
     Q_PROPERTY(qreal score READ score NOTIFY scoreChanged)
     Q_PROPERTY(qreal highScore READ highScore NOTIFY highScoreChanged)
@@ -41,6 +42,10 @@ public:
 
     bool isInverted() const { return m_isInverted; }
 
+    bool isPaused() const { return m_isPaused; }
+
+    bool isNewHighScore() const { return m_isNewHighScore; }
+
     qreal score() const { return m_score; }
 
     qreal highScore() const { return m_highScore; }
@@ -63,12 +68,18 @@ public:
     Q_INVOKABLE void startGame();
     Q_INVOKABLE void gameOver();
     Q_INVOKABLE void jump();
+    // Called once per rendered frame with the time since the last one, so motion follows
+    // the display's refresh instead of a timer that drifts against it.
+    Q_INVOKABLE void advance(qreal elapsedMs);
+    Q_INVOKABLE void pause();
 
 signals:
     void isPlayingChanged();
     void isGameOverChanged();
     void isDuckingChanged();
     void isInvertedChanged();
+    void isPausedChanged();
+    void isNewHighScoreChanged();
     void scoreChanged();
     void highScoreChanged();
     void dinoYChanged();
@@ -81,19 +92,18 @@ signals:
     void gameStarted();
     void gameDied();
 
-private slots:
-    void tick();
-
 private:
+    // f is the step length in 60 Hz frames, the unit the tuning below is written in.
+    void step(qreal f);
     void readHighScore();
     void writeHighScore();
-
-    QTimer* m_timer;
 
     bool m_isPlaying = false;
     bool m_isGameOver = false;
     bool m_isDucking = false;
     bool m_isInverted = false;
+    bool m_isPaused = false;
+    bool m_isNewHighScore = false;
 
     qreal m_score = 0;
     qreal m_highScore = 0;
@@ -102,14 +112,17 @@ private:
     qreal m_groundX = 0;
     qreal m_gameSpeed = 6.0;
     int m_frameCount = 0;
+    qreal m_frameTime = 0;
+    qreal m_jumpBuffer = 0;
     qreal m_width = 250;
 
-    int m_cloudTimer = 0;
-    int m_obstacleTimer = 0;
+    qreal m_cloudTimer = 0;
+    qreal m_obstacleTimer = 0;
 
     const qreal m_gravity = 0.8;
     const qreal m_duckGravity = 1.5;
     const qreal m_jumpForce = -13.0;
+    const qreal m_baseSpeed = 6.0;
 
     QVariantList m_obstacles;
     QVariantList m_clouds;

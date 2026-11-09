@@ -142,6 +142,18 @@ QtObject {
                 keywords: ["theme", "effects", "blur", "opacity", "corner radius", "font", "monospace", "bezel"]
                 component: Component { AppearancePage {} }
             }
+
+            Page {
+                slot: 10
+                key: "nexusSettings"
+                label: qsTr("Nexus settings")
+                icon: "tune"
+                section: qsTr("Nexus")
+                status: GlobalConfig.nexus.sidePane ? qsTr("3-pane layout") : qsTr("2-pane layout")
+                description: qsTr("Nexus window layout and subcategory side pane")
+                keywords: ["nexus", "layout", "sidepane", "subpanel", "side pane", "settings window"]
+                component: Component { NexusSettingsPage {} }
+            }
         },
 
         Category {

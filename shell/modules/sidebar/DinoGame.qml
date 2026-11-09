@@ -296,6 +296,8 @@ Item {
                 y: cloud.y ?? 0
                 width: 92
                 height: 27
+                // the game over and pause text sits in the sky, so clouds step aside while it shows
+                opacity: root.isRunning ? 1 : 0
                 source: Paths.absolutePath("root:/assets/dino_cloud.png")
                 fillMode: Image.PreserveAspectFit
 
@@ -304,6 +306,8 @@ Item {
                     colorizationColor: root.activeColor
                     brightness: 1
                 }
+
+                Behavior on opacity { Anim { type: Anim.Standard } }
             }
         }
 

@@ -160,7 +160,7 @@ Singleton {
         const v = getForActive();
         return v ? v[drawer] === true : false;
     }
-    function setDrawer(drawer: string, open: boolean): void {
+    function setDrawer(drawer: string, open: bool): void {
         if (drawer === "launcher") {
             if (open)
                 openLauncher("");
@@ -176,7 +176,7 @@ Singleton {
         if (v)
             v[drawer] = open;
     }
-    function setLauncherOwner(visibilities: DrawerVisibilities, open: boolean): void {
+    function setLauncherOwner(visibilities: DrawerVisibilities, open: bool): void {
         if (!open) {
             if (launcherScreen !== visibilities)
                 return;

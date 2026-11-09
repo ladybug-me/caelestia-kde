@@ -1148,6 +1148,19 @@ STUB
     assert_file_missing "$SANDBOX/helm_calls.txt" "skwd-helm apply should not be called when -a is passed"
 }
 
+test_an_apply_path_that_is_not_a_file_keeps_the_thumbnail() {
+    setup_sandbox
+    local thumb; thumb="$(wallpaper_image "thumb.png")"
+
+    # skwd-wall hands a Wallpaper Engine workshop id as -a for its own wallpapers.
+    SKWD_WALLD=1 run_color wallpaper -f "$thumb" -a "3522288336"
+    assert_status 0 "$STATUS" "setting the wallpaper should still succeed"
+    assert_eq "$thumb" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt falls back to the thumbnail"
+    assert_eq "$thumb" "$(readlink "$XDG_STATE_HOME/caelestia/wallpaper/current")" \
+        "the current link falls back to the thumbnail"
+}
+
 test_skwd_helm_not_called_when_multi_monitor_already_has_wallpaper() {
     setup_sandbox
     local img; img="$(wallpaper_image "wall.png")"

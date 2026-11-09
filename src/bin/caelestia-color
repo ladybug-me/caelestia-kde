@@ -1791,7 +1791,10 @@ cmd_wallpaper() {
         fi
     fi
 
-    local state_file="${apply_file:-$file}"
+    # skwd-wall passes a Wallpaper Engine workshop id as -a for its own wallpapers, not a file;
+    # the thumbnail is the only real image then. apply_file stays set for the loop guard.
+    local state_file="$file"
+    [[ -n "$apply_file" && -e "$apply_file" ]] && state_file="$apply_file"
     state_file="$(resolve_actual_wallpaper "$state_file")"
 
     write_wallpaper_state "$state_file"

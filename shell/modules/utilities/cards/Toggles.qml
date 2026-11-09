@@ -437,7 +437,7 @@ StyledRect {
         x: Math.max(Tokens.padding.extraSmall, Math.min(root.width - width - Tokens.padding.extraSmall, root.hoverX - width / 2))
         y: Math.min(root.height - height - Tokens.padding.extraSmall, root.hoverY + Tokens.spacing.medium)
         implicitWidth: hoverTipLabel.implicitWidth + Tokens.padding.medium * 2
-        implicitHeight: hoverTipLabel.implicitHeight + Tokens.padding.extraSmall * 2
+        implicitHeight: hoverTipLabel.implicitHeight + Tokens.padding.small * 2
         radius: Tokens.rounding.full
         color: Qt.rgba(0, 0, 0, 0.85)
 

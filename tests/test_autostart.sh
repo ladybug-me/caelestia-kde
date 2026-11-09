@@ -10,7 +10,6 @@ SCRIPT="$REPO_ROOT/shell/scripts/autostart.py"
 SERVICE="$REPO_ROOT/shell/services/Autostart.qml"
 PAGE="$REPO_ROOT/shell/modules/nexus/pages/startup/AutostartPage.qml"
 PICKER="$REPO_ROOT/shell/modules/nexus/pages/startup/AutostartAppPicker.qml"
-DICTIONARY="$REPO_ROOT/shell/modules/nexus/PageDictionary.qml"
 REGISTRY="$REPO_ROOT/shell/modules/nexus/PageCompRegistry.qml"
 PYTHON="$(command -v python3 || command -v python)"
 
@@ -121,11 +120,10 @@ test_an_installed_application_can_be_added() {
 }
 
 test_the_page_and_service_drive_the_script() {
-    local service page picker dictionary registry
+    local service page picker registry
     service="$(cat "$SERVICE")"
     page="$(cat "$PAGE")"
     picker="$(cat "$PICKER")"
-    dictionary="$(cat "$DICTIONARY")"
     registry="$(cat "$REGISTRY")"
 
     assert_contains "$service" 'Quickshell.shellPath("scripts/autostart.py")' "the script owns the files"
@@ -135,8 +133,8 @@ test_the_page_and_service_drive_the_script() {
     assert_contains "$page" 'Autostart.setEnabled(entryRow.modelData.id, checked)' "and toggles it"
     assert_contains "$page" 'visible: entryRow.modelData.own' "only the user's own entry can be removed"
     assert_contains "$picker" 'Autostart.add(appRow.modelData.id)' "adding copies an installed application in"
-    assert_contains "$dictionary" '"startup":' "the page exists in the dictionary"
-    assert_contains "$dictionary" 'category: "system"' "among the system pages"
+    assert_contains "$registry" 'key: "startup"' "the page exists in the registry"
+    assert_contains "$registry" 'key: "services"' "among the system pages"
     assert_contains "$registry" 'Component { AutostartPage {} }' "and is registered"
     assert_contains "$registry" 'Component { AutostartAppPicker {} }' "with its application picker"
 }

@@ -98,7 +98,7 @@ ColumnLayout {
             StateLayer {
                 onClicked: {
                     root.nState.selectedEthernetInterface = ethRow.modelData.iface;
-                    root.nState.openSubPage(1);
+                    root.nState.openSubPage("ethernetDetail");
                 }
             }
 

@@ -51,7 +51,7 @@ PageBase {
                 icon: "image_search"
                 label: qsTr("Wallhaven")
                 status: qsTr("Download wallpapers from Wallhaven")
-                onClicked: root.nState.openSubPage(4)
+                onClicked: root.nState.openSubPage("wallhaven")
             }
 
             NavRow {

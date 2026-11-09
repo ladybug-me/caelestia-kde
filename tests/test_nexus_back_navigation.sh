@@ -26,7 +26,7 @@ test_the_shortcut_only_closes_a_sub_page() {
         "the settings window should report whether it is focused"
     assert_file_contains "$NEXUS/WindowFactory.qml" 'function goBack(): void' \
         "the settings window should expose a back action"
-    assert_file_contains "$NEXUS/WindowFactory.qml" 'subPageIdxStack.length > 0' \
+    assert_file_contains "$NEXUS/WindowFactory.qml" 'subPageKeyStack.length > 0' \
         "the back action should do nothing at the page root"
     assert_file_contains "$NEXUS/WindowFactory.qml" 'state.closeSubPage()' \
         "the back action should pop one sub-page"

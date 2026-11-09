@@ -76,7 +76,7 @@ PageBase {
             text: qsTr("Restart Shell")
             icon: "restart_alt"
             type: TextButton.Filled
-            onClicked: Launch.exec(["bash", "-c", `bash "${Quickshell.shellPath("scripts/restart_shell.sh")}"; sleep 1; caelestia shell nexus openPage ${PageDictionary.pageIdxFor("appearance")} 8`])
+            onClicked: Launch.exec(["bash", "-c", `bash "${Quickshell.shellPath("scripts/restart_shell.sh")}"; sleep 1; caelestia shell nexus openPage appearance appearance`])
         },
         IconTextButton {
             id: resetBtn
@@ -521,26 +521,6 @@ PageBase {
                 to: 1.5
                 stepSize: 0.05
                 onMoved: v => GlobalConfig.appearance.deformScale = v
-            }
-        }
-
-        SectionHeader {
-            text: qsTr("Settings window")
-        }
-
-        ColumnLayout {
-            Layout.fillWidth: true
-            spacing: 0
-
-            ToggleRow {
-                reset: ({ node: GlobalConfig.nexus, setting: "sidePane" })
-                first: true
-                last: true
-                Layout.fillWidth: true
-                text: qsTr("Subcategory side pane")
-                subtext: qsTr("List a section's subcategories in their own pane. Turned off, they line up inside the section")
-                checked: GlobalConfig.nexus.sidePane
-                onToggled: GlobalConfig.nexus.sidePane = checked
             }
         }
     }

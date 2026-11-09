@@ -126,7 +126,7 @@ PageBase {
             icon: "apps"
             label: qsTr("All apps")
             status: qsTr("Browse installed apps, set favorites and hidden")
-            onClicked: root.nState.openSubPage(1)
+            onClicked: root.nState.openSubPage("allApps")
         }
 
         SectionHeader {

@@ -114,6 +114,16 @@ STUB
     chmod +x "$STUB_DIR/ffmpeg"
 }
 
+# Without it the real skwd-helm on PATH talks to the user's running skwd-walld and applies the
+# sandbox images as their wallpaper. Tests that care about the calls write their own over it.
+write_stub_skwd_helm() {
+    cat > "$STUB_DIR/skwd-helm" <<'STUB'
+#!/usr/bin/env bash
+exit 0
+STUB
+    chmod +x "$STUB_DIR/skwd-helm"
+}
+
 write_stub_kde() {
     cat > "$STUB_DIR/plasma-apply-colorscheme" <<'STUB'
 #!/usr/bin/env bash
@@ -155,6 +165,7 @@ setup_sandbox() {
     write_stub_ffmpeg
     write_stub_kde
     write_stub_ps
+    write_stub_skwd_helm
 
     export CAELESTIA_DATA_DIR="$REPO_ROOT/src"
     export XDG_CONFIG_HOME="$SANDBOX/config"

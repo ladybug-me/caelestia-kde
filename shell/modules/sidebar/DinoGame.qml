@@ -49,7 +49,11 @@ Item {
 
     Component.onDestruction: Notifs.setDndHold("game", false)
 
+    // A Shortcut covers the whole drawers window, and it takes Up before a focused field's
+    // Keys handler sees it (the launcher search loses its list navigation). Only while
+    // playing or focused, then.
     Shortcut {
+        enabled: root.isPlaying || root.activeFocus
         sequence: "Space"
         onActivated: {
             root.forceActiveFocus();
@@ -57,6 +61,7 @@ Item {
         }
     }
     Shortcut {
+        enabled: root.isPlaying || root.activeFocus
         sequence: "Up"
         onActivated: {
             root.forceActiveFocus();
@@ -78,6 +83,8 @@ Item {
         anchors.fill: parent
         hoverEnabled: true
         onClicked: {
+            // so Down can duck after a game started with the mouse
+            root.forceActiveFocus();
             DinoGameBackend.jump()
         }
     }

@@ -131,6 +131,19 @@ STUB
     chmod +x "$STUB_DIR/plasma-apply-colorscheme" "$STUB_DIR/kwriteconfig6" "$STUB_DIR/kreadconfig6"
 }
 
+write_stub_ps() {
+    local real_ps
+    real_ps="$(command -v ps)"
+    # apply_terms writes the sequences to every shell's pty, and a sandbox still sees the
+    # real /dev/pts: without this the stub palette ("primary 92cef5") lands in open terminals.
+    cat > "$STUB_DIR/ps" <<STUB
+#!/usr/bin/env bash
+[[ "\${1:-}" == "-t" ]] && exit 0
+exec "$real_ps" "\$@"
+STUB
+    chmod +x "$STUB_DIR/ps"
+}
+
 setup_sandbox() {
     SANDBOX="$(new_tmpdir)"
     STUB_DIR="$SANDBOX/bin"
@@ -140,6 +153,7 @@ setup_sandbox() {
     write_stub_matugen
     write_stub_ffmpeg
     write_stub_kde
+    write_stub_ps
 
     export CAELESTIA_DATA_DIR="$REPO_ROOT/src"
     export XDG_CONFIG_HOME="$SANDBOX/config"

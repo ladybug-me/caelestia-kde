@@ -1122,6 +1122,28 @@ EOF
         "path.txt should contain actual video from skwd-wall, not webp thumbnail"
 }
 
+test_wallpaper_keeps_the_thumbnail_of_a_wallpaper_engine_scene() {
+    setup_sandbox
+    local thumb_dir="$XDG_CACHE_HOME/skwd-wall-v2/we-thumbs"
+    mkdir -p "$thumb_dir"
+    local thumb="$thumb_dir/3522288336.webp"
+    touch "$thumb"
+    local other; other="$(wallpaper_image "other.jpg")"
+
+    # A scene has no file to point at, and last-applied.json still names an older wallpaper.
+    cat > "$XDG_CACHE_HOME/skwd-wall-v2/last-wallpaper.json" <<EOF
+{"path": "", "thumb": "/steam/workshop/content/431960/3522288336/preview.jpg", "type": "we", "we_id": "3522288336"}
+EOF
+    cat > "$XDG_CACHE_HOME/skwd-wall-v2/last-applied.json" <<EOF
+{"landscape": {"path": "$other", "type": "static"}}
+EOF
+
+    SKWD_WALLD=1 run_color wallpaper -f "$thumb" -a "3522288336"
+    assert_status 0 "$STATUS" "setting the wallpaper should succeed"
+    assert_eq "$thumb" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt keeps the scene's thumbnail, not an unrelated older wallpaper"
+}
+
 test_skwd_helm_not_called_when_skwd_walld_env_set() {
     setup_sandbox
     local img; img="$(wallpaper_image "wall.png")"

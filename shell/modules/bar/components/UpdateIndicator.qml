@@ -10,7 +10,7 @@ import qs.modules.nexus
 Item {
     id: root
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
 
     readonly property int barThickness: Math.round(Tokens.sizes.bar.innerWidth * Math.max(0.6, !isNaN(Config.bar.scale) ? Config.bar.scale : 1.0))
 

@@ -23,6 +23,10 @@ Item {
     required property DrawerVisibilities visibilities
     required property BarPopouts.Wrapper popouts
     required property bool fullscreen
+    property string position: Config.bar.position
+    property var entries: Config.bar.entries
+    property int panelIndex: -1
+    property real panelInset: 0
     property Item currentHoveredItem: null
 
     readonly property int vPadding: Tokens.padding.large
@@ -31,15 +35,15 @@ Item {
     readonly property real barScale: rawScale < 1.0 ? Math.sqrt(Math.max(0.1, rawScale)) : rawScale
     readonly property int thickness: Math.round(Tokens.sizes.bar.innerWidth * barScale)
 
-    readonly property bool isHorizontal: Config.bar.position === "top" || Config.bar.position === "bottom"
+    readonly property bool isHorizontal: root.position === "top" || root.position === "bottom"
 
     readonly property real leftZoneSize: isHorizontal ? leftLayout.implicitWidth : leftLayout.implicitHeight
     readonly property real middleZoneSize: isHorizontal ? middleLayout.implicitWidth : middleLayout.implicitHeight
     readonly property real rightZoneSize: isHorizontal ? rightLayout.implicitWidth : rightLayout.implicitHeight
 
-    property var leftEntries: BarWidgets.zoneEntries(Config.bar.entries, "left")
-    property var middleEntries: BarWidgets.zoneEntries(Config.bar.entries, "middle")
-    property var rightEntries: BarWidgets.zoneEntries(Config.bar.entries, "right")
+    property var leftEntries: BarWidgets.zoneEntries(root.entries, "left")
+    property var middleEntries: BarWidgets.zoneEntries(root.entries, "middle")
+    property var rightEntries: BarWidgets.zoneEntries(root.entries, "right")
 
     function resetHover(): void {
         if (currentHoveredItem) {
@@ -83,6 +87,8 @@ Item {
     }
 
     function checkPopout(pos: real): void {
+        popouts.setOrigin(root.position, root.panelInset, root.panelIndex);
+
         // A context menu stays open while the pointer moves over the bar, so
         // the hover routing below must not take it over or close it.
         if (popouts.isContextPopout)
@@ -131,8 +137,11 @@ Item {
         } else if (id === "statusIcons") {
             const statusIcons = ch.item as StatusIcons;
             const items = statusIcons.items;
-            const localX = isHorizontal ? items.mapFromItem(null, pos, 0).x : items.width / 2;
-            const localY = isHorizontal ? items.height / 2 : items.mapFromItem(null, 0, pos).y;
+            // `pos` runs along this bar, not across the screen: map it from the
+            // bar itself so the icons of a side panel are hit where they are.
+            const localPos = isHorizontal ? items.mapFromItem(root, pos, root.height / 2) : items.mapFromItem(root, root.width / 2, pos);
+            const localX = localPos.x;
+            const localY = localPos.y;
             statusIcons.hoverPos = isHorizontal ? localX : localY;
 
             if (!Config.bar.popouts.statusIcons) return;
@@ -349,6 +358,17 @@ Item {
 
     clip: true
 
+    TapHandler {
+        acceptedButtons: Qt.RightButton
+
+        onTapped: eventPoint => {
+            const pos = isHorizontal ? eventPoint.position.x : eventPoint.position.y;
+            popouts.setOrigin(root.position, root.panelInset, root.panelIndex);
+            popouts.currentName = "barcontext";
+            popouts.currentCenter = isHorizontal ? root.mapToItem(null, pos, 0).x : root.mapToItem(null, 0, pos).y;
+            popouts.hasCurrent = true;
+        }
+    }
     Timer {
         id: closeTrayTimer
 
@@ -486,6 +506,7 @@ Item {
                 roleValue: "tray"
                 delegate: WrappedLoader {
                     sourceComponent: Tray {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -495,6 +516,7 @@ Item {
                 delegate: WrappedLoader {
                     sourceComponent: Clock {
                         bar: root
+                        isHorizontal: root.isHorizontal
                     }
                 }
             }
@@ -503,6 +525,7 @@ Item {
                 delegate: WrappedLoader {
                     sourceComponent: StatusIcons {
                         bar: root
+                        isHorizontal: root.isHorizontal
                     }
                 }
             }
@@ -525,7 +548,9 @@ Item {
                 roleValue: "updateIndicator"
                 delegate: WrappedLoader {
                     visible: enabled && GlobalConfig.general.checkUpdates
-                    sourceComponent: UpdateIndicator {}
+                    sourceComponent: UpdateIndicator {
+                        isHorizontal: root.isHorizontal
+                    }
                 }
             }
             DelegateChoice {
@@ -533,6 +558,7 @@ Item {
                 delegate: WrappedLoader {
                     visible: enabled && Cpu.name.length > 0
                     sourceComponent: PerfCpu {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -542,6 +568,7 @@ Item {
                 delegate: WrappedLoader {
                     visible: enabled && Memory.total > 1
                     sourceComponent: PerfMemory {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -551,6 +578,7 @@ Item {
                 delegate: WrappedLoader {
                     visible: enabled && Storage.disks.length > 0
                     sourceComponent: PerfStorage {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -559,6 +587,7 @@ Item {
                 roleValue: "perfNetwork"
                 delegate: WrappedLoader {
                     sourceComponent: PerfNetwork {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -568,6 +597,7 @@ Item {
                 delegate: WrappedLoader {
                     visible: enabled && Gpu.type !== Gpu.None
                     sourceComponent: PerfGpu {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -577,6 +607,7 @@ Item {
                 delegate: WrappedLoader {
                     visible: enabled && UPower.displayDevice.isLaptopBattery
                     sourceComponent: PerfBattery {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -610,6 +641,7 @@ Item {
                 roleValue: "weather"
                 delegate: WrappedLoader {
                     sourceComponent: WeatherWidget {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -618,6 +650,7 @@ Item {
                 roleValue: "performance"
                 delegate: WrappedLoader {
                     sourceComponent: PerformanceWidget {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -626,6 +659,7 @@ Item {
                 roleValue: "shortcuts"
                 delegate: WrappedLoader {
                     sourceComponent: ShortcutsWidget {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -634,6 +668,7 @@ Item {
                 roleValue: "screencapture"
                 delegate: WrappedLoader {
                     sourceComponent: ScreenCaptureWidget {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }
@@ -642,6 +677,7 @@ Item {
                 roleValue: "keepawake"
                 delegate: WrappedLoader {
                     sourceComponent: KeepAwakeWidget {
+                        isHorizontal: root.isHorizontal
                         popouts: root.popouts
                     }
                 }

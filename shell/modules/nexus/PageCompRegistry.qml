@@ -80,6 +80,7 @@ QtObject {
                 SubPage { slot: 22; key: "barScreenCapture"; Component { BarScreenCapture {} } }
                 SubPage { slot: 23; key: "barKeepAwake"; Component { BarKeepAwake {} } }
                 SubPage { slot: 24; key: "osdPanel"; Component { OsdPanel {} } }
+                SubPage { slot: 25; key: "extraBars"; Component { ExtraBarsPanel {} } }
             }
         },
         // Page 3: Network & Connectivity

@@ -78,6 +78,7 @@ QtObject {
                 { label: qsTr("Screen Capture"), keywords: ["screenshot", "recording", "region", "spectacle", "gif"], pagePath: "panels/taskbar/BarScreenCapture.qml", subPageIdx: 22 },
                 { label: qsTr("Keep Awake"), keywords: ["idle", "inhibit", "sleep", "caffeine", "coffee"], pagePath: "panels/taskbar/BarKeepAwake.qml", subPageIdx: 23 },
                 { label: qsTr("OSD"), keywords: ["osd", "volume", "brightness", "floating", "hardware", "pill", "radial", "card", "slider"], pagePath: "panels/OsdPanel.qml", subPageIdx: 24 },
+                { label: qsTr("Extra bars"), keywords: ["bar", "panels", "edge", "secondary", "dock", "multiple"], pagePath: "panels/ExtraBarsPanel.qml", subPageIdx: 25 },
                 { label: qsTr("Per-element scaling offsets"), keywords: ["scale", "font scale", "preview"], pagePath: "panels/taskbar/BarPreviewScales.qml", subPageIdx: 14 },
                 { label: qsTr("Elements & Modules"), keywords: ["workspaces", "tray", "clock", "modules"], pagePath: "panels/taskbar/TaskbarElements.qml", subPageIdx: 15 },
                 { label: qsTr("Update indicator"), keywords: ["updates", "indicator"], pagePath: "panels/taskbar/BarUpdates.qml", subPageIdx: 17 },

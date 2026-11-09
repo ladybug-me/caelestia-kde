@@ -378,7 +378,10 @@ Scope {
     CustomShortcut {
         name: "firefox"
         description: qsTr("Launch Browser")
-        onPressed: Launch.exec(["firefox"])
+        onPressed: {
+            const browser = GlobalConfig.general.apps.browser;
+            Launch.exec(browser.length > 0 ? [...browser] : ["firefox"]);
+        }
     }
     CustomShortcut {
         name: "code"

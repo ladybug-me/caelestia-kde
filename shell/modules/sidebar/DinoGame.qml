@@ -98,6 +98,7 @@ Item {
         anchors.fill: parent
         enabled: root.playable
         hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
         onClicked: {
             // so Down can duck after a game started with the mouse
             root.forceActiveFocus();
@@ -268,6 +269,14 @@ Item {
             color: root.activeColor
             font: Tokens.font.headline.builders.small.width(90).build()
         }
+
+        StyledText {
+            Layout.alignment: Qt.AlignHCenter
+            visible: root.playable
+            text: qsTr("Click to play")
+            color: Colours.palette.m3onSurfaceVariant
+            font: Tokens.font.body.medium
+        }
     }
 
     Item {
@@ -356,6 +365,8 @@ Item {
     }
 
     StyledText {
+        id: gameOverText
+
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) < 99999
         text: qsTr("G A M E   O V E R\nClick to restart")
         horizontalAlignment: Text.AlignHCenter
@@ -373,6 +384,17 @@ Item {
         anchors.verticalCenterOffset: -40
         font: Tokens.font.title.large
         color: root.activeColor
+    }
+
+    StyledText {
+        visible: gameOverText.visible && DinoGameBackend.isNewHighScore
+        text: qsTr("New high score: %1").arg(Math.floor(DinoGameBackend.highScore))
+        anchors.top: gameOverText.bottom
+        anchors.topMargin: Tokens.spacing.small
+        anchors.horizontalCenter: parent.horizontalCenter
+        font: Tokens.font.label.large
+        color: root.activeColor
+        Component.onCompleted: font.features = {"tnum": 1}
     }
 
     StyledText {

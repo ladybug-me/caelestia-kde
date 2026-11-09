@@ -5972,7 +5972,24 @@ Agora vá tocar na grama</translation>
       <source>Now go touch grass</source>
       <translation>Agora vá tocar na grama</translation>
     </message>
-  </context>
+      <message>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+0"/>
+      <source>Click to play</source>
+      <translation>Clique para jogar</translation>
+    </message>
+    <message>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+0"/>
+      <source>New high score: %1</source>
+      <translation>Novo recorde: %1</translation>
+    </message>
+    <message>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+0"/>
+      <source>P A U S E D
+Click to continue</source>
+      <translation>P A U S A D O
+Clique para continuar</translation>
+    </message>
+</context>
   <context>
     <name>DiscordRPC</name>
     <message>

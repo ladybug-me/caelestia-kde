@@ -16,8 +16,6 @@ Item {
 
     readonly property var status: UpdateStatus.describe(null, false)
 
-    readonly property int updatesPageIdx: PageRegistry.updatesPageIdx
-
     implicitWidth: isHorizontal ? (icon.implicitWidth + Tokens.padding.small * 2) : barThickness
     implicitHeight: isHorizontal ? barThickness : (icon.implicitHeight + Tokens.padding.small * 2)
 
@@ -45,7 +43,7 @@ Item {
             if (mouse.button === Qt.RightButton) {
                 UpdateChecker.checkNow();
             } else {
-                WindowFactory.create(null, { initialPageIdx: root.updatesPageIdx });
+                WindowFactory.create(null, { initialPageIdx: "updates" });
             }
         }
     }

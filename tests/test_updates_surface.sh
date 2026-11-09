@@ -229,6 +229,14 @@ test_the_dialogs_share_one_frame() {
     assert_file_not_contains "$COMMON/UpdateConfirmDialog.qml" 'Elevation {' "neither keeps its own copy of the chrome"
 }
 
+test_update_links_open_the_updates_subpage() {
+    assert_file_contains "$POPOUT" 'initialPageIdx: "updates"' "the popout opens the Updates subpage by key"
+    assert_file_contains "$INDICATOR" 'initialPageIdx: "updates"' "the indicator opens the same subpage"
+    assert_file_contains "$REPO_ROOT/shell/modules/nexus/pages/panels/taskbar/BarUpdates.qml" \
+        'goToSubPage(root.updatesPageIdx, PageRegistry.defaultSubPageForKey("updates"))' \
+        "the taskbar settings link opens the Updates subpage"
+}
+
 test_the_updates_page_index_has_one_lookup() {
     local copies
     copies="$(grep -rl 'indexForKey("updates")' "$REPO_ROOT/shell" | wc -l | tr -d ' ')"

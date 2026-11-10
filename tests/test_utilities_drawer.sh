@@ -47,8 +47,8 @@ test_the_two_panels_are_kept_out_of_one_blob_once() {
     local window
     window="$(cat "$WINDOW")"
 
-    assert_contains "$window" 'exclude: [utilsBg]' \
-        "a notification background must not bridge into the drawer's behind it"
+    assert_contains "$window" 'exclude: [utilsBg, popoutBg]' \
+        "a notification background must not bridge into the drawer's behind it, or a popout over it"
     assert_not_contains "$window" 'notifsBg]' \
         "exclusion is symmetric, so one side saying it is enough"
 }

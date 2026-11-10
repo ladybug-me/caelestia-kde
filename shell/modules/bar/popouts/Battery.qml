@@ -150,9 +150,7 @@ ColumnLayout {
                                     height: 25 * root.scaleOffset
                                     clip: true
 
-                                    // Only while charging: on AC but full (or held at a charge limit)
-                                    // the battery reads as full instead of a wave below the top.
-                                    opacity: UPower.displayDevice.state === UPowerDeviceState.Charging ? 1 : 0
+                                    opacity: UPower.onBattery ? 0 : 1
 
                                     Behavior on opacity { Anim { type: Anim.SlowEffects } }
 

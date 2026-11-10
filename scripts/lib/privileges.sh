@@ -95,7 +95,7 @@ caelestia_prime_sudo() {
             sleep 30
             caelestia_real_sudo -nv 2>/dev/null || true
         done
-    ) &
+    ) >/dev/null 2>&1 &
     CAELESTIA_SUDO_KEEPALIVE_PID=$!
     export CAELESTIA_SUDO_KEEPALIVE_PID
     return 0

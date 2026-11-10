@@ -35,6 +35,7 @@ Item {
     readonly property alias session: session
     readonly property alias sessionWrapper: sessionWrapper
     readonly property alias launcher: launcher
+    readonly property alias launcherAvatar: launcherAvatar
     readonly property alias dashboard: dashboard
     readonly property alias popouts: popoutsWrapper.content
     readonly property alias popoutsWrapper: popoutsWrapper
@@ -270,6 +271,18 @@ Item {
         panels: root
         anchors.horizontalCenter: parent.horizontalCenter
         anchors.bottom: parent.bottom
+    }
+    // Geometry for the circle the launcher's profile picture sits in. The
+    // background is drawn in the window around this rect, so it can join the
+    // launcher card through the blob group.
+    Item {
+        id: launcherAvatar
+
+        visible: launcher.avatarVisible
+        width: launcher.avatarSize
+        height: width
+        x: launcher.x + (launcher.width - width) / 2
+        y: launcher.y - height / 2
     }
     Dashboard.Wrapper {
         id: dashboard

@@ -403,6 +403,13 @@ StyledWindow {
             deformAmount: 0.1
         }
         PanelBg {
+            id: launcherAvatarBg
+
+            panel: panels.launcherAvatar
+            deformAmount: 0.1
+            radius: width / 2
+        }
+        PanelBg {
             id: sessionBg
 
             panel: panels.sessionWrapper

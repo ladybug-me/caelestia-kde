@@ -9,7 +9,10 @@ import Caelestia.Config
 import Caelestia.Services
 import qs.components
 import qs.components.controls
+import qs.components.effects
+import qs.components.images
 import qs.services
+import qs.utils
 import qs.modules.launcher.services
 
 Item {
@@ -24,6 +27,14 @@ Item {
     readonly property int rounding: Tokens.rounding.extraLarge
     readonly property bool isClipboardMode: search.text.startsWith(`${GlobalConfig.launcher.actionPrefix}clipboard `)
     readonly property int footerSpacing: Tokens.spacing.small
+    // The profile picture hangs off the top edge of the card, so only its lower
+    // half takes room inside the panel. The drawers window paints the circle
+    // above the launcher and joins it to the card through the blob group.
+    readonly property int avatarSize: Math.round(Tokens.sizes.launcher.browseTileHeight * 1.05)
+    readonly property int headerHeight: Math.round(root.avatarSize / 2 + Tokens.spacing.medium)
+    readonly property bool isBrowsing: list.showAppsBrowser
+    // The drawers window reads this to draw the circle behind the avatar.
+    readonly property bool showAvatar: true
 
     function clearClipboardHistory(): void {
         Clipboard.clearHistory();
@@ -40,7 +51,7 @@ Item {
     }
 
     implicitWidth: listWrapper.width + padding * 2
-    implicitHeight: listWrapper.height + sessionFooter.height + searchWrapper.height + listWrapper.anchors.bottomMargin + sessionFooter.anchors.bottomMargin + searchWrapper.anchors.bottomMargin
+    implicitHeight: listWrapper.height + searchWrapper.height + listWrapper.anchors.bottomMargin + searchWrapper.anchors.bottomMargin + root.headerHeight
 
     Connections {
         function onClearHistoryFinished(success: bool): void {
@@ -62,7 +73,7 @@ Item {
         implicitHeight: list.implicitHeight + root.padding
 
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: sessionFooter.top
+        anchors.bottom: searchWrapper.top
         anchors.bottomMargin: root.footerSpacing
 
         ContentList {
@@ -72,85 +83,188 @@ Item {
             visibilities: root.visibilities
             panels: root.panels
             maxWidth: root.maxWidth - root.padding * 2
-            maxHeight: root.maxHeight - searchWrapper.implicitHeight - sessionFooter.implicitHeight - root.padding * 2 - (sessionFooter.visible ? root.footerSpacing * 2 : root.footerSpacing)
+            maxHeight: root.maxHeight - searchWrapper.implicitHeight - root.padding * 2 - root.headerHeight - root.footerSpacing
             search: search
             padding: root.padding
             rounding: root.rounding
         }
     }
 
-    StyledRect {
-        id: sessionFooter
+    // The profile picture sits on the top edge of the card: its centre is the
+    // panel's top edge, so half the circle floats above the launcher and the
+    // drawers window merges it with the card background.
+    Item {
+        id: avatar
 
-        visible: Config.launcher.showPowerMenu
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: -root.avatarSize / 2
+        implicitWidth: root.avatarSize
+        implicitHeight: root.avatarSize
 
-        color: Colours.layer(Colours.palette.m3surfaceContainerLow, 2)
-        radius: Tokens.rounding.extraLarge
+        property int ring: Math.max(2, Math.round(Tokens.padding.extraSmall / 2))
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: searchWrapper.top
-        anchors.bottomMargin: visible ? root.footerSpacing : 0
-        anchors.leftMargin: root.padding
-        anchors.rightMargin: root.padding
-
-        implicitHeight: visible ? (footerLayout.implicitHeight + Tokens.padding.medium * 2) : 0
-
-        ColumnLayout {
-            id: footerLayout
+        Item {
+            id: avatarClip
 
             anchors.fill: parent
-            anchors.margins: Tokens.padding.medium
-            spacing: Tokens.spacing.small
+            layer.enabled: true
+            layer.smooth: true
+            layer.effect: Mask {
+                maskSource: avatarMask
+            }
 
-            // StyledText {
-            //     Layout.fillWidth: true
-            //     text: qsTr("Quick session controls")
-            //     color: Colours.palette.m3onSurfaceVariant
-            //     font: Tokens.font.label.large
-            // }
+            Item {
+                anchors.fill: parent
+                anchors.margins: avatar.ring
 
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: Tokens.spacing.small
+                CachingImage {
+                    id: face
 
-                IconTextButton {
-                    Layout.fillWidth: true
-                    type: TextButton.Tonal
-                    icon: "logout"
-                    text: qsTr("Log Out")
-                    onClicked: root.triggerSessionCommand(["sh", "-c", "qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null"])
+                    anchors.fill: parent
+                    path: `${Paths.home}/.face`
                 }
 
-                IconTextButton {
-                    Layout.fillWidth: true
-                    type: TextButton.Tonal
-                    icon: "bedtime"
-                    text: qsTr("Sleep")
-                    onClicked: root.triggerSessionCommand(["suspendThenHibernate"])
-                }
+                Loader {
+                    anchors.centerIn: parent
+                    active: face.status !== Image.Ready
 
-                IconTextButton {
-                    Layout.fillWidth: true
-                    type: TextButton.Tonal
-                    icon: "restart_alt"
-                    text: qsTr("Restart")
-                    inactiveColour: Colours.palette.m3secondaryContainer
-                    inactiveOnColour: Colours.palette.m3onSecondaryContainer
-                    onClicked: root.triggerSessionCommand(Config.session.commands.reboot)
-                }
-
-                IconTextButton {
-                    Layout.fillWidth: true
-                    type: TextButton.Tonal
-                    icon: "power_settings_new"
-                    text: qsTr("Shut Down")
-                    inactiveColour: Colours.palette.m3errorContainer
-                    inactiveOnColour: Colours.palette.m3onErrorContainer
-                    onClicked: root.triggerSessionCommand(Config.session.commands.shutdown)
+                    sourceComponent: MaterialIcon {
+                        text: "person"
+                        color: Colours.palette.m3onSurfaceVariant
+                        fontStyle: Tokens.font.icon.extraLarge
+                    }
                 }
             }
         }
+
+        Item {
+            id: avatarMask
+
+            anchors.fill: parent
+            visible: false
+            layer.enabled: true
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: avatar.ring
+                radius: width / 2
+                color: "white"
+            }
+        }
+    }
+
+    Row {
+        id: headerActions
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: Tokens.padding.small
+        anchors.rightMargin: root.padding
+        spacing: Tokens.spacing.extraSmall
+
+        IconButton {
+            id: sortBtn
+
+            visible: root.isBrowsing && list.currentList?.sortMode !== undefined
+            type: IconButton.Tonal
+            icon: list.currentList?.sortMode === "alpha" ? "sort_by_alpha" : "trending_up"
+
+            onClicked: sortMenu.expanded = !sortMenu.expanded
+        }
+
+        IconButton {
+            id: powerBtn
+
+            visible: Config.launcher.showPowerMenu
+            type: IconButton.Tonal
+            icon: "power_settings_new"
+
+            onClicked: powerMenu.expanded = !powerMenu.expanded
+        }
+    }
+
+    Menu {
+        id: sortMenu
+
+        attachTo: sortBtn
+        attachSideX: Menu.Right
+        thisSideX: Menu.Right
+        attachSideY: Menu.Bottom
+        thisSideY: Menu.Top
+        marginY: Tokens.spacing.extraSmall
+
+        items: [
+            MenuItem {
+                text: qsTr("Most used")
+                icon: "trending_up"
+                trailingIcon: list.currentList?.sortMode === "alpha" ? "" : "check"
+
+                onClicked: {
+                    sortMenu.expanded = false;
+                    list.currentList?.setSortMode("most-used");
+                }
+            },
+            MenuItem {
+                text: qsTr("A-Z")
+                icon: "sort_by_alpha"
+                trailingIcon: list.currentList?.sortMode === "alpha" ? "check" : ""
+
+                onClicked: {
+                    sortMenu.expanded = false;
+                    list.currentList?.setSortMode("alpha");
+                }
+            }
+        ]
+    }
+
+    Menu {
+        id: powerMenu
+
+        attachTo: powerBtn
+        attachSideX: Menu.Right
+        thisSideX: Menu.Right
+        attachSideY: Menu.Bottom
+        thisSideY: Menu.Top
+        marginY: Tokens.spacing.extraSmall
+
+        items: [
+            MenuItem {
+                text: qsTr("Log Out")
+                icon: "logout"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(["sh", "-c", "qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null"]);
+                }
+            },
+            MenuItem {
+                text: qsTr("Sleep")
+                icon: "bedtime"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(["suspendThenHibernate"]);
+                }
+            },
+            MenuItem {
+                text: qsTr("Restart")
+                icon: "restart_alt"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(Config.session.commands.reboot);
+                }
+            },
+            MenuItem {
+                text: qsTr("Shut Down")
+                icon: "power_settings_new"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(Config.session.commands.shutdown);
+                }
+            }
+        ]
     }
 
     StyledRect {

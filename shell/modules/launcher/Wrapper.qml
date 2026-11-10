@@ -24,6 +24,9 @@ Item {
     property real offsetScale: shouldBeActive ? 0 : 1
     property bool keepAlive: false
 
+    readonly property bool avatarVisible: root.visible && (content.item?.showAvatar ?? false)
+    readonly property int avatarSize: content.item?.avatarSize ?? 0
+
     signal closed()
 
     onOffsetScaleChanged: {

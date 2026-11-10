@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtCore
 import Quickshell
 import Caelestia.Config
 import qs.components
@@ -20,6 +21,7 @@ Item {
     property bool sidebarFocused: false
     property var visibleCategories: []
 
+    readonly property string sortMode: sortSettings.sortMode
     readonly property var currentItem: grid.currentItem
     readonly property int count: grid.count
 
@@ -42,10 +44,29 @@ Item {
         return true;
     }
 
+    // Alphabetical mode keeps favourites on top and sorts the rest by name,
+    // case-insensitively; "most used" leaves the launcher's own ranking alone.
+    function sortedApps(list: var): var {
+        if (sortSettings.sortMode !== "alpha")
+            return list;
+        const favourites = GlobalConfig.launcher.favouriteApps ?? [];
+        const isFavourite = app => favourites.includes(app.id);
+        const byName = (a, b) => (a.name ?? "").localeCompare(b.name ?? "", undefined, { sensitivity: "base" });
+        return list.filter(a => isFavourite(a)).sort(byName).concat(list.filter(a => !isFavourite(a)).sort(byName));
+    }
+
+    function setSortMode(mode: string): void {
+        if (sortSettings.sortMode === mode)
+            return;
+        sortSettings.sortMode = mode;
+        root.refresh();
+        grid.currentIndex = grid.count > 0 ? 0 : -1;
+    }
+
     function refresh(): void {
         const all = Apps.allApps();
         const nextCategories = Categories.visibleCategories(all);
-        const nextApps = Categories.appsFor(root.currentCategory, all);
+        const nextApps = root.sortedApps(Categories.appsFor(root.currentCategory, all));
         if (!sameItems(root.visibleCategories, nextCategories))
             root.visibleCategories = nextCategories;
         if (!sameItems(gridModel.values, nextApps))
@@ -145,6 +166,14 @@ Item {
         }
 
         target: GlobalConfig.launcher
+    }
+
+    Settings {
+        id: sortSettings
+
+        property string sortMode: "most-used"
+
+        category: "Launcher"
     }
 
     AppContextMenu {

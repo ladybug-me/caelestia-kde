@@ -20,6 +20,12 @@ PageBase {
     readonly property bool isSkwdOverridden: root.skwdKeybind !== "Meta+X"
     readonly property bool isCaelestiaOverridden: root.caelestiaKeybind !== "Meta+Ctrl+T"
 
+    readonly property list<MenuItem> engineItems: [
+        MenuItem { text: qsTr("Auto") },
+        MenuItem { text: qsTr("Quickshell") },
+        MenuItem { text: qsTr("skwd / Plasma") }
+    ]
+    readonly property list<string> engineValues: ["auto", "quickshell", "skwd/plasma"]
     readonly property list<MenuItem> scalingItems: [
         MenuItem { text: qsTr("Crop") },
         MenuItem { text: qsTr("Fit") },
@@ -27,7 +33,7 @@ PageBase {
     ]
     readonly property list<int> scalingValues: [Image.PreserveAspectCrop, Image.PreserveAspectFit, Image.Stretch]
     readonly property list<string> fallbackSettings: [
-        "wallpaperFillMode", "wallpaperRecolor", "wallpaperRecolorStrength",
+        "wallpaperEngine", "wallpaperFillMode", "wallpaperRecolor", "wallpaperRecolorStrength",
         "slideshowEnabled", "slideshowInterval", "slideshowRandom",
         "videoWallpaperPaused", "videoWallpaperSoundEnabled", "videoWallpaperPauseOnFullscreen",
         "videoWallpaperPauseOnTiled", "videoWallpaperPauseOnAllDisplays", "videoWallpaperMuteOnMedia"
@@ -156,6 +162,24 @@ PageBase {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
+
+            SelectRow {
+                first: true
+                last: true
+                label: qsTr("Wallpaper engine")
+                subtext: qsTr("Select which engine renders the desktop wallpaper")
+                menuItems: root.engineItems
+                active: {
+                    const idx = root.engineValues.indexOf(Config.background.wallpaperEngine);
+                    return root.engineItems[Math.max(0, idx)];
+                }
+                onSelected: item => root.setFallbackOption("wallpaperEngine", root.engineValues[root.engineItems.indexOf(item)])
+            }
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall / 2
             visible: Wallpapers.hasSkwd
 
             InfoRow {
@@ -201,7 +225,7 @@ PageBase {
                 icon: "info"
                 wrapSubtext: true
                 label: qsTr("Managed by Quickshell")
-                subtext: qsTr("The built-in wallpaper renderer is used because skwd-wall is not installed.")
+                subtext: qsTr("Because skwd-wall is not installed. Plasma widgets like visualizer not visible.")
             }
 
             SelectRow {

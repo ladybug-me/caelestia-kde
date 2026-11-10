@@ -308,6 +308,26 @@ Searcher {
             proc.destroy();
     }
 
+    function applyWallpaperEngine(): void {
+        if (GlobalConfig.background.disableQuickshellDesktop)
+            return;
+
+        const engine = Config.background.wallpaperEngine;
+        if (engine === "quickshell") {
+            GlobalConfig.background.wallpaperEnabled = true;
+        } else if (engine === "skwd/plasma" || engine === "plasma") {
+            GlobalConfig.background.wallpaperEnabled = false;
+        } else {
+            GlobalConfig.background.wallpaperEnabled = !root.hasSkwd;
+        }
+
+        for (let i = 0; i < Quickshell.screens.length; i++) {
+            const sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
+            if (sConf)
+                sConf.background.resetOption("wallpaperEnabled");
+        }
+    }
+
     list: filteredList
     key: "relativePath"
     useFuzzy: GlobalConfig.launcher.useFuzzy.wallpapers
@@ -385,6 +405,14 @@ Searcher {
         category: "Wallpapers"
     }
 
+    Connections {
+        function onWallpaperEngineChanged(): void {
+            root.applyWallpaperEngine();
+        }
+
+        target: Config.background
+    }
+
     Process {
         id: skwdWallCheckProcess
 
@@ -394,14 +422,7 @@ Searcher {
         onExited: code => {
             const hasSkwd = (code === 0);
             root.hasSkwd = hasSkwd;
-            if (GlobalConfig.background.disableQuickshellDesktop)
-                return;
-            GlobalConfig.background.wallpaperEnabled = !hasSkwd;
-            for (let i = 0; i < Quickshell.screens.length; i++) {
-                const sConf = GlobalConfig.forScreen(Quickshell.screens[i].name);
-                if (sConf)
-                    sConf.background.resetOption("wallpaperEnabled");
-            }
+            root.applyWallpaperEngine();
         }
     }
 }

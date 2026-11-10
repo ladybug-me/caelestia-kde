@@ -136,9 +136,10 @@ write_stub_ps() {
     real_ps="$(command -v ps)"
     # apply_terms writes the sequences to every shell's pty, and a sandbox still sees the
     # real /dev/pts: without this the stub palette ("primary 92cef5") lands in open terminals.
+    # sh, not bash: the suite runs ps about 20000 times walking parent processes.
     cat > "$STUB_DIR/ps" <<STUB
-#!/usr/bin/env bash
-[[ "\${1:-}" == "-t" ]] && exit 0
+#!/bin/sh
+[ "\$1" = "-t" ] && exit 0
 exec "$real_ps" "\$@"
 STUB
     chmod +x "$STUB_DIR/ps"

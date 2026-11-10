@@ -3034,6 +3034,13 @@ QtObject {
             subPage: "utilitiesPanelPage"
         },
         {
+            label: qsTr("Wallpaper engine"),
+            description: qsTr("Select which engine renders the desktop wallpaper"),
+            section: qsTr("Wallpaper Settings"),
+            pageIdx: 0,
+            subPage: "wallpaperSettings"
+        },
+        {
             label: qsTr("General Settings"),
             section: qsTr("Wallpaper Settings"),
             pageIdx: 0,

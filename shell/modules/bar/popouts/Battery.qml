@@ -149,7 +149,7 @@ ColumnLayout {
                                         loops: Animation.Infinite
                                         from: 0; to: 360
                                         duration: 4000
-                                        running: waveLayer.opacity > 0 && Tokens.anim.enabled
+                                        running: root.visible && waveLayer.opacity > 0 && Tokens.anim.enabled
                                     }
                                 }
                             }

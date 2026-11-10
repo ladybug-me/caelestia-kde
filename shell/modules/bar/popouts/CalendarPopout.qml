@@ -74,6 +74,11 @@ StyledRect {
         // changing is enough for it to count as opened.
         if (popouts.currentName !== "clock")
             return;
+        // A kept popout would otherwise reopen on the month and day left behind.
+        if (popouts.hasCurrent) {
+            root.viewDate = new Date();
+            root.selectedDate = new Date();
+        }
         CalendarEvents.refresh();
     }
 

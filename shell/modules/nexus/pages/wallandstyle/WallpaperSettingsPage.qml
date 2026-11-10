@@ -20,6 +20,10 @@ PageBase {
     readonly property bool isSkwdOverridden: root.skwdKeybind !== "Meta+X"
     readonly property bool isCaelestiaOverridden: root.caelestiaKeybind !== "Meta+Ctrl+T"
 
+    readonly property bool isQuickshell: Config.background.wallpaperEngine === "quickshell" || (Config.background.wallpaperEngine === "auto" && !Wallpapers.hasSkwd)
+    readonly property bool isSkwd: Wallpapers.hasSkwd && Config.background.wallpaperEngine !== "quickshell"
+    readonly property bool isPlasma: !Wallpapers.hasSkwd && (Config.background.wallpaperEngine === "skwd/plasma" || Config.background.wallpaperEngine === "plasma")
+
     readonly property list<MenuItem> engineItems: [
         MenuItem { text: qsTr("Auto") },
         MenuItem { text: qsTr("Quickshell") },
@@ -108,7 +112,7 @@ PageBase {
                 if (resetBtn.armed) {
                     resetBtn.armed = false;
                     resetArmTimer.stop();
-                    if (Wallpapers.hasSkwd)
+                    if (root.isSkwd)
                         Launch.exec(["bash", Quickshell.shellPath("scripts/export-plasma-config.sh"), "skwd"]);
                     else
                         root.resetFallbackSettings();
@@ -180,7 +184,7 @@ PageBase {
         ColumnLayout {
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
-            visible: Wallpapers.hasSkwd
+            visible: root.isSkwd
 
             InfoRow {
                 first: true
@@ -215,7 +219,23 @@ PageBase {
         }
 
         ColumnLayout {
-            visible: !Wallpapers.hasSkwd
+            Layout.fillWidth: true
+            spacing: Tokens.spacing.extraSmall / 2
+            visible: root.isPlasma
+
+            InfoRow {
+                first: true
+                last: true
+                Layout.fillWidth: true
+                icon: "info"
+                wrapSubtext: true
+                label: qsTr("Managed by KDE Plasma")
+                subtext: qsTr("skwd-wall is not installed, so wallpaper settings are managed by the Plasma desktop environment.")
+            }
+        }
+
+        ColumnLayout {
+            visible: root.isQuickshell
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
@@ -225,7 +245,7 @@ PageBase {
                 icon: "info"
                 wrapSubtext: true
                 label: qsTr("Managed by Quickshell")
-                subtext: qsTr("Because skwd-wall is not installed. Plasma widgets like visualizer not visible.")
+                subtext: Wallpapers.hasSkwd ? qsTr("The built-in wallpaper renderer is active. Plasma widgets like visualizer are not visible.") : qsTr("The built-in wallpaper renderer is used because skwd-wall is not installed. Plasma widgets like visualizer are not visible.")
             }
 
             SelectRow {
@@ -239,12 +259,12 @@ PageBase {
         }
 
         SectionHeader {
-            visible: !Wallpapers.hasSkwd
+            visible: root.isQuickshell
             text: qsTr("Shaders & Effects")
         }
 
         ColumnLayout {
-            visible: !Wallpapers.hasSkwd
+            visible: root.isQuickshell
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
@@ -270,12 +290,12 @@ PageBase {
         }
 
         SectionHeader {
-            visible: !Wallpapers.hasSkwd
+            visible: root.isQuickshell
             text: qsTr("Video Wallpapers")
         }
 
         ColumnLayout {
-            visible: !Wallpapers.hasSkwd
+            visible: root.isQuickshell
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
@@ -320,11 +340,12 @@ PageBase {
         }
 
         SectionHeader {
+            visible: !root.isPlasma
             text: qsTr("Playlists & Automation")
         }
 
         ColumnLayout {
-            visible: Wallpapers.hasSkwd
+            visible: root.isSkwd
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 
@@ -333,7 +354,6 @@ PageBase {
                 icon: "slideshow"
                 label: qsTr("Playlists & Slideshows")
                 status: qsTr("Manage wallpaper playlists and transition intervals")
-                visible: Wallpapers.hasSkwd
                 onClicked: root.openSkwd("playlists")
             }
 
@@ -342,13 +362,12 @@ PageBase {
                 icon: "schedule"
                 label: qsTr("Schedule & Timers")
                 status: qsTr("Time-based wallpaper rules and schedules")
-                visible: Wallpapers.hasSkwd
                 onClicked: root.openSkwd("schedule")
             }
         }
 
         ColumnLayout {
-            visible: !Wallpapers.hasSkwd
+            visible: root.isQuickshell
             Layout.fillWidth: true
             spacing: Tokens.spacing.extraSmall / 2
 

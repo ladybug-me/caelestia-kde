@@ -3,6 +3,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtCore
 import Quickshell
 import Caelestia
 import Caelestia.Config
@@ -30,11 +31,14 @@ Item {
     // The profile picture hangs off the top edge of the card, so only its lower
     // half takes room inside the panel. The drawers window paints the circle
     // above the launcher and joins it to the card through the blob group.
-    readonly property int avatarSize: Math.round(Tokens.sizes.launcher.browseTileHeight * 1.05)
-    readonly property int headerHeight: Math.round(root.avatarSize / 2 + Tokens.spacing.medium)
+    readonly property int avatarSize: Math.round(Tokens.sizes.launcher.browseTileHeight * 1.3)
+    readonly property int headerHeight: root.modernStyle ? Math.round(root.avatarSize / 2 - 6) : 0
     readonly property bool isBrowsing: list.showAppsBrowser
+    // Classic keeps the launcher as it shipped (session row under the search
+    // field); Modern is the profile picture header with the corner actions.
+    readonly property bool modernStyle: styleSettings.launcherStyle === "modern"
     // The drawers window reads this to draw the circle behind the avatar.
-    readonly property bool showAvatar: true
+    readonly property bool showAvatar: root.modernStyle
 
     function clearClipboardHistory(): void {
         Clipboard.clearHistory();
@@ -51,7 +55,15 @@ Item {
     }
 
     implicitWidth: listWrapper.width + padding * 2
-    implicitHeight: listWrapper.height + searchWrapper.height + listWrapper.anchors.bottomMargin + searchWrapper.anchors.bottomMargin + root.headerHeight
+    implicitHeight: listWrapper.height + sessionFooter.height + searchWrapper.height + listWrapper.anchors.bottomMargin + sessionFooter.anchors.bottomMargin + searchWrapper.anchors.bottomMargin + root.headerHeight
+
+    Settings {
+        id: styleSettings
+
+        property string launcherStyle: "classic"
+
+        category: "Launcher"
+    }
 
     Connections {
         function onClearHistoryFinished(success: bool): void {
@@ -73,7 +85,7 @@ Item {
         implicitHeight: list.implicitHeight + root.padding
 
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: searchWrapper.top
+        anchors.bottom: root.modernStyle ? searchWrapper.top : sessionFooter.top
         anchors.bottomMargin: root.footerSpacing
 
         ContentList {
@@ -83,7 +95,7 @@ Item {
             visibilities: root.visibilities
             panels: root.panels
             maxWidth: root.maxWidth - root.padding * 2
-            maxHeight: root.maxHeight - searchWrapper.implicitHeight - root.padding * 2 - root.headerHeight - root.footerSpacing
+            maxHeight: root.maxHeight - searchWrapper.implicitHeight - root.padding * 2 - (root.modernStyle ? root.headerHeight + root.footerSpacing : sessionFooter.implicitHeight + (sessionFooter.visible ? root.footerSpacing * 2 : root.footerSpacing))
             search: search
             padding: root.padding
             rounding: root.rounding
@@ -96,12 +108,13 @@ Item {
     Item {
         id: avatar
 
+        property int ring: Math.max(6, Math.round(root.avatarSize * 0.08))
+
+        visible: root.modernStyle
         anchors.horizontalCenter: parent.horizontalCenter
         y: -root.avatarSize / 2
         implicitWidth: root.avatarSize
         implicitHeight: root.avatarSize
-
-        property int ring: Math.max(2, Math.round(Tokens.padding.extraSmall / 2))
 
         Item {
             id: avatarClip
@@ -147,8 +160,75 @@ Item {
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: avatar.ring
-                radius: width / 2
+                radius: Tokens.rounding.full
                 color: "white"
+            }
+        }
+    }
+
+    StyledRect {
+        id: sessionFooter
+
+        visible: !root.modernStyle && Config.launcher.showPowerMenu
+
+        color: Colours.layer(Colours.palette.m3surfaceContainerLow, 2)
+        radius: Tokens.rounding.extraLarge
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: searchWrapper.top
+        anchors.bottomMargin: visible ? root.footerSpacing : 0
+        anchors.leftMargin: root.padding
+        anchors.rightMargin: root.padding
+
+        implicitHeight: visible ? (footerLayout.implicitHeight + Tokens.padding.medium * 2) : 0
+
+        ColumnLayout {
+            id: footerLayout
+
+            anchors.fill: parent
+            anchors.margins: Tokens.padding.medium
+            spacing: Tokens.spacing.small
+
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: Tokens.spacing.small
+
+                IconTextButton {
+                    Layout.fillWidth: true
+                    type: TextButton.Tonal
+                    icon: "logout"
+                    text: qsTr("Log Out")
+                    onClicked: root.triggerSessionCommand(["sh", "-c", "qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null"])
+                }
+
+                IconTextButton {
+                    Layout.fillWidth: true
+                    type: TextButton.Tonal
+                    icon: "bedtime"
+                    text: qsTr("Sleep")
+                    onClicked: root.triggerSessionCommand(["suspendThenHibernate"])
+                }
+
+                IconTextButton {
+                    Layout.fillWidth: true
+                    type: TextButton.Tonal
+                    icon: "restart_alt"
+                    text: qsTr("Restart")
+                    inactiveColour: Colours.palette.m3secondaryContainer
+                    inactiveOnColour: Colours.palette.m3onSecondaryContainer
+                    onClicked: root.triggerSessionCommand(Config.session.commands.reboot)
+                }
+
+                IconTextButton {
+                    Layout.fillWidth: true
+                    type: TextButton.Tonal
+                    icon: "power_settings_new"
+                    text: qsTr("Shut Down")
+                    inactiveColour: Colours.palette.m3errorContainer
+                    inactiveOnColour: Colours.palette.m3onErrorContainer
+                    onClicked: root.triggerSessionCommand(Config.session.commands.shutdown)
+                }
             }
         }
     }
@@ -165,7 +245,8 @@ Item {
         IconButton {
             id: sortBtn
 
-            visible: root.isBrowsing && list.currentList?.sortMode !== undefined
+            visible: root.modernStyle && root.isBrowsing && list.currentList?.sortMode !== undefined
+            isRound: true
             type: IconButton.Tonal
             icon: list.currentList?.sortMode === "alpha" ? "sort_by_alpha" : "trending_up"
 
@@ -175,7 +256,8 @@ Item {
         IconButton {
             id: powerBtn
 
-            visible: Config.launcher.showPowerMenu
+            visible: root.modernStyle && Config.launcher.showPowerMenu
+            isRound: true
             type: IconButton.Tonal
             icon: "power_settings_new"
 

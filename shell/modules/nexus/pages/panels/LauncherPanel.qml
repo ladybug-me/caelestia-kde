@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtCore
 import Quickshell.Io
 import Caelestia.Config
 import qs.components
@@ -28,6 +29,19 @@ PageBase {
             property int value: LauncherBrowseLayout.Compact
 
             text: qsTr("Compact")
+        }
+    ]
+
+    readonly property list<MenuItem> styleItems: [
+        MenuItem {
+            property string value: "classic"
+
+            text: qsTr("Classic")
+        },
+        MenuItem {
+            property string value: "modern"
+
+            text: qsTr("Modern")
         }
     ]
 
@@ -58,6 +72,14 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
+        Settings {
+            id: launcherSettings
+
+            property string launcherStyle: "classic"
+
+            category: "Launcher"
+        }
+
         SectionHeader {
             first: true
             text: qsTr("General")
@@ -69,6 +91,14 @@ PageBase {
             reset: ({ node: GlobalConfig.launcher, setting: "enabled" })
             checked: Config.launcher.enabled
             onToggled: GlobalConfig.launcher.enabled = checked
+        }
+
+        SelectRow {
+            label: qsTr("Launcher style")
+            subtext: qsTr("Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner")
+            active: root.styleItems.find(item => item.value === launcherSettings.launcherStyle) ?? root.styleItems[0]
+            menuItems: root.styleItems
+            onSelected: item => launcherSettings.launcherStyle = item.value
         }
 
         ToggleRow {
@@ -203,7 +233,7 @@ PageBase {
 
         ToggleRow {
             text: qsTr("Show power menu")
-            subtext: qsTr("Show the quick session controls (shutdown, sleep, logout) at the bottom")
+            subtext: qsTr("Show the quick session controls (shutdown, sleep, logout): under the search field in the classic style, in the top right menu in the modern one")
             reset: ({ node: GlobalConfig.launcher, setting: "showPowerMenu" })
             checked: Config.launcher.showPowerMenu
             onToggled: GlobalConfig.launcher.showPowerMenu = checked

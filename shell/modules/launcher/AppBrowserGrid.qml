@@ -47,6 +47,10 @@ Item {
     // Alphabetical mode keeps favourites on top and sorts the rest by name,
     // case-insensitively; "most used" leaves the launcher's own ranking alone.
     function sortedApps(list: var): var {
+        // The classic launcher has no ordering control: it keeps the launcher's
+        // own ranking, exactly as it shipped.
+        if (sortSettings.launcherStyle !== "modern")
+            return list;
         if (sortSettings.sortMode !== "alpha")
             return list;
         const favourites = GlobalConfig.launcher.favouriteApps ?? [];
@@ -172,6 +176,7 @@ Item {
         id: sortSettings
 
         property string sortMode: "most-used"
+        property string launcherStyle: "classic"
 
         category: "Launcher"
     }
@@ -185,7 +190,12 @@ Item {
 
     RowLayout {
         anchors.fill: parent
-        anchors.margins: root.padding
+        anchors.leftMargin: root.padding
+        anchors.rightMargin: root.padding
+        anchors.bottomMargin: root.padding
+        // The profile picture hangs over the top of the card, so the grid keeps
+        // less breathing room above the first row.
+        anchors.topMargin: Math.max(0, root.padding - 12)
         spacing: Tokens.spacing.medium
 
         Item {

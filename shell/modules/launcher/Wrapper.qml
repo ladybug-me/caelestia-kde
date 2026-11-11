@@ -39,7 +39,9 @@ Item {
         } else
             implicitHeight = implicitHeight;
     }
-    clip: Config.bar.position === "bottom"
+    // Keep the clip while the panel slides away, but not while it is open: the
+    // profile picture deliberately overhangs the top edge of the card.
+    clip: Config.bar.position === "bottom" && !root.avatarVisible
     visible: offsetScale < 1
     anchors.bottomMargin: (Config.bar.position === "bottom" ? 0 : -implicitHeight - 5) * offsetScale
     height: Config.bar.position === "bottom" ? implicitHeight * (1 - offsetScale) : implicitHeight

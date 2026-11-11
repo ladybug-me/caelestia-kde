@@ -43,7 +43,7 @@ StyledWindow {
     // A new one joins a list instead of extending the expression below.
     readonly property var desktopMenus: [desktopContextMenu, desktopIconContextMenu, dropMenu]
     readonly property var desktopPopups: [viewOptions, widgetGallery, widgetSettings]
-    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || root.desktopMenus.some(menu => menu.expanded) || root.desktopPopups.some(popup => popup.open) || visibilities.overview || Visibilities.launcherOpen || (Config.dashboard.enabled && visibilities.dashboard) || (Config.session.enabled && visibilities.session) || (Config.utilities.enabled && visibilities.utilities)
+    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || root.desktopMenus.some(menu => menu.expanded) || root.desktopPopups.some(popup => popup.open) || visibilities.overview || (Visibilities.launcherOpen && Config.launcher.enabled) || (Config.dashboard.enabled && visibilities.dashboard) || (Config.session.enabled && visibilities.session) || (Config.utilities.enabled && visibilities.utilities)
     readonly property bool hasOpenOverlay: focusGrabState.active || transientOverlayOpen || (Config.sidebar.enabled && visibilities.sidebar)
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
     // The launcher is one panel across outputs: a screen that does not show it
@@ -407,7 +407,7 @@ StyledWindow {
 
             panel: panels.launcherAvatar
             deformAmount: 0.1
-            radius: width / 2
+            radius: Tokens.rounding.full
         }
         PanelBg {
             id: sessionBg

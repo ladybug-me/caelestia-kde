@@ -3549,7 +3549,7 @@
     <message>
         <location line="+49"/>
         <source>Forget</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Olvidar</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -3595,7 +3595,7 @@
     <message>
         <location filename="../modules/nexus/pages/panels/taskbar/BarWeather.qml" line="+15"/>
         <source>Auto</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Automático</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -3615,17 +3615,17 @@
     <message>
         <location line="+11"/>
         <source>Units</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unidades</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Temperature</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Temperatura</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Units for weather temperatures</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Unidades para la temperatura del clima</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -3756,7 +3756,7 @@
     <message>
         <location line="+146"/>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1%</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -4189,7 +4189,7 @@
     <message>
         <location line="+10"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nombre</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -4209,7 +4209,7 @@
     <message>
         <location line="+7"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Añadir</translation>
     </message>
     <message>
         <location line="+66"/>
@@ -4229,12 +4229,12 @@
     <message>
         <location line="+2"/>
         <source>%1 days</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 días</translation>
     </message>
     <message>
         <location line="+35"/>
         <source>Refresh</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Actualizar</translation>
     </message>
 </context>
 <context>
@@ -5085,7 +5085,7 @@
     <message>
         <location line="-53"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">General</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -5150,7 +5150,7 @@
     <message>
         <location line="+8"/>
         <source>Terminal</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Terminal</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -5215,12 +5215,12 @@
     <message>
         <location line="+7"/>
         <source>GPU</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GPU</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -5308,7 +5308,7 @@
     <message>
         <location line="+5"/>
         <source>Circle</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Círculo</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -5437,7 +5437,7 @@
     <message>
         <location line="+0"/>
         <source>Edit Widgets</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Editar widgets</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -5452,7 +5452,7 @@
     <message>
         <location line="+52"/>
         <source>Widgets</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Widgets</translation>
     </message>
     <message>
         <location line="+16"/>
@@ -5688,27 +5688,27 @@
     <message>
         <location filename="../modules/nexus/pages/desktop/DesktopSettingsPage.qml" line="+16"/>
         <source>Small</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pequeño</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Medium</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mediano</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Large</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Grande</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Huge</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enorme</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Escritorio</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -5728,7 +5728,7 @@
     <message>
         <location line="+16"/>
         <source>Show Desktop Icons</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostrar iconos del escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5951,7 +5951,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>GitHub</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GitHub</translation>
     </message>
 </context>
 <context>
@@ -5977,7 +5977,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+4"/>
         <source>Left</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Izquierda</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -5987,7 +5987,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+4"/>
         <source>Right</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Derecha</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -6012,7 +6012,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+5"/>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activado</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6027,12 +6027,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+8"/>
         <source>Resolution &amp; refresh rate</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Resolución y tasa de refreso</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Scale</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Escala</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6062,7 +6062,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+8"/>
         <source>Input</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Entrada</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -6179,7 +6179,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+7"/>
         <source>Done</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Listo</translation>
     </message>
 </context>
 <context>
@@ -6194,42 +6194,192 @@ Ahora salir a tocar el pasto</translation>
     <name>Entries</name>
     <message>
         <location filename="../modules/whatsnew/Entries.qml" line="+14"/>
-        <source>Shimeji Cat update</source>
+        <source>Cheaper Inference AI Provider</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+2"/>
-        <source>Multiple Shimeji Cats can now be summoned at once. Also a fix regarding the cat hiding when clicking desktop has been pushed. Update from plugin store to access new features!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Multi-Monitor Desktop Support</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Desktop icons and widgets now fully support multi-monitor setups with screen-aware positioning. Each connected display maintains its own grid layout and arrangement independently, ensuring widgets and icons stay pinned to their designated monitor across display reconnections and resolution changes without overlapping or shifting between screens.</source>
+        <location line="+3"/>
+        <source>Added Cheaper Inference as a supported assistant provider in AI settings, allowing seamless integration with cost-effective cloud AI inference models alongside existing local and cloud providers.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-        <source>Widget Locking &amp; Outlines</source>
+        <source>Accessibility Controls</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Desktop widgets can now be locked individually or altogether directly from their context menus, preventing accidental dragging or resizing while interacting with them. In addition, a new widget outlines toggle highlights widget boundaries on your wallpaper, making it effortless to locate empty or conditionally hidden widgets across your desktop.</source>
+        <location line="+3"/>
+        <source>A dedicated Accessibility page in Nexus provides instant controls for screen magnification, colour inversion, high-contrast filters, reduced motion, and on-screen keyboard options to suit your workflow.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-        <source>Desktop Widget Edit Mode</source>
+        <source>Captive Portal &amp; Proxy Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The shell now automatically detects public and hotel captive Wi-Fi portals with one-click sign-in prompts, alongside comprehensive system proxy configuration options in Network settings.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Dock Recent Files &amp; Jump Lists</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Desktop widgets now have an edit mode of their own. The controls inside a widget step aside, so the whole card can be dragged from anywhere, every border resizes, the cells are outlined underneath, and each card names itself and its size. A toolbar adds widgets, locks or unlocks all of them, and ends the mode. Right-click the desktop and choose Widgets → Edit Widgets to start; Escape leaves it. Ctrl+C and Ctrl+V copy and paste widgets, and Delete removes them without touching your files.</source>
+        <source>Pinned and running applications on the dock now display their recently accessed documents and jump-list actions directly in their right-click context menus for faster resumption.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Nexus Keyboard Navigation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Nexus settings now offers full keyboard accessibility: press Meta+U to open Nexus, &apos;/&apos; to jump immediately into search, arrow keys and Tab to navigate categories and controls, and hold-to-confirm key captures.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Instant Window Tiling Reload</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Krohnkite window tiling settings now reload and apply dynamically in real time without requiring a session logout or restart when tweaking tiling layouts, rules, and window gaps.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Toast Positioning &amp; Corner Rounding</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Toast notification banners can now be anchored to any corner of the screen (top-left, top-right, bottom-left, bottom-right) with configurable corner radii and independent surface styling rules.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Startup Applications Manager</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Easily manage programs that run when you log in through Nexus. View all configured autostart entries, toggle individual background services, and add new apps with the integrated application picker.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Disk &amp; Storage Management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Nexus now includes a dedicated Disk &amp; Storage settings page to inspect mounted drives, monitor filesystem capacity and partition health, and safely mount, unmount, or eject external USB media.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Countdown Timers &amp; Quick Toggles</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The Utilities drawer introduces persistent countdown timers that survive shell restarts, pin active timers directly to the taskbar, and convert utilities like Keep Awake into persistent quick toggles.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>System Tray Ordering &amp; Renaming</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The taskbar system tray now provides granular per-icon control: set icons to Always Visible, Collapsible, or Hidden, drag and drop to reorder pinned tray items, and assign custom display names and tooltips.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Shell Animation Presets</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Fine-tune interface motion with new shell animation presets, allowing you to choose between expressive motion, standard timing, snappy transitions, or instant response across all panels and drawers. You can also switch animation profiles from launcher by typing &gt; and selecting Animations.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Display &amp; HDR Management</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Manage multiple monitors seamlessly within Nexus: configure display resolutions, refresh rates, monitor rotation, fractional HiDPI scaling, and High Dynamic Range (HDR) toggles all in one place.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Focus Sessions &amp; Meeting DND</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Focus Sessions let you schedule distraction-free work periods that automatically silence notifications and dim background distractions, with optional automated start whenever calendar meetings begin.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Calendar Agenda &amp; Google Calendar Sync</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>The taskbar calendar synchronizes with Google Calendar and remote ICS feeds to display upcoming meeting agendas and event schedules, with hover activation and direct link access right from the bar.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>KRunner System Search in Launcher</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>The launcher now integrates with KDE&apos;s KRunner search service to execute math equations, locate system files and browser bookmarks, look up system settings, and configure custom web search engines. Type &gt; to open commands and select Search everything.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Three-Panel Nexus Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Nexus settings has been overhauled with a three-panel layout displaying sections, subcategories, and active settings side by side. It folds smoothly into two panels on compact screens, and introduces an integrated system font picker previewing every installed typeface.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Plasma Audio Visualizer</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Desktop audio visualization is now powered by the native Plasma Audio Visualizer with multi-monitor positioning, idle auto-hiding, responsive geometry calculations, and multiple profiles.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>New Wallpaper Engine</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+3"/>
+        <source>Deep integration with the skwd-wall daemon brings high-performance animated and video wallpapers with thumbnail caching, automatic Material You smart color extraction via caelestia-color, and a new Library and Community wallpapers browser. Press Meta + X to open the new Wallpaper Switcher.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6238,7 +6388,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+20"/>
         <source>Ethernet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ethernet</translation>
     </message>
     <message>
         <location line="+54"/>
@@ -6440,7 +6590,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+58"/>
         <source>Name</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nombre</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -6465,7 +6615,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+19"/>
         <source>Add</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Añadir</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -6485,7 +6635,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Pick it from the applications installed here</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Elígela entre las aplicaciones instaladas aquí</translation>
     </message>
 </context>
 <context>
@@ -6800,7 +6950,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+2"/>
         <source>Today</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Hoy</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -6870,7 +7020,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+14"/>
         <source>Rename</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Renombrar</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -6925,7 +7075,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+0"/>
         <source>Clear all</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Borrar todo</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -7186,7 +7336,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/bar/components/KeepAwakeWidget.qml" line="+109"/>
         <source>Active since %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activo desde %1</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -7790,7 +7940,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+11"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">General</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -7890,7 +8040,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+7"/>
         <source>Truncated app names</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nombres de app truncados</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8038,7 +8188,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+15"/>
         <source>Wallhaven</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wallhaven</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -8262,7 +8412,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+16"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">General</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -8721,7 +8871,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+11"/>
         <source>Ethernet</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ethernet</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -8802,7 +8952,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1%</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -8922,7 +9072,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+7"/>
         <source>Wi-Fi</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wi-Fi</translation>
     </message>
     <message>
         <location line="+25"/>
@@ -9033,7 +9183,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+8"/>
         <source>Advanced</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Avanzado</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -9129,32 +9279,32 @@ Ahora salir a tocar el pasto</translation>
         <location filename="../modules/bar/popouts/Notes.qml" line="+37"/>
         <location line="+228"/>
         <source>Untitled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sin título</translation>
     </message>
     <message>
         <location line="-111"/>
         <source>Notes</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Notas</translation>
     </message>
     <message>
         <location line="+161"/>
         <source>No additional text</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sin texto adicional</translation>
     </message>
     <message>
         <location line="+37"/>
         <source>No notes yet. Tap + to add one.</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Todavía no hay notas. Tocar + para agregar una.</translation>
     </message>
     <message>
         <location line="+72"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Título</translation>
     </message>
     <message>
         <location line="+47"/>
         <source>Start writing...</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Empezar a escribir...</translation>
     </message>
     <message>
         <location line="+115"/>
@@ -9184,13 +9334,13 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+0"/>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Grabar</translation>
     </message>
     <message>
         <location line="+13"/>
         <location line="+51"/>
         <source>Upload</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Subida</translation>
     </message>
     <message>
         <location line="-42"/>
@@ -9230,12 +9380,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Image files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Archivos de imagen</translation>
     </message>
     <message>
         <location line="+17"/>
         <source>Edited %1</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Editada %1</translation>
     </message>
     <message>
         <location line="+28"/>
@@ -9304,13 +9454,13 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+0"/>
         <source>Record</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Grabar</translation>
     </message>
     <message>
         <location line="+13"/>
         <location line="+68"/>
         <source>Upload</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Subida</translation>
     </message>
     <message>
         <location line="-59"/>
@@ -9350,7 +9500,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Image files</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Archivos de imagen</translation>
     </message>
     <message>
         <location line="+17"/>
@@ -9686,7 +9836,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+10"/>
         <source>Muted notification apps</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Aplicaciones con notificaciones silenciadas</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -9734,7 +9884,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+68"/>
         <source>Add an application</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Añadir una aplicación</translation>
     </message>
 </context>
 <context>
@@ -10364,7 +10514,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10620,7 +10770,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Bluetooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bluetooth</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10730,12 +10880,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Utilities panel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Panel de utilidades</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Quick toggles</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Atajos rápidos</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10835,7 +10985,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Accessibility</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Accesibilidad</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10845,7 +10995,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Add to startup</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Añadir a inicio automático</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -11329,7 +11479,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+21"/>
         <source>Mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Modo</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -11361,7 +11511,7 @@ PIN: %1</source>
         <location line="+23"/>
         <location line="+24"/>
         <source>Quick Share</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quick Share</translation>
     </message>
     <message>
         <location line="-54"/>
@@ -11427,12 +11577,12 @@ PIN: %1</source>
     <message>
         <location line="+12"/>
         <source>Nearby devices have to be on the same network, which for a phone means the same Wi-Fi</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Los dispositivos cercanos deben estar en la misma red; en el caso de un teléfono, en la misma red Wi-Fi</translation>
     </message>
     <message>
         <location line="+58"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <location line="+18"/>
@@ -11445,12 +11595,12 @@ PIN: %1</source>
     <message>
         <location filename="../modules/utilities/cards/QuickShareList.qml" line="+90"/>
         <source>Quick Share</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quick Share</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Desactivado</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -11460,7 +11610,7 @@ PIN: %1</source>
     <message>
         <location line="+0"/>
         <source>Hidden</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oculta</translation>
     </message>
     <message>
         <location line="+37"/>
@@ -11662,7 +11812,7 @@ PIN: %1</source>
     <message>
         <location filename="../modules/nexus/pages/utilities/QuickTogglesPage.qml" line="+13"/>
         <source>Wi-Fi</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Wi-Fi</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -11672,7 +11822,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Bluetooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bluetooth</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -11682,7 +11832,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Quick Share</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Quick Share</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -11702,12 +11852,12 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Overview</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vista general</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Dashboard</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Panel</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -12282,7 +12432,7 @@ PIN: %1</source>
     <message>
         <location line="+10"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">General</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13088,7 +13238,7 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>Storage</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Almacenamiento</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -13116,12 +13266,12 @@ PIN: %1</source>
     <message>
         <location filename="../modules/nexus/SubcategoryPane.qml" line="+225"/>
         <source>Wallpapers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fondos de pantalla</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Browse and select wallpapers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Explorar y seleccionar fondos de pantalla</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13136,7 +13286,7 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Wallpaper Settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Ajustes del fondo de pantalla</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13151,17 +13301,17 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Lock screen</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pantalla de bloqueo</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Wallpaper sync and lock screen settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sincronización del fondo de pantalla y ajustes de la pantalla de bloqueo</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Colores</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13171,42 +13321,42 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Theme &amp; Effects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Tema y efectos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Islands, Pitch Black, Transparency</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Islas, negro absoluto y transparencia</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Desktop</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Disabled (Plasma)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Desabilitado (Plasma)</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Icons enabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Iconos habilitados</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Icons disabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Iconos desabilitados</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Desktop Addons</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Complementos del escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Visualiser, auto-hide, styling</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Visualizador, ocultamiento automático y estilo</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13216,7 +13366,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Configure desktop right click menu</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Configurar el menú del clic derecho del escritorio</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13226,7 +13376,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Enabled (Krohnkite)</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activado (Krohnkite)</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -13239,12 +13389,12 @@ PIN: %1</source>
         <location line="+12"/>
         <location line="+30"/>
         <source>Disabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Desactivado</translation>
     </message>
     <message>
         <location line="-79"/>
         <source>Dashboard</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Panel</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13254,7 +13404,7 @@ PIN: %1</source>
         <location line="+6"/>
         <location line="+48"/>
         <source>Enabled</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activado</translation>
     </message>
     <message>
         <location line="-73"/>
@@ -13264,17 +13414,17 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Always visible</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Siempre visible</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Reveal on hover</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostrar al pasar el cursor</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Reveal on drag</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Mostrar al arrastrar</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13289,27 +13439,27 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>Quick toggle</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Atajo rápido</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Overview</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vista general</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Window Switcher</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Selector de ventanas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Current desktop only</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Solo el escritorio actual</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>All desktops</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Todos los escritorios</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -13344,12 +13494,12 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Hotspot</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Punto de acceso</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Active</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Activo</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -13369,7 +13519,7 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Bluetooth</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Bluetooth</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13399,42 +13549,42 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Muted</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Silenciado</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>%1%</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1%</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>App Volumes</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Volumen de aplicaciones</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>No apps playing audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">No hay aplicaciones reproduciendo audio</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>1 app playing audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">1 aplicación reproduciendo audio</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>%1 apps playing audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 aplicaciones reproduciendo audio</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Sound Effects</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Efectos de sonido</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Feedback sounds and volume</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sonidos de respuesta y volumen</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13454,17 +13604,17 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Position, timeout, and display behavior</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Posición, tiempo de espera y comportamiento de visualización</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Toasts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Notificaciones emergentes</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Fullscreen behavior, appearance, and sound</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Comportamiento en pantalla completa, apariencia y sonido</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13474,7 +13624,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Choose which system changes show a toast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Elegir qué cambios del sistema muestran una notificación emergente</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13499,37 +13649,37 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Volume, microphone, brightness, and edge triggers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Volumen, micrófono, brillo y activadores de borde</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Utilities panel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Panel de utilidades</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Choose the cards shown in the panel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Elegir las tarjetas que se muestran en el panel</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Quick toggles</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Atajos rápidos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Choose the controls shown in Quick Toggles</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Elegir los controles que se muestran en Atajos rápidos</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Game Mode</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Modo de juego</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Auto-enable rules and performance overrides</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Reglas de activación automática y ajustes de rendimiento</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13539,7 +13689,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Send files to nearby devices</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Enviar archivos a dispositivos cercanos</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -13634,7 +13784,7 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Accessibility</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Accesibilidad</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13674,7 +13824,7 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>Updates</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Actualizaciones</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13684,7 +13834,7 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>About System</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Acerca del sistema</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13707,12 +13857,12 @@ PIN: %1</source>
     <message>
         <location line="+126"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Save</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Guardar</translation>
     </message>
 </context>
 <context>
@@ -13721,13 +13871,13 @@ PIN: %1</source>
         <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+69"/>
         <location line="+39"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">CPU</translation>
     </message>
     <message>
         <location line="-33"/>
         <location line="+43"/>
         <source>GPU</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GPU</translation>
     </message>
     <message>
         <location line="-38"/>
@@ -13752,7 +13902,7 @@ PIN: %1</source>
     <message>
         <location line="+37"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">General</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13890,7 +14040,7 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>Dock</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Dock</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13900,7 +14050,7 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>GitHub</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GitHub</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14191,7 +14341,7 @@ PIN: %1</source>
     <message>
         <location filename="../services/Timers.qml" line="+35"/>
         <source>Timers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Temporizadores</translation>
     </message>
     <message>
         <location line="+53"/>
@@ -14214,7 +14364,7 @@ PIN: %1</source>
     <message>
         <location filename="../modules/utilities/cards/TimersCard.qml" line="+100"/>
         <source>Timers</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Temporizadores</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -14264,7 +14414,7 @@ PIN: %1</source>
     <message>
         <location line="+14"/>
         <source>%1m</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 min</translation>
     </message>
 </context>
 <context>
@@ -14302,7 +14452,7 @@ PIN: %1</source>
     <message>
         <location line="+7"/>
         <source>Audio</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Audio</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -14515,7 +14665,7 @@ PIN: %1</source>
     <message>
         <location filename="../services/TrayRegistry.qml" line="+20"/>
         <source>Always visible</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Siempre visible</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14525,7 +14675,7 @@ PIN: %1</source>
     <message>
         <location line="+1"/>
         <source>Hidden</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Oculta</translation>
     </message>
 </context>
 <context>
@@ -14714,7 +14864,7 @@ PIN: %1</source>
         <location line="+34"/>
         <source>%1 / %2</source>
         <comment>used / total amount</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 / %2</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -15369,7 +15519,7 @@ PIN: %1</source>
         <location line="+0"/>
         <location line="+5"/>
         <source>%1: %2</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1: %2</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -15643,25 +15793,25 @@ PIN: %1</source>
         <location filename="../modules/nexus/pages/wallandstyle/WallpaperCategory.qml" line="+45"/>
         <location line="+38"/>
         <source>Videos</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Vídeos</translation>
     </message>
     <message>
         <location line="-37"/>
         <location line="+28"/>
         <source>GIFs</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">GIF</translation>
     </message>
     <message>
         <location line="-27"/>
         <location line="+18"/>
         <source>Images</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Imágenes</translation>
     </message>
     <message>
         <location line="-17"/>
         <location line="+8"/>
         <source>All</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Todos</translation>
     </message>
 </context>
 <context>
@@ -15756,12 +15906,12 @@ PIN: %1</source>
     <message>
         <location line="+8"/>
         <source>Sure?</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">¿Seguro?</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Reset settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Restablecer la configuración</translation>
     </message>
     <message>
         <location line="+68"/>
@@ -15776,7 +15926,7 @@ PIN: %1</source>
     <message>
         <location line="+5"/>
         <source>General Settings</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Configuración general</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -15917,7 +16067,7 @@ PIN: %1</source>
     <message>
         <location line="+9"/>
         <source>Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Atajos</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -15950,28 +16100,28 @@ PIN: %1</source>
     <message>
         <location line="+11"/>
         <source>Humidity</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Humedad</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Feels like</source>
         <comment>apparent temperature</comment>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Sensación térmica</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Wind</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Viento</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 km/h</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">%1 km/h</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Hourly forecast</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Pronóstico por hora</translation>
     </message>
     <message>
         <location filename="../services/Weather.qml" line="+127"/>

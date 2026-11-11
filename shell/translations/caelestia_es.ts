@@ -12080,7 +12080,7 @@ PIN: %1</source>
     <message>
         <location line="+48"/>
         <source>%1 (%2)</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 (%2)</translation>
     </message>
     <message>
         <location line="+10"/>
@@ -12432,7 +12432,7 @@ PIN: %1</source>
     <message>
         <location line="+10"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>General</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13228,17 +13228,17 @@ PIN: %1</source>
     <message>
         <location line="+11"/>
         <source>%1 used</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 utilizado</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>read-only</source>
-        <translation type="unfinished"></translation>
+        <translation>solo lectura</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Storage</source>
-        <translation type="unfinished">Almacenamiento</translation>
+        <translation>Almacenamiento</translation>
     </message>
     <message>
         <location line="+24"/>
@@ -13871,13 +13871,13 @@ PIN: %1</source>
         <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+69"/>
         <location line="+39"/>
         <source>CPU</source>
-        <translation type="unfinished">CPU</translation>
+        <translation>CPU</translation>
     </message>
     <message>
         <location line="-33"/>
         <location line="+43"/>
         <source>GPU</source>
-        <translation type="unfinished">GPU</translation>
+        <translation>GPU</translation>
     </message>
     <message>
         <location line="-38"/>
@@ -13902,7 +13902,7 @@ PIN: %1</source>
     <message>
         <location line="+37"/>
         <source>General</source>
-        <translation type="unfinished">General</translation>
+        <translation>General</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14040,7 +14040,7 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>Dock</source>
-        <translation type="unfinished">Dock</translation>
+        <translation>Dock</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14050,7 +14050,7 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>GitHub</source>
-        <translation type="unfinished">GitHub</translation>
+        <translation>GitHub</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14070,12 +14070,12 @@ PIN: %1</source>
     <message>
         <location line="+6"/>
         <source>Weather</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiempo</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Widget units</source>
-        <translation type="unfinished"></translation>
+        <translation>Unidades del widget</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14341,22 +14341,22 @@ PIN: %1</source>
     <message>
         <location filename="../services/Timers.qml" line="+35"/>
         <source>Timers</source>
-        <translation type="unfinished">Temporizadores</translation>
+        <translation>Temporizadores</translation>
     </message>
     <message>
         <location line="+53"/>
         <source>Timer finished</source>
-        <translation type="unfinished"></translation>
+        <translation>Temporizador finalizado</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Time is up.</source>
-        <translation type="unfinished"></translation>
+        <translation>Se acabó el tiempo.</translation>
     </message>
     <message>
         <location line="+102"/>
         <source>%1 timers finished while the shell was not running.</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 temporizadores acabaron mientras la shell no estaba activa.</translation>
     </message>
 </context>
 <context>
@@ -14364,7 +14364,7 @@ PIN: %1</source>
     <message>
         <location filename="../modules/utilities/cards/TimersCard.qml" line="+100"/>
         <source>Timers</source>
-        <translation type="unfinished">Temporizadores</translation>
+        <translation>Temporizadores</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -14414,7 +14414,7 @@ PIN: %1</source>
     <message>
         <location line="+14"/>
         <source>%1m</source>
-        <translation type="unfinished">%1 min</translation>
+        <translation>%1 min</translation>
     </message>
 </context>
 <context>
@@ -14452,7 +14452,7 @@ PIN: %1</source>
     <message>
         <location line="+7"/>
         <source>Audio</source>
-        <translation type="unfinished">Audio</translation>
+        <translation>Audio</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -14535,27 +14535,27 @@ PIN: %1</source>
     <message>
         <location line="+8"/>
         <source>Automatic</source>
-        <translation type="unfinished"></translation>
+        <translation>Automático</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Top left</source>
-        <translation type="unfinished"></translation>
+        <translation>Arriba a la izquierda</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Top right</source>
-        <translation type="unfinished"></translation>
+        <translation>Arriba a la derecha</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Bottom left</source>
-        <translation type="unfinished"></translation>
+        <translation>Debajo a la izquierda</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Bottom right</source>
-        <translation type="unfinished"></translation>
+        <translation>Debajo a la derecha</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -14590,7 +14590,7 @@ PIN: %1</source>
     <message>
         <location line="+9"/>
         <source>Corner</source>
-        <translation type="unfinished"></translation>
+        <translation>Esquina</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14665,17 +14665,17 @@ PIN: %1</source>
     <message>
         <location filename="../services/TrayRegistry.qml" line="+20"/>
         <source>Always visible</source>
-        <translation type="unfinished">Siempre visible</translation>
+        <translation>Siempre visible</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Collapse</source>
-        <translation type="unfinished"></translation>
+        <translation>Contraer</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hidden</source>
-        <translation type="unfinished">Oculta</translation>
+        <translation>Oculta</translation>
     </message>
 </context>
 <context>
@@ -14726,145 +14726,145 @@ PIN: %1</source>
         <location filename="../services/Units.qml" line="+22"/>
         <source>%1°</source>
         <comment>temperature</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1º</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%1°F</source>
         <comment>temperature</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1ºF</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>%1 K</source>
         <comment>temperature</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 K</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1°C</source>
         <comment>temperature</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1ºC</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>%1 B</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 B</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 KB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 KB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 MB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 MB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 GB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 GB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 TB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 TB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 KiB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 KiB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 MiB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 MiB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 GiB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 GiB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 TiB</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 TiB</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 B/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 B/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 KB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 KB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 MB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 MB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 GB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 GB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 TB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 TB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 KiB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 KiB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 MiB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 MiB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 GiB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 GiB/s</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>%1 TiB/s</source>
         <comment>data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 TiB/s</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>%1 %2</source>
         <comment>value and data unit</comment>
-        <translation type="unfinished"></translation>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location line="+34"/>
         <source>%1 / %2</source>
         <comment>used / total amount</comment>
-        <translation type="unfinished">%1 / %2</translation>
+        <translation>%1 / %2</translation>
     </message>
     <message>
         <location line="+30"/>
@@ -15052,12 +15052,12 @@ PIN: %1</source>
     <message>
         <location line="+11"/>
         <source>%1m %2s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1m %2s</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>%1s</source>
-        <translation type="unfinished"></translation>
+        <translation>%1s</translation>
     </message>
     <message>
         <location line="+64"/>
@@ -15519,7 +15519,7 @@ PIN: %1</source>
         <location line="+0"/>
         <location line="+5"/>
         <source>%1: %2</source>
-        <translation type="unfinished">%1: %2</translation>
+        <translation>%1: %2</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -15793,25 +15793,25 @@ PIN: %1</source>
         <location filename="../modules/nexus/pages/wallandstyle/WallpaperCategory.qml" line="+45"/>
         <location line="+38"/>
         <source>Videos</source>
-        <translation type="unfinished">Vídeos</translation>
+        <translation>Vídeos</translation>
     </message>
     <message>
         <location line="-37"/>
         <location line="+28"/>
         <source>GIFs</source>
-        <translation type="unfinished">GIF</translation>
+        <translation>GIFs</translation>
     </message>
     <message>
         <location line="-27"/>
         <location line="+18"/>
         <source>Images</source>
-        <translation type="unfinished">Imágenes</translation>
+        <translation>Imágenes</translation>
     </message>
     <message>
         <location line="-17"/>
         <location line="+8"/>
         <source>All</source>
-        <translation type="unfinished">Todos</translation>
+        <translation>Todos</translation>
     </message>
 </context>
 <context>

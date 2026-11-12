@@ -94,6 +94,36 @@ PageBase {
             onSelected: item => Style.setLauncherStyle(item.value)
         }
 
+        NavRow {
+            icon: "account_circle"
+            label: qsTr("Custom avatar")
+            // Only the modern header draws the avatar, so the row stays visible
+            // but faded in classic to signal where the option lives.
+            enabled: Style.launcherStyle === "modern"
+            opacity: enabled ? 1 : 0.4
+            status: Style.avatarPath !== "" ? Style.avatarPath : (enabled ? qsTr("Using your profile picture") : qsTr("Only used by the modern launcher style"))
+            onClicked: customAvatarDialog.open()
+
+            FileDialog {
+                id: customAvatarDialog
+
+                title: qsTr("Select a custom avatar")
+                filterLabel: qsTr("Image files")
+                filters: Images.validImageExtensions
+                onAccepted: path => {
+                    Style.setAvatarPath(path);
+                }
+            }
+        }
+
+        NavRow {
+            visible: Style.avatarPath !== ""
+            icon: "restart_alt"
+            label: qsTr("Reset custom avatar")
+            status: qsTr("Go back to your profile picture")
+            onClicked: Style.setAvatarPath("")
+        }
+
         ToggleRow {
             text: qsTr("Use alternative logo")
             subtext: qsTr("Use the Caelestia logo or a custom image instead of your distribution's logo")

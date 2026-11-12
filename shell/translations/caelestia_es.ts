@@ -858,80 +858,16 @@
     </message>
     <message>
         <location line="+502"/>
-<<<<<<< Updated upstream
-        <location line="+1012"/>
-=======
         <location line="+1118"/>
->>>>>>> Stashed changes
         <source>Rate limited - retrying in %1s…</source>
         <translation>Límite de solicitudes alcanzado; reintentando en %1s…</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-662"/>
-=======
         <location line="-768"/>
->>>>>>> Stashed changes
         <source>(stopped)</source>
         <translation>(detenido)</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+869"/>
-        <source>Chat</source>
-        <translation>Chat</translation>
-    </message>
-    <message>
-        <location line="+36"/>
-        <source>History</source>
-        <translation>Historial</translation>
-    </message>
-    <message>
-        <location line="+38"/>
-        <source>Provider</source>
-        <translation>Proveedor</translation>
-    </message>
-    <message>
-        <location line="+39"/>
-        <source>Select Model</source>
-        <translation>Seleccionar modelo</translation>
-    </message>
-    <message>
-        <location line="+39"/>
-        <source>Effort</source>
-        <translation>Esfuerzo</translation>
-    </message>
-    <message>
-        <location line="+31"/>
-        <source>Account</source>
-        <translation>Cuenta</translation>
-    </message>
-    <message>
-        <location line="+30"/>
-        <source>Permissions</source>
-        <translation>Permisos</translation>
-    </message>
-    <message>
-        <location line="+59"/>
-        <source>Claude Code working directory</source>
-        <translation>Directorio de trabajo de Claude Code</translation>
-    </message>
-    <message>
-        <location line="+456"/>
-        <source>Suggestions</source>
-        <translation>Sugerencias</translation>
-    </message>
-    <message>
-        <location line="+138"/>
-        <source>Attach a file</source>
-        <translation>Adjuntar un archivo</translation>
-    </message>
-    <message>
-        <location line="+74"/>
-        <source>Ask assistant...</source>
-        <translation>Preguntar al asistente...</translation>
-    </message>
-=======
         <location line="+126"/>
         <source>Assistant permission</source>
         <translation type="unfinished"></translation>
@@ -1026,7 +962,6 @@
         <source>Ask assistant...</source>
         <translation>Preguntar al asistente...</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>AiSettingsPage</name>
@@ -1067,31 +1002,18 @@
     </message>
     <message>
         <location line="+27"/>
-<<<<<<< Updated upstream
-        <location line="+545"/>
-=======
         <location line="+556"/>
->>>>>>> Stashed changes
         <source>Checking…</source>
         <translation>Comprobando…</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-543"/>
-        <location line="+522"/>
-=======
         <location line="-554"/>
         <location line="+533"/>
->>>>>>> Stashed changes
         <source>Not installed</source>
         <translation>No instalado</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-513"/>
-=======
         <location line="-524"/>
->>>>>>> Stashed changes
         <source>Daemon not running - start it with: sudo systemctl start ollama</source>
         <translation>El daemon no está en ejecución; inícialo con: sudo systemctl start ollama</translation>
     </message>
@@ -1112,242 +1034,21 @@
     </message>
     <message>
         <location line="+79"/>
-<<<<<<< Updated upstream
-        <location line="+35"/>
-=======
         <location line="+39"/>
->>>>>>> Stashed changes
         <source>Installed.</source>
         <translation>Instalado.</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-35"/>
-        <location line="+39"/>
-        <source>Failed</source>
-        <translation>Error</translation>
-    </message>
-    <message>
-        <location line="-2"/>
-=======
         <location line="-39"/>
         <source>Install failed (%1)</source>
         <translation>Instalación fallida (%1)</translation>
     </message>
     <message>
         <location line="+41"/>
->>>>>>> Stashed changes
         <source>Cancelled.</source>
         <translation>Cancelado.</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+49"/>
-        <source>Local provider</source>
-        <translation>Proveedor local</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Ollama</source>
-        <translation>Ollama</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+166"/>
-        <source>Status</source>
-        <translation>Estado</translation>
-    </message>
-    <message>
-        <location line="-157"/>
-        <source>Download Ollama</source>
-        <translation>Descargar Ollama</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <location line="+5"/>
-        <location line="+173"/>
-        <location line="+18"/>
-        <source>Installing…</source>
-        <translation>Instalando…</translation>
-    </message>
-    <message>
-        <location line="-185"/>
-        <source>Claude</source>
-        <translation>Claude</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <location line="+134"/>
-        <source>Claude Code</source>
-        <translation>Claude Code</translation>
-    </message>
-    <message>
-        <location line="-133"/>
-        <source>Uses the Claude CLI and your Claude login</source>
-        <translation>Usa la CLI de Claude y tu inicio de sesión de Claude</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Let the CLI run its own tools</source>
-        <translation>Permitir que la CLI ejecute sus propias herramientas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Off by default; the assistant&apos;s own tools do not need it</source>
-        <translation>Desactivado de forma predeterminada; las herramientas propias del asistente no lo necesitan</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Claude API</source>
-        <translation>API de Claude</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pay-per-token API with an Anthropic key</source>
-        <translation>API de pago por token con una clave de Anthropic</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Other providers</source>
-        <translation>Otros proveedores</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>OpenAI (ChatGPT)</source>
-        <translation>OpenAI (ChatGPT)</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pay-per-token API with an OpenAI key</source>
-        <translation>API de pago por token con una clave de OpenAI</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Gemini</source>
-        <translation>Gemini</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Google&apos;s OpenAI-compatible endpoint</source>
-        <translation>Endpoint de Google compatible con OpenAI</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>OpenRouter</source>
-        <translation>OpenRouter</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>One key for models from multiple vendors</source>
-        <translation>Una sola clave para modelos de varios proveedores</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>opencode Zen</source>
-        <translation>opencode Zen</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Curated coding models, pay as you go</source>
-        <translation>Modelos de programación seleccionados, paga según el uso</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>opencode Go</source>
-        <translation>opencode Go</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Monthly subscription; shares Zen&apos;s key</source>
-        <translation>Suscripción mensual; comparte la clave de Zen</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Cheaper Inference</source>
-        <translation>Inferencia más barata</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>OpenAI-compatible gateway; one key for models from multiple vendors</source>
-        <translation>Pasarela compatible con OpenAI; una llave para modelos de múltiples proveedores</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>API keys</source>
-        <translation>Claves de API</translation>
-    </message>
-    <message>
-        <location line="+68"/>
-        <source>Download Claude Code</source>
-        <translation>Descargar Claude Code</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Update Claude Code</source>
-        <translation>Actualizar Claude Code</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Check for updates</source>
-        <translation>Buscar actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Up to date</source>
-        <translation>Actualizado</translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <source>Claude accounts</source>
-        <translation>Cuentas de Claude</translation>
-    </message>
-    <message>
-        <location line="+49"/>
-        <source>Active</source>
-        <translation>Activo</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Tap to select</source>
-        <translation>Pulsa para seleccionar</translation>
-    </message>
-    <message>
-        <location line="+31"/>
-        <source>Log in to selected account</source>
-        <translation>Iniciar sesión en la cuenta seleccionada</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <location line="+11"/>
-        <source>Install Claude Code first</source>
-        <translation>Primero instala Claude Code</translation>
-    </message>
-    <message>
-        <location line="-1"/>
-        <source>Add another account &amp; log in</source>
-        <translation>Añadir otra cuenta e iniciar sesión</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Log into a different Claude account</source>
-        <translation>Iniciar sesión en otra cuenta de Claude</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>History</source>
-        <translation>Historial</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Save chat history</source>
-        <translation>Guardar historial de chat</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</source>
-        <translation>Conserva las conversaciones entre sesiones; el botón para borrar de la barra lateral elimina lo que ya se haya guardado</translation>
-    </message>
-=======
         <location line="+2"/>
         <source>Ollama install failed (%1)</source>
         <translation>Instalación de Ollama fallida (%1)</translation>
@@ -1563,17 +1264,12 @@
         <source>Keep conversations between sessions; the sidebar&apos;s clear button removes what was already saved</source>
         <translation>Conserva las conversaciones entre sesiones; el botón para borrar de la barra lateral elimina lo que ya se haya guardado</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>AllApps</name>
     <message>
         <location filename="../modules/nexus/pages/apps/AllApps.qml" line="+17"/>
-<<<<<<< Updated upstream
-        <source>All apps</source>
-=======
         <source>All Apps</source>
->>>>>>> Stashed changes
         <translation>Todas las aplicaciones</translation>
     </message>
 </context>
@@ -1581,11 +1277,7 @@
     <name>AllNetworksPage</name>
     <message>
         <location filename="../modules/nexus/pages/network/AllNetworksPage.qml" line="+14"/>
-<<<<<<< Updated upstream
-        <source>All networks</source>
-=======
         <source>All Networks</source>
->>>>>>> Stashed changes
         <translation>Todas las redes</translation>
     </message>
     <message>
@@ -1619,20 +1311,12 @@
     <message>
         <location filename="../modules/launcher/services/Animations.qml" line="+16"/>
         <location line="+18"/>
-<<<<<<< Updated upstream
-        <location line="+70"/>
-=======
         <location line="+89"/>
->>>>>>> Stashed changes
         <source>Default (Material-3 Expressive)</source>
         <translation>Por defecto (Material-3 Expresivo)</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-68"/>
-=======
         <location line="-87"/>
->>>>>>> Stashed changes
         <source>Reset animations</source>
         <translation>Restablecer animaciones</translation>
     </message>
@@ -1642,20 +1326,12 @@
         <translation>Animaciones por defecto del shell restauradas</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+10"/>
-=======
         <location line="+14"/>
->>>>>>> Stashed changes
         <source>Applied animation</source>
         <translation>Animación aplicada</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+64"/>
-=======
         <location line="+79"/>
->>>>>>> Stashed changes
         <source>Reset to built-in shell animation curves</source>
         <translation>Restablecer a las curvas de animación por defecto del shell</translation>
     </message>
@@ -1838,13 +1514,8 @@
     <name>AppVolumes</name>
     <message>
         <location filename="../modules/nexus/pages/audio/AppVolumes.qml" line="+17"/>
-<<<<<<< Updated upstream
-        <source>App volumes</source>
-        <translation>Volúmenes de las aplicaciones</translation>
-=======
         <source>App Volumes</source>
         <translation>Volumen de aplicaciones</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+13"/>
@@ -1939,11 +1610,7 @@
         <translation>Todo aparece como un widget flotante independiente (muy experimental)</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+8"/>
-=======
         <location line="+246"/>
->>>>>>> Stashed changes
         <source>Border thickness</source>
         <translation>Grosor del borde</translation>
     </message>
@@ -1953,11 +1620,7 @@
         <translation>Grosor del borde del shell en píxeles. Establécelo en 0 para eliminar el borde</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+10"/>
-=======
         <location line="+33"/>
->>>>>>> Stashed changes
         <source>Corner radius scale</source>
         <translation>Escala del radio de las esquinas</translation>
     </message>
@@ -1967,11 +1630,7 @@
         <translation>Multiplica el redondeo de las esquinas del shell</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+10"/>
-=======
         <location line="-273"/>
->>>>>>> Stashed changes
         <source>Transparency</source>
         <translation>Transparencia</translation>
     </message>
@@ -2101,11 +1760,7 @@
         <translation>Esquinas y efectos</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+11"/>
-=======
         <location line="+23"/>
->>>>>>> Stashed changes
         <source>Border rounding</source>
         <translation>Redondeo del borde</translation>
     </message>
@@ -2115,11 +1770,7 @@
         <translation>Suavizado del borde</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+12"/>
-=======
         <location line="+24"/>
->>>>>>> Stashed changes
         <source>Blur deform</source>
         <translation>Deformación del desenfoque</translation>
     </message>
@@ -2465,11 +2116,7 @@
         <translation>Aplicación desconocida</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+174"/>
-=======
         <location line="+188"/>
->>>>>>> Stashed changes
         <source>Audio output changed</source>
         <translation>Salida de audio modificada</translation>
     </message>
@@ -2575,15 +2222,6 @@
     </message>
     <message>
         <location line="+6"/>
-<<<<<<< Updated upstream
-        <source>Sound effects</source>
-        <translation>Efectos de sonido</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Feedback sounds and volume</source>
-        <translation>Sonidos de respuesta y volumen</translation>
-=======
         <source>Sounds</source>
         <translation>Sonidos</translation>
     </message>
@@ -2591,7 +2229,6 @@
         <location line="+1"/>
         <source>Notification and feedback sounds</source>
         <translation>Sonidos de notificación y respuesta</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -2641,11 +2278,7 @@
 <context>
     <name>AuthHandler</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/AuthHandler.qml" line="+26"/>
-=======
         <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/AuthHandler.qml" line="+30"/>
->>>>>>> Stashed changes
         <source>%1 min left</source>
         <translation>Quedan %1 min</translation>
     </message>
@@ -2662,13 +2295,8 @@
     <name>AutostartPage</name>
     <message>
         <location filename="../modules/nexus/pages/startup/AutostartPage.qml" line="+18"/>
-<<<<<<< Updated upstream
-        <source>Startup</source>
-        <translation>Autoinicio</translation>
-=======
         <source>Startup Applications</source>
         <translation>Aplicaciones de autoinicio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+10"/>
@@ -3659,11 +3287,7 @@
 <context>
     <name>BarPreviewScales</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/pages/panels/taskbar/BarPreviewScales.qml" line="+15"/>
-=======
         <location filename="../modules/nexus/pages/panels/taskbar/BarPreviewScales.qml" line="+16"/>
->>>>>>> Stashed changes
         <source>Per Element Scaling Offset</source>
         <translation>Ajuste de escala por elemento</translation>
     </message>
@@ -3678,97 +3302,6 @@
         <translation>Personalizar la escala de vista previa y la fuente para cada tipo de ventana emergente</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+32"/>
-        <source>RESET ALL</source>
-        <translation>RESTABLECER TODO</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Reset all to 0</source>
-        <translation>Restablecer todo a 0</translation>
-    </message>
-    <message>
-        <location line="+46"/>
-        <source>Scale</source>
-        <translation>Escala</translation>
-    </message>
-    <message>
-        <location line="+15"/>
-        <source>Font</source>
-        <translation>Fuente</translation>
-    </message>
-    <message>
-        <location line="+22"/>
-        <source>Greeter</source>
-        <translation>Pantalla de bienvenida</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Audio</source>
-        <translation>Audio</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Battery</source>
-        <translation>Batería</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Bluetooth</source>
-        <translation>Bluetooth</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Clock</source>
-        <translation>Reloj</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Dock</source>
-        <translation>Dock</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>GitHub</source>
-        <translation>GitHub</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Lock status</source>
-        <translation>Estado de bloqueo</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Network</source>
-        <translation>Red</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Notifications</source>
-        <translation>Notificaciones</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Peripheral battery</source>
-        <translation>Batería de periféricos</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Tray menu</source>
-        <translation>Menú de la bandeja</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Wireless password</source>
-        <translation>Contraseña de red inalámbrica</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Now playing</source>
-        <translation>Reproduciendo ahora</translation>
-    </message>
-=======
         <location line="+22"/>
         <source>Turn this on to set a preview scale and a font scale for each popout type.</source>
         <translation>Activa esto para establecer una escala de previsualización y de fuente para cada tipo de ventana emergente.</translation>
@@ -3863,7 +3396,6 @@
         <source>Now playing</source>
         <translation>Reproduciendo ahora</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>BarScreenCapture</name>
@@ -4061,86 +3593,42 @@
     <message>
         <location line="+7"/>
         <source>Every icon stays on the bar while Compact is off, so Collapse applies once it is on.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Cada icono se mantiene en la barra mientras Compacto está desactivado, así que Colapsar se aplica cuando esté activado.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+14"/>
         <source>Not running</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No está ejecutándose</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+49"/>
         <source>Forget</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Olvidar</translation>
-=======
         <translation>Olvidar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+20"/>
         <source>No tray icons have been seen yet.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No se han visto iconos de bandeja todavía.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Drag a row to change the order</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Arrastra una fila para cambiar el orden</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
     <name>BarUpdates</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/pages/panels/taskbar/BarUpdates.qml" line="+13"/>
-=======
         <location filename="../modules/nexus/pages/panels/taskbar/BarUpdates.qml" line="+19"/>
->>>>>>> Stashed changes
         <source>Updates</source>
         <translation>Actualizaciones</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+11"/>
-=======
         <location line="+12"/>
->>>>>>> Stashed changes
         <source>Show update indicator</source>
         <translation>Mostrar indicador de actualizaciones</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+1"/>
-        <source>Always-visible icon in the taskbar that changes when a Caelestia update is available</source>
-        <translation>Icono siempre visible en la barra de tareas que cambia cuando hay una actualización de Caelestia disponible</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Enable update checking</source>
-        <translation>Activar comprobación de actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Enables the update indicator and periodic checks (every 30 minutes)</source>
-        <translation>Activa el indicador de actualizaciones y las comprobaciones periódicas (cada 30 minutos)</translation>
-    </message>
-=======
         <location line="+2"/>
         <source>Nothing to report while update checking is off</source>
         <translation>Nada que reportar mientras la comprobación de actualizaciones está apagada</translation>
@@ -4160,90 +3648,53 @@
         <source>Periodic checks and the indicator are off</source>
         <translation>Las comprobaciones periódicas y el indicador están apagados</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>BarWeather</name>
     <message>
         <location filename="../modules/nexus/pages/panels/taskbar/BarWeather.qml" line="+15"/>
         <source>Auto</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Automático</translation>
-=======
         <translation>Automático</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>°C</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>ºC</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>°F</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>ºF</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Weather</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Tiempo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
         <source>Units</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Unidades</translation>
-=======
         <translation>Unidades</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Temperature</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Temperatura</translation>
-=======
         <translation>Temperatura</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Units for weather temperatures</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Unidades para la temperatura del clima</translation>
-=======
         <translation>Unidades para temperaturas climáticas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Location</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Localización</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Set the weather location</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Establece la localización para el tiempo</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -4362,15 +3813,9 @@
         <translation>Batería</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+146"/>
-        <source>%1%</source>
-        <translation type="unfinished">%1%</translation>
-=======
         <location line="+169"/>
         <source>%1%</source>
         <translation>%1%</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
@@ -4386,11 +3831,7 @@
         <location line="+3"/>
         <location line="+5"/>
         <source>~ %1</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>~ %1</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="-2"/>
@@ -4455,8 +3896,6 @@
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>BlobPopup</name>
     <message>
         <location filename="../modules/nexus/common/BlobPopup.qml" line="+117"/>
@@ -4465,7 +3904,6 @@
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>Bluetooth</name>
     <message>
         <location filename="../modules/bar/popouts/Bluetooth.qml" line="+28"/>
@@ -4506,72 +3944,6 @@
 <context>
     <name>BluetoothPage</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/pages/BluetoothPage.qml" line="+20"/>
-        <source>Connected devices</source>
-        <translation>Dispositivos conectados</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Connected Devices</source>
-        <translation>Dispositivos Conectados</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Bluetooth</source>
-        <translation>Bluetooth</translation>
-    </message>
-    <message>
-        <location line="+15"/>
-        <source>No saved devices</source>
-        <translation>No hay dispositivos guardados</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Bluetooth disabled</source>
-        <translation>Bluetooth desactivado</translation>
-    </message>
-    <message>
-        <location line="+73"/>
-        <source>Unknown</source>
-        <translation>Desconocido</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Connected%1</source>
-        <translation>Conectado%1</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Saved</source>
-        <translation>Guardada</translation>
-    </message>
-    <message>
-        <location line="+77"/>
-        <source>Pair new device</source>
-        <translation>Emparejar nuevo dispositivo</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Discoverable</source>
-        <translation>Visible para otros dispositivos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Allow nearby devices to find this one</source>
-        <translation>Permitir que los dispositivos cercanos encuentren este dispositivo</translation>
-    </message>
-    <message>
-        <location line="+16"/>
-        <source>Pairable</source>
-        <translation>Emparejable</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Allow nearby devices to pair with this one</source>
-        <translation>Permitir que los dispositivos cercanos se emparejen con este dispositivo</translation>
-    </message>
-=======
         <location filename="../modules/nexus/pages/BluetoothPage.qml" line="+30"/>
         <source>Connected Devices</source>
         <translation>Dispositivos Conectados</translation>
@@ -4632,17 +4004,12 @@
         <source>Allow nearby devices to pair with this one</source>
         <translation>Permitir que los dispositivos cercanos se emparejen con este dispositivo</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>BluetoothPairing</name>
     <message>
         <location filename="../modules/nexus/pages/bluetooth/BluetoothPairing.qml" line="+24"/>
-<<<<<<< Updated upstream
-        <source>Pair new device</source>
-=======
         <source>Pair New Device</source>
->>>>>>> Stashed changes
         <translation>Emparejar nuevo dispositivo</translation>
     </message>
     <message>
@@ -4885,92 +4252,52 @@
     <message>
         <location line="+10"/>
         <source>Name</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Nombre</translation>
-=======
         <translation>Nombre</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Work</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Trabajo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>iCal address</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Dirección iCal</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+21"/>
         <source>Paste the address, then add it</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pega la dirección y luego añádela</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Add</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Añadir</translation>
-=======
         <translation>Añadir</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+66"/>
         <source>Agenda</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Agenda</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Look ahead</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Eventos próximos</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>How far the agenda and the calendar popout look for events</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Cómo de lejos la agenda y el calendario buscan eventos</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>%1 days</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">%1 días</translation>
-=======
         <translation>%1 días</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+35"/>
         <source>Refresh</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Actualizar</translation>
-=======
         <translation>Actualizar</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -5002,11 +4329,6 @@
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>CaptureCard</name>
-    <message>
-        <location filename="../modules/utilities/cards/CaptureCard.qml" line="+88"/>
-=======
     <name>CalendarWidget</name>
     <message>
         <location filename="../modules/background/desktopicons/widgets/CalendarWidget.qml" line="+30"/>
@@ -5033,135 +4355,10 @@
     <name>CaptureCard</name>
     <message>
         <location filename="../modules/utilities/cards/CaptureCard.qml" line="+94"/>
->>>>>>> Stashed changes
         <source>Screen Capture</source>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+7"/>
-        <source>Capture, OCR and image search</source>
-        <translation>Captura, OCR y búsqueda de imágenes</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Paused</source>
-        <translation>Pausado</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Running...</source>
-        <translation>Grabando...</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Ready</source>
-        <translation>Listo</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <location line="+179"/>
-        <source>Record</source>
-        <translation>Grabar</translation>
-    </message>
-    <message>
-        <location line="-178"/>
-        <location line="+9"/>
-        <location line="+9"/>
-        <location line="+9"/>
-        <location line="+10"/>
-        <source>Start</source>
-        <translation>Iniciar</translation>
-    </message>
-    <message>
-        <location line="-29"/>
-        <source>Record with Sound</source>
-        <translation>Grabar con sonido</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Record with Microphone</source>
-        <translation>Grabar con micrófono</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Both Sound &amp; Microphone</source>
-        <translation>Sonido y micrófono</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Record GIF</source>
-        <translation>Grabar GIF</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <location line="+84"/>
-        <source>Use Spectacle</source>
-        <translation>Usar Spectacle</translation>
-    </message>
-    <message>
-        <location line="-83"/>
-        <location line="+84"/>
-        <source>Spectacle</source>
-        <translation>Spectacle</translation>
-    </message>
-    <message>
-        <location line="-62"/>
-        <source>Capture region</source>
-        <translation>Capturar región</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <location line="+117"/>
-        <source>Capture</source>
-        <translation>Capturar</translation>
-    </message>
-    <message>
-        <location line="-107"/>
-        <source>Capture fullscreen</source>
-        <translation>Capturar pantalla completa</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Fullscreen</source>
-        <translation>Pantalla completa</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Capture active window</source>
-        <translation>Capturar ventana activa</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Window</source>
-        <translation>Ventana</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Recognize text</source>
-        <translation>Reconocer texto</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Recognize</source>
-        <translation>Reconocer</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Search image</source>
-        <translation>Buscar imagen</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Search</source>
-        <translation>Buscar</translation>
-    </message>
-    <message>
-        <location line="+198"/>
-        <source>Recording %1</source>
-        <translation>Grabando %1</translation>
-    </message>
-=======
         <location line="+25"/>
         <source>Paused</source>
         <translation>Pausado</translation>
@@ -5287,7 +4484,6 @@
         <source>0%</source>
         <translation>0%</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Categories</name>
@@ -5422,13 +4618,6 @@
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>Connectivity</name>
-    <message>
-        <location filename="../services/Connectivity.qml" line="+98"/>
-        <source>No sign-in page answered.</source>
-        <translation>Ninguna página de inicio de sesión respondió</translation>
-=======
     <name>CompactOsd</name>
     <message>
         <location filename="../modules/osd/floating/CompactOsd.qml" line="+129"/>
@@ -5447,7 +4636,6 @@
         <location filename="../services/Connectivity.qml" line="+101"/>
         <source>No sign-in page answered.</source>
         <translation>Ninguna página de inicio de sesión respondió.</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -5999,11 +5187,7 @@
     <message>
         <location line="-53"/>
         <source>General</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">General</translation>
-=======
         <translation>General</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
@@ -6068,11 +5252,7 @@
     <message>
         <location line="+8"/>
         <source>Terminal</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Terminal</translation>
-=======
         <translation>Terminal</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
@@ -6097,38 +5277,22 @@
     <message>
         <location line="+8"/>
         <source>Ambient color mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Modo de color ambiente</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Ambient glow is unavailable in light mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>El brillo ambiente no está disponible en modo claro</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Ambient light glow in media tab</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Brillo de luz ambiente en la pestaña de medios</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Ambient glow opacity</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Opacidad del brillo ambiente</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+14"/>
@@ -6153,20 +5317,12 @@
     <message>
         <location line="+7"/>
         <source>GPU</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">GPU</translation>
-=======
         <translation>GPU</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>CPU</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">CPU</translation>
-=======
         <translation>CPU</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -6257,11 +5413,7 @@
         <translation type="unfinished">Círculo</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+5"/>
-=======
         <location line="+7"/>
->>>>>>> Stashed changes
         <source>Desktop Addons</source>
         <translation>Complementos del escritorio</translation>
     </message>
@@ -6302,35 +5454,12 @@
         <translation>Visualizador de Audio</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+13"/>
-        <source>plasma-audio-visualizer not installed</source>
-=======
         <location line="+12"/>
         <source>Visualizer not available</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>Download and install plasma-audio-visualizer to enable these settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Enable Visualizer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show audio visualizer on desktop</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Profile</source>
-=======
         <source>Click to open troubleshooting guide</source>
         <translation type="unfinished">Pulsa para abrir la guía de solución de problemas</translation>
     </message>
@@ -6347,70 +5476,20 @@
     <message>
         <location line="+2"/>
         <source>Visualizer is not visible when internal wallpaper is enabled</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>Visualizer layout and style preset</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Auto-hide visualizer</source>
-=======
         <source>Show audio visualizer on desktop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Profile</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>Hide visualizer when a window is maximized on active workspace</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+12"/>
-        <source>Hide on all monitors</source>
-        <translation>Ocultar en todos los monitores</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Also hide on all other monitors if disabled by a window</source>
-        <translation>Ocultar también en todos los demás monitores si una ventana lo desactiva</translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>Configure Visualizer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Right click on desktop -&gt; Edit Mode -&gt; Right click visualizer -&gt; Configure</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Media shapes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Auto-hide media shapes</source>
-        <translation>Ocultar automáticamente las formas multimedia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hide media shapes when a window is open</source>
-        <translation>Ocultar las formas multimedia cuando haya una ventana abierta</translation>
-    </message>
-=======
         <source>Visualizer layout and style preset</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6454,54 +5533,33 @@
         <source>Hide media shapes when a window is open</source>
         <translation>Ocultar las formas multimedia cuando haya una ventana abierta</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>DesktopContextMenu</name>
     <message>
         <location filename="../modules/background/DesktopContextMenu.qml" line="+113"/>
         <source>Done Editing Widgets</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>He acabado de editar widgets</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Edit Widgets</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Editar widgets</translation>
-=======
         <translation>Editar widgets</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Lock All Widgets</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Bloquear todos los widgets</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Unlock All Widgets</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Desbloquear todos los widgets</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+52"/>
         <source>Widgets</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Widgets</translation>
-=======
         <translation>Widgets</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+16"/>
@@ -6563,81 +5621,6 @@
     </message>
     <message>
         <location line="+12"/>
-<<<<<<< Updated upstream
-        <source>Change Folder...</source>
-        <translation>Cambiar la carpeta...</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Open in File Manager</source>
-        <translation>Abrir en el gestor de archivos</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Group Items</source>
-        <translation>Agrupar elementos</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Ungroup</source>
-        <translation>Desagrupar</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Remove from Group</source>
-        <translation>Quitar del grupo</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Copy</source>
-        <translation>Copiar</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Cut</source>
-        <translation>Cortar</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Move Contents to Trash</source>
-        <translation>Mover el contenido a la papelera</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Move to Trash</source>
-        <translation>Mover a la papelera</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Unlock Widgets</source>
-        <translation>Desbloquear widgets</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Unlock Widget</source>
-        <translation>Desbloquear widget</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Lock Widgets</source>
-        <translation>Bloquear widgets</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Lock Widget</source>
-        <translation>Bloquear widget</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Remove Widgets</source>
-        <translation>Quitar los widgets</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Remove Widget</source>
-        <translation>Quitar el widget</translation>
-    </message>
-=======
         <source>Widget Settings...</source>
         <translation>Ajustes de widget...</translation>
     </message>
@@ -6716,26 +5699,17 @@
         <source>Remove Widget</source>
         <translation>Quitar el widget</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>DesktopIcons</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/DesktopIcons.qml" line="+699"/>
-=======
         <location filename="../modules/background/DesktopIcons.qml" line="+711"/>
->>>>>>> Stashed changes
         <location line="+3"/>
         <source>Group</source>
         <translation>Agrupar</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+442"/>
-=======
         <location line="+459"/>
->>>>>>> Stashed changes
         <location line="+10"/>
         <source>Rename failed</source>
         <translation>No se pudo renombrar</translation>
@@ -6759,117 +5733,31 @@
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>DesktopPage</name>
-    <message>
-        <location filename="../modules/nexus/pages/DesktopPage.qml" line="+12"/>
-        <source>Desktop &amp; Tiling</source>
-        <translation>Escritorio y mosaico</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Desktop</source>
-        <translation>Escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Disabled (Plasma)</source>
-        <translation>Desabilitado (Plasma)</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Icons enabled</source>
-        <translation>Iconos habilitados</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Icons disabled</source>
-        <translation>Iconos desabilitados</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Desktop Addons</source>
-        <translation>Complementos del escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Visualiser, auto-hide, styling</source>
-        <translation>Visualizador, ocultamiento automático y estilo</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Right Click Menu</source>
-        <translation>Menú del clic derecho</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Configure desktop right click menu</source>
-        <translation>Configurar el menú del clic derecho del escritorio</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Window Tiling</source>
-        <translation>Mosaico de ventanas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Enabled (Krohnkite)</source>
-        <translation>Activado (Krohnkite)</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Disabled</source>
-        <translation>Desactivado</translation>
-    </message>
-</context>
-<context>
-=======
->>>>>>> Stashed changes
     <name>DesktopSettingsPage</name>
     <message>
         <location filename="../modules/nexus/pages/desktop/DesktopSettingsPage.qml" line="+16"/>
         <source>Small</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Pequeño</translation>
-=======
         <translation>Pequeño</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Medium</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Mediano</translation>
-=======
         <translation>Mediano</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Large</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Grande</translation>
-=======
         <translation>Grande</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Huge</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Enorme</translation>
-=======
         <translation>Enorme</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Desktop</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Escritorio</translation>
-=======
         <translation>Escritorio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
@@ -6889,11 +5777,7 @@
     <message>
         <location line="+16"/>
         <source>Show Desktop Icons</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Mostrar iconos del escritorio</translation>
-=======
         <translation>Mostrar iconos del escritorio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -7116,11 +6000,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>GitHub</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">GitHub</translation>
-=======
         <translation>GitHub</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -7133,11 +6013,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+12"/>
         <source>No screen reports any mode to choose from.</source>
-<<<<<<< Updated upstream
-        <translation>Ninguna pantalla reporta ningún modo del que elegir</translation>
-=======
         <translation>Ninguna pantalla reporta ningún modo del que elegir.</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -7145,209 +6021,117 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/pages/DisplayPage.qml" line="+57"/>
         <source>Normal</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Normal</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Left</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Izquierda</translation>
-=======
         <translation>Izquierda</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Upside down</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Del revés</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Right</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Derecha</translation>
-=======
         <translation>Derecha</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+18"/>
         <source>Unknown mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Modo desconocido</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+3"/>
         <source>Displays</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pantallas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+15"/>
         <source>This machine has no kscreen-doctor, so the shell can neither read nor change the screen setup. Install Plasma&apos;s kscreen package to manage displays here.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Esta máquina no tiene kscreen-doctor instalado, así que la shell no puede leer ni cambiar la configuración de pantalla. Instala el paquete kscreen de Plasma para administrar las pantallas aquí.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+22"/>
         <source>%1 (off)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 (apagado)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Enabled</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Activado</translation>
-=======
         <translation>Activado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Drives a picture for this screen</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Muestra una imagen para esta pantalla</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>The last enabled screen has to stay on</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>La última pantalla activada debe mantenerse encendida</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Resolution &amp; refresh rate</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Resolución y tasa de refreso</translation>
-=======
         <translation>Resolución y tasa de refreso</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Scale</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Escala</translation>
-=======
         <translation>Escala</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>How large everything is drawn</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation></translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Rotation</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Rotación</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Turn the picture to match how the screen stands</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Rota la imagen para coincidir con la posición de la pantalla</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
         <source>HDR</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>HDR</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>High dynamic range, and the wide colour gamut that goes with it</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Alto rango dinámico, y el ancho gamut de color que le acompaña</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Input</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Entrada</translation>
-=======
         <translation>Entrada</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>Mouse &amp; touchpad</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Ratón y panel táctil</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Speed, tap to click, natural scrolling</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Velocidad, tocar para hacer click, desplazamiento natural</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Keyboard</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Teclado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Repeat rate, layouts, advanced settings</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Tasa de repetición, disposiciones, ajustes avanzados</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -7419,56 +6203,32 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/background/EditModeOverlay.qml" line="+112"/>
         <source>Exit Plasma edit mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Salir de modo de edición de Plasma</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+14"/>
         <source>Editing widgets</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Editando widgets</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+19"/>
         <source>Add widget</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Añadir widget</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Lock all</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Bloquear todo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Unlock all</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Desbloquear todo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Done</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Listo</translation>
-=======
         <translation>Hecho</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -7483,235 +6243,52 @@ Ahora salir a tocar el pasto</translation>
     <name>Entries</name>
     <message>
         <location filename="../modules/whatsnew/Entries.qml" line="+14"/>
-<<<<<<< Updated upstream
-        <source>Cheaper Inference AI Provider</source>
-=======
         <source>Floating OSD Styles</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
-<<<<<<< Updated upstream
-        <source>Added Cheaper Inference as a supported assistant provider in AI settings, allowing seamless integration with cost-effective cloud AI inference models alongside existing local and cloud providers.</source>
-=======
         <source>Pick a volume and brightness OSD: pill, compact, radial, card, or the edge drawer.</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-<<<<<<< Updated upstream
-        <source>Accessibility Controls</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>A dedicated Accessibility page in Nexus provides instant controls for screen magnification, colour inversion, high-contrast filters, reduced motion, and on-screen keyboard options to suit your workflow.</source>
-=======
         <source>Desktop Widgets</source>
         <translation>Widgets de escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add clocks, calendars, notes, weather, media and folders to the desktop, then resize or configure each one.</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-<<<<<<< Updated upstream
-        <source>Captive Portal &amp; Proxy Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>The shell now automatically detects public and hotel captive Wi-Fi portals with one-click sign-in prompts, alongside comprehensive system proxy configuration options in Network settings.</source>
-=======
         <source>Open From a Notification</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Click a notification to open the app that sent it.</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-<<<<<<< Updated upstream
-        <source>Dock Recent Files &amp; Jump Lists</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pinned and running applications on the dock now display their recently accessed documents and jump-list actions directly in their right-click context menus for faster resumption.</source>
-=======
         <source>Notification Sounds</source>
         <translation>Sonidos de notificación</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Choose the notification sound and volume, and preview it in Sound Effects.</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+6"/>
-<<<<<<< Updated upstream
-        <source>Nexus Keyboard Navigation</source>
-=======
         <source>Quick Share Pairing Code</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>Nexus settings now offers full keyboard accessibility: press Meta+U to open Nexus, &apos;/&apos; to jump immediately into search, arrow keys and Tab to navigate categories and controls, and hold-to-confirm key captures.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Instant Window Tiling Reload</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Krohnkite window tiling settings now reload and apply dynamically in real time without requiring a session logout or restart when tweaking tiling layouts, rules, and window gaps.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Toast Positioning &amp; Corner Rounding</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Toast notification banners can now be anchored to any corner of the screen (top-left, top-right, bottom-left, bottom-right) with configurable corner radii and independent surface styling rules.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Startup Applications Manager</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Easily manage programs that run when you log in through Nexus. View all configured autostart entries, toggle individual background services, and add new apps with the integrated application picker.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Disk &amp; Storage Management</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Nexus now includes a dedicated Disk &amp; Storage settings page to inspect mounted drives, monitor filesystem capacity and partition health, and safely mount, unmount, or eject external USB media.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Countdown Timers &amp; Quick Toggles</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>The Utilities drawer introduces persistent countdown timers that survive shell restarts, pin active timers directly to the taskbar, and convert utilities like Keep Awake into persistent quick toggles.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>System Tray Ordering &amp; Renaming</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>The taskbar system tray now provides granular per-icon control: set icons to Always Visible, Collapsible, or Hidden, drag and drop to reorder pinned tray items, and assign custom display names and tooltips.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Shell Animation Presets</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Fine-tune interface motion with new shell animation presets, allowing you to choose between expressive motion, standard timing, snappy transitions, or instant response across all panels and drawers. You can also switch animation profiles from launcher by typing &gt; and selecting Animations.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Display &amp; HDR Management</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Manage multiple monitors seamlessly within Nexus: configure display resolutions, refresh rates, monitor rotation, fractional HiDPI scaling, and High Dynamic Range (HDR) toggles all in one place.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Focus Sessions &amp; Meeting DND</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Focus Sessions let you schedule distraction-free work periods that automatically silence notifications and dim background distractions, with optional automated start whenever calendar meetings begin.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Calendar Agenda &amp; Google Calendar Sync</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>The taskbar calendar synchronizes with Google Calendar and remote ICS feeds to display upcoming meeting agendas and event schedules, with hover activation and direct link access right from the bar.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>KRunner System Search in Launcher</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>The launcher now integrates with KDE&apos;s KRunner search service to execute math equations, locate system files and browser bookmarks, look up system settings, and configure custom web search engines. Type &gt; to open commands and select Search everything.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Three-Panel Nexus Settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Nexus settings has been overhauled with a three-panel layout displaying sections, subcategories, and active settings side by side. It folds smoothly into two panels on compact screens, and introduces an integrated system font picker previewing every installed typeface.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Plasma Audio Visualizer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Desktop audio visualization is now powered by the native Plasma Audio Visualizer with multi-monitor positioning, idle auto-hiding, responsive geometry calculations, and multiple profiles.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>New Wallpaper Engine</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Deep integration with the skwd-wall daemon brings high-performance animated and video wallpapers with thumbnail caching, automatic Material You smart color extraction via caelestia-color, and a new Library and Community wallpapers browser. Press Meta + X to open the new Wallpaper Switcher.</source>
-=======
         <source>Both devices show a four-digit code. Compare them before a file is sent.</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -7720,11 +6297,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/pages/network/EthernetDetailPage.qml" line="+20"/>
         <source>Ethernet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Ethernet</translation>
-=======
         <translation>Ethernet</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+54"/>
@@ -7767,11 +6340,7 @@ Ahora salir a tocar el pasto</translation>
         <location line="+6"/>
         <location line="+7"/>
         <source>—</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>—</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="-21"/>
@@ -7864,8 +6433,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>FileEntry</name>
     <message>
         <location filename="../modules/background/desktopicons/FileEntry.qml" line="+146"/>
@@ -7887,7 +6454,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>Focus</name>
     <message>
         <location filename="../services/Focus.qml" line="+44"/>
@@ -7901,11 +6467,7 @@ Ahora salir a tocar el pasto</translation>
         <location filename="../modules/nexus/pages/services/FocusPage.qml" line="+61"/>
         <location line="+2"/>
         <source>Every day</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Cada día</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -7931,82 +6493,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+20"/>
-<<<<<<< Updated upstream
-        <location line="+16"/>
-        <source>Focus sessions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Turn notifications off by themselves on a schedule</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Follow the calendar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Start a session while a calendar event is running</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+18"/>
-        <source>Schedules</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+58"/>
-        <source>Name</source>
-        <translation type="unfinished">Nombre</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Deep work</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+18"/>
-        <source>Days</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+50"/>
-        <source>From</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+15"/>
-        <source>to</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <source>Add</source>
-        <translation type="unfinished">Añadir</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Allowed through</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Notifications from these apps still pop up during a focus session.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Allow an application</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pick it from the applications installed here</source>
-        <translation type="unfinished">Elígela entre las aplicaciones instaladas aquí</translation>
-    </message>
-=======
         <source>Focus Sessions</source>
         <translation type="unfinished">Sesiones de concentración</translation>
     </message>
@@ -8085,7 +6571,6 @@ Ahora salir a tocar el pasto</translation>
         <source>Pick it from the applications installed here</source>
         <translation type="unfinished">Elígela entre las aplicaciones instaladas aquí</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>FolderContents</name>
@@ -8098,11 +6583,7 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>FolderWidget</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+46"/>
-=======
         <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+44"/>
->>>>>>> Stashed changes
         <source>Choose a folder to show</source>
         <translation>Elegí una carpeta para mostrar</translation>
     </message>
@@ -8174,13 +6655,8 @@ Ahora salir a tocar el pasto</translation>
     <name>GameModePage</name>
     <message>
         <location filename="../modules/nexus/pages/services/GameModePage.qml" line="+19"/>
-<<<<<<< Updated upstream
-        <source>Game mode</source>
-        <translation>Modo gaming</translation>
-=======
         <source>Game Mode</source>
         <translation>Modo de juego</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+13"/>
@@ -8238,32 +6714,6 @@ Ahora salir a tocar el pasto</translation>
         <translation>Desactivar la transparencia de las ventanas</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+9"/>
-        <source>Caelestia feature overrides</source>
-        <translation>Anulaciones de funciones de Caelestia</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Disable shell transparency</source>
-        <translation>Desactivar la transparencia del shell</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Disable toast notifications transparency</source>
-        <translation>Desactivar la transparencia de las notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Disable desktop lyrics</source>
-        <translation>Desactivar las letras del escritorio</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Disable visualizer</source>
-        <translation>Desactivar el visualizador</translation>
-    </message>
-=======
         <location line="+14"/>
         <source>KDE desktop effects</source>
         <translation>Efectos de escritorio de KDE</translation>
@@ -8319,7 +6769,6 @@ Ahora salir a tocar el pasto</translation>
         <source>Disable visualizer</source>
         <translation>Desactivar el visualizador</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>GameModeTargetsPage</name>
@@ -8397,11 +6846,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Add a personal access token in Settings -&gt; Panels -&gt; Taskbar -&gt; GitHub.</source>
-<<<<<<< Updated upstream
-        <translation>Añade un token de acceso personal en Configuración -&gt; Paneles -&gt; Barra de tareas -&gt; GitHub</translation>
-=======
         <translation>Añade un token de acceso personal en Configuración -&gt; Paneles -&gt; Barra de tareas -&gt; GitHub.</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -8460,281 +6905,157 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/sidebar/ai/HistoryPane.qml" line="+73"/>
         <source>You: </source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Tú: </translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+14"/>
         <source>Pinned</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Fijado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>Today</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Hoy</translation>
-=======
         <translation>Hoy</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>Yesterday</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Ayer</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>Previous 7 days</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Útimos 7 días</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>Previous 30 days</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Últimos 30 días</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>Older</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Más antiguo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>just now</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Justo ahora</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>%1 min ago</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Hace %1 min</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+68"/>
         <source>Chat deleted</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Chat eliminado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>1 chat cleared</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>1 chat borrado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>%1 chats cleared</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 chats borrados</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+46"/>
         <source>Search 1 chat</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Buscar 1 chat</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Search %1 chats</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Buscar %1 chats</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+224"/>
         <source>Unpin</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Desfijar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Pin to top</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Fijar arriba</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+14"/>
         <source>Rename</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Renombrar</translation>
-=======
         <translation>Renombrar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+18"/>
         <source>Copy as Markdown</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Copiar como Markdown</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+22"/>
         <source>Click again to delete</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pulsa otra vez para eliminar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Delete</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Eliminar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+37"/>
         <source>1 message</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>1 mensaje</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>%1 messages</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 mensajes</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+49"/>
         <source>No chats match &quot;%1&quot;</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Ningún chat coincide con &quot;%1&quot;</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>No saved chats yet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No hay chats guardados todavía</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+10"/>
         <source>Saving chat history is turned off in AI settings</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>El guardado de historial del chat está apagado en los ajustes de IA</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+56"/>
         <source>Undo</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Deshacer</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+12"/>
         <source>Clear unpinned</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Borrar no fijados</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Clear all</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Borrar todo</translation>
-=======
         <translation>Borrar todo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Hold to clear</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Mantener para borrar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+113"/>
         <source>Press and hold to delete %1 chats</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Presiona y mantén para borrar %1 chats</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+33"/>
         <source>New Chat</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Nuevo chat</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -8861,11 +7182,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/common/Ipv4ConfigSection.qml" line="+98"/>
         <source>IPv4</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>IPv4</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
@@ -8886,11 +7203,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+6"/>
         <source>Manual</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Manual</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+84"/>
@@ -8944,29 +7257,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../services/JsonScript.qml" line="+49"/>
         <source>The script failed with exit code %1.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>El script ha fallado con el código de salida %1.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>The script printed something that is not JSON.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>El script ha impreso algo que no es JSON.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>The script printed nothing.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>El script no ha impreso nada.</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -9000,20 +7301,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/bar/components/KeepAwakeWidget.qml" line="+109"/>
         <source>Active since %1</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Activo desde %1</translation>
-=======
         <translation>Activo desde %1</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Inactive</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Inactivo</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -9031,20 +7324,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+64"/>
         <source>Hold Escape to cancel (%1s)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Mantén Escape para cancelar (%1s)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+39"/>
         <source>Hold Enter to accept shortcut (%1s)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Mantén Enter para aceptar el atajo (%1s)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+25"/>
@@ -9080,11 +7365,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/pages/desktop/KrohnkitePage.qml" line="+24"/>
         <source>BTree</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>BTree</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -9155,29 +7436,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="-72"/>
         <source>Updating...</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Actualizando...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Update Krohnkite (v%1)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Actualiza Krohnkite (v%1)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Update Krohnkite</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Actualiza Krohnkite</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+73"/>
@@ -9202,20 +7471,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+13"/>
         <source>Magic Lamp Minimize</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Minimizar como lámpara mágica</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Enable the magic lamp effect when minimizing windows</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Activar el efecto de lámpara mágica al minimizar ventanas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+40"/>
@@ -9379,11 +7640,7 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>Kwin</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../services/Kwin.qml" line="+507"/>
-=======
         <location filename="../services/Kwin.qml" line="+511"/>
->>>>>>> Stashed changes
         <source>Caps lock enabled</source>
         <translation>Bloq Mayús activado</translation>
     </message>
@@ -9449,29 +7706,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="-37"/>
         <source>°C</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>ºC</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>°F</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>ºF</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>K</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>K</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -9481,11 +7726,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+4"/>
         <source>Decimal (KB, MB)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Decimal (KB, MB)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
@@ -9505,11 +7746,7 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+5"/>
-<<<<<<< Updated upstream
-        <source>Language &amp; region</source>
-=======
         <source>Language &amp; Region</source>
->>>>>>> Stashed changes
         <translation>Idioma y región</translation>
     </message>
     <message>
@@ -9638,11 +7875,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+5"/>
         <source>Simple</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Simple</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
@@ -9652,29 +7885,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+8"/>
         <source>Tooltip</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Tooltip</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Shrink icon</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Hacer icono más pequeño</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
         <source>Flip icon</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Dar la vuelta al icono</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
@@ -9684,11 +7905,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+11"/>
         <source>General</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">General</translation>
-=======
         <translation>General</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+5"/>
@@ -9788,20 +8005,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+7"/>
         <source>Truncated app names</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Nombres de app truncados</translation>
-=======
         <translation>Nombres de app truncados</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>How to show app names that are too long for the tile: a hover tooltip, shrinking the icon to make room for a second line, or flipping the icon away to show the full name</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Cómo enseñar nombres de aplicaciones que son demasiado largos para el título: un tooltip al pasar el cursor, hacer el icono más pequeño para que quepa una segunda línea, o quitar el icono para enseñar el nombre completo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -9938,71 +8147,32 @@ Ahora salir a tocar el pasto</translation>
     <name>LibraryAndCommunityPage</name>
     <message>
         <location filename="../modules/nexus/pages/wallandstyle/LibraryAndCommunityPage.qml" line="+37"/>
-<<<<<<< Updated upstream
-        <source>Community &amp; Online</source>
-        <translation type="unfinished"></translation>
-=======
         <source>Library &amp; Components</source>
         <translation>Librería y componentes</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+15"/>
         <source>Wallhaven</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Wallhaven</translation>
-=======
         <translation>Wallhaven</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Download wallpapers from Wallhaven</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Descargar fondos de Wallhaven</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Online Wallpapers</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Fondos de pantalla online</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Browse and download community wallpapers</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Explorar y descargar fondos de la comunidad</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Library Management</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+13"/>
-        <source>skwd-wall not installed</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Download and install skwd-wall to enable these settings.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Tags &amp; Filters</source>
-        <translation type="unfinished"></translation>
-=======
         <translation>Administración de librería</translation>
     </message>
     <message>
@@ -10019,34 +8189,21 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <source>Tags &amp; Filters</source>
         <translation>Etiquetas y filtros</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Organize library with custom tags</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Organiza la librería con etiquetas personalizadas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Open skwd-wall</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Abrir skwd-wall</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Launch the main wallpaper picker interface</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Ejecutar la interfaz selectora de fondos principal</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -10220,11 +8377,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+16"/>
         <source>General</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">General</translation>
-=======
         <translation>General</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
@@ -10506,45 +8659,15 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <location line="+6"/>
-        <source>A playful theme - the seed color&apos;s hue does not appear in the theme.</source>
-        <translation>Un tema divertido: el tono del color base no aparece en el tema.</translation>
-    </message>
-    <message>
-        <location line="-1"/>
-=======
         <source>A playful theme - the seed color shifts through unrelated hues.</source>
         <translation>Un tema juguetón: el color de la semilla transita por tonalidades no relacionadas entre sí.</translation>
     </message>
     <message>
         <location line="+5"/>
->>>>>>> Stashed changes
         <source>Rainbow</source>
         <translation>Arcoíris</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+6"/>
-        <source>Neutral</source>
-        <translation>Neutro</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Close to grayscale, a hint of chroma.</source>
-        <translation>Cercano a la escala de grises, con un ligero toque de croma.</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Monochrome</source>
-        <translation>Monocromático</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>All colors are grayscale, no chroma.</source>
-        <translation>Todos los colores están en escala de grises, sin croma.</translation>
-    </message>
-=======
         <location line="+1"/>
         <source>A playful theme - a full spectrum, with the seed only as an accent.</source>
         <translation>Un tema juguetón: una gama completa, en la que la semilla actúa únicamente como un acento.</translation>
@@ -10569,7 +8692,6 @@ Ahora salir a tocar el pasto</translation>
         <source>All colors are grayscale, no chroma.</source>
         <translation>Todos los colores están en escala de grises, sin croma.</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Media</name>
@@ -10622,20 +8744,12 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>MediaWidget</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+31"/>
-=======
         <location filename="../modules/background/desktopicons/widgets/MediaWidget.qml" line="+38"/>
->>>>>>> Stashed changes
         <source>Nothing playing</source>
         <translation>No hay nada en reproducción</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+49"/>
-=======
         <location line="+85"/>
->>>>>>> Stashed changes
         <source>Unknown title</source>
         <translation>Título desconocido</translation>
     </message>
@@ -10658,11 +8772,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/NavPane.qml" line="+106"/>
         <source>Press / to Search</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Presiona / para buscar</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -10685,11 +8795,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>DNS</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>DNS</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -10719,11 +8825,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+26"/>
         <source>VPN</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>VPN</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
@@ -10738,11 +8840,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+11"/>
         <source>Ethernet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Ethernet</translation>
-=======
         <translation>Ethernet</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
@@ -10785,11 +8883,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+27"/>
         <source>Total</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Total</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -10827,11 +8921,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>%1%</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">%1%</translation>
-=======
         <translation>%1%</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
@@ -10840,11 +8930,7 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+8"/>
         <source>—</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>—</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="-30"/>
@@ -10864,11 +8950,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>%1 MHz</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 MHz</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
@@ -10939,47 +9021,27 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+49"/>
         <source>Sign-in required</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Se requiere inicio de sesión</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Looking for the sign-in page...</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Buscando la página de inicio de sesión...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Open sign-in page</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Abrir página de inicio de sesión</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>This network asks you to sign in before it lets traffic through</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Esta red te pide iniciar sesión antes de dejar pasar tráfico</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Wi-Fi</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Wi-Fi</translation>
-=======
         <translation>Wi-Fi</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+25"/>
@@ -11059,13 +9121,8 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+2"/>
-<<<<<<< Updated upstream
-        <source>An error occurred</source>
-        <translation>Se produjo un error</translation>
-=======
         <source>Could not connect. Check the VPN settings and try again.</source>
         <translation>No se ha podido conectar. Comprueba los ajustes de VPN e inténtalo de nuevo.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
@@ -11085,11 +9142,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+20"/>
         <source>%1 ms</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 ms</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+28"/>
@@ -11099,30 +9152,18 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+8"/>
         <source>Advanced</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Avanzado</translation>
-=======
         <translation>Avanzado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Proxy</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
     <name>News</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/sidebar/News.qml" line="+90"/>
-=======
         <location filename="../modules/sidebar/News.qml" line="+91"/>
->>>>>>> Stashed changes
         <source>Failed to fetch news (Status: %1)</source>
         <translation>No se pudieron obtener las noticias (estado: %1)</translation>
     </message>
@@ -11143,8 +9184,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>NexusDialog</name>
     <message>
         <location filename="../modules/nexus/common/NexusDialog.qml" line="+22"/>
@@ -11176,7 +9215,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>NightLight</name>
     <message>
         <location filename="../modules/bar/popouts/NightLight.qml" line="+26"/>
@@ -11191,11 +9229,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+0"/>
         <source>Manual</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Manual</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+12"/>
@@ -11234,11 +9268,7 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>NoteWidget</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+49"/>
-=======
         <location filename="../modules/background/desktopicons/widgets/NoteWidget.qml" line="+47"/>
->>>>>>> Stashed changes
         <source>Write something…</source>
         <translation>Escribir algo…</translation>
     </message>
@@ -11249,210 +9279,118 @@ Ahora salir a tocar el pasto</translation>
         <location filename="../modules/bar/popouts/Notes.qml" line="+37"/>
         <location line="+228"/>
         <source>Untitled</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Sin título</translation>
-=======
         <translation>Sin título</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="-111"/>
         <source>Notes</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Notas</translation>
-=======
         <translation>Notas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+161"/>
         <source>No additional text</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Sin texto adicional</translation>
-=======
         <translation>Sin texto adicional</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+37"/>
         <source>No notes yet. Tap + to add one.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Todavía no hay notas. Tocar + para agregar una.</translation>
-=======
         <translation>Todavía no hay notas. Tocar + para agregar una.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+72"/>
         <source>Title</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Título</translation>
-=======
         <translation>Título</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+47"/>
         <source>Start writing...</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Empezar a escribir...</translation>
-=======
         <translation>Empezar a escribir...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+115"/>
         <source>List item</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Elemento de lista</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+10"/>
         <source>Add item</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Añadir elemento</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+22"/>
         <source>Pause</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pausar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Play</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Reproducir</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Stop</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Parar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Record</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Grabar</translation>
-=======
         <translation>Grabar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+13"/>
         <location line="+51"/>
         <source>Upload</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Subida</translation>
-=======
         <translation>Subir</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="-42"/>
         <source>No audio yet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No hay audio todavía</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+51"/>
         <source>Paste image URL…</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pega una URL de imagen...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+20"/>
         <source>No image yet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No hay imagen todavía</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Add a caption…</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Añade un subtítulo...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Select audio file</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Selecciona un archivo de audio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Audio files</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Archivos de audio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Select image</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Selecciona una imagen</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Image files</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Archivos de imagen</translation>
-=======
         <translation>Archivos de imagen</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+17"/>
         <source>Edited %1</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Editada %1</translation>
-=======
         <translation>Editada %1</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+28"/>
         <source>Select a note</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Selecciona una nota</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -11491,138 +9429,78 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+94"/>
         <source>List item</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Elemento de lista</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+10"/>
         <source>Add item</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Añadir elemento</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+26"/>
         <source>Pause</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pausar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Play</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Reproducir</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Stop</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Parar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Record</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Grabar</translation>
-=======
         <translation>Grabar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+13"/>
         <location line="+68"/>
         <source>Upload</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Subida</translation>
-=======
         <translation>Subir</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="-59"/>
         <source>No audio yet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No hay audio todavía</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+68"/>
         <source>Paste image URL…</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Pega una URL de imagen...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+20"/>
         <source>No image yet</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No hay imagen todavía</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Add a caption…</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Añade un subtítulo...</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+10"/>
         <source>Select audio file</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Selecciona un archivo de audio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Audio files</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Archivos de audio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Select image</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Selecciona una imagen</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Image files</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Archivos de imagen</translation>
-=======
         <translation>Archivos de imagen</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+17"/>
@@ -11638,25 +9516,15 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>Notif</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/sidebar/Notif.qml" line="+164"/>
-        <source>No body here! :/</source>
-        <translation>¡No hay contenido aquí! :/</translation>
-=======
         <location filename="../modules/sidebar/Notif.qml" line="+165"/>
         <source>No message text</source>
         <translation>No hay texto de mensaje</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
     <name>NotifData</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../services/NotifData.qml" line="+19"/>
-=======
         <location filename="../services/NotifData.qml" line="+20"/>
->>>>>>> Stashed changes
         <location line="+200"/>
         <source>now</source>
         <translation>ahora</translation>
@@ -11664,11 +9532,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="-164"/>
         <source>Reply…</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Responder...</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -11689,17 +9553,10 @@ Ahora salir a tocar el pasto</translation>
         <location line="+25"/>
         <location line="+18"/>
         <source>Search notifications</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+110"/>
-=======
         <translation>Buscar notificaciones</translation>
     </message>
     <message>
         <location line="+113"/>
->>>>>>> Stashed changes
         <source>Caelestia Mode</source>
         <translation>Modo Caelestia</translation>
     </message>
@@ -11728,20 +9585,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>h</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>h</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>d</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>d</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+70"/>
@@ -11762,15 +9611,9 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>Notification</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/notifications/Notification.qml" line="+498"/>
-        <source>Turn off notifications from %1</source>
-        <translation type="unfinished"></translation>
-=======
         <location filename="../modules/notifications/Notification.qml" line="+503"/>
         <source>Turn off notifications from %1</source>
         <translation>Desactivar notificaciones de %1</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -11831,177 +9674,6 @@ Ahora salir a tocar el pasto</translation>
         <translation>Abajo a la derecha</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+6"/>
-        <source>Notifications</source>
-        <translation>Notificaciones</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Display</source>
-        <translation>Visualización</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Show in fullscreen</source>
-        <translation>Mostrar en pantalla completa</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Allow notifications over fullscreen apps</source>
-        <translation>Permitir notificaciones sobre aplicaciones en pantalla completa</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Display on screen</source>
-        <translation>Mostrar en pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Which screens show notification popups</source>
-        <translation>En qué pantallas se muestran las notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Position</source>
-        <translation>Posición</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Where notification popups appear</source>
-        <translation>Dónde aparecen las notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Expire automatically</source>
-        <translation>Expirar automáticamente</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Dismiss notifications after their timeout</source>
-        <translation>Descartar las notificaciones cuando se agote su tiempo</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Open expanded</source>
-        <translation>Abrir expandidas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show notifications expanded by default</source>
-        <translation>Mostrar las notificaciones expandidas de forma predeterminada</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Do not disturb while sharing</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Mute notifications while the screen is being shared or recorded</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Default timeout</source>
-        <translation>Tiempo de espera predeterminado</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Seconds before a notification dismisses</source>
-        <translation>Segundos antes de descartar una notificación</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Group preview count</source>
-        <translation>Cantidad de vistas previas del grupo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Notifications shown before a group collapses</source>
-        <translation>Número de notificaciones mostradas antes de contraer un grupo</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Max popup notifications</source>
-        <translation>Máximo de notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Only the newest popups are shown; the rest stay in the sidebar</source>
-        <translation>Solo se muestran las notificaciones emergentes más recientes; las demás permanecen en la barra lateral</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Max stored notifications</source>
-        <translation>Máximo de notificaciones almacenadas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Older notifications are dropped when the limit is reached</source>
-        <translation>Las notificaciones más antiguas se eliminan al alcanzar el límite</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Interaction</source>
-        <translation>Interacción</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Click to activate</source>
-        <translation>Hacer clic para activar</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Activate the notification action on click</source>
-        <translation>Activar la acción de la notificación al hacer clic</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Expand threshold</source>
-        <translation>Umbral de expansión</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hover pixels before a docked notification expands</source>
-        <translation>Píxeles de desplazamiento del cursor necesarios para expandir una notificación acoplada</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Fullscreen timeout</source>
-        <translation>Tiempo de espera en pantalla completa</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Milliseconds a notification stays over a fullscreen app</source>
-        <translation>Milisegundos que una notificación permanece sobre una aplicación en pantalla completa</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Clear threshold</source>
-        <translation>Umbral para descartar</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Swipe distance before a notification is dismissed</source>
-        <translation>Distancia de deslizamiento necesaria para descartar una notificación</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Related settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Muted notification apps</source>
-        <translation type="unfinished">Aplicaciones con notificaciones silenciadas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Manage applications with disabled notifications or sounds</source>
-        <translation type="unfinished"></translation>
-    </message>
-=======
         <location line="+17"/>
         <source>Display</source>
         <translation>Visualización</translation>
@@ -12176,81 +9848,48 @@ Ahora salir a tocar el pasto</translation>
         <source>Manage applications with disabled notifications or sounds</source>
         <translation>Administrar aplicaciones con notificaciones o sonidos deshabilitados</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>NotificationSilencingPage</name>
     <message>
         <location filename="../modules/nexus/pages/audio/NotificationSilencingPage.qml" line="+14"/>
-<<<<<<< Updated upstream
-        <source>Muted apps</source>
-=======
         <source>Muted Apps</source>
->>>>>>> Stashed changes
         <translation>Aplicaciones silenciadas</translation>
     </message>
     <message>
         <location line="+11"/>
         <source>Notifications turned off</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Notificaciones apagadas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Nothing arrives from these applications: no banner, no sound, and nothing added to the notification list.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No llega nada desde estás aplicaciones: no hay banner, ni sonido, ni se añade nada a la lista de notificaciones.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Turn its notifications off completely</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Apaga completamente sus notificaciones</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Notifications without sound</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Notificaciones sin sonido</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>These applications still show their notifications. Only the sound is skipped.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Estas aplicaciones siguen mostrando sus notificaciones. Solo se omite el sonido.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Keep its notifications, drop the sound</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Mantén sus notificaciones, elimina el sonido</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+68"/>
         <source>Add an application</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Añadir una aplicación</translation>
-=======
         <translation>Añadir una aplicación</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -12298,69 +9937,15 @@ Ahora salir a tocar el pasto</translation>
     <name>NotificationsPage</name>
     <message>
         <location filename="../modules/nexus/pages/services/NotificationsPage.qml" line="+9"/>
-<<<<<<< Updated upstream
-        <location line="+16"/>
-=======
->>>>>>> Stashed changes
         <source>Notifications</source>
         <translation>Notificaciones</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-6"/>
-=======
         <location line="+10"/>
->>>>>>> Stashed changes
         <source>Delivery</source>
         <translation>Entrega</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+7"/>
-        <source>Position, timeout, and display behavior</source>
-        <translation>Posición, tiempo de espera y comportamiento de visualización</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Toasts</source>
-        <translation>Notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Fullscreen behavior, appearance, and sound</source>
-        <translation>Comportamiento en pantalla completa, apariencia y sonido</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Automation</source>
-        <translation>Automatización</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Toast events</source>
-        <translation>Eventos de notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Choose which system changes show a toast</source>
-        <translation>Elegir qué cambios del sistema muestran una notificación emergente</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Focus sessions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Running until %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Do Not Disturb on a schedule</source>
-        <translation type="unfinished"></translation>
-    </message>
-=======
         <location line="+6"/>
         <source>Notification Behaviour</source>
         <translation>Comportamiento de notificaciones</translation>
@@ -12410,18 +9995,13 @@ Ahora salir a tocar el pasto</translation>
         <source>Do Not Disturb on a schedule</source>
         <translation>Horario de No molestar</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Notifs</name>
     <message>
         <location filename="../services/Notifs.qml" line="+111"/>
         <source>Caelestia</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Caelestia</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+132"/>
@@ -12444,11 +10024,7 @@ Ahora salir a tocar el pasto</translation>
         <translation>Las notificaciones emergentes están activadas</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+109"/>
-=======
         <location line="+118"/>
->>>>>>> Stashed changes
         <source>Clear all notifications</source>
         <translation>Borrar todas las notificaciones</translation>
     </message>
@@ -12468,11 +10044,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Google Lens</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Google Lens</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -12481,99 +10053,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>OsdPage</name>
-    <message>
-        <location filename="../modules/nexus/pages/utilities/OsdPage.qml" line="+9"/>
-        <source>On-screen sliders</source>
-        <translation>Controles deslizantes en pantalla</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Sliders</source>
-        <translation>Controles deslizantes</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Enabled</source>
-        <translation>Activado</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show the on-screen sliders</source>
-        <translation>Mostrar los controles deslizantes en pantalla</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Volume</source>
-        <translation>Volumen</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show the volume slider</source>
-        <translation>Mostrar el control deslizante de volumen</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Microphone</source>
-        <translation>Micrófono</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show the microphone slider</source>
-        <translation>Mostrar el control deslizante del micrófono</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Brightness</source>
-        <translation>Brillo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show the brightness slider</source>
-        <translation>Mostrar el control deslizante de brillo</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Edge trigger</source>
-        <translation>Activación desde el borde</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Depth</source>
-        <translation>Profundidad</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Distance from the screen edge</source>
-        <translation>Distancia desde el borde de la pantalla</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Height</source>
-        <translation>Altura</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Portion of the edge that responds</source>
-        <translation>Porción del borde que responde</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Behavior</source>
-        <translation>Comportamiento</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Hide delay</source>
-        <translation>Retraso al ocultar</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Seconds before the slider hides</source>
-        <translation>Segundos antes de que se oculte el control deslizante</translation>
-    </message>
-=======
     <name>OsdFunctions</name>
     <message>
         <location filename="../modules/osd/OsdFunctions.qml" line="+36"/>
@@ -12800,7 +10279,6 @@ Ahora salir a tocar el pasto</translation>
         <source>Edge Drawer</source>
         <translation>Cajón de borde</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>OverviewPanel</name>
@@ -12989,38 +10467,22 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+6"/>
         <source>Ambient color mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Modo de color ambiente</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Ambient glow is unavailable in light mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>El brillo ambiente no está disponible en modo claro</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Ambient light glow in window info panel</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Brillo de luz ambiente en el panel de información de ventana</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Ambient glow opacity</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Opacidad del brillo ambiente</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
@@ -13081,344 +10543,6 @@ Ahora salir a tocar el pasto</translation>
 <context>
     <name>PageCompRegistry</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/PageCompRegistry.qml" line="+172"/>
-        <source>Page under construction</source>
-        <translation>Página en construcción</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>This page will be available in a future update.</source>
-        <translation>Esta página estará disponible en una futura actualización.</translation>
-    </message>
-</context>
-<context>
-    <name>PageDictionary</name>
-    <message>
-        <location filename="../modules/nexus/PageDictionary.qml" line="+9"/>
-        <source>Appearance</source>
-        <translation>Apariencia</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Wallpapers, colors, themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Theme &amp; Effects</source>
-        <translation>Tema y efectos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Font</source>
-        <translation>Fuente</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Monospace font</source>
-        <translation>Fuente monoespaciada</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Font scale</source>
-        <translation>Escala de la fuente</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Colors</source>
-        <translation>Colores</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Advanced color settings</source>
-        <translation>Configuración avanzada de colores</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Color intensity</source>
-        <translation>Intensidad del color</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Blur &amp; Opacity</source>
-        <translation>Desenfoque y opacidad</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Corner Radius</source>
-        <translation>Radio de las esquinas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallpapers</source>
-        <translation>Fondos de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallhaven</source>
-        <translation>Wallhaven</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallpaper settings</source>
-        <translation>Configuración del fondo de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Library &amp; Components</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Lock Screen</source>
-        <translation>Pantalla de bloqueo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Fingerprint</source>
-        <translation>Huella digital</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Bezel mode</source>
-        <translation>Modo de bisel</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Desktop &amp; Tiling</source>
-        <translation>Escritorio y mosaico</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Desktop, addons, tiling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Desktop</source>
-        <translation type="unfinished">Escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Desktop Addons</source>
-        <translation>Complementos del escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Right Click Menu</source>
-        <translation>Menú del clic derecho</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Window Tiling</source>
-        <translation>Mosaico de ventanas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Floating windows</source>
-        <translation>Ventanas flotantes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Virtual Workspaces</source>
-        <translation>Espacios de trabajo virtuales</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Panels &amp; Interface</source>
-        <translation>Paneles e interfaz</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Dashboard, taskbar, launcher</source>
-        <translation>Panel, barra de tareas, lanzador</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Taskbar</source>
-        <translation>Barra de tareas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Dashboard</source>
-        <translation>Panel</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Launcher</source>
-        <translation>Menú de aplicaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>App browser layout</source>
-        <translation>Diseño del explorador de aplicaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Truncated app names</source>
-        <translation>Nombres de app truncados</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Clipboard</source>
-        <translation>Portapapeles</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Sidebar</source>
-        <translation>Panel de notificaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Quick Toggles Panel</source>
-        <translation>Panel de controles rápidos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Overview</source>
-        <translation>Vista general</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Toggle &amp; Rearrange</source>
-        <translation>Activar y reorganizar</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Workspaces indicator</source>
-        <translation>Indicador de espacios de trabajo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Unoccupied workspaces</source>
-        <translation>Áreas de trabajo desocupadas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Greeter</source>
-        <translation>Pantalla de bienvenida</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Greeter slideshow</source>
-        <translation>Presentación de la pantalla de bienvenida</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Tray</source>
-        <translation>Bandeja del sistema</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Status icons</source>
-        <translation>Iconos de estado</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Clock</source>
-        <translation>Reloj</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Clock seconds</source>
-        <translation>Segundos del reloj</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Dock</source>
-        <translation>Dock</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>GitHub</source>
-        <translation>GitHub</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Media</source>
-        <translation>Multimedia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Weather</source>
-        <translation>Tiempo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <location line="+7"/>
-        <source>Performance</source>
-        <translation>Rendimiento</translation>
-    </message>
-    <message>
-        <location line="-6"/>
-        <source>Screen Capture</source>
-        <translation>Captura de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Keep Awake</source>
-        <translation>Mantener despierto</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Per-element scaling offsets</source>
-        <translation>Ajustes de escala por elemento</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Elements &amp; Modules</source>
-        <translation>Elementos y módulos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Update indicator</source>
-        <translation>Indicador de actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Preview scale</source>
-        <translation>Escala de vista previa</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Dashboard clock seconds</source>
-        <translation>Segundos del reloj del panel</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Fuzzy search</source>
-        <translation>Búsqueda aproximada</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Activation</source>
-        <translation>Activación</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Window Switcher</source>
-        <translation>Selector de ventanas</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Network &amp; Connectivity</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Wi-Fi, Bluetooth, network</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Wi-Fi &amp; Connection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>VPN</source>
-=======
         <location filename="../modules/nexus/PageCompRegistry.qml" line="+45"/>
         <source>Appearance</source>
         <translation>Apariencia</translation>
@@ -13769,139 +10893,10 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Preview Scales</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>IPv4</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>All networks</source>
-        <translation>Todas las redes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Saved networks</source>
-        <translation>Redes guardadas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hotspot</source>
-        <translation>Punto de acceso</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Captive portal</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Proxy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Bluetooth</source>
-        <translation type="unfinished">Bluetooth</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Discoverable</source>
-        <translation>Visible para otros dispositivos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pairable</source>
-        <translation>Emparejable</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Pair New Device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Display &amp; Sound</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Displays, audio, notifications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Layout &amp; Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Resolution</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Refresh rate</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Rotation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>HDR</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Output &amp; Input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>App Volumes</source>
-        <translation>Volumen de aplicaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Sound Effects</source>
-        <translation>Efectos de sonido</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Notification Silence</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Preferences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Toasts</source>
-        <translation>Notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Toast events</source>
-        <translation>Eventos de notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Focus sessions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Utilities &amp; Tools</source>
-=======
         <source>Elements &amp; Modules</source>
         <translation>Elementos y módulos</translation>
     </message>
@@ -14029,84 +11024,10 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Default (Edge)</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
-<<<<<<< Updated upstream
-        <source>Sliders, game mode, AI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>On-screen slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Utilities panel</source>
-        <translation type="unfinished">Panel de utilidades</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Quick toggles</source>
-        <translation type="unfinished">Atajos rápidos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Game Mode</source>
-        <translation>Modo de juego</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Auto-enable rules</source>
-        <translation>Reglas de activación automática</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Quick share</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>AI Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Applications &amp; Shortcuts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Default apps, shortcuts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Default Applications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>File Types</source>
-        <translation>Tipos de archivo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Installed Applications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Favorites &amp; Hidden</source>
-        <translation>Favoritas y ocultas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Keyboard Shortcuts</source>
-=======
         <source>On-screen display styles, volume and brightness sliders, and positioning</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14183,44 +11104,10 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Manage known connections</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>Custom Keybinds</source>
-        <translation>Atajos personalizados</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>System &amp; Services</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Session, services, storage, about</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Session settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System Services</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Remote IPC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Calendar Integration</source>
-=======
         <source>Manage remembered Wi-Fi profiles and stored credentials</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14252,51 +11139,10 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Network proxy settings</source>
->>>>>>> Stashed changes
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+1"/>
-<<<<<<< Updated upstream
-        <source>Language &amp; Format</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Accessibility</source>
-        <translation type="unfinished">Accesibilidad</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Startup Applications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Add to startup</source>
-        <translation type="unfinished">Añadir a inicio automático</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Disk &amp; Storage</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Caelestia Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Updates</source>
-        <translation>Actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>About System</source>
-        <translation>Acerca del sistema</translation>
-    </message>
-=======
         <source>HTTP, HTTPS, SOCKS, and automatic PAC proxy configurations</source>
         <translation type="unfinished"></translation>
     </message>
@@ -14807,108 +11653,16 @@ Ahora salir a tocar el pasto</translation>
         <source>This page is not available in this build. Update the shell to get it.</source>
         <translation type="unfinished"></translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>PageRegistry</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/PageRegistry.qml" line="+31"/>
-=======
         <location filename="../modules/nexus/PageRegistry.qml" line="+36"/>
->>>>>>> Stashed changes
         <source>Main Page</source>
         <translation>Página principal</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>PanelsPage</name>
-    <message>
-        <location filename="../modules/nexus/pages/PanelsPage.qml" line="+8"/>
-        <source>Panels</source>
-        <translation>Paneles</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Dashboard</source>
-        <translation>Panel</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <location line="+12"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <source>Enabled</source>
-        <translation>Activado</translation>
-    </message>
-    <message>
-        <location line="-30"/>
-        <location line="+12"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+7"/>
-        <source>Disabled</source>
-        <translation>Desactivado</translation>
-    </message>
-    <message>
-        <location line="-32"/>
-        <source>Taskbar</source>
-        <translation>Barra de tareas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Always visible</source>
-        <translation>Siempre visible</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Reveal on hover</source>
-        <translation>Mostrar al pasar el cursor</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Reveal on drag</source>
-        <translation>Mostrar al arrastrar</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Launcher</source>
-        <translation>Menú de Aplicaciones</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Sidebar</source>
-        <translation>Panel de Notificaciones</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Quick toggle</source>
-        <translation>Atajo rápido</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Overview</source>
-        <translation>Vista general</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Window Switcher</source>
-        <translation>Selector de ventanas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Current desktop only</source>
-        <translation>Solo el escritorio actual</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>All desktops</source>
-        <translation>Todos los escritorios</translation>
-    </message>
-=======
     <name>PageRowIndex</name>
     <message>
         <location filename="../modules/nexus/PageRowIndex.qml" line="+12"/>
@@ -18945,7 +15699,6 @@ Ahora salir a tocar el pasto</translation>
         <source>Random order</source>
         <translation type="unfinished"></translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>PasswordPill</name>
@@ -18997,8 +15750,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>PillOsd</name>
     <message>
         <location filename="../modules/osd/floating/PillOsd.qml" line="+101"/>
@@ -19012,7 +15763,6 @@ Ahora salir a tocar el pasto</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>Players</name>
     <message>
         <location filename="../services/Players.qml" line="+252"/>
@@ -19091,11 +15841,7 @@ Ahora salir a tocar el pasto</translation>
         <translation>Se pueden actualizar %1 complementos</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+153"/>
-=======
         <location line="+181"/>
->>>>>>> Stashed changes
         <source>Enter a valid git URL</source>
         <translation>Ingresar una URL de git válida</translation>
     </message>
@@ -19130,20 +15876,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+43"/>
-<<<<<<< Updated upstream
-        <location line="+369"/>
-=======
         <location line="+374"/>
->>>>>>> Stashed changes
         <source>Installed</source>
         <translation>Instalados</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-360"/>
-=======
         <location line="-365"/>
->>>>>>> Stashed changes
         <source>Store</source>
         <translation>Tienda</translation>
     </message>
@@ -19178,15 +15916,9 @@ Ahora salir a tocar el pasto</translation>
         <translation>URL de Git</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+21"/>
-        <source>The repository root must contain metadata.json</source>
-        <translation>La raíz del repositorio debe contener metadata.json</translation>
-=======
         <location line="+26"/>
         <source>The repository root must contain metadata.json. A plugin runs inside the shell, so it can do anything this session can.</source>
         <translation>La raíz del repositorio debe contener metadata.json. Un plugin se ejecuta dentro del shell, de forma que puede hacer lo mismo que esta sesión.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -19259,38 +15991,22 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../services/Proxy.qml" line="+21"/>
         <source>Manual, no address set</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Manual, sin dirección configurada</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source>Automatic script</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Script automático</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Off</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Apagado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+51"/>
         <source>The proxy settings could not be written.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No se ha podido escribir los ajustes del proxy.</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -19298,196 +16014,87 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/nexus/pages/network/ProxyPage.qml" line="+16"/>
         <source>No proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Sin proxy</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Manual</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Manual</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Automatic (PAC script)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Automático (Script PAC)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Detect automatically</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Detectar automáticamente</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+4"/>
         <source>Use environment variables</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Usar las variables de entorno</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+10"/>
         <source>HTTP proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Proxy HTTP</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>HTTPS proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Proxy HTTPS</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>FTP proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Proxy FTP</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>SOCKS proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Proxy SOCKS</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>No proxy for</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Ningún proxy para</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Comma separated hosts</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Hosts separados por comas</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+3"/>
         <source>Script address</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Dirección del script</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
         <source>Proxy</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Proxy</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+21"/>
         <source>Mode</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Modo</translation>
-=======
         <translation>Modo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>How applications decide where to send requests</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Forma en la que las aplicaciones eligen a dónde enviar solicitudes</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+28"/>
         <source>Stored in kioslaverc, which KDE applications read: Plasma, Dolphin, Konsole and the rest. Programs started from a shell keep whatever their environment says until they are restarted.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Guarado en kioslaverc, que leen las aplicaciones de KDE: Plasma, Dolphin, Konsole y demás. Los programas iniciados desde una shell mantendrán lo que diga su entorno hasta que se reinicien.</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
     <name>QuickShare</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../services/QuickShare.qml" line="+96"/>
-        <source>%1 wants to send you %2 (%3)</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>
-PIN: %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+22"/>
-        <location line="+8"/>
-        <location line="+23"/>
-        <location line="+24"/>
-        <source>Quick Share</source>
-        <translation type="unfinished">Quick Share</translation>
-    </message>
-    <message>
-        <location line="-54"/>
-        <source>Quick Share needs administrator rights to start Avahi and open the transfer port.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Quick Share could not confirm the transfer port is reachable. Allow port %1 in Settings -&gt; Services -&gt; Quick Share.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+19"/>
-        <source>Incoming file</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Decline</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Accept</source>
-        <translation type="unfinished"></translation>
-    </message>
-=======
         <location filename="../services/QuickShare.qml" line="+126"/>
         <source>%1 wants to send you %2 (%3)</source>
         <translation>%1 quiere enviarte %2 (%3)</translation>
@@ -19555,7 +16162,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Send</source>
         <translation>Enviar</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>QuickShareDeleteModal</name>
@@ -19580,56 +16186,32 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location filename="../modules/utilities/QuickShareDeviceSelector.qml" line="+45"/>
         <source>Send a file</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Enviar un archivo</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>Looking for nearby devices that have Quick Share open.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Buscando dispositivos cercanos que tengan Quick Share abierto.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Choose a nearby device to send the file to.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Elige un dispositivo cercano al que enviar el archivo.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+12"/>
         <source>Nearby devices have to be on the same network, which for a phone means the same Wi-Fi</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Los dispositivos cercanos deben estar en la misma red; en el caso de un teléfono, en la misma red Wi-Fi</translation>
-=======
         <translation>Los dispositivos cercanos deben estar en la misma red; en el caso de un teléfono, en la misma red Wi-Fi</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+58"/>
         <source>Cancel</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Cancelar</translation>
-=======
         <translation>Cancelar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+18"/>
         <source>Select a file to send</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Elige un archivo para enviar</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -19637,101 +16219,57 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location filename="../modules/utilities/cards/QuickShareList.qml" line="+90"/>
         <source>Quick Share</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Quick Share</translation>
-=======
         <translation>Quick Share</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Disabled</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Desactivado</translation>
-=======
         <translation>Desactivado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Visible to nearby devices</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Visible para los dispositivos cercanos</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Hidden</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Oculta</translation>
-=======
         <translation>Oculta</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+37"/>
         <source>Incoming file: %1 from %2</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Archivo entrante: %1 de %2</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
         <source> (PIN %1)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation> (PIN %1)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>Decline</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Rechazar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>Accept</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Aceptar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+38"/>
         <source>Recent transfers</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Transferencias recientes</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+45"/>
         <source>%1 at %2</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 a %2</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+96"/>
         <source>No recent transfers</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No hay transferencias recientes</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -19843,11 +16381,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>QuickShareSetup</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../services/QuickShareSetup.qml" line="+50"/>
-=======
         <location filename="../services/QuickShareSetup.qml" line="+55"/>
->>>>>>> Stashed changes
         <source>Avahi and the transfer port are ready</source>
         <translation>Avahi y el puerto de transferencia están listos</translation>
     </message>
@@ -19867,37 +16401,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>Inicia el servicio Avahi y abre el puerto de transferencia en el cortafuegos</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+25"/>
-        <source>Waiting for administrator rights…</source>
-        <translation>Esperando permisos de administrador…</translation>
-    </message>
-    <message>
-        <location line="+36"/>
-        <source>Quick Share&apos;s system setup helper could not be run</source>
-        <translation>No se pudo ejecutar el asistente de configuración del sistema de Quick Share</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Setup ran, but the port is still blocked</source>
-        <translation>Se ejecutó la configuración, pero el puerto sigue bloqueado</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Setup ran; the port cannot be checked again without root</source>
-        <translation>Se ejecutó la configuración; no se puede volver a comprobar el puerto sin permisos de administrador</translation>
-    </message>
-    <message>
-        <location line="+23"/>
-        <source>Administrator rights were refused</source>
-        <translation>Se denegaron los permisos de administrador</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Setup failed (%1)</source>
-        <translation>Error de configuración (%1)</translation>
-    </message>
-=======
         <location line="+20"/>
         <location line="+16"/>
         <source>Quick Share&apos;s setup helper is missing; reinstall Caelestia to restore it</source>
@@ -19933,18 +16436,13 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Setup failed (%1)</source>
         <translation>Error de configuración (%1)</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>QuickTogglesPage</name>
     <message>
         <location filename="../modules/nexus/pages/utilities/QuickTogglesPage.qml" line="+13"/>
         <source>Wi-Fi</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Wi-Fi</translation>
-=======
         <translation>Wi-Fi</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -19954,29 +16452,17 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Bluetooth</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Bluetooth</translation>
-=======
         <translation>Bluetooth</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>VPN</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>VPN</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Quick Share</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Quick Share</translation>
-=======
         <translation>Quick Share</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+3"/>
@@ -19991,29 +16477,17 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Launcher</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Lanzador</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Overview</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Vista general</translation>
-=======
         <translation>Vista general</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Dashboard</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Panel</translation>
-=======
         <translation>Panel</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -20043,11 +16517,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Audio Visualiser</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Visualizador de audio</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -20057,20 +16527,12 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>EasyEffects</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>EasyEffects</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Keep Awake</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Mantener despierto</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
@@ -20119,8 +16581,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>RadialOsd</name>
     <message>
         <location filename="../modules/osd/floating/RadialOsd.qml" line="+60"/>
@@ -20129,7 +16589,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>Recorder</name>
     <message>
         <location filename="../modules/screenshot/recorder/Recorder.qml" line="+114"/>
@@ -20248,11 +16707,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <name>SavedNetworksPage</name>
     <message>
         <location filename="../modules/nexus/pages/network/SavedNetworksPage.qml" line="+16"/>
-<<<<<<< Updated upstream
-        <source>Saved networks</source>
-=======
         <source>Saved Networks</source>
->>>>>>> Stashed changes
         <translation>Redes guardadas</translation>
     </message>
     <message>
@@ -20317,12 +16772,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>SearchResults</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/navpane/SearchResults.qml" line="+184"/>
-        <source>in </source>
-        <translation>en </translation>
-    </message>
-=======
         <location filename="../modules/nexus/navpane/SearchResults.qml" line="+185"/>
         <source>in %1 › %2</source>
         <translation>en %1 › %2</translation>
@@ -20332,7 +16781,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>in %1</source>
         <translation>en %1</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>ServicesPage</name>
@@ -20370,13 +16818,8 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
     <message>
         <location line="+16"/>
-<<<<<<< Updated upstream
-        <source>Services</source>
-        <translation>Servicios</translation>
-=======
         <source>System Services</source>
         <translation type="unfinished">Servicios del sistema</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+24"/>
@@ -20670,36 +17113,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>Iconos</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+5"/>
-        <location line="+30"/>
-        <source>Logout</source>
-        <translation>Cerrar sesión</translation>
-    </message>
-    <message>
-        <location line="-24"/>
-        <location line="+30"/>
-        <source>Shutdown</source>
-        <translation>Apagar</translation>
-    </message>
-    <message>
-        <location line="-24"/>
-        <location line="+30"/>
-        <source>Hibernate</source>
-        <translation>Hibernar</translation>
-    </message>
-    <message>
-        <location line="-23"/>
-        <location line="+30"/>
-        <source>Reboot</source>
-        <translation>Reiniciar</translation>
-    </message>
-    <message>
-        <location line="-24"/>
-        <source>Commands</source>
-        <translation>Comandos</translation>
-    </message>
-=======
         <location line="+7"/>
         <source>Material icon names used by the session menu</source>
         <translation>Nombres de Material icon usados por el menú de sesión</translation>
@@ -20741,19 +17154,13 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Reset to default</source>
         <translation>Restablecer</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>ShortcutManagerPage</name>
     <message>
         <location filename="../modules/nexus/pages/ShortcutManagerPage.qml" line="+82"/>
-<<<<<<< Updated upstream
-        <source>Shortcuts</source>
-        <translation>Atajos</translation>
-=======
         <source>Keyboard Shortcuts</source>
         <translation>Atajos de teclado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+43"/>
@@ -20790,13 +17197,8 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <name>ShortcutRow</name>
     <message>
         <location filename="../modules/nexus/common/ShortcutRow.qml" line="+234"/>
-<<<<<<< Updated upstream
-        <source>Collides with: </source>
-        <translation>Entra en conflicto con: </translation>
-=======
         <source>Collides with %1</source>
         <translation>Colisiona con %1</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
@@ -21107,11 +17509,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>Abrir navegador</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+5"/>
-=======
         <location line="+8"/>
->>>>>>> Stashed changes
         <source>Launch Editor</source>
         <translation>Abrir editor</translation>
     </message>
@@ -21181,11 +17579,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>Cambiar al espacio de trabajo 10</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+105"/>
-=======
         <location line="+104"/>
->>>>>>> Stashed changes
         <source>Open dock entry 1</source>
         <translation>Abrir la entrada 1 del dock</translation>
     </message>
@@ -21392,72 +17786,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>SoundEffectsPage</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/pages/audio/SoundEffectsPage.qml" line="+10"/>
-        <source>Sound effects</source>
-        <translation>Efectos de sonido</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>General</source>
-        <translation>General</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Enable sound effects</source>
-        <translation>Activar efectos de sonido</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Sound effect volume</source>
-        <translation>Volumen de los efectos de sonido</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Feedback</source>
-        <translation>Respuesta</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Camera click</source>
-        <translation>Clic de cámara</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Volume tick</source>
-        <translation>Indicador de volumen</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>System</source>
-        <translation>Sistema</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Charging started</source>
-        <translation>Carga iniciada</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Screen lock</source>
-        <translation>Bloqueo de pantalla</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Screen unlock</source>
-        <translation>Desbloqueo de pantalla</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Low battery</source>
-        <translation>Batería baja</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Screen recording</source>
-        <translation>Grabación de pantalla</translation>
-    </message>
-=======
         <location filename="../modules/nexus/pages/audio/SoundEffectsPage.qml" line="+181"/>
         <source>Enable sound effects</source>
         <translation>Activar efectos de sonido</translation>
@@ -21570,7 +17898,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Images</source>
         <translation>Imágenes</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>StorageCard</name>
@@ -21600,11 +17927,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location filename="../modules/nexus/pages/StoragePage.qml" line="+14"/>
         <source>%1 (removable)</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 (extraíble)</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
@@ -21624,671 +17947,51 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+24"/>
         <source>No disks were reported by lsblk.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>lsblk no ha reportado ningún disco.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+60"/>
         <source>Eject</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Eyectar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>Unmount everything on this disk first</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Desmonta todo lo que hay en este disco primero</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Power the disk off before unplugging it</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>SubcategoryPane</name>
-    <message>
-        <location filename="../modules/nexus/SubcategoryPane.qml" line="+225"/>
-        <source>Wallpapers</source>
-        <translation type="unfinished">Fondos de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Browse and select wallpapers</source>
-        <translation type="unfinished">Explorar y seleccionar fondos de pantalla</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Library &amp; Components</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallhaven, online wallpapers, tags and filters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Wallpaper Settings</source>
-        <translation type="unfinished">Ajustes del fondo de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Configure wallpaper engine, mixer, and effects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure scaling, recoloring, video playback, and slideshows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Lock screen</source>
-        <translation type="unfinished">Pantalla de bloqueo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallpaper sync and lock screen settings</source>
-        <translation type="unfinished">Sincronización del fondo de pantalla y ajustes de la pantalla de bloqueo</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Colors</source>
-        <translation type="unfinished">Colores</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Caelestia owns color management and not skwd-wall.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Theme &amp; Effects</source>
-        <translation type="unfinished">Tema y efectos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Islands, Pitch Black, Transparency</source>
-        <translation type="unfinished">Islas, negro absoluto y transparencia</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Desktop</source>
-        <translation type="unfinished">Escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Disabled (Plasma)</source>
-        <translation type="unfinished">Desabilitado (Plasma)</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Icons enabled</source>
-        <translation type="unfinished">Iconos habilitados</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Icons disabled</source>
-        <translation type="unfinished">Iconos desabilitados</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Desktop Addons</source>
-        <translation type="unfinished">Complementos del escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Visualiser, auto-hide, styling</source>
-        <translation type="unfinished">Visualizador, ocultamiento automático y estilo</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Right click menu</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Configure desktop right click menu</source>
-        <translation type="unfinished">Configurar el menú del clic derecho del escritorio</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Windows Tiling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Enabled (Krohnkite)</source>
-        <translation type="unfinished">Activado (Krohnkite)</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <location line="+12"/>
-        <location line="+12"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+12"/>
-        <location line="+30"/>
-        <source>Disabled</source>
-        <translation type="unfinished">Desactivado</translation>
-    </message>
-    <message>
-        <location line="-79"/>
-        <source>Dashboard</source>
-        <translation type="unfinished">Panel</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <location line="+12"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+6"/>
-        <location line="+48"/>
-        <source>Enabled</source>
-        <translation type="unfinished">Activado</translation>
-    </message>
-    <message>
-        <location line="-73"/>
-        <source>Taskbar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Always visible</source>
-        <translation type="unfinished">Siempre visible</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Reveal on hover</source>
-        <translation type="unfinished">Mostrar al pasar el cursor</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Reveal on drag</source>
-        <translation type="unfinished">Mostrar al arrastrar</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Launcher</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Sidebar</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Quick toggle</source>
-        <translation type="unfinished">Atajo rápido</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Overview</source>
-        <translation type="unfinished">Vista general</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Window Switcher</source>
-        <translation type="unfinished">Selector de ventanas</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Current desktop only</source>
-        <translation type="unfinished">Solo el escritorio actual</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>All desktops</source>
-        <translation type="unfinished">Todos los escritorios</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Wi-Fi &amp; Connection</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Disconnected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>All Networks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>%1 available</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Saved Networks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Manage known connections</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Hotspot</source>
-        <translation type="unfinished">Punto de acceso</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Active</source>
-        <translation type="unfinished">Activo</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Inactive</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Proxy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Network proxy settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Bluetooth</source>
-        <translation type="unfinished">Bluetooth</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Pair New Device</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Search for nearby Bluetooth devices</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Layout &amp; Scale</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>%1 display(s) connected</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Output &amp; Input</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Muted</source>
-        <translation type="unfinished">Silenciado</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>%1%</source>
-        <translation type="unfinished">%1%</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>App Volumes</source>
-        <translation type="unfinished">Volumen de aplicaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>No apps playing audio</source>
-        <translation type="unfinished">No hay aplicaciones reproduciendo audio</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>1 app playing audio</source>
-        <translation type="unfinished">1 aplicación reproduciendo audio</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>%1 apps playing audio</source>
-        <translation type="unfinished">%1 aplicaciones reproduciendo audio</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Sound Effects</source>
-        <translation type="unfinished">Efectos de sonido</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Feedback sounds and volume</source>
-        <translation type="unfinished">Sonidos de respuesta y volumen</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Notification Silence</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Applications that send without sound</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Preferences</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Position, timeout, and display behavior</source>
-        <translation type="unfinished">Posición, tiempo de espera y comportamiento de visualización</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Toasts</source>
-        <translation type="unfinished">Notificaciones emergentes</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Fullscreen behavior, appearance, and sound</source>
-        <translation type="unfinished">Comportamiento en pantalla completa, apariencia y sonido</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Toasts Events</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Choose which system changes show a toast</source>
-        <translation type="unfinished">Elegir qué cambios del sistema muestran una notificación emergente</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Focus Sessions</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Running until %1</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Do Not Disturb on a schedule</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>On-screen slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Volume, microphone, brightness, and edge triggers</source>
-        <translation type="unfinished">Volumen, micrófono, brillo y activadores de borde</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Utilities panel</source>
-        <translation type="unfinished">Panel de utilidades</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Choose the cards shown in the panel</source>
-        <translation type="unfinished">Elegir las tarjetas que se muestran en el panel</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Quick toggles</source>
-        <translation type="unfinished">Atajos rápidos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Choose the controls shown in Quick Toggles</source>
-        <translation type="unfinished">Elegir los controles que se muestran en Atajos rápidos</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Game Mode</source>
-        <translation type="unfinished">Modo de juego</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Auto-enable rules and performance overrides</source>
-        <translation type="unfinished">Reglas de activación automática y ajustes de rendimiento</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Quick share</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Send files to nearby devices</source>
-        <translation type="unfinished">Enviar archivos a dispositivos cercanos</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>AI Configuration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Models, providers, and parameters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Default Applications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Configure system default openers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Installed Applications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Browse and manage desktop apps</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Keyboard Shortcuts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>View and configure shell keybindings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Session settings</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Power, lock, and logout options</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>System Services</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Lyrics, GPU, and system integration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Remote IPC</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Local and network remote procedure calls</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Calendar Integration</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Sync calendar events and accounts</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Language &amp; Format</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System locale, spellcheck, and formats</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Accessibility</source>
-        <translation type="unfinished">Accesibilidad</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Vision, hearing, and interaction aids</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Startup Applications</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Manage apps launched upon login</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Disk &amp; Storage</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Mount points, free space, and drives</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Caelestia Plugins</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Manage installed extensions and add-ons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Updates</source>
-        <translation type="unfinished">Actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Check for package and system updates</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>About System</source>
-        <translation type="unfinished">Acerca del sistema</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Hardware, OS version, and shell info</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-=======
         <translation>Apaga el disco antes de desconectarlo</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>SubmenuOrderDialog</name>
     <message>
         <location filename="../modules/nexus/pages/desktop/SubmenuOrderDialog.qml" line="+87"/>
         <source>Order the submenu</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Ordenar el submenú</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Drag the rows to change the order they unfold in.</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Arrastra las filas para cambiar el orden en que se despliegan.</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+126"/>
         <source>Cancel</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Cancelar</translation>
-=======
         <translation>Cancelar</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
         <source>Save</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Guardar</translation>
-=======
         <translation>Guardar</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
     <name>SystemWidget</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+69"/>
-=======
         <location filename="../modules/background/desktopicons/widgets/SystemWidget.qml" line="+71"/>
->>>>>>> Stashed changes
         <location line="+39"/>
         <source>CPU</source>
         <translation>CPU</translation>
@@ -22789,83 +18492,47 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+7"/>
         <source>Nothing running</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Nada ejecutándose</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>%1 running</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>%1 ejecutándose</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+64"/>
         <source>Timer</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Temporizador</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+16"/>
         <source>Unpin this timer</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>No fijar este temporizador</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+0"/>
         <source>Pin this timer</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Fijar este temporizador</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>Cancel this timer</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Cancelar este temporizador</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+16"/>
         <source>25m</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>25m</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+9"/>
         <source>What is it for?</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>¿Para qué sirve?</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
         <source>Start the timer</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Iniciar el temporizador</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+14"/>
@@ -22877,13 +18544,8 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <name>ToastEventsPage</name>
     <message>
         <location filename="../modules/nexus/pages/services/ToastEventsPage.qml" line="+9"/>
-<<<<<<< Updated upstream
-        <source>Toast events</source>
-        <translation>Eventos de notificaciones emergentes</translation>
-=======
         <source>Toast Events</source>
         <translation>Eventos emergentes</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
@@ -23056,11 +18718,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Where the stack grows from. Automatic keeps the corner the shell has always used</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>De dónde crecen las pilas. En automático se mantiene la esquina que el shell siempre ha usado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -23084,11 +18742,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
     <message>
         <location line="+7"/>
-<<<<<<< Updated upstream
-        <source>Notification volume</source>
-        <translation>Volumen de notificaciones</translation>
-    </message>
-=======
         <source>Notification sounds</source>
         <translation>Sonidos de notificación</translation>
     </message>
@@ -23097,17 +18750,10 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Volume and sound selector</source>
         <translation>Selector de volumen y sonido</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Toggles</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/utilities/cards/Toggles.qml" line="+287"/>
-        <source>Quick Toggles</source>
-        <translation>Atajos rápidos</translation>
-    </message>
-=======
         <location filename="../modules/utilities/cards/Toggles.qml" line="+140"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
@@ -23212,7 +18858,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Quick Toggles</source>
         <translation>Atajos rápidos</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>ToolCard</name>
@@ -23238,11 +18883,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>TrayMenu</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/bar/popouts/TrayMenu.qml" line="+330"/>
-=======
         <location filename="../modules/bar/popouts/TrayMenu.qml" line="+374"/>
->>>>>>> Stashed changes
         <source>Back</source>
         <translation>Atrás</translation>
     </message>
@@ -23268,20 +18909,12 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>UninstallDialog</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/common/UninstallDialog.qml" line="+71"/>
-=======
         <location filename="../modules/nexus/common/UninstallDialog.qml" line="+18"/>
->>>>>>> Stashed changes
         <source>Uninstall Caelestia?</source>
         <translation>¿Desinstalar Caelestia?</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+10"/>
-=======
         <location line="+3"/>
->>>>>>> Stashed changes
         <source>Still looking for the uninstaller. Try again in a moment.</source>
         <translation>Todavía se está buscando el desinstalador. Probar de nuevo en un momento.</translation>
     </message>
@@ -23305,22 +18938,10 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>No se encontró ningún script de desinstalación y ningún gestor de paquetes conocido es el dueño de esta instalación. Elimínala de la misma forma en que la instalaste.</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+15"/>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Uninstall</source>
-        <translation>Desinstalar</translation>
-    </message>
-=======
         <location line="+2"/>
         <source>Uninstall</source>
         <translation>Desinstalar</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Units</name>
@@ -23517,42 +19138,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>UpdateChecker</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../services/UpdateChecker.qml" line="+365"/>
-        <source>Done!</source>
-        <translation>¡Listo!</translation>
-    </message>
-    <message>
-        <location line="+18"/>
-        <source>Preparing shell build...</source>
-        <translation>Preparando compilación del shell...</translation>
-    </message>
-    <message>
-        <location line="+31"/>
-        <source>Starting…</source>
-        <translation>Iniciando…</translation>
-    </message>
-    <message>
-        <location line="+15"/>
-        <source>Canceled</source>
-        <translation>Cancelado</translation>
-    </message>
-    <message>
-        <location line="+103"/>
-        <location line="+21"/>
-        <source>Release</source>
-        <translation>Versión</translation>
-    </message>
-    <message>
-        <location line="-19"/>
-        <source>GitHub release</source>
-        <translation>Versión de GitHub</translation>
-    </message>
-    <message>
-        <location line="+21"/>
-        <source>Tag</source>
-        <translation>Etiqueta</translation>
-=======
         <location filename="../services/UpdateChecker.qml" line="+463"/>
         <location line="+23"/>
         <source>The update check failed</source>
@@ -23596,21 +19181,14 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <location line="+2"/>
         <source>Restore</source>
         <translation>Restaurar</translation>
->>>>>>> Stashed changes
     </message>
 </context>
 <context>
     <name>UpdateIndicator</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/bar/components/UpdateIndicator.qml" line="+47"/>
-        <source>Caelestia updates</source>
-        <translation>Actualizaciones de Caelestia</translation>
-=======
         <location filename="../modules/bar/components/UpdateIndicator.qml" line="+40"/>
         <source>Caelestia updates: %1</source>
         <translation>Actualizaciones de Caelestia: %1</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+2"/>
@@ -23619,69 +19197,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>UpdateTimeline</name>
-    <message>
-        <location filename="../modules/nexus/common/UpdateTimeline.qml" line="+27"/>
-        <source>feat</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>fix</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>perf</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>refactor</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>style</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>docs</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>build</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>ci</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>chore</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>revert</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+230"/>
-        <source>merge</source>
-        <translation type="unfinished"></translation>
-    </message>
-=======
     <name>UpdateStatus</name>
     <message>
         <location filename="../services/UpdateStatus.qml" line="+48"/>
@@ -23982,78 +19497,10 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Clear</source>
         <translation>Limpiar</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Updates</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/bar/popouts/Updates.qml" line="+33"/>
-        <source>Checking for updates…</source>
-        <translation>Buscando actualizaciones…</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>New version available on %1</source>
-        <translation>Nueva versión disponible en %1</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>%1 new commits on %2 branch</source>
-        <translation>%1 commits nuevos en la rama %2</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System is up to date</source>
-        <translation>El sistema está actualizado</translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>%1m %2s</source>
-        <translation>%1m %2s</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>%1s</source>
-        <translation>%1s</translation>
-    </message>
-    <message>
-        <location line="+64"/>
-        <location line="+78"/>
-        <source>Checking…</source>
-        <translation>Comprobando…</translation>
-    </message>
-    <message>
-        <location line="-76"/>
-        <source>Last check: not yet</source>
-        <translation>Última revisión: aún no realizada</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Last check %1 ago</source>
-        <translation>Última revisión hace %1</translation>
-    </message>
-    <message>
-        <location line="+20"/>
-        <source>Next check in %1</source>
-        <translation>Siguiente revisión en %1</translation>
-    </message>
-    <message>
-        <location line="+55"/>
-        <source>Check for updates</source>
-        <translation>Buscar actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+40"/>
-        <source>Open Updates</source>
-        <translation>Abrir actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+37"/>
-        <source>Hide from bar</source>
-        <translation>Ocultar de la barra</translation>
-    </message>
-=======
         <location filename="../modules/bar/popouts/Updates.qml" line="+34"/>
         <source>Checking…</source>
         <translation>Comprobando…</translation>
@@ -24078,16 +19525,11 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Hide from bar</source>
         <translation>Ocultar de la barra</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>UpdatesPage</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+141"/>
-=======
         <location filename="../modules/nexus/pages/UpdatesPage.qml" line="+118"/>
->>>>>>> Stashed changes
         <source>Updates</source>
         <translation>Actualizaciones</translation>
     </message>
@@ -24097,152 +19539,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>Ayuda</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+95"/>
-        <source>Restore to %1?</source>
-        <translation>¿Restaurar a %1?</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Reinstall %1?</source>
-        <translation>¿Reinstalar %1?</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Install %1?</source>
-        <translation>¿Instalar %1?</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>New version available on %1</source>
-        <translation>Nueva versión disponible en %1</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>%1 new commits on %2</source>
-        <translation>%1 commits nuevos en %2</translation>
-    </message>
-    <message>
-        <location line="+3"/>
-        <source>Installed version unknown</source>
-        <translation>Versión instalada desconocida</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>You&apos;re up to date</source>
-        <translation>Todo está actualizado</translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Installed: %1</source>
-        <translation>Instalada: %1</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Channel: %1</source>
-        <translation>Canal: %1</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Restore</source>
-        <translation>Restaurar</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Reinstall</source>
-        <translation>Reinstalar</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Install %1</source>
-        <translation>Instalar %1</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Install Update</source>
-        <translation>Instalar actualización</translation>
-    </message>
-    <message>
-        <location line="+22"/>
-        <source>Cancel</source>
-        <translation>Cancelar</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Checking…</source>
-        <translation>Comprobando…</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Check</source>
-        <translation>Comprobar</translation>
-    </message>
-    <message>
-        <location line="+29"/>
-        <source>General</source>
-        <translation>General</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Update channel</source>
-        <translation>Canal de actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+2"/>
-        <source>Stable releases</source>
-        <translation>Versiones estables</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Development builds - may be unstable</source>
-        <translation>Compilaciones de desarrollo - pueden ser inestables</translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Show Update Indicator</source>
-        <translation>Mostrar indicador de actualizaciones</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Show a notification icon in the taskbar when updates are available</source>
-        <translation>Mostrar un icono de notificación en la barra de tareas cuando haya actualizaciones disponibles</translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Open Backup Folder</source>
-        <translation>Abrir carpeta de copias de seguridad</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>View your previously backed-up configuration files</source>
-        <translation>Ver los archivos de configuración respaldados anteriormente</translation>
-    </message>
-    <message>
-        <location line="+34"/>
-        <source>Switching to %1…</source>
-        <translation>Cambiando a %1…</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Version History</source>
-        <translation>Historial de versiones</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Commit History</source>
-        <translation>Historial de commits</translation>
-    </message>
-    <message>
-        <location line="+53"/>
-        <source>Loading…</source>
-        <translation>Cargando…</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Load 10 More</source>
-        <translation>Cargar 10 más</translation>
-    </message>
-=======
         <location line="+132"/>
         <source>Dismiss</source>
         <translation type="unfinished"></translation>
@@ -24367,7 +19663,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Loading…</source>
         <translation>Cargando…</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>User</name>
@@ -24378,82 +19673,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-    <name>UtilitiesPage</name>
-    <message>
-        <location filename="../modules/nexus/pages/UtilitiesPage.qml" line="+11"/>
-        <source>Utilities</source>
-        <translation>Utilidades</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Quick controls</source>
-        <translation>Atajo de controles</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>On-screen sliders</source>
-        <translation>Controles deslizantes en pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Volume, microphone, brightness, and edge triggers</source>
-        <translation>Volumen, micrófono, brillo y activadores de borde</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Utilities panel</source>
-        <translation>Panel de utilidades</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Choose the cards shown in the panel</source>
-        <translation>Elegir las tarjetas que se muestran en el panel</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Quick toggles</source>
-        <translation>Atajos rápidos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Choose the controls shown in Quick Toggles</source>
-        <translation>Elegir los controles que se muestran en Atajos rápidos</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Performance</source>
-        <translation>Rendimiento</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Game mode</source>
-        <translation>Modo gaming</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Auto-enable rules and performance overrides</source>
-        <translation>Reglas de activación automática y ajustes de rendimiento</translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>File sharing</source>
-        <translation>Compartir archivos</translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Quick Share</source>
-        <translation>Quick Share</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Send files to nearby devices</source>
-        <translation>Enviar archivos a dispositivos cercanos</translation>
-    </message>
-</context>
-<context>
-=======
->>>>>>> Stashed changes
     <name>UtilitiesPanel</name>
     <message>
         <location filename="../modules/nexus/pages/panels/UtilitiesPanel.qml" line="+15"/>
@@ -24531,11 +19750,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Show the countdown timers card</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Enseñar la sección de temporizadores</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+7"/>
@@ -24565,11 +19780,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Show the Quick Share card while it is enabled</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>Enseñar la sección de Quick Share mientras esté activado</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+8"/>
@@ -24738,8 +19949,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>VolumeWidget</name>
     <message>
         <location filename="../modules/background/desktopicons/widgets/VolumeWidget.qml" line="+25"/>
@@ -24758,7 +19967,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>WallhavenPage</name>
     <message>
         <location filename="../modules/nexus/pages/wallandstyle/WallhavenPage.qml" line="+7"/>
@@ -24850,99 +20058,11 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
     <message>
         <location line="+13"/>
-<<<<<<< Updated upstream
-        <source>Set it now!</source>
-        <translation>¡Aplicarlo ahora!</translation>
-    </message>
-</context>
-<context>
-    <name>WallpaperAndStyle</name>
-    <message>
-        <location filename="../modules/nexus/pages/WallpaperAndStyle.qml" line="+14"/>
-        <source>Appearance</source>
-        <translation>Apariencia</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Wallpaper</source>
-        <translation>Fondo de pantalla</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Wallpapers</source>
-        <translation>Fondos de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Browse and select wallpapers</source>
-        <translation>Explorar y seleccionar fondos de pantalla</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Library &amp; Community</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallhaven, online wallpapers, tags and filters</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Wallpaper Settings</source>
-        <translation>Ajustes del fondo de pantalla</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Configure wallpaper engine, mixer, and effects</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>Configure scaling, recoloring, video playback, and slideshows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <location line="+11"/>
-        <source>Lock screen</source>
-        <translation>Pantalla de bloqueo</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Wallpaper sync and lock screen settings</source>
-        <translation>Sincronización del fondo de pantalla y ajustes de la pantalla de bloqueo</translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <location line="+10"/>
-        <source>Colors</source>
-        <translation>Colores</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Caelestia owns color management and not skwd-wall.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Theme &amp; Effects</source>
-        <translation>Tema y efectos</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Islands, Pitch Black, Transparency</source>
-        <translation>Islas, negro absoluto y transparencia</translation>
-    </message>
-</context>
-<context>
-=======
         <source>Set wallpaper</source>
         <translation>Configurar como fondo de pantalla</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>WallpaperCategory</name>
     <message>
         <location filename="../modules/nexus/pages/wallandstyle/WallpaperCategory.qml" line="+45"/>
@@ -24973,13 +20093,8 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <name>WallpaperSelect</name>
     <message>
         <location filename="../modules/nexus/pages/wallandstyle/WallpaperSelect.qml" line="+113"/>
-<<<<<<< Updated upstream
-        <source>Select wallpaper</source>
-        <translation>Seleccionar fondo de pantalla</translation>
-=======
         <source>Wallpapers</source>
         <translation>Fondos de pantalla</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+42"/>
@@ -25044,11 +20159,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>WallpaperSettingsPage</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+24"/>
-=======
         <location filename="../modules/nexus/pages/wallandstyle/WallpaperSettingsPage.qml" line="+34"/>
->>>>>>> Stashed changes
         <source>Crop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -25078,11 +20189,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation type="unfinished">Restablecer la configuración</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+68"/>
-=======
         <location line="+86"/>
->>>>>>> Stashed changes
         <source>Managed by skwd-wall</source>
         <translation type="unfinished"></translation>
     </message>
@@ -25113,164 +20220,21 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
     <message>
         <location line="+7"/>
-<<<<<<< Updated upstream
-        <location line="+32"/>
-=======
         <location line="+48"/>
->>>>>>> Stashed changes
         <source>Shaders &amp; Effects</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="-31"/>
-=======
         <location line="-47"/>
->>>>>>> Stashed changes
         <source>Post-processing, blur, and visual filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+15"/>
-=======
         <location line="+31"/>
->>>>>>> Stashed changes
         <source>Managed by Quickshell</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+1"/>
-        <source>The built-in wallpaper renderer is used because skwd-wall is not installed.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+5"/>
-        <source>Wallpaper scaling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>How the wallpaper image fits the screen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+18"/>
-        <source>Recolor wallpaper</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>Recolor strength</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+12"/>
-        <source>Video Wallpapers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Pause video wallpapers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+7"/>
-        <source>Enable video audio</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Pause video on fullscreen</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Pause video on tiled windows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Pause video on all displays</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+6"/>
-        <source>Mute video when media plays</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Playlists &amp; Automation</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+11"/>
-        <source>Playlists &amp; Slideshows</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Manage wallpaper playlists and transition intervals</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+8"/>
-        <source>Schedule &amp; Timers</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Time-based wallpaper rules and schedules</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+12"/>
-        <source>Wallpaper slideshow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Slideshow interval</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>%1 min</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Random order</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+9"/>
-        <source>Shortcuts</source>
-        <translation type="unfinished">Atajos</translation>
-    </message>
-    <message>
-        <location line="+10"/>
-        <source>skwd-wall</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Launch skwd-wall wallpaper changer</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+14"/>
-        <source>Caelestia</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Launch Caelestia wallpaper changer</source>
-        <translation type="unfinished"></translation>
-    </message>
-=======
         <location line="-219"/>
         <source>Auto</source>
         <translation type="unfinished">Automático</translation>
@@ -25440,64 +20404,39 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Launch Caelestia wallpaper changer</source>
         <translation type="unfinished"></translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Weather</name>
     <message>
         <location filename="../modules/bar/popouts/Weather.qml" line="+59"/>
         <source>H:%1 L:%2</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished"></translation>
-=======
         <translation>H:%1 L:%2</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
         <source>Humidity</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Humedad</translation>
-=======
         <translation>Humedad</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>Feels like</source>
         <comment>apparent temperature</comment>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Sensación térmica</translation>
-=======
         <translation>Sensación térmica</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+6"/>
         <source>Wind</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Viento</translation>
-=======
         <translation>Viento</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+1"/>
         <source>%1 km/h</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">%1 km/h</translation>
-=======
         <translation>%1 km/h</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location line="+11"/>
         <source>Hourly forecast</source>
-<<<<<<< Updated upstream
-        <translation type="unfinished">Pronóstico por hora</translation>
-=======
         <translation>Pronóstico por hora</translation>
->>>>>>> Stashed changes
     </message>
     <message>
         <location filename="../services/Weather.qml" line="+127"/>
@@ -25600,8 +20539,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
-<<<<<<< Updated upstream
-=======
     <name>WeatherWidget</name>
     <message>
         <location filename="../modules/background/desktopicons/widgets/WeatherWidget.qml" line="+30"/>
@@ -25615,7 +20552,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>WelcomeText</name>
     <message>
         <location filename="../../src/sddm/themes/full/widgets/WelcomeText.qml" line="+13"/>
@@ -25655,61 +20591,11 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>WidgetCatalog</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+7"/>
-=======
         <location filename="../modules/background/desktopicons/WidgetCatalog.qml" line="+14"/>
->>>>>>> Stashed changes
         <source>Clock &amp; Weather</source>
         <translation>Reloj y clima</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+1"/>
-        <source>Desktop Clock</source>
-        <translation>Reloj del escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Media</source>
-        <translation>Multimedia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Media Shapes</source>
-        <translation>Figuras multimedia</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Desktop Lyrics</source>
-        <translation>Letras del escritorio</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>System Monitor</source>
-        <translation>Monitor del sistema</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Calendar</source>
-        <translation>Calendario</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Note</source>
-        <translation>Nota</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Folder View</source>
-        <translation>Vista de carpeta</translation>
-    </message>
-    <message>
-        <location line="+4"/>
-        <source>Large Folder</source>
-        <translation>Carpeta grande</translation>
-    </message>
-=======
         <location line="+7"/>
         <source>Show weather</source>
         <translation type="unfinished"></translation>
@@ -25935,28 +20821,15 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>Corner radius</source>
         <translation type="unfinished"></translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>WidgetGallery</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+78"/>
-=======
         <location filename="../modules/background/desktopicons/WidgetGallery.qml" line="+45"/>
->>>>>>> Stashed changes
         <source>Add Widget</source>
         <translation>Agregar widget</translation>
     </message>
     <message>
-<<<<<<< Updated upstream
-        <location line="+64"/>
-        <source>Drag a widget&apos;s border or corner to resize it; right-click for more</source>
-        <translation>Arrastra el borde o la esquina de un widget para redimensionarlo, click derecho para más</translation>
-    </message>
-</context>
-<context>
-=======
         <location line="+85"/>
         <source>Drag a widget&apos;s border or corner to resize it; its gear in edit mode opens its settings</source>
         <translation>Arrastra el borde o la esquina de un widget para redimensionarlo; su engranaje en el modo edición abre su configuración</translation>
@@ -26009,7 +20882,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
 </context>
 <context>
->>>>>>> Stashed changes
     <name>WirelessPassword</name>
     <message>
         <location filename="../modules/bar/popouts/WirelessPassword.qml" line="+52"/>
@@ -26062,17 +20934,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>WorkspaceTrackerGuard</name>
     <message>
-<<<<<<< Updated upstream
-        <location filename="../services/WorkspaceTrackerGuard.qml" line="+36"/>
-        <source>Workspace tracker effect is not running</source>
-        <translation>El efecto rastreador del espacio de trabajo no se está ejecutando</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>KWin stopped loading it after a KDE update. Run caelestia update, then log out and back in.</source>
-        <translation>KWin dejó de cargarlo después de una actualización de KDE. Ejecute la actualización de caelestia, luego cierre la sesión y vuelva a entrar.</translation>
-    </message>
-=======
         <location filename="../services/WorkspaceTrackerGuard.qml" line="+42"/>
         <source>no reason given</source>
         <translation>no se ha dado una razón</translation>
@@ -26087,7 +20948,6 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <source>KWin refused the workspace tracker (%1). Run caelestia update.</source>
         <translation>KWin ha rechazado el seguidor de espacio de trabajo (%1). Actualiza caelestia.</translation>
     </message>
->>>>>>> Stashed changes
 </context>
 <context>
     <name>Wrapper</name>

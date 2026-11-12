@@ -243,6 +243,11 @@ Item {
             // Read here so a filter change re-runs the page, the way window changes do.
             readonly property var _appFilter: Visibilities.overviewAppFilter
 
+            // A new array rebuilds every card on the page, and a title or geometry change is
+            // enough for one. While the overview is hidden that happens for nothing, so the
+            // page catches up when it is shown instead.
+            readonly property bool _shown: root.opacity > 0
+
             function _updateWsWindows(): void {
                 const arr = root.gridWindows(wsId);
 
@@ -263,9 +268,10 @@ Item {
                 }
             }
 
-            on_WinTriggerChanged: _updateWsWindows()
+            on_WinTriggerChanged: if (_shown) _updateWsWindows()
             on_AppFilterChanged: _updateWsWindows()
             onWsIdChanged: _updateWsWindows()
+            on_ShownChanged: if (_shown) _updateWsWindows()
 
             width: listView.width
             height: listView.height
@@ -508,8 +514,8 @@ Item {
                                     WindowPreview {
                                         active: root.opacity > 0
                                             && (dragHandler.active || Math.abs(page.index - listView.currentIndex) <= 1)
-                                            && !(root.activeInfoClient && root.activeInfoClient.address === modelData.address)
-                                            && Visibilities.streamClaim !== modelData.address
+                                            && !(root.activeInfoClient && root.activeInfoClient.address === activeWin.clientAddress)
+                                            && Visibilities.streamClaim !== activeWin.clientAddress
                                         address: modelData.address ?? ""
                                         width: {
                                             const wAspect = activeWin.windowAspect;

@@ -87,15 +87,18 @@ Item {
             Behavior on width { Anim { type: Anim.FastSpatial } }
             Behavior on height { Anim { type: Anim.FastSpatial } }
             TapHandler { }
-            WInfo.WindowInfo {
-                id: winInfoItem
-
+            // Built only while shown: closed, it followed the active window and re-ran
+            // every details binding on each window list change.
+            Loader {
                 anchors.fill: parent
-                clientAddress: windowInfoOverlay.clientAddress
-                border.width: 2
-                border.color: Colours.palette.m3primary
-                onCloseRequested: {
-                    windowInfoOverlay.isOpen = false
+                active: windowInfoOverlay.visible
+                sourceComponent: WInfo.WindowInfo {
+                    clientAddress: windowInfoOverlay.clientAddress
+                    border.width: 2
+                    border.color: Colours.palette.m3primary
+                    onCloseRequested: {
+                        windowInfoOverlay.isOpen = false
+                    }
                 }
             }
         }

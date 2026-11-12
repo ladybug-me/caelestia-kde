@@ -10,6 +10,7 @@ import qs.components.controls
 import qs.components.filedialog
 import qs.utils
 import qs.modules.nexus.common
+import qs.modules.launcher.services
 
 PageBase {
     id: root
@@ -72,14 +73,6 @@ PageBase {
         width: root.cappedWidth
         spacing: Tokens.spacing.extraSmall / 2
 
-        Settings {
-            id: launcherSettings
-
-            property string launcherStyle: "classic"
-
-            category: "Launcher"
-        }
-
         SectionHeader {
             first: true
             text: qsTr("General")
@@ -96,9 +89,9 @@ PageBase {
         SelectRow {
             label: qsTr("Launcher style")
             subtext: qsTr("Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner")
-            active: root.styleItems.find(item => item.value === launcherSettings.launcherStyle) ?? root.styleItems[0]
+            active: root.styleItems.find(item => item.value === Style.launcherStyle) ?? root.styleItems[0]
             menuItems: root.styleItems
-            onSelected: item => launcherSettings.launcherStyle = item.value
+            onSelected: item => Style.setLauncherStyle(item.value)
         }
 
         ToggleRow {

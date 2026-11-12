@@ -3,7 +3,6 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import QtCore
 import Quickshell
 import Caelestia
 import Caelestia.Config
@@ -36,7 +35,7 @@ Item {
     readonly property bool isBrowsing: list.showAppsBrowser
     // Classic keeps the launcher as it shipped (session row under the search
     // field); Modern is the profile picture header with the corner actions.
-    readonly property bool modernStyle: styleSettings.launcherStyle === "modern"
+    readonly property bool modernStyle: Style.launcherStyle === "modern"
     // The drawers window reads this to draw the circle behind the avatar.
     readonly property bool showAvatar: root.modernStyle
 
@@ -56,14 +55,6 @@ Item {
 
     implicitWidth: listWrapper.width + padding * 2
     implicitHeight: listWrapper.height + sessionFooter.height + searchWrapper.height + listWrapper.anchors.bottomMargin + sessionFooter.anchors.bottomMargin + searchWrapper.anchors.bottomMargin + root.headerHeight
-
-    Settings {
-        id: styleSettings
-
-        property string launcherStyle: "classic"
-
-        category: "Launcher"
-    }
 
     Connections {
         function onClearHistoryFinished(success: bool): void {

@@ -49,7 +49,7 @@ Item {
     function sortedApps(list: var): var {
         // The classic launcher has no ordering control: it keeps the launcher's
         // own ranking, exactly as it shipped.
-        if (sortSettings.launcherStyle !== "modern")
+        if (Style.launcherStyle !== "modern")
             return list;
         if (sortSettings.sortMode !== "alpha")
             return list;
@@ -176,7 +176,6 @@ Item {
         id: sortSettings
 
         property string sortMode: "most-used"
-        property string launcherStyle: "classic"
 
         category: "Launcher"
     }

@@ -98,13 +98,13 @@ test_the_page_is_registered_next_to_its_neighbours() {
     assert_contains "$registry" 'Component { DisplayModesPage {} }' "with its mode list"
     assert_contains "$state" 'property string selectedOutput' "the mode list needs to know which screen it edits"
 
-    # The registry is positional: its Nth stack is the Nth page of the dictionary.
+    # Pages live in the registry in their category's displayed order.
     local registry_bluetooth registry_displays registry_audio
     registry_bluetooth="$(grep -n 'key: "bluetoothPairing"' "$REGISTRY" | cut -d: -f1)"
     registry_displays="$(grep -n 'key: "displays"' "$REGISTRY" | head -n1 | cut -d: -f1)"
     registry_audio="$(grep -n 'key: "audio"' "$REGISTRY" | cut -d: -f1)"
     assert_eq "yes" "$([ "$registry_bluetooth" -lt "$registry_displays" ] && [ "$registry_displays" -lt "$registry_audio" ] && echo yes)" \
-        "and the registry has to keep that order"
+        "display and audio follow connectivity in the registry"
 }
 
 SCRIPT="$REPO_ROOT/shell/scripts/panel_capabilities.py"

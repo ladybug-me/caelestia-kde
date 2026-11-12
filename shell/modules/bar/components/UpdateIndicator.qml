@@ -43,7 +43,7 @@ Item {
             if (mouse.button === Qt.RightButton) {
                 UpdateChecker.checkNow();
             } else {
-                WindowFactory.create(null, { initialPageIdx: "updates" });
+                WindowFactory.create(null, { initialPageIdx: "updates", initialSubPage: "updates" });
             }
         }
     }

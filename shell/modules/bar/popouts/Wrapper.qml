@@ -60,7 +60,7 @@ Item {
         } else {
             WindowFactory.create(null, {
                 initialPageIdx: mode,
-                initialSubPageIdx: PageRegistry.defaultSubPageForKey(mode)
+                initialSubPage: PageRegistry.defaultSubPageForKey(mode)
             });
             close();
         }

@@ -14,7 +14,7 @@ ConnectedRect {
     property NexusState nState
     property string pageKey: ""
     property int pageIdx: -1
-    property int subPageIdx: -1
+    property string subPage: ""
     property string trailingIcon: "open_in_new"
 
     property alias icon: icon.text
@@ -31,8 +31,8 @@ ConnectedRect {
             ? PageRegistry.indexForKey(root.pageKey)
             : (root.pageIdx >= 0 ? root.pageIdx : root.nState.currentPageIdx);
 
-        if (targetPageIdx >= 0 && root.subPageIdx >= 0)
-            root.nState.goToSubPage(targetPageIdx, root.subPageIdx);
+        if (targetPageIdx >= 0 && root.subPage !== "")
+            root.nState.goToSubPage(targetPageIdx, root.subPage);
         else if (targetPageIdx >= 0)
             root.nState.goToPage(targetPageIdx);
     }

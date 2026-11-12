@@ -15,12 +15,12 @@ ColumnLayout {
 
     required property PopoutState popouts
     required property string label
-    required property int subPageIdx
+    property string subPage: ""
 
     // Optional second action row (e.g. every widget menu also links to
     // Elements & Modules). Empty label hides it.
     property string secondLabel: ""
-    property int secondSubPageIdx: -1
+    property string secondSubPage: ""
     property string secondPageKey: "panels"
 
     property real scaleOffset: 1.0
@@ -53,14 +53,14 @@ ColumnLayout {
             ActionRow {
                 labelText: root.label
                 pageKey: "panels"
-                subPageIdx: root.subPageIdx
+                subPage: root.subPage
             }
 
             ActionRow {
                 visible: root.secondLabel !== ""
                 labelText: root.secondLabel
                 pageKey: root.secondPageKey
-                subPageIdx: root.secondSubPageIdx
+                subPage: root.secondSubPage
             }
         }
     }
@@ -70,7 +70,7 @@ ColumnLayout {
 
         required property string labelText
         required property string pageKey
-        required property int subPageIdx
+        property string subPage: ""
 
         Layout.fillWidth: true
         implicitWidth: rowLayout.implicitWidth + Tokens.padding.medium * 2 * root.scaleOffset
@@ -87,7 +87,7 @@ ColumnLayout {
                 root.popouts.hasCurrent = false;
                 WindowFactory.create(null, {
                     initialPageIdx: PageRegistry.indexForKey(row.pageKey),
-                    initialSubPageIdx: row.subPageIdx
+                    initialSubPage: row.subPage
                 });
             }
         }

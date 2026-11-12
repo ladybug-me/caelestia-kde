@@ -230,10 +230,10 @@ test_the_dialogs_share_one_frame() {
 }
 
 test_update_links_open_the_updates_subpage() {
-    assert_file_contains "$POPOUT" 'initialPageIdx: "updates"' "the popout opens the Updates subpage by key"
-    assert_file_contains "$INDICATOR" 'initialPageIdx: "updates"' "the indicator opens the same subpage"
+    assert_file_contains "$POPOUT" 'initialPageIdx: "updates", initialSubPage: "updates"' "the popout opens the Updates page by key"
+    assert_file_contains "$INDICATOR" 'initialPageIdx: "updates", initialSubPage: "updates"' "the indicator opens the same page"
     assert_file_contains "$REPO_ROOT/shell/modules/nexus/pages/panels/taskbar/BarUpdates.qml" \
-        'goToSubPage(root.updatesPageIdx, PageRegistry.defaultSubPageForKey("updates"))' \
+        'goToSubPage(root.updatesPageIdx, "updates")' \
         "the taskbar settings link opens the Updates subpage"
 }
 

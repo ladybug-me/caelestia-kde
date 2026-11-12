@@ -114,6 +114,16 @@ STUB
     chmod +x "$STUB_DIR/ffmpeg"
 }
 
+# Without it the real skwd-helm on PATH talks to the user's running skwd-walld and applies the
+# sandbox images as their wallpaper. Tests that care about the calls write their own over it.
+write_stub_skwd_helm() {
+    cat > "$STUB_DIR/skwd-helm" <<'STUB'
+#!/usr/bin/env bash
+exit 0
+STUB
+    chmod +x "$STUB_DIR/skwd-helm"
+}
+
 write_stub_kde() {
     cat > "$STUB_DIR/plasma-apply-colorscheme" <<'STUB'
 #!/usr/bin/env bash
@@ -131,6 +141,20 @@ STUB
     chmod +x "$STUB_DIR/plasma-apply-colorscheme" "$STUB_DIR/kwriteconfig6" "$STUB_DIR/kreadconfig6"
 }
 
+write_stub_ps() {
+    local real_ps
+    real_ps="$(command -v ps)"
+    # apply_terms writes the sequences to every shell's pty, and a sandbox still sees the
+    # real /dev/pts: without this the stub palette ("primary 92cef5") lands in open terminals.
+    # sh, not bash: the suite runs ps about 20000 times walking parent processes.
+    cat > "$STUB_DIR/ps" <<STUB
+#!/bin/sh
+[ "\$1" = "-t" ] && exit 0
+exec "$real_ps" "\$@"
+STUB
+    chmod +x "$STUB_DIR/ps"
+}
+
 setup_sandbox() {
     SANDBOX="$(new_tmpdir)"
     STUB_DIR="$SANDBOX/bin"
@@ -140,6 +164,8 @@ setup_sandbox() {
     write_stub_matugen
     write_stub_ffmpeg
     write_stub_kde
+    write_stub_ps
+    write_stub_skwd_helm
 
     export CAELESTIA_DATA_DIR="$REPO_ROOT/src"
     export XDG_CONFIG_HOME="$SANDBOX/config"
@@ -1096,6 +1122,28 @@ EOF
         "path.txt should contain actual video from skwd-wall, not webp thumbnail"
 }
 
+test_wallpaper_keeps_the_thumbnail_of_a_wallpaper_engine_scene() {
+    setup_sandbox
+    local thumb_dir="$XDG_CACHE_HOME/skwd-wall-v2/we-thumbs"
+    mkdir -p "$thumb_dir"
+    local thumb="$thumb_dir/3522288336.webp"
+    touch "$thumb"
+    local other; other="$(wallpaper_image "other.jpg")"
+
+    # A scene has no file to point at, and last-applied.json still names an older wallpaper.
+    cat > "$XDG_CACHE_HOME/skwd-wall-v2/last-wallpaper.json" <<EOF
+{"path": "", "thumb": "/steam/workshop/content/431960/3522288336/preview.jpg", "type": "we", "we_id": "3522288336"}
+EOF
+    cat > "$XDG_CACHE_HOME/skwd-wall-v2/last-applied.json" <<EOF
+{"landscape": {"path": "$other", "type": "static"}}
+EOF
+
+    SKWD_WALLD=1 run_color wallpaper -f "$thumb" -a "3522288336"
+    assert_status 0 "$STATUS" "setting the wallpaper should succeed"
+    assert_eq "$thumb" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt keeps the scene's thumbnail, not an unrelated older wallpaper"
+}
+
 test_skwd_helm_not_called_when_skwd_walld_env_set() {
     setup_sandbox
     local img; img="$(wallpaper_image "wall.png")"
@@ -1131,6 +1179,32 @@ STUB
     run_color wallpaper -f "$thumb" -a "$actual"
     assert_status 0 "$STATUS" "setting wallpaper with -a flag should succeed"
     assert_file_missing "$SANDBOX/helm_calls.txt" "skwd-helm apply should not be called when -a is passed"
+}
+
+test_an_apply_path_that_is_not_a_file_keeps_the_thumbnail() {
+    setup_sandbox
+    local thumb; thumb="$(wallpaper_image "thumb.png")"
+
+    # skwd-wall hands a Wallpaper Engine workshop id as -a for its own wallpapers.
+    SKWD_WALLD=1 run_color wallpaper -f "$thumb" -a "3522288336"
+    assert_status 0 "$STATUS" "setting the wallpaper should still succeed"
+    assert_eq "$thumb" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt falls back to the thumbnail"
+    assert_eq "$thumb" "$(readlink "$XDG_STATE_HOME/caelestia/wallpaper/current")" \
+        "the current link falls back to the thumbnail"
+}
+
+test_an_apply_path_that_is_a_directory_keeps_the_thumbnail() {
+    setup_sandbox
+    local thumb; thumb="$(wallpaper_image "thumb.png")"
+    local scene="$SANDBOX/workshop/431960/3522288336"
+    mkdir -p "$scene"
+
+    # Newer skwd-wall hands the scene's workshop folder instead of its id.
+    SKWD_WALLD=1 run_color wallpaper -f "$thumb" -a "$scene"
+    assert_status 0 "$STATUS" "setting the wallpaper should still succeed"
+    assert_eq "$thumb" "$(cat "$XDG_STATE_HOME/caelestia/wallpaper/path.txt")" \
+        "path.txt falls back to the thumbnail"
 }
 
 test_skwd_helm_not_called_when_multi_monitor_already_has_wallpaper() {

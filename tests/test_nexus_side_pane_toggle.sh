@@ -8,7 +8,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/helpers.sh"
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 NEXUS="$REPO_ROOT/shell/modules/nexus"
 CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/nexusconfig.hpp"
-APPEARANCE="$NEXUS/pages/wallandstyle/AppearancePage.qml"
+NEXUS_SETTINGS="$NEXUS/pages/wallandstyle/NexusSettingsPage.qml"
 
 test_the_layout_is_a_global_setting_that_defaults_to_two_panels() {
     assert_file_contains "$CONFIG" 'CONFIG_GLOBAL_PROPERTY(bool, sidePane, false)' \
@@ -16,9 +16,9 @@ test_the_layout_is_a_global_setting_that_defaults_to_two_panels() {
 }
 
 test_the_toggle_lives_in_the_settings_window_itself() {
-    assert_file_contains "$APPEARANCE" 'setting: "sidePane"' \
+    assert_file_contains "$NEXUS_SETTINGS" 'setting: "sidePane"' \
         "the toggle should reset through the setting it edits"
-    assert_file_contains "$APPEARANCE" 'GlobalConfig.nexus.sidePane = checked' \
+    assert_file_contains "$NEXUS_SETTINGS" 'GlobalConfig.nexus.sidePane = checked' \
         "the toggle should write the setting"
 }
 
@@ -39,7 +39,7 @@ test_a_section_opens_on_its_own_list_without_the_pane() {
         "the navigation state should know which layout it is driving"
     assert_file_contains "$NEXUS/NexusState.qml" 'if (!sidePane)' \
         "the default slot should depend on the layout"
-    assert_file_contains "$NEXUS/NexusState.qml" 'return sidePane ? parentSubCategorySlot(pageIdx, target) : 0' \
+    assert_file_contains "$NEXUS/NexusState.qml" 'return sidePane ? parentSubCategory(pageIdx, target) : "hub"' \
         "without the pane the section list is the root of the stack"
 }
 

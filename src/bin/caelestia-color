@@ -815,6 +815,11 @@ def cmd_resolve_thumb(thumb_path: str) -> int:
                 d = json.load(f)
             t = d.get("thumb")
             p = d.get("path")
+            # A Wallpaper Engine scene has no file to point at, so the thumbnail is the image.
+            # Falling through would pick whatever older wallpaper the files below still name.
+            if d.get("type") == "we" and thumb_p.stem in (str(d.get("we_id") or ""), pathlib.Path(str(t or "")).parent.name):
+                print(thumb_path)
+                return 0
             if p and os.path.exists(p) and (t == thumb_path or not t or thumb_p.stem in str(t)):
                 print(p)
                 return 0
@@ -1791,7 +1796,10 @@ cmd_wallpaper() {
         fi
     fi
 
-    local state_file="${apply_file:-$file}"
+    # skwd-wall passes a Wallpaper Engine workshop id or folder as -a for its own wallpapers;
+    # the thumbnail is the only real image then. apply_file stays set for the loop guard.
+    local state_file="$file"
+    [[ -n "$apply_file" && -f "$apply_file" ]] && state_file="$apply_file"
     state_file="$(resolve_actual_wallpaper "$state_file")"
 
     write_wallpaper_state "$state_file"

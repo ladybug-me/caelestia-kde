@@ -123,6 +123,27 @@ test_priming_uses_the_askpass_helper() {
     reset_sudo_state
 }
 
+test_priming_inside_a_command_substitution_returns() {
+    require_unprivileged_user || return 0
+
+    local tmp log lib output status
+    reset_sudo_state
+    tmp="$(new_tmpdir)"
+    log="$tmp/calls.log"
+    lib="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/scripts/lib/privileges.sh"
+
+    output="$(
+        CAELESTIA_SUDO_BIN="$(sudo_stub "$tmp/bin" none "$log")" \
+        SUDO_ASKPASS="$(askpass_file "$tmp/bin")" \
+        timeout 10 bash -c 'source "$1"; result="$(caelestia_sudo marked-command; echo ran)"; echo "$result"' _ "$lib"
+    )"
+    status=$?
+
+    assert_status 0 "$status" "the keepalive must not hold the substitution open"
+    assert_eq "ran" "$output" "the command should run and the substitution return"
+    reset_sudo_state
+}
+
 nopasswd_sudo_stub() {
     local dir="$1" log="$2"
     stub_bin "$dir" sudo "

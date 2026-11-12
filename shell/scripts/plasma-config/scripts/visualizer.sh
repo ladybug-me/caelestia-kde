@@ -5,6 +5,7 @@
 VISUALIZER_PLUGIN_ID="luisbocanegra.audio.visualizer"
 USER_CONFIG_DIR="${USER_CONFIG_DIR:-${XDG_CONFIG_HOME:-$HOME/.config}}"
 CONFIG_DIR="${CONFIG_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+VISUALIZER_SNAPSHOT_FILE="${VISUALIZER_SNAPSHOT_FILE:-/tmp/plasma-visualizer-editmode-snapshot.json}"
 
 normalize_visualizer_profile() {
     local raw="${1,,}"
@@ -64,12 +65,6 @@ except Exception:
     live_ids = None
     live_geoms = {}
 
-if live_ids is not None and len(live_ids) == 0:
-    os.makedirs(os.path.dirname(target_file), exist_ok=True)
-    with open(target_file, "w") as fh:
-        fh.write("# User visualizer configuration\n# No visualizer widgets configured\n")
-    sys.exit(0)
-
 candidate_files = []
 shell_pkg = ""
 try:
@@ -87,6 +82,31 @@ for name in ["plasma-caelestia.desktop-appletsrc", "plasma-org.kde.plasma.deskto
     p = os.path.join(config_dir, name)
     if os.path.exists(p) and p not in candidate_files:
         candidate_files.append(p)
+
+
+def visualizer_hidden_by_shell(appletsrc_files, plugin_id):
+    """True when the shell parked visualizer widgets in [DisabledApplets]."""
+    for appletsrc in appletsrc_files:
+        try:
+            txt = open(appletsrc).read()
+        except Exception:
+            continue
+        for sec in re.split(r"(?m)(?=^\[)", txt):
+            sl = sec.strip().splitlines()
+            if sl and re.match(r"^\[Containments\]\[\d+\]\[DisabledApplets\]\[\d+\]$", sl[0].strip()):
+                if any(l.strip() == f"plugin={plugin_id}" for l in sl[1:]):
+                    return True
+    return False
+
+
+if live_ids is not None and len(live_ids) == 0:
+    if visualizer_hidden_by_shell(candidate_files, plugin_id):
+        # The shell hid the widgets (no player playing); keep the saved layout.
+        sys.exit(0)
+    os.makedirs(os.path.dirname(target_file), exist_ok=True)
+    with open(target_file, "w") as fh:
+        fh.write("# User visualizer configuration\n# No visualizer widgets configured\n")
+    sys.exit(0)
 
 found_blocks = []
 for appletsrc in candidate_files:
@@ -183,12 +203,12 @@ PYEOF
 }
 
 snapshot_visualizer_config() {
-    python3 - "$USER_CONFIG_DIR" "$VISUALIZER_PLUGIN_ID" << 'PYEOF'
+    python3 - "$USER_CONFIG_DIR" "$VISUALIZER_PLUGIN_ID" "$VISUALIZER_SNAPSHOT_FILE" << 'PYEOF'
 import json, os, re, subprocess, sys
 
 config_dir = sys.argv[1]
 plugin_id = sys.argv[2]
-snapshot_file = "/tmp/plasma-visualizer-editmode-snapshot.json"
+snapshot_file = sys.argv[3]
 
 
 live_data = {}
@@ -273,13 +293,13 @@ PYEOF
 }
 
 check_visualizer_edit_mode_changes() {
-    python3 - "$USER_CONFIG_DIR" "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf" "$VISUALIZER_PLUGIN_ID" << 'PYEOF'
+    python3 - "$USER_CONFIG_DIR" "$CONFIG_DIR/plasma-audio-visualizer/double_reversed.conf" "$VISUALIZER_PLUGIN_ID" "$VISUALIZER_SNAPSHOT_FILE" << 'PYEOF'
 import json, os, re, subprocess, sys
 
 config_dir = sys.argv[1]
 fallback_tmpl = sys.argv[2]
 plugin_id = sys.argv[3]
-snapshot_file = "/tmp/plasma-visualizer-editmode-snapshot.json"
+snapshot_file = sys.argv[4]
 target_file = os.path.join(config_dir, "caelestia", "plasma-audio-visualizer", "user.conf")
 
 
@@ -303,8 +323,8 @@ if not isinstance(snap_items, list):
     print("STATUS_UNCHANGED")
     sys.exit(0)
 
-# Query live widgets
-live_data = {}
+# Query live widgets; None means plasmashell could not be read
+live_data = None
 try:
     js_live = f"""
     var data = {{}};
@@ -327,7 +347,12 @@ try:
     if out.startswith("{"):
         live_data = json.loads(out)
 except Exception:
-    pass
+    live_data = None
+
+# Without a readable Plasma state there is no evidence of a user edit
+if not isinstance(live_data, dict):
+    print("STATUS_UNCHANGED")
+    sys.exit(0)
 
 candidate_files = []
 shell_pkg = ""
@@ -346,6 +371,28 @@ for name in ["plasma-caelestia.desktop-appletsrc", "plasma-org.kde.plasma.deskto
     p = os.path.join(config_dir, name)
     if os.path.exists(p) and p not in candidate_files:
         candidate_files.append(p)
+
+
+def visualizer_hidden_by_shell(appletsrc_files, plugin_id):
+    """True when the shell parked visualizer widgets in [DisabledApplets]."""
+    for appletsrc in appletsrc_files:
+        try:
+            txt = open(appletsrc).read()
+        except Exception:
+            continue
+        for sec in re.split(r"(?m)(?=^\[)", txt):
+            sl = sec.strip().splitlines()
+            if sl and re.match(r"^\[Containments\]\[\d+\]\[DisabledApplets\]\[\d+\]$", sl[0].strip()):
+                if any(l.strip() == f"plugin={plugin_id}" for l in sl[1:]):
+                    return True
+    return False
+
+
+# The shell hides the widgets whenever playback stops; if that happened during
+# edit mode the live set is empty although the user removed nothing.
+if not live_data and snap_items and visualizer_hidden_by_shell(candidate_files, plugin_id):
+    print("STATUS_UNCHANGED")
+    sys.exit(0)
 
 widget_configs = {}
 for appletsrc in candidate_files:

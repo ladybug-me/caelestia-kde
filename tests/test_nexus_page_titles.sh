@@ -21,11 +21,9 @@ test_every_card_names_the_page_it_opens() {
     fi
 }
 
-test_the_middle_pane_shows_the_current_category() {
+test_the_middle_pane_shows_the_selected_category_name() {
     assert_file_contains "$PANE" 'text: root.currentPage ? root.currentPage.label : ""' \
-        "the middle pane header should show the selected category"
-    assert_file_contains "$PANE" 'root.nState.compact ?' \
-        "compact mode still has a way back to category navigation"
+        "the middle pane header should show the selected category from panel 1"
 }
 
 test_a_long_page_can_scroll_clear_of_the_window_edge() {

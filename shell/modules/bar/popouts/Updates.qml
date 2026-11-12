@@ -160,7 +160,7 @@ ColumnLayout {
                     radius: parent.radius
                     onClicked: {
                         root.popouts.hasCurrent = false;
-                        WindowFactory.create(null, { initialPageIdx: "updates" });
+                        WindowFactory.create(null, { initialPageIdx: "updates", initialSubPage: "updates" });
                     }
                 }
 

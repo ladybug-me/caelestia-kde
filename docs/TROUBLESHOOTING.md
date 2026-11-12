@@ -1259,13 +1259,14 @@ unanswered is dropped after two minutes.
 
 ### 7.9 Plasma Audio Visualizer
 
-The desktop visualizer is a Plasma widget from `plasma-audio-visualizer`, not a shell module. Install it first; on Arch it is in the AUR (`yay -S plasma-audio-visualizer`).
-
-The shell drives the widget through presets such as Double Reverse and Single. Editing the widget in Plasma saves the result as *User Defined*, which the shell reapplies. A fresh install can leave the preset on *User Defined* with nothing shown; pick another preset to bring it back.
-
-The widget draws on the Plasma desktop. When the Quickshell wallpaper layer is on (`background.wallpaperEnabled`), the widget is hidden behind it, so the layer only works when `skwd-wall` is installed and on `PATH`. The shell turns the layer off when it detects `skwd-wall`.
-
-To use the visualizer without the shell's presets, turn it off in the shell and add the widget from Plasma's widget picker. To keep the shell's preset but change the look, pick Single or Double Reverse here, then edit the widget in Plasma's edit mode (right-click the desktop, *Edit Plasma Widgets*).
+- **Not installed:**
+  The desktop visualizer is a Plasma widget from `plasma-audio-visualizer`, not a shell module. Install it first; on Arch it is in the AUR (`yay -S plasma-audio-visualizer`).
+- **Empty config:**
+  The shell drives the widget through presets such as `Double Reverse` and `Single`. Editing the widget in Plasma saves the result as `User Defined`, which the shell reapplies. A fresh install can leave the preset on *User Defined* with nothing shown; pick another preset to bring it back.
+- **Hidden by wallpaper:**
+  The widget draws on the Plasma desktop. When the Quickshell wallpaper layer is on (`background.wallpaperEnabled`), the widget is hidden behind it, hence disabled automatically. In wallpaper settings, change wallpaper engine to skwd/plasma to use it.
+- **Customize:**
+  To use the visualizer without the shell's presets, turn it off in the shell and add the widget from Plasma's widget picker. To keep the shell's preset but change the look, pick Single or Double Reverse here, then edit the widget in Plasma's edit mode (right-click the desktop, *Edit Plasma Widgets*).
 
 ### 7.10 skwd-wall
 

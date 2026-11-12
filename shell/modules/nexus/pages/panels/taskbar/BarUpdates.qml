@@ -47,7 +47,7 @@ PageBase {
             icon: "sync"
             label: qsTr("Turn on update checking")
             status: qsTr("Periodic checks and the indicator are off")
-            onClicked: root.nState.goToSubPage(root.updatesPageIdx, PageRegistry.defaultSubPageForKey("updates"))
+            onClicked: root.nState.goToSubPage(root.updatesPageIdx, "updates")
         }
     }
 }

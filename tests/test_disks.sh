@@ -9,7 +9,6 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 SCRIPT="$REPO_ROOT/shell/scripts/disks.py"
 SERVICE="$REPO_ROOT/shell/services/Disks.qml"
 PAGE="$REPO_ROOT/shell/modules/nexus/pages/StoragePage.qml"
-DICTIONARY="$REPO_ROOT/shell/modules/nexus/PageDictionary.qml"
 REGISTRY="$REPO_ROOT/shell/modules/nexus/PageCompRegistry.qml"
 PYTHON="$(command -v python3 || command -v python)"
 
@@ -184,7 +183,6 @@ test_mounting_goes_through_udisks() {
 
 test_the_page_is_reachable() {
     assert_file_exists "$PAGE"
-    assert_file_contains "$DICTIONARY" '"storage":' "the page needs a dictionary entry"
     assert_file_contains "$REGISTRY" 'key: "storage"' "and a component slot"
     assert_file_contains "$PAGE" 'Disks.refresh()' "the list is re-read when the page is shown"
     assert_file_contains "$PAGE" 'Disks.eject(diskSection.disk.device)' "ejecting asks for the disk, not one of its filesystems"

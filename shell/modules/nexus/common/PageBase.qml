@@ -346,7 +346,7 @@ ColumnLayout {
 
             Loader {
                 visible: active
-                active: root.isSubPage && (root.nState ? root.nState.subPageIdxStack.length > 0 : false)
+                active: root.isSubPage && (root.nState ? root.nState.subPageKeyStack.length > 0 : false)
                 asynchronous: true
                 sourceComponent: IconButton {
                     icon: "arrow_back"

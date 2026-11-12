@@ -211,6 +211,7 @@ Item {
         }
 
         root.modelDataArray = newArr;
+        root._lastSignature = "";
         const map = {};
         for (const app of newArr) {
             map[app.id] = app;
@@ -359,7 +360,12 @@ Item {
         property real maxVerticalSize: maxVerticalItems >= 1 ? ((maxVerticalItems + 0.5) * itemSize + maxVerticalItems * spacing + padding * 2) : availableSize
 
         property var _appsValues: DesktopEntries.applications.values
-        on_AppsValuesChanged: root.rebuildModel()
+        on_AppsValuesChanged: {
+            root._pinnedCache = null;
+            root._entryCache = ({});
+            root._lastSignature = "";
+            root.scheduleRebuild();
+        }
 
         MouseArea {
             anchors.fill: parent
@@ -667,9 +673,10 @@ Item {
                     ColouredIcon {
                         anchors.centerIn: parent
                         implicitSize: root.iconSize
-                        source: icon.source
+                        // hidden unless recolouring: skip the second decode and the colour analysis
+                        source: visible ? icon.source : ""
                         colour: Colours.palette.m3secondary
-                        layer.enabled: true
+                        layer.enabled: visible
                         visible: Config.bar.dock.recolourIcons ?? false
                     }
 
@@ -833,28 +840,74 @@ Item {
 
     onModelDataArrayChanged: currentOrder = [...modelDataArray]
 
+    // Resolved pinned entries and per-class entry lookups. Both scan every desktop entry,
+    // so they are kept until the pins or the installed applications change.
+    property var _pinnedCache: null
+
+    property var _entryCache: ({})
+
+    // What the delegates render from the model; equal means only titles or geometry moved.
+    property string _lastSignature: ""
+
+    function resolvePinned(pinnedIds: var): var {
+        const key = pinnedIds.join("\n");
+        if (root._pinnedCache && root._pinnedCache.key === key)
+            return root._pinnedCache.entries;
+
+        const entries = [];
+        for (const pid of pinnedIds) {
+            for (const entry of DesktopEntries.applications.values) {
+                if (Strings.testRegex(pid, entry.id) && !entries.some(e => e.id === entry.id))
+                    entries.push(entry);
+            }
+        }
+        root._pinnedCache = { key: key, entries: entries };
+        return entries;
+    }
+
+    function resolveEntry(appClass: string): var {
+        const cached = root._entryCache[appClass];
+        if (cached !== undefined)
+            return cached;
+
+        let entry = null;
+        let iconName = appClass;
+        if (appClass.toLowerCase().startsWith("steam_app_")) {
+            const appId = appClass.substring(10);
+            iconName = `steam_icon_${appId}`;
+            entry = DesktopEntries.applications.values.find(e => e.id.toLowerCase() === `steam_app_${appId}.desktop` || e.id.toLowerCase() === `steam-${appId}.desktop`) || null;
+        } else {
+            entry = DesktopEntries.heuristicLookup(appClass) || null;
+            if (!entry)
+                entry = DesktopEntries.applications.values.find(e => Kwin.classNamesApp(appClass, [e.id])) || null;
+            iconName = entry ? entry.id : (appClass.toLowerCase().split(/[^a-z0-9]/)[0] || appClass);
+        }
+
+        const resolved = { entry: entry, iconName: iconName };
+        root._entryCache[appClass] = resolved;
+        return resolved;
+    }
+
+    function modelSignature(apps: var): string {
+        return apps.map(a => `${a.id}|${a.isPinned}|${a.entry?.id ?? ""}|` + a.toplevels.map(t => `${t.address}${t.focused ? "*" : ""}${t.minimized ? "m" : ""}`).join(",")).join("\n");
+    }
+
     function rebuildModel(): void {
         if (root.isDragging) return;
         let apps = [];
 
         const pinnedIds = GlobalConfig.bar.dock.pinnedApps || [];
 
-        for (const pid of pinnedIds) {
-            for (const entry of DesktopEntries.applications.values) {
-                if (Strings.testRegexList([pid], entry.id)) {
-                    if (!apps.some(a => a.id === entry.id)) {
-                        apps.push({
-                            id: entry.id,
-                            isPinned: true,
-                            entry: entry,
-                            toplevels: [],
-                            appClass: entry.id.replace(".desktop", ""),
-                            iconName: entry.id,
-                            pid: 0
-                        });
-                    }
-                }
-            }
+        for (const entry of root.resolvePinned(pinnedIds)) {
+            apps.push({
+                id: entry.id,
+                isPinned: true,
+                entry: entry,
+                toplevels: [],
+                appClass: entry.id.replace(".desktop", ""),
+                iconName: entry.id,
+                pid: 0
+            });
         }
 
         for (const toplevel of root._toplevels) {
@@ -890,24 +943,7 @@ Item {
             }
 
             if (!found) {
-                const isToplevelSteamGame = appClass.toLowerCase().startsWith("steam_app_");
-                let entry = null;
-                let iconName = appClass;
-
-                if (isToplevelSteamGame) {
-                    const appId = appClass.substring(10);
-                    iconName = `steam_icon_${appId}`;
-                    entry = DesktopEntries.applications.values.find(e => e.id.toLowerCase() === `steam_app_${appId}.desktop` || e.id.toLowerCase() === `steam-${appId}.desktop`) || null;
-                } else {
-                    entry = DesktopEntries.heuristicLookup(appClass) || null;
-                    if (!entry) {
-                        entry = DesktopEntries.applications.values.find(e => Kwin.classNamesApp(appClass, [e.id])) || null;
-                    }
-                    if (entry)
-                        iconName = entry.id;
-                    else
-                        iconName = appClass.toLowerCase().split(/[^a-z0-9]/)[0] || appClass;
-                }
+                const { entry, iconName } = root.resolveEntry(appClass);
 
                 const pid = ipc.pid || 0;
                 if (!entry)
@@ -970,6 +1006,19 @@ Item {
             apps = orderedApps;
         }
 
+        const signature = root.modelSignature(apps);
+        if (signature === root._lastSignature) {
+            // Nothing the dock draws changed; refresh the snapshots hover and click read
+            // without reassigning, which would re-evaluate every delegate binding.
+            for (const app of apps) {
+                const prev = root.modelDataMap[app.id];
+                if (prev)
+                    prev.toplevels = app.toplevels;
+            }
+            return;
+        }
+        root._lastSignature = signature;
+
         let changed = false;
         if (apps.length !== dockModel.count) {
             changed = true;
@@ -1026,35 +1075,27 @@ Item {
         root.modelUpdateTrigger += 1;
     }
 
+    // One rebuild per event loop pass: a focus change alone emits windowListChanged and
+    // activeWindowChanged twice (old window, then new), and each used to rebuild here.
+    function scheduleRebuild(): void {
+        Qt.callLater(root.rebuildModel);
+    }
+
     property var _toplevels: Config.bar.dock.currentDesktopOnly
         ? Kwin.filterWindows(Kwin.windowList, Kwin.activeWorkspaceFor(bar?.screen?.name), bar?.screen?.name, true)
         : (Kwin.windowList || [])
 
-    on_ToplevelsChanged: {
-        root.rebuildModel()
-        delayedRebuildTimer.restart()
-    }
+    on_ToplevelsChanged: root.scheduleRebuild()
 
-    Timer {
-        id: delayedRebuildTimer
-
-        interval: 100
-        repeat: false
-        onTriggered: root.rebuildModel()
-    }
-
+    // The bridge always emits windowListChanged with activeWindowChanged, so the list
+    // rebuild above covers focus; isActive reads activeTop directly.
     property var activeTop: (Kwin.activeWindow && Kwin.activeWindow.address) ? Kwin.activeWindow : null
-
-    onActiveTopChanged: {
-        root.rebuildModel()
-        delayedRebuildTimer.restart()
-    }
 
     Connections {
         target: GlobalConfig.bar.dock
 
         function onPinnedAppsChanged(): void {
-            root.rebuildModel();
+            root.scheduleRebuild();
         }
     }
 
@@ -1071,12 +1112,12 @@ Item {
 
         function onActiveWsIdChanged(): void {
             if (Config.bar.dock.currentDesktopOnly)
-                root.rebuildModel();
+                root.scheduleRebuild();
         }
 
         function onActiveByOutputChanged(): void {
             if (Config.bar.dock.currentDesktopOnly)
-                root.rebuildModel();
+                root.scheduleRebuild();
         }
     }
 
@@ -1084,11 +1125,11 @@ Item {
         target: Config.bar.dock
 
         function onCurrentDesktopOnlyChanged(): void {
-            root.rebuildModel();
+            root.scheduleRebuild();
         }
 
         function onWindowGroupingChanged(): void {
-            root.rebuildModel();
+            root.scheduleRebuild();
         }
     }
 

@@ -23,6 +23,11 @@ Item {
 
     property bool isGameOver: DinoGameBackend.isGameOver
 
+    readonly property bool isRunning: isPlaying && !DinoGameBackend.isPaused
+
+    // The game loop is continuous motion, so the animations switch turns the game off too.
+    readonly property bool playable: Tokens.anim.enabled
+
     implicitWidth: Math.max(250, parent.width * 0.8)
 
     implicitHeight: 200
@@ -35,25 +40,35 @@ Item {
 
     Component.onCompleted: DinoGameBackend.width = width
 
-    Connections {
-        target: DinoGameBackend
+    onIsRunningChanged: Notifs.setDndHold("game", isRunning)
 
-        function onGameStarted() {
-            Notifs.setDndHold("game", true);
-        }
-
-        function onGameDied() {
-            Notifs.setDndHold("game", false);
-        }
+    // The backend outlives this item, so a game left behind (sidebar closed or hidden)
+    // pauses instead of running blind and holding do-not-disturb until it crashes.
+    onVisibleChanged: {
+        if (!visible)
+            DinoGameBackend.pause();
     }
 
-    Component.onDestruction: Notifs.setDndHold("game", false)
+    onPlayableChanged: {
+        if (!playable)
+            DinoGameBackend.pause();
+    }
+
+    Component.onDestruction: {
+        DinoGameBackend.pause();
+        Notifs.setDndHold("game", false);
+    }
+
+    FrameAnimation {
+        running: root.isRunning && root.visible && root.playable
+        onTriggered: DinoGameBackend.advance(frameTime * 1000)
+    }
 
     // A Shortcut covers the whole drawers window, and it takes Up before a focused field's
     // Keys handler sees it (the launcher search loses its list navigation). Only while
     // playing or focused, then.
     Shortcut {
-        enabled: root.isPlaying || root.activeFocus
+        enabled: root.playable && (root.isRunning || root.activeFocus)
         sequence: "Space"
         onActivated: {
             root.forceActiveFocus();
@@ -61,7 +76,7 @@ Item {
         }
     }
     Shortcut {
-        enabled: root.isPlaying || root.activeFocus
+        enabled: root.playable && (root.isRunning || root.activeFocus)
         sequence: "Up"
         onActivated: {
             root.forceActiveFocus();
@@ -81,7 +96,9 @@ Item {
 
     MouseArea {
         anchors.fill: parent
+        enabled: root.playable
         hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
         onClicked: {
             // so Down can duck after a game started with the mouse
             root.forceActiveFocus();
@@ -252,6 +269,14 @@ Item {
             color: root.activeColor
             font: Tokens.font.headline.builders.small.width(90).build()
         }
+
+        StyledText {
+            Layout.alignment: Qt.AlignHCenter
+            visible: root.playable
+            text: qsTr("Click to play")
+            color: Colours.palette.m3onSurfaceVariant
+            font: Tokens.font.body.medium
+        }
     }
 
     Item {
@@ -271,6 +296,8 @@ Item {
                 y: cloud.y ?? 0
                 width: 92
                 height: 27
+                // the game over and pause text sits in the sky, so clouds step aside while it shows
+                opacity: root.isRunning ? 1 : 0
                 source: Paths.absolutePath("root:/assets/dino_cloud.png")
                 fillMode: Image.PreserveAspectFit
 
@@ -279,6 +306,8 @@ Item {
                     colorizationColor: root.activeColor
                     brightness: 1
                 }
+
+                Behavior on opacity { Anim { type: Anim.Standard } }
             }
         }
 
@@ -340,6 +369,8 @@ Item {
     }
 
     StyledText {
+        id: gameOverText
+
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) < 99999
         text: qsTr("G A M E   O V E R\nClick to restart")
         horizontalAlignment: Text.AlignHCenter
@@ -352,6 +383,27 @@ Item {
     StyledText {
         visible: root.isGameOver && Math.floor(DinoGameBackend.score) >= 99999
         text: qsTr("Y O U   W I N !\nNow go touch grass")
+        horizontalAlignment: Text.AlignHCenter
+        anchors.centerIn: parent
+        anchors.verticalCenterOffset: -40
+        font: Tokens.font.title.large
+        color: root.activeColor
+    }
+
+    StyledText {
+        visible: gameOverText.visible && DinoGameBackend.isNewHighScore
+        text: qsTr("New high score: %1").arg(Math.floor(DinoGameBackend.highScore))
+        anchors.top: gameOverText.bottom
+        anchors.topMargin: Tokens.spacing.small
+        anchors.horizontalCenter: parent.horizontalCenter
+        font: Tokens.font.label.large
+        color: root.activeColor
+        Component.onCompleted: font.features = {"tnum": 1}
+    }
+
+    StyledText {
+        visible: root.isPlaying && DinoGameBackend.isPaused
+        text: qsTr("P A U S E D\nClick to continue")
         horizontalAlignment: Text.AlignHCenter
         anchors.centerIn: parent
         anchors.verticalCenterOffset: -40

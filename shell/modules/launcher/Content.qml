@@ -9,7 +9,10 @@ import Caelestia.Config
 import Caelestia.Services
 import qs.components
 import qs.components.controls
+import qs.components.effects
+import qs.components.images
 import qs.services
+import qs.utils
 import qs.modules.launcher.services
 
 Item {
@@ -24,6 +27,17 @@ Item {
     readonly property int rounding: Tokens.rounding.extraLarge
     readonly property bool isClipboardMode: search.text.startsWith(`${GlobalConfig.launcher.actionPrefix}clipboard `)
     readonly property int footerSpacing: Tokens.spacing.small
+    // The profile picture hangs off the top edge of the card, so only its lower
+    // half takes room inside the panel. The drawers window paints the circle
+    // above the launcher and joins it to the card through the blob group.
+    readonly property int avatarSize: Math.round(Tokens.sizes.launcher.browseTileHeight * 1.3)
+    readonly property int headerHeight: root.modernStyle ? Math.round(root.avatarSize / 2 - 6) : 0
+    readonly property bool isBrowsing: list.showAppsBrowser
+    // Classic keeps the launcher as it shipped (session row under the search
+    // field); Modern is the profile picture header with the corner actions.
+    readonly property bool modernStyle: Style.launcherStyle === "modern"
+    // The drawers window reads this to draw the circle behind the avatar.
+    readonly property bool showAvatar: root.modernStyle
 
     function clearClipboardHistory(): void {
         Clipboard.clearHistory();
@@ -40,7 +54,7 @@ Item {
     }
 
     implicitWidth: listWrapper.width + padding * 2
-    implicitHeight: listWrapper.height + sessionFooter.height + searchWrapper.height + listWrapper.anchors.bottomMargin + sessionFooter.anchors.bottomMargin + searchWrapper.anchors.bottomMargin
+    implicitHeight: listWrapper.height + sessionFooter.height + searchWrapper.height + listWrapper.anchors.bottomMargin + sessionFooter.anchors.bottomMargin + searchWrapper.anchors.bottomMargin + root.headerHeight
 
     Connections {
         function onClearHistoryFinished(success: bool): void {
@@ -62,7 +76,7 @@ Item {
         implicitHeight: list.implicitHeight + root.padding
 
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.bottom: sessionFooter.top
+        anchors.bottom: root.modernStyle ? searchWrapper.top : sessionFooter.top
         anchors.bottomMargin: root.footerSpacing
 
         ContentList {
@@ -72,17 +86,92 @@ Item {
             visibilities: root.visibilities
             panels: root.panels
             maxWidth: root.maxWidth - root.padding * 2
-            maxHeight: root.maxHeight - searchWrapper.implicitHeight - sessionFooter.implicitHeight - root.padding * 2 - (sessionFooter.visible ? root.footerSpacing * 2 : root.footerSpacing)
+            maxHeight: root.maxHeight - searchWrapper.implicitHeight - root.padding * 2 - (root.modernStyle ? root.headerHeight + root.footerSpacing : sessionFooter.implicitHeight + (sessionFooter.visible ? root.footerSpacing * 2 : root.footerSpacing))
             search: search
             padding: root.padding
             rounding: root.rounding
         }
     }
 
+    // The profile picture sits on the top edge of the card: its centre is the
+    // panel's top edge, so half the circle floats above the launcher and the
+    // drawers window merges it with the card background.
+    Item {
+        id: avatar
+
+        property int ring: Math.max(6, Math.round(root.avatarSize * 0.08))
+
+        visible: root.modernStyle
+        anchors.horizontalCenter: parent.horizontalCenter
+        y: 4 - (root.avatarSize / 2 + 4) * (panels.launcher?.avatarOpenScale ?? (root.modernStyle ? 1 : 0))
+        opacity: panels.launcher?.avatarOpenScale ?? (root.modernStyle ? 1 : 0)
+        implicitWidth: root.avatarSize
+        implicitHeight: root.avatarSize
+
+        Item {
+            id: avatarClip
+
+            anchors.fill: parent
+            layer.enabled: true
+            layer.smooth: true
+            layer.effect: Mask {
+                maskSource: avatarMask
+            }
+
+            Item {
+                anchors.fill: parent
+                anchors.margins: avatar.ring
+
+                Rectangle {
+                    anchors.fill: parent
+                    visible: face.status !== Image.Ready
+                    color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
+
+                    Behavior on color {
+                        CAnim {}
+                    }
+                }
+
+                CachingImage {
+                    id: face
+
+                    anchors.fill: parent
+                    path: Style.avatarPath !== "" ? Style.avatarPath : `${Paths.home}/.face`
+                }
+
+                Loader {
+                    anchors.centerIn: parent
+                    active: face.status !== Image.Ready
+
+                    sourceComponent: MaterialIcon {
+                        text: "person"
+                        color: Colours.palette.m3onSurfaceVariant
+                        fontStyle: Tokens.font.icon.extraLarge
+                    }
+                }
+            }
+        }
+
+        Item {
+            id: avatarMask
+
+            anchors.fill: parent
+            visible: false
+            layer.enabled: true
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: avatar.ring
+                radius: Tokens.rounding.full
+                color: "white"
+            }
+        }
+    }
+
     StyledRect {
         id: sessionFooter
 
-        visible: Config.launcher.showPowerMenu
+        visible: !root.modernStyle && Config.launcher.showPowerMenu
 
         color: Colours.layer(Colours.palette.m3surfaceContainerLow, 2)
         radius: Tokens.rounding.extraLarge
@@ -102,13 +191,6 @@ Item {
             anchors.fill: parent
             anchors.margins: Tokens.padding.medium
             spacing: Tokens.spacing.small
-
-            // StyledText {
-            //     Layout.fillWidth: true
-            //     text: qsTr("Quick session controls")
-            //     color: Colours.palette.m3onSurfaceVariant
-            //     font: Tokens.font.label.large
-            // }
 
             RowLayout {
                 Layout.fillWidth: true
@@ -151,6 +233,122 @@ Item {
                 }
             }
         }
+    }
+
+    Row {
+        id: headerActions
+
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.topMargin: Tokens.padding.small
+        anchors.rightMargin: root.padding
+        spacing: Tokens.spacing.extraSmall
+
+        IconButton {
+            id: sortBtn
+
+            visible: root.modernStyle && root.isBrowsing && Boolean(list.currentList?.sortMode)
+            isRound: true
+            type: IconButton.Tonal
+            icon: list.currentList?.sortMode === "alpha" ? "sort_by_alpha" : "trending_up"
+
+            onClicked: sortMenu.expanded = !sortMenu.expanded
+        }
+
+        IconButton {
+            id: powerBtn
+
+            visible: root.modernStyle && Config.launcher.showPowerMenu
+            isRound: true
+            type: IconButton.Tonal
+            icon: "power_settings_new"
+
+            onClicked: powerMenu.expanded = !powerMenu.expanded
+        }
+    }
+
+    Menu {
+        id: sortMenu
+
+        attachTo: sortBtn
+        attachSideX: Menu.Right
+        thisSideX: Menu.Right
+        attachSideY: Menu.Bottom
+        thisSideY: Menu.Top
+        marginY: Tokens.spacing.extraSmall
+
+        items: [
+            MenuItem {
+                text: qsTr("Most used")
+                icon: "trending_up"
+                trailingIcon: list.currentList?.sortMode === "alpha" ? "" : "check"
+
+                onClicked: {
+                    sortMenu.expanded = false;
+                    list.currentList?.setSortMode("most-used");
+                }
+            },
+            MenuItem {
+                text: qsTr("A-Z")
+                icon: "sort_by_alpha"
+                trailingIcon: list.currentList?.sortMode === "alpha" ? "check" : ""
+
+                onClicked: {
+                    sortMenu.expanded = false;
+                    list.currentList?.setSortMode("alpha");
+                }
+            }
+        ]
+    }
+
+    Menu {
+        id: powerMenu
+
+        attachTo: powerBtn
+        attachSideX: Menu.Right
+        thisSideX: Menu.Right
+        attachSideY: Menu.Bottom
+        thisSideY: Menu.Top
+        marginY: Tokens.spacing.extraSmall
+
+        items: [
+            MenuItem {
+                text: qsTr("Log Out")
+                icon: "logout"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(["sh", "-c", "qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout 2>/dev/null"]);
+                }
+            },
+            MenuItem {
+                text: qsTr("Sleep")
+                icon: "bedtime"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(["suspendThenHibernate"]);
+                }
+            },
+            MenuItem {
+                text: qsTr("Restart")
+                icon: "restart_alt"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(Config.session.commands.reboot);
+                }
+            },
+            MenuItem {
+                text: qsTr("Shut Down")
+                icon: "power_settings_new"
+
+                onClicked: {
+                    powerMenu.expanded = false;
+                    root.triggerSessionCommand(Config.session.commands.shutdown);
+                }
+            }
+        ]
     }
 
     StyledRect {

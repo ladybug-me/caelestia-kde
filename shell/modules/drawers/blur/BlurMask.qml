@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Caelestia.Config
+import qs.utils
 
 Region {
     id: root
@@ -16,6 +17,7 @@ Region {
     property real blurOffsetLeft: 0
     property real blurOffsetRight: 0
     property matrix4x4 deformMatrix
+    property real radius: (target && target["radius"] !== undefined) ? target["radius"] : Surface.panelRounding
 
     property BlurOffsets offsets: BlurOffsets {
         target: root.target
@@ -28,6 +30,7 @@ Region {
         blurOffsetLeft: root.blurOffsetLeft
         blurOffsetRight: root.blurOffsetRight
         deformMatrix: root.deformMatrix
+        radius: root.radius
     }
 
     BlurBodies {

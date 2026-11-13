@@ -22,7 +22,11 @@ Item {
         return max;
     }
     property real offsetScale: shouldBeActive ? 0 : 1
+    property real avatarOpenScale: shouldBeActive ? 1 : 0
     property bool keepAlive: false
+
+    readonly property bool avatarVisible: root.visible && (content.item?.showAvatar ?? false)
+    readonly property int avatarSize: content.item?.avatarSize ?? 0
 
     signal closed()
 
@@ -36,7 +40,9 @@ Item {
         } else
             implicitHeight = implicitHeight;
     }
-    clip: Config.bar.position === "bottom"
+    // Keep the clip while the panel slides away, but not while it is open: the
+    // profile picture deliberately overhangs the top edge of the card.
+    clip: Config.bar.position === "bottom" && !root.avatarVisible
     visible: offsetScale < 1
     anchors.bottomMargin: (Config.bar.position === "bottom" ? 0 : -implicitHeight - 5) * offsetScale
     height: Config.bar.position === "bottom" ? implicitHeight * (1 - offsetScale) : implicitHeight
@@ -56,6 +62,14 @@ Item {
         enabled: !visibilities.skipLauncherAnim
 
         Anim {}
+    }
+
+    Behavior on avatarOpenScale {
+        enabled: !visibilities.skipLauncherAnim
+
+        Anim {
+            type: root.shouldBeActive ? Anim.DefaultSpatial : Anim.FastSpatial
+        }
     }
     Loader {
         id: content

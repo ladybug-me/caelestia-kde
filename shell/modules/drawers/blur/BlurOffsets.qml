@@ -24,6 +24,7 @@ Item {
     // The centered deformMatrix from the BlobRect (identity by default)
     // m11 = horizontal scale, m22 = vertical scale, applied around the center of the target
     property matrix4x4 deformMatrix
+    property real radius: (target && target["radius"] !== undefined) ? target["radius"] : Surface.panelRounding
     property real animScale: 1 - offsetScale
     property real sTop: (vAnchor === "top" ? blurOffsetBottom : blurOffsetTop) * animScale
     property real sBottom: (vAnchor === "top" ? blurOffsetTop : blurOffsetBottom) * animScale
@@ -51,7 +52,7 @@ Item {
     property real bY: useMasks ? tY + deformOffsetY + sTop * dm22 : 0
     property real bW: (isActive && useMasks) ? Math.max(0, tW * tScale * dm11 - sLeft * dm11 - sRight * dm11) : 0
     property real bH: (isActive && useMasks) ? Math.max(0, tH * tScale * dm22 - sTop * dm22 - sBottom * dm22) : 0
-    property real r: (isActive && useMasks) ? Math.min(bW / 2, Math.min(bH / 2, Surface.panelRounding * animScale * tScale)) : 0
+    property real r: (isActive && useMasks) ? Math.min(bW / 2, Math.min(bH / 2, root.radius * animScale * tScale)) : 0
     property bool isIsland: GlobalConfig.appearance.islands
     property real rTop: (!isIsland && (vAnchor === "top" || vAnchor === "both")) ? 0 : r
     property real rBottom: (!isIsland && (vAnchor === "bottom" || vAnchor === "both")) ? 0 : r

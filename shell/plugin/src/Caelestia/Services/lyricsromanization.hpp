@@ -41,8 +41,7 @@ inline QString romanize(const QString& text) {
             continue;
         }
         const qsizetype start = i++;
-        while (i < text.size() &&
-               text.at(i).script() == script)
+        while (i < text.size() && text.at(i).script() == script)
             ++i;
         QString word = text.mid(start, i - start);
         auto& transliterator = devanagari;

@@ -964,6 +964,18 @@ StyledWindow {
             deformMatrix: launcherBg.deformMatrix
         }
         BlurMask {
+            target: panels.launcherAvatar
+            contentItem: root.contentItem
+            blurOffsetTop: root.blurOffsetTop
+            blurOffsetBottom: root.blurOffsetBottom
+            blurOffsetLeft: root.blurOffsetLeft
+            blurOffsetRight: root.blurOffsetRight
+            vAnchor: "none"
+            hAnchor: "none"
+            offsetScale: 1 - panels.launcher.avatarOpenScale
+            deformMatrix: launcherAvatarBg.deformMatrix
+        }
+        BlurMask {
             target: panels.dashboard
             contentItem: root.contentItem
             blurOffsetTop: root.blurOffsetTop

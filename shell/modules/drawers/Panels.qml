@@ -278,6 +278,8 @@ Item {
     Item {
         id: launcherAvatar
 
+        property real radius: Tokens.rounding.full
+
         visible: launcher.avatarVisible
         width: launcher.avatarSize
         height: width

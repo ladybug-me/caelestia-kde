@@ -23,7 +23,12 @@ Item {
     // `config.x` below and inside the content is a plain lookup. The store keeps only
     // what was changed, which is how a reset can just empty it.
     readonly property var config: controller.widgetCatalog.configFor(isGroup ? "group" : (widget?.type ?? ""), widget?.config)
-    readonly property var info: controller.widgetCatalog.infoForGrid(isGroup ? "group" : (widget?.type ?? ""), controller.cols, controller.rows)
+    readonly property var info: {
+        const base = controller.widgetCatalog.infoForGrid(isGroup ? "group" : (widget?.type ?? ""), controller.cols, controller.rows);
+        if (config.background === true)
+            return Object.assign({}, base, { frameless: false });
+        return base;
+    }
     readonly property var span: {
         const raw = controller.displaySpans[key] ?? info.size;
         return {

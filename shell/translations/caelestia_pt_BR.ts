@@ -566,7 +566,7 @@
     <message>
       <location line="+16"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
     <message>
       <location line="+24"/>
@@ -599,7 +599,7 @@
     <message>
       <location line="+8"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -683,12 +683,12 @@
     <message>
       <location line="+23"/>
       <source>Delete</source>
-      <translation>excluir</translation>
+      <translation>Excluir</translation>
     </message>
     <message>
       <location line="+22"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
     <message>
       <location line="+9"/>
@@ -895,7 +895,7 @@
     <message>
       <location line="+31"/>
       <source>Account</source>
-      <translation>conta</translation>
+      <translation>Conta</translation>
     </message>
     <message>
       <location line="+30"/>
@@ -985,7 +985,7 @@
     <message>
       <location line="+37"/>
       <source>Account</source>
-      <translation>conta</translation>
+      <translation>Conta</translation>
     </message>
     <message>
       <location line="+54"/>
@@ -1167,12 +1167,12 @@
     <message>
       <location line="+19"/>
       <source>Claude accounts</source>
-      <translation>contas Claude</translation>
+      <translation>Contas Claude</translation>
     </message>
     <message>
       <location line="+49"/>
       <source>Active</source>
-      <translation>ativo</translation>
+      <translation>Ativo</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -1411,7 +1411,7 @@
     <message>
       <location line="+10"/>
       <source>Details</source>
-      <translation>detalhes</translation>
+      <translation>Detalhes</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -2378,12 +2378,12 @@
     <message>
       <location line="+1"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+1"/>
       <source>CPU</source>
-      <translation>cpu</translation>
+      <translation>CPU</translation>
     </message>
     <message>
       <location line="+0"/>
@@ -3320,7 +3320,7 @@
     <message>
       <location line="+14"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+14"/>
@@ -3446,7 +3446,7 @@
     <message>
       <location line="+1"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -3648,7 +3648,7 @@
     <message>
       <location line="+5"/>
       <source>Text</source>
-      <translation>texto</translation>
+      <translation>Texto</translation>
     </message>
     <message>
       <location line="+4"/>
@@ -4739,7 +4739,7 @@
     <message>
       <location line="+9"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
     <message>
       <location line="+5"/>
@@ -4764,7 +4764,7 @@
     <message>
       <location filename="../modules/sidebar/Content.qml" line="+114"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+3"/>
@@ -4792,7 +4792,7 @@
     <message>
       <location line="+9"/>
       <source>Videos</source>
-      <translation>vídeos</translation>
+      <translation>Vídeos</translation>
     </message>
     <message>
       <location line="+239"/>
@@ -4853,7 +4853,7 @@
     <message>
       <location filename="../modules/nexus/pages/desktop/ContextMenuPage.qml" line="+242"/>
       <source>Delete</source>
-      <translation>excluir</translation>
+      <translation>Excluir</translation>
     </message>
     <message>
       <location line="+20"/>
@@ -5259,7 +5259,7 @@
     <message>
       <location line="+7"/>
       <source>CPU</source>
-      <translation>cpu</translation>
+      <translation>CPU</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -5914,7 +5914,7 @@
     <message>
       <location line="+9"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
   </context>
   <context>
@@ -5922,7 +5922,7 @@
     <message>
       <location filename="../modules/nexus/common/DialogRowButton.qml" line="+224"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
   </context>
   <context>
@@ -5937,13 +5937,15 @@
       <location line="+85"/>
       <source>G A M E   O V E R
 Click to restart</source>
-      <translation>F I M   D E   J O G O\nClique para reiniciar</translation>
+      <translation>F I M   D E   J O G O
+Clique para reiniciar</translation>
     </message>
     <message>
       <location line="+10"/>
       <source>Y O U   W I N !
 Now go touch grass</source>
-      <translation>V O C Ê   G A N H O U !\nAgora vá tocar na grama</translation>
+      <translation>V O C Ê   G A N H O U !
+Agora vá tocar na grama</translation>
     </message>
     <message>
       <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/DinoGame.qml" line="+8"/>
@@ -5970,7 +5972,24 @@ Now go touch grass</source>
       <source>Now go touch grass</source>
       <translation>Agora vá tocar na grama</translation>
     </message>
-  </context>
+      <message>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+0"/>
+      <source>Click to play</source>
+      <translation>Clique para jogar</translation>
+    </message>
+    <message>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+0"/>
+      <source>New high score: %1</source>
+      <translation>Novo recorde: %1</translation>
+    </message>
+    <message>
+      <location filename="../modules/sidebar/DinoGame.qml" line="+0"/>
+      <source>P A U S E D
+Click to continue</source>
+      <translation>P A U S A D O
+Clique para continuar</translation>
+    </message>
+</context>
   <context>
     <name>DiscordRPC</name>
     <message>
@@ -7429,7 +7448,7 @@ Now go touch grass</source>
     <message>
       <location line="+11"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
     <message>
       <location line="+7"/>
@@ -7576,7 +7595,7 @@ Now go touch grass</source>
     <message>
       <location line="+20"/>
       <source>Gap Between Windows</source>
-      <translation>espaço entre as janelas</translation>
+      <translation>Espaço entre as janelas</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -8672,7 +8691,7 @@ Now go touch grass</source>
     <message>
       <location line="+12"/>
       <source>Selected candidate: %1 | %2 | %3</source>
-      <translation>candidata selecionado: %1 ├ %2 ct, %3</translation>
+      <translation>Candidato selecionado: %1 | %2 | %3</translation>
     </message>
     <message>
       <location line="+19"/>
@@ -9582,7 +9601,7 @@ Now go touch grass</source>
       <location filename="../services/NotifData.qml" line="+19"/>
       <location line="+200"/>
       <source>now</source>
-      <translation>format@@0number@@1format@@2s</translation>
+      <translation>agora</translation>
     </message>
     <message>
       <location line="-164"/>
@@ -9602,7 +9621,7 @@ Now go touch grass</source>
       <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/NotifDock.qml" line="+68"/>
       <location line="+56"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+25"/>
@@ -9731,7 +9750,7 @@ Now go touch grass</source>
     <message>
       <location line="+6"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+11"/>
@@ -9947,7 +9966,7 @@ Now go touch grass</source>
     <message>
       <location filename="../modules/bar/popouts/Notifications.qml" line="+26"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="+25"/>
@@ -9989,7 +10008,7 @@ Now go touch grass</source>
       <location filename="../modules/nexus/pages/services/NotificationsPage.qml" line="+9"/>
       <location line="+16"/>
       <source>Notifications</source>
-      <translation>notificações</translation>
+      <translation>Notificações</translation>
     </message>
     <message>
       <location line="-6"/>
@@ -11380,7 +11399,7 @@ Now go touch grass</source>
     <message>
       <location line="+33"/>
       <source>CPU</source>
-      <translation>cpu</translation>
+      <translation>CPU</translation>
     </message>
     <message>
       <location line="+20"/>
@@ -11506,7 +11525,7 @@ Now go touch grass</source>
     <message>
       <location line="+4"/>
       <source>Refresh</source>
-      <translation>atualizar</translation>
+      <translation>Atualizar</translation>
     </message>
     <message>
       <location line="+8"/>
@@ -11743,7 +11762,8 @@ Now go touch grass</source>
       <source>
 PIN: %1</source>
       <translation>
-\nPIN: %1</translation>
+
+PIN: %1</translation>
     </message>
     <message>
       <location line="+22"/>
@@ -12241,7 +12261,7 @@ PIN: %1</source>
     <message>
       <location line="+1"/>
       <source>Delete</source>
-      <translation>excluir</translation>
+      <translation>Excluir</translation>
     </message>
   </context>
   <context>
@@ -13279,7 +13299,7 @@ PIN: %1</source>
     <message>
       <location filename="../components/filedialog/Sidebar.qml" line="+33"/>
       <source>Files</source>
-      <translation>arquivos</translation>
+      <translation>Arquivos</translation>
     </message>
   </context>
   <context>
@@ -15092,7 +15112,9 @@ PIN: %1</source>
       <source>This install belongs to a package, so the package manager owns its files. Remove it with:
 
 %1</source>
-      <translation>Esta instalação pertence a um pacote, então o gerenciador de pacotes é dono dos arquivos. Remova-a com:\n\n%1</translation>
+      <translation>Esta instalação pertence a um pacote, então o gerenciador de pacotes é dono dos arquivos. Remova-a com:
+
+%1</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -15566,7 +15588,7 @@ PIN: %1</source>
     <message>
       <location line="+22"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
     <message>
       <location line="+1"/>
@@ -16253,7 +16275,7 @@ PIN: %1</source>
       <location line="+23"/>
       <location line="+38"/>
       <source>Videos</source>
-      <translation>vídeos</translation>
+      <translation>Vídeos</translation>
     </message>
     <message>
       <location line="-37"/>
@@ -17011,7 +17033,7 @@ PIN: %1</source>
     <message>
       <location line="+105"/>
       <source>Cancel</source>
-      <translation>cancelar</translation>
+      <translation>Cancelar</translation>
     </message>
   </context>
   <context>

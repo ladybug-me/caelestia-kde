@@ -29,7 +29,7 @@ from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 CACHE_SECONDS = 300
 TIMEOUT_SECONDS = 15
-USER_AGENT = "caelestia-shell (+https://github.com/ladybug-me/caelestia-kde)"
+USER_AGENT = "caelestia-shell (+https://github.com/caelestia-kde/caelestia)"
 WEEKDAYS = ("MO", "TU", "WE", "TH", "FR", "SA", "SU")
 # A bound on how far a recurring rule is expanded, so a rule that never ends cannot
 # produce an unbounded list: four occurrences a day for a long horizon is already more

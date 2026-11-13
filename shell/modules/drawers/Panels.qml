@@ -82,23 +82,24 @@ Item {
     /// to grow a text field cannot be forgotten in another file.
     readonly property bool wantsKeyboard: launcher.offsetScale < 1 || session.offsetScale < 1 || dashboard.offsetScale < 1 || sidebar.offsetScale < 1 || overview.visible || utilities.offsetScale < 1 || (popouts.hasCurrent && !popouts.isDockPopout)
 
-    readonly property bool popoutIntersectsRight: {
-        if (!popoutsWrapper.visible || popoutsWrapper.offsetScale >= 1) return false;
-        if (bar.isHorizontal) {
-            const notifLeft = notifications.x;
-            const notifRight = notifLeft + (notifications.implicitWidth > 0 ? notifications.implicitWidth : Tokens.sizes.notifs.width);
-            // Use where the popout ends up, not where its slide currently is, so
-            // switching between bar items doesn't push the sidebar on the way.
-            const popLeft = popoutsWrapper.targetX;
-            const popRight = popoutsWrapper.targetX + popoutsWrapper.content.nonAnimWidth;
-            return popLeft < notifRight && popRight > notifLeft;
-        } else {
-            const notifTop = notifications.y;
-            const notifBottom = notifTop + (notifications.implicitHeight > 0 ? notifications.implicitHeight : 300);
-            const popTop = popoutsWrapper.y;
-            const popBottom = popoutsWrapper.y + popoutsWrapper.content.nonAnimHeight;
-            return popTop < notifBottom && popBottom > notifTop;
-        }
+    /// Whether an open bar popout, where it ends up, overlaps the notification stack
+    /// on both axes; the popout then draws over the stack on a backing of its own.
+    readonly property bool popoutCoversNotifications: {
+        if (!popoutsWrapper.visible || popoutsWrapper.offsetScale >= 1 || popoutsWrapper.content.isDockPopout)
+            return false;
+        const notifW = notifications.implicitWidth > 0 ? notifications.implicitWidth : Tokens.sizes.notifs.width;
+        const notifH = notifications.implicitHeight;
+        if (notifH <= 0)
+            return false;
+        const content = popoutsWrapper.content;
+        const popW = content.nonAnimWidth;
+        const popH = content.nonAnimHeight;
+        const popX = popoutsWrapper.targetX;
+        let popY = popoutsWrapper.y;
+        if (bar.isHorizontal && !content.isDetached)
+            popY = bar.position === "bottom" ? root.height - popH : 0;
+        return popX < notifications.x + notifW && popX + popW > notifications.x
+            && popY < notifications.y + notifH && popY + popH > notifications.y;
     }
 
     readonly property bool popoutIntersectsSidebar: {
@@ -215,9 +216,6 @@ Item {
         readonly property string _notifH: root.notifPosition.split("-")[1]
         property string vAnchor: _notifV
         property string hAnchor: _notifH
-        property bool shouldPush: root.popoutIntersectsRight && !popoutsWrapper.content.isDockPopout && !sidebar.visible
-
-        readonly property real _pushOffset: shouldPush ? (popoutsWrapper.implicitHeight + Tokens.spacing.extraLarge) : 0
 
         visibilities: root.visibilities
         screen: root.screen
@@ -233,8 +231,8 @@ Item {
             return Math.max(0, (parent.width - implicitWidth) / 2);
         }
         y: {
-            if (_notifV === "top") return _pushOffset;
-            return Math.max(0, parent.height - implicitHeight - _pushOffset);
+            if (_notifV === "top") return 0;
+            return Math.max(0, parent.height - implicitHeight);
         }
     }
     Item {
@@ -290,6 +288,7 @@ Item {
         property string vAnchor: (bar.position === "top" || bar.position === "bottom") ? bar.position : "none"
         property string hAnchor: (bar.position === "left" || bar.position === "right") ? bar.position : "none"
 
+        backed: root.popoutCoversNotifications
         screen: root.screen
         bar: root.bar
         borderThickness: root.borderThickness

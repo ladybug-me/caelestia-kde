@@ -41,6 +41,28 @@ ColumnLayout {
         return `${Math.round(v * 100)}%`;
     }
 
+    function valueFromRatio(field: var, ratio: real): var {
+        if (!field)
+            return ratio;
+        const min = field.min ?? 0;
+        const max = field.max ?? 1;
+        const raw = min + ratio * (max - min);
+        const step = field.step ?? 0;
+        if (field.integer === true) {
+            const stepVal = step > 0 ? step : 1;
+            const stepped = Math.round((raw - min) / stepVal) * stepVal + min;
+            return Math.max(min, Math.min(max, Math.round(stepped)));
+        }
+        if (step > 0) {
+            const stepped = Math.round((raw - min) / step) * step + min;
+            const decimals = (String(step).split(".")[1] || "").length;
+            const factor = Math.pow(10, Math.min(6, decimals));
+            const rounded = Math.round(stepped * factor) / factor;
+            return Math.max(min, Math.min(max, rounded));
+        }
+        return Math.max(min, Math.min(max, raw));
+    }
+
     spacing: Tokens.spacing.medium
 
     Repeater {
@@ -105,7 +127,7 @@ ColumnLayout {
             StyledSwitch {
                 id: toggle
 
-                checked: toggleRow.field ? root.read(toggleRow.field.key) !== false : false
+                checked: toggleRow.field ? (root.read(toggleRow.field.key) ?? toggleRow.field.default ?? false) === true : false
                 onToggled: root.write(toggleRow.field.key, checked)
             }
         }
@@ -149,7 +171,7 @@ ColumnLayout {
                 to: sliderRow.field?.max ?? 1
                 stepSize: sliderRow.field?.step ?? 0
                 value: sliderRow.current
-                onInteraction: v => root.write(sliderRow.field.key, sliderRow.whole ? Math.round(v) : v)
+                onInteraction: v => root.write(sliderRow.field.key, root.valueFromRatio(sliderRow.field, v))
             }
         }
     }

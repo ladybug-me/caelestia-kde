@@ -17,8 +17,6 @@ ColumnLayout {
     property real fontScale: 1.0
     property bool _isSidebarOpen: false
 
-    readonly property int updatesPageIdx: PageRegistry.updatesPageIdx
-
     readonly property var status: UpdateStatus.describe(null, false)
 
     readonly property bool checking: UpdateChecker.checkingUpdates
@@ -162,7 +160,7 @@ ColumnLayout {
                     radius: parent.radius
                     onClicked: {
                         root.popouts.hasCurrent = false;
-                        WindowFactory.create(null, { initialPageIdx: root.updatesPageIdx });
+                        WindowFactory.create(null, { initialPageIdx: "updates", initialSubPage: "updates" });
                     }
                 }
 

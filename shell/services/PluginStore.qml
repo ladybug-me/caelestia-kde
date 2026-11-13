@@ -88,7 +88,7 @@ Item {
             console.log("PluginStore: baseline seeded in fetchIndex:", JSON.stringify(ids));
         }
 
-        fetchProc.command = ["curl", "-sfL", "https://raw.githubusercontent.com/ladybug-me/caelestia-kde-plugins/" + fetchBranch + "/index.json"];
+        fetchProc.command = ["curl", "-sfL", "https://raw.githubusercontent.com/caelestia-kde/plugins/" + fetchBranch + "/index.json"];
         fetchProc.running = true;
     }
 
@@ -141,7 +141,7 @@ Item {
 TMP_DIR=$(mktemp -d)
 cd "$TMP_DIR"
 git init -q
-git remote add origin https://github.com/ladybug-me/caelestia-kde-plugins.git
+git remote add origin https://github.com/caelestia-kde/plugins.git
 git config core.sparseCheckout true
 echo "$2/*" >> .git/info/sparse-checkout
 git fetch -q --depth 1 --filter=blob:none origin "$3"

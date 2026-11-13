@@ -492,8 +492,8 @@ MouseArea {
             // qmllint enable missing-property
             readonly property bool hasSubmenu: entries.length > 0
             readonly property bool active: modelData === root?.active || root?.submenuRow === item
-            readonly property int firstIndex: inSubmenu ? root.submenuFirstVisibleIndex : root.firstVisibleIndex
-            readonly property int lastIndex: inSubmenu ? root.submenuLastVisibleIndex : root.lastVisibleIndex
+            readonly property int firstIndex: inSubmenu ? root?.submenuFirstVisibleIndex : root?.firstVisibleIndex
+            readonly property int lastIndex: inSubmenu ? root?.submenuLastVisibleIndex : root?.lastVisibleIndex
 
             visible: item.modelData ? item.modelData.visible : false
 

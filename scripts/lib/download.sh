@@ -60,7 +60,7 @@ asset_matches_digest() {
 is_own_release() {
     local url="$1"
     case "$url" in
-        https://github.com/ladybug-me/*/releases/download/*) return 0 ;;
+        https://github.com/caelestia-kde/*/releases/download/* | https://github.com/ladybug-me/*/releases/download/*) return 0 ;;
         *) return 1 ;;
     esac
 }

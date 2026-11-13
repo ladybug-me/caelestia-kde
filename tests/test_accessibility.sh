@@ -10,7 +10,6 @@ SERVICE="$REPO_ROOT/shell/services/Accessibility.qml"
 CONFIG="$REPO_ROOT/shell/plugin/src/Caelestia/Config/appearanceconfig.hpp"
 PAGE="$REPO_ROOT/shell/modules/nexus/pages/services/AccessibilityPage.qml"
 REGISTRY="$REPO_ROOT/shell/modules/nexus/PageCompRegistry.qml"
-DICTIONARY="$REPO_ROOT/shell/modules/nexus/PageDictionary.qml"
 
 test_shell_text_follows_kdes_font_size() {
     local config service
@@ -72,14 +71,13 @@ test_screen_reader_is_offered_when_present() {
 }
 
 test_accessibility_page_is_a_top_level_page() {
-    local page registry dictionary
+    local page registry
     page="$(cat "$PAGE")"
     registry="$(cat "$REGISTRY")"
-    dictionary="$(cat "$DICTIONARY")"
 
     assert_contains "$page" 'title: qsTr("Accessibility")' "the page needs its own title"
     assert_contains "$registry" 'Component { AccessibilityPage {} }' "the page must be registered"
-    assert_contains "$dictionary" '"accessibility":' "and listed in the settings index"
+    assert_contains "$registry" 'key: "accessibility"' "and listed in the settings index"
     assert_not_contains "$page" 'isSubPage: true' "it is a top level page, not a sub page"
 }
 

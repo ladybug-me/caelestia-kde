@@ -254,10 +254,13 @@ test_own_release_is_recognized() {
     if ! is_own_release "https://github.com/ladybug-me/cava/releases/download/continuous/cava-x86_64-arch.tar.gz"; then
         fail "a ladybug-me asset is one of ours"
     fi
+    if ! is_own_release "https://github.com/caelestia-kde/caelestia/releases/download/v1.0/caelestia-kde-x86_64.tar.gz"; then
+        fail "a caelestia-kde asset is one of ours"
+    fi
     if is_own_release "https://github.com/other-org/thing/releases/download/v1/thing.tar.gz"; then
         fail "another org's asset is not one of ours"
     fi
-    if is_own_release "https://github.com/ladybug-me/caelestia-kde/archive/refs/tags/v1.0.tar.gz"; then
+    if is_own_release "https://github.com/caelestia-kde/caelestia/archive/refs/tags/v1.0.tar.gz"; then
         fail "a page under our account that is not a release asset is not one of ours"
     fi
 }

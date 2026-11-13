@@ -103,7 +103,7 @@ PageBase {
 
             icon: "expand_content"
             label: qsTr("Show all networks (%1)").arg(Nmcli.networks.length)
-            onClicked: root.nState.openSubPage(5) // All networks sub-page
+            onClicked: root.nState.openSubPage("allNetworks")
 
             Behavior on Layout.preferredHeight {
                 Anim {
@@ -116,13 +116,13 @@ PageBase {
         NavRow {
             icon: "bookmark"
             label: qsTr("Saved networks")
-            onClicked: root.nState.openSubPage(6) // Saved networks sub-page
+            onClicked: root.nState.openSubPage("savedNetworks")
         }
 
         NavRow {
             icon: "add"
             label: qsTr("Add network")
-            onClicked: root.nState.openSubPage(2) // Add network sub-page
+            onClicked: root.nState.openSubPage("addNetwork")
         }
 
         // Sits with the Wi-Fi controls rather than with the saved-network rows:
@@ -132,7 +132,7 @@ PageBase {
             icon: "wifi_tethering"
             label: qsTr("Hotspot")
             status: Nmcli.hotspot.enabled ? Nmcli.hotspot.ssid : ""
-            onClicked: root.nState.openSubPage(7) // Hotspot sub-page
+            onClicked: root.nState.openSubPage("hotspot")
         }
 
         SectionHeader {
@@ -483,7 +483,7 @@ PageBase {
                         icon: "edit"
                         onClicked: {
                             root.nState.editingVpnIndex = provider.index;
-                            root.nState.openSubPage(4); // Add/edit provider sub-page
+                            root.nState.openSubPage("addVpn");
                         }
                     }
                 }
@@ -496,7 +496,7 @@ PageBase {
             text: qsTr("Add provider")
             onClicked: {
                 root.nState.editingVpnIndex = -1;
-                root.nState.openSubPage(4); // Add/edit provider sub-page
+                root.nState.openSubPage("addVpn");
             }
         }
 
@@ -510,7 +510,7 @@ PageBase {
             icon: "lan"
             label: qsTr("Proxy")
             status: Proxy.summary
-            onClicked: root.nState.openSubPage(8)
+            onClicked: root.nState.openSubPage("proxy")
         }
     }
 }

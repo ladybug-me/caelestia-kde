@@ -81,7 +81,7 @@ Controls.Menu {
                 else if (entry.action === "OpenRightClickMenu") {
                     WindowFactory.create(null, {
                         initialPageIdx: PageRegistry.indexForKey("desktop"),
-                        initialSubPageIdx: 2
+                        initialSubPage: "contextMenu"
                     });
                 } else if (entry.action === "OpenTerminal") {
                     Launch.exec([...GlobalConfig.general.apps.terminal]);

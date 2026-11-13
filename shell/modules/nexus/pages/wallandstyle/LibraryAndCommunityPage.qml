@@ -51,7 +51,7 @@ PageBase {
                 icon: "image_search"
                 label: qsTr("Wallhaven")
                 status: qsTr("Download wallpapers from Wallhaven")
-                onClicked: root.nState.openSubPage(4)
+                onClicked: root.nState.openSubPage("wallhaven")
             }
 
             NavRow {
@@ -80,7 +80,7 @@ PageBase {
                 icon: "info"
                 label: qsTr("skwd-wall not available")
                 status: qsTr("Click to open troubleshooting guide")
-                onClicked: Qt.openUrlExternally("https://github.com/ladybug-me/caelestia-kde/blob/main/docs/TROUBLESHOOTING.md#710-skwd-wall")
+                onClicked: Qt.openUrlExternally("https://github.com/caelestia-kde/caelestia/blob/main/docs/TROUBLESHOOTING.md#710-skwd-wall")
             }
 
             NavRow {

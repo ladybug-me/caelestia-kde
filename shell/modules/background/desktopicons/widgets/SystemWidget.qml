@@ -23,6 +23,10 @@ DesktopWidget {
     readonly property bool tall: (frame?.span.h ?? 2) >= 3
     readonly property int tier: cols <= 2 ? 0 : cols === 3 ? 1 : 2
     readonly property bool hasGpu: Gpu.type !== Gpu.None && !isNaN(Gpu.percentage)
+    // A maximized or fullscreen window hides the desktop, so the samplers can rest.
+    // On NVIDIA each GPU sample spawns nvidia-smi.
+    readonly property string screenName: root.controller?.screenData?.name ?? ""
+    readonly property bool covered: screenName !== "" && Kwin.windowHidesDesktopWidgets(screenName, false)
 
     function percent(value: real): string {
         return `${Math.round((isNaN(value) ? 0 : value) * 100)}%`;
@@ -33,23 +37,23 @@ DesktopWidget {
     }
 
     ServiceRef {
-        service: Cpu
+        service: root.covered ? null : Cpu
     }
 
     ServiceRef {
-        service: Gpu
+        service: root.covered ? null : Gpu
     }
 
     ServiceRef {
-        service: Memory
+        service: root.covered ? null : Memory
     }
 
     ServiceRef {
-        service: Storage
+        service: root.covered ? null : Storage
     }
 
     ServiceRef {
-        service: NetworkUsage
+        service: root.covered ? null : NetworkUsage
     }
 
     // Small: one ring per resource. Each layout only exists while it is the

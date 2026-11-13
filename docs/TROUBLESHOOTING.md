@@ -207,7 +207,7 @@ causing that app to freeze or crash.
 This falls back to static app icons for thumbnails instead of live video and
 avoids Caelestia's use of the protocol entirely.
 
-### 3.3.2 Black Window in Screen Center (xwaylandvideobridge) ([#1006](https://github.com/ladybug-me/caelestia-kde/issues/1006))
+### 3.3.2 Black Window in Screen Center (xwaylandvideobridge) ([#1006](https://github.com/caelestia-kde/caelestia/issues/1006))
 
 On systems where `xwaylandvideobridge` autostarts (such as Fedora KDE), an opaque black floating window can appear in the center of the display at startup and reappear whenever clicking the desktop.
 
@@ -225,7 +225,7 @@ bash scripts/04a-window-rules.sh
 
 The rule uses substring matching (`wmclassmatch 2`), omits `types` (matching both Dialog and Normal window types), enforces `placement 0` (NoPlacement to prevent centering), forces 0% active and inactive opacity, and marks the window to stay below others while skipping taskbars, pagers, and window switchers.
 
-### 3.3.3 Shell Crash-Loops When MangoHud Is Enabled Session-Wide ([#940](https://github.com/ladybug-me/caelestia-kde/issues/940))
+### 3.3.3 Shell Crash-Loops When MangoHud Is Enabled Session-Wide ([#940](https://github.com/caelestia-kde/caelestia/issues/940))
 
 With `MANGOHUD=1` set for the whole session (common on gaming distributions, e.g. in
 `~/.config/environment.d/`), the shell dies seconds after it starts and
@@ -1088,7 +1088,7 @@ themes that ask for it, which is what that optional dependency is for.
 The installer writes five groups into `~/.config/kwinrulesrc` in priority order:
 `caelestia-shell-opacity` keeps the shell's own toplevels at full opacity,
 `caelestia-xwaylandvideobridge` keeps `xwaylandvideobridge` transparent and uncentered
-out of switchers and taskbars (resolving a black centered box glitch on distros like Fedora; see [issue #1006](https://github.com/ladybug-me/caelestia-kde/issues/1006)),
+out of switchers and taskbars (resolving a black centered box glitch on distros like Fedora; see [issue #1006](https://github.com/caelestia-kde/caelestia/issues/1006)),
 `caelestia-pip` keeps windows whose title matches `Picture(-| )in(-| )[Pp]icture` above others,
 `caelestia-dialogs` forces centered placement on dialogs, and `caelestia-opacity` gives
 normal windows and dialogs an inactive opacity of 95 percent. Specific rules are intentionally
@@ -1259,13 +1259,14 @@ unanswered is dropped after two minutes.
 
 ### 7.9 Plasma Audio Visualizer
 
-The desktop visualizer is a Plasma widget from `plasma-audio-visualizer`, not a shell module. Install it first; on Arch it is in the AUR (`yay -S plasma-audio-visualizer`).
-
-The shell drives the widget through presets such as Double Reverse and Single. Editing the widget in Plasma saves the result as *User Defined*, which the shell reapplies. A fresh install can leave the preset on *User Defined* with nothing shown; pick another preset to bring it back.
-
-The widget draws on the Plasma desktop. When the Quickshell wallpaper layer is on (`background.wallpaperEnabled`), the widget is hidden behind it, so the layer only works when `skwd-wall` is installed and on `PATH`. The shell turns the layer off when it detects `skwd-wall`.
-
-To use the visualizer without the shell's presets, turn it off in the shell and add the widget from Plasma's widget picker. To keep the shell's preset but change the look, pick Single or Double Reverse here, then edit the widget in Plasma's edit mode (right-click the desktop, *Edit Plasma Widgets*).
+- **Not installed:**
+  The desktop visualizer is a Plasma widget from `plasma-audio-visualizer`, not a shell module. Install it first; on Arch it is in the AUR (`yay -S plasma-audio-visualizer`).
+- **Empty config:**
+  The shell drives the widget through presets such as `Double Reverse` and `Single`. Editing the widget in Plasma saves the result as `User Defined`, which the shell reapplies. A fresh install can leave the preset on *User Defined* with nothing shown; pick another preset to bring it back.
+- **Hidden by wallpaper:**
+  The widget draws on the Plasma desktop. When the Quickshell wallpaper layer is on (`background.wallpaperEnabled`), the widget is hidden behind it, hence disabled automatically. In wallpaper settings, change wallpaper engine to skwd/plasma to use it.
+- **Customize:**
+  To use the visualizer without the shell's presets, turn it off in the shell and add the widget from Plasma's widget picker. To keep the shell's preset but change the look, pick Single or Double Reverse here, then edit the widget in Plasma's edit mode (right-click the desktop, *Edit Plasma Widgets*).
 
 ### 7.10 skwd-wall
 
@@ -1485,7 +1486,7 @@ You can simply run `bash update.sh` in the cloned repo folder (~/caelestia-kde) 
 
 Run the following command to simply install the latest shell using installer.
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ladybug-me/caelestia-kde/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/caelestia-kde/caelestia/main/install.sh | sh
 ```
 
 - If it gives an error due to already present `~/caelestia-kde` directory in your pc, then remove that directory first and then run the above command. **Make sure to copy the `backups/` folder somewhere and then put it back here after installation completes.**
@@ -1498,7 +1499,7 @@ under the notice names the reason and says when the check last succeeded:
 
 ```bash
 # Is GitHub reachable at all?
-git ls-remote --exit-code --heads https://github.com/ladybug-me/caelestia-kde.git main
+git ls-remote --exit-code --heads https://github.com/caelestia-kde/caelestia.git main
 
 # The bare clone the check reads from, and its freshness
 git -C ~/.cache/caelestia-update-repo log --oneline -1 main
@@ -1559,7 +1560,7 @@ cat /tmp/caelestia_installer_err.log 2>/dev/null
 
 ```bash
 # Test submodule availability
-git ls-remote https://github.com/ladybug-me/caelestia-kde.git HEAD
+git ls-remote https://github.com/caelestia-kde/caelestia.git HEAD
 
 # Test AUR access
 curl -sI https://aur.archlinux.org/rpc/?v=5\&type=info\&arg[]=quickshell-git | head -5

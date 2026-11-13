@@ -18,7 +18,7 @@ Following options are the most important changes done in our config.json
     ]
     ```
 
-- The "Who drives color" option in skwd-wall is set to skwd-wall itself. Although, it provides caelestia as an option, but due to runtime injection of the bin files for caelestia, skwd-wall failes to recognize caelestia-color in path from time to time. Hence, direct path is preferred (used in postProcessing)
+- The "Who drives color" option in skwd-wall is set to skwd-wall itself. Although, it provides caelestia as an option, but due to runtime injection of the bin files for caelestia, skwd-wall fails to recognize caelestia-color in path from time to time. Hence, direct path is preferred (used in postProcessing)
     ```json
     "theme": {
         "authority": "skwd",

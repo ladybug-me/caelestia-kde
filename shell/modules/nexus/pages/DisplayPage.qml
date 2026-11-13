@@ -142,7 +142,7 @@ PageBase {
                     status: root.currentModeLabel(outputSection.output)
                     onClicked: {
                         root.nState.selectedOutput = outputSection.output.name;
-                        root.nState.openSubPage(1);
+                        root.nState.openSubPage("displayModes");
                     }
                 }
 

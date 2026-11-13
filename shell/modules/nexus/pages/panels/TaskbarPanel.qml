@@ -224,7 +224,7 @@ PageBase {
             icon: "aspect_ratio"
             label: qsTr("Per-element scaling offsets")
             status: qsTr("Customize scale and font for each popout type")
-            onClicked: root.nState.openSubPage(14)
+            onClicked: root.nState.openSubPage("barPreviewScales")
         }
 
         SectionHeader {
@@ -236,7 +236,7 @@ PageBase {
             icon: "view_agenda"
             label: qsTr("Toggle & Rearrange")
             status: qsTr("Add, remove or reorder components")
-            onClicked: root.nState.openSubPage(6)
+            onClicked: root.nState.openSubPage("barComponents")
         }
 
         NavRow {
@@ -244,7 +244,7 @@ PageBase {
             icon: "tune"
             label: qsTr("Elements & Modules")
             status: qsTr("Workspaces, tray, status icons, clock, dock and more")
-            onClicked: root.nState.openSubPage(15)
+            onClicked: root.nState.openSubPage("taskbarElements")
         }
 
         SectionHeader {

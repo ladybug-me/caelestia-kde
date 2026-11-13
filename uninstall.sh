@@ -190,6 +190,56 @@ restore_or_remove() {
     fi
 }
 
+section "Step 0 - Put the Plasma Desktop Back"
+
+# The shell draws the bar, the panels and the background itself, and this install
+# points plasmashell at Caelestia's own shell package, which has no panel of its
+# own. Stopping the shell while Plasma still has nothing to show is what left the
+# session on a black screen, so the stock shell comes back first and plasmashell is
+# restarted to draw it. It runs underneath the shell for the few seconds left, which
+# is far less alarming than a desktop with nothing on it.
+caelestia_restore_plasma_desktop() {
+    local qdbus_bin="$1"
+
+    kwriteconfig6 --file plasmashellrc --group Shell --key ShellPackage --delete 2>/dev/null || true
+
+    if systemctl --user restart plasma-plasmashell.service >/dev/null 2>&1; then
+        ok "Restarted plasmashell on the stock Plasma shell"
+    elif pgrep -x plasmashell >/dev/null 2>&1; then
+        plasmashell --replace >/dev/null 2>&1 &
+        ok "Restarted plasmashell on the stock Plasma shell"
+    else
+        plasmashell >/dev/null 2>&1 &
+        ok "Started plasmashell on the stock Plasma shell"
+    fi
+
+    if [[ -z "$qdbus_bin" ]]; then
+        skip "No qdbus found - cannot check for a default panel"
+        return 0
+    fi
+
+    # The panel layout lives in Plasma's own config, which the install leaves alone,
+    # but a profile restored from a backup can come without one. Wait for plasmashell
+    # to own its bus name before asking it about panels.
+    local i
+    for i in {1..20}; do
+        "$qdbus_bin" org.kde.plasmashell /PlasmaShell evaluateScript "$(stock_panel_script)" 2>/dev/null && {
+            ok "Confirmed the Plasma desktop has a panel"
+            return 0
+        }
+        sleep 0.5
+    done
+
+    warn "Could not add a default panel. Add one via Edit Mode if the desktop is empty."
+}
+
+if command -v plasmashell >/dev/null 2>&1 &&
+   { systemctl --user is-active --quiet plasma-plasmashell.service 2>/dev/null || pgrep -x plasmashell >/dev/null 2>&1; }; then
+    caelestia_restore_plasma_desktop "$(command -v qdbus6 || command -v qdbus || true)"
+else
+    skip "plasmashell is not running - nothing to put back"
+fi
+
 section "Step 1 - Stop and Disable Services"
 
 for svc in qs-kwin-bridge cliphist ydotoold kde-material-you-colors; do
@@ -975,6 +1025,17 @@ if command -v lookandfeeltool >/dev/null 2>&1; then
         info "Skipping Breeze look-and-feel apply because theme was restored from backup."
     else
         lookandfeeltool --apply "org.kde.breeze.desktop" 2>/dev/null || true
+    fi
+fi
+
+# A look-and-feel apply can take plasmashell down with it. Ending on a session with
+# no panels is exactly what this uninstall is being fixed for, so check it once more.
+if command -v plasmashell >/dev/null 2>&1; then
+    if ! systemctl --user is-active --quiet plasma-plasmashell.service 2>/dev/null &&
+       ! pgrep -x plasmashell >/dev/null 2>&1; then
+        systemctl --user restart plasma-plasmashell.service >/dev/null 2>&1 ||
+            { plasmashell >/dev/null 2>&1 & }
+        ok "Restarted plasmashell"
     fi
 fi
 

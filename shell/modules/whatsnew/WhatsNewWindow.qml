@@ -582,10 +582,10 @@ FloatingWindow {
                                 text: qsTr("Open in Settings")
                                 onClicked: {
                                     const pageKey = featureData.settingsPage;
-                                    const subIdx = featureData.settingsSubPage ?? PageRegistry.defaultSubPageForKey(pageKey);
+                                    const subPage = featureData.settingsSubPage ?? PageRegistry.defaultSubPageForKey(pageKey);
                                     WindowFactory.create(null, {
                                         initialPageIdx: pageKey,
-                                        initialSubPageIdx: subIdx
+                                        initialSubPage: subPage
                                     });
                                     root.dismiss();
                                 }

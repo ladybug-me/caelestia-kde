@@ -203,8 +203,7 @@ release_tag_of_url() {
 # rather than done quietly.
 download_kwinscript() {
     local url="$1" dest="$2" status=0 tag actual
-
-    curl -sL --proto '=https' --tlsv1.2 -- "$url" -o "$dest" || return 1
+    curl -sL --proto '=https' --tlsv1.2 -o "$dest" -- "$url" || return 1
     verify_kwinscript "$url" "$dest" || status=$?
     if [[ "$status" -eq 1 ]]; then
         echo "Error: checksum mismatch for $url - refusing to install it." >&2

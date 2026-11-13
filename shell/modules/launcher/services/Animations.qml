@@ -35,8 +35,12 @@ Searcher {
             Quickshell.execDetached(["rm", "-f", target]);
             Toaster.toast(qsTr("Reset animations"), qsTr("Default shell animations restored"), "animation");
         } else {
-            const allowedPrefix = `${Paths.config}/animations/`;
-            if (!path.startsWith(allowedPrefix) || path.includes("..")) {
+            const allowedPrefixes = [
+                `${Paths.config}/animations/`,
+                `${Quickshell.shellDir}/assets/animations/`
+            ];
+            const isSafe = allowedPrefixes.some(prefix => path.startsWith(prefix)) && !path.includes("..");
+            if (!isSafe) {
                 console.warn("Animations: rejected unsafe preset path:", path);
                 return;
             }
@@ -62,9 +66,10 @@ Searcher {
         command: [
             "python3",
             "-c",
-            "import json, glob, os\n" +
-            "anim_dir = os.path.expanduser('~/.config/caelestia/animations')\n" +
-            "tokens_file = os.path.expanduser('~/.config/caelestia/shell-tokens.json')\n" +
+            "import json, glob, os, sys\n" +
+            "bundled_dir = sys.argv[1]\n" +
+            "user_dir = sys.argv[2]\n" +
+            "tokens_file = sys.argv[3]\n" +
             "current = 'default'\n" +
             "current_name = 'Default (Material-3 Expressive)'\n" +
             "if os.path.exists(tokens_file):\n" +
@@ -74,12 +79,23 @@ Searcher {
             "        current_name = cur_data.get('name', 'Custom')\n" +
             "    except Exception:\n" +
             "        current_name = 'Custom'\n" +
+            "files = []\n" +
+            "if os.path.isdir(user_dir):\n" +
+            "    files.extend(glob.glob(os.path.join(user_dir, '*.json')))\n" +
+            "if os.path.isdir(bundled_dir):\n" +
+            "    files.extend(glob.glob(os.path.join(bundled_dir, '*.json')))\n" +
+            "presets = {}\n" +
+            "for p in files:\n" +
+            "    fn = os.path.basename(p)\n" +
+            "    if fn not in presets:\n" +
+            "        presets[fn] = p\n" +
             "items = []\n" +
-            "for p in sorted(glob.glob(os.path.join(anim_dir, '*.json'))):\n" +
+            "for fn in sorted(presets.keys()):\n" +
+            "    p = presets[fn]\n" +
             "    try:\n" +
             "        with open(p) as f:\n" +
             "            data = json.load(f)\n" +
-            "        p_name = data.get('name', os.path.basename(p).replace('.json', '').replace('-', ' ').title())\n" +
+            "        p_name = data.get('name', fn.replace('.json', '').replace('-', ' ').title())\n" +
             "        if p_name == current_name or p == current:\n" +
             "            current = p\n" +
             "        items.append({\n" +
@@ -89,7 +105,10 @@ Searcher {
             "        })\n" +
             "    except Exception:\n" +
             "        pass\n" +
-            "print(json.dumps({'current': current, 'currentName': current_name, 'items': items}))\n"
+            "print(json.dumps({'current': current, 'currentName': current_name, 'items': items}))\n",
+            `${Quickshell.shellDir}/assets/animations`,
+            `${Paths.config}/animations`,
+            `${Paths.config}/shell-tokens.json`
         ]
         stdout: StdioCollector {
             onStreamFinished: {

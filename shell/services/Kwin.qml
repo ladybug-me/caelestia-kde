@@ -473,6 +473,10 @@ Singleton {
     }
 
     function monitorFor(screen: ShellScreen): var {
+        // the screen is null while its window is being torn down
+        if (!screen)
+            return null;
+
         let cached = root._monitorCache[screen.name];
         if (!cached) {
             cached = root.createMonitorMock(screen.name, Object.keys(root._monitorCache).length);

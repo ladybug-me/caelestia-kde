@@ -46,7 +46,7 @@ PageBase {
             icon: "ads_click"
             label: qsTr("Target windows")
             status: qsTr("Add or remove auto-enable targets")
-            onClicked: root.nState.openSubPage(2)
+            onClicked: root.nState.openSubPage("gameModeTargets")
         }
 
         ColumnLayout {

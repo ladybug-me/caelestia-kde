@@ -393,7 +393,7 @@ try_download_prebuilt_shell() {
     url=""
     info "Downloading prebuilt shell artifacts (${tag}, Qt ${qt_abi})..."
     for asset in "caelestia-kde-${arch}-qt${qt_abi}.tar.gz" "caelestia-shell-${arch}-qt${qt_abi}.tar.gz"; do
-        candidate="https://github.com/ladybug-me/caelestia-kde/releases/download/${tag}/${asset}"
+        candidate="https://github.com/caelestia-kde/caelestia/releases/download/${tag}/${asset}"
         if fetch_asset "$candidate" "$tmp_archive" --progress-bar; then
             url="$candidate"
             break

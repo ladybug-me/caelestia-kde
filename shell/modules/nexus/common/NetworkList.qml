@@ -62,7 +62,7 @@ ItemList {
             if (!modelData.active) {
                 NetworkConnection.handleConnect(modelData, null, ap => {
                     root.nState.pendingNetworkSsid = ap.ssid;
-                    root.nState.openSubPage(2);
+                    root.nState.openSubPage("addNetwork");
                 });
                 currentSelected = true;
                 root.networkSelected(modelData);

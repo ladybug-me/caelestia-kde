@@ -168,7 +168,10 @@ if(ICU_FOUND)
     endif()
 endif()
 
-qt_add_resources(caelestia-services "lyrics_romanization_data"
-    PREFIX "/caelestia/lyrics"
-    FILES lyrics-data/urdu-roman.tsv lyrics-data/URDU-LEXICON-LICENSE.txt
-)
+if(CAELESTIA_BUILD_DINO_TESTS)
+    qt_add_executable(caelestia-dinogame-test ../../../tests/dinogame-test.cpp)
+    target_include_directories(caelestia-dinogame-test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
+    target_link_libraries(caelestia-dinogame-test PRIVATE caelestia-services Qt6::Test Qt6::Qml)
+    add_test(NAME dinogame-loop COMMAND caelestia-dinogame-test)
+    set_tests_properties(dinogame-loop PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
+endif()

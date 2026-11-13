@@ -38,7 +38,7 @@ test_the_registry_searches_the_generated_rows() {
 }
 
 test_a_row_the_dictionary_already_names_is_not_indexed_twice() {
-    assert_file_contains "$REGISTRY" "named[\`\${entry.pageIdx}|\${entry.subPageIdx}|\${entry.settingLabel.toLowerCase()}\`]" \
+    assert_file_contains "$REGISTRY" "named[\`\${entry.pageIdx}|\${entry.subPage}|\${entry.settingLabel.toLowerCase()}\`]" \
         "curated entries should win over the generated copy"
 }
 

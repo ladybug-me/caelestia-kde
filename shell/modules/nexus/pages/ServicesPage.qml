@@ -144,7 +144,7 @@ PageBase {
 
         ToggleRow {
             text: qsTr("Romanize lyrics")
-            subtext: qsTr("Use Latin letters for Devanagari, Gurmukhi and Arabic scripts (approximate; requires ICU)")
+            subtext: qsTr("Use Latin letters for Hindi lyrics (approximate; requires ICU)")
             reset: ({ node: GlobalConfig.services, setting: "romanizeIndicLyrics" })
             checked: GlobalConfig.services.romanizeIndicLyrics
             enabled: Lyrics.romanizationAvailable

@@ -13,6 +13,11 @@ Item {
     readonly property var browser: loader.item
     readonly property var currentItem: root.browser?.currentItem ?? null
     readonly property int count: root.browser?.count ?? 0
+    readonly property var sortMode: root.browser?.sortMode
+
+    function setSortMode(mode: string): void {
+        root.browser?.setSortMode(mode);
+    }
 
     function refresh(): void {
         root.browser?.refresh();

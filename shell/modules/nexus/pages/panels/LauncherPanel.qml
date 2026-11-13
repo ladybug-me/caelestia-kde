@@ -2,6 +2,7 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Layouts
+import QtCore
 import Quickshell.Io
 import Caelestia.Config
 import qs.components
@@ -9,6 +10,7 @@ import qs.components.controls
 import qs.components.filedialog
 import qs.utils
 import qs.modules.nexus.common
+import qs.modules.launcher.services
 
 PageBase {
     id: root
@@ -28,6 +30,19 @@ PageBase {
             property int value: LauncherBrowseLayout.Compact
 
             text: qsTr("Compact")
+        }
+    ]
+
+    readonly property list<MenuItem> styleItems: [
+        MenuItem {
+            property string value: "classic"
+
+            text: qsTr("Classic")
+        },
+        MenuItem {
+            property string value: "modern"
+
+            text: qsTr("Modern")
         }
     ]
 
@@ -69,6 +84,44 @@ PageBase {
             reset: ({ node: GlobalConfig.launcher, setting: "enabled" })
             checked: Config.launcher.enabled
             onToggled: GlobalConfig.launcher.enabled = checked
+        }
+
+        SelectRow {
+            label: qsTr("Launcher style")
+            subtext: qsTr("Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner")
+            active: root.styleItems.find(item => item.value === Style.launcherStyle) ?? root.styleItems[0]
+            menuItems: root.styleItems
+            onSelected: item => Style.setLauncherStyle(item.value)
+        }
+
+        NavRow {
+            icon: "account_circle"
+            label: qsTr("Custom avatar")
+            // Only the modern header draws the avatar, so the row stays visible
+            // but faded in classic to signal where the option lives.
+            enabled: Style.launcherStyle === "modern"
+            opacity: enabled ? 1 : 0.4
+            status: Style.avatarPath !== "" ? Style.avatarPath : (enabled ? qsTr("Using your profile picture") : qsTr("Only used by the modern launcher style"))
+            onClicked: customAvatarDialog.open()
+
+            FileDialog {
+                id: customAvatarDialog
+
+                title: qsTr("Select a custom avatar")
+                filterLabel: qsTr("Image files")
+                filters: Images.validImageExtensions
+                onAccepted: path => {
+                    Style.setAvatarPath(path);
+                }
+            }
+        }
+
+        NavRow {
+            visible: Style.avatarPath !== ""
+            icon: "restart_alt"
+            label: qsTr("Reset custom avatar")
+            status: qsTr("Go back to your profile picture")
+            onClicked: Style.setAvatarPath("")
         }
 
         ToggleRow {
@@ -203,7 +256,7 @@ PageBase {
 
         ToggleRow {
             text: qsTr("Show power menu")
-            subtext: qsTr("Show the quick session controls (shutdown, sleep, logout) at the bottom")
+            subtext: qsTr("Show the quick session controls (shutdown, sleep, logout): under the search field in the classic style, in the top right menu in the modern one")
             reset: ({ node: GlobalConfig.launcher, setting: "showPowerMenu" })
             checked: Config.launcher.showPowerMenu
             onToggled: GlobalConfig.launcher.showPowerMenu = checked

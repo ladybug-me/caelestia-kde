@@ -43,7 +43,7 @@ StyledWindow {
     // A new one joins a list instead of extending the expression below.
     readonly property var desktopMenus: [desktopContextMenu, desktopIconContextMenu, dropMenu]
     readonly property var desktopPopups: [viewOptions, widgetGallery, widgetSettings]
-    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || root.desktopMenus.some(menu => menu.expanded) || root.desktopPopups.some(popup => popup.open) || visibilities.overview || Visibilities.launcherOpen || (Config.dashboard.enabled && visibilities.dashboard) || (Config.session.enabled && visibilities.session) || (Config.utilities.enabled && visibilities.utilities)
+    readonly property bool transientOverlayOpen: panels.popouts.isDetached || panels.popouts.isContextPopout || root.desktopMenus.some(menu => menu.expanded) || root.desktopPopups.some(popup => popup.open) || visibilities.overview || (Visibilities.launcherOpen && Config.launcher.enabled) || (Config.dashboard.enabled && visibilities.dashboard) || (Config.session.enabled && visibilities.session) || (Config.utilities.enabled && visibilities.utilities)
     readonly property bool hasOpenOverlay: focusGrabState.active || transientOverlayOpen || (Config.sidebar.enabled && visibilities.sidebar)
     readonly property bool hasFullscreen: actualFullscreen && !hasOpenOverlay
     // The launcher is one panel across outputs: a screen that does not show it
@@ -401,6 +401,13 @@ StyledWindow {
 
             panel: panels.launcher
             deformAmount: 0.1
+        }
+        PanelBg {
+            id: launcherAvatarBg
+
+            panel: panels.launcherAvatar
+            deformAmount: 0.1
+            radius: Tokens.rounding.full
         }
         PanelBg {
             id: sessionBg
@@ -955,6 +962,18 @@ StyledWindow {
             hAnchor: panels.launcher.hAnchor
             offsetScale: panels.launcher.offsetScale
             deformMatrix: launcherBg.deformMatrix
+        }
+        BlurMask {
+            target: panels.launcherAvatar
+            contentItem: root.contentItem
+            blurOffsetTop: root.blurOffsetTop
+            blurOffsetBottom: root.blurOffsetBottom
+            blurOffsetLeft: root.blurOffsetLeft
+            blurOffsetRight: root.blurOffsetRight
+            vAnchor: "none"
+            hAnchor: "none"
+            offsetScale: 1 - panels.launcher.avatarOpenScale
+            deformMatrix: launcherAvatarBg.deformMatrix
         }
         BlurMask {
             target: panels.dashboard

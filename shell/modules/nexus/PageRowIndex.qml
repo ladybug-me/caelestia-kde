@@ -1645,6 +1645,26 @@ QtObject {
         },
         {
             label: qsTr("Enabled"),
+            description: qsTr("Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner"),
+            section: qsTr("Launcher"),
+            pageIdx: 2,
+            subPage: "launcher"
+        },
+        {
+            label: qsTr("Launcher style"),
+            description: qsTr("Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner"),
+            section: qsTr("Launcher"),
+            pageIdx: 2,
+            subPage: "launcher"
+        },
+        {
+            label: qsTr("Custom avatar"),
+            section: qsTr("Launcher"),
+            pageIdx: 2,
+            subPage: "launcher"
+        },
+        {
+            label: qsTr("Reset custom avatar"),
             description: qsTr("Use the Caelestia logo or a custom image instead of your distribution's logo"),
             section: qsTr("Launcher"),
             pageIdx: 2,
@@ -1712,7 +1732,7 @@ QtObject {
         },
         {
             label: qsTr("Show power menu"),
-            description: qsTr("Show the quick session controls (shutdown, sleep, logout) at the bottom"),
+            description: qsTr("Show the quick session controls (shutdown, sleep, logout): under the search field in the classic style, in the top right menu in the modern one"),
             section: qsTr("Launcher"),
             pageIdx: 2,
             subPage: "launcher"

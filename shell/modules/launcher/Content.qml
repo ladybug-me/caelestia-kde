@@ -104,7 +104,8 @@ Item {
 
         visible: root.modernStyle
         anchors.horizontalCenter: parent.horizontalCenter
-        y: -root.avatarSize / 2
+        y: 4 - (root.avatarSize / 2 + 4) * (panels.launcher?.avatarOpenScale ?? (root.modernStyle ? 1 : 0))
+        opacity: panels.launcher?.avatarOpenScale ?? (root.modernStyle ? 1 : 0)
         implicitWidth: root.avatarSize
         implicitHeight: root.avatarSize
 

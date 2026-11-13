@@ -22,6 +22,7 @@ Item {
         return max;
     }
     property real offsetScale: shouldBeActive ? 0 : 1
+    property real avatarOpenScale: shouldBeActive ? 1 : 0
     property bool keepAlive: false
 
     readonly property bool avatarVisible: root.visible && (content.item?.showAvatar ?? false)
@@ -61,6 +62,14 @@ Item {
         enabled: !visibilities.skipLauncherAnim
 
         Anim {}
+    }
+
+    Behavior on avatarOpenScale {
+        enabled: !visibilities.skipLauncherAnim
+
+        Anim {
+            type: root.shouldBeActive ? Anim.DefaultSpatial : Anim.FastSpatial
+        }
     }
     Loader {
         id: content

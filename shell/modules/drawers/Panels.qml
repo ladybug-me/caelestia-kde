@@ -282,7 +282,7 @@ Item {
         width: launcher.avatarSize
         height: width
         x: launcher.x + (launcher.width - width) / 2
-        y: launcher.y - height / 2
+        y: launcher.y + 4 - (height / 2 + 4) * launcher.avatarOpenScale
     }
     Dashboard.Wrapper {
         id: dashboard

@@ -8,6 +8,7 @@
 #include "../src/Caelestia/Config/rootnodes.hpp"
 #include "lyrics.hpp"
 #include "lyricsmatching.hpp"
+#include "lyricsromanization.hpp"
 
 namespace caelestia::services {
 
@@ -113,8 +114,41 @@ private slots:
     }
 
     void init() {
+        config::ConfigSingleton::instance()->services()->set_romanizeIndicLyrics(false);
         QDir(m_dir.path() + u"/cache"_s).removeRecursively();
         QDir(m_dir.path() + u"/state"_s).removeRecursively();
+    }
+
+    void romanizationPreservesOtherScripts() {
+        const QString urdu = QString::fromUtf8("تم ہی ہو — میرا دل، پنجابی شاہ مکھی");
+        QCOMPARE(lyricsromanization::romanize(urdu), urdu);
+        const QString other = QString::fromUtf8("café — বাংলা தமிழ் ಕನ್ನಡ 😀");
+        QCOMPARE(lyricsromanization::romanize(other), other);
+        if (!lyricsromanization::available())
+            QSKIP("ICU is not available");
+        QCOMPARE(lyricsromanization::romanize(QString::fromUtf8("तुम ही हो")), QStringLiteral("tum hi ho"));
+        QCOMPARE(lyricsromanization::romanize(QString::fromUtf8("ਮੇਰਾ ਦਿਲ")), QString::fromUtf8("ਮੇਰਾ ਦਿਲ"));
+        QCOMPARE(
+            lyricsromanization::romanize(QString::fromUtf8("تم — तुम — café")), QString::fromUtf8("تم — tum — café"));
+    }
+
+    void romanizationKeepsOriginalLyricsAndTiming() {
+        if (!lyricsromanization::available())
+            QSKIP("ICU is not available");
+        Lyrics lyrics;
+        network(lyrics);
+        const QString hindi = QString::fromUtf8("तुम ही हो");
+        const QString urdu = QString::fromUtf8("تم ہی ہو");
+        lyrics.setLines({ { 1.5, hindi }, { 5.0, urdu } }, LyricsBackend::Local);
+        QCOMPARE(lyrics.lyrics().first(), hindi);
+        config::ConfigSingleton::instance()->services()->set_romanizeIndicLyrics(true);
+        QCOMPARE(lyrics.lyrics().first(), QStringLiteral("tum hi ho"));
+        QCOMPARE(lyrics.lyrics().last(), urdu);
+        QCOMPARE(lyrics.timeForIndex(0), 1.5);
+        QCOMPARE(lyrics.indexForTime(5.0), 1);
+        config::ConfigSingleton::instance()->services()->set_romanizeIndicLyrics(false);
+        QCOMPARE(lyrics.lyrics().first(), hindi);
+        QCOMPARE(lyrics.m_lines.first().text, hindi);
     }
 
     void matchingPreservesRecordings() {

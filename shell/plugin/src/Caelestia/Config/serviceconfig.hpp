@@ -84,6 +84,7 @@ private:
     CONFIG_GLOBAL_LIST(PlayerAliasList, playerAliases,
         { vmap({ { u"from"_s, u"com.github.th_ch.youtube_music"_s }, { u"to"_s, u"YT Music"_s } }) })
     CONFIG_GLOBAL_PROPERTY(QString, lyricsBackend, u"Auto"_s)
+    CONFIG_GLOBAL_PROPERTY(QString, lyricsArabicFont, u""_s)
     CONFIG_GLOBAL_PROPERTY(bool, romanizeIndicLyrics, false)
     CONFIG_GLOBAL_PROPERTY(QStringList, bluetoothAutoReconnectDevices, QStringList())
 

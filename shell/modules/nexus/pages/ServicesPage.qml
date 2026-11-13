@@ -4,6 +4,7 @@ import Quickshell
 import Caelestia.Config
 import Caelestia.Services
 import qs.components
+import qs.components.containers
 import qs.components.controls
 import qs.services
 import qs.utils
@@ -149,6 +150,59 @@ PageBase {
             checked: GlobalConfig.services.romanizeIndicLyrics
             enabled: Lyrics.romanizationAvailable
             onToggled: GlobalConfig.services.romanizeIndicLyrics = checked
+        }
+
+        DialogRowButton {
+            id: lyricsFontPicker
+
+            property string selectedFamily: ""
+
+            rootParent: root.flickable
+            icon: "font_download"
+            label: GlobalConfig.services.lyricsArabicFont ? qsTr("Urdu lyrics font: %1").arg(GlobalConfig.services.lyricsArabicFont) : qsTr("Urdu lyrics font: Automatic")
+            header: qsTr("Choose an installed font")
+            acceptLabel: qsTr("Apply")
+            separateContent: true
+            onOpenChanged: if (open) selectedFamily = GlobalConfig.services.lyricsArabicFont
+            onAccepted: GlobalConfig.services.lyricsArabicFont = selectedFamily
+
+            content: Component {
+                VerticalFadeListView {
+                    spacing: 0
+                    topMargin: Tokens.padding.large
+                    bottomMargin: Tokens.padding.large
+                    model: [""].concat([...Qt.fontFamilies()].sort())
+
+                    delegate: StyledRect {
+                        id: fontItem
+
+                        required property string modelData
+
+                        readonly property bool selected: lyricsFontPicker.selectedFamily === modelData
+
+                        anchors.left: ListView.view.contentItem.left
+                        anchors.right: ListView.view.contentItem.right
+                        implicitHeight: fontLabel.implicitHeight + Tokens.padding.medium * 2
+                        radius: Tokens.rounding.medium
+                        color: Qt.alpha(Colours.palette.m3tertiaryContainer, selected ? 1 : 0)
+
+                        StateLayer {
+                            anchors.fill: parent
+                            radius: parent.radius
+                            onClicked: lyricsFontPicker.selectedFamily = fontItem.modelData
+                        }
+                        StyledText {
+                            id: fontLabel
+
+                            anchors.fill: parent
+                            anchors.margins: Tokens.padding.medium
+                            text: fontItem.modelData || qsTr("Automatic")
+                            font.family: fontItem.modelData || GlobalConfig.appearance.font.body.family
+                            elide: Text.ElideRight
+                        }
+                    }
+                }
+            }
         }
 
         SelectRow {

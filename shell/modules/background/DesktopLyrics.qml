@@ -338,7 +338,7 @@ Item {
 
                     anchors.fill: parent
                     text: root.previousLyricText
-                    font.family: root.sansFont
+                    font.family: LyricFonts.familyForText(text, root.sansFont)
                     font.pointSize: Tokens.font.body.medium.pointSize * root.lyricsScale
                     color: root.safeSecondary
                     opacity: 0.6
@@ -391,7 +391,7 @@ Item {
 
                     width: parent.width
                     text: root.displayedLyric
-                    font.family: root.sansFont
+                    font.family: LyricFonts.familyForText(text, root.sansFont)
                     font.pointSize: Tokens.font.title.medium.pointSize * 1.3 * root.lyricsScale
                     font.weight: Font.Bold
                     color: Colours.palette.m3primary
@@ -429,7 +429,7 @@ Item {
 
                     anchors.fill: parent
                     text: root.nextLyricText
-                    font.family: root.sansFont
+                    font.family: LyricFonts.familyForText(text, root.sansFont)
                     font.pointSize: Tokens.font.body.medium.pointSize * root.lyricsScale
                     color: root.safeSecondary
                     opacity: 0.6

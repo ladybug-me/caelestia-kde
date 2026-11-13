@@ -2,7 +2,6 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Effects
 import QtQuick.Layouts
 import Quickshell
 import Caelestia
@@ -123,32 +122,14 @@ Item {
                 anchors.fill: parent
                 anchors.margins: avatar.ring
 
-                // Without a profile picture the circle would be a flat grey
-                // hole behind the placeholder icon, so fill it with a blurred
-                // crop of the wallpaper instead.
                 Rectangle {
                     anchors.fill: parent
                     visible: face.status !== Image.Ready
                     color: Colours.layer(Colours.palette.m3surfaceContainerHighest, 2)
-                }
 
-                Image {
-                    anchors.fill: parent
-                    source: face.status !== Image.Ready ? Wallpapers.current : ""
-                    fillMode: Image.PreserveAspectCrop
-                    asynchronous: true
-                    layer.enabled: status === Image.Ready
-                    layer.effect: MultiEffect {
-                        blurEnabled: true
-                        blur: 1
-                        blurMax: 64
+                    Behavior on color {
+                        CAnim {}
                     }
-                }
-
-                Rectangle {
-                    anchors.fill: parent
-                    visible: face.status !== Image.Ready
-                    color: Qt.alpha(Colours.palette.m3scrim, 0.4)
                 }
 
                 CachingImage {

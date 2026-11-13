@@ -1658,6 +1658,19 @@ QtObject {
             subPage: "launcher"
         },
         {
+            label: qsTr("Custom avatar"),
+            section: qsTr("Launcher"),
+            pageIdx: 2,
+            subPage: "launcher"
+        },
+        {
+            label: qsTr("Reset custom avatar"),
+            description: qsTr("Use the Caelestia logo or a custom image instead of your distribution's logo"),
+            section: qsTr("Launcher"),
+            pageIdx: 2,
+            subPage: "launcher"
+        },
+        {
             label: qsTr("Use alternative logo"),
             description: qsTr("Use the Caelestia logo or a custom image instead of your distribution's logo"),
             section: qsTr("Launcher"),

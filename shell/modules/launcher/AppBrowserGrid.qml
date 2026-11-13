@@ -8,6 +8,7 @@ import Caelestia.Config
 import qs.components
 import qs.components.controls
 import qs.services
+import qs.utils
 import qs.modules.launcher.items
 import qs.modules.launcher.services
 
@@ -54,7 +55,7 @@ Item {
         if (sortSettings.sortMode !== "alpha")
             return list;
         const favourites = GlobalConfig.launcher.favouriteApps ?? [];
-        const isFavourite = app => favourites.includes(app.id);
+        const isFavourite = app => Strings.testRegexList(favourites, app.id);
         const byName = (a, b) => (a.name ?? "").localeCompare(b.name ?? "", undefined, { sensitivity: "base" });
         return list.filter(a => isFavourite(a)).sort(byName).concat(list.filter(a => !isFavourite(a)).sort(byName));
     }
@@ -170,6 +171,14 @@ Item {
         }
 
         target: GlobalConfig.launcher
+    }
+
+    Connections {
+        function onLauncherStyleChanged(): void {
+            root.refresh();
+        }
+
+        target: Style
     }
 
     Settings {

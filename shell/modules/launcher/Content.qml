@@ -265,7 +265,7 @@ Item {
         IconButton {
             id: sortBtn
 
-            visible: root.modernStyle && root.isBrowsing && list.currentList?.sortMode !== undefined
+            visible: root.modernStyle && root.isBrowsing && Boolean(list.currentList?.sortMode)
             isRound: true
             type: IconButton.Tonal
             icon: list.currentList?.sortMode === "alpha" ? "sort_by_alpha" : "trending_up"

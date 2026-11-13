@@ -29,7 +29,7 @@ Item {
     readonly property color safePrimary: useLightSet ? Colours.palette.m3primaryContainer : Colours.palette.m3primary
     readonly property color safeSecondary: useLightSet ? Colours.palette.m3secondaryContainer : Colours.palette.m3secondary
     readonly property color safeTertiary: useLightSet ? Colours.palette.m3tertiaryContainer : Colours.palette.m3tertiary
-    readonly property string sansFont: GlobalConfig.appearance.font.body.family
+    readonly property string sansFont: GlobalConfig.appearance.font.body.family || Tokens.font.body.medium.family
     readonly property int alignment: Config.background.desktopLyrics.alignment
     readonly property bool autoHide: Config.background.desktopLyrics.autoHide
     readonly property bool windowHidesLyrics: Kwin.windowHidesDesktopWidgets(root.screen ? root.screen.name : "", false)

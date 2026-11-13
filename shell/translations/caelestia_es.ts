@@ -1352,7 +1352,7 @@
 <context>
     <name>AppBrowserGrid</name>
     <message>
-        <location filename="../modules/launcher/AppBrowserGrid.qml" line="+235"/>
+        <location filename="../modules/launcher/AppBrowserGrid.qml" line="+284"/>
         <source>No apps in this category</source>
         <translation>No hay aplicaciones en esta categoría</translation>
     </message>
@@ -4744,7 +4744,7 @@
         <translation>Terminal</translation>
     </message>
     <message>
-        <location filename="../modules/launcher/Content.qml" line="+49"/>
+        <location filename="../modules/launcher/Content.qml" line="+63"/>
         <source>Clipboard history cleared</source>
         <translation>Historial del portapapeles borrado</translation>
     </message>
@@ -4754,28 +4754,42 @@
         <translation>No se pudo borrar el historial del portapapeles</translation>
     </message>
     <message>
-        <location line="+70"/>
+        <location line="+138"/>
+        <location line="+113"/>
         <source>Log Out</source>
         <translation>Cerrar sesión</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="-105"/>
+        <location line="+114"/>
         <source>Sleep</source>
         <translation>Suspender</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="-106"/>
+        <location line="+115"/>
         <location filename="../modules/session/Content.qml" line="+129"/>
         <source>Restart</source>
         <translation>Reiniciar</translation>
     </message>
     <message>
-        <location line="+10"/>
+        <location line="-105"/>
+        <location line="+114"/>
         <source>Shut Down</source>
         <translation>Apagar</translation>
     </message>
     <message>
-        <location line="+45"/>
+        <location line="-61"/>
+        <source>Most used</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>A-Z</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+98"/>
         <source>Type &quot;%1&quot; for commands</source>
         <translation>Escribe &quot;%1&quot; para ejecutar comandos</translation>
     </message>
@@ -6592,7 +6606,7 @@ Pulsa para continuar</translation>
     <message>
         <location filename="../modules/background/desktopicons/widgets/FolderWidget.qml" line="+44"/>
         <source>Choose a folder to show</source>
-        <translation>Elegí una carpeta para mostrar</translation>
+        <translation type="unfinished">Elige una carpeta para mostrar</translation>
     </message>
     <message>
         <location line="+171"/>
@@ -7913,7 +7927,7 @@ Pulsa para continuar</translation>
 <context>
     <name>LauncherPanel</name>
     <message>
-        <location filename="../modules/nexus/pages/panels/LauncherPanel.qml" line="+20"/>
+        <location filename="../modules/nexus/pages/panels/LauncherPanel.qml" line="+22"/>
         <source>Default</source>
         <translation>Predeterminado</translation>
     </message>
@@ -7928,7 +7942,7 @@ Pulsa para continuar</translation>
         <translation>Compacto</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+21"/>
         <source>Tooltip</source>
         <translation>Tooltip</translation>
     </message>
@@ -7958,7 +7972,7 @@ Pulsa para continuar</translation>
         <translation>Activado</translation>
     </message>
     <message>
-        <location line="+7"/>
+        <location line="+45"/>
         <source>Use alternative logo</source>
         <translation>Usar logotipo alternativo</translation>
     </message>
@@ -7983,12 +7997,63 @@ Pulsa para continuar</translation>
         <translation>Seleccionar un logotipo personalizado</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-47"/>
+        <location line="+48"/>
         <source>Image files</source>
         <translation>Archivos de imagen</translation>
     </message>
     <message>
-        <location line="+11"/>
+        <location line="-119"/>
+        <source>Classic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Modern</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+45"/>
+        <source>Launcher style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+8"/>
+        <source>Custom avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+5"/>
+        <source>Using your profile picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Only used by the modern launcher style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Select a custom avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Reset custom avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Go back to your profile picture</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+47"/>
         <source>Select KDE icon</source>
         <translation>Seleccionar icono de KDE</translation>
     </message>
@@ -8064,8 +8129,8 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+1"/>
-        <source>Show the quick session controls (shutdown, sleep, logout) at the bottom</source>
-        <translation>Mostrar los controles rápidos de sesión (apagar, suspender y cerrar sesión) en la parte inferior</translation>
+        <source>Show the quick session controls (shutdown, sleep, logout): under the search field in the classic style, in the top right menu in the modern one</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
@@ -9555,7 +9620,7 @@ Pulsa para continuar</translation>
     <message>
         <location line="+46"/>
         <source>Select a note or create one</source>
-        <translation>Elegí una nota o creá una</translation>
+        <translation type="unfinished">Elige una nota o crea una</translation>
     </message>
 </context>
 <context>
@@ -11841,12 +11906,12 @@ Pulsa para continuar</translation>
     <message>
         <location line="+6"/>
         <location line="+487"/>
-        <location line="+1743"/>
+        <location line="+1763"/>
         <source>Mode</source>
         <translation>Modo</translation>
     </message>
     <message>
-        <location line="-2224"/>
+        <location line="-2244"/>
         <source>Color intensity</source>
         <translation>Intensidad del color</translation>
     </message>
@@ -12078,12 +12143,12 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2692"/>
+        <location line="+2712"/>
         <source>Transparency</source>
         <translation>Transparencia</translation>
     </message>
     <message>
-        <location line="-2691"/>
+        <location line="-2711"/>
         <source>Enable transparency across the shell</source>
         <translation>Activar la transparencia en todo el shell</translation>
     </message>
@@ -12216,12 +12281,12 @@ Pulsa para continuar</translation>
         <location line="+1"/>
         <location line="+6"/>
         <location line="+7"/>
-        <location line="+1406"/>
+        <location line="+1426"/>
         <source>Apps</source>
         <translation>Aplicaciones</translation>
     </message>
     <message>
-        <location line="-1414"/>
+        <location line="-1434"/>
         <source>All apps</source>
         <translation>Todas las aplicaciones</translation>
     </message>
@@ -12251,12 +12316,12 @@ Pulsa para continuar</translation>
         <location line="+7"/>
         <location line="+6"/>
         <location line="+7"/>
-        <location line="+2016"/>
+        <location line="+2036"/>
         <source>Discord Rich Presence</source>
         <translation>Presencia enriquecida de Discord</translation>
     </message>
     <message>
-        <location line="-2038"/>
+        <location line="-2058"/>
         <source>Auto-detect Steam games</source>
         <translation>Detectar automáticamente los juegos de Steam</translation>
     </message>
@@ -12329,7 +12394,7 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2096"/>
+        <location line="+2116"/>
         <location line="+7"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -12344,7 +12409,7 @@ Pulsa para continuar</translation>
         <translation>Sonidos</translation>
     </message>
     <message>
-        <location line="-2151"/>
+        <location line="-2171"/>
         <source>Muted notification apps</source>
         <translation>Aplicaciones con notificaciones silenciadas</translation>
     </message>
@@ -12372,12 +12437,12 @@ Pulsa para continuar</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+328"/>
-        <location line="+1853"/>
+        <location line="+1873"/>
         <source>Clock</source>
         <translation>Reloj</translation>
     </message>
     <message>
-        <location line="-2203"/>
+        <location line="-2223"/>
         <source>Show date</source>
         <translation>Mostrar fecha</translation>
     </message>
@@ -12422,12 +12487,12 @@ Pulsa para continuar</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+286"/>
-        <location line="+1853"/>
+        <location line="+1873"/>
         <source>Dock</source>
         <translation>Dock</translation>
     </message>
     <message>
-        <location line="-2176"/>
+        <location line="-2196"/>
         <source>Icon size</source>
         <translation>Tamaño de los iconos</translation>
     </message>
@@ -12459,12 +12524,12 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2097"/>
+        <location line="+2117"/>
         <source>Filter by current desktop</source>
         <translation>Filtrar por escritorio actual</translation>
     </message>
     <message>
-        <location line="-2096"/>
+        <location line="-2116"/>
         <source>Only show applications and windows belonging to the active virtual desktop</source>
         <translation>Mostrar solo las aplicaciones y ventanas que pertenecen al escritorio virtual activo</translation>
     </message>
@@ -12480,12 +12545,12 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2090"/>
+        <location line="+2110"/>
         <source>Preview window on desktop</source>
         <translation>Previsualizar ventana en el escritorio</translation>
     </message>
     <message>
-        <location line="-2089"/>
+        <location line="-2109"/>
         <source>Highlight and show the window itself on the workspace while hovering over dock previews</source>
         <translation>Resaltar y mostrar la ventana en el espacio de trabajo al pasar el cursor sobre las vistas previas del Dock</translation>
     </message>
@@ -12502,12 +12567,12 @@ Pulsa para continuar</translation>
     <message>
         <location line="+1"/>
         <location line="+285"/>
-        <location line="+1853"/>
+        <location line="+1873"/>
         <source>GitHub</source>
         <translation>GitHub</translation>
     </message>
     <message>
-        <location line="-2132"/>
+        <location line="-2152"/>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+7"/>
@@ -12531,12 +12596,12 @@ Pulsa para continuar</translation>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+103"/>
-        <location line="+1859"/>
+        <location line="+1879"/>
         <source>Greeter</source>
         <translation>Pantalla de bienvenida</translation>
     </message>
     <message>
-        <location line="-2097"/>
+        <location line="-2117"/>
         <source>Inverted</source>
         <translation>Invertido</translation>
     </message>
@@ -12549,7 +12614,7 @@ Pulsa para continuar</translation>
     <message>
         <location line="-1"/>
         <location line="+513"/>
-        <location line="+608"/>
+        <location line="+628"/>
         <location line="+517"/>
         <location line="+540"/>
         <location line="+238"/>
@@ -12557,7 +12622,7 @@ Pulsa para continuar</translation>
         <translation>Mostrar al pasar el cursor</translation>
     </message>
     <message>
-        <location line="-2409"/>
+        <location line="-2429"/>
         <location line="+336"/>
         <location line="+26"/>
         <source>Popout on hover</source>
@@ -12802,12 +12867,12 @@ Pulsa para continuar</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+327"/>
-        <location line="+1592"/>
+        <location line="+1612"/>
         <source>Performance</source>
         <translation>Rendimiento</translation>
     </message>
     <message>
-        <location line="-1935"/>
+        <location line="-1955"/>
         <source>Show values</source>
         <translation>Mostrar valores</translation>
     </message>
@@ -12888,7 +12953,7 @@ Pulsa para continuar</translation>
     <message>
         <location line="+6"/>
         <location line="+355"/>
-        <location line="+756"/>
+        <location line="+776"/>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -12899,8 +12964,8 @@ Pulsa para continuar</translation>
         <translation>Red</translation>
     </message>
     <message>
-        <location line="-1142"/>
-        <location line="+1253"/>
+        <location line="-1162"/>
+        <location line="+1273"/>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -12908,7 +12973,7 @@ Pulsa para continuar</translation>
         <translation>Notificaciones</translation>
     </message>
     <message>
-        <location line="-1265"/>
+        <location line="-1285"/>
         <source>Peripheral battery</source>
         <translation>Batería de periféricos</translation>
     </message>
@@ -12924,13 +12989,13 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+1817"/>
+        <location line="+1837"/>
         <location line="+176"/>
         <source>Now playing</source>
         <translation>Reproduciendo ahora</translation>
     </message>
     <message>
-        <location line="-1987"/>
+        <location line="-2007"/>
         <source>Show screenshot buttons</source>
         <translation>Mostrar botones de captura</translation>
     </message>
@@ -12943,12 +13008,12 @@ Pulsa para continuar</translation>
         <location line="+1"/>
         <location line="+7"/>
         <location line="+7"/>
-        <location line="+2120"/>
+        <location line="+2140"/>
         <source>Screen Capture</source>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-        <location line="-2129"/>
+        <location line="-2149"/>
         <source>Show recording buttons</source>
         <translation>Mostrar botones de grabación</translation>
     </message>
@@ -12969,24 +13034,24 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+1053"/>
+        <location line="+1073"/>
         <source>Wi-Fi</source>
         <translation>Wi-Fi</translation>
     </message>
     <message>
-        <location line="-1052"/>
+        <location line="-1072"/>
         <source>Show the Wi-Fi icon alongside the network icon</source>
         <translation>Mostrar el icono de Wi-Fi junto al icono de red</translation>
     </message>
     <message>
         <location line="+1"/>
         <location line="+7"/>
-        <location line="+1757"/>
+        <location line="+1777"/>
         <source>Status icons</source>
         <translation>Iconos de estado</translation>
     </message>
     <message>
-        <location line="-1758"/>
+        <location line="-1778"/>
         <source>Show a details popout when hovering the status icons</source>
         <translation>Mostrar una ventana emergente con detalles al pasar el cursor sobre los iconos de estado</translation>
     </message>
@@ -12995,12 +13060,12 @@ Pulsa para continuar</translation>
         <location line="+6"/>
         <location line="+7"/>
         <location line="+7"/>
-        <location line="+1725"/>
+        <location line="+1745"/>
         <source>Tray</source>
         <translation>Bandeja del sistema</translation>
     </message>
     <message>
-        <location line="-1734"/>
+        <location line="-1754"/>
         <source>Compact</source>
         <translation>Compacto</translation>
     </message>
@@ -13018,7 +13083,7 @@ Pulsa para continuar</translation>
     <message>
         <location line="+1"/>
         <location line="+6"/>
-        <location line="+1761"/>
+        <location line="+1781"/>
         <location line="+247"/>
         <location line="+7"/>
         <location line="+6"/>
@@ -13026,7 +13091,7 @@ Pulsa para continuar</translation>
         <translation>Actualizaciones</translation>
     </message>
     <message>
-        <location line="-2022"/>
+        <location line="-2042"/>
         <source>Turn on update checking</source>
         <translation>Activar la comprobación de actualizaciones</translation>
     </message>
@@ -13046,12 +13111,12 @@ Pulsa para continuar</translation>
         <location line="-665"/>
         <location line="+6"/>
         <location line="+156"/>
-        <location line="+1580"/>
+        <location line="+1600"/>
         <source>Weather</source>
         <translation>Tiempo</translation>
     </message>
     <message>
-        <location line="-1737"/>
+        <location line="-1757"/>
         <source>Location</source>
         <translation>Localización</translation>
     </message>
@@ -13076,13 +13141,13 @@ Pulsa para continuar</translation>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+7"/>
-        <location line="+1622"/>
+        <location line="+1642"/>
         <location line="+161"/>
         <source>Workspaces</source>
         <translation>Espacios de trabajo</translation>
     </message>
     <message>
-        <location line="-1837"/>
+        <location line="-1857"/>
         <source>Active indicator</source>
         <translation>Indicador activo</translation>
     </message>
@@ -13149,12 +13214,12 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+12"/>
-        <location line="+1298"/>
+        <location line="+1318"/>
         <source>Discoverable</source>
         <translation>Visible para otros dispositivos</translation>
     </message>
     <message>
-        <location line="-1297"/>
+        <location line="-1317"/>
         <source>Allow nearby devices to find this one</source>
         <translation>Permitir que los dispositivos cercanos encuentren este dispositivo</translation>
     </message>
@@ -13200,7 +13265,7 @@ Pulsa para continuar</translation>
         <location line="+6"/>
         <location line="+263"/>
         <location line="+313"/>
-        <location line="+493"/>
+        <location line="+513"/>
         <location line="+338"/>
         <location line="+21"/>
         <location line="+475"/>
@@ -13208,16 +13273,16 @@ Pulsa para continuar</translation>
         <translation>Activado</translation>
     </message>
     <message>
-        <location line="-1902"/>
+        <location line="-1922"/>
         <location line="+7"/>
-        <location line="+608"/>
+        <location line="+628"/>
         <location line="+1288"/>
         <location line="+7"/>
         <source>Reveal when the cursor reaches the screen edge</source>
         <translation>Mostrar cuando el cursor llegue al borde de la pantalla</translation>
     </message>
     <message>
-        <location line="-1909"/>
+        <location line="-1929"/>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+7"/>
@@ -13298,18 +13363,18 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+1119"/>
+        <location line="+1139"/>
         <source>Ambient color mode</source>
         <translation>Modo de color ambiente</translation>
     </message>
     <message>
-        <location line="-1113"/>
-        <location line="+1119"/>
+        <location line="-1133"/>
+        <location line="+1139"/>
         <source>Ambient glow opacity</source>
         <translation>Opacidad del brillo ambiente</translation>
     </message>
     <message>
-        <location line="-1113"/>
+        <location line="-1133"/>
         <source>Welcome splash</source>
         <translation>Pantalla de bienvenida</translation>
     </message>
@@ -13320,12 +13385,12 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+12"/>
-        <location line="+1273"/>
+        <location line="+1293"/>
         <source>GPU</source>
         <translation>GPU</translation>
     </message>
     <message>
-        <location line="-1267"/>
+        <location line="-1287"/>
         <source>CPU</source>
         <translation>CPU</translation>
     </message>
@@ -13336,37 +13401,37 @@ Pulsa para continuar</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+1416"/>
+        <location line="+1436"/>
         <source>Storage</source>
         <translation>Almacenamiento</translation>
     </message>
     <message>
-        <location line="-1404"/>
-        <location line="+529"/>
+        <location line="-1424"/>
+        <location line="+549"/>
         <location line="+1254"/>
         <source>Hover trigger depth</source>
         <translation>Profundidad del activador al pasar el cursor</translation>
     </message>
     <message>
-        <location line="-1782"/>
+        <location line="-1802"/>
         <source>Distance in from the screen edge that opens the dashboard</source>
         <translation>Distancia desde el borde de la pantalla que abre el panel</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+529"/>
+        <location line="+549"/>
         <location line="+1254"/>
         <source>Hover trigger width</source>
         <translation>Ancho del activador al pasar el cursor</translation>
     </message>
     <message>
-        <location line="-1782"/>
+        <location line="-1802"/>
         <source>How much of the top edge opens the dashboard, as a percentage of its width</source>
         <translation>Porcentaje del borde superior que abre el panel, según su ancho</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+529"/>
+        <location line="+549"/>
         <location line="+469"/>
         <location line="+275"/>
         <location line="+14"/>
@@ -13376,7 +13441,7 @@ Pulsa para continuar</translation>
         <translation>Umbral de arrastre</translation>
     </message>
     <message>
-        <location line="-1782"/>
+        <location line="-1802"/>
         <source>Pixels dragged before the dashboard opens</source>
         <translation>Píxeles que se deben arrastrar antes de abrir el panel</translation>
     </message>
@@ -13615,12 +13680,12 @@ Pulsa para continuar</translation>
         <location line="+1"/>
         <location line="+7"/>
         <location line="+6"/>
-        <location line="+725"/>
+        <location line="+745"/>
         <source>Focus Sessions</source>
         <translation>Sesiones de concentración</translation>
     </message>
     <message>
-        <location line="-733"/>
+        <location line="-753"/>
         <source>Follow the calendar</source>
         <translation>Seguir el calendario</translation>
     </message>
@@ -13707,12 +13772,12 @@ Pulsa para continuar</translation>
     <message>
         <location line="+6"/>
         <location line="+1"/>
-        <location line="+510"/>
+        <location line="+530"/>
         <source>Hotspot</source>
         <translation>Punto de acceso</translation>
     </message>
     <message>
-        <location line="-505"/>
+        <location line="-525"/>
         <location line="+2"/>
         <location line="+7"/>
         <location line="+7"/>
@@ -13978,11 +14043,40 @@ Pulsa para continuar</translation>
     <message>
         <location line="+7"/>
         <location line="+7"/>
+        <source>Classic: the session buttons under the search field. Modern: your profile picture on top of the launcher, with the session menu in the top right corner</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-1"/>
+        <source>Launcher style</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+7"/>
+        <source>Custom avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Reset custom avatar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <location line="+7"/>
         <source>Use the Caelestia logo or a custom image instead of your distribution&apos;s logo</source>
         <translation>Usar el logotipo de Caelestia o una imagen personalizada en lugar del logotipo de tu distribución</translation>
     </message>
     <message>
-        <location line="-6"/>
+        <location line="+60"/>
+        <source>Show the quick session controls (shutdown, sleep, logout): under the search field in the classic style, in the top right menu in the modern one</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location line="-86"/>
+        <location line="+7"/>
+        <location line="+6"/>
+        <location line="+7"/>
         <location line="+7"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -14076,12 +14170,7 @@ Pulsa para continuar</translation>
         <translation>Mostrar menú de apagado</translation>
     </message>
     <message>
-        <location line="+1"/>
-        <source>Show the quick session controls (shutdown, sleep, logout) at the bottom</source>
-        <translation>Mostrar los controles rápidos de sesión (apagar, suspender y cerrar sesión) en la parte inferior</translation>
-    </message>
-    <message>
-        <location line="+6"/>
+        <location line="+7"/>
         <source>Max items shown</source>
         <translation>Máximo de elementos mostrados</translation>
     </message>

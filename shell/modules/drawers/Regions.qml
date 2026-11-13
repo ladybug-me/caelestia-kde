@@ -38,7 +38,12 @@ Region {
     R {
         panel: root.panels.launcher
         y: root.win.height - height
-        height: root.Config.launcher.enabled ? panel.height * (1 - root.panels.launcher.offsetScale) + root.edgeExtent(root.Config.launcher.hoverThickness) : 0
+        height: root.Config.launcher.enabled ? panel.height * (1 - root.panels.launcher.offsetScale) + root.edgeExtent(root.Config.launcher.hoverThickness) + (panel.height * (1 - root.panels.launcher.offsetScale) > 0 ? root.panels.bottomMargin : 0) : 0
+    }
+    R {
+        panel: root.panels.launcherAvatar
+        width: root.panels.launcher.avatarVisible ? panel.width : 0
+        height: root.panels.launcher.avatarVisible ? panel.height : 0
     }
     R {
         id: sessionRegion

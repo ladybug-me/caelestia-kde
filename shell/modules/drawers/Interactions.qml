@@ -101,7 +101,16 @@ CustomMouseArea {
     }
     function inBottomPanel(panel: Item, x: real, y: real, isCorner = false, edge = Config.border.thickness, span = 100): bool {
         const panelHeight = panel.height * (1 - (panel.offsetScale ?? 0)); // qmllint disable missing-property
-        return y > screen.height - Math.max(Config.border.minThickness, edge + panelHeight) - (isCorner ? Config.border.rounding : 0) && withinPanelWidth(panel, x, y, panelHeight > 0 ? 100 : span);
+        const bottomMargin = panelHeight > 0 ? panels.bottomMargin : 0;
+        return y > screen.height - Math.max(Config.border.minThickness, edge + panelHeight + bottomMargin) - (isCorner ? Config.border.rounding : 0) && withinPanelWidth(panel, x, y, panelHeight > 0 ? 100 : span);
+    }
+    function inLauncherAvatar(x: real, y: real): bool {
+        if (!panels.launcher.avatarVisible)
+            return false;
+        const av = panels.launcherAvatar;
+        const avX = panels.leftMargin + av.x;
+        const avY = panels.topMargin + av.y;
+        return x >= avX && x <= avX + av.width && y >= avY && y <= avY + av.height;
     }
     function inOverviewCorner(x: real, y: real): string {
         const thickness = Config.overview.hoverThickness;
@@ -138,7 +147,7 @@ CustomMouseArea {
             let inside = false;
 
             if (inBarArea(event.x, event.y)) inside = true;
-            else if (visibilities.launcher && inBottomPanel(panels.launcher, event.x, event.y, false, Config.launcher.hoverThickness, Config.launcher.hoverWidth) && withinPanelWidth(panels.launcher, event.x, event.y)) inside = true;
+            else if (visibilities.launcher && ((inBottomPanel(panels.launcher, event.x, event.y, false, Config.launcher.hoverThickness, Config.launcher.hoverWidth) && withinPanelWidth(panels.launcher, event.x, event.y)) || inLauncherAvatar(event.x, event.y))) inside = true;
             else if (visibilities.session && inRightPanel(panels.sessionWrapper, event.x, event.y)) inside = true;
             else if (visibilities.sidebar && inRightPanel(panels.sidebar, event.x, event.y)) inside = true;
             else if (visibilities.dashboard && inTopPanel(panels.dashboard, event.x, event.y, Config.dashboard.hoverThickness, Config.dashboard.hoverWidth) && withinPanelWidth(panels.dashboard, event.x, event.y)) inside = true;

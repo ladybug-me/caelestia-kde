@@ -157,6 +157,17 @@ if(CAELESTIA_BUILD_LYRICS_TESTS)
     set_tests_properties(lyrics-regressions PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen")
 endif()
 
+# Optional: playback and original-script lyrics remain available without ICU.
+find_package(ICU QUIET COMPONENTS uc i18n)
+if(ICU_FOUND)
+    target_compile_definitions(caelestia-services PRIVATE CAELESTIA_HAVE_ICU)
+    target_link_libraries(caelestia-services PRIVATE ICU::uc ICU::i18n)
+    if(CAELESTIA_BUILD_LYRICS_TESTS)
+        target_compile_definitions(caelestia-lyrics-test PRIVATE CAELESTIA_HAVE_ICU)
+        target_link_libraries(caelestia-lyrics-test PRIVATE ICU::uc ICU::i18n)
+    endif()
+endif()
+
 if(CAELESTIA_BUILD_DINO_TESTS)
     qt_add_executable(caelestia-dinogame-test ../../../tests/dinogame-test.cpp)
     target_include_directories(caelestia-dinogame-test PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")

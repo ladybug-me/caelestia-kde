@@ -4,6 +4,7 @@ import Quickshell
 import Caelestia.Config
 import Caelestia.Services
 import qs.components
+import qs.components.containers
 import qs.components.controls
 import qs.services
 import qs.utils
@@ -140,6 +141,28 @@ PageBase {
             menuItems: root.lyricsItems
             active: root.lyricsItems[Lyrics.preferredBackend] ?? root.lyricsItems[0]
             onSelected: item => Lyrics.preferredBackend = root.lyricsItems.indexOf(item)
+        }
+
+        ToggleRow {
+            text: qsTr("Romanize lyrics")
+            subtext: qsTr("Use Latin letters for Hindi lyrics (approximate; requires ICU)")
+            reset: ({ node: GlobalConfig.services, setting: "romanizeIndicLyrics" })
+            checked: GlobalConfig.services.romanizeIndicLyrics
+            enabled: Lyrics.romanizationAvailable
+            onToggled: GlobalConfig.services.romanizeIndicLyrics = checked
+        }
+
+        FontPickerRow {
+            id: lyricsFontPicker
+
+            rootParent: root.flickable
+            icon: "font_download"
+            label: GlobalConfig.services.lyricsArabicFont ? qsTr("Urdu lyrics font: %1").arg(GlobalConfig.services.lyricsArabicFont) : qsTr("Urdu lyrics font: Automatic")
+            header: qsTr("Choose an installed font")
+            selectedFamily: GlobalConfig.services.lyricsArabicFont
+            allowAutomatic: true
+            onOpenChanged: if (open) selectedFamily = GlobalConfig.services.lyricsArabicFont
+            onFontSelected: family => GlobalConfig.services.lyricsArabicFont = family
         }
 
         SelectRow {

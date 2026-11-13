@@ -2389,6 +2389,13 @@ QtObject {
             subPage: "services"
         },
         {
+            label: qsTr("Romanize lyrics"),
+            description: qsTr("Use Latin letters for Hindi lyrics (approximate; requires ICU)"),
+            section: qsTr("System Services"),
+            pageIdx: 7,
+            subPage: "services"
+        },
+        {
             label: qsTr("Default player"),
             description: qsTr("Preferred media player when several are open"),
             section: qsTr("System Services"),

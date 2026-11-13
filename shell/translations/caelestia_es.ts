@@ -5410,7 +5410,7 @@
     <message>
         <location line="+5"/>
         <source>Circle</source>
-        <translation type="unfinished">Círculo</translation>
+        <translation>Círculo</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -5461,7 +5461,7 @@
     <message>
         <location line="+1"/>
         <source>Click to open troubleshooting guide</source>
-        <translation type="unfinished">Pulsa para abrir la guía de solución de problemas</translation>
+        <translation>Pulsa para abrir la guía de solución de problemas</translation>
     </message>
     <message>
         <location line="+73"/>

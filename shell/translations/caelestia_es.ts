@@ -870,42 +870,42 @@
     <message>
         <location line="+126"/>
         <source>Assistant permission</source>
-        <translation type="unfinished"></translation>
+        <translation>Permiso de asistente</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Assistant</source>
-        <translation type="unfinished"></translation>
+        <translation>Asistente</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Don&apos;t allow</source>
-        <translation type="unfinished"></translation>
+        <translation>No permitir</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Allow</source>
-        <translation type="unfinished"></translation>
+        <translation>Permitir</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>The assistant wants to capture your screen and send it to the model.</source>
-        <translation type="unfinished"></translation>
+        <translation>El asistente quiere capturar tu pantalla y enviarla al modelo.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The assistant wants to fetch %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>El asistente quiere buscar %1.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The assistant wants to launch %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>El asistente quiere ejecutar %1.</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>The assistant wants to use %1.</source>
-        <translation type="unfinished"></translation>
+        <translation>El asistente quiere utilizar %1.</translation>
     </message>
     <message>
         <location line="+827"/>
@@ -1574,7 +1574,7 @@
         <translation>Usada por todos los estilos de texto en el shell</translation>
     </message>
     <message>
-        <location line="+19"/>
+        <location line="+22"/>
         <location line="+20"/>
         <source>Monospace font</source>
         <translation>Fuente monoespaciada</translation>
@@ -1585,7 +1585,7 @@
         <translation>Usado para código, previsualizaciones de terminal y etiquetas de anchura fija</translation>
     </message>
     <message>
-        <location line="+20"/>
+        <location line="+23"/>
         <source>Theme</source>
         <translation>Tema</translation>
     </message>
@@ -1635,7 +1635,12 @@
         <translation>Transparencia</translation>
     </message>
     <message>
-        <location line="+1"/>
+        <location line="-36"/>
+        <source>Choose a monospace font</source>
+        <translation>Elige una fuente monoespaciada</translation>
+    </message>
+    <message>
+        <location line="+37"/>
         <source>Enable transparency across the shell</source>
         <translation>Activar la transparencia en todo el shell</translation>
     </message>
@@ -1775,24 +1780,9 @@
         <translation>Deformación del desenfoque</translation>
     </message>
     <message>
-        <location line="+18"/>
+        <location line="-365"/>
         <source>Choose a system font</source>
         <translation>Elegir una fuente del sistema</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Monospace fonts</source>
-        <translation>Fuentes monoespaciadas</translation>
-    </message>
-    <message>
-        <location line="+0"/>
-        <source>System fonts</source>
-        <translation>Fuentes del sistema</translation>
-    </message>
-    <message>
-        <location line="+1"/>
-        <source>Apply</source>
-        <translation>Aplicar</translation>
     </message>
 </context>
 <context>
@@ -5395,17 +5385,17 @@
     <message>
         <location line="+8"/>
         <source>Double Reversed (default)</source>
-        <translation type="unfinished"></translation>
+        <translation>Doblemente invertido (Por defecto)</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>User defined</source>
-        <translation type="unfinished"></translation>
+        <translation>Definido por el usuario</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Single</source>
-        <translation type="unfinished"></translation>
+        <translation>Uno</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -5456,7 +5446,7 @@
     <message>
         <location line="+12"/>
         <source>Visualizer not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualizador no disponible</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -5466,42 +5456,42 @@
     <message>
         <location line="+73"/>
         <source>Right click on desktop -&gt; Edit Plasma Widgets -&gt; Right click visualizer -&gt; Configure</source>
-        <translation type="unfinished"></translation>
+        <translation>Click derecho en el escritorio -&gt; Editar Widgets de Plasma -&gt; Click derecho en el visualizador -&gt; Configurar</translation>
     </message>
     <message>
         <location line="-64"/>
         <source>Enable Visualizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar visualizador</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Visualizer is not visible when internal wallpaper is enabled</source>
-        <translation type="unfinished"></translation>
+        <translation>El visualizador no es bisible cuando el fondo de pantalla interno está activado</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show audio visualizer on desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostar el visualizador de audio en el escritorio</translation>
     </message>
     <message>
         <location line="+13"/>
         <source>Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Perfil</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Visualizer layout and style preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Disposición del visualizador y estilo preconfigurado</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Auto-hide visualizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Esconder visualizador automáticamente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide visualizer when a window is maximized on active workspace</source>
-        <translation type="unfinished"></translation>
+        <translation>Esconder el visualizador cuando una ventana esté maximizada en el espacio de trabajo activo</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -5516,12 +5506,12 @@
     <message>
         <location line="+14"/>
         <source>Configure Visualizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar visualizador</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Media shapes</source>
-        <translation type="unfinished"></translation>
+        <translation>Figuras multimedia</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -5782,7 +5772,7 @@
     <message>
         <location line="+1"/>
         <source>Enable icons for Caelestia desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>Activa los iconos para el escritorio de Caelestia</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -5792,7 +5782,7 @@
     <message>
         <location line="+1"/>
         <source>Override the KDE icon theme for desktop icons only</source>
-        <translation type="unfinished"></translation>
+        <translation>Anula el tema de iconos de KDE solamente para los iconos de escritorio</translation>
     </message>
     <message>
         <location line="+20"/>
@@ -5802,37 +5792,37 @@
     <message>
         <location line="+1"/>
         <source>Boost saturation of Material You icons for extra vibrancy</source>
-        <translation type="unfinished"></translation>
+        <translation>Potencia la saturación de los iconos Material You para más vitalidad</translation>
     </message>
     <message>
         <location line="+19"/>
         <source>Icon Vibrancy</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitalidad de iconos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Saturation level of vibrant Material You icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Nivel de saturación de los iconos Material You vibrantes</translation>
     </message>
     <message>
         <location line="+23"/>
         <source>Desktop Icon Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamaño de iconos de escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ctrl+scroll on the desktop also changes it</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+deslizar en el escritorio también lo cambia</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Arrange Icons Automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Organizar iconos automáticamente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep desktop icons packed; dragging one reorders the rest</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantener los iconos de escritorio juntos; arrastrar uno reordena el resto</translation>
     </message>
 </context>
 <context>
@@ -5928,13 +5918,18 @@
 <context>
     <name>DinoGame</name>
     <message>
-        <location filename="../modules/sidebar/DinoGame.qml" line="+244"/>
+        <location filename="../modules/sidebar/DinoGame.qml" line="+268"/>
         <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/DinoGame.qml" line="+162"/>
         <source>All up to date!</source>
         <translation>¡Todo está actualizado!</translation>
     </message>
     <message>
-        <location line="+85"/>
+        <location line="+8"/>
+        <source>Click to play</source>
+        <translation>Pulsa para jugar</translation>
+    </message>
+    <message>
+        <location line="+99"/>
         <source>G A M E   O V E R
 Click to restart</source>
         <translation>F I N   D E L   J U E G O
@@ -5946,6 +5941,18 @@ Hacer click para reiniciar</translation>
 Now go touch grass</source>
         <translation>¡G A N A S T E!
 Ahora salir a tocar el pasto</translation>
+    </message>
+    <message>
+        <location line="+10"/>
+        <source>New high score: %1</source>
+        <translation>Nuevo ŕecord: %1</translation>
+    </message>
+    <message>
+        <location line="+11"/>
+        <source>P A U S E D
+Click to continue</source>
+        <translation>P A U S A D O
+Pulsa para continuar</translation>
     </message>
     <message>
         <location filename="../../src/kde/shells/caelestia.desktop/contents/lockscreen/components/DinoGame.qml" line="+8"/>
@@ -6244,12 +6251,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location filename="../modules/whatsnew/Entries.qml" line="+14"/>
         <source>Floating OSD Styles</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilos de OSD flotante</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Pick a volume and brightness OSD: pill, compact, radial, card, or the edge drawer.</source>
-        <translation type="unfinished"></translation>
+        <translation>Elige un OSD de volumen y brillo: píldora, compacto, radial, tarjeta, o e cajón de borde.</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -6616,6 +6623,44 @@ Ahora salir a tocar el pasto</translation>
         <location line="+2"/>
         <source>File operation failed</source>
         <translation>La operación de archivo falló</translation>
+    </message>
+</context>
+<context>
+    <name>FontPickerRow</name>
+    <message>
+        <location filename="../modules/nexus/common/FontPickerRow.qml" line="+18"/>
+        <source>Automatic</source>
+        <translation>Automático</translation>
+    </message>
+    <message>
+        <location line="+27"/>
+        <source>Choose a monospace font</source>
+        <translation>Elige una fuente monoespaciada</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Choose a system font</source>
+        <translation>Elegir una fuente del sistema</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Monospace fonts</source>
+        <translation>Fuentes monoespaciadas</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>System fonts</source>
+        <translation>Fuentes del sistema</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Apply</source>
+        <translation>Aplicar</translation>
+    </message>
+    <message>
+        <location line="+25"/>
+        <source>Search fonts...</source>
+        <translation>Buscar fuentes...</translation>
     </message>
 </context>
 <context>
@@ -10085,22 +10130,22 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+5"/>
         <source>Compact Slider</source>
-        <translation type="unfinished"></translation>
+        <translation>Deslizador compacto</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Radial Dial HUD</source>
-        <translation type="unfinished"></translation>
+        <translation>HUD de dial radial</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Elevated Card</source>
-        <translation type="unfinished"></translation>
+        <translation>Tarjeta elevada</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Minimal Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra mínima</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -10120,17 +10165,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+5"/>
         <source>Right Side</source>
-        <translation type="unfinished"></translation>
+        <translation>Lado derecho</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Left Side</source>
-        <translation type="unfinished"></translation>
+        <translation>Lado izquierdo</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -10145,17 +10190,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Visual style for hardware buttons (volume, brightness)</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilo visual para los botones de hardware (volumen, brillo)</translation>
     </message>
     <message>
         <location line="+25"/>
         <source>Test OSD on screen</source>
-        <translation type="unfinished"></translation>
+        <translation>Probar el OSD en pantalla</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Trigger a live test of the current OSD design</source>
-        <translation type="unfinished"></translation>
+        <translation>Desencadenar una prueba en vivo del diseño actual del OSD</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10165,12 +10210,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Screen placement for the floating indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>Posición en pantalla para el indicador flotante</translation>
     </message>
     <message>
         <location line="+14"/>
         <source>Monitors</source>
-        <translation type="unfinished"></translation>
+        <translation>Pantallas</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10180,7 +10225,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Enable on-screen display popups</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar notificaciones emergentes de pantallas</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10190,7 +10235,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Show indicator on speaker volume changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostar indicador al cambiar el volumen del altavoz</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10200,7 +10245,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Show indicator on microphone volume changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar indicador al cambiar el volumen del micrófono</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10210,7 +10255,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Show indicator on display brightness changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar indicador al cambiar el brillo de la pantalla</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -10220,12 +10265,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Display indicator over fullscreen applications</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar indicador sobre aplicaciones en pantalla completa</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Timing</source>
-        <translation type="unfinished"></translation>
+        <translation>Margen de tiempo</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -10235,12 +10280,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Seconds before the indicator hides</source>
-        <translation type="unfinished"></translation>
+        <translation>Segundos antes de esconderse el indicador</translation>
     </message>
     <message>
         <location line="+10"/>
         <source>Edge Drawer (Mouse Trigger)</source>
-        <translation type="unfinished"></translation>
+        <translation>Cajón de borde (Desencadenado por ratón)</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10250,7 +10295,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Distance from the screen edge to trigger the drawer</source>
-        <translation type="unfinished"></translation>
+        <translation>Distancia desde el borde de la pantalla para activar el cajón</translation>
     </message>
     <message>
         <location line="+11"/>
@@ -10260,7 +10305,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Portion of the edge that responds to hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Porción del borde que responde al cursor</translation>
     </message>
 </context>
 <context>
@@ -10572,12 +10617,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Browse local wallpapers, online sources, and collections</source>
-        <translation type="unfinished"></translation>
+        <translation>Navegar fondos locales, fuentes en línea y colecciones</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Wallpaper Category</source>
-        <translation type="unfinished"></translation>
+        <translation>Categoría de fondo</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -10592,12 +10637,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Wallhaven, online wallpapers, tags and filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Wallhaven, fondos en línea, etiquetas y filtros</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Community wallpaper sources, tag filters, and downloads</source>
-        <translation type="unfinished"></translation>
+        <translation>Fuentes de fondos de la comunidad, filtros de etiquetas y descargas</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10607,17 +10652,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Configure wallpaper engine, mixer, and effects</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar wallpaper engine, el mezclador y los efectos</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Configure scaling, recoloring, video playback, and slideshows</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar el escalado, el recoloreado, la reproducción de vídeo, y las presentaciones</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure wallpaper engine, scaling, slideshow timing, and video playback</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar wallpaper engine, el escalado, el tiempo de las presentaciones, y la reproducción de vídeo</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10633,7 +10678,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Configure lock screen wallpaper sync and biometric fingerprint unlocking</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar la sincronización del fondo en la pantalla de bloqueo y el desbloqueo biométrico por huella dactilar</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10644,12 +10689,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Caelestia owns color management and not skwd-wall.</source>
-        <translation type="unfinished"></translation>
+        <translation>La administración de color le pertecene a Caelestia y no a skwd-wall.</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Material You color palette, scheme styles, and accent colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Paleta de color Material You, estilos de esquema, y colores de acento</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -10674,7 +10719,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>UI blur, opacity, pitch black bezel mode, fonts, and corner radius</source>
-        <translation type="unfinished"></translation>
+        <translation>Difuminado de la UI, opacidad, modo de bisel negro absoluto, fuentes, y radio de las esquinas</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10689,17 +10734,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>3-pane layout</source>
-        <translation type="unfinished"></translation>
+        <translation>Disposición de 3 paneles</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>2-pane layout</source>
-        <translation type="unfinished"></translation>
+        <translation>Disposición de 2 paneles</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Nexus window layout and subcategory side pane</source>
-        <translation type="unfinished"></translation>
+        <translation>Disposición de la ventana de Nexus y panel lateral de subcategorías</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -10709,7 +10754,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+2"/>
         <source>Desktop, addons, tiling</source>
-        <translation type="unfinished"></translation>
+        <translation>Escritorio, complementos, mosaico</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -10749,7 +10794,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Audio visualizer, wallpaper clock, auto-hide, and desktop widgets</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualizador de audio, reloj de fondo, esconder automáticamente, y widgets de escritorio</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -10764,7 +10809,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Customize desktop context menu entries, actions, and tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Personalizar las entradas del menú de contexto del escritorio, acciones, y herramientas</translation>
     </message>
     <message>
         <location line="+8"/>
@@ -10793,7 +10838,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="-195"/>
         <source>Automatic window tiling, Krohnkite layout rules, and floating exceptions</source>
-        <translation type="unfinished"></translation>
+        <translation>Moscaico de ventanas automático, reglas de disposición de Krohnkite, y excepciones flotantes</translation>
     </message>
     <message>
         <location line="+9"/>
@@ -10823,12 +10868,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="-176"/>
         <source>Performance monitor, media visualizer, and dashboard clock widgets</source>
-        <translation type="unfinished"></translation>
+        <translation>Monitor de rendimiento, visualizador de medios, y widgets de reloj del panel</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Taskbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra de tareas</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -10848,7 +10893,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Bar position, visibility behavior, workspaces, tray, and dock modules</source>
-        <translation type="unfinished"></translation>
+        <translation>Posición de la barra, comportamiento de visibilidad, espacios de trabajo, bandeja y módulos del dock</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -10873,7 +10918,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Status Icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Iconos de estado</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10893,7 +10938,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Preview Scales</source>
-        <translation type="unfinished"></translation>
+        <translation>Previsualizar escalas</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10903,7 +10948,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Updates Indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>Indicador de actualizaciones</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -10939,17 +10984,17 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Application search, fuzzy matching, clipboard history, and categories</source>
-        <translation type="unfinished"></translation>
+        <translation>Búsqueda de aplicaciones, coincidencia aproximada, historial de portapapeles, y categorías</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Sidebar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra lateral</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Slide-out sidebar, notifications, and quick widgets</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra lateral deslizante, notificaciones, y widgets rápidos</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10959,7 +11004,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Quick settings toggles panel layout and button ordering</source>
-        <translation type="unfinished"></translation>
+        <translation>Los ajustes rápidos cambian la disposición del panel y el orden de los botones</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10969,7 +11014,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Window overview, workspace thumbnails, and gesture hot corners</source>
-        <translation type="unfinished"></translation>
+        <translation>Vista de ventanas, miniaturas de espacio de trabajo, y esquinas para gestos</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -10989,12 +11034,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Alt+Tab task switcher, window previews, and desktop filters</source>
-        <translation type="unfinished"></translation>
+        <translation>Selector de ventanas en Alt+Tab, previsualización de ventanas, y filtros de escritorio</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -11009,37 +11054,37 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Radial</source>
-        <translation type="unfinished"></translation>
+        <translation>Radial</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Card</source>
-        <translation type="unfinished"></translation>
+        <translation>Tarjeta</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Minimal Bar</source>
-        <translation type="unfinished"></translation>
+        <translation>Barra mínima</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Default (Edge)</source>
-        <translation type="unfinished"></translation>
+        <translation>Por defecto (Borde)</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>On-screen display styles, volume and brightness sliders, and positioning</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilos de ajustes en pantalla, deslizadores para volumen y brillo, y posicionamiento</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Network &amp; Connectivity</source>
-        <translation type="unfinished"></translation>
+        <translation>Red y conectividad</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Wi-Fi, Bluetooth, network</source>
-        <translation type="unfinished"></translation>
+        <translation>Wi-Fi, Bluetooth, red</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -11059,7 +11104,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Wi-Fi, wired ethernet, IPv4 gateways, and VPN tunnel connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Wi-Fi, ethernet, puertas de enlace IPv4, y conexiones túnel VPN</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -11069,82 +11114,82 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Add Network</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir red</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Network Detail</source>
-        <translation type="unfinished"></translation>
+        <translation>Detalles de red</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Add VPN</source>
-        <translation type="unfinished"></translation>
+        <translation>Añadir VPN</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>All Networks</source>
-        <translation type="unfinished">Todas las redes</translation>
+        <translation>Todas las redes</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>%1 available</source>
-        <translation type="unfinished"></translation>
+        <translation>%1 disponible</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Scan and connect to available Wi-Fi access points</source>
-        <translation type="unfinished"></translation>
+        <translation>Escanear y conectarse a puntos de acceso Wi-Fi disponibles</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Saved Networks</source>
-        <translation type="unfinished">Redes guardadas</translation>
+        <translation>Redes guardadas</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Manage known connections</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrar conexiones conocidas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Manage remembered Wi-Fi profiles and stored credentials</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrar perfiles Wi-Fi recordados y credenciales guardadas</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Hotspot</source>
-        <translation type="unfinished">Punto de acceso</translation>
+        <translation>Punto de acceso</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Active</source>
-        <translation type="unfinished">Activo</translation>
+        <translation>Activo</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Inactive</source>
-        <translation type="unfinished">Inactivo</translation>
+        <translation>Inactivo</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Share network connection with other devices via Wi-Fi hotspot</source>
-        <translation type="unfinished"></translation>
+        <translation>Compartir la conexión de red con otros dispositivos mediante el punto de acceso Wi-Fi</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Proxy</source>
-        <translation type="unfinished">Proxy</translation>
+        <translation>Proxy</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Network proxy settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configuración del proxy de red</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>HTTP, HTTPS, SOCKS, and automatic PAC proxy configurations</source>
-        <translation type="unfinished"></translation>
+        <translation>Configuraciones de HTTP, HTTPS, SOCKS, y proxy PAC automático</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -11155,12 +11200,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+2"/>
         <source>Manage paired Bluetooth accessories, discoverable visibility, and audio sinks</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrar accesorios Bluetooth emparejados, la visibilidad a otros dispositivos y los sumideros de audio</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Device Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Información de dispositivo</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -11170,12 +11215,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+7"/>
         <source>Display &amp; Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Pantalla y sonido</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Displays, audio, notifications</source>
-        <translation type="unfinished"></translation>
+        <translation>Pantallas, audio, notificaciones</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -11195,269 +11240,269 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Resolution, refresh rate, orientation, fractional scaling, and HDR</source>
-        <translation type="unfinished"></translation>
+        <translation>Resolución, tasa de refresco, orientación, escalado fraccional, y HDR</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Display Modes</source>
-        <translation type="unfinished"></translation>
+        <translation>Modos de visualización</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Audio</source>
-        <translation type="unfinished">Audio</translation>
+        <translation>Audio</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Sound &amp; Audio</source>
-        <translation type="unfinished"></translation>
+        <translation>Sonido y audio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Muted</source>
-        <translation type="unfinished">Silenciado</translation>
+        <translation>Silenciado</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>%1%</source>
-        <translation type="unfinished">%1%</translation>
+        <translation>%1%</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Output speakers, input microphones, master volume, and balances</source>
-        <translation type="unfinished"></translation>
+        <translation>Altavoces de salida, micrófonos de entrada, volumen maestro, y balances</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>App Volumes</source>
-        <translation type="unfinished">Volumen de aplicaciones</translation>
+        <translation>Volumen de aplicaciones</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Sounds</source>
-        <translation type="unfinished">Sonidos</translation>
+        <translation>Sonidos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Muted Apps</source>
-        <translation type="unfinished">Aplicaciones silenciadas</translation>
+        <translation>Aplicaciones silenciadas</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Notification Behaviour</source>
-        <translation type="unfinished">Comportamiento de notificaciones</translation>
+        <translation>Comportamiento de notificaciones</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+9"/>
         <source>Notifications</source>
-        <translation type="unfinished">Notificaciones</translation>
+        <translation>Notificaciones</translation>
     </message>
     <message>
         <location line="-8"/>
         <source>Position, timeout, and display behavior</source>
-        <translation type="unfinished">Posición, tiempo de espera y comportamiento de visualización</translation>
+        <translation>Posición, tiempo de espera y comportamiento de visualización</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Notification banners, positions, timeouts, toasts, and focus sessions</source>
-        <translation type="unfinished"></translation>
+        <translation>Banners de notificación, posiciones, tiempo límite, notifiaciones emergentes y sesiones de concentración</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Toasts</source>
-        <translation type="unfinished">Notificaciones emergentes</translation>
+        <translation>Notificaciones emergentes</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Toast Events</source>
-        <translation type="unfinished">Eventos emergentes</translation>
+        <translation>Eventos emergentes</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Focus Sessions</source>
-        <translation type="unfinished">Sesiones de concentración</translation>
+        <translation>Sesiones de concentración</translation>
     </message>
     <message>
         <location line="+8"/>
         <source>Utilities &amp; Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilidades y herramientas</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Utilities panel, toggles, game mode, AI</source>
-        <translation type="unfinished"></translation>
+        <translation>Panel de utilidades, interrupotores, modo de juego, IA</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Utilities panel</source>
-        <translation type="unfinished">Panel de utilidades</translation>
+        <translation>Panel de utilidades</translation>
     </message>
     <message>
         <location line="+2"/>
         <location line="+11"/>
         <source>Quick controls</source>
-        <translation type="unfinished">Atajo de controles</translation>
+        <translation>Atajo de controles</translation>
     </message>
     <message>
         <location line="-10"/>
         <source>Choose the cards shown in the panel</source>
-        <translation type="unfinished">Elegir las tarjetas que se muestran en el panel</translation>
+        <translation>Elegir las tarjetas que se muestran en el panel</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Choose cards and monitors pinned in the slide-out utilities panel</source>
-        <translation type="unfinished"></translation>
+        <translation>Elige tarjetas y monitores fijados en el panel de utilidades deslizante</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Quick toggles</source>
-        <translation type="unfinished">Atajos rápidos</translation>
+        <translation>Atajos rápidos</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Choose the controls shown in Quick Toggles</source>
-        <translation type="unfinished">Elegir los controles que se muestran en Atajos rápidos</translation>
+        <translation>Elegir los controles que se muestran en Atajos rápidos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Select which switches appear in the dashboard quick toggles</source>
-        <translation type="unfinished"></translation>
+        <translation>Elije que botones aparecen en los interruptores rápidos del panel</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Game Mode</source>
-        <translation type="unfinished">Modo de juego</translation>
+        <translation>Modo de juego</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Auto-enable rules and performance overrides</source>
-        <translation type="unfinished">Reglas de activación automática y ajustes de rendimiento</translation>
+        <translation>Reglas de activación automática y ajustes de rendimiento</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Performance mode, window rule targets, and GPU profile boosts</source>
-        <translation type="unfinished"></translation>
+        <translation>Modo rendimiento, objetivos de reglas de ventana, y potenciador del perfil de GPU</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>Auto-enable rules</source>
-        <translation type="unfinished">Reglas de activación automática</translation>
+        <translation>Reglas de activación automática</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Quick Share</source>
-        <translation type="unfinished">Quick Share</translation>
+        <translation>Quick Share</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>File sharing</source>
-        <translation type="unfinished">Compartir archivos</translation>
+        <translation>Compartir archivos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Send files to nearby devices</source>
-        <translation type="unfinished">Enviar archivos a dispositivos cercanos</translation>
+        <translation>Enviar archivos a dispositivos cercanos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Nearby file sharing over Wi-Fi and Bluetooth to Android and Linux devices</source>
-        <translation type="unfinished"></translation>
+        <translation>Compartir archivos por Wi-Fi y Bluetooth a dispositivos Android y Linux cercanos</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>AI Assistant</source>
-        <translation type="unfinished">Asistente IA</translation>
+        <translation>Asistente IA</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>AI</source>
-        <translation type="unfinished"></translation>
+        <translation>IA</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Models, providers, and parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Modelos, proveedores y parámetros</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ollama local models, Claude accounts, and API provider configurations</source>
-        <translation type="unfinished"></translation>
+        <translation>Modelos locales de Ollama, cuentas de Claude, y configuraciones de proveedores de API</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>Applications &amp; Shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplicaciones y atajdos</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Default apps, shortcuts</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplicaciones por defecto, atajos</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Apps</source>
-        <translation type="unfinished">Aplicaciones</translation>
+        <translation>Aplicaciones</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Default openers, installed apps, and search</source>
-        <translation type="unfinished"></translation>
+        <translation>Abrir por defecto con, aplicaciones instaladas y búsqueda</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Default web browser, email client, file manager, and MIME file associations</source>
-        <translation type="unfinished"></translation>
+        <translation>Navegador predeterminado, cliente email, administrador de archivos, y asociaciones MIME para archivos</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>All Apps</source>
-        <translation type="unfinished">Todas las aplicaciones</translation>
+        <translation>Todas las aplicaciones</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Browse and manage desktop apps</source>
-        <translation type="unfinished"></translation>
+        <translation>Navega y administra aplicaciones de escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Inspect installed applications, launcher favorites, and uninstalled items</source>
-        <translation type="unfinished"></translation>
+        <translation>Inspecciona aplicaciones instaladas, los favoritos del launcher, y los items desinstalados</translation>
     </message>
     <message>
         <location line="+4"/>
         <source>App Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Información de la aplicación</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Keyboard Shortcuts</source>
-        <translation type="unfinished">Atajos de teclado</translation>
+        <translation>Atajos de teclado</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>View and configure shell keybindings</source>
-        <translation type="unfinished"></translation>
+        <translation>Ver y configurar los atajos de teclado del shell</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure system hotkeys, window management keys, and custom scripts</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar los atajos de teclado del systema, las teclas de administración de ventana, y los scripts personalizados</translation>
     </message>
     <message>
         <location line="+9"/>
         <source>System &amp; Services</source>
-        <translation type="unfinished"></translation>
+        <translation>Systema y servicios</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Session, services, storage, about</source>
-        <translation type="unfinished"></translation>
+        <translation>Sesión, servicios, almacenamiento, acerca</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Session</source>
-        <translation type="unfinished">Sesión</translation>
+        <translation>Sesión</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -11467,97 +11512,97 @@ Ahora salir a tocar el pasto</translation>
         <location line="+11"/>
         <location line="+11"/>
         <source>System</source>
-        <translation type="unfinished">Sistema</translation>
+        <translation>Sistema</translation>
     </message>
     <message>
         <location line="-54"/>
         <source>Power, lock, and logout options</source>
-        <translation type="unfinished"></translation>
+        <translation>Opciones de energía, bloquear y cerrar sesión</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Shutdown, restart, sleep, hibernate, lock screen, and logout controls</source>
-        <translation type="unfinished"></translation>
+        <translation>Controles de apagar, reiniciar, suspender, hibernar, pantalla de bloqueo y cierre de sesión</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>System Services</source>
-        <translation type="unfinished">Servicios del sistema</translation>
+        <translation>Servicios del sistema</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Lyrics, GPU, and system integration</source>
-        <translation type="unfinished"></translation>
+        <translation>Letras, GPU, e integración del sistema</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Background services, cava audio visualizer, GPU monitors, and systemd daemons</source>
-        <translation type="unfinished"></translation>
+        <translation>Servicios en segundo plano, visualizador de audio cava, monitores de GPU, y daemons de systemd</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Language &amp; Region</source>
-        <translation type="unfinished">Idioma y región</translation>
+        <translation>Idioma y región</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>System locale, spellcheck, and formats</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma del sistema, comprobación de la escritura y formatos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Display language, regional formats, timezones, and spellcheck options</source>
-        <translation type="unfinished"></translation>
+        <translation>Idioma a mostrar, formatos regionales, zonas horarias y opciones de la comprobación de escritura</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Accessibility</source>
-        <translation type="unfinished">Accesibilidad</translation>
+        <translation>Accesibilidad</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Vision, hearing, and interaction aids</source>
-        <translation type="unfinished"></translation>
+        <translation>Ayudas de visión, escucha e interacción</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Font scale, motion reduction, color filters, and screen reader assistance</source>
-        <translation type="unfinished"></translation>
+        <translation>Asistencia de escala de fuente, reducción de movimiento, filtros de color, y lector de pantalla</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Storage</source>
-        <translation type="unfinished">Almacenamiento</translation>
+        <translation>Almacenamiento</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Mount points, free space, and drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Puntos de montaje, espacio libre y discos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Inspect disks, partition free space, mount points, and eject removable drives</source>
-        <translation type="unfinished"></translation>
+        <translation>Inspeccionar discos, espacio libre de particiones, puntos de montado, y eyectar unidades extraíbles</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>About</source>
-        <translation type="unfinished">Acerca de</translation>
+        <translation>Acerca de</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>System specifications and versions</source>
-        <translation type="unfinished"></translation>
+        <translation>Especificaciones del sistema y versiones</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hardware specs, kernel release, Quickshell shell version, and license details</source>
-        <translation type="unfinished"></translation>
+        <translation>Hardware, versión del kernel, versión de la shell Quickshell, y detalles de licencia</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Discord Rich Presence</source>
-        <translation type="unfinished">Presencia enriquecida de Discord</translation>
+        <translation>Presencia enriquecida de Discord</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -11566,17 +11611,17 @@ Ahora salir a tocar el pasto</translation>
         <location line="+13"/>
         <location line="+11"/>
         <source>Services</source>
-        <translation type="unfinished">Servicios</translation>
+        <translation>Servicios</translation>
     </message>
     <message>
         <location line="-45"/>
         <source>Broadcast your activity to Discord</source>
-        <translation type="unfinished"></translation>
+        <translation>Transmite tu actividad a Discord</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Connect system media playback and active games to Discord rich presence</source>
-        <translation type="unfinished"></translation>
+        <translation>Conecta la reproducción de medios del sistema y los juegos activos a la presencia enriquecida de Discord</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -11586,27 +11631,27 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Sync calendar events and accounts</source>
-        <translation type="unfinished"></translation>
+        <translation>Sincronizar eventos del calendario y cuentas</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Google, Nextcloud, and local ICS calendar sync with taskbar popout</source>
-        <translation type="unfinished"></translation>
+        <translation>Los calendarios de Google, Nextcloud, e ICS locales se sincronizan con la barra de tareas</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Startup Applications</source>
-        <translation type="unfinished">Aplicaciones de autoinicio</translation>
+        <translation>Aplicaciones de autoinicio</translation>
     </message>
     <message>
         <location line="+3"/>
         <source>Manage apps launched upon login</source>
-        <translation type="unfinished"></translation>
+        <translation>Administra las aplicaciones iniciadas al iniciar sesión</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure autostart programs, services, and background scripts on login</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar los programas de autoinicio, servicios, y scripts en segundo plano al iniciar sesión</translation>
     </message>
     <message>
         <location line="+4"/>
@@ -11621,12 +11666,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Manage installed extensions and add-ons</source>
-        <translation type="unfinished"></translation>
+        <translation>Administrar extensiones y complementos instalados</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Configure, enable, or disable Caelestia shell plugins and extensions</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurar, activar o desactivar extensiones y complementos de la shell de Caelestia</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -11636,12 +11681,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+3"/>
         <source>Check for package and system updates</source>
-        <translation type="unfinished"></translation>
+        <translation>Comprobar actualizaciones de paquetes y sistema</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Pacman, flatpak, firmware updates, and Caelestia shell version upgrades</source>
-        <translation type="unfinished"></translation>
+        <translation>Pacman, flatpak, actualizaciones de firmware, y actualizaciones de la versión de Caelestia</translation>
     </message>
     <message>
         <location line="+87"/>
@@ -11651,7 +11696,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+6"/>
         <source>This page is not available in this build. Update the shell to get it.</source>
-        <translation type="unfinished"></translation>
+        <translation>Esta página no está disponible en esta compilación. Actualiza el shell para desbloquearla.</translation>
     </message>
 </context>
 <context>
@@ -12033,12 +12078,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2685"/>
+        <location line="+2692"/>
         <source>Transparency</source>
         <translation>Transparencia</translation>
     </message>
     <message>
-        <location line="-2684"/>
+        <location line="-2691"/>
         <source>Enable transparency across the shell</source>
         <translation>Activar la transparencia en todo el shell</translation>
     </message>
@@ -12206,12 +12251,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+6"/>
         <location line="+7"/>
-        <location line="+2009"/>
+        <location line="+2016"/>
         <source>Discord Rich Presence</source>
         <translation>Presencia enriquecida de Discord</translation>
     </message>
     <message>
-        <location line="-2031"/>
+        <location line="-2038"/>
         <source>Auto-detect Steam games</source>
         <translation>Detectar automáticamente los juegos de Steam</translation>
     </message>
@@ -12284,7 +12329,7 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2089"/>
+        <location line="+2096"/>
         <location line="+7"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -12299,7 +12344,7 @@ Ahora salir a tocar el pasto</translation>
         <translation>Sonidos</translation>
     </message>
     <message>
-        <location line="-2144"/>
+        <location line="-2151"/>
         <source>Muted notification apps</source>
         <translation>Aplicaciones con notificaciones silenciadas</translation>
     </message>
@@ -12327,12 +12372,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+328"/>
-        <location line="+1846"/>
+        <location line="+1853"/>
         <source>Clock</source>
         <translation>Reloj</translation>
     </message>
     <message>
-        <location line="-2196"/>
+        <location line="-2203"/>
         <source>Show date</source>
         <translation>Mostrar fecha</translation>
     </message>
@@ -12377,12 +12422,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+286"/>
-        <location line="+1846"/>
+        <location line="+1853"/>
         <source>Dock</source>
         <translation>Dock</translation>
     </message>
     <message>
-        <location line="-2169"/>
+        <location line="-2176"/>
         <source>Icon size</source>
         <translation>Tamaño de los iconos</translation>
     </message>
@@ -12414,12 +12459,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2090"/>
+        <location line="+2097"/>
         <source>Filter by current desktop</source>
         <translation>Filtrar por escritorio actual</translation>
     </message>
     <message>
-        <location line="-2089"/>
+        <location line="-2096"/>
         <source>Only show applications and windows belonging to the active virtual desktop</source>
         <translation>Mostrar solo las aplicaciones y ventanas que pertenecen al escritorio virtual activo</translation>
     </message>
@@ -12435,12 +12480,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+2083"/>
+        <location line="+2090"/>
         <source>Preview window on desktop</source>
         <translation>Previsualizar ventana en el escritorio</translation>
     </message>
     <message>
-        <location line="-2082"/>
+        <location line="-2089"/>
         <source>Highlight and show the window itself on the workspace while hovering over dock previews</source>
         <translation>Resaltar y mostrar la ventana en el espacio de trabajo al pasar el cursor sobre las vistas previas del Dock</translation>
     </message>
@@ -12457,12 +12502,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <location line="+285"/>
-        <location line="+1846"/>
+        <location line="+1853"/>
         <source>GitHub</source>
         <translation>GitHub</translation>
     </message>
     <message>
-        <location line="-2125"/>
+        <location line="-2132"/>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+7"/>
@@ -12486,12 +12531,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+103"/>
-        <location line="+1852"/>
+        <location line="+1859"/>
         <source>Greeter</source>
         <translation>Pantalla de bienvenida</translation>
     </message>
     <message>
-        <location line="-2090"/>
+        <location line="-2097"/>
         <source>Inverted</source>
         <translation>Invertido</translation>
     </message>
@@ -12506,13 +12551,13 @@ Ahora salir a tocar el pasto</translation>
         <location line="+513"/>
         <location line="+608"/>
         <location line="+517"/>
-        <location line="+533"/>
+        <location line="+540"/>
         <location line="+238"/>
         <source>Show on hover</source>
         <translation>Mostrar al pasar el cursor</translation>
     </message>
     <message>
-        <location line="-2402"/>
+        <location line="-2409"/>
         <location line="+336"/>
         <location line="+26"/>
         <source>Popout on hover</source>
@@ -12757,12 +12802,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+327"/>
-        <location line="+1585"/>
+        <location line="+1592"/>
         <source>Performance</source>
         <translation>Rendimiento</translation>
     </message>
     <message>
-        <location line="-1928"/>
+        <location line="-1935"/>
         <source>Show values</source>
         <translation>Mostrar valores</translation>
     </message>
@@ -12879,13 +12924,13 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+1810"/>
+        <location line="+1817"/>
         <location line="+176"/>
         <source>Now playing</source>
         <translation>Reproduciendo ahora</translation>
     </message>
     <message>
-        <location line="-1980"/>
+        <location line="-1987"/>
         <source>Show screenshot buttons</source>
         <translation>Mostrar botones de captura</translation>
     </message>
@@ -12898,12 +12943,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+1"/>
         <location line="+7"/>
         <location line="+7"/>
-        <location line="+2113"/>
+        <location line="+2120"/>
         <source>Screen Capture</source>
         <translation>Captura de pantalla</translation>
     </message>
     <message>
-        <location line="-2122"/>
+        <location line="-2129"/>
         <source>Show recording buttons</source>
         <translation>Mostrar botones de grabación</translation>
     </message>
@@ -12936,12 +12981,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <location line="+7"/>
-        <location line="+1750"/>
+        <location line="+1757"/>
         <source>Status icons</source>
         <translation>Iconos de estado</translation>
     </message>
     <message>
-        <location line="-1751"/>
+        <location line="-1758"/>
         <source>Show a details popout when hovering the status icons</source>
         <translation>Mostrar una ventana emergente con detalles al pasar el cursor sobre los iconos de estado</translation>
     </message>
@@ -12950,12 +12995,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="+6"/>
         <location line="+7"/>
         <location line="+7"/>
-        <location line="+1718"/>
+        <location line="+1725"/>
         <source>Tray</source>
         <translation>Bandeja del sistema</translation>
     </message>
     <message>
-        <location line="-1727"/>
+        <location line="-1734"/>
         <source>Compact</source>
         <translation>Compacto</translation>
     </message>
@@ -12973,7 +13018,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <location line="+6"/>
-        <location line="+1754"/>
+        <location line="+1761"/>
         <location line="+247"/>
         <location line="+7"/>
         <location line="+6"/>
@@ -12981,7 +13026,7 @@ Ahora salir a tocar el pasto</translation>
         <translation>Actualizaciones</translation>
     </message>
     <message>
-        <location line="-2015"/>
+        <location line="-2022"/>
         <source>Turn on update checking</source>
         <translation>Activar la comprobación de actualizaciones</translation>
     </message>
@@ -13001,12 +13046,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="-665"/>
         <location line="+6"/>
         <location line="+156"/>
-        <location line="+1573"/>
+        <location line="+1580"/>
         <source>Weather</source>
         <translation>Tiempo</translation>
     </message>
     <message>
-        <location line="-1730"/>
+        <location line="-1737"/>
         <source>Location</source>
         <translation>Localización</translation>
     </message>
@@ -13031,13 +13076,13 @@ Ahora salir a tocar el pasto</translation>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+7"/>
-        <location line="+1615"/>
+        <location line="+1622"/>
         <location line="+161"/>
         <source>Workspaces</source>
         <translation>Espacios de trabajo</translation>
     </message>
     <message>
-        <location line="-1830"/>
+        <location line="-1837"/>
         <source>Active indicator</source>
         <translation>Indicador activo</translation>
     </message>
@@ -13156,23 +13201,23 @@ Ahora salir a tocar el pasto</translation>
         <location line="+263"/>
         <location line="+313"/>
         <location line="+493"/>
-        <location line="+331"/>
+        <location line="+338"/>
         <location line="+21"/>
         <location line="+475"/>
         <source>Enabled</source>
         <translation>Activado</translation>
     </message>
     <message>
-        <location line="-1895"/>
+        <location line="-1902"/>
         <location line="+7"/>
         <location line="+608"/>
-        <location line="+1281"/>
+        <location line="+1288"/>
         <location line="+7"/>
         <source>Reveal when the cursor reaches the screen edge</source>
         <translation>Mostrar cuando el cursor llegue al borde de la pantalla</translation>
     </message>
     <message>
-        <location line="-1902"/>
+        <location line="-1909"/>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+7"/>
@@ -13275,12 +13320,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+12"/>
-        <location line="+1266"/>
+        <location line="+1273"/>
         <source>GPU</source>
         <translation>GPU</translation>
     </message>
     <message>
-        <location line="-1260"/>
+        <location line="-1267"/>
         <source>CPU</source>
         <translation>CPU</translation>
     </message>
@@ -13291,31 +13336,31 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+1409"/>
+        <location line="+1416"/>
         <source>Storage</source>
         <translation>Almacenamiento</translation>
     </message>
     <message>
-        <location line="-1397"/>
+        <location line="-1404"/>
         <location line="+529"/>
-        <location line="+1247"/>
+        <location line="+1254"/>
         <source>Hover trigger depth</source>
         <translation>Profundidad del activador al pasar el cursor</translation>
     </message>
     <message>
-        <location line="-1775"/>
+        <location line="-1782"/>
         <source>Distance in from the screen edge that opens the dashboard</source>
         <translation>Distancia desde el borde de la pantalla que abre el panel</translation>
     </message>
     <message>
         <location line="+6"/>
         <location line="+529"/>
-        <location line="+1247"/>
+        <location line="+1254"/>
         <source>Hover trigger width</source>
         <translation>Ancho del activador al pasar el cursor</translation>
     </message>
     <message>
-        <location line="-1775"/>
+        <location line="-1782"/>
         <source>How much of the top edge opens the dashboard, as a percentage of its width</source>
         <translation>Porcentaje del borde superior que abre el panel, según su ancho</translation>
     </message>
@@ -13323,7 +13368,7 @@ Ahora salir a tocar el pasto</translation>
         <location line="+6"/>
         <location line="+529"/>
         <location line="+469"/>
-        <location line="+268"/>
+        <location line="+275"/>
         <location line="+14"/>
         <location line="+244"/>
         <location line="+252"/>
@@ -13331,7 +13376,7 @@ Ahora salir a tocar el pasto</translation>
         <translation>Umbral de arrastre</translation>
     </message>
     <message>
-        <location line="-1775"/>
+        <location line="-1782"/>
         <source>Pixels dragged before the dashboard opens</source>
         <translation>Píxeles que se deben arrastrar antes de abrir el panel</translation>
     </message>
@@ -13371,32 +13416,32 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+6"/>
         <source>Visualizer not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Visualizador no disponible</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Enable Visualizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar visualizador</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Profile</source>
-        <translation type="unfinished"></translation>
+        <translation>Perfil</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Visualizer layout and style preset</source>
-        <translation type="unfinished"></translation>
+        <translation>Disposición del visualizador y estilo preconfigurado</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Auto-hide visualizer</source>
-        <translation type="unfinished"></translation>
+        <translation>Esconder visualizador automáticamente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide visualizer when a window is maximized on active workspace</source>
-        <translation type="unfinished"></translation>
+        <translation>Esconder el visualizador cuando una ventana esté maximizada en el espacio de trabajo activo</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -13421,12 +13466,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+6"/>
         <source>Disable Quickshell Desktop</source>
-        <translation type="unfinished">Desactivar el escritorio de Quickshell</translation>
+        <translation>Desactivar el escritorio de Quickshell</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Completely disable quickshell desktop features and use plasma desktop.</source>
-        <translation type="unfinished">Desactivar las funciones del escritorio de Quickshell completamente y utilizar el escritorio de plasma.</translation>
+        <translation>Desactivar las funciones del escritorio de Quickshell completamente y utilizar el escritorio de plasma.</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -13447,57 +13492,57 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Enable icons for Caelestia desktop</source>
-        <translation type="unfinished"></translation>
+        <translation>Activa los iconos para el escritorio de Caelestia</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Material You Icons</source>
-        <translation type="unfinished">Iconos Material You</translation>
+        <translation>Iconos Material You</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Override the KDE icon theme for desktop icons only</source>
-        <translation type="unfinished"></translation>
+        <translation>Anula el tema de iconos de KDE solamente para los iconos de escritorio</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Vibrant Icons</source>
-        <translation type="unfinished">Vibrant Icons</translation>
+        <translation>Vibrant Icons</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Boost saturation of Material You icons for extra vibrancy</source>
-        <translation type="unfinished"></translation>
+        <translation>Potencia la saturación de los iconos Material You para más vitalidad</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Icon Vibrancy</source>
-        <translation type="unfinished"></translation>
+        <translation>Vitalidad de iconos</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Saturation level of vibrant Material You icons</source>
-        <translation type="unfinished"></translation>
+        <translation>Nivel de saturación de los iconos Material You vibrantes</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Desktop Icon Size</source>
-        <translation type="unfinished"></translation>
+        <translation>Tamaño de iconos de escritorio</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Ctrl+scroll on the desktop also changes it</source>
-        <translation type="unfinished"></translation>
+        <translation>Ctrl+deslizar en el escritorio también lo cambia</translation>
     </message>
     <message>
         <location line="+6"/>
         <source>Arrange Icons Automatically</source>
-        <translation type="unfinished"></translation>
+        <translation>Organizar iconos automáticamente</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Keep desktop icons packed; dragging one reorders the rest</source>
-        <translation type="unfinished"></translation>
+        <translation>Mantener los iconos de escritorio juntos; arrastrar uno reordena el resto</translation>
     </message>
     <message>
         <location line="+7"/>
@@ -13519,7 +13564,7 @@ Ahora salir a tocar el pasto</translation>
         <location line="+1"/>
         <location line="+7"/>
         <source>How large everything is drawn</source>
-        <translation type="unfinished"></translation>
+        <translation>Cómo de grande se dibuja todo</translation>
     </message>
     <message>
         <location line="-1"/>
@@ -14083,12 +14128,12 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+709"/>
+        <location line="+716"/>
         <source>Vim keybinds</source>
         <translation>Atajos de Vim</translation>
     </message>
     <message>
-        <location line="-708"/>
+        <location line="-715"/>
         <source>Navigate results with Ctrl+hjkl</source>
         <translation>Navegar por los resultados con Ctrl+hjkl</translation>
     </message>
@@ -14380,12 +14425,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+5"/>
         <location line="+164"/>
-        <location line="+740"/>
+        <location line="+747"/>
         <source>Show in fullscreen</source>
         <translation>Mostrar en pantalla completa</translation>
     </message>
     <message>
-        <location line="-903"/>
+        <location line="-910"/>
         <source>Allow notifications over fullscreen apps</source>
         <translation>Permitir notificaciones sobre aplicaciones en pantalla completa</translation>
     </message>
@@ -14421,12 +14466,12 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+6"/>
         <location line="+115"/>
-        <location line="+596"/>
+        <location line="+603"/>
         <source>Position</source>
         <translation>Posición</translation>
     </message>
     <message>
-        <location line="-710"/>
+        <location line="-717"/>
         <source>Where notification popups appear</source>
         <translation>Dónde aparecen las notificaciones emergentes</translation>
     </message>
@@ -14542,7 +14587,7 @@ Ahora salir a tocar el pasto</translation>
     </message>
     <message>
         <location line="+12"/>
-        <location line="+802"/>
+        <location line="+809"/>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+7"/>
@@ -14552,8 +14597,8 @@ Ahora salir a tocar el pasto</translation>
         <translation>Notificaciones emergentes</translation>
     </message>
     <message>
-        <location line="-829"/>
-        <location line="+711"/>
+        <location line="-836"/>
+        <location line="+718"/>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -14571,14 +14616,14 @@ Ahora salir a tocar el pasto</translation>
         <translation>Eventos emergentes</translation>
     </message>
     <message>
-        <location line="-777"/>
+        <location line="-784"/>
         <source>Design</source>
         <translation>Diseño</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Visual style for hardware buttons (volume, brightness)</source>
-        <translation type="unfinished"></translation>
+        <translation>Estilo visual para los botones de hardware (volumen, brillo)</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -14592,28 +14637,28 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+7"/>
         <source>OSD</source>
-        <translation type="unfinished"></translation>
+        <translation>OSD</translation>
     </message>
     <message>
         <location line="-57"/>
         <source>Screen placement for the floating indicator</source>
-        <translation type="unfinished"></translation>
+        <translation>Posición en pantalla para el indicador flotante</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Enable on-screen display popups</source>
-        <translation type="unfinished"></translation>
+        <translation>Activar notificaciones emergentes de pantallas</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+663"/>
+        <location line="+670"/>
         <source>Volume</source>
         <translation>Volumen</translation>
     </message>
     <message>
-        <location line="-662"/>
+        <location line="-669"/>
         <source>Show indicator on speaker volume changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostar indicador al cambiar el volumen del altavoz</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14623,23 +14668,23 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Show indicator on microphone volume changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar indicador al cambiar el volumen del micrófono</translation>
     </message>
     <message>
         <location line="+6"/>
-        <location line="+656"/>
+        <location line="+663"/>
         <source>Brightness</source>
         <translation>Brillo</translation>
     </message>
     <message>
-        <location line="-655"/>
+        <location line="-662"/>
         <source>Show indicator on display brightness changes</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar indicador al cambiar el brillo de la pantalla</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Display indicator over fullscreen applications</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar indicador sobre aplicaciones en pantalla completa</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14649,7 +14694,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Seconds before the indicator hides</source>
-        <translation type="unfinished"></translation>
+        <translation>Segundos antes de esconderse el indicador</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14659,7 +14704,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Distance from the screen edge to trigger the drawer</source>
-        <translation type="unfinished"></translation>
+        <translation>Distancia desde el borde de la pantalla para activar el cajón</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14669,7 +14714,7 @@ Ahora salir a tocar el pasto</translation>
     <message>
         <location line="+1"/>
         <source>Portion of the edge that responds to hover</source>
-        <translation type="unfinished"></translation>
+        <translation>Porción del borde que responde al cursor</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -14849,12 +14894,12 @@ Ahora salir a tocar el pasto</translation>
         <location line="-6"/>
         <location line="+7"/>
         <location line="+7"/>
-        <location line="+678"/>
+        <location line="+685"/>
         <source>Quick Share</source>
         <translation>Quick Share</translation>
     </message>
     <message>
-        <location line="-680"/>
+        <location line="-687"/>
         <source>Start automatically</source>
         <translation>Iniciar automáticamente</translation>
     </message>
@@ -14911,6 +14956,7 @@ Ahora salir a tocar el pasto</translation>
         <location line="+7"/>
         <location line="+7"/>
         <location line="+7"/>
+        <location line="+7"/>
         <location line="+6"/>
         <location line="+6"/>
         <location line="+6"/>
@@ -14920,7 +14966,7 @@ Ahora salir a tocar el pasto</translation>
         <translation>Servicios del sistema</translation>
     </message>
     <message>
-        <location line="-95"/>
+        <location line="-102"/>
         <source>System stats refresh</source>
         <translation>Actualización de estadísticas del sistema</translation>
     </message>
@@ -14948,6 +14994,16 @@ Ahora salir a tocar el pasto</translation>
         <location line="+1"/>
         <source>Source used to fetch synced lyrics</source>
         <translation>Fuente utilizada para obtener letras sincronizadas</translation>
+    </message>
+    <message>
+        <location line="+6"/>
+        <source>Romanize lyrics</source>
+        <translation>Letras romanizadas</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Use Latin letters for Hindi lyrics (approximate; requires ICU)</source>
+        <translation>Usar letras latinas para letras en hindi (aproximado, requiere ICU)</translation>
     </message>
     <message>
         <location line="+6"/>
@@ -16785,14 +16841,14 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>ServicesPage</name>
     <message>
-        <location filename="../modules/nexus/pages/ServicesPage.qml" line="+17"/>
+        <location filename="../modules/nexus/pages/ServicesPage.qml" line="+18"/>
         <location line="+15"/>
-        <location line="+120"/>
+        <location line="+142"/>
         <source>Auto</source>
         <translation>Automático</translation>
     </message>
     <message>
-        <location line="-132"/>
+        <location line="-154"/>
         <source>Local</source>
         <translation>Local</translation>
     </message>
@@ -16872,7 +16928,32 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
         <translation>Fuente utilizada para obtener letras sincronizadas</translation>
     </message>
     <message>
-        <location line="+8"/>
+        <location line="+7"/>
+        <source>Romanize lyrics</source>
+        <translation>Letras romanizadas</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Use Latin letters for Hindi lyrics (approximate; requires ICU)</source>
+        <translation>Usar letras latinas para letras en hindi (aproximado, requiere ICU)</translation>
+    </message>
+    <message>
+        <location line="+12"/>
+        <source>Urdu lyrics font: %1</source>
+        <translation>Fuente Urdu para letras: %1</translation>
+    </message>
+    <message>
+        <location line="+0"/>
+        <source>Urdu lyrics font: Automatic</source>
+        <translation>Fuente Urdu para letras: Automático</translation>
+    </message>
+    <message>
+        <location line="+1"/>
+        <source>Choose an installed font</source>
+        <translation>Elige una fuente instalada</translation>
+    </message>
+    <message>
+        <location line="+9"/>
         <source>Default player</source>
         <translation>Reproductor predeterminado</translation>
     </message>
@@ -18920,8 +19001,12 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>This opens the uninstaller in a terminal, where it asks for confirmation of its own. It removes the shell, its config files and its services, and can restore your pre-install configuration from a backup.</source>
-        <translation>Esto abre el desinstalador en una terminal, donde pide su propia confirmación. Elimina el shell, sus archivos de configuración y sus servicios, y puede restaurar la configuración previa a la instalación desde una copia de seguridad.</translation>
+        <source>This opens the uninstaller in a terminal, where it asks for confirmation of its own. It removes the shell, its config files and its services, and can restore your pre-install configuration from a backup.
+
+The bar disappears while it runs: Plasma&apos;s own desktop and panel come back first, so the session stays usable, and a log out afterwards finishes the job.</source>
+        <translation>Esto abre el desinstalador en una terminal, donde pide su propia confirmación. Elimina el shell, sus archivos de configuración y sus servicios, y puede restaurar tu configuración previa desde una copia de seguridad.
+
+La barra desaparece mientras se ejecuta: El propio escritorio y panel de Plasma vuelven los primeros, de forma que la sesión se mantiene usable, y cerrar la sesión después finaliza el proceso.</translation>
     </message>
     <message>
         <location line="+2"/>
@@ -19186,7 +19271,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>UpdateIndicator</name>
     <message>
-        <location filename="../modules/bar/components/UpdateIndicator.qml" line="+40"/>
+        <location filename="../modules/bar/components/UpdateIndicator.qml" line="+38"/>
         <source>Caelestia updates: %1</source>
         <translation>Actualizaciones de Caelestia: %1</translation>
     </message>
@@ -19501,7 +19586,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
 <context>
     <name>Updates</name>
     <message>
-        <location filename="../modules/bar/popouts/Updates.qml" line="+34"/>
+        <location filename="../modules/bar/popouts/Updates.qml" line="+32"/>
         <source>Checking…</source>
         <translation>Comprobando…</translation>
     </message>
@@ -20598,37 +20683,37 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+7"/>
         <source>Show weather</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar tiempo</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Show hourly forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar pronóstico por hora</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Only when the widget is wide enough</source>
-        <translation type="unfinished"></translation>
+        <translation>Sólamente cuando el widget sea lo suficientemente ancho</translation>
     </message>
     <message>
         <location line="+5"/>
         <source>Weather</source>
-        <translation type="unfinished"></translation>
+        <translation>Tiempo</translation>
     </message>
     <message>
         <location line="+7"/>
         <source>Show forecast</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar pronóstico</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Daily highs and lows below the current weather</source>
-        <translation type="unfinished"></translation>
+        <translation>Máximos y mínimos diarios debajo del tiempo actual</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Forecast days</source>
-        <translation type="unfinished"></translation>
+        <translation>Pronosticar días</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -20648,32 +20733,32 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+1"/>
         <source>Artwork beside</source>
-        <translation type="unfinished"></translation>
+        <translation>Arte al lado</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Artwork above</source>
-        <translation type="unfinished"></translation>
+        <translation>Arte encima</translation>
     </message>
     <message>
         <location line="+2"/>
         <source>Artwork background</source>
-        <translation type="unfinished"></translation>
+        <translation>Fondo de arte</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Blur the current artwork behind the player</source>
-        <translation type="unfinished"></translation>
+        <translation>Difuminar el arte actual detrás del reproductor</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Hide when idle</source>
-        <translation type="unfinished"></translation>
+        <translation>Ocultar con inactividad</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>Hide the widget while nothing is playing</source>
-        <translation type="unfinished"></translation>
+        <translation>Ocultar el widget cuando nada se esté reproduciendo</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -20698,12 +20783,12 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+7"/>
         <source>Show agenda</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar agenda</translation>
     </message>
     <message>
         <location line="+0"/>
         <source>List the picked day&apos;s events next to the month</source>
-        <translation type="unfinished"></translation>
+        <translation>Listar los eventos del día elegido al lado del mes</translation>
     </message>
     <message>
         <location line="+3"/>
@@ -20733,7 +20818,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+2"/>
         <source>Show device name</source>
-        <translation type="unfinished"></translation>
+        <translation>Mostrar nombre de dispositivo</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -20754,7 +20839,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+0"/>
         <source>Material icon name</source>
-        <translation type="unfinished"></translation>
+        <translation>Nombre de Material icon</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -20769,7 +20854,7 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+0"/>
         <source>Run on click</source>
-        <translation type="unfinished"></translation>
+        <translation>Ejecutar al pulsar</translation>
     </message>
     <message>
         <location line="+5"/>
@@ -20809,17 +20894,17 @@ Comprueba que %1 muestra este código antes de aceptar: %2</translation>
     <message>
         <location line="+0"/>
         <source>Draw the card behind the widget&apos;s content</source>
-        <translation type="unfinished"></translation>
+        <translation>Dibujar la tarjeta detrás del contenido del widget</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Background opacity</source>
-        <translation type="unfinished"></translation>
+        <translation>Opacidad del fondo</translation>
     </message>
     <message>
         <location line="+1"/>
         <source>Corner radius</source>
-        <translation type="unfinished"></translation>
+        <translation>Radio de la esquina</translation>
     </message>
 </context>
 <context>

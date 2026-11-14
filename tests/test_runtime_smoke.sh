@@ -132,15 +132,15 @@ test_a_missing_marker_fails_the_run_and_keeps_the_report() {
     assert_status 0 "$?" "an interrupted run should still emit valid JSON"
 }
 
-test_a_created_window_must_also_be_destroyed() {
+test_more_than_one_leftover_window_fails() {
     setup_env
     # Every marker count is satisfied here; only the created/destroyed balance
-    # can catch this.
-    printf '[caelestia] nexus=created\n' >>"$DIR/markers.log"
+    # can catch this. One window may stay alive hidden, two may not.
+    printf '[caelestia] nexus=created\n[caelestia] nexus=created\n' >>"$DIR/markers.log"
 
     run_smoke unbalanced 0.5 --baseline "$BASELINE"
 
-    assert_status 1 "$LAST_STATUS" "a window left un-destroyed should fail the run"
+    assert_status 1 "$LAST_STATUS" "two windows left un-destroyed should fail the run"
     assert_contains "$(cat "$LAST_ERR")" "but destroyed" \
         "the failure should report the created/destroyed counts"
 }

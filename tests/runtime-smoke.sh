@@ -258,12 +258,13 @@ check_run_marks() {
         fi
     done <"$marks_file"
 
-    # Everything created has to be destroyed again. Only the balance is
-    # asserted: the engine may process the final close later than the last IPC
-    # reply, so the individual counts are not fixed.
+    # The settings window is kept hidden for reuse, so at most one created window
+    # may be left over. Only the balance is asserted: the engine may process the
+    # final close later than the last IPC reply, so the individual counts are
+    # not fixed.
     created=$(grep -Fc -- '[caelestia] nexus=created' "$log_file" || true)
     destroyed=$(grep -Fc -- '[caelestia] nexus=destroyed' "$log_file" || true)
-    if ((created < 1 || created != destroyed)); then
+    if ((created < 1 || created - destroyed > 1)); then
         echo "runtime smoke run $run created ${created} nexus window(s) but destroyed ${destroyed}" >&2
         return 1
     fi

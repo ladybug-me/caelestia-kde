@@ -19,7 +19,6 @@
 1|[perf][DesktopContextMenu] build model
 1|[caelestia] nexus=created
 1|[caelestia] nexus=reused
-1|[caelestia] nexus=destroyed
 2|[caelestia] drawer=launcher toggled
 2|[caelestia] drawer=sidebar toggled
 2|[caelestia] drawer=dashboard toggled

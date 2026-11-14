@@ -191,7 +191,7 @@ CustomMouseArea {
         const dragY = y - dragStart.y;
 
         if (fullscreen) {
-            root.panels.osd.hovered = inRightPanel(panels.osdWrapper, x, y, Config.osd.hoverThickness, Config.osd.hoverWidth);
+            root.panels.osd.hovered = Config.osd.showOnHover && inRightPanel(panels.osdWrapper, x, y, Config.osd.hoverThickness, Config.osd.hoverWidth);
             return;
         }
 
@@ -223,7 +223,7 @@ CustomMouseArea {
         }
 
         if (panels.sidebar.offsetScale === 1) {
-            const showOsd = inRightPanel(panels.osdWrapper, x, y, Config.osd.hoverThickness, Config.osd.hoverWidth);
+            const showOsd = Config.osd.showOnHover && inRightPanel(panels.osdWrapper, x, y, Config.osd.hoverThickness, Config.osd.hoverWidth);
 
             if (!osdShortcutActive) {
                 visibilities.osd = showOsd;
@@ -252,7 +252,7 @@ CustomMouseArea {
             }
         } else {
             const outOfSidebar = bar.position === "right" ? x > panels.leftMargin + panels.sidebar.width * (1 - panels.sidebar.offsetScale) : x < screen.width - panels.sidebar.width * (1 - panels.sidebar.offsetScale);
-            const showOsd = outOfSidebar && inRightPanel(panels.osdWrapper, x, y, Config.osd.hoverThickness, Config.osd.hoverWidth);
+            const showOsd = Config.osd.showOnHover && outOfSidebar && inRightPanel(panels.osdWrapper, x, y, Config.osd.hoverThickness, Config.osd.hoverWidth);
 
             if (!osdShortcutActive) {
                 visibilities.osd = showOsd;

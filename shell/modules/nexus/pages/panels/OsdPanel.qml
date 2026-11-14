@@ -151,6 +151,14 @@ PageBase {
         }
 
         ToggleRow {
+            text: qsTr("Show on hover")
+            subtext: qsTr("Reveal the edge drawer when the cursor reaches the screen edge")
+            reset: ({ node: GlobalConfig.osd, setting: "showOnHover" })
+            checked: Config.osd.showOnHover
+            onToggled: GlobalConfig.osd.showOnHover = checked
+        }
+
+        ToggleRow {
             text: qsTr("Volume")
             subtext: qsTr("Show indicator on speaker volume changes")
             reset: ({ node: GlobalConfig.osd, setting: "enableVolume" })

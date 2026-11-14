@@ -64,7 +64,7 @@ Region {
 
         panel: root.panels.osdWrapper
         x: root.bar.position === "right" ? 0 : root.win.width - osdRegion.width
-        width: panel.width * (1 - root.panels.osd.offsetScale) + root.edgeExtent(root.Config.osd.hoverThickness) + sessionRegion.width
+        width: panel.width * (1 - root.panels.osd.offsetScale) + (root.Config.osd.showOnHover ? root.edgeExtent(root.Config.osd.hoverThickness) : 0) + sessionRegion.width
     }
     R {
         panel: root.panels.notifications

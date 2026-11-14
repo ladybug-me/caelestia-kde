@@ -16,7 +16,7 @@
 # validation and main default have one implementation.
 
 record_installed_revision() {
-    local bundle="$1" config="$2"
+    local bundle="$1" config="$2" channel="${3:-}"
 
     if [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
         return 1
@@ -31,8 +31,14 @@ record_installed_revision() {
     # A checkout parked on a feature branch must not silently re-point the
     # update channel (issue #565): only a real channel is a fact worth
     # recording, anything else leaves the previously tracked branch alone.
+    # The updater resets the checkout it created from `git init`, which can
+    # leave HEAD on a branch that is not the channel it just installed
+    # (#1327), so an explicit channel always wins over the git branch name.
     local branch
     branch="$(git -C "$bundle" rev-parse --abbrev-ref HEAD 2>/dev/null)" || branch=""
+    if [[ -n "$channel" ]]; then
+        branch="$channel"
+    fi
     case "$branch" in
         main | dev)
             update_state_set_branch "$config" "$branch" || return 1

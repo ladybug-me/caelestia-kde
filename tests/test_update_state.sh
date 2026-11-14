@@ -42,6 +42,24 @@ test_record_installed_revision_writes_commit_branch_and_version() {
         ".update_branch should name the checked-out branch"
 }
 
+test_record_installed_revision_records_the_channel_the_updater_installed() {
+    require_git || return 0
+    local tmp status
+    tmp="$(new_tmpdir)"
+    make_repo "$tmp/repo" "v9.9.9"
+    # The updater's own checkout is created by git init, so HEAD can still name
+    # the init default while the tree holds the channel it just reset to (#1327).
+    git -C "$tmp/repo" checkout -q -b installed-dev-default
+    git -C "$tmp/repo" branch -q -m installed-dev-default master
+
+    record_installed_revision "$tmp/repo" "$tmp/config" dev
+    status=$?
+
+    assert_status 0 "$status" "recording the installed revision should succeed"
+    assert_eq "dev" "$(cat "$tmp/config/.update_branch")" \
+        ".update_branch should follow the installed channel, not the checkout's branch name"
+}
+
 test_record_installed_revision_does_nothing_when_the_build_was_skipped() {
     require_git || return 0
     local tmp status

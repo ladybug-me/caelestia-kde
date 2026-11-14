@@ -340,7 +340,7 @@ PREV_REV="$(cat "$QUICKSHELL_DIR/.current_commit" 2>/dev/null || true)"
 # record_installed_revision() refuses under CAELESTIA_SKIP_BUILD=1: the checkout moved
 # but the shell was deliberately not rebuilt, so the new revision would describe a state
 # nobody can see (#651). The previous value stays, still naming the running shell.
-if record_installed_revision "$BUNDLE_DIR" "$QUICKSHELL_DIR"; then
+if record_installed_revision "$BUNDLE_DIR" "$QUICKSHELL_DIR" "$BRANCH"; then
     info "Saved commit hash: $(cat "$QUICKSHELL_DIR/.current_commit" 2>/dev/null || true)"
 elif [[ "${CAELESTIA_SKIP_BUILD:-0}" == "1" ]]; then
     info "Shell build skipped; the recorded revision still describes the running shell."

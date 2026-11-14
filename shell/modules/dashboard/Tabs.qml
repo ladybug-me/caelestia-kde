@@ -1,7 +1,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Templates
 import Quickshell
 import Caelestia.Config
@@ -33,12 +32,15 @@ Item {
 
         implicitHeight: contentHeight
         background: null
-        contentItem: RowLayout {
-            spacing: 0
-
-            Repeater {
-                model: bar.contentModel
-            }
+        // A RowLayout repeating contentModel never paints tabs inserted after the bar is
+        // built, so a tab enabled at runtime, or one rebuilt when the tab list re-evaluates,
+        // kept its slot but stayed blank until a restart. TabBar sizes the tabs itself.
+        contentItem: ListView {
+            model: bar.contentModel
+            currentIndex: bar.currentIndex
+            orientation: ListView.Horizontal
+            interactive: false
+            spacing: bar.spacing
         }
 
         Repeater {
@@ -115,8 +117,6 @@ Item {
         required property string iconName
         readonly property bool current: TabBar.tabBar.currentItem === this
 
-        Layout.fillWidth: true
-        Layout.preferredWidth: 1
         implicitWidth: implicitContentWidth
         implicitHeight: implicitContentHeight
         background: null
